@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class StartController {
+public class StartController extends CommonController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String start(Map<String, Object> model) {
 
 		model.put("message", "JapaneseDictionaryWeb - start");
-		
+				
 		return "start";
 	}
 }
