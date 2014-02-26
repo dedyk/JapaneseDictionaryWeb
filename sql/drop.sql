@@ -1,0 +1,20 @@
+
+drop table DictionaryEntries;
+
+drop table ListEntries_DictionaryEntries_AttributeList;
+drop table ListEntries_DictionaryEntries_DictionaryEntryTypeList;
+drop table ListEntries_DictionaryEntries_GroupsList;
+drop table ListEntries_DictionaryEntries_KanaList;
+drop table ListEntries_DictionaryEntries_RomajiList;
+drop table ListEntries_DictionaryEntries_TranslateList;
+drop table ListEntries_DictionaryEntries_InfoStringList;
+
+
+drop table KanjiEntries;
+
+drop table ListEntries_KanjiEntries_RadicalsList;
+drop table ListEntries_KanjiEntries_OnReadingList;
+drop table ListEntries_KanjiEntries_KunReadingList;
+drop table ListEntries_KanjiEntries_PolishTranslateList;
+drop table ListEntries_KanjiEntries_GroupsList;
+drop table ListEntries_KanjiEntries_InfoStringList;
