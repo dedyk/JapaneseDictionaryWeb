@@ -4,7 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<t:template pageTitle="START - TEST">
+<t:template pageTitle="Mały, skromny japoński pomocnik | 小さくて奥ゆかしい日本語ヘルパー">
 	<jsp:body>
 	
 		<script>

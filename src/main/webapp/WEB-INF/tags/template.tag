@@ -70,13 +70,30 @@
 		
 		<div class="row">
 
-			<div class="row header">
-				HEADER
+			<div class="row header" style="margin-bottom:30px;" >
+				
+				<table>
+					<tr>
+						<td>
+							<img src="http://www.idedyk.pl/index_html_m4c6a7bce.png" align="middle">
+						</td>
+						
+						<td style="font-size:150%;" >
+							小さくて奥ゆかしい日本語ヘルパー <br/>
+							Mały, skromny japoński pomocnik
+						</td>
+					</tr>				
+				</table>
+				
+							
+				
 			</div>
 			
-			<button id="button1">A button1 element</button>
-			<button id="button2">A button2 element</button>
-			<button id="button3">A button3 element</button>
+			<div style="margin-bottom:50px;" >
+				<button id="button1">A button1 element</button>
+				<button id="button2">A button2 element</button>
+				<button id="button3">A button3 element</button>
+			</div>			
 						
 			<div id="content">
 				<jsp:doBody />
