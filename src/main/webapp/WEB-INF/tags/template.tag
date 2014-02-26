@@ -75,7 +75,7 @@
 				<table>
 					<tr>
 						<td>
-							<img src="http://www.idedyk.pl/index_html_m4c6a7bce.png" align="middle">
+							<img src="img/japan-flag.png" align="middle">
 						</td>
 						
 						<td style="font-size:150%;" >
@@ -84,23 +84,22 @@
 						</td>
 					</tr>				
 				</table>
-				
-							
-				
 			</div>
 			
 			<div style="margin-bottom:50px;" >
-				<button id="button1">A button1 element</button>
-				<button id="button2">A button2 element</button>
-				<button id="button3">A button3 element</button>
+				<button id="startButton">Start</button>
+				<button id="wordDictionaryButton" data-href="wordDictionary">Słowniczek</button>
+				<button id="kanjiDictionaryButton" data-href="kanjiDictionary">Kanji</button>
+				<button id="suggestionButton" data-href="suggetion">Zgłoś sugestię</button>
+				<button id="infoButton" data-href="info">Informacje</button>
 			</div>			
 						
 			<div id="content">
 				<jsp:doBody />
 			</div>
 			
-			<div class="row footer">
-				FOOTER
+			<div class="row footer" style="margin-top:50px;">
+				<b>FIXME: FOOTER</b>
 			</div>
 		</div>
 	</div>
@@ -109,11 +108,41 @@
 		$( "#nav" ).menu( {position: {at: "left bottom"}});
 
 		$(document).ready(function() {
-			$( "#button1" ).button();
-			$( "#button2" ).button();
-			$( "#button3" ).button();
-		});
+			$( "#startButton" ).button();
+			$( "#startButton" ).click(function( event ) {
+				var link = this;
+				
+				window.location = "<c:out value='${pageContext.request.contextPath}' />";
+			});
+			
+			$( "#wordDictionaryButton" ).button();
+			$( "#wordDictionaryButton" ).click(function( event ) {
+				var link = this;
+				
+				window.location = $(link).attr("data-href");
+			});
+						
+			$( "#kanjiDictionaryButton" ).button();
+			$( "#kanjiDictionaryButton" ).click(function( event ) {
+				var link = this;
+				
+				window.location = $(link).attr("data-href");
+			});
+			
+			$( "#suggestionButton" ).button();
+			$( "#suggestionButton" ).click(function( event ) {
+				var link = this;
+				
+				window.location = $(link).attr("data-href");
+			});
 
+			$( "#infoButton" ).button();
+			$( "#infoButton" ).click(function( event ) {
+				var link = this;
+				
+				window.location = $(link).attr("data-href");
+			});
+		});
 		
 	</script>
 </body>

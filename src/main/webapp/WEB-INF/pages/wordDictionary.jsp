@@ -5,9 +5,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <t:template pageTitle="Mały, skromny japoński pomocnik | 小さくて奥ゆかしい日本語ヘルパー">
-	<jsp:body>
+	<jsp:body>	
 		
-		Tutaj powinna znaleźć się jakaś informacja
-			
+		Słowniczek
+		
 	</jsp:body>
 </t:template>
