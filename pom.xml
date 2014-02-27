@@ -21,9 +21,6 @@
 
 		<!-- spring version -->
 		<spring.version>4.0.2.RELEASE</spring.version>
-		
-		<!-- db output dir -->
-		<db.output.dir>${basedir}/src/main/resources/db</db.output.dir>
 	</properties>
 
 	<dependencies>
