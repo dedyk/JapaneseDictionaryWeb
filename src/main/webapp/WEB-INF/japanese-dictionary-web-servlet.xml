@@ -31,4 +31,11 @@
 		</property>
 	</bean>
 
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+	    <property name="jndiName" value="java:comp/env/jdbc/sqlite" />
+	    <property name="resourceRef" value="true"/>
+	    <property name="proxyInterface" value="javax.sql.DataSource" />
+	    <property name="lookupOnStartup" value="true" />
+	</bean>
+
 </beans>
