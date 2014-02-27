@@ -21,6 +21,9 @@
 
 		<!-- spring version -->
 		<spring.version>4.0.2.RELEASE</spring.version>
+		
+		<!-- db output dir -->
+		<db.output.dir>${basedir}/src/main/resources/db</db.output.dir>
 	</properties>
 
 	<dependencies>
@@ -63,6 +66,26 @@
 			<version>1.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>group</groupId>
+			<artifactId>artifact</artifactId>
+			<version>anything</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140227.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.javacsv</groupId>
+			<artifactId>javacsv</artifactId>
+			<version>2.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<version>3.7.2</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
