@@ -10,5 +10,4 @@
 * Baza danych
 * Mechanizm importu słownika do bazy danych, reset auto_increment do 1, aby id zawsze byly takie same
 * Katalog ze słowami
-
-
+* Diabeski mechanizm cache slowek i kanji

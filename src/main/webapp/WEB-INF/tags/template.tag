@@ -15,10 +15,10 @@
 
 	<title>${pageTitle}</title>
 
-	<link href="css/excite-bike/jquery-ui-1.10.4.custom.min.css" rel="stylesheet">
+	<link href="http://code.jquery.com/ui/1.10.4/themes/excite-bike/jquery-ui.css" rel="stylesheet">
 	
-	<script src="js/jquery-1.11.0.min.js"></script>
-	<script src="js/jquery-ui-1.10.4.custom.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
 
 	<style>
 	
