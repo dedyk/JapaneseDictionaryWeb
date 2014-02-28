@@ -68,7 +68,7 @@
 			<artifactId>artifact</artifactId>
 			<version>anything</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140227.jar</systemPath>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140228.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -82,6 +82,12 @@
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.7.2</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
 		</dependency>
 
 		<dependency>

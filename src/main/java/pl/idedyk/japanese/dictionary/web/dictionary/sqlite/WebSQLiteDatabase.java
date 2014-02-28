@@ -1,12 +1,10 @@
 package pl.idedyk.japanese.dictionary.web.dictionary.sqlite;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.sql.DataSource;
 
 import org.springframework.stereotype.Service;
 
@@ -15,22 +13,24 @@ import pl.idedyk.japanese.dictionary.api.dictionary.sqlite.SQLiteDatabase;
 
 @Service
 public class WebSQLiteDatabase implements SQLiteDatabase {
-
-	@Resource(name="dataSource")
-	private DataSource dataSource = null;
 	
 	private Connection connection = null;
 	
 	@Override
 	public void open() {
 		
-		if (connection == null) {
-			
-			try {
-				connection = dataSource.getConnection();
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
+		try {
+			if (connection == null || connection.isClosed() == true) {
+				// init db driver
+				Class.forName("org.sqlite.JDBC");
+				
+				connection = DriverManager.getConnection("jdbc:sqlite:../webapps/JapaneseDictionaryWeb/WEB-INF/classes/db/dictionary.db");
+
+				connection.setReadOnly(true);
 			}
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -161,13 +161,5 @@ public class WebSQLiteDatabase implements SQLiteDatabase {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public DataSource getDataSource() {
-		return dataSource;
-	}
-
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
 	}
 }

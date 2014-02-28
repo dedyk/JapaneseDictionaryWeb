@@ -20,7 +20,7 @@
 	<mvc:resources mapping="/img/**" location="/img/" />
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/js/**" location="/js/" />
-
+	
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
 			<value>/WEB-INF/pages/</value>
@@ -30,12 +30,4 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
-
-	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-	    <property name="jndiName" value="java:comp/env/jdbc/sqlite" />
-	    <property name="resourceRef" value="true"/>
-	    <property name="proxyInterface" value="javax.sql.DataSource" />
-	    <property name="lookupOnStartup" value="true" />
-	</bean>
-
 </beans>

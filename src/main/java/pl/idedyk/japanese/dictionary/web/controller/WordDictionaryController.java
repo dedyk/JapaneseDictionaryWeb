@@ -11,15 +11,14 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult.ResultItem;
-import pl.idedyk.japanese.dictionary.api.dictionary.sqlite.SQLiteConnector;
-import pl.idedyk.japanese.dictionary.web.dictionary.sqlite.WebSQLiteDatabase;
+import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 
 @Controller
 public class WordDictionaryController extends CommonController {
 	
 	@Autowired
-	private WebSQLiteDatabase webSQLiteDatabase;
-
+	private DictionaryManager dictionaryManager;
+	
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
 	public String start(Map<String, Object> model) {
 		
@@ -83,17 +82,19 @@ public class WordDictionaryController extends CommonController {
 		cursor.close();
 		*/
 		
-		SQLiteConnector sqliteConnector = new SQLiteConnector();
+		long start = System.currentTimeMillis();
 		
-		try {
-			sqliteConnector.open(webSQLiteDatabase);
-			
+		try {			
 			FindWordRequest findWordRequest = new FindWordRequest();
 			
 			findWordRequest.word = "kot";
 			findWordRequest.wordPlaceSearch = WordPlaceSearch.START_WITH;
 			
-			FindWordResult findDictionaryEntries = sqliteConnector.findDictionaryEntries(findWordRequest);
+			long findStart = System.currentTimeMillis();
+			FindWordResult findDictionaryEntries = dictionaryManager.findWord(findWordRequest);
+			long findStop = System.currentTimeMillis();
+			
+			System.out.println("Czas(find): " + (findStop - findStart));
 			
 			for (ResultItem resultItem : findDictionaryEntries.result) {
 				
@@ -105,8 +106,12 @@ public class WordDictionaryController extends CommonController {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
-			sqliteConnector.close();
+			//sqliteConnector.close();
 		}
+		
+		long stop = System.currentTimeMillis();
+		
+		System.out.println("Czas: " + (stop - start));
 		
 		return "wordDictionary";
 	}
