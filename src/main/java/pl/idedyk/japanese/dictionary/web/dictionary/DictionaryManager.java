@@ -3,7 +3,6 @@ package pl.idedyk.japanese.dictionary.web.dictionary;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,10 +11,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.csvreader.CsvReader;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.DictionaryManagerAbstract;
 import pl.idedyk.japanese.dictionary.api.dictionary.Utils;
@@ -25,7 +21,8 @@ import pl.idedyk.japanese.dictionary.api.dto.TransitiveIntransitivePair;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.api.keigo.KeigoHelper;
 import pl.idedyk.japanese.dictionary.api.tools.KanaHelper;
-import pl.idedyk.japanese.dictionary.web.dictionary.sqlite.WebSQLiteDatabase;
+
+import com.csvreader.CsvReader;
 
 @Service
 public class DictionaryManager extends DictionaryManagerAbstract {
@@ -42,9 +39,6 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	private List<RadicalInfo> radicalList = null;
 	private List<TransitiveIntransitivePair> transitiveIntransitivePairsList = null;
 	
-	@Autowired
-	private WebSQLiteDatabase webSQLiteDatabase;
-	
 	public DictionaryManager() {
 		super();
 	}
@@ -56,8 +50,9 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		
 		logger.info("Otwieranie bazy danych");
 		
+		/*
 		try {
-			sqliteConnector.open(webSQLiteDatabase);
+			//sqliteConnector.open(webSQLiteDatabase);
 			
 		} catch (SQLException e) {
 			
@@ -65,6 +60,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 
 			throw new RuntimeException(e);
 		}
+		*/
 		
 		logger.info("Inicjalizuje Keigo Helper");
 		keigoHelper = new KeigoHelper();
