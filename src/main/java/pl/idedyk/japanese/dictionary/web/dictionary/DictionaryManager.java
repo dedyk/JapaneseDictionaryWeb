@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import pl.idedyk.japanese.dictionary.api.dto.TransitiveIntransitivePair;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.api.keigo.KeigoHelper;
 import pl.idedyk.japanese.dictionary.api.tools.KanaHelper;
+import pl.idedyk.japanese.dictionary.web.dictionary.lucene.LuceneDatabase;
 
 import com.csvreader.CsvReader;
 
@@ -32,7 +34,11 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	private static final String RADICAL_FILE = "radical.csv";
 	private static final String TRANSITIVE_INTRANSTIVE_PAIRS_FILE = "transitive_intransitive_pairs.csv";
 	private static final String KANA_FILE = "kana.csv";
+	
+	private static final String LUCENE_DB_DIR = "db-lucene";
 
+	private LuceneDatabase luceneDatabase;
+	
 	private KanaHelper kanaHelper;
 	private KeigoHelper keigoHelper;
 	
@@ -50,17 +56,17 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		
 		logger.info("Otwieranie bazy danych");
 		
-		/*
 		try {
-			//sqliteConnector.open(webSQLiteDatabase);
+			databaseConnector = luceneDatabase = new LuceneDatabase(DictionaryManager.class.getResource("/db/" + LUCENE_DB_DIR + "/").getPath()); 
 			
-		} catch (SQLException e) {
+			luceneDatabase.open();
+			
+		} catch (IOException e) {
 			
 			logger.error("Otwieranie bazy danych zakonczylo sie bledem", e);
 
 			throw new RuntimeException(e);
 		}
-		*/
 		
 		logger.info("Inicjalizuje Keigo Helper");
 		keigoHelper = new KeigoHelper();
@@ -105,6 +111,11 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		}
 		
 		logger.info("Inicjalizacja Dictionary Manager zakonczona sukcesem");
+	}
+	
+	@PreDestroy
+	private void close() throws IOException {
+		luceneDatabase.close();
 	}
 	
 	private void readKanaFile(InputStream kanaFileInputStream) throws IOException {
