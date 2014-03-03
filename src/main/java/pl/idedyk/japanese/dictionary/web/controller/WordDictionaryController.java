@@ -1,6 +1,5 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 
@@ -21,7 +18,9 @@ public class WordDictionaryController extends CommonController {
 	private DictionaryManager dictionaryManager;
 	
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
-	public String start(@RequestParam(value="q", required=false, defaultValue = "kot") String query, Map<String, Object> model) {
+	public String start(@RequestParam(value="q", required=false, defaultValue = "kot") String query, 
+			@RequestParam(value="f", required=false, defaultValue = "1") String f, 
+			@RequestParam(value="t", required=false, defaultValue = "999") String t, Map<String, Object> model) {
 		
 		/*
 		long start = System.currentTimeMillis();
@@ -65,6 +64,7 @@ public class WordDictionaryController extends CommonController {
 		System.out.println("Czas: " + (stop - start));
 		*/
 		
+		/*
 		FindKanjiRequest findKanjiRequest = new FindKanjiRequest();
 		
 		findKanjiRequest.word = query;
@@ -77,6 +77,38 @@ public class WordDictionaryController extends CommonController {
 		for (KanjiEntry kanjiEntry : result) {
 			System.out.println(kanjiEntry.getKanji() + " - " + kanjiEntry.getGroups() + " - " + kanjiEntry.getPolishTranslates() + " - " + kanjiEntry.getInfo());
 		}
+		*/
+		
+		/*
+		List<String> radicalsList = new ArrayList<String>();
+		
+		for (int i = 0; i < query.length(); i++) {
+			
+			radicalsList.add(String.valueOf(query.charAt(i)));
+		}
+				
+		//System.out.println(dictionaryManager.findAllAvailableRadicals(radicalsList.toArray(new String[0])));
+		
+		//List<KanjiEntry> result = dictionaryManager.findKnownKanjiFromRadicals(radicalsList.toArray(new String[0]));
+		
+		List<KanjiEntry> result = dictionaryManager.findKanjisFromStrokeCount(Integer.parseInt(f), Integer.parseInt(t)).result;
+		
+		for (KanjiEntry kanjiEntry : result) {
+			System.out.println(kanjiEntry.getKanji() + " - " + kanjiEntry.getGroups() + " - " + kanjiEntry.getPolishTranslates() + " - " + kanjiEntry.getInfo());
+		}
+		*/
+		
+		//System.out.println("AAA: " + dictionaryManager.getDictionaryEntriesSize());
+
+		KanjiEntry kanjiEntry = dictionaryManager.findKanji(query);
+		
+		System.out.println(kanjiEntry.getKanji());
+		System.out.println(kanjiEntry.getGroups());
+		System.out.println(kanjiEntry.getPolishTranslates());
+		System.out.println(kanjiEntry.getKanjiDic2Entry().getKunReading());
+		System.out.println(kanjiEntry.getKanjiDic2Entry().getOnReading());
+		System.out.println(kanjiEntry.getKanjiDic2Entry().getRadicals());
+		System.out.println(kanjiEntry.getKanjivgEntry().getStrokePaths());
 		
 		return "wordDictionary";
 	}
