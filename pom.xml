@@ -71,7 +71,7 @@
 			<artifactId>artifact</artifactId>
 			<version>anything</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140301.jar</systemPath>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140302.jar</systemPath>
 		</dependency>
 
 		<dependency>

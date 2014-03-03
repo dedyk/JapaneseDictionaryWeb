@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest.WordPlaceSearch;
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult.ResultItem;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 
 @Controller
@@ -22,7 +22,8 @@ public class WordDictionaryController extends CommonController {
 	
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
 	public String start(@RequestParam(value="q", required=false, defaultValue = "kot") String query, Map<String, Object> model) {
-				
+		
+		/*
 		long start = System.currentTimeMillis();
 		
 		try {			
@@ -62,6 +63,20 @@ public class WordDictionaryController extends CommonController {
 		long stop = System.currentTimeMillis();
 		
 		System.out.println("Czas: " + (stop - start));
+		*/
+		
+		FindKanjiRequest findKanjiRequest = new FindKanjiRequest();
+		
+		findKanjiRequest.word = query;
+		findKanjiRequest.wordPlaceSearch = FindKanjiRequest.WordPlaceSearch.ANY_PLACE;
+		
+		FindKanjiResult findKanjiResult = dictionaryManager.findKanji(findKanjiRequest);
+		
+		List<KanjiEntry> result = findKanjiResult.result;
+		
+		for (KanjiEntry kanjiEntry : result) {
+			System.out.println(kanjiEntry.getKanji() + " - " + kanjiEntry.getGroups() + " - " + kanjiEntry.getPolishTranslates() + " - " + kanjiEntry.getInfo());
+		}
 		
 		return "wordDictionary";
 	}
