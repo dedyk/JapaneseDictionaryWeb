@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +101,7 @@ public class WordDictionaryController extends CommonController {
 		
 		//System.out.println("AAA: " + dictionaryManager.getDictionaryEntriesSize());
 
+		/*
 		KanjiEntry kanjiEntry = dictionaryManager.findKanji(query);
 		
 		System.out.println(kanjiEntry.getKanji());
@@ -109,8 +111,44 @@ public class WordDictionaryController extends CommonController {
 		System.out.println(kanjiEntry.getKanjiDic2Entry().getOnReading());
 		System.out.println(kanjiEntry.getKanjiDic2Entry().getRadicals());
 		System.out.println(kanjiEntry.getKanjivgEntry().getStrokePaths());
+		*/
+		
+		/*
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(Integer.parseInt(query));
+		
+		System.out.println(dictionaryEntry.getId() + " - " + dictionaryEntry.getKanji() + " - " + dictionaryEntry.getKanaList() + " - " + 
+				dictionaryEntry.getRomajiList() + " - " + dictionaryEntry.getTranslates() + " - " + dictionaryEntry.getInfo());
+		*/
+		
+		/*
+		List<DictionaryEntry> wordsGroup = dictionaryManager.getWordsGroup(10, Integer.parseInt(query));
+		*/
+		
+		/*
+		List<DictionaryEntry> wordsGroup = dictionaryManager.getGroupDictionaryEntries(GroupEnum.GENKI_1_6);
+		
+		for (DictionaryEntry dictionaryEntry : wordsGroup) {
+			System.out.println(dictionaryEntry.getId() + " - " + dictionaryEntry.getKanji() + " - " + dictionaryEntry.getKanaList() + " - " + 
+					dictionaryEntry.getRomajiList() + " - " + dictionaryEntry.getTranslates() + " - " + dictionaryEntry.getInfo());
+		}
+		*/
+		
+		//System.out.println(dictionaryManager.getDictionaryEntryGroupTypes());
+
+		/*
+		List<KanjiEntry> result = dictionaryManager.getAllKanjis(false, false);
+		
+		for (KanjiEntry kanjiEntry : result) {
+			System.out.println(kanjiEntry.getKanji() + " - " + kanjiEntry.getGroups() + " - " + kanjiEntry.getPolishTranslates() + " - " + kanjiEntry.getInfo());
+		}
+		*/
+		
+		List<KanjiEntry> result = dictionaryManager.findKnownKanji(query);
+
+		for (KanjiEntry kanjiEntry : result) {
+			System.out.println(kanjiEntry.getKanji() + " - " + kanjiEntry.getGroups() + " - " + kanjiEntry.getPolishTranslates() + " - " + kanjiEntry.getInfo());
+		}
 		
 		return "wordDictionary";
 	}
-	
 }

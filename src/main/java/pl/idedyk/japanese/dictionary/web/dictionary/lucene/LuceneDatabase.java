@@ -295,6 +295,102 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 		return findWordResult;
 	}
+	
+	@Override
+	public DictionaryEntry getDictionaryEntryById(String id) throws DictionaryException {
+		
+		BooleanQuery query = new BooleanQuery();
+
+		// object type
+		PhraseQuery phraseQuery = new PhraseQuery();
+		phraseQuery.add(new Term(LuceneStatic.objectType, LuceneStatic.dictionaryEntry_objectType));
+
+		query.add(phraseQuery, Occur.MUST);
+
+		query.add(NumericRangeQuery.newIntRange(LuceneStatic.dictionaryEntry_id, Integer.parseInt(id), Integer.parseInt(id), true, true), Occur.MUST);
+		
+		try {
+			ScoreDoc[] scoreDocs = searcher.search(query, null, 1).scoreDocs;
+			
+			if (scoreDocs.length == 0) {
+				return null;
+			}
+			
+			Document foundDocument = searcher.doc(scoreDocs[0].doc);
+
+			String idString = foundDocument.get(LuceneStatic.dictionaryEntry_id);
+
+			List<String> dictionaryEntryTypeList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_dictionaryEntryTypeList));
+			List<String> attributeList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_attributeList));
+			List<String> groupsList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_groupsList));
+
+			String prefixKanaString = foundDocument.get(LuceneStatic.dictionaryEntry_prefixKana);
+
+			String kanjiString = foundDocument.get(LuceneStatic.dictionaryEntry_kanji);
+			List<String> kanaList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_kanaList));
+
+			String prefixRomajiString = foundDocument.get(LuceneStatic.dictionaryEntry_prefixRomaji);
+
+			List<String> romajiList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_romajiList));				
+			List<String> translateList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_translatesList));
+
+			String infoString = foundDocument.get(LuceneStatic.dictionaryEntry_info);
+
+			return Utils.parseDictionaryEntry(idString, dictionaryEntryTypeList, attributeList,
+					groupsList, prefixKanaString, kanjiString, kanaList, prefixRomajiString, romajiList,
+					translateList, infoString);
+			
+		} catch (IOException e) {
+			throw new DictionaryException("Błąd podczas pobierania słowa: " + e);
+		}		
+	}
+	
+	@Override
+	public DictionaryEntry getNthDictionaryEntry(int nth) throws DictionaryException {
+		
+		BooleanQuery query = new BooleanQuery();
+
+		// object type
+		PhraseQuery phraseQuery = new PhraseQuery();
+		phraseQuery.add(new Term(LuceneStatic.objectType, LuceneStatic.dictionaryEntry_objectType));
+
+		query.add(phraseQuery, Occur.MUST);
+		
+		try {
+			ScoreDoc[] scoreDocs = searcher.search(query, null, Integer.MAX_VALUE).scoreDocs;
+			
+			if (nth < 0 || nth >= scoreDocs.length) {
+				return null;
+			}
+			
+			Document foundDocument = searcher.doc(scoreDocs[nth].doc);
+
+			String idString = foundDocument.get(LuceneStatic.dictionaryEntry_id);
+
+			List<String> dictionaryEntryTypeList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_dictionaryEntryTypeList));
+			List<String> attributeList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_attributeList));
+			List<String> groupsList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_groupsList));
+
+			String prefixKanaString = foundDocument.get(LuceneStatic.dictionaryEntry_prefixKana);
+
+			String kanjiString = foundDocument.get(LuceneStatic.dictionaryEntry_kanji);
+			List<String> kanaList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_kanaList));
+
+			String prefixRomajiString = foundDocument.get(LuceneStatic.dictionaryEntry_prefixRomaji);
+
+			List<String> romajiList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_romajiList));				
+			List<String> translateList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_translatesList));
+
+			String infoString = foundDocument.get(LuceneStatic.dictionaryEntry_info);
+
+			return Utils.parseDictionaryEntry(idString, dictionaryEntryTypeList, attributeList,
+					groupsList, prefixKanaString, kanjiString, kanaList, prefixRomajiString, romajiList,
+					translateList, infoString);
+			
+		} catch (IOException e) {
+			throw new DictionaryException("Błąd podczas pobierania n-tego słowa: " + e);
+		}				
+	}
 
 	private Query createQuery(String word, String fieldName, WordPlaceSearch wordPlaceSearch) {
 
@@ -309,7 +405,7 @@ public class LuceneDatabase implements IDatabaseConnector {
 		} else {
 			throw new RuntimeException();
 		}
-
+		
 		return query;
 	}
 
@@ -368,6 +464,94 @@ public class LuceneDatabase implements IDatabaseConnector {
 			
 		} catch (IOException e) {
 			throw new RuntimeException("Błąd podczas pobierania liczby słówek: " + e);
+		}		
+	}
+		
+	@Override
+	public List<GroupEnum> getDictionaryEntryGroupTypes() {
+		
+		BooleanQuery query = new BooleanQuery();
+
+		// object type
+		PhraseQuery phraseQuery = new PhraseQuery();
+		phraseQuery.add(new Term(LuceneStatic.objectType, LuceneStatic.dictionaryEntry_objectType));
+
+		query.add(phraseQuery, Occur.MUST);
+		
+		Set<String> uniqueGroupStringTypes = new HashSet<String>();
+
+		try {			
+			ScoreDoc[] scoreDocs = searcher.search(query, null, Integer.MAX_VALUE).scoreDocs;
+						
+			for (ScoreDoc scoreDoc : scoreDocs) {
+
+				Document foundDocument = searcher.doc(scoreDoc.doc);
+
+				uniqueGroupStringTypes.addAll(Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_groupsList)));
+			}
+
+			List<GroupEnum> result = GroupEnum.convertToListGroupEnum(new ArrayList<String>(uniqueGroupStringTypes));
+			
+			GroupEnum.sortGroups(result);
+			
+			return result;
+			
+		} catch (IOException e) {
+			throw new RuntimeException("Błąd podczas pobierania typów grup słówek: " + e);
+		}		
+	}
+
+	@Override
+	public List<DictionaryEntry> getGroupDictionaryEntries(GroupEnum groupEnum) throws DictionaryException {
+		
+		BooleanQuery query = new BooleanQuery();
+
+		// object type
+		PhraseQuery phraseQuery = new PhraseQuery();
+		phraseQuery.add(new Term(LuceneStatic.objectType, LuceneStatic.dictionaryEntry_objectType));
+
+		query.add(phraseQuery, Occur.MUST);
+		
+		query.add(createQuery(groupEnum.getValue(), LuceneStatic.dictionaryEntry_groupsList, WordPlaceSearch.EXACT), Occur.MUST);
+		
+		try {
+			List<DictionaryEntry> result = new ArrayList<DictionaryEntry>();
+			
+			ScoreDoc[] scoreDocs = searcher.search(query, null, Integer.MAX_VALUE).scoreDocs;
+
+			for (ScoreDoc scoreDoc : scoreDocs) {
+
+				Document foundDocument = searcher.doc(scoreDoc.doc);
+
+				String idString = foundDocument.get(LuceneStatic.dictionaryEntry_id);
+
+				List<String> dictionaryEntryTypeList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_dictionaryEntryTypeList));
+				List<String> attributeList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_attributeList));
+				List<String> groupsList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_groupsList));
+
+				String prefixKanaString = foundDocument.get(LuceneStatic.dictionaryEntry_prefixKana);
+
+				String kanjiString = foundDocument.get(LuceneStatic.dictionaryEntry_kanji);
+				List<String> kanaList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_kanaList));
+
+				String prefixRomajiString = foundDocument.get(LuceneStatic.dictionaryEntry_prefixRomaji);
+
+				List<String> romajiList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_romajiList));				
+				List<String> translateList = Arrays.asList(foundDocument.getValues(LuceneStatic.dictionaryEntry_translatesList));
+
+				String infoString = foundDocument.get(LuceneStatic.dictionaryEntry_info);
+
+				DictionaryEntry entry = Utils.parseDictionaryEntry(idString, dictionaryEntryTypeList, attributeList,
+						groupsList, prefixKanaString, kanjiString, kanaList, prefixRomajiString, romajiList,
+						translateList, infoString);
+
+				result.add(entry);
+			}
+			
+			return result;
+			
+		} catch (IOException e) {
+			throw new DictionaryException("Błąd podczas pobierania słówek dla grupy: " + e);
 		}		
 	}
 
@@ -809,27 +993,71 @@ public class LuceneDatabase implements IDatabaseConnector {
 	}
 
 	@Override
-	public List<KanjiEntry> getAllKanjis(boolean arg0, boolean arg1) throws DictionaryException {
-		throw new UnsupportedOperationException();
-	}
+	public List<KanjiEntry> getAllKanjis(boolean withDetails, boolean addGenerated) throws DictionaryException {
+		
+		BooleanQuery query = new BooleanQuery();
 
-	@Override
-	public DictionaryEntry getDictionaryEntryById(String arg0) throws DictionaryException {
-		throw new UnsupportedOperationException();
-	}
+		// object type
+		PhraseQuery phraseQuery = new PhraseQuery();
+		phraseQuery.add(new Term(LuceneStatic.objectType, LuceneStatic.kanjiEntry_objectType));
 
-	@Override
-	public List<GroupEnum> getDictionaryEntryGroupTypes() {
-		throw new UnsupportedOperationException();
-	}
+		query.add(phraseQuery, Occur.MUST);
 
-	@Override
-	public List<DictionaryEntry> getGroupDictionaryEntries(GroupEnum arg0) throws DictionaryException {
-		throw new UnsupportedOperationException();
-	}
+		if (addGenerated == false) {
+			query.add(createQuery("false", LuceneStatic.kanjiEntry_generated, FindKanjiRequest.WordPlaceSearch.EXACT), Occur.MUST);
+		}
 
-	@Override
-	public DictionaryEntry getNthDictionaryEntry(int arg0) throws DictionaryException {
-		throw new UnsupportedOperationException();
+		try {
+
+			ScoreDoc[] scoreDocs = searcher.search(query, null, Integer.MAX_VALUE).scoreDocs;
+
+			List<KanjiEntry> result = new ArrayList<KanjiEntry>();
+
+			for (ScoreDoc scoreDoc : scoreDocs) {
+
+				Document foundDocument = searcher.doc(scoreDoc.doc);
+
+				String idString = foundDocument.get(LuceneStatic.kanjiEntry_id);
+
+				String kanjiString = foundDocument.get(LuceneStatic.kanjiEntry_kanji);				
+
+				String generated = foundDocument.get(LuceneStatic.kanjiEntry_generated);
+
+				String strokeCountString = null;
+				
+				List<String> radicalsList = null;
+				List<String> onReadingList = null;
+				List<String> kunReadingList = null;
+				List<String> strokePathsList = null;
+				
+				if (withDetails == true) {
+					strokeCountString = foundDocument.get(LuceneStatic.kanjiEntry_kanjiDic2Entry_strokeCount);
+					
+					radicalsList = Arrays.asList(foundDocument.getValues(LuceneStatic.kanjiEntry_kanjiDic2Entry_radicalsList));
+
+					onReadingList = Arrays.asList(foundDocument.getValues(LuceneStatic.kanjiEntry_kanjiDic2Entry_onReadingList));
+					kunReadingList = Arrays.asList(foundDocument.getValues(LuceneStatic.kanjiEntry_kanjiDic2Entry_kunReadingList));
+
+					strokePathsList = Arrays.asList(foundDocument.getValues(LuceneStatic.kanjiEntry_kanjivgEntry_strokePaths));
+				}				
+
+				List<String> polishTranslateList = Arrays.asList(foundDocument.getValues(LuceneStatic.kanjiEntry_polishTranslatesList));
+
+				List<String> groupsList = Arrays.asList(foundDocument.getValues(LuceneStatic.kanjiEntry_groupsList));
+
+				String infoString = foundDocument.get(LuceneStatic.kanjiEntry_info);
+
+				KanjiEntry kanjiEntry = Utils.parseKanjiEntry(idString, kanjiString, strokeCountString, radicalsList,
+						onReadingList, kunReadingList, strokePathsList, polishTranslateList, infoString, generated,
+						groupsList);
+
+				result.add(kanjiEntry);
+			}				
+
+			return result;
+
+		} catch (IOException e) {
+			throw new DictionaryException("Błąd podczas wyszukiwania wszystkich znaków kanji po ilościach kresek: " + e);
+		}		
 	}
 }
