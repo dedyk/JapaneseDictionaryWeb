@@ -31,6 +31,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
+import pl.idedyk.japanese.dictionary.api.dictionary.lucene.LuceneStatic;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
@@ -764,13 +765,16 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 		query.add(phraseQuery, Occur.MUST);
 
-		BooleanQuery kanjiBooleanQuery = new BooleanQuery();
+		if (radicals.length > 0) {
+			BooleanQuery kanjiBooleanQuery = new BooleanQuery();
+			
 
-		for (String currentRadical : radicals) {
-			kanjiBooleanQuery.add(createQuery(currentRadical, LuceneStatic.kanjiEntry_kanjiDic2Entry_radicalsList, FindKanjiRequest.WordPlaceSearch.EXACT), Occur.MUST);
-		}
+			for (String currentRadical : radicals) {
+				kanjiBooleanQuery.add(createQuery(currentRadical, LuceneStatic.kanjiEntry_kanjiDic2Entry_radicalsList, FindKanjiRequest.WordPlaceSearch.EXACT), Occur.MUST);
+			}
 
-		query.add(kanjiBooleanQuery, Occur.MUST);
+			query.add(kanjiBooleanQuery, Occur.MUST);			
+		}		
 
 		Set<String> result = new HashSet<String>();
 
