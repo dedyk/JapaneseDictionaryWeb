@@ -432,7 +432,7 @@ public class LuceneDBGenerator {
 			Integer freq = kanjiDic2Entry.getFreq();
 			
 			if (freq != null) {
-				document.add(new IntField(LuceneStatic.kanjiEntry_kanjiDic2Entry_jlpt, freq, Field.Store.YES));
+				document.add(new IntField(LuceneStatic.kanjiEntry_kanjiDic2Entry_freq, freq, Field.Store.YES));
 			}
 		}
 		
