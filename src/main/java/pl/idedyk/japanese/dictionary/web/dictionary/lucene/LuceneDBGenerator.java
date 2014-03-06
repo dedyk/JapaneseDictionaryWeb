@@ -16,7 +16,6 @@ import java.util.Set;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
@@ -256,10 +255,10 @@ public class LuceneDBGenerator {
 		Document document = new Document();
 		
 		// object type
-		document.add(new Field(LuceneStatic.objectType, LuceneStatic.uniqueDictionaryEntryGroupEnumList_objectType, Field.Store.YES, Index.NOT_ANALYZED));
+		document.add(new StringField(LuceneStatic.objectType, LuceneStatic.uniqueDictionaryEntryGroupEnumList_objectType, Field.Store.YES));
 
 		for (GroupEnum groupEnum : uniqueDictionaryEntryGroupEnumList) {
-			document.add(new Field(LuceneStatic.uniqueDictionaryEntryGroupEnumList_groupsList, groupEnum.getValue(), Field.Store.YES, Index.NOT_ANALYZED));
+			document.add(new StringField(LuceneStatic.uniqueDictionaryEntryGroupEnumList_groupsList, groupEnum.getValue(), Field.Store.YES));
 		}		
 		
 		indexWriter.addDocument(document);
@@ -492,10 +491,10 @@ public class LuceneDBGenerator {
 		Document document = new Document();
 		
 		// object type
-		document.add(new Field(LuceneStatic.objectType, LuceneStatic.allAvailableKanjiRadicals_objectType, Field.Store.YES, Index.NOT_ANALYZED));
+		document.add(new StringField(LuceneStatic.objectType, LuceneStatic.allAvailableKanjiRadicals_objectType, Field.Store.YES));
 
 		for (String radical : allAvailableRadicalList) {
-			document.add(new Field(LuceneStatic.allAvailableKanjiRadicals_radicalsList, radical, Field.Store.YES, Index.NOT_ANALYZED));
+			document.add(new StringField(LuceneStatic.allAvailableKanjiRadicals_radicalsList, radical, Field.Store.YES));
 		}		
 		
 		indexWriter.addDocument(document);
