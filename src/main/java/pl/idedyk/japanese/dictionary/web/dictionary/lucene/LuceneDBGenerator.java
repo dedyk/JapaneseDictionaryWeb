@@ -8,12 +8,15 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
@@ -115,6 +118,8 @@ public class LuceneDBGenerator {
 
 		CsvReader csvReader = new CsvReader(new InputStreamReader(dictionaryInputStream), ',');
 
+		Set<GroupEnum> uniqueDictionaryEntryGroupEnumSet = new HashSet<GroupEnum>();
+
 		while (csvReader.readRecord()) {
 
 			String idString = csvReader.get(0);
@@ -152,7 +157,11 @@ public class LuceneDBGenerator {
 			}
 
 			addDictionaryEntry(indexWriter, entry);
+
+			uniqueDictionaryEntryGroupEnumSet.addAll(entry.getGroups());
 		}
+
+		addDictionaryEntryUniqueGroupEnum(indexWriter, uniqueDictionaryEntryGroupEnumSet);
 
 		csvReader.close();
 	}
@@ -240,6 +249,22 @@ public class LuceneDBGenerator {
 		indexWriter.addDocument(document);
 	}
 
+	private static void addDictionaryEntryUniqueGroupEnum(IndexWriter indexWriter, Set<GroupEnum> uniqueDictionaryEntryGroupEnumSet) throws IOException {
+		
+		List<GroupEnum> uniqueDictionaryEntryGroupEnumList = GroupEnum.sortGroups(new ArrayList<GroupEnum>(uniqueDictionaryEntryGroupEnumSet));
+				
+		Document document = new Document();
+		
+		// object type
+		document.add(new Field(LuceneStatic.objectType, LuceneStatic.uniqueDictionaryEntryGroupEnumList_objectType, Field.Store.YES, Index.NOT_ANALYZED));
+
+		for (GroupEnum groupEnum : uniqueDictionaryEntryGroupEnumList) {
+			document.add(new Field(LuceneStatic.uniqueDictionaryEntryGroupEnumList_groupsList, groupEnum.getValue(), Field.Store.YES, Index.NOT_ANALYZED));
+		}		
+		
+		indexWriter.addDocument(document);
+	}	
+	
 	private static List<RadicalInfo> readRadicalEntriesFromCsv(InputStream radicalInputStream) throws IOException,
 			DictionaryException {
 
@@ -286,6 +311,8 @@ public class LuceneDBGenerator {
 
 			radicalListMapCache.put(radical, currentRadicalInfo);
 		}
+		
+		Set<String> allAvailableRadicalSet = new HashSet<String>();
 
 		CsvReader csvReader = new CsvReader(new InputStreamReader(kanjiInputStream), ',');
 
@@ -322,11 +349,16 @@ public class LuceneDBGenerator {
 			// update radical info
 			if (entry.getKanjiDic2Entry() != null) {
 				updateRadicalInfoUse(radicalListMapCache, entry.getKanjiDic2Entry().getRadicals());
+				
+				allAvailableRadicalSet.addAll(entry.getKanjiDic2Entry().getRadicals());
 			}
 
 			// add
 			addKanjiEntry(indexWriter, entry);
 		}
+		
+		// add available radical list
+		addAvailableRadicalList(indexWriter, allAvailableRadicalSet);
 
 		csvReader.close();
 	}
@@ -451,6 +483,22 @@ public class LuceneDBGenerator {
 		
 
 		indexWriter.addDocument(document);		
+	}
+	
+	private static void addAvailableRadicalList(IndexWriter indexWriter, Set<String> allAvailableRadicalSet) throws IOException {
+		
+		List<String> allAvailableRadicalList = new ArrayList<String>(allAvailableRadicalSet);
+				
+		Document document = new Document();
+		
+		// object type
+		document.add(new Field(LuceneStatic.objectType, LuceneStatic.allAvailableKanjiRadicals_objectType, Field.Store.YES, Index.NOT_ANALYZED));
+
+		for (String radical : allAvailableRadicalList) {
+			document.add(new Field(LuceneStatic.allAvailableKanjiRadicals_radicalsList, radical, Field.Store.YES, Index.NOT_ANALYZED));
+		}		
+		
+		indexWriter.addDocument(document);
 	}
 	
 	private static String emptyIfNull(String text) {
