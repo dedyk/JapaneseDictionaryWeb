@@ -200,13 +200,13 @@ public class LuceneDBGenerator {
 		document.add(new StringField(LuceneStatic.dictionaryEntry_prefixKana, emptyIfNull(dictionaryEntry.getPrefixKana()), Field.Store.YES));
 		
 		// kanji
-		document.add(new TextField(LuceneStatic.dictionaryEntry_kanji, emptyIfNull(dictionaryEntry.getKanji()), Field.Store.YES));
+		document.add(new StringField(LuceneStatic.dictionaryEntry_kanji, emptyIfNull(dictionaryEntry.getKanji()), Field.Store.YES));
 		
 		// kanaList
 		List<String> kanaList = dictionaryEntry.getKanaList();
 		
 		for (String currentKana : kanaList) {
-			document.add(new TextField(LuceneStatic.dictionaryEntry_kanaList, currentKana, Field.Store.YES));
+			document.add(new StringField(LuceneStatic.dictionaryEntry_kanaList, currentKana, Field.Store.YES));
 		}
 		
 		// prefixRomaji
@@ -226,24 +226,19 @@ public class LuceneDBGenerator {
 			
 			document.add(new TextField(LuceneStatic.dictionaryEntry_translatesList, currentTranslate, Field.Store.YES));
 			
-			if (Utils.containsPolishChars(currentTranslate) == true) {
-				String currentTranslateWithoutPolishChars = Utils.removePolishChars(currentTranslate);
+			String currentTranslateWithoutPolishChars = Utils.removePolishChars(currentTranslate);
 				
-				document.add(new TextField(LuceneStatic.dictionaryEntry_translatesListWithoutPolishChars, currentTranslateWithoutPolishChars, Field.Store.YES));
-			}
+			document.add(new TextField(LuceneStatic.dictionaryEntry_translatesListWithoutPolishChars, currentTranslateWithoutPolishChars, Field.Store.YES));
 		}
 		
 		// info
 		String info = emptyIfNull(dictionaryEntry.getInfo());
 		
 		document.add(new TextField(LuceneStatic.dictionaryEntry_info, info, Field.Store.YES));
-		
-		if (Utils.containsPolishChars(info) == true) {
 			
-			String infoWithoutPolishChars = Utils.removePolishChars(info);
+		String infoWithoutPolishChars = Utils.removePolishChars(info);
 			
-			document.add(new TextField(LuceneStatic.dictionaryEntry_infoWithoutPolishChars, infoWithoutPolishChars, Field.Store.YES));
-		}
+		document.add(new TextField(LuceneStatic.dictionaryEntry_infoWithoutPolishChars, infoWithoutPolishChars, Field.Store.YES));
 		
 		indexWriter.addDocument(document);
 	}
@@ -387,7 +382,7 @@ public class LuceneDBGenerator {
 		document.add(new IntField(LuceneStatic.kanjiEntry_id, kanjiEntry.getId(), Field.Store.YES));
 
 		// kanji
-		document.add(new TextField(LuceneStatic.kanjiEntry_kanji, emptyIfNull(kanjiEntry.getKanji()), Field.Store.YES));
+		document.add(new StringField(LuceneStatic.kanjiEntry_kanji, emptyIfNull(kanjiEntry.getKanji()), Field.Store.YES));
 		
 		// polishTranslatesList
 		List<String> polishtranslatesList = kanjiEntry.getPolishTranslates();
@@ -396,11 +391,9 @@ public class LuceneDBGenerator {
 			
 			document.add(new TextField(LuceneStatic.kanjiEntry_polishTranslatesList, currentTranslate, Field.Store.YES));
 			
-			if (Utils.containsPolishChars(currentTranslate) == true) {
-				String currentTranslateWithoutPolishChars = Utils.removePolishChars(currentTranslate);
+			String currentTranslateWithoutPolishChars = Utils.removePolishChars(currentTranslate);
 				
-				document.add(new TextField(LuceneStatic.kanjiEntry_infoWithoutPolishChars, currentTranslateWithoutPolishChars, Field.Store.YES));
-			}
+			document.add(new TextField(LuceneStatic.kanjiEntry_infoWithoutPolishChars, currentTranslateWithoutPolishChars, Field.Store.YES));
 		}
 		
 		// info
@@ -408,12 +401,9 @@ public class LuceneDBGenerator {
 		
 		document.add(new TextField(LuceneStatic.kanjiEntry_info, info, Field.Store.YES));
 		
-		if (Utils.containsPolishChars(info) == true) {
+		String infoWithoutPolishChars = Utils.removePolishChars(info);
 			
-			String infoWithoutPolishChars = Utils.removePolishChars(info);
-			
-			document.add(new TextField(LuceneStatic.kanjiEntry_infoWithoutPolishChars, infoWithoutPolishChars, Field.Store.YES));
-		}
+		document.add(new TextField(LuceneStatic.kanjiEntry_infoWithoutPolishChars, infoWithoutPolishChars, Field.Store.YES));
 
 		// generated
 		document.add(new StringField(LuceneStatic.kanjiEntry_generated, String.valueOf(kanjiEntry.isGenerated()), Field.Store.YES));
@@ -436,21 +426,21 @@ public class LuceneDBGenerator {
 			List<String> onReadingList = kanjiDic2Entry.getOnReading();
 			
 			for (String currentOnReading : onReadingList) {
-				document.add(new TextField(LuceneStatic.kanjiEntry_kanjiDic2Entry_onReadingList, currentOnReading, Field.Store.YES));
+				document.add(new StringField(LuceneStatic.kanjiEntry_kanjiDic2Entry_onReadingList, currentOnReading, Field.Store.YES));
 			}
 
 			// kanjiDic2Entry_kunReadingList
 			List<String> kunReadingList = kanjiDic2Entry.getKunReading();
 			
 			for (String currentKunReading : kunReadingList) {
-				document.add(new TextField(LuceneStatic.kanjiEntry_kanjiDic2Entry_kunReadingList, currentKunReading, Field.Store.YES));
+				document.add(new StringField(LuceneStatic.kanjiEntry_kanjiDic2Entry_kunReadingList, currentKunReading, Field.Store.YES));
 			}
 			
 			// kanjiDic2Entry_radicalsList
 			List<String> radicalsList = kanjiDic2Entry.getRadicals();
 			
 			for (String currentRadical : radicalsList) {
-				document.add(new TextField(LuceneStatic.kanjiEntry_kanjiDic2Entry_radicalsList, currentRadical, Field.Store.YES));
+				document.add(new StringField(LuceneStatic.kanjiEntry_kanjiDic2Entry_radicalsList, currentRadical, Field.Store.YES));
 			}
 			
 			// kanjiDic2Entry_jlpt
