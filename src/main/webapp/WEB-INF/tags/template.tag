@@ -119,28 +119,28 @@
 			$( "#wordDictionaryButton" ).click(function( event ) {
 				var link = this;
 				
-				window.location = $(link).attr("data-href");
+				window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/" + $(link).attr("data-href");
 			});
 						
 			$( "#kanjiDictionaryButton" ).button();
 			$( "#kanjiDictionaryButton" ).click(function( event ) {
 				var link = this;
 				
-				window.location = $(link).attr("data-href");
+				window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/" + $(link).attr("data-href");
 			});
 			
 			$( "#suggestionButton" ).button();
 			$( "#suggestionButton" ).click(function( event ) {
 				var link = this;
 				
-				window.location = $(link).attr("data-href");
+				window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/" + $(link).attr("data-href");
 			});
 
 			$( "#infoButton" ).button();
 			$( "#infoButton" ).click(function( event ) {
 				var link = this;
 				
-				window.location = $(link).attr("data-href");
+				window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/" + $(link).attr("data-href");
 			});
 		});
 		

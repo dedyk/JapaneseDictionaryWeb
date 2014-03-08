@@ -2,6 +2,7 @@ package pl.idedyk.japanese.dictionary.web.dictionary.lucene;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -22,8 +24,12 @@ import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.spell.PlainTextDictionary;
+import org.apache.lucene.search.suggest.Lookup.LookupResult;
+import org.apache.lucene.search.suggest.analyzing.AnalyzingSuggester;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.IDatabaseConnector;
 import pl.idedyk.japanese.dictionary.api.dictionary.Utils;
@@ -44,7 +50,7 @@ public class LuceneDatabase implements IDatabaseConnector {
 	private String dbDir;
 
 	private Directory index;
-	//private SimpleAnalyzer analyzer;
+	private SimpleAnalyzer analyzer;
 	private IndexReader reader;
 	private IndexSearcher searcher;
 
@@ -55,7 +61,7 @@ public class LuceneDatabase implements IDatabaseConnector {
 	public void open() throws IOException {
 
 		index = FSDirectory.open(new File(dbDir));
-		//analyzer = new SimpleAnalyzer(Version.LUCENE_47);
+		analyzer = new SimpleAnalyzer(Version.LUCENE_47);
 		reader = DirectoryReader.open(index);
 		searcher = new IndexSearcher(reader);
 	}
@@ -1132,5 +1138,33 @@ public class LuceneDatabase implements IDatabaseConnector {
 		} catch (IOException e) {
 			throw new DictionaryException("Błąd podczas wyszukiwania wszystkich znaków kanji po ilościach kresek: " + e);
 		}		
+	}
+
+	public List<String> getWordAutocomplete(String term, int limit) throws DictionaryException {
+		
+		List<String> result = new ArrayList<String>();
+		
+		int fixme = 1;
+		
+		try {
+			StringReader stringReader = new StringReader("fryderyk\nmazurek\nkot\npies\nsłowniczek\njaponia");
+			
+			PlainTextDictionary plainTextDictionary = new PlainTextDictionary(stringReader);
+			
+			AnalyzingSuggester analyzingSuggester = new AnalyzingSuggester(analyzer);
+			
+			analyzingSuggester.build(plainTextDictionary);
+			
+			List<LookupResult> lookupResult = analyzingSuggester.lookup(term, false, limit);
+			
+			for (LookupResult currentLookupResult : lookupResult) {
+				result.add(currentLookupResult.key.toString());
+			}
+			
+			return result;
+			
+		} catch (IOException e) {
+			throw new DictionaryException("Błąd podczas działania modułu autocomplete: " + e);
+		}
 	}
 }

@@ -223,4 +223,9 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	public List<TransitiveIntransitivePair> getTransitiveIntransitivePairsList() {
 		return transitiveIntransitivePairsList;
 	}
+
+	public List<String> getWordAutocomplete(String term, int limit) throws DictionaryException {
+		
+		return luceneDatabase.getWordAutocomplete(term, limit);
+	}
 }

@@ -71,7 +71,7 @@
 			<artifactId>artifact</artifactId>
 			<version>anything</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140306.jar</systemPath>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140308.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -108,6 +108,19 @@
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-queryparser</artifactId>
 			<version>${lucene.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-suggest</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20140107</version>
 		</dependency>
 
 		<dependency>
