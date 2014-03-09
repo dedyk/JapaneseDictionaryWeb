@@ -17,7 +17,7 @@ public class CommonController implements HandlerExceptionResolver {
 	public ModelAndView resolveException(HttpServletRequest request,
 			HttpServletResponse response, Object obj, Exception exc) {
 		
-		logger.error("Blad podczas dzialania kontrolera", exc);
+		logger.error("Błąd podczas działania kontrolera", exc);
 
 		Map<String, Object> model = new HashMap<String, Object>();
 

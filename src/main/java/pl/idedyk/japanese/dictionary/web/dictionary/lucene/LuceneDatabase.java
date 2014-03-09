@@ -2,7 +2,6 @@ package pl.idedyk.japanese.dictionary.web.dictionary.lucene;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,7 +23,7 @@ import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.spell.PlainTextDictionary;
+import org.apache.lucene.search.spell.LuceneDictionary;
 import org.apache.lucene.search.suggest.Lookup.LookupResult;
 import org.apache.lucene.search.suggest.analyzing.AnalyzingSuggester;
 import org.apache.lucene.store.Directory;
@@ -54,6 +53,9 @@ public class LuceneDatabase implements IDatabaseConnector {
 	private IndexReader reader;
 	private IndexSearcher searcher;
 
+	private LuceneDictionary dictionaryEntryDictionary;
+	private AnalyzingSuggester dictionaryEntryAnalyzingSuggester;
+
 	public LuceneDatabase(String dbDir) {
 		this.dbDir = dbDir;		
 	}
@@ -64,14 +66,20 @@ public class LuceneDatabase implements IDatabaseConnector {
 		analyzer = new SimpleAnalyzer(Version.LUCENE_47);
 		reader = DirectoryReader.open(index);
 		searcher = new IndexSearcher(reader);
+
+		dictionaryEntryDictionary = new LuceneDictionary(reader, LuceneStatic.dictionaryEntry_sugestionList);				
+		dictionaryEntryAnalyzingSuggester = new AnalyzingSuggester(analyzer);
+
+		dictionaryEntryAnalyzingSuggester.build(dictionaryEntryDictionary);
+
 	}
 
 	public void close() throws IOException {
-		
+
 		if (reader != null) {
 			reader.close();
 		}
-		
+
 		if (index != null) {
 			index.close();
 		}
@@ -82,17 +90,17 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 		FindWordResult findWordResult = new FindWordResult();
 		findWordResult.result = new ArrayList<FindWordResult.ResultItem>();
-		
+
 		final int maxResult = 50;
-		
+
 		String[] wordSplited = findWordRequest.word.split("\\s+");
-		
+
 		String wordToLowerCase = findWordRequest.word.toLowerCase(Locale.getDefault());
 		String wordWithoutPolishCharsToLowerCase = Utils.removePolishChars(wordToLowerCase);
-		
+
 		//String[] wordSplitedToLowerCase = wordToLowerCase.split("\\s+");
 		String[] wordSplitedWithoutPolishCharsToLowerCase = wordWithoutPolishCharsToLowerCase.split("\\s+");
-		
+
 		try {
 			if (findWordRequest.wordPlaceSearch != WordPlaceSearch.ANY_PLACE) {
 
@@ -304,10 +312,10 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 		return findWordResult;
 	}
-	
+
 	@Override
 	public DictionaryEntry getDictionaryEntryById(String id) throws DictionaryException {
-		
+
 		BooleanQuery query = new BooleanQuery();
 
 		// object type
@@ -317,14 +325,14 @@ public class LuceneDatabase implements IDatabaseConnector {
 		query.add(phraseQuery, Occur.MUST);
 
 		query.add(NumericRangeQuery.newIntRange(LuceneStatic.dictionaryEntry_id, Integer.parseInt(id), Integer.parseInt(id), true, true), Occur.MUST);
-		
+
 		try {
 			ScoreDoc[] scoreDocs = searcher.search(query, null, 1).scoreDocs;
-			
+
 			if (scoreDocs.length == 0) {
 				return null;
 			}
-			
+
 			Document foundDocument = searcher.doc(scoreDocs[0].doc);
 
 			String idString = foundDocument.get(LuceneStatic.dictionaryEntry_id);
@@ -348,15 +356,15 @@ public class LuceneDatabase implements IDatabaseConnector {
 			return Utils.parseDictionaryEntry(idString, dictionaryEntryTypeList, attributeList,
 					groupsList, prefixKanaString, kanjiString, kanaList, prefixRomajiString, romajiList,
 					translateList, infoString);
-			
+
 		} catch (IOException e) {
 			throw new DictionaryException("Błąd podczas pobierania słowa: " + e);
 		}		
 	}
-	
+
 	@Override
 	public DictionaryEntry getNthDictionaryEntry(int nth) throws DictionaryException {
-		
+
 		BooleanQuery query = new BooleanQuery();
 
 		// object type
@@ -364,14 +372,14 @@ public class LuceneDatabase implements IDatabaseConnector {
 		phraseQuery.add(new Term(LuceneStatic.objectType, LuceneStatic.dictionaryEntry_objectType));
 
 		query.add(phraseQuery, Occur.MUST);
-		
+
 		try {
 			ScoreDoc[] scoreDocs = searcher.search(query, null, Integer.MAX_VALUE).scoreDocs;
-			
+
 			if (nth < 0 || nth >= scoreDocs.length) {
 				return null;
 			}
-			
+
 			Document foundDocument = searcher.doc(scoreDocs[nth].doc);
 
 			String idString = foundDocument.get(LuceneStatic.dictionaryEntry_id);
@@ -395,49 +403,49 @@ public class LuceneDatabase implements IDatabaseConnector {
 			return Utils.parseDictionaryEntry(idString, dictionaryEntryTypeList, attributeList,
 					groupsList, prefixKanaString, kanjiString, kanaList, prefixRomajiString, romajiList,
 					translateList, infoString);
-			
+
 		} catch (IOException e) {
 			throw new DictionaryException("Błąd podczas pobierania n-tego słowa: " + e);
 		}				
 	}
 
 	private Query createQuery(String[] wordSplited, String fieldName, WordPlaceSearch wordPlaceSearch) {
-		
+
 		BooleanQuery booleanQuery = new BooleanQuery();
 
 		if (wordPlaceSearch == WordPlaceSearch.START_WITH) {
-			
+
 			for (String currentWord : wordSplited) {
 				booleanQuery.add(new PrefixQuery(new Term(fieldName, currentWord)), Occur.MUST);
 			}
-			
+
 		} else if (wordPlaceSearch == WordPlaceSearch.EXACT) {
-			
+
 			for (String currentWord : wordSplited) {
 				booleanQuery.add(new TermQuery(new Term(fieldName, currentWord)), Occur.MUST);;
 			}
-			
+
 		} else {
 			throw new RuntimeException();
 		}
-		
+
 		return booleanQuery;
 	}
-	
+
 	private Query createQuery(String word, String fieldName, WordPlaceSearch wordPlaceSearch) {
-		
+
 		Query query = null;
 
 		if (wordPlaceSearch == WordPlaceSearch.START_WITH) {
 			query = new PrefixQuery(new Term(fieldName, word));
-			
+
 		} else if (wordPlaceSearch == WordPlaceSearch.EXACT) {
 			query = new TermQuery(new Term(fieldName, word));
-			
+
 		} else {
 			throw new RuntimeException();
 		}
-		
+
 		return query;
 	}
 
@@ -457,27 +465,27 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 		return query;
 	}
-	
+
 	private Query createQuery(String[] wordSplited, String fieldName, FindKanjiRequest.WordPlaceSearch wordPlaceSearch) {
-		
+
 		BooleanQuery booleanQuery = new BooleanQuery();
 
 		if (wordPlaceSearch == FindKanjiRequest.WordPlaceSearch.START_WITH) {
-			
+
 			for (String currentWord : wordSplited) {
 				booleanQuery.add(new PrefixQuery(new Term(fieldName, currentWord)), Occur.MUST);
 			}
-			
+
 		} else if (wordPlaceSearch == FindKanjiRequest.WordPlaceSearch.EXACT) {
-			
+
 			for (String currentWord : wordSplited) {
 				booleanQuery.add(new TermQuery(new Term(fieldName, currentWord)), Occur.MUST);;
 			}
-			
+
 		} else {
 			throw new RuntimeException();
 		}
-		
+
 		return booleanQuery;
 	}
 
@@ -502,10 +510,10 @@ public class LuceneDatabase implements IDatabaseConnector {
 			}
 		}	
 	}
-	
+
 	@Override
 	public int getDictionaryEntriesSize() {
-		
+
 		BooleanQuery query = new BooleanQuery();
 
 		// object type
@@ -516,15 +524,15 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 		try {
 			return searcher.search(query, null, Integer.MAX_VALUE).scoreDocs.length;			
-			
+
 		} catch (IOException e) {
 			throw new RuntimeException("Błąd podczas pobierania liczby słówek: " + e);
 		}		
 	}
-		
+
 	@Override
 	public List<GroupEnum> getDictionaryEntryGroupTypes() {
-		
+
 		BooleanQuery query = new BooleanQuery();
 
 		// object type
@@ -532,12 +540,12 @@ public class LuceneDatabase implements IDatabaseConnector {
 		phraseQuery.add(new Term(LuceneStatic.objectType, LuceneStatic.uniqueDictionaryEntryGroupEnumList_objectType));
 
 		query.add(phraseQuery, Occur.MUST);
-		
+
 		Set<String> uniqueGroupStringTypes = new HashSet<String>();
 
 		try {			
 			ScoreDoc[] scoreDocs = searcher.search(query, null, Integer.MAX_VALUE).scoreDocs;
-						
+
 			for (ScoreDoc scoreDoc : scoreDocs) {
 
 				Document foundDocument = searcher.doc(scoreDoc.doc);
@@ -546,11 +554,11 @@ public class LuceneDatabase implements IDatabaseConnector {
 			}
 
 			List<GroupEnum> result = GroupEnum.convertToListGroupEnum(new ArrayList<String>(uniqueGroupStringTypes));
-			
+
 			GroupEnum.sortGroups(result);
-			
+
 			return result;
-			
+
 		} catch (IOException e) {
 			throw new RuntimeException("Błąd podczas pobierania typów grup słówek: " + e);
 		}		
@@ -558,7 +566,7 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 	@Override
 	public List<DictionaryEntry> getGroupDictionaryEntries(GroupEnum groupEnum) throws DictionaryException {
-		
+
 		BooleanQuery query = new BooleanQuery();
 
 		// object type
@@ -566,12 +574,12 @@ public class LuceneDatabase implements IDatabaseConnector {
 		phraseQuery.add(new Term(LuceneStatic.objectType, LuceneStatic.dictionaryEntry_objectType));
 
 		query.add(phraseQuery, Occur.MUST);
-		
+
 		query.add(createQuery(groupEnum.getValue(), LuceneStatic.dictionaryEntry_groupsList, WordPlaceSearch.EXACT), Occur.MUST);
-		
+
 		try {
 			List<DictionaryEntry> result = new ArrayList<DictionaryEntry>();
-			
+
 			ScoreDoc[] scoreDocs = searcher.search(query, null, Integer.MAX_VALUE).scoreDocs;
 
 			for (ScoreDoc scoreDoc : scoreDocs) {
@@ -602,9 +610,9 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 				result.add(entry);
 			}
-			
+
 			return result;
-			
+
 		} catch (IOException e) {
 			throw new DictionaryException("Błąd podczas pobierania słówek dla grupy: " + e);
 		}		
@@ -615,14 +623,14 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 		FindKanjiResult findKanjiResult = new FindKanjiResult();
 		findKanjiResult.result = new ArrayList<KanjiEntry>();
-		
+
 		final int maxResult = 50;
-		
+
 		String[] wordSplited = findKanjiRequest.word.split("\\s+");
-		
+
 		String wordToLowerCase = findKanjiRequest.word.toLowerCase(Locale.getDefault());
 		String wordWithoutPolishCharsToLowerCase = Utils.removePolishChars(wordToLowerCase);
-		
+
 		//String[] wordSplitedToLowerCase = wordToLowerCase.split("\\s+");
 		String[] wordSplitedWithoutPolishCharsToLowerCase = wordWithoutPolishCharsToLowerCase.split("\\s+");
 
@@ -1018,10 +1026,10 @@ public class LuceneDatabase implements IDatabaseConnector {
 			throw new DictionaryException("Błąd podczas wyszukiwania wszystkich znaków kanji po ilościach kresek: " + e);
 		}
 	}
-	
+
 	@Override
 	public KanjiEntry getKanjiEntry(String kanji) throws DictionaryException {
-		
+
 		BooleanQuery query = new BooleanQuery();
 
 		// object type
@@ -1034,11 +1042,11 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 		try {
 			ScoreDoc[] scoreDocs = searcher.search(query, null, 1).scoreDocs;
-			
+
 			if (scoreDocs.length == 0) {
 				return null;
 			}
-			
+
 			Document foundDocument = searcher.doc(scoreDocs[0].doc);
 
 			String idString = foundDocument.get(LuceneStatic.kanjiEntry_id);
@@ -1065,7 +1073,7 @@ public class LuceneDatabase implements IDatabaseConnector {
 			return Utils.parseKanjiEntry(idString, kanjiString, strokeCountString, radicalsList,
 					onReadingList, kunReadingList, strokePathsList, polishTranslateList, infoString, generated,
 					groupsList);
-			
+
 		} catch (IOException e) {
 			throw new DictionaryException("Błąd podczas pobierania znaku kanji: " + e);
 		}		
@@ -1073,7 +1081,7 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 	@Override
 	public List<KanjiEntry> getAllKanjis(boolean withDetails, boolean addGenerated) throws DictionaryException {
-		
+
 		BooleanQuery query = new BooleanQuery();
 
 		// object type
@@ -1103,15 +1111,15 @@ public class LuceneDatabase implements IDatabaseConnector {
 				String generated = foundDocument.get(LuceneStatic.kanjiEntry_generated);
 
 				String strokeCountString = null;
-				
+
 				List<String> radicalsList = null;
 				List<String> onReadingList = null;
 				List<String> kunReadingList = null;
 				List<String> strokePathsList = null;
-				
+
 				if (withDetails == true) {
 					strokeCountString = foundDocument.get(LuceneStatic.kanjiEntry_kanjiDic2Entry_strokeCount);
-					
+
 					radicalsList = Arrays.asList(foundDocument.getValues(LuceneStatic.kanjiEntry_kanjiDic2Entry_radicalsList));
 
 					onReadingList = Arrays.asList(foundDocument.getValues(LuceneStatic.kanjiEntry_kanjiDic2Entry_onReadingList));
@@ -1141,30 +1149,15 @@ public class LuceneDatabase implements IDatabaseConnector {
 	}
 
 	public List<String> getWordAutocomplete(String term, int limit) throws DictionaryException {
-		
+
 		List<String> result = new ArrayList<String>();
-		
-		int fixme = 1;
-		
-		try {
-			StringReader stringReader = new StringReader("fryderyk\nmazurek\nkot\npies\nsłowniczek\njaponia");
-			
-			PlainTextDictionary plainTextDictionary = new PlainTextDictionary(stringReader);
-			
-			AnalyzingSuggester analyzingSuggester = new AnalyzingSuggester(analyzer);
-			
-			analyzingSuggester.build(plainTextDictionary);
-			
-			List<LookupResult> lookupResult = analyzingSuggester.lookup(term, false, limit);
-			
-			for (LookupResult currentLookupResult : lookupResult) {
-				result.add(currentLookupResult.key.toString());
-			}
-			
-			return result;
-			
-		} catch (IOException e) {
-			throw new DictionaryException("Błąd podczas działania modułu autocomplete: " + e);
+
+		List<LookupResult> lookupResult = dictionaryEntryAnalyzingSuggester.lookup(term, false, limit);
+
+		for (LookupResult currentLookupResult : lookupResult) {
+			result.add(currentLookupResult.key.toString());
 		}
+
+		return result;
 	}
 }

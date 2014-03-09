@@ -201,12 +201,14 @@ public class LuceneDBGenerator {
 		
 		// kanji
 		document.add(new StringField(LuceneStatic.dictionaryEntry_kanji, emptyIfNull(dictionaryEntry.getKanji()), Field.Store.YES));
+		document.add(new StringField(LuceneStatic.dictionaryEntry_sugestionList, emptyIfNull(dictionaryEntry.getKanji()), Field.Store.YES));
 		
 		// kanaList
 		List<String> kanaList = dictionaryEntry.getKanaList();
 		
 		for (String currentKana : kanaList) {
 			document.add(new StringField(LuceneStatic.dictionaryEntry_kanaList, currentKana, Field.Store.YES));
+			document.add(new StringField(LuceneStatic.dictionaryEntry_sugestionList, currentKana, Field.Store.YES));
 		}
 		
 		// prefixRomaji
@@ -217,6 +219,7 @@ public class LuceneDBGenerator {
 		
 		for (String currentRomaji : romajiList) {
 			document.add(new TextField(LuceneStatic.dictionaryEntry_romajiList, currentRomaji, Field.Store.YES));
+			document.add(new StringField(LuceneStatic.dictionaryEntry_sugestionList, currentRomaji, Field.Store.YES));
 		}
 		
 		// translatesList
@@ -225,6 +228,7 @@ public class LuceneDBGenerator {
 		for (String currentTranslate : translates) {
 			
 			document.add(new TextField(LuceneStatic.dictionaryEntry_translatesList, currentTranslate, Field.Store.YES));
+			document.add(new StringField(LuceneStatic.dictionaryEntry_sugestionList, currentTranslate, Field.Store.YES));
 			
 			String currentTranslateWithoutPolishChars = Utils.removePolishChars(currentTranslate);
 				

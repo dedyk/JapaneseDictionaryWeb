@@ -225,7 +225,6 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	}
 
 	public List<String> getWordAutocomplete(String term, int limit) throws DictionaryException {
-		
 		return luceneDatabase.getWordAutocomplete(term, limit);
 	}
 }

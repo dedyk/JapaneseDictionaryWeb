@@ -75,7 +75,7 @@
 				<table>
 					<tr>
 						<td>
-							<img src="img/japan-flag.png" align="middle">
+							<img src="${pageContext.request.contextPath}/img/japan-flag.png" align="middle">
 						</td>
 						
 						<td style="font-size:150%;" >

@@ -3,8 +3,7 @@ package pl.idedyk.japanese.dictionary.web.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +20,14 @@ import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 @Controller
 public class WordDictionaryController extends CommonController {
 	
+	private static final Logger logger = Logger.getLogger(WordDictionaryController.class);
+	
 	@Autowired
 	private DictionaryManager dictionaryManager;
-	
-	@Autowired
-	private ServletContext servletContext;
-	
+		
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
 	public String start(Map<String, Object> model) {
-		
-		model.put("wordDictionaryActionSearchPath", servletContext.getContextPath() + "/wordDictionary/search");
-		model.put("wordDictionaryAutocompletePath", servletContext.getContextPath() + "/wordDictionary/autocomplete");
-		
+				
 		model.put("command", new WordDictionarySearchModel());
 		
 		return "wordDictionary";
@@ -42,19 +37,26 @@ public class WordDictionaryController extends CommonController {
 	public String search(@ModelAttribute("wordDictionarySearchModel") WordDictionarySearchModel searchModel,
 			Map<String, Object> model) {
 		
-		System.out.println("AAAAA: " + searchModel.getWord());
-		
-		// FIXME
+		int fixme = 1;
+		// szukanie
+				
 		model.put("command", new WordDictionarySearchModel());
 		
 		return "wordDictionary";
+	}
+
+	@RequestMapping(value = "/wordDictionary/search", method = RequestMethod.GET)
+	public String searchRedirect(@ModelAttribute("wordDictionarySearchModel") WordDictionarySearchModel searchModel,
+			Map<String, Object> model) {
+		
+		return "redirect:";
 	}
 	
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
 			value = "/wordDictionary/autocomplete", method = RequestMethod.GET)
 	public @ResponseBody String autocomplete(@RequestParam(value="term", required=true) String term) {
-
-		int fixme = 1;
+		
+		logger.info("Podpowiadacz słówkowy dla wyrażenia: " + term);
 		
 		try {
 			List<String> wordAutocomplete = dictionaryManager.getWordAutocomplete(term, 5);
@@ -77,7 +79,4 @@ public class WordDictionaryController extends CommonController {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	
-	
 }

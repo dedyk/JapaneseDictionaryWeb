@@ -6,8 +6,8 @@
 
 <t:template pageTitle="Mały, skromny japoński pomocnik | 小さくて奥ゆかしい日本語ヘルパー">
 	<jsp:body>
-	
-		<form:form method="post" action="${wordDictionaryActionSearchPath}">
+			
+		<form:form method="post" action="${pageContext.request.contextPath}/wordDictionary/search">
 			
 			<table>
 				<tr>
@@ -49,7 +49,7 @@
 		
 		<script>
 			$( "#word" ).autocomplete({
-			 	source: "${wordDictionaryAutocompletePath}",
+			 	source: "${pageContext.request.contextPath}/wordDictionary/autocomplete",
 			 	minLength: 2
 			});
 
