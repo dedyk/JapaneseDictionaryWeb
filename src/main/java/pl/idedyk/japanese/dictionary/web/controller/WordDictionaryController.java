@@ -14,7 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest.WordPlaceSearch;
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
+import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel.DictionaryType;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 
 @Controller
@@ -27,8 +31,26 @@ public class WordDictionaryController extends CommonController {
 		
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
 	public String start(Map<String, Object> model) {
-				
-		model.put("command", new WordDictionarySearchModel());
+		
+		// utworzenie model szukania
+		WordDictionarySearchModel wordDictionarySearchModel = new WordDictionarySearchModel();
+		
+		// ustawienie domyslnych wartosci model szukania
+		wordDictionarySearchModel.setWordPlace(WordPlaceSearch.START_WITH.toString());
+		
+		wordDictionarySearchModel.setSearchKanji(true);
+		wordDictionarySearchModel.setSearchKana(true);
+		wordDictionarySearchModel.setSearchRomaji(true);
+		wordDictionarySearchModel.setSearchTranslate(true);
+		
+		// pobranie wyswietlanych typow
+		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
+		
+		for (DictionaryEntryType dictionaryEntryType : addableDictionaryEntryList) {
+			wordDictionarySearchModel.cgtDictionaryTypeList().add(new DictionaryType(dictionaryEntryType.getName(), true));
+		}		
+		
+		model.put("command", wordDictionarySearchModel);
 		
 		return "wordDictionary";
 	}
@@ -39,8 +61,12 @@ public class WordDictionaryController extends CommonController {
 		
 		int fixme = 1;
 		// szukanie
-				
-		model.put("command", new WordDictionarySearchModel());
+		
+		FindWordRequest findWordRequest = new FindWordRequest();
+		
+		//findWordRequest.
+		
+		model.put("command", searchModel);
 		
 		return "wordDictionary";
 	}

@@ -14,44 +14,61 @@
 					<td><form:label path="word">Szukane słowo</form:label></td>
 					<td><form:input id="word" path="word"/></td>				
 				</tr>
-			
-			
-			
+				
 				<tr>
+					<td><form:label path="wordPlace">Szukane ciągu</form:label></td>
 					<td>
-						<input type="submit" value="Szukaj" />					
+						<table>
+							<tr><td><form:radiobutton path="wordPlace" label="od pierwszego znaku w słowie" value="START_WITH" /></td></tr>
+							<tr><td><form:radiobutton path="wordPlace" label="w dowolnym miejscu w słowie" value="ANY_PLACE" /></td></tr>
+							<tr><td><form:radiobutton path="wordPlace" label="dokładnego" value="EXACT" /></td></tr>
+						</table>
+					</td>
+				</tr>
+				
+				<tr>
+					<td><form:label path="">Szukaj w</form:label></td>
+					<td>
+						<table>
+							<tr><td><form:checkbox path="searchKanji" label="kanji"/></td></tr>
+							<tr><td><form:checkbox path="searchKana" label="czytanie japońskie"/></td></tr>
+							<tr><td><form:checkbox path="searchRomaji" label="czytanie romaji"/></td></tr>
+							<tr><td><form:checkbox path="searchTranslate" label="tłumaczenia"/></td></tr>
+							<tr><td><form:checkbox path="searchInfo" label="informacje dodatkowe"/></td></tr>
+						</table>
+					</td>				
+				</tr>
+				
+				<tr>
+					<td><form label path="">Typy szukanych słów</form></td>
+					<td>
+						<table>
+							<c:forEach begin="0" items="${command.dictionaryTypeList}" varStatus="varStatus">
+								<tr><td><form:checkbox path="dictionaryTypeList[${varStatus.index}].search" label="${command.dictionaryTypeList[varStatus.index].label}" /></td></tr>							
+							</c:forEach>
+						</table>
+					</td>				
+				</tr>				
+						
+				<tr>
+					<td></td>
+					<td>
+						<input id="searchButton" type="submit" value="Szukaj" />					
 					</td>				
 				</tr>			
 			</table>
 			
 			
 			
-		</form:form>
-		
-		Słowniczek
-		
-		<p>Szukaza fraza</p>
-		<p>Pole do wpisywania</p>
-		<p>Podpowiadacz</p>
-		<p>Szukaj ciagu</p>
-		<p>od pierwszego znaku w słowie</p>
-		<p>w dowolnym miejscu w słowie</p>
-		<p>dokładnego</p>
-		<p>Szukaj w</p>
-		<p>kanji</p>
-		<p>czytanie japońskie</p>
-		<p>czytanie romaji</p>
-		<p>tlumaczenia</p>
-		<p>informacje dodatkowe</p>
-		<p>typy szukanych słów</p>
-		<p>generowane</p>
-		
+		</form:form>		
 		
 		<script>
 			$( "#word" ).autocomplete({
 			 	source: "${pageContext.request.contextPath}/wordDictionary/autocomplete",
 			 	minLength: 2
 			});
+
+			$( "#searchButton" ).button();
 
 		</script>		
 	</jsp:body>
