@@ -47,8 +47,8 @@ public class WordDictionaryController extends CommonController {
 		
 		for (DictionaryEntryType dictionaryEntryType : addableDictionaryEntryList) {
 			wordDictionarySearchModel.addDictionaryType(dictionaryEntryType);
-		}		
-				
+		}
+		
 		model.put("addableDictionaryEntryList", addableDictionaryEntryList);
 		model.put("command", wordDictionarySearchModel);
 		
@@ -62,7 +62,15 @@ public class WordDictionaryController extends CommonController {
 		int fixme = 1;
 		// szukanie
 		
+		List<String> dictionaryTypeStringList = searchModel.getDictionaryTypeStringList();
+		
+		for (String string : dictionaryTypeStringList) {
+			System.out.println("AAAA: " + string);
+		}
+		
 		// usuwanie przecinkow ze slow
+		
+		// walidator
 		
 		FindWordRequest findWordRequest = new FindWordRequest();
 		

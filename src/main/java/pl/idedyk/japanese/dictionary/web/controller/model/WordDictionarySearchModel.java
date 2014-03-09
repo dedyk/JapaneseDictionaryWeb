@@ -21,7 +21,7 @@ public class WordDictionarySearchModel {
 	
 	private Boolean searchInfo;
 	
-	private List<Boolean> dictionaryTypeBooleanList;
+	private List<String> dictionaryTypeStringList;
 	
 	public String getWord() {
 		return word;
@@ -79,20 +79,20 @@ public class WordDictionarySearchModel {
 		this.searchInfo = searchInfo;
 	}
 
-	public List<Boolean> getDictionaryTypeBooleanList() {
-		return dictionaryTypeBooleanList;
+	public List<String> getDictionaryTypeStringList() {
+		return dictionaryTypeStringList;
 	}
 
-	public void setDictionaryTypeBooleanList(List<Boolean> dictionaryTypeBooleanList) {
-		this.dictionaryTypeBooleanList = dictionaryTypeBooleanList;
+	public void setDictionaryTypeStringList(List<String> dictionaryTypeStringList) {
+		this.dictionaryTypeStringList = dictionaryTypeStringList;
 	}
-
+	
 	public void addDictionaryType(DictionaryEntryType dictionaryEntryType) {
 		
-		if (dictionaryTypeBooleanList == null) {
-			dictionaryTypeBooleanList = new ArrayList<Boolean>();
+		if (dictionaryTypeStringList == null) {
+			dictionaryTypeStringList = new ArrayList<String>();
 		}
-				
-		dictionaryTypeBooleanList.add(Boolean.TRUE);
+		
+		dictionaryTypeStringList.add(dictionaryEntryType.toString());
 	}
 }
