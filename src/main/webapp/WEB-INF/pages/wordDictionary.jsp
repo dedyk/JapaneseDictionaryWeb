@@ -43,8 +43,8 @@
 					<td><form label path="">Typy szukanych słów</form></td>
 					<td>
 						<table>
-							<c:forEach begin="0" items="${command.dictionaryTypeList}" varStatus="varStatus">
-								<tr><td><form:checkbox path="dictionaryTypeList[${varStatus.index}].search" label="${command.dictionaryTypeList[varStatus.index].label}" /></td></tr>							
+							<c:forEach begin="0" items="${command.dictionaryTypeBooleanList}" varStatus="varStatus">
+								<tr><td><form:checkbox path="dictionaryTypeBooleanList[${varStatus.index}]" label="${addableDictionaryEntryList[varStatus.index].name}" /></td></tr>							
 							</c:forEach>
 						</table>
 					</td>				
@@ -57,8 +57,6 @@
 					</td>				
 				</tr>			
 			</table>
-			
-			
 			
 		</form:form>		
 		

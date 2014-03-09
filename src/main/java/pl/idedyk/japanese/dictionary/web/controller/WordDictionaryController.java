@@ -18,7 +18,6 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
-import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel.DictionaryType;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 
 @Controller
@@ -42,14 +41,15 @@ public class WordDictionaryController extends CommonController {
 		wordDictionarySearchModel.setSearchKana(true);
 		wordDictionarySearchModel.setSearchRomaji(true);
 		wordDictionarySearchModel.setSearchTranslate(true);
-		
+				
 		// pobranie wyswietlanych typow
 		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
 		
 		for (DictionaryEntryType dictionaryEntryType : addableDictionaryEntryList) {
-			wordDictionarySearchModel.cgtDictionaryTypeList().add(new DictionaryType(dictionaryEntryType.getName(), true));
+			wordDictionarySearchModel.addDictionaryType(dictionaryEntryType);
 		}		
-		
+				
+		model.put("addableDictionaryEntryList", addableDictionaryEntryList);
 		model.put("command", wordDictionarySearchModel);
 		
 		return "wordDictionary";
@@ -62,10 +62,13 @@ public class WordDictionaryController extends CommonController {
 		int fixme = 1;
 		// szukanie
 		
+		// usuwanie przecinkow ze slow
+		
 		FindWordRequest findWordRequest = new FindWordRequest();
 		
 		//findWordRequest.
 		
+		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
 		
 		return "wordDictionary";

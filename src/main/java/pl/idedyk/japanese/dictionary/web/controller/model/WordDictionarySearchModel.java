@@ -3,6 +3,8 @@ package pl.idedyk.japanese.dictionary.web.controller.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+
 public class WordDictionarySearchModel {
 	
 	private String word;
@@ -19,8 +21,8 @@ public class WordDictionarySearchModel {
 	
 	private Boolean searchInfo;
 	
-	private List<DictionaryType> dictionaryTypeList;
-
+	private List<Boolean> dictionaryTypeBooleanList;
+	
 	public String getWord() {
 		return word;
 	}
@@ -76,49 +78,21 @@ public class WordDictionarySearchModel {
 	public void setSearchInfo(Boolean searchInfo) {
 		this.searchInfo = searchInfo;
 	}
-	
-	public List<DictionaryType> getDictionaryTypeList() {
-		return dictionaryTypeList;
-	}
-	
-	public List<DictionaryType> cgtDictionaryTypeList() {
-		
-		if (dictionaryTypeList == null) {
-			dictionaryTypeList = new ArrayList<WordDictionarySearchModel.DictionaryType>();
-		}
-		
-		return dictionaryTypeList;
+
+	public List<Boolean> getDictionaryTypeBooleanList() {
+		return dictionaryTypeBooleanList;
 	}
 
-	public void setDictionaryTypeList(List<DictionaryType> dictionaryTypeList) {
-		this.dictionaryTypeList = dictionaryTypeList;
+	public void setDictionaryTypeBooleanList(List<Boolean> dictionaryTypeBooleanList) {
+		this.dictionaryTypeBooleanList = dictionaryTypeBooleanList;
 	}
 
-	public static class DictionaryType {
+	public void addDictionaryType(DictionaryEntryType dictionaryEntryType) {
 		
-		private String label;
-		
-		private boolean search;
-
-		public DictionaryType(String label, boolean search) {
-			this.label = label;
-			this.search = search;
+		if (dictionaryTypeBooleanList == null) {
+			dictionaryTypeBooleanList = new ArrayList<Boolean>();
 		}
-
-		public String getLabel() {
-			return label;
-		}
-
-		public void setLabel(String label) {
-			this.label = label;
-		}
-
-		public boolean getSearch() {
-			return search;
-		}
-
-		public void setSearch(boolean search) {
-			this.search = search;
-		}
+				
+		dictionaryTypeBooleanList.add(Boolean.TRUE);
 	}
 }
