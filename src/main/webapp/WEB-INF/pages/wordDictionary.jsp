@@ -43,9 +43,16 @@
 					<td><form label path="">Typy szukanych słów</form></td>
 					<td>
 						<table>
+							<form:select id="dictionaryTypeListId" path="dictionaryTypeStringList" multiple="true" size="${fn:length(addableDictionaryEntryList)}">
+								<c:forEach items="${addableDictionaryEntryList}" var="currentAddableDictionaryEntry">
+									<form:option value="${currentAddableDictionaryEntry}" label="${currentAddableDictionaryEntry.name}" />
+								</c:forEach>								
+							</form:select>
+<%--  
 							<c:forEach items="${addableDictionaryEntryList}" var="currentAddableDictionaryEntry">
 								<tr><td><form:checkbox path="dictionaryTypeStringList" label="${currentAddableDictionaryEntry.name}" value="${currentAddableDictionaryEntry}"/></td></tr>							
 							</c:forEach>
+--%>
 						</table>
 					</td>				
 				</tr>				
@@ -61,13 +68,18 @@
 		</form:form>		
 		
 		<script>
-			$( "#word" ).autocomplete({
-			 	source: "${pageContext.request.contextPath}/wordDictionary/autocomplete",
-			 	minLength: 2
+			$(document).ready(function() {
+				
+				$( "#word" ).autocomplete({
+				 	source: "${pageContext.request.contextPath}/wordDictionary/autocomplete",
+				 	minLength: 2
+				});
+	
+				$( "#searchButton" ).button();
+
+				$( "#dictionaryTypeListId").multiselect();
+				
 			});
-
-			$( "#searchButton" ).button();
-
 		</script>		
 	</jsp:body>
 </t:template>

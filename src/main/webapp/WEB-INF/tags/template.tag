@@ -15,10 +15,18 @@
 
 	<title>${pageTitle}</title>
 
-	<link href="http://code.jquery.com/ui/1.10.4/themes/excite-bike/jquery-ui.css" rel="stylesheet">
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/excite-bike/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/jquery.multiselect/jquery.multiselect.css" rel="stylesheet">
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/jquery.multiselect/jquery.multiselect.filter.css" rel="stylesheet">
 	
-	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery-1.11.0.js"></script>
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery-ui-1.10.4.custom.js"></script>
+	
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery.multiselect.filter.js"></script>
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery.multiselect.js"></script>
+	
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery.multiselect.filter.pl.js"></script>
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery.multiselect.pl.js"></script>
 
 	<style>
 	
