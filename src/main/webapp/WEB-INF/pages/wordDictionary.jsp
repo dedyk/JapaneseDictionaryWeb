@@ -30,11 +30,13 @@
 					<td><form:label path="">Szukaj w</form:label></td>
 					<td>
 						<table>
-							<tr><td><form:checkbox path="searchKanji" label="kanji"/></td></tr>
-							<tr><td><form:checkbox path="searchKana" label="czytanie japońskie"/></td></tr>
-							<tr><td><form:checkbox path="searchRomaji" label="czytanie romaji"/></td></tr>
-							<tr><td><form:checkbox path="searchTranslate" label="tłumaczenia"/></td></tr>
-							<tr><td><form:checkbox path="searchInfo" label="informacje dodatkowe"/></td></tr>
+							<form:select id="searchInId" path="searchIn" multiple="true">
+								<form:option value="KANJI" label="kanji" />
+								<form:option value="KANA" label="czytanie japońskie" />
+								<form:option value="ROMAJI" label="czytanie romaji" />
+								<form:option value="TRANSLATE" label="tłumaczenia" />
+								<form:option value="INFO" label="informacje dodatkowe" />
+							</form:select>
 						</table>
 					</td>				
 				</tr>
@@ -43,7 +45,7 @@
 					<td><form label path="">Typy szukanych słów</form></td>
 					<td>
 						<table>
-							<form:select id="dictionaryTypeListId" path="dictionaryTypeStringList" multiple="true" size="${fn:length(addableDictionaryEntryList)}">
+							<form:select id="dictionaryTypeListId" path="dictionaryTypeStringList" multiple="true">
 								<c:forEach items="${addableDictionaryEntryList}" var="currentAddableDictionaryEntry">
 									<form:option value="${currentAddableDictionaryEntry}" label="${currentAddableDictionaryEntry.name}" />
 								</c:forEach>								
@@ -76,6 +78,8 @@
 				});
 	
 				$( "#searchButton" ).button();
+
+				$( "#searchInId").multiselect();
 
 				$( "#dictionaryTypeListId").multiselect();
 				

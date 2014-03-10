@@ -11,16 +11,8 @@ public class WordDictionarySearchModel {
 	
 	private String wordPlace;
 	
-	private Boolean searchKanji;
-	
-	private Boolean searchKana;
-	
-	private Boolean searchRomaji;
-	
-	private Boolean searchTranslate;
-	
-	private Boolean searchInfo;
-	
+	private List<String> searchIn;
+		
 	private List<String> dictionaryTypeStringList;
 	
 	public String getWord() {
@@ -39,44 +31,12 @@ public class WordDictionarySearchModel {
 		this.wordPlace = wordPlace;
 	}
 
-	public Boolean getSearchKanji() {
-		return searchKanji;
+	public List<String> getSearchIn() {
+		return searchIn;
 	}
 
-	public void setSearchKanji(Boolean searchKanji) {
-		this.searchKanji = searchKanji;
-	}
-
-	public Boolean getSearchKana() {
-		return searchKana;
-	}
-
-	public void setSearchKana(Boolean searchKana) {
-		this.searchKana = searchKana;
-	}
-
-	public Boolean getSearchRomaji() {
-		return searchRomaji;
-	}
-
-	public void setSearchRomaji(Boolean searchRomaji) {
-		this.searchRomaji = searchRomaji;
-	}
-
-	public Boolean getSearchTranslate() {
-		return searchTranslate;
-	}
-
-	public void setSearchTranslate(Boolean searchTranslate) {
-		this.searchTranslate = searchTranslate;
-	}
-
-	public Boolean getSearchInfo() {
-		return searchInfo;
-	}
-
-	public void setSearchInfo(Boolean searchInfo) {
-		this.searchInfo = searchInfo;
+	public void setSearchIn(List<String> searchIn) {
+		this.searchIn = searchIn;
 	}
 
 	public List<String> getDictionaryTypeStringList() {

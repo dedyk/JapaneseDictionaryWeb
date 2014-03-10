@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,11 +38,9 @@ public class WordDictionaryController extends CommonController {
 		// ustawienie domyslnych wartosci model szukania
 		wordDictionarySearchModel.setWordPlace(WordPlaceSearch.START_WITH.toString());
 		
-		wordDictionarySearchModel.setSearchKanji(true);
-		wordDictionarySearchModel.setSearchKana(true);
-		wordDictionarySearchModel.setSearchRomaji(true);
-		wordDictionarySearchModel.setSearchTranslate(true);
-				
+		// ustawienie miejsca szukania		
+		wordDictionarySearchModel.setSearchIn(Arrays.asList("KANJI", "KANA", "ROMAJI", "TRANSLATE", "INFO"));
+		
 		// pobranie wyswietlanych typow
 		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
 		
@@ -54,7 +53,7 @@ public class WordDictionaryController extends CommonController {
 		
 		return "wordDictionary";
 	}
-	
+		
 	@RequestMapping(value = "/wordDictionary/search", method = RequestMethod.POST)
 	public String search(@ModelAttribute("wordDictionarySearchModel") WordDictionarySearchModel searchModel,
 			Map<String, Object> model) {
@@ -69,6 +68,7 @@ public class WordDictionaryController extends CommonController {
 		}
 		
 		// usuwanie przecinkow ze slow
+		// polskie znaki
 		
 		// walidator
 		
