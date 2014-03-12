@@ -12,16 +12,18 @@
 			<table>
 				<tr>
 					<td><form:label path="word">Szukane słowo</form:label></td>
-					<td><form:input id="word" path="word"/></td>				
+					<td><form:input cssClass="form-control" cssStyle="margin: 0px 0px 10px 0px" id="word" path="word"/></td>				
 				</tr>
 				
 				<tr>
 					<td><form:label path="wordPlace">Szukane ciągu</form:label></td>
 					<td>
 						<table>
-							<tr><td><form:radiobutton path="wordPlace" label="od pierwszego znaku w słowie" value="START_WITH" /></td></tr>
-							<tr><td><form:radiobutton path="wordPlace" label="w dowolnym miejscu w słowie" value="ANY_PLACE" /></td></tr>
-							<tr><td><form:radiobutton path="wordPlace" label="dokładnego" value="EXACT" /></td></tr>
+							<form:select id="workPlaceId" path="wordPlace">
+								<form:option value="START_WITH" label="od pierwszego znaku w słowie" />
+								<form:option value="ANY_PLACE" label="w dowolnym miejscu w słowie" />
+								<form:option value="EXACT" label="dokładnego" />
+							</form:select>
 						</table>
 					</td>
 				</tr>
@@ -30,7 +32,7 @@
 					<td><form:label path="">Szukaj w</form:label></td>
 					<td>
 						<table>
-							<form:select id="searchInId" path="searchIn" multiple="true">
+							<form:select id="searchInId" path="searchIn" multiple="true" data-selected-text-format="count">
 								<form:option value="KANJI" label="kanji" />
 								<form:option value="KANA" label="czytanie japońskie" />
 								<form:option value="ROMAJI" label="czytanie romaji" />
@@ -42,10 +44,10 @@
 				</tr>
 				
 				<tr>
-					<td><form label path="">Typy szukanych słów</form></td>
+					<td><form:label path="" cssStyle="margin: 0px 10px 0px 0px">Typy szukanych słów</form:label></td>
 					<td>
 						<table>
-							<form:select id="dictionaryTypeListId" path="dictionaryTypeStringList" multiple="true">
+							<form:select id="dictionaryTypeListId" path="dictionaryTypeStringList" multiple="true" data-selected-text-format="count">
 								<c:forEach items="${addableDictionaryEntryList}" var="currentAddableDictionaryEntry">
 									<form:option value="${currentAddableDictionaryEntry}" label="${currentAddableDictionaryEntry.name}" />
 								</c:forEach>								
@@ -62,7 +64,7 @@
 				<tr>
 					<td></td>
 					<td>
-						<input id="searchButton" type="submit" value="Szukaj" />					
+						<input class="btn btn-default btn-lg" id="searchButton" type="submit" value="Szukaj" />					
 					</td>				
 				</tr>			
 			</table>
@@ -79,9 +81,17 @@
 	
 				$( "#searchButton" ).button();
 
-				$( "#searchInId").multiselect();
+				$( "#workPlaceId").selectpicker();
+				
+				$( "#searchInId").selectpicker({
+					noneSelectedText: 'proszę wybrać', 
+					countSelectedText: 'wybrano {0} z {1}'
+				});
 
-				$( "#dictionaryTypeListId").multiselect();
+				$( "#dictionaryTypeListId").selectpicker({
+					noneSelectedText: 'proszę wybrać', 
+					countSelectedText: 'wybrano {0} z {1}'
+				});
 				
 			});
 		</script>		

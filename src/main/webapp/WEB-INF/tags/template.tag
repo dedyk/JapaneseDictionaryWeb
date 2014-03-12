@@ -12,145 +12,75 @@
 <html lang="pl">
 <head>
 	<meta charset="utf-8">
-
+	
 	<title>${pageTitle}</title>
-
+	
 	<link href="<c:out value='${pageContext.request.contextPath}' />/css/excite-bike/jquery-ui-1.10.4.custom.css" rel="stylesheet">
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/jquery.multiselect/jquery.multiselect.css" rel="stylesheet">
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/jquery.multiselect/jquery.multiselect.filter.css" rel="stylesheet">
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/bootstrap/bootstrap.css" rel="stylesheet">
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/bootstrap-select/bootstrap-select.css" rel="stylesheet">
 	
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery-1.11.0.js"></script>
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery-ui-1.10.4.custom.js"></script>
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery/jquery-1.11.0.js"></script>
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery/jquery-ui-1.10.4.custom.js"></script>
 	
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery.multiselect.filter.js"></script>
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery.multiselect.js"></script>
-	
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery.multiselect.filter.pl.js"></script>
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery.multiselect.pl.js"></script>
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/bootstrap/bootstrap.js"></script>
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/bootstrap-select/bootstrap-select.js"></script>
 
-	<style>
-	
+<style>
 	body {
-		font: 80% "Trebuchet MS", sans-serif;
 		margin: 50px;
 	}
-	.demoHeaders {
-		margin-top: 2em;
-	}
-	#dialog-link {
-		padding: .4em 1em .4em 20px;
-		text-decoration: none;
-		position: relative;
-	}
-	#dialog-link span.ui-icon {
-		margin: 0 5px 0 0;
-		position: absolute;
-		left: .2em;
-		top: 50%;
-		margin-top: -8px;
-	}
-	#icons {
-		margin: 0;
-		padding: 0;
-	}
-	#icons li {
-		margin: 2px;
-		position: relative;
-		padding: 4px 0;
-		cursor: pointer;
-		float: left;
-		list-style: none;
-	}
-	#icons span.ui-icon {
-		float: left;
-		margin: 0 4px;
-	}
-	.fakewindowcontain .ui-widget-overlay {
-		position: absolute;
-	}
-		
-	</style>
+</style>
 
 </head>
 
 <body>
 	<div class="container">
-		
+
 		<div class="row">
 
-			<div class="row header" style="margin-bottom:30px;" >
-				
+			<div class="row header" style="margin-bottom: 30px;">
+
 				<table>
 					<tr>
-						<td>
-							<img src="${pageContext.request.contextPath}/img/japan-flag.png" align="middle">
-						</td>
-						
-						<td style="font-size:150%;" >
-							小さくて奥ゆかしい日本語ヘルパー <br/>
-							Mały, skromny japoński pomocnik
-						</td>
-					</tr>				
+						<td><img
+							src="${pageContext.request.contextPath}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px"></td>
+
+						<td style="font-size: 150%;">小さくて奥ゆかしい日本語ヘルパー <br /> Mały, skromny japoński pomocnik</td>
+					</tr>
 				</table>
 			</div>
-			
-			<div style="margin-bottom:50px;" >
-				<button id="startButton">Start</button>
-				<button id="wordDictionaryButton" data-href="wordDictionary">Słowniczek</button>
-				<button id="kanjiDictionaryButton" data-href="kanjiDictionary">Kanji</button>
-				<button id="suggestionButton" data-href="suggetion">Zgłoś sugestię</button>
-				<button id="infoButton" data-href="info">Informacje</button>
-			</div>			
-						
+
+			<nav role="navigation" class="navbar navbar-default">
+				<div class="navbar-header">
+					<a href="#" class="navbar-brand" onclick="goTo('')">Japoński pomocnik</a>
+				</div>
+				<div id="navbarCollapse" class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="#"
+							onclick="goTo('wordDictionary')">Słowniczek</a></li>
+						<li><a href="#" onclick="goTo('kanjiDictionary')">Kanji</a></li>
+						<li><a href="#" onclick="goTo('suggetion')">Zgłoś sugestię</a></li>
+						<li><a href="#" onclick="goTo('info')">Informacje</a></li>
+					</ul>
+				</div>
+			</nav>
+
 			<div id="content">
 				<jsp:doBody />
 			</div>
-			
-			<div class="row footer" style="margin-top:50px;">
+
+			<div class="row footer" style="margin-top: 50px;">
 				<b>FIXME: FOOTER</b>
 			</div>
 		</div>
 	</div>
-	
+
 	<script>
 		$( "#nav" ).menu( {position: {at: "left bottom"}});
 
-		$(document).ready(function() {
-			$( "#startButton" ).button();
-			$( "#startButton" ).click(function( event ) {
-				var link = this;
-				
-				window.location = "<c:out value='${pageContext.request.contextPath}' />";
-			});
-			
-			$( "#wordDictionaryButton" ).button();
-			$( "#wordDictionaryButton" ).click(function( event ) {
-				var link = this;
-				
-				window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/" + $(link).attr("data-href");
-			});
-						
-			$( "#kanjiDictionaryButton" ).button();
-			$( "#kanjiDictionaryButton" ).click(function( event ) {
-				var link = this;
-				
-				window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/" + $(link).attr("data-href");
-			});
-			
-			$( "#suggestionButton" ).button();
-			$( "#suggestionButton" ).click(function( event ) {
-				var link = this;
-				
-				window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/" + $(link).attr("data-href");
-			});
-
-			$( "#infoButton" ).button();
-			$( "#infoButton" ).click(function( event ) {
-				var link = this;
-				
-				window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/" + $(link).attr("data-href");
-			});
-		});
+		function goTo(component) {
+			window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/" + component;
+		}
 		
 	</script>
 </body>
