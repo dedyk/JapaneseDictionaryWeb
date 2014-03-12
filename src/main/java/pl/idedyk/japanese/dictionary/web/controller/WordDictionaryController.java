@@ -50,6 +50,7 @@ public class WordDictionaryController extends CommonController {
 		
 		model.put("addableDictionaryEntryList", addableDictionaryEntryList);
 		model.put("command", wordDictionarySearchModel);
+		model.put("selectedMenu", "wordDictionary");
 		
 		return "wordDictionary";
 	}
@@ -78,6 +79,7 @@ public class WordDictionaryController extends CommonController {
 		
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
+		model.put("selectedMenu", "wordDictionary");
 		
 		return "wordDictionary";
 	}

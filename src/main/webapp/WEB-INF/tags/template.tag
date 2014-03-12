@@ -42,8 +42,7 @@
 
 				<table>
 					<tr>
-						<td><img
-							src="${pageContext.request.contextPath}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px"></td>
+						<td><img src="${pageContext.request.contextPath}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px"></td>
 
 						<td style="font-size: 150%;">小さくて奥ゆかしい日本語ヘルパー <br /> Mały, skromny japoński pomocnik</td>
 					</tr>
@@ -56,11 +55,41 @@
 				</div>
 				<div id="navbarCollapse" class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href="#"
-							onclick="goTo('wordDictionary')">Słowniczek</a></li>
-						<li><a href="#" onclick="goTo('kanjiDictionary')">Kanji</a></li>
-						<li><a href="#" onclick="goTo('suggetion')">Zgłoś sugestię</a></li>
-						<li><a href="#" onclick="goTo('info')">Informacje</a></li>
+						<c:choose>
+							<c:when test="${selectedMenu == 'wordDictionary'}">
+								<li class="active"><a href="#" onclick="goTo('wordDictionary')">Słowniczek</a></li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="#" onclick="goTo('wordDictionary')">Słowniczek</a></li>
+							</c:otherwise>
+						</c:choose>
+
+						<c:choose>
+							<c:when test="${selectedMenu == 'kanjiDictionary'}">
+								<li class="active"><a href="#" onclick="goTo('kanjiDictionary')">Kanji</a></li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="#" onclick="goTo('kanjiDictionary')">Kanji</a></li>
+							</c:otherwise>
+						</c:choose>
+
+						<c:choose>
+							<c:when test="${selectedMenu == 'suggetion'}">
+								<li class="active"><a href="#" onclick="goTo('suggetion')">Zgłoś sugestię</a></li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="#" onclick="goTo('suggetion')">Zgłoś sugestię</a></li>
+							</c:otherwise>
+						</c:choose>
+
+						<c:choose>
+							<c:when test="${selectedMenu == 'info'}">
+								<li class="active"><a href="#" onclick="goTo('info')">Informacje</a></li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="#" onclick="goTo('info')">Informacje</a></li>
+							</c:otherwise>
+						</c:choose>
 					</ul>
 				</div>
 			</nav>
