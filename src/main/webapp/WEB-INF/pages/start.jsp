@@ -3,8 +3,12 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<t:template pageTitle="Mały, skromny japoński pomocnik | 小さくて奥ゆかしい日本語ヘルパー">
+<c:set var="pageTitle"> <spring:message code="start.page.title"/> </c:set>
+
+<t:template pageTitle="${pageTitle}">
+
 	<jsp:body>
 		
 		Tutaj powinna znaleźć się jakaś informacja

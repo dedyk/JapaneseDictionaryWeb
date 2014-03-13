@@ -44,50 +44,50 @@
 					<tr>
 						<td><img src="${pageContext.request.contextPath}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px"></td>
 
-						<td style="font-size: 150%;">小さくて奥ゆかしい日本語ヘルパー <br /> Mały, skromny japoński pomocnik</td>
+						<td style="font-size: 150%;"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>
 					</tr>
 				</table>
 			</div>
 
 			<nav role="navigation" class="navbar navbar-default">
 				<div class="navbar-header">
-					<a href="#" class="navbar-brand" onclick="goTo('')">Japoński pomocnik</a>
+					<a href="#" class="navbar-brand" onclick="goTo('')"><spring:message code="template.title.short.polish"/></a>
 				</div>
 				<div id="navbarCollapse" class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
 						<c:choose>
 							<c:when test="${selectedMenu == 'wordDictionary'}">
-								<li class="active"><a href="#" onclick="goTo('wordDictionary')">Słowniczek</a></li>
+								<li class="active"><a href="#" onclick="goTo('wordDictionary')"><spring:message code="template.menu.dictionary"/></a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="#" onclick="goTo('wordDictionary')">Słowniczek</a></li>
+								<li><a href="#" onclick="goTo('wordDictionary')"><spring:message code="template.menu.dictionary"/></a></li>
 							</c:otherwise>
 						</c:choose>
 
 						<c:choose>
 							<c:when test="${selectedMenu == 'kanjiDictionary'}">
-								<li class="active"><a href="#" onclick="goTo('kanjiDictionary')">Kanji</a></li>
+								<li class="active"><a href="#" onclick="goTo('kanjiDictionary')"><spring:message code="template.menu.kanji"/></a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="#" onclick="goTo('kanjiDictionary')">Kanji</a></li>
+								<li><a href="#" onclick="goTo('kanjiDictionary')"><spring:message code="template.menu.kanji"/></a></li>
 							</c:otherwise>
 						</c:choose>
 
 						<c:choose>
 							<c:when test="${selectedMenu == 'suggetion'}">
-								<li class="active"><a href="#" onclick="goTo('suggetion')">Zgłoś sugestię</a></li>
+								<li class="active"><a href="#" onclick="goTo('suggetion')"><spring:message code="template.menu.suggestion"/></a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="#" onclick="goTo('suggetion')">Zgłoś sugestię</a></li>
+								<li><a href="#" onclick="goTo('suggetion')"><spring:message code="template.menu.suggestion"/></a></li>
 							</c:otherwise>
 						</c:choose>
 
 						<c:choose>
 							<c:when test="${selectedMenu == 'info'}">
-								<li class="active"><a href="#" onclick="goTo('info')">Informacje</a></li>
+								<li class="active"><a href="#" onclick="goTo('info')"><spring:message code="template.menu.information"/></a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="#" onclick="goTo('info')">Informacje</a></li>
+								<li><a href="#" onclick="goTo('info')"><spring:message code="template.menu.information"/></a></li>
 							</c:otherwise>
 						</c:choose>
 					</ul>

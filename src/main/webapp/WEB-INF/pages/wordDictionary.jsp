@@ -3,48 +3,67 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<t:template pageTitle="Mały, skromny japoński pomocnik | 小さくて奥ゆかしい日本語ヘルパー">
+<c:set var="pageTitle"> <spring:message code="wordDictionary.page.title"/> </c:set>
+
+<c:set var="workPlaceStartWith"> <spring:message code="wordDictionary.page.label.wordPlace.startWith"/> </c:set>
+<c:set var="workPlaceAnyPlace"> <spring:message code="wordDictionary.page.label.wordPlace.anyPlace"/> </c:set>
+<c:set var="workPlaceExact"> <spring:message code="wordDictionary.page.label.wordPlace.exact"/> </c:set>
+
+<c:set var="searchInKanji"> <spring:message code="wordDictionary.page.label.searchIn.kanji"/> </c:set>
+<c:set var="searchInKana"> <spring:message code="wordDictionary.page.label.searchIn.kana"/> </c:set>
+<c:set var="searchInRomaji"> <spring:message code="wordDictionary.page.label.searchIn.romaji"/> </c:set>
+<c:set var="searchInTranslate"> <spring:message code="wordDictionary.page.label.searchIn.translate"/> </c:set>
+<c:set var="searchInInfo"> <spring:message code="wordDictionary.page.label.searchIn.info"/> </c:set>
+
+<c:set var="search"> <spring:message code="wordDictionary.page.label.search"/> </c:set>
+
+<c:set var="selectPickerNoneSelectedText"> <spring:message code="common.selectpicker.noneSelectedText"/> </c:set>
+<c:set var="selectPickerCountSelectedText"> <spring:message code="common.selectpicker.countSelectedText"/> </c:set>
+
+<t:template pageTitle="${pageTitle}">
+
 	<jsp:body>
 			
 		<form:form method="post" action="${pageContext.request.contextPath}/wordDictionary/search">
 			
 			<table>
 				<tr>
-					<td><form:label path="word">Szukane słowo</form:label></td>
+					<td><form:label path="word"><spring:message code="wordDictionary.page.label.searchWord"/></form:label></td>
 					<td><form:input cssClass="form-control" cssStyle="margin: 0px 0px 10px 0px" id="word" path="word"/></td>				
 				</tr>
 				
 				<tr>
-					<td><form:label path="wordPlace">Szukane ciągu</form:label></td>
+					<td><form:label path="wordPlace"><spring:message code="wordDictionary.page.label.wordPlace"/></form:label></td>
 					<td>
 						<table>
 							<form:select id="workPlaceId" path="wordPlace">
-								<form:option value="START_WITH" label="od pierwszego znaku w słowie" />
-								<form:option value="ANY_PLACE" label="w dowolnym miejscu w słowie" />
-								<form:option value="EXACT" label="dokładnego" />
+								<form:option value="START_WITH" label="${workPlaceStartWith}" />
+								<form:option value="ANY_PLACE" label="${workPlaceAnyPlace}" />
+								<form:option value="EXACT" label="${workPlaceExact}" />
 							</form:select>
 						</table>
 					</td>
 				</tr>
 				
 				<tr>
-					<td><form:label path="">Szukaj w</form:label></td>
+					<td><form:label path=""><spring:message code="wordDictionary.page.label.searchIn"/></form:label></td>
 					<td>
 						<table>
 							<form:select id="searchInId" path="searchIn" multiple="true" data-selected-text-format="count">
-								<form:option value="KANJI" label="kanji" />
-								<form:option value="KANA" label="czytanie japońskie" />
-								<form:option value="ROMAJI" label="czytanie romaji" />
-								<form:option value="TRANSLATE" label="tłumaczenia" />
-								<form:option value="INFO" label="informacje dodatkowe" />
+								<form:option value="KANJI" label="${searchInKanji}" />
+								<form:option value="KANA" label="${searchInKana}" />
+								<form:option value="ROMAJI" label="${searchInRomaji}" />
+								<form:option value="TRANSLATE" label="${searchInTranslate}" />
+								<form:option value="INFO" label="${searchInInfo}" />
 							</form:select>
 						</table>
 					</td>				
 				</tr>
 				
 				<tr>
-					<td><form:label path="" cssStyle="margin: 0px 10px 0px 0px">Typy szukanych słów</form:label></td>
+					<td><form:label path="" cssStyle="margin: 0px 10px 0px 0px"><spring:message code="wordDictionary.page.label.dictionaryType"/></form:label></td>
 					<td>
 						<table>
 							<form:select id="dictionaryTypeListId" path="dictionaryTypeStringList" multiple="true" data-selected-text-format="count">
@@ -52,11 +71,6 @@
 									<form:option value="${currentAddableDictionaryEntry}" label="${currentAddableDictionaryEntry.name}" />
 								</c:forEach>								
 							</form:select>
-<%--  
-							<c:forEach items="${addableDictionaryEntryList}" var="currentAddableDictionaryEntry">
-								<tr><td><form:checkbox path="dictionaryTypeStringList" label="${currentAddableDictionaryEntry.name}" value="${currentAddableDictionaryEntry}"/></td></tr>							
-							</c:forEach>
---%>
 						</table>
 					</td>				
 				</tr>				
@@ -64,7 +78,7 @@
 				<tr>
 					<td></td>
 					<td>
-						<input class="btn btn-default btn-lg" id="searchButton" type="submit" value="Szukaj" />					
+						<input class="btn btn-default btn-lg" id="searchButton" type="submit" value="${search}" />					
 					</td>				
 				</tr>			
 			</table>
@@ -84,13 +98,13 @@
 				$( "#workPlaceId").selectpicker();
 				
 				$( "#searchInId").selectpicker({
-					noneSelectedText: 'proszę wybrać', 
-					countSelectedText: 'wybrano {0} z {1}'
+					noneSelectedText: '${selectPickerNoneSelectedText}', 
+					countSelectedText: '${selectPickerCountSelectedText}'
 				});
 
 				$( "#dictionaryTypeListId").selectpicker({
-					noneSelectedText: 'proszę wybrać', 
-					countSelectedText: 'wybrano {0} z {1}'
+					noneSelectedText: '${selectPickerNoneSelectedText}', 
+					countSelectedText: '${selectPickerCountSelectedText}'
 				});
 				
 			});
