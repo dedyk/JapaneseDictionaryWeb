@@ -28,7 +28,9 @@
 			
 		<form:form method="post" action="${pageContext.request.contextPath}/wordDictionary/search">
 			
-			<table>
+			<form:errors cssClass="alert alert-danger" path="*" element="div" />		
+			
+			<table>				
 				<tr>
 					<td><form:label path="word"><spring:message code="wordDictionary.page.label.searchWord"/></form:label></td>
 					<td><form:input cssClass="form-control" cssStyle="margin: 0px 0px 10px 0px" id="word" path="word"/></td>				

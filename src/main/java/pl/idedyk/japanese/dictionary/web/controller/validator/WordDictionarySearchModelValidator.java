@@ -1,4 +1,4 @@
-package pl.idedyk.japanese.dictionary.web.dictionary;
+package pl.idedyk.japanese.dictionary.web.controller.validator;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -17,7 +17,8 @@ public class WordDictionarySearchModelValidator implements Validator {
 
 	@Override
 	public void validate(Object target, Errors errors) {
-		
+						
+		errors.rejectValue("word", "wordDictionary.validation.word.test");
 		
 	}
 }

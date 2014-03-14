@@ -24,8 +24,8 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
+import pl.idedyk.japanese.dictionary.web.controller.validator.WordDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
-import pl.idedyk.japanese.dictionary.web.dictionary.WordDictionarySearchModelValidator;
 
 @Controller
 public class WordDictionaryController extends CommonController {
@@ -70,17 +70,27 @@ public class WordDictionaryController extends CommonController {
 	}
 
 	@RequestMapping(value = "/wordDictionary/search", method = RequestMethod.POST)
-	public String search(@ModelAttribute("wordDictionarySearchModel") @Valid WordDictionarySearchModel searchModel,
-			BindingResult result,
-			Map<String, Object> model) {
+	public String search(@ModelAttribute("command") @Valid WordDictionarySearchModel searchModel,
+			BindingResult result, Map<String, Object> model) {
 
+		if (result.hasErrors() == true) {
+			
+			System.out.println("ZZZZZZZ");
+			
+			model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
+			model.put("command", searchModel);
+			model.put("selectedMenu", "wordDictionary");
+			
+			return "wordDictionary";
+		}
+		
 		int fixme = 1;
 		// szukanie
 
 		List<String> dictionaryTypeStringList = searchModel.getDictionaryTypeStringList();
 
 		for (String string : dictionaryTypeStringList) {
-			System.out.println("AAAA: " + string);
+			//System.out.println("AAAA: " + string);
 		}
 
 		// usuwanie przecinkow ze slow
