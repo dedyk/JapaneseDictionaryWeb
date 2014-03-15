@@ -26,7 +26,7 @@
 
 	<jsp:body>
 			
-		<form:form method="post" action="${pageContext.request.contextPath}/wordDictionary/search">
+		<form:form method="post" action="${pageContext.request.contextPath}/wordDictionary">
 			
 			<form:errors cssClass="alert alert-danger" path="*" element="div" />		
 			

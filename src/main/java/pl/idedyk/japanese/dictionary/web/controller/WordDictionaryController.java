@@ -69,14 +69,12 @@ public class WordDictionaryController extends CommonController {
 		return "wordDictionary";
 	}
 
-	@RequestMapping(value = "/wordDictionary/search", method = RequestMethod.POST)
+	@RequestMapping(value = "/wordDictionary", method = RequestMethod.POST)
 	public String search(@ModelAttribute("command") @Valid WordDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) {
 
 		if (result.hasErrors() == true) {
-			
-			System.out.println("ZZZZZZZ");
-			
+						
 			model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 			model.put("command", searchModel);
 			model.put("selectedMenu", "wordDictionary");
@@ -107,13 +105,6 @@ public class WordDictionaryController extends CommonController {
 		model.put("selectedMenu", "wordDictionary");
 
 		return "wordDictionary";
-	}
-
-	@RequestMapping(value = "/wordDictionary/search", method = RequestMethod.GET)
-	public String searchRedirect(@ModelAttribute("wordDictionarySearchModel") WordDictionarySearchModel searchModel,
-			Map<String, Object> model) {
-
-		return "redirect:";
 	}
 
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
