@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest.WordPlaceSearch;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.WordDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
@@ -82,10 +85,25 @@ public class WordDictionaryController extends CommonController {
 			return "wordDictionary";
 		}
 		
-		System.out.println("SSS: " + searchModel.getWord());
+		// stworzenie obiektu FindWordRequest
+		FindWordRequest findWordRequest = createFindWordRequest(searchModel);
 		
+		// logowanie
 		int fixme = 1;
+		
+		
+		
+		int fixme2 = 1;
 		// szukanie
+		
+		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
+		
+		for (FindWordResult.ResultItem resultItem : findWordResult.result) {
+			
+			System.out.println(resultItem.getKanji() + " - " + resultItem.getKanaList() + " - " + 
+			resultItem.getRomajiList() + " - " + resultItem.getTranslates() + " - " + resultItem.getInfo());
+			
+		}		
 
 		List<String> dictionaryTypeStringList = searchModel.getDictionaryTypeStringList();
 
@@ -98,7 +116,7 @@ public class WordDictionaryController extends CommonController {
 
 		// walidator
 
-		FindWordRequest findWordRequest = new FindWordRequest();
+		
 
 		//findWordRequest.
 
@@ -107,6 +125,80 @@ public class WordDictionaryController extends CommonController {
 		model.put("selectedMenu", "wordDictionary");
 
 		return "wordDictionary";
+	}
+	
+	private FindWordRequest createFindWordRequest(WordDictionarySearchModel searchModel) {
+		
+		FindWordRequest findWordRequest = new FindWordRequest();
+		
+		List<String> tokenWord = Utils.tokenWord(searchModel.getWord());
+		
+		StringBuffer wordJoined = new StringBuffer();
+		
+		for (int idx = 0; idx < tokenWord.size(); ++idx) {
+			
+			wordJoined.append(tokenWord.get(idx));
+			
+			if (idx != tokenWord.size() - 1) {
+				wordJoined.append(" ");
+			}
+		}
+		
+		// word
+		findWordRequest.word = wordJoined.toString();
+		
+		// wordPlace
+		findWordRequest.wordPlaceSearch = FindWordRequest.WordPlaceSearch.valueOf(searchModel.getWordPlace());
+		
+		// searchIn
+		findWordRequest.searchKanji = false;
+		findWordRequest.searchKana = false;
+		findWordRequest.searchRomaji = false;
+		findWordRequest.searchTranslate = false;
+		findWordRequest.searchInfo = false;
+
+		List<String> searchIn = searchModel.getSearchIn();
+		
+		for (String currentSearch : searchIn) {
+			
+			if (Utils.isKanjiSearchIn(currentSearch) == true) {
+				findWordRequest.searchKanji = true;
+			}
+
+			if (Utils.isKanaSearchIn(currentSearch) == true) {
+				findWordRequest.searchKana = true;
+			}
+
+			if (Utils.isRomajiSearchIn(currentSearch) == true) {
+				findWordRequest.searchRomaji = true;
+			}
+
+			if (Utils.isTranslateSearchIn(currentSearch) == true) {
+				findWordRequest.searchTranslate = true;
+			}
+
+			if (Utils.isInfoSearchIn(currentSearch) == true) {
+				findWordRequest.searchInfo = true;
+			}
+		}
+		
+		// dictionaryEntryList
+		List<String> dictionaryTypeStringList = searchModel.getDictionaryTypeStringList();
+				
+		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
+		
+		if (dictionaryTypeStringList.size() == addableDictionaryEntryList.size()) {			
+			findWordRequest.dictionaryEntryList = null;
+			
+		} else {
+			findWordRequest.dictionaryEntryList = new ArrayList<DictionaryEntryType>();
+			
+			for (String currentDictionaryTypeString : dictionaryTypeStringList) {
+				findWordRequest.dictionaryEntryList.add(DictionaryEntryType.valueOf(currentDictionaryTypeString));
+			}			
+		}		
+		
+		return findWordRequest;
 	}
 
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
