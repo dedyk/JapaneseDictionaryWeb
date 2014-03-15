@@ -82,6 +82,8 @@ public class WordDictionaryController extends CommonController {
 			return "wordDictionary";
 		}
 		
+		System.out.println("SSS: " + searchModel.getWord());
+		
 		int fixme = 1;
 		// szukanie
 
