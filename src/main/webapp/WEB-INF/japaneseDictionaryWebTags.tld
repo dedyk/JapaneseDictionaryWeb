@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib>
+	<tlibversion>1.0</tlibversion>
+	<jspversion>1.1</jspversion>
+	<shortname>japaneseDictionaryWebTags</shortname>
+	<tag>
+		<name>dictionaryEntryTableRow</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.DictionaryEntryTableRowTag</tagclass>
+		<info>Generuje wiersz tabeli z wynikiem wyszukiwania slowek</info>
+		<attribute>
+			<name>dictionaryEntry</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+</taglib> 
