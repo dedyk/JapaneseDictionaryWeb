@@ -99,6 +99,7 @@ public class WordDictionaryController extends CommonController {
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
 		model.put("selectedMenu", "wordDictionary");
+		model.put("findWordRequest", findWordRequest);
 		model.put("findWordResult", findWordResult);
 		
 		return "wordDictionary";

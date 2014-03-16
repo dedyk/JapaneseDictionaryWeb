@@ -4,11 +4,16 @@
 	<jspversion>1.1</jspversion>
 	<shortname>japaneseDictionaryWebTags</shortname>
 	<tag>
-		<name>dictionaryEntryTableRow</name>
-		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.DictionaryEntryTableRowTag</tagclass>
+		<name>findWordResultItemTableRow</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.FindWordResultItemTableRowTag</tagclass>
 		<info>Generuje wiersz tabeli z wynikiem wyszukiwania slowek</info>
 		<attribute>
-			<name>dictionaryEntry</name>
+			<name>findWordRequest</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>resultItem</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

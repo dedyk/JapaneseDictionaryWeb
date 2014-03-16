@@ -89,36 +89,31 @@
 		
 		<!--  FIXME: Nie znaleziono wynikow -->
 		<!-- Zaznaczenie ciagu -->
+		<!-- Przeskakiwanie do wynikow # -->
+		<!-- Pageowanie, sortowanie -->
 		<c:if test="${findWordResult != null}">
 			
 			<hr style="margin-bottom: 10px" />
 		
-			<table class="table table-striped">
+			<table class="table table-striped" style="font-size: 120%;">
 				<caption class="text-left"><h4><spring:message code="wordDictionary.page.search.table.caption" /></h4></caption> 
 				<thead>
 					<tr>
-						<th>AAA</th>
-						<th>BBB</th>				
+						<th><spring:message code="wordDictionary.page.search.table.column.kanji" /></th>
+						<th><spring:message code="wordDictionary.page.search.table.column.kana" /></th>
+						<th><spring:message code="wordDictionary.page.search.table.column.romaji" /></th>
+						<th><spring:message code="wordDictionary.page.search.table.column.translate" /></th>
+						<th><spring:message code="wordDictionary.page.search.table.column.info" /></th>
 					</tr>			
 				</thead>
 				<tfood>
 					<c:forEach items="${findWordResult.result}" var="currentResult">
-						<tr>
-							<td>${currentResult.dictionaryEntry.kanji}</td>
-							<td>${currentResult.dictionaryEntry.kanaList}</td>
-							<td>${currentResult.dictionaryEntry.translates}</td>
-							<td>${currentResult.dictionaryEntry.info}</td>
-							<td>
-							<jdwt:dictionaryEntryTableRow dictionaryEntry="${currentResult.dictionaryEntry}"></jdwt:dictionaryEntryTableRow>
-							</td>
-						</tr>				
+						<jdwt:findWordResultItemTableRow findWordRequest="${findWordRequest}" resultItem="${currentResult}"></jdwt:findWordResultItemTableRow>
 					</c:forEach>
 				</tfood>
 				
 			</table>
 		</c:if>
-		
-		
 		
 		<script>
 			$(document).ready(function() {
