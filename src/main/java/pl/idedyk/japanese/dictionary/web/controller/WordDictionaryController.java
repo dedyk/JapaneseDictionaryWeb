@@ -41,7 +41,7 @@ public class WordDictionaryController extends CommonController {
 	@Autowired  
 	private WordDictionarySearchModelValidator wordDictionarySearchModelValidator;
 
-	@InitBinder 
+	@InitBinder(value = { "command" })
 	private void initBinder(WebDataBinder binder) {  
 		binder.setValidator(wordDictionarySearchModelValidator);  
 	}
@@ -90,40 +90,17 @@ public class WordDictionaryController extends CommonController {
 		
 		// logowanie
 		int fixme = 1;
+		// ukrywanie specjalnych parametrow wyszukiwania
 		
-		
-		
-		int fixme2 = 1;
-		// szukanie
-		
+
+		// szukanie		
 		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
 		
-		for (FindWordResult.ResultItem resultItem : findWordResult.result) {
-			
-			System.out.println(resultItem.getKanji() + " - " + resultItem.getKanaList() + " - " + 
-			resultItem.getRomajiList() + " - " + resultItem.getTranslates() + " - " + resultItem.getInfo());
-			
-		}		
-
-		List<String> dictionaryTypeStringList = searchModel.getDictionaryTypeStringList();
-
-		for (String string : dictionaryTypeStringList) {
-			//System.out.println("AAAA: " + string);
-		}
-
-		// usuwanie przecinkow ze slow
-		// polskie znaki
-
-		// walidator
-
-		
-
-		//findWordRequest.
-
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
 		model.put("selectedMenu", "wordDictionary");
-
+		model.put("findWordResult", findWordResult);
+		
 		return "wordDictionary";
 	}
 	

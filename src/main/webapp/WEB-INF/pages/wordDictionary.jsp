@@ -84,8 +84,39 @@
 					</td>				
 				</tr>			
 			</table>
+		</form:form>
+		
+		<!--  FIXME: Nie znaleziono wynikow -->
+		<!-- Zaznaczenie ciagu -->
+		<c:if test="${findWordResult != null}">
 			
-		</form:form>		
+			<hr style="margin-bottom: 10px" />
+		
+			<table class="table table-striped">
+				<caption class="text-left"><h4><spring:message code="wordDictionary.page.search.table.caption" /></h4></caption> 
+				<thead>
+					<tr>
+						<th>AAA</th>
+						<th>BBB</th>				
+					</tr>			
+				</thead>
+				<tfood>
+					<c:forEach items="${findWordResult.result}" var="currentResult">
+						<tr>
+							<td>${currentResult.dictionaryEntry.kanji}</td>
+							<td>${currentResult.dictionaryEntry.kanaList}</td>
+							<td>${currentResult.dictionaryEntry.translates}</td>
+							<td>${currentResult.dictionaryEntry.info}</td>
+						
+						
+						</tr>				
+					</c:forEach>
+				</tfood>
+				
+			</table>
+		</c:if>
+		
+		
 		
 		<script>
 			$(document).ready(function() {
