@@ -16,14 +16,21 @@
 	<title>${pageTitle}</title>
 	
 	<link href="<c:out value='${pageContext.request.contextPath}' />/css/excite-bike/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+	
 	<link href="<c:out value='${pageContext.request.contextPath}' />/css/bootstrap/bootstrap.css" rel="stylesheet">
 	<link href="<c:out value='${pageContext.request.contextPath}' />/css/bootstrap-select/bootstrap-select.css" rel="stylesheet">
+	
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/datatables/jquery.dataTables.css" rel="stylesheet">
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet">
 	
 	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery/jquery-1.11.0.js"></script>
 	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery/jquery-ui-1.10.4.custom.js"></script>
 	
 	<script src="<c:out value='${pageContext.request.contextPath}' />/js/bootstrap/bootstrap.js"></script>
 	<script src="<c:out value='${pageContext.request.contextPath}' />/js/bootstrap-select/bootstrap-select.js"></script>
+	
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/datatables/jquery.dataTables.js"></script>
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/datatables/dataTables.bootstrap.js"></script>
 
 <style>
 	body {

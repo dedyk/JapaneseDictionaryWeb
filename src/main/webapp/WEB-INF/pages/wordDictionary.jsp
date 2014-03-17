@@ -95,8 +95,9 @@
 			
 			<hr style="margin-bottom: 10px" />
 		
-			<table class="table table-striped" style="font-size: 120%;">
-				<caption class="text-left"><h4><spring:message code="wordDictionary.page.search.table.caption" /></h4></caption> 
+			<p class="text-left"><h4><spring:message code="wordDictionary.page.search.table.caption" /></h4></p>
+		
+			<table id="wordDictionaryFindWordResult" class="table table-striped" style="font-size: 120%;">
 				<thead>
 					<tr>
 						<th><spring:message code="wordDictionary.page.search.table.column.kanji" /></th>
@@ -113,6 +114,18 @@
 				</tfood>
 				
 			</table>
+			
+			<script>
+				$(document).ready(function() {
+					$('#wordDictionaryFindWordResult').dataTable({
+						language: {
+							url: '${pageContext.request.contextPath}/js/datatables/polish.json'
+						},
+						"aaSorting": [],
+						"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>"
+					});
+				});
+			</script>
 		</c:if>
 		
 		<script>

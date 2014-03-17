@@ -1,0 +1,23 @@
+{
+    "emptyTable":     "Nie znaleziono wyników",
+    "info":           "Elementy od _START_ do _END_ _TOTAL_ elementów",
+    "infoEmpty":      "Wyświetlenie 0 z 0 z 0 elementów",
+    "infoFiltered":   "(przefiltrowano z _MAX_ wpisów)",
+    "infoPostFix":    "",
+    "thousands":      ",",
+    "lengthMenu":     "Pokaż _MENU_ wpisów",
+    "loadingRecords": "Ładowanie...",
+    "processing":     "Przetwarzanie...",
+    "search":         "Filtrowanie:",
+    "zeroRecords":    "Nie znaleziono pasujących elementów",
+    "paginate": {
+        "first":      "Pierwszy",
+        "last":       "Ostatni",
+        "next":       "Następny",
+        "previous":   "Poprzedni"
+    },
+    "aria": {
+        "sortAscending":  ": naciśnij, aby sortować rosnąco",
+        "sortDescending": ": naciśnij, aby sortować　malejąco"
+    }
+}
