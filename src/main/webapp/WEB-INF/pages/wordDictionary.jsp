@@ -23,6 +23,8 @@
 <c:set var="selectPickerNoneSelectedText"> <spring:message code="common.selectpicker.noneSelectedText"/> </c:set>
 <c:set var="selectPickerCountSelectedText"> <spring:message code="common.selectpicker.countSelectedText"/> </c:set>
 
+<c:set var="wordDictionaryDetailsLinkValue"> <spring:message code="wordDictionary.page.search.table.column.details.value" /> </c:set>
+
 <t:template pageTitle="${pageTitle}">
 
 	<jsp:body>
@@ -87,13 +89,9 @@
 			</table>
 		</form:form>
 		
-		<!--  FIXME: Nie znaleziono wynikow -->
-		<!-- Zaznaczenie ciagu -->
-		<!-- Przeskakiwanie do wynikow # -->
-		<!-- Pageowanie, sortowanie -->
 		<c:if test="${findWordResult != null}">
 			
-			<hr style="margin-bottom: 10px" />
+			<hr id="findWordResulthrId" style="margin-bottom: 10px" />
 		
 			<p class="text-left"><h4><spring:message code="wordDictionary.page.search.table.caption" /></h4></p>
 		
@@ -105,11 +103,16 @@
 						<th><spring:message code="wordDictionary.page.search.table.column.romaji" /></th>
 						<th><spring:message code="wordDictionary.page.search.table.column.translate" /></th>
 						<th><spring:message code="wordDictionary.page.search.table.column.info" /></th>
-					</tr>			
+						<th></th>
+					</tr>
 				</thead>
 				<tfood>
 					<c:forEach items="${findWordResult.result}" var="currentResult">
-						<jdwt:findWordResultItemTableRow findWordRequest="${findWordRequest}" resultItem="${currentResult}"></jdwt:findWordResultItemTableRow>
+						<jdwt:findWordResultItemTableRow
+							findWordRequest="${findWordRequest}"
+							resultItem="${currentResult}"
+							detailsLink="${pageContext.request.contextPath}/wordDictionaryDetails/%ID%/%KANJI%/%KANA%"
+							detailsLinkValue="${wordDictionaryDetailsLinkValue}" />
 					</c:forEach>
 				</tfood>
 				
@@ -149,7 +152,12 @@
 					noneSelectedText: '${selectPickerNoneSelectedText}', 
 					countSelectedText: '${selectPickerCountSelectedText}'
 				});
-				
+
+				<c:if test="${findWordResult != null}">
+					$('html, body').animate({
+			        	scrollTop: $("#findWordResulthrId").offset().top
+			    	}, 1000);
+				</c:if>				
 			});
 		</script>		
 	</jsp:body>

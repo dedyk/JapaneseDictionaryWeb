@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
@@ -90,8 +92,6 @@ public class WordDictionaryController extends CommonController {
 		
 		// logowanie
 		int fixme = 1;
-		// ukrywanie specjalnych parametrow wyszukiwania
-		
 
 		// szukanie		
 		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
@@ -205,5 +205,24 @@ public class WordDictionaryController extends CommonController {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
+	public String start(@PathVariable("id") int id, @PathVariable("kanji") String kanji,
+			@PathVariable("kana") String kana, Map<String, Object> model) {
+		
+		// pobranie slowa
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
+		
+		int fixme = 1;
+		// nie znaleziono slowka
+		
+		// zrobic powrot
+		// logowanie
+		
+		model.put("dictionaryEntry", dictionaryEntry);
+		model.put("selectedMenu", "wordDictionary");
+		
+		return "wordDictionaryDetails";
 	}
 }

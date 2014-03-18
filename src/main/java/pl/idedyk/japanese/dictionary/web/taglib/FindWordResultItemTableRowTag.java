@@ -19,6 +19,9 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	
 	private FindWordResult.ResultItem resultItem;
 	
+	private String detailsLink;
+	private String detailsLinkValue;
+	
 	@Override
 	public int doStartTag() throws JspException {
 		
@@ -41,7 +44,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 
 	    	String tempPrefixKana = prefixKana != null && prefixKana.equals("") == false ? prefixKana : null;
 	    	String tempPrefixRomaji = prefixRomaji != null && prefixRomaji.equals("") == false ? prefixRomaji : null;
-            
+            	    	
             // kanji
 	    	out.println("<td>");
             
@@ -88,7 +91,18 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	    	}
 	    	
 	    	out.println("</td>");
-	    	
+            
+            // details link
+            out.println("<td>");
+            
+            String link = detailsLink.replaceAll("%ID%", String.valueOf(resultItem.getDictionaryEntry().getId())).
+            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
+            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-");
+            
+            out.println("<a href=\"" + link + "\">" + detailsLinkValue + "</a>");
+            
+            out.println("</td>");
+            
             out.println("</tr>");
             
             return SKIP_BODY;
@@ -167,5 +181,21 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 
 	public void setFindWordRequest(FindWordRequest findWordRequest) {
 		this.findWordRequest = findWordRequest;
+	}
+
+	public String getDetailsLink() {
+		return detailsLink;
+	}
+
+	public void setDetailsLink(String detailsLink) {
+		this.detailsLink = detailsLink;
+	}
+
+	public String getDetailsLinkValue() {
+		return detailsLinkValue;
+	}
+
+	public void setDetailsLinkValue(String detailsLinkValue) {
+		this.detailsLinkValue = detailsLinkValue;
 	}
 }
