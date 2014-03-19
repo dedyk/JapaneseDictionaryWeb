@@ -28,4 +28,14 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	<tag>
+		<name>generateWordDictionaryDetails</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.GenerateWordDictionaryDetailsTag</tagclass>
+		<info>Generuje szczegoly slowa</info>
+		<attribute>
+			<name>dictionaryEntry</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 </taglib> 

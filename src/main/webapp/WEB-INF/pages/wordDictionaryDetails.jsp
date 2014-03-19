@@ -6,13 +6,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<c:set var="pageTitle"> <spring:message code="wordDictionaryDetails.page.title"/> </c:set>
-
 <t:template pageTitle="${pageTitle}">
 
 	<jsp:body>
 		
-		${dictionaryEntry}	
+		<jdwt:generateWordDictionaryDetails dictionaryEntry="${dictionaryEntry}"></jdwt:generateWordDictionaryDetails>
 				
 	</jsp:body>
 </t:template>

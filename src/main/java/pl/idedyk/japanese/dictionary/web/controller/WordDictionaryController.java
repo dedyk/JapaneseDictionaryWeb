@@ -3,6 +3,7 @@ package pl.idedyk.japanese.dictionary.web.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -11,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -43,6 +45,8 @@ public class WordDictionaryController extends CommonController {
 	@Autowired  
 	private WordDictionarySearchModelValidator wordDictionarySearchModelValidator;
 
+	 @Autowired private MessageSource messageSource;
+	
 	@InitBinder(value = { "command" })
 	private void initBinder(WebDataBinder binder) {  
 		binder.setValidator(wordDictionarySearchModelValidator);  
@@ -220,6 +224,29 @@ public class WordDictionaryController extends CommonController {
 		// zrobic powrot
 		// logowanie
 		
+		// tytul strony
+		if (dictionaryEntry != null) {
+			
+			String dictionaryEntryKanji = dictionaryEntry.getKanji();
+			List<String> dictionaryEntryKanaList = dictionaryEntry.getKanaList();
+			List<String> dictionaryEntryRomajiList = dictionaryEntry.getRomajiList();
+						
+			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title", 
+					new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
+							dictionaryEntryKanaList != null && dictionaryEntryKanaList.size() > 0 ? dictionaryEntryKanaList.get(0) : "-",
+							dictionaryEntryRomajiList != null && dictionaryEntryRomajiList.size() > 0 ? dictionaryEntryRomajiList.get(0) : "-",
+					}, Locale.getDefault());
+			
+			model.put("pageTitle", pageTitle);
+			
+		} else {
+			
+			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title", 
+					new Object[] { "-", "-", "-" }, Locale.getDefault());
+			
+			model.put("pageTitle", pageTitle);
+		}
+				
 		model.put("dictionaryEntry", dictionaryEntry);
 		model.put("selectedMenu", "wordDictionary");
 		
