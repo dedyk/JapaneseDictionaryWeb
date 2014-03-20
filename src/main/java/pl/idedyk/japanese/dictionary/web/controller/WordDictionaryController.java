@@ -78,7 +78,7 @@ public class WordDictionaryController extends CommonController {
 		return "wordDictionary";
 	}
 
-	@RequestMapping(value = "/wordDictionary", method = RequestMethod.POST)
+	@RequestMapping(value = "/wordDictionaryDetails", method = RequestMethod.GET)
 	public String search(@ModelAttribute("command") @Valid WordDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) {
 
@@ -93,6 +93,8 @@ public class WordDictionaryController extends CommonController {
 		
 		// stworzenie obiektu FindWordRequest
 		FindWordRequest findWordRequest = createFindWordRequest(searchModel);
+		
+		logger.info("Wyszukiwanie słowek dla zapytania: " + findWordRequest);
 		
 		// logowanie
 		int fixme = 1;
@@ -218,14 +220,14 @@ public class WordDictionaryController extends CommonController {
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
 		
-		int fixme = 1;
-		// nie znaleziono slowka
-		
+		int fixme = 1;		
 		// zrobic powrot
 		// logowanie
 		
 		// tytul strony
 		if (dictionaryEntry != null) {
+			
+			logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
 			
 			String dictionaryEntryKanji = dictionaryEntry.getKanji();
 			List<String> dictionaryEntryKanaList = dictionaryEntry.getKanaList();
@@ -240,6 +242,8 @@ public class WordDictionaryController extends CommonController {
 			model.put("pageTitle", pageTitle);
 			
 		} else {
+			
+			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa: " + id + " / " + kanji + " / " + kana);
 			
 			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title", 
 					new Object[] { "-", "-", "-" }, Locale.getDefault());

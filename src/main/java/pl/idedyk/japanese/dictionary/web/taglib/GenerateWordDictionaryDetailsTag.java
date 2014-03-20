@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
@@ -13,6 +14,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
+import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
+import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 
 public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	
@@ -28,6 +31,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
 		MessageSource messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
+		DictionaryManager dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
 		
 		try {
             JspWriter out = pageContext.getOut();
@@ -46,7 +50,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             generateTitle(out, messageSource);
             
             // kanji
-            generateKanjiSection(out, messageSource);
+            generateKanjiSection(out, dictionaryManager, messageSource);
             
             
             return SKIP_BODY;
@@ -63,16 +67,12 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         out.println("</h4>");		
 	}
 	
-	private void generateKanjiSection(JspWriter out, MessageSource messageSource) throws IOException {
+	private void generateKanjiSection(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
 		
-        out.println("<div class=\"panel panel-default\">");
-        
-        out.println("   <div class=\"panel-heading\">");
-        out.println("      <h3 class=\"panel-title\">" + getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.kanji.title") + "</h3>");
-        out.println("   </div>");
-        
-        out.println("   <div class=\"panel-body\">");
-        
+		int fixme = 1;
+		// animacja pisania znaku
+		// TTS
+		        
 		String prefixKana = dictionaryEntry.getPrefixKana();
 
 		if (prefixKana != null && prefixKana.length() == 0) {
@@ -99,12 +99,71 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			addKanjiWrite = false;
 		}
         
-        int fixme = 1;
-        out.println("<h1>" + kanjiSb.toString() + "</h1>");
-        
-        out.println("   </div>");
-        
-        out.println("</div>");
+        if (addKanjiWrite == true) {
+        	
+            out.println("<div class=\"panel panel-default\">");
+            
+            out.println("   <div class=\"panel-heading\">");
+            out.println("      <h3 class=\"panel-title\">" + getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.kanji.title") + "</h3>");
+            out.println("   </div>");
+            
+            out.println("   <div class=\"panel-body\">");
+       	
+            List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(dictionaryEntry);
+        	            
+            if (furiganaEntries != null && furiganaEntries.size() > 0 && addKanjiWrite == true) {
+            	
+            	for (FuriganaEntry currentFuriganaEntry : furiganaEntries) {
+            		
+					List<String> furiganaKanaParts = currentFuriganaEntry.getKanaPart();
+					List<String> furiganaKanjiParts = currentFuriganaEntry.getKanjiPart();
+					
+					out.println("<table>");
+					out.println("<tr style=\"font-size: 123%; text-align:center;\">");
+					
+					for (int idx = 0; idx < furiganaKanaParts.size(); ++idx) {
+						
+						String currentKanaPart = furiganaKanaParts.get(idx);
+						
+						out.println("<td>");
+						out.println(currentKanaPart);
+						out.println("</td>");
+					}
+					
+					out.println("</tr>");
+					
+					out.println("<tr style=\"font-size: 300%;\">");
+					
+					for (int idx = 0; idx < furiganaKanjiParts.size(); ++idx) {
+						
+						String currentKanjiPart = furiganaKanjiParts.get(idx);
+						
+						out.println("<td>");
+						out.println(currentKanjiPart);
+						out.println("</td>");
+					}					
+					
+					out.println("</tr>");
+					out.println("</table>");
+            	}
+            	
+            } else {
+            	
+            	out.println("<table>");   	
+            	out.println("<tr style=\"font-size: 300%;\">");
+            	
+				out.println("<td>");
+				out.println(kanjiSb.toString());
+				out.println("</td>");            	
+            	
+            	out.println("</tr>");
+            	out.println("</table>");
+            }
+        	            
+            out.println("   </div>");
+            
+            out.println("</div>");        	
+        }
 	}
 	
 	/*
@@ -116,176 +175,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 			String prefixKana = dictionaryEntry.getPrefixKana();
 			String prefixRomaji = dictionaryEntry.getPrefixRomaji();
-
-			if (prefixKana != null && prefixKana.length() == 0) {
-				prefixKana = null;
-			}
-
-			// Kanji		
-			report.add(new TitleItem(getString(R.string.word_dictionary_details_kanji_label), 0));
-
-			final StringBuffer kanjiSb = new StringBuffer();
-
-			boolean addKanjiWrite = false;
-
-			if (dictionaryEntry.isKanjiExists() == true) {
-				if (prefixKana != null) {
-					kanjiSb.append("(").append(prefixKana).append(") ");
-				}
-
-				kanjiSb.append(dictionaryEntry.getKanji());
-
-				addKanjiWrite = true;
-			} else {
-				kanjiSb.append("-");
-
-				addKanjiWrite = false;
-			}
-
-			// kanji draw on click listener
-			OnClickListener kanjiDrawOnClickListener = new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					List<KanjivgEntry> strokePathsForWord = JapaneseAndroidLearnHelperApplication.getInstance()
-							.getDictionaryManager(WordDictionaryDetails.this).getStrokePathsForWord(kanjiSb.toString());
-
-					StrokePathInfo strokePathInfo = new StrokePathInfo();
-
-					strokePathInfo.setStrokePaths(strokePathsForWord);
-
-					Intent intent = new Intent(getApplicationContext(), SodActivity.class);
-
-					intent.putExtra("strokePathsInfo", strokePathInfo);
-					intent.putExtra("annotateStrokes", false);
-
-					startActivity(intent);
-				}
-			};
-
-			List<String> kanaList = dictionaryEntry.getKanaList();
-
-			// check furigana
-			List<FuriganaEntry> furiganaEntries = JapaneseAndroidLearnHelperApplication.getInstance()
-					.getDictionaryManager(this).getFurigana(dictionaryEntry);
-
-			if (furiganaEntries != null && furiganaEntries.size() > 0 && addKanjiWrite == true) {
-
-				report.add(new StringValue(getString(R.string.word_dictionary_word_anim), 12.0f, 0));
-
-				for (FuriganaEntry currentFuriganaEntry : furiganaEntries) {
-
-					TableLayout furiganaTableLayout = new TableLayout(TableLayout.LayoutParam.WrapContent_WrapContent,
-							true, null);
-
-					final int maxPartsInLine = 7;
-
-					List<String> furiganaKanaParts = currentFuriganaEntry.getKanaPart();
-					List<String> furiganaKanjiParts = currentFuriganaEntry.getKanjiPart();
-
-					int maxParts = furiganaKanaParts.size() / maxPartsInLine
-							+ (furiganaKanaParts.size() % maxPartsInLine > 0 ? 1 : 0);
-
-					for (int currentPart = 0; currentPart < maxParts; ++currentPart) {
-
-						TableRow readingRow = new TableRow();
-
-						StringValue spacer = new StringValue("", 15.0f, 0);
-						spacer.setGravity(Gravity.CENTER);
-						spacer.setNullMargins(true);
-
-						readingRow.addScreenItem(spacer);
-
-						for (int furiganaKanaPartsIdx = currentPart * maxPartsInLine; furiganaKanaPartsIdx < furiganaKanaParts
-								.size() && furiganaKanaPartsIdx < (currentPart + 1) * maxPartsInLine; ++furiganaKanaPartsIdx) {
-
-							StringValue currentKanaPartStringValue = new StringValue(
-									furiganaKanaParts.get(furiganaKanaPartsIdx), 15.0f, 0);
-
-							currentKanaPartStringValue.setGravity(Gravity.CENTER);
-							currentKanaPartStringValue.setNullMargins(true);
-
-							currentKanaPartStringValue.setOnClickListener(kanjiDrawOnClickListener);
-
-							readingRow.addScreenItem(currentKanaPartStringValue);
-						}
-
-						furiganaTableLayout.addTableRow(readingRow);
-
-						TableRow kanjiRow = new TableRow();
-
-						StringValue spacer2 = new StringValue("  ", 25.0f, 0);
-						spacer2.setGravity(Gravity.CENTER);
-						spacer2.setNullMargins(true);
-
-						kanjiRow.addScreenItem(spacer2);
-
-						for (int furiganaKanjiPartsIdx = currentPart * maxPartsInLine; furiganaKanjiPartsIdx < furiganaKanjiParts
-								.size() && furiganaKanjiPartsIdx < (currentPart + 1) * maxPartsInLine; ++furiganaKanjiPartsIdx) {
-							StringValue currentKanjiPartStringValue = new StringValue(
-									furiganaKanjiParts.get(furiganaKanjiPartsIdx), 35.0f, 0);
-
-							currentKanjiPartStringValue.setGravity(Gravity.CENTER);
-							currentKanjiPartStringValue.setNullMargins(true);
-
-							currentKanjiPartStringValue.setOnClickListener(kanjiDrawOnClickListener);
-
-							kanjiRow.addScreenItem(currentKanjiPartStringValue);
-						}
-
-						furiganaTableLayout.addTableRow(kanjiRow);
-					}
-
-					report.add(furiganaTableLayout);
-
-					TableLayout actionButtons = new TableLayout(TableLayout.LayoutParam.WrapContent_WrapContent, true, null);
-					TableRow actionTableRow = new TableRow();
-
-					// speak image
-					Image speakImage = new Image(getResources().getDrawable(android.R.drawable.ic_lock_silent_mode_off), 0);
-					speakImage.setOnClickListener(new TTSJapaneseSpeak(null, currentFuriganaEntry.getKanaPartJoined()));
-					actionTableRow.addScreenItem(speakImage);
-
-					// copy kanji
-					Image clipboardKanji = new Image(getResources().getDrawable(R.drawable.clipboard_kanji), 0);
-					clipboardKanji.setOnClickListener(new CopyToClipboard(dictionaryEntry.getKanji()));
-					actionTableRow.addScreenItem(clipboardKanji);
-
-					actionButtons.addTableRow(actionTableRow);
-					report.add(actionButtons);
-				}
-			} else {
-				if (addKanjiWrite == true) {
-					StringValue kanjiStringValue = new StringValue(kanjiSb.toString(), 35.0f, 0);
-
-					report.add(new StringValue(getString(R.string.word_dictionary_word_anim), 12.0f, 0));
-
-					kanjiStringValue.setOnClickListener(kanjiDrawOnClickListener);
-
-					report.add(kanjiStringValue);
-
-					TableLayout actionButtons = new TableLayout(TableLayout.LayoutParam.WrapContent_WrapContent, true, null);
-					TableRow actionTableRow = new TableRow();
-
-					Image speakImage = new Image(getResources().getDrawable(android.R.drawable.ic_lock_silent_mode_off), 0);
-
-					if (kanaList != null && kanaList.size() > 0) {
-						speakImage.setOnClickListener(new TTSJapaneseSpeak(null, kanaList.get(0)));
-					} else {
-						speakImage.setOnClickListener(new TTSJapaneseSpeak(null, dictionaryEntry.getKanji()));
-					}
-
-					actionTableRow.addScreenItem(speakImage);
-
-					// clipboard kanji
-					Image clipboardKanji = new Image(getResources().getDrawable(R.drawable.clipboard_kanji), 0);
-					clipboardKanji.setOnClickListener(new CopyToClipboard(dictionaryEntry.getKanji()));
-					actionTableRow.addScreenItem(clipboardKanji);
-
-					actionButtons.addTableRow(actionTableRow);
-					report.add(actionButtons);
-				}
-			}
 
 			// Reading
 			report.add(new TitleItem(getString(R.string.word_dictionary_details_reading_label), 0));
