@@ -130,6 +130,7 @@
 								'pathstr'  : p, 
 								'duration' : val.duration, 
 								'attr'     : applyStyles( d, val ),
+								'translateX': val.translateX,
 								'callback' : function (e) {  
 
 									// remove reference to setTimeOut
@@ -272,7 +273,9 @@
 			total_length = guide_path.getTotalLength( guide_path ),
 			last_point = guide_path.getPointAtLength( 0 ),
 			start_time = new Date().getTime(),
-			interval_length = 25;        
+			interval_length = 25;
+
+		path = path.translate(settings.translateX, 0);
 
 		var interval_id = setInterval( function()
 		{

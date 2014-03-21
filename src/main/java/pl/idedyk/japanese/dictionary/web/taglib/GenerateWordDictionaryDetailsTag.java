@@ -182,6 +182,12 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		out.println("	    \"drawTest\": {");
 		out.println("	        \"strokepath\": [");
 		
+		int fixme = 1;
+		// scalowanie, aby zmiescilo sie
+		// szybkosc pisania od dlugosci pisania (mniej wiecej)
+		// suwak, szybkosc pisania
+		// ponowne pisanie
+		
 		for (int currentStrokePathsIdx = 0; currentStrokePathsIdx < strokePathsForWord.size(); ++currentStrokePathsIdx) {
 			
 			KanjivgEntry kanjivgEntry = strokePathsForWord.get(currentStrokePathsIdx);
@@ -194,11 +200,12 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 				out.println("				{");
 		        out.println("					\"path\": \"" + currentStrokePath + "\",");
-		        out.println("					\"duration\": 350");
+		        out.println("					\"duration\": 300,");
+		        out.println("					\"translateX\": " + (currentStrokePathsIdx * 100));
 		        
 		        if (strokePathIdx != strokePaths.size() - 1 || currentStrokePathsIdx < strokePathsForWord.size()) {
 		        	out.println("				},");
-		        	
+		       	
 		        } else {
 		        	out.println("				}");
 		        }								
