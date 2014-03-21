@@ -11,6 +11,11 @@
 	<jsp:body>
 		
 		<jdwt:generateWordDictionaryDetails dictionaryEntry="${dictionaryEntry}"></jdwt:generateWordDictionaryDetails>
-				
+		
+		<div id="drawTest" width="800" height="800">
+		
+		
+		</div>
+		
 	</jsp:body>
 </t:template>

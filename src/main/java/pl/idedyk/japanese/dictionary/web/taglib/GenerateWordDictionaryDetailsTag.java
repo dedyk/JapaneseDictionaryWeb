@@ -15,6 +15,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
+import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 
 public class GenerateWordDictionaryDetailsTag extends TagSupport {
@@ -51,7 +52,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             
             // kanji
             generateKanjiSection(out, dictionaryManager, messageSource);
-            
             
             return SKIP_BODY;
             
@@ -164,7 +164,67 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             
             out.println("</div>");        	
         }
+        
+        // test rysowania kanji
+        kanjiDrawTest(out, dictionaryManager, kanjiSb.toString());
+
 	}
+	
+	private void kanjiDrawTest(JspWriter out, DictionaryManager dictionaryManager, String kanjiSb) throws IOException {
+		
+		List<KanjivgEntry> strokePathsForWord = dictionaryManager.getStrokePathsForWord(kanjiSb);
+
+		out.println("<div id=\"drawTest\" width=\"800\" height=\"800\">");
+		out.println("</div>");		
+		
+		out.println("<script>");
+		out.println("	var pathObj = {");
+		out.println("	    \"drawTest\": {");
+		out.println("	        \"strokepath\": [");
+		
+		for (int currentStrokePathsIdx = 0; currentStrokePathsIdx < strokePathsForWord.size(); ++currentStrokePathsIdx) {
+			
+			KanjivgEntry kanjivgEntry = strokePathsForWord.get(currentStrokePathsIdx);
+			
+			List<String> strokePaths = kanjivgEntry.getStrokePaths();
+			
+			for (int strokePathIdx = 0; strokePathIdx < strokePaths.size(); ++strokePathIdx) {
+				
+				String currentStrokePath = strokePaths.get(strokePathIdx);
+
+				out.println("				{");
+		        out.println("					\"path\": \"" + currentStrokePath + "\",");
+		        out.println("					\"duration\": 350");
+		        
+		        if (strokePathIdx != strokePaths.size() - 1 || currentStrokePathsIdx < strokePathsForWord.size()) {
+		        	out.println("				},");
+		        	
+		        } else {
+		        	out.println("				}");
+		        }								
+			}
+		}
+
+		out.println("	        ],");
+		out.println("	        \"dimensions\": {");
+		out.println("	            \"width\": 800,");
+		out.println("	            \"height\": 800");
+		out.println("	        }");
+		out.println("	    }");
+		out.println("	};");
+
+		out.println("	$(document).ready(function() {");
+		out.println("		$('#drawTest').lazylinepainter({");
+		out.println("			\"svgData\": pathObj,");
+		out.println("			\"strokeWidth\": 5,");
+		out.println("			\"strokeColor\": \"#262213\"");
+		out.println("		}).lazylinepainter('paint');");
+		out.println("	});");
+
+
+		out.println("</script>");
+	}
+
 	
 	/*
 

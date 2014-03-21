@@ -31,6 +31,9 @@
 	
 	<script src="<c:out value='${pageContext.request.contextPath}' />/js/datatables/jquery.dataTables.js"></script>
 	<script src="<c:out value='${pageContext.request.contextPath}' />/js/datatables/dataTables.bootstrap.js"></script>
+	
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/lazy-line-painter/jquery.lazylinepainter-1.4.1.js"></script>
+	<script src="<c:out value='${pageContext.request.contextPath}' />/js/raphael/raphael.js"></script>
 
 <style>
 	body {
