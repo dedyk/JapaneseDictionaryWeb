@@ -199,7 +199,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 				out.println("				{");
 		        out.println("					\"path\": \"" + currentStrokePath + "\",");
-		        out.println("					\"duration\": 300,");
+		        out.println("					\"duration\": 400,");
 		        out.println("					\"translateX\": " + (currentStrokePathsIdx * 100));
 		        
 		        if (strokePathIdx != strokePaths.size() - 1 || currentStrokePathsIdx < strokePathsForWord.size()) {
