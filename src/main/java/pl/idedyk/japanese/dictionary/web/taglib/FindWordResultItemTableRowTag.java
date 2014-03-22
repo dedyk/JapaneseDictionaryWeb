@@ -99,7 +99,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             		replaceAll("%KANJI%", kanji != null ? kanji : "-").
             		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-");
             
-            out.println("<a href=\"" + link + "\">" + detailsLinkValue + "</a>");
+            //out.println("<a href=\"" + link + "\">" + detailsLinkValue + "</a>");
+            out.println("<button type=\"button\" class=\"btn btn-default\" onclick=\"window.location = '" + link + "'\">" + detailsLinkValue + "</button>");
             
             out.println("</td>");
             
