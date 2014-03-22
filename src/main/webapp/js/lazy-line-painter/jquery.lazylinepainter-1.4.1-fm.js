@@ -67,7 +67,10 @@
 					var $s = $this.attr("id"); // Requires Id
 					var paper = new Raphael($s, $w, $h);
 					
-				 
+					if (typeof o.viewBoxX != 'undefined') {						
+						paper.setViewBox(o.viewBoxX, o.viewBoxY, o.viewBoxWidth, o.viewBoxHeight, o.viewBoxFit);
+					}
+									 
 					/*
 						BIND DATA TO ELEMENT
 					*/
@@ -274,8 +277,10 @@
 			last_point = guide_path.getPointAtLength( 0 ),
 			start_time = new Date().getTime(),
 			interval_length = 25;
-
-		path = path.translate(settings.translateX, 0);
+				
+		if (typeof settings.translateX != 'undefined') {
+			path = path.translate(settings.translateX, 0);
+		}
 
 		var interval_id = setInterval( function()
 		{

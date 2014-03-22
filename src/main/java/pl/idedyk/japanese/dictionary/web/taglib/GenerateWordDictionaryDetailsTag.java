@@ -185,7 +185,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		int fixme = 1;
 		// scalowanie, aby zmiescilo sie
 		// szybkosc pisania od dlugosci pisania (mniej wiecej)
-		// suwak, szybkosc pisania
 		// ponowne pisanie
 		
 		for (int currentStrokePathsIdx = 0; currentStrokePathsIdx < strokePathsForWord.size(); ++currentStrokePathsIdx) {
@@ -215,7 +214,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		out.println("	        ],");
 		out.println("	        \"dimensions\": {");
 		out.println("	            \"width\": 800,");
-		out.println("	            \"height\": 800");
+		out.println("	            \"height\": 800,");
 		out.println("	        }");
 		out.println("	    }");
 		out.println("	};");
@@ -224,7 +223,13 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		out.println("		$('#drawTest').lazylinepainter({");
 		out.println("			\"svgData\": pathObj,");
 		out.println("			\"strokeWidth\": 5,");
-		out.println("			\"strokeColor\": \"#262213\"");
+		out.println("			\"strokeColor\": \"#262213\",");
+		out.println("	        \"viewBoxX\": 0,");
+		out.println("	        \"viewBoxY\": 0,");
+		out.println("	        \"viewBoxWidth\": 1200,");
+		out.println("	        \"viewBoxHeight\": 1200,");
+		out.println("	        \"viewBoxFit\": false");
+
 		out.println("		}).lazylinepainter('paint');");
 		out.println("	});");
 
