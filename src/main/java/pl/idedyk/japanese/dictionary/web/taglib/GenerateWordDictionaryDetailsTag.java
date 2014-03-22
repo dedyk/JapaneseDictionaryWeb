@@ -69,9 +69,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	
 	private void generateKanjiSection(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
 		
-		int fixme = 1;
-		// animacja pisania znaku
-		// TTS
+		final String kanjiDrawId = "kanjiDrawId";
 		        
 		String prefixKana = dictionaryEntry.getPrefixKana();
 
@@ -141,7 +139,14 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 						out.println("<td>");
 						out.println(currentKanjiPart);
 						out.println("</td>");
-					}					
+					}		
+					
+					out.println("<td><div style=\"margin: 0 0 0 50px\">");
+					
+					// dodaj guzik pisania znakow kanji
+					GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanjiDrawId, getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
+					
+					out.println("</div></td>");
 					
 					out.println("</tr>");
 					out.println("</table>");
@@ -164,12 +169,9 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             
             out.println("</div>");        	
         }
-        
-		String kanjiDrawDialogTitle = getMessage(messageSource, "common.generateDrawStrokeDiv.dialog.title", new String[] { kanjiSb.toString() });
-        
-        // test rysowania kanji
-        GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, kanjiSb.toString(), "kanjiDrawId", kanjiDrawDialogTitle);
-
+                
+        // wygeneruj okienko rysowania znaku kanji
+        GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, messageSource, kanjiSb.toString(), kanjiDrawId);
 	}
 	
 	/*
@@ -879,9 +881,11 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return messageSource.getMessage(code, null, Locale.getDefault());
 	}
 
+	/*
 	private String getMessage(MessageSource messageSource, String code, String[] args) {
 		return messageSource.getMessage(code, args, Locale.getDefault());
 	}
+	*/
 	
 	public DictionaryEntry getDictionaryEntry() {
 		return dictionaryEntry;
