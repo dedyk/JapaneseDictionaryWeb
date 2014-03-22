@@ -15,8 +15,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
-import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 
 public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	
@@ -165,78 +165,12 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             out.println("</div>");        	
         }
         
+		String kanjiDrawDialogTitle = getMessage(messageSource, "common.generateDrawStrokeDiv.dialog.title", new String[] { kanjiSb.toString() });
+        
         // test rysowania kanji
-        kanjiDrawTest(out, dictionaryManager, kanjiSb.toString());
+        GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, kanjiSb.toString(), "kanjiDrawId", kanjiDrawDialogTitle);
 
 	}
-	
-	private void kanjiDrawTest(JspWriter out, DictionaryManager dictionaryManager, String kanjiSb) throws IOException {
-		
-		List<KanjivgEntry> strokePathsForWord = dictionaryManager.getStrokePathsForWord(kanjiSb);
-
-		out.println("<div id=\"drawTest\" width=\"800\" height=\"800\">");
-		out.println("</div>");		
-		
-		out.println("<script>");
-		out.println("	var pathObj = {");
-		out.println("	    \"drawTest\": {");
-		out.println("	        \"strokepath\": [");
-		
-		int fixme = 1;
-		// scalowanie, aby zmiescilo sie
-		// szybkosc pisania od dlugosci pisania (mniej wiecej)
-		// ponowne pisanie
-		
-		for (int currentStrokePathsIdx = 0; currentStrokePathsIdx < strokePathsForWord.size(); ++currentStrokePathsIdx) {
-			
-			KanjivgEntry kanjivgEntry = strokePathsForWord.get(currentStrokePathsIdx);
-			
-			List<String> strokePaths = kanjivgEntry.getStrokePaths();
-			
-			for (int strokePathIdx = 0; strokePathIdx < strokePaths.size(); ++strokePathIdx) {
-				
-				String currentStrokePath = strokePaths.get(strokePathIdx);
-
-				out.println("				{");
-		        out.println("					\"path\": \"" + currentStrokePath + "\",");
-		        out.println("					\"duration\": 400,");
-		        out.println("					\"translateX\": " + (currentStrokePathsIdx * 100));
-		        
-		        if (strokePathIdx != strokePaths.size() - 1 || currentStrokePathsIdx < strokePathsForWord.size()) {
-		        	out.println("				},");
-		       	
-		        } else {
-		        	out.println("				}");
-		        }								
-			}
-		}
-
-		out.println("	        ],");
-		out.println("	        \"dimensions\": {");
-		out.println("	            \"width\": 800,");
-		out.println("	            \"height\": 800,");
-		out.println("	        }");
-		out.println("	    }");
-		out.println("	};");
-
-		out.println("	$(document).ready(function() {");
-		out.println("		$('#drawTest').lazylinepainter({");
-		out.println("			\"svgData\": pathObj,");
-		out.println("			\"strokeWidth\": 5,");
-		out.println("			\"strokeColor\": \"#262213\",");
-		out.println("	        \"viewBoxX\": 0,");
-		out.println("	        \"viewBoxY\": 0,");
-		out.println("	        \"viewBoxWidth\": 1200,");
-		out.println("	        \"viewBoxHeight\": 1200,");
-		out.println("	        \"viewBoxFit\": false");
-
-		out.println("		}).lazylinepainter('paint');");
-		out.println("	});");
-
-
-		out.println("</script>");
-	}
-
 	
 	/*
 
@@ -945,6 +879,10 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return messageSource.getMessage(code, null, Locale.getDefault());
 	}
 
+	private String getMessage(MessageSource messageSource, String code, String[] args) {
+		return messageSource.getMessage(code, args, Locale.getDefault());
+	}
+	
 	public DictionaryEntry getDictionaryEntry() {
 		return dictionaryEntry;
 	}
