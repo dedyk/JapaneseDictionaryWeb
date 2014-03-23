@@ -40,7 +40,7 @@ public class GenerateDrawStrokeDialog {
 		
 		List<KanjivgEntry> strokePathsForWord = dictionaryManager.getStrokePathsForWord(word);
 
-		final int width = 800;
+		final int width = 900;
 		final int height = 200;
 		
 		out.println("<div id=\"" + dialogId + "\" width=\"" + width + "\" height=\"" + height + "\" class=\"modal fade\">\n");
@@ -52,9 +52,9 @@ public class GenerateDrawStrokeDialog {
 		out.println("      </div>\n");
 		out.println("      <div class=\"modal-body\">\n");
 		out.println("        <div id=\"" + dialogId + "Drawing\" />");
-				
+
 		out.println("<script>");
-		out.println("	var pathObj = {");
+		out.println("	var pathObj_" + dialogId + " = {");
 		out.println("	    \"" + dialogId + "Drawing\": {");
 		out.println("	        \"strokepath\": [");
 				
@@ -93,7 +93,7 @@ public class GenerateDrawStrokeDialog {
 		out.println("	$(document).ready(function() {");
 		
 		out.println("		$('#" + dialogId + "Drawing').lazylinepainter({");
-		out.println("			\"svgData\": pathObj,");
+		out.println("			\"svgData\": pathObj_" + dialogId + ",");
 		out.println("			\"strokeWidth\": 5,");
 		out.println("			\"strokeColor\": \"#262213\",");
 		out.println("	        \"viewBoxX\": 0,");
@@ -107,6 +107,7 @@ public class GenerateDrawStrokeDialog {
 
 		out.println("</script>");
 		
+		out.println("        </div>\n");
 		out.println("      </div>\n");
 		out.println("      <div class=\"modal-footer\">\n");
 		out.println("        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">" + closeButtonTitle + "</button>\n");

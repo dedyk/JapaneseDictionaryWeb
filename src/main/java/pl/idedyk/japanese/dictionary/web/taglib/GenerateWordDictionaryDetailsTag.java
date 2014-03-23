@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,6 +53,9 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             
             // kanji
             generateKanjiSection(out, dictionaryManager, messageSource);
+            
+            // czytanie
+            generateReadingSection(out, dictionaryManager, messageSource);
             
             return SKIP_BODY;
             
@@ -172,6 +176,87 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
                 
         // wygeneruj okienko rysowania znaku kanji
         GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, messageSource, kanjiSb.toString(), kanjiDrawId);
+	}
+	
+	private void generateReadingSection(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
+		
+		String prefixKana = dictionaryEntry.getPrefixKana();
+		String prefixRomaji = dictionaryEntry.getPrefixRomaji();
+		
+		List<String> kanaList = dictionaryEntry.getKanaList();
+		List<String> romajiList = dictionaryEntry.getRomajiList();
+		
+        out.println("<div class=\"panel panel-default\">");
+        
+        out.println("   <div class=\"panel-heading\">");
+        out.println("      <h3 class=\"panel-title\">" + getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.reading.title") + "</h3>");
+        out.println("   </div>");
+        
+        out.println("   <div class=\"panel-body\">");
+
+        out.println("      <table>");
+        
+        class IdAndText {
+        	
+        	public String id;
+        	
+        	public String text;
+
+			public IdAndText(String id, String text) {
+				this.id = id;
+				this.text = text;
+			}        	
+        }
+        
+        List<IdAndText> idAndTextList = new ArrayList<IdAndText>();
+                
+        for (int idx = 0; idx < kanaList.size(); ++idx) {
+        	
+        	final String kanaDrawId = "kanaDrawId" + idx;
+        	
+            out.println("         <tr>");
+
+			final StringBuffer sb = new StringBuffer();
+
+			if (prefixKana != null && prefixKana.equals("") == false) {
+				sb.append("(").append(prefixKana).append(") ");
+			}
+
+			sb.append(kanaList.get(idx)).append(" - ");
+
+			if (prefixRomaji != null && prefixRomaji.equals("") == false) {
+				sb.append("(").append(prefixRomaji).append(") ");
+			}
+
+			sb.append(romajiList.get(idx));
+			
+			out.println("            <td><h3>");
+			out.println(sb.toString());
+			out.println("            </h3></td>");
+			
+			out.println("            <td><div style=\"margin: 0 0 0 50px\">");
+			
+			// dodaj guzik pisania znakow kana
+			GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanaDrawId, getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
+			
+			idAndTextList.add(new IdAndText(kanaDrawId, sb.toString()));
+			
+			out.println("            </div></td>");
+			
+            out.println("         </tr>");
+        }
+        
+        out.println("      </table>");
+		
+        out.println("   </div>");
+        
+        out.println("</div>");
+        
+        for (IdAndText idAndText : idAndTextList) {
+        	
+            // wygeneruj okienko rysowania znakow kana
+            GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, messageSource, idAndText.text, idAndText.id);
+		}        
 	}
 	
 	/*

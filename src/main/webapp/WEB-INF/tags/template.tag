@@ -11,17 +11,17 @@
 <!doctype html>
 <html lang="pl">
 <head>
-	<meta charset="utf-8">
+	<meta charset="utf-8" />
 	
 	<title>${pageTitle}</title>
 	
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/excite-bike/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/excite-bike/jquery-ui-1.10.4.custom.css" rel="stylesheet" />
 	
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/bootstrap/bootstrap.css" rel="stylesheet">
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/bootstrap-select/bootstrap-select.css" rel="stylesheet">
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/bootstrap/bootstrap.css" rel="stylesheet" />
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/bootstrap-select/bootstrap-select.css" rel="stylesheet" />
 	
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/datatables/jquery.dataTables.css" rel="stylesheet">
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/datatables/jquery.dataTables.css" rel="stylesheet" />
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet" />
 	
 	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery/jquery-1.11.0.js"></script>
 	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery/jquery-ui-1.10.4.custom.js"></script>
@@ -52,7 +52,7 @@
 
 				<table>
 					<tr>
-						<td><img src="${pageContext.request.contextPath}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px"></td>
+						<td><img src="${pageContext.request.contextPath}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px" /></td>
 
 						<td style="font-size: 150%;"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>
 					</tr>
