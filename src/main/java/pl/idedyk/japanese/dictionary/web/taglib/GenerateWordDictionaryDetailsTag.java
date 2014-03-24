@@ -15,6 +15,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
@@ -56,6 +57,15 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             
             // czytanie
             generateReadingSection(out, dictionaryManager, messageSource);
+            
+            // tlumaczenie
+            generateTranslateSection(out, dictionaryManager, messageSource);
+            
+            // generuj informacje dodatkowe
+            generateAdditionalInfo(out, dictionaryManager, messageSource);
+            
+            // czesc mowy
+            generateWordType(out, dictionaryManager, messageSource);
             
             return SKIP_BODY;
             
@@ -259,108 +269,149 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		}        
 	}
 	
+	private void generateTranslateSection(JspWriter out, DictionaryManager dictionaryManager,
+			MessageSource messageSource) throws IOException {
+
+		List<String> translates = dictionaryEntry.getTranslates();
+
+		out.println("<div class=\"panel panel-default\">");
+
+		out.println("   <div class=\"panel-heading\">");
+		out.println("      <h3 class=\"panel-title\">"
+				+ getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.translate.title") + "</h3>");
+		out.println("   </div>");
+
+		out.println("   <div class=\"panel-body\">");
+						
+		for (int idx = 0; idx < translates.size(); ++idx) {
+
+			out.println("      <h4 style=\"margin-top: 0px;margin-bottom: 5px\">");
+			String currentTranslate = translates.get(idx);
+			
+			out.println(currentTranslate);
+		
+			out.println("      </h4>");
+		}
+		
+		out.println("   </div>");
+
+		out.println("</div>");
+	}
+	
+	private void generateAdditionalInfo(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
+		
+		String info = dictionaryEntry.getInfo();
+		
+		String kanji = dictionaryEntry.getKanji();
+		
+		boolean special = false;
+		
+		if (kanji != null && isSmTsukiNiKawatteOshiokiYo(kanji) == true) {
+			special = true;
+		}
+		
+		if (!(info != null && info.length() > 0) && (special == false)) {
+			return;			
+		}		
+		
+		out.println("<div class=\"panel panel-default\">");
+
+		out.println("   <div class=\"panel-heading\">");
+		out.println("      <h3 class=\"panel-title\">"
+				+ getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.info.title") + "</h3>");
+		out.println("   </div>");
+
+		if (special == false) {
+			
+			out.println("   <div class=\"panel-body\">");
+		
+			out.println("      <h4 style=\"margin-top: 0px;margin-bottom: 5px\">");
+			out.println(info);
+			out.println("      </h4>");
+			
+		} else {
+			
+			out.println("   <div class=\"panel-body\" style=\"font-family:monospace; font-size: 20%\">");
+			
+			String specialValue = getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.info.special");
+			
+			out.println(specialValue);
+		}		
+		
+		out.println("   </div>");
+
+		out.println("</div>");
+	}
+	
+	// special
+	private boolean isSmTsukiNiKawatteOshiokiYo(String value) {
+
+		if (value == null) {
+			return false;
+		}
+
+		if (value.equals("月に代わって、お仕置きよ!") == true) {
+			return true;
+		}
+
+		return false;
+	}
+	
+	private void generateWordType(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
+		
+		List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
+		
+		if (dictionaryEntryTypeList != null) {
+			
+			int addableDictionaryEntryTypeInfoCounter = 0;
+
+			for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
+
+				boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
+
+				if (addableDictionaryEntryTypeInfo == true) {
+					addableDictionaryEntryTypeInfoCounter++;
+				}
+			}
+
+			if (addableDictionaryEntryTypeInfoCounter > 0) {
+					
+				out.println("<div class=\"panel panel-default\">");
+
+				out.println("   <div class=\"panel-heading\">");
+				out.println("      <h3 class=\"panel-title\">"
+						+ getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.translate.title") + "</h3>");
+				out.println("   </div>");
+
+				out.println("   <div class=\"panel-body\">");
+								
+				for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
+
+					boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
+
+					if (addableDictionaryEntryTypeInfo == true) {
+						out.println("      <h4 style=\"margin-top: 0px;margin-bottom: 5px\">");
+						
+						out.println(currentDictionaryEntryType.getName());
+					
+						out.println("      </h4>");
+					}
+				}
+				
+				out.println("   </div>");
+
+				out.println("</div>");
+			}			
+		}
+	}
+
+	
 	/*
 
 		private List<IScreenItem> generateDetails(final DictionaryEntry dictionaryEntry,
 				DictionaryEntryType forceDictionaryEntryType, final ScrollView scrollMainLayout) {
 
 			List<IScreenItem> report = new ArrayList<IScreenItem>();
-
-			String prefixKana = dictionaryEntry.getPrefixKana();
-			String prefixRomaji = dictionaryEntry.getPrefixRomaji();
-
-			// Reading
-			report.add(new TitleItem(getString(R.string.word_dictionary_details_reading_label), 0));
-			report.add(new StringValue(getString(R.string.word_dictionary_word_anim), 12.0f, 0));
-
-			List<String> romajiList = dictionaryEntry.getRomajiList();
-
-			for (int idx = 0; idx < kanaList.size(); ++idx) {
-
-				final StringBuffer sb = new StringBuffer();
-
-				if (prefixKana != null) {
-					sb.append("(").append(prefixKana).append(") ");
-				}
-
-				sb.append(kanaList.get(idx)).append(" - ");
-
-				if (prefixRomaji != null) {
-					sb.append("(").append(prefixRomaji).append(") ");
-				}
-
-				sb.append(romajiList.get(idx));
-
-				StringValue readingStringValue = new StringValue(sb.toString(), 20.0f, 0);
-
-				readingStringValue.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						List<KanjivgEntry> strokePathsForWord = JapaneseAndroidLearnHelperApplication.getInstance()
-								.getDictionaryManager(WordDictionaryDetails.this).getStrokePathsForWord(sb.toString());
-
-						StrokePathInfo strokePathInfo = new StrokePathInfo();
-
-						strokePathInfo.setStrokePaths(strokePathsForWord);
-
-						Intent intent = new Intent(getApplicationContext(), SodActivity.class);
-
-						intent.putExtra("strokePathsInfo", strokePathInfo);
-						intent.putExtra("annotateStrokes", false);
-
-						startActivity(intent);
-					}
-				});
-
-				report.add(readingStringValue);
-
-				TableLayout actionButtons = new TableLayout(TableLayout.LayoutParam.WrapContent_WrapContent, true, null);
-				TableRow actionTableRow = new TableRow();
-
-				// speak image		
-				Image speakImage = new Image(getResources().getDrawable(android.R.drawable.ic_lock_silent_mode_off), 0);
-				speakImage.setOnClickListener(new TTSJapaneseSpeak(null, kanaList.get(idx)));
-				actionTableRow.addScreenItem(speakImage);
-
-				// clipboard kana
-				Image clipboardKana = new Image(getResources().getDrawable(R.drawable.clipboard_kana), 0);
-				clipboardKana.setOnClickListener(new CopyToClipboard(kanaList.get(idx)));
-				actionTableRow.addScreenItem(clipboardKana);
-
-				// clipboard romaji
-				Image clipboardRomaji = new Image(getResources().getDrawable(R.drawable.clipboard_romaji), 0);
-				clipboardRomaji.setOnClickListener(new CopyToClipboard(romajiList.get(idx)));
-				actionTableRow.addScreenItem(clipboardRomaji);
-
-				actionButtons.addTableRow(actionTableRow);
-
-				report.add(actionButtons);
-			}
-
-			// Translate
-			report.add(new TitleItem(getString(R.string.word_dictionary_details_translate_label), 0));
-
-			List<String> translates = dictionaryEntry.getTranslates();
-
-			for (int idx = 0; idx < translates.size(); ++idx) {
-				report.add(new StringValue(translates.get(idx), 20.0f, 0));
-			}
-
-			// Additional info
-			report.add(new TitleItem(getString(R.string.word_dictionary_details_additional_info_label), 0));
-
-			if (isSmTsukiNiKawatteOshiokiYo(kanjiSb.toString()) == true) {
-				report.add(createSmTsukiNiKawatteOshiokiYo());
-			} else {
-				String info = dictionaryEntry.getInfo();
-
-				if (info != null && info.length() > 0) {
-					report.add(new StringValue(info, 20.0f, 0));
-				} else {
-					report.add(new StringValue("-", 20.0f, 0));
-				}
-			}
 
 			// Word type
 			int addableDictionaryEntryTypeInfoCounter = 0;
@@ -854,19 +905,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			}
 		}
 
-		// special
-		private boolean isSmTsukiNiKawatteOshiokiYo(String value) {
-
-			if (value == null) {
-				return false;
-			}
-
-			if (value.equals("月に代わって、お仕置きよ!") == true) {
-				return true;
-			}
-
-			return false;
-		}
 
 		private StringValue createSmTsukiNiKawatteOshiokiYo() {
 
