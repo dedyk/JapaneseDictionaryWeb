@@ -9,8 +9,11 @@
 <t:template pageTitle="${pageTitle}">
 
 	<jsp:body>
-		
-		<jdwt:generateWordDictionaryDetails dictionaryEntry="${dictionaryEntry}"></jdwt:generateWordDictionaryDetails>
+			
+		<jdwt:generateWordDictionaryDetails
+			dictionaryEntry="${dictionaryEntry}"
+			forceDictionaryEntryType="${forceDictionaryEntryType}"
+			detailsLink="${pageContext.request.contextPath}/wordDictionaryDetails/%ID%/%KANJI%/%KANA%?forceDictionaryEntryType=%FORCEDICTIONARYENTRYTYPE%" />
 				
 	</jsp:body>
 </t:template>

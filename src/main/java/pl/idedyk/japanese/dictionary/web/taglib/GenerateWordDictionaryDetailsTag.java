@@ -26,6 +26,10 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	
 	private DictionaryEntry dictionaryEntry;
 	
+	private DictionaryEntryType forceDictionaryEntryType;
+	
+	private String detailsLink;
+	
 	@Override
 	public int doStartTag() throws JspException {
 		
@@ -66,7 +70,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             
             // czesc mowy
             generateWordType(out, dictionaryManager, messageSource);
-            
+                        
             return SKIP_BODY;
             
         } catch (IOException e) {
@@ -380,23 +384,60 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 				out.println("   <div class=\"panel-heading\">");
 				out.println("      <h3 class=\"panel-title\">"
-						+ getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.translate.title") + "</h3>");
+						+ getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.dictionaryType.title") + "</h3>");
 				out.println("   </div>");
 
 				out.println("   <div class=\"panel-body\">");
-								
+				
+				out.println("      <table>");
+				
+				if (addableDictionaryEntryTypeInfoCounter > 1) {
+					out.println("         <tr>");
+					out.println("            <td colspan=\"2\">");
+					
+					out.println("               <h5 style=\"margin: 0 0 10px 0\">");
+					out.println(getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.info"));
+					out.println("               </h5>");
+					
+					out.println("            </td>");					
+					out.println("         </tr>");						
+				}
+				
 				for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
 
 					boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
 
-					if (addableDictionaryEntryTypeInfo == true) {
-						out.println("      <h4 style=\"margin-top: 0px;margin-bottom: 5px\">");
-						
-						out.println(currentDictionaryEntryType.getName());
+					out.println("         <tr>");
 					
-						out.println("      </h4>");
+					if (addableDictionaryEntryTypeInfo == true) {
+						
+						out.println("         <td>");
+						out.println("            <h4 style=\"margin-top: 0px;margin-bottom: 5px\">");
+						out.println(currentDictionaryEntryType.getName());
+						out.println("            </h4>");
+						out.println("         </td>");
+						
+						if (addableDictionaryEntryTypeInfoCounter > 1 && (forceDictionaryEntryType == null || forceDictionaryEntryType != currentDictionaryEntryType)) {
+							
+							String kanji = dictionaryEntry.getKanji();
+							List<String> kanaList = dictionaryEntry.getKanaList();
+							
+				            String link = detailsLink.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
+				            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
+				            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-").
+				            		replaceAll("%FORCEDICTIONARYENTRYTYPE%", currentDictionaryEntryType.toString());
+
+							out.println("         <td><div style=\"margin: 0 0 5px 50px\">");
+							out.println("            <button type=\"button\" class=\"btn btn-default\" onclick=\"window.location = '" + link + "'\">" + 
+									getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.show") + "</button>\n");
+							out.println("         </div></td>");
+						}
 					}
+					
+					out.println("         </tr>");
 				}
+				
+				out.println("      </table>");
 				
 				out.println("   </div>");
 
@@ -404,7 +445,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			}			
 		}
 	}
-
 	
 	/*
 
@@ -412,54 +452,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 				DictionaryEntryType forceDictionaryEntryType, final ScrollView scrollMainLayout) {
 
 			List<IScreenItem> report = new ArrayList<IScreenItem>();
-
-			// Word type
-			int addableDictionaryEntryTypeInfoCounter = 0;
-
-			List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
-
-			if (dictionaryEntryTypeList != null) {
-				for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
-
-					boolean addableDictionaryEntryTypeInfo = DictionaryEntryType
-							.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
-
-					if (addableDictionaryEntryTypeInfo == true) {
-						addableDictionaryEntryTypeInfoCounter++;
-					}
-				}
-			}
-
-			if (addableDictionaryEntryTypeInfoCounter > 0) {
-				report.add(new TitleItem(getString(R.string.word_dictionary_details_part_of_speech), 0));
-
-				if (addableDictionaryEntryTypeInfoCounter > 1) {
-					report.add(new StringValue(getString(R.string.word_dictionary_details_part_of_speech_press), 12.0f, 0));
-				}
-
-				for (final DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
-
-					StringValue currentDictionaryEntryTypeStringValue = new StringValue(
-							currentDictionaryEntryType.getName(), 20.0f, 0);
-
-					if (addableDictionaryEntryTypeInfoCounter > 1) {
-						currentDictionaryEntryTypeStringValue.setOnClickListener(new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								Intent intent = new Intent(getApplicationContext(), WordDictionaryDetails.class);
-
-								intent.putExtra("item", dictionaryEntry);
-								intent.putExtra("forceDictionaryEntryType", currentDictionaryEntryType);
-
-								startActivity(intent);
-							}
-						});
-					}
-
-					report.add(currentDictionaryEntryTypeStringValue);
-				}
-			}
 
 			List<Attribute> attributeList = dictionaryEntry.getAttributeList().getAttributeList();
 
@@ -1016,5 +1008,21 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 	public void setDictionaryEntry(DictionaryEntry dictionaryEntry) {
 		this.dictionaryEntry = dictionaryEntry;
+	}
+
+	public DictionaryEntryType getForceDictionaryEntryType() {
+		return forceDictionaryEntryType;
+	}
+
+	public void setForceDictionaryEntryType(DictionaryEntryType forceDictionaryEntryType) {
+		this.forceDictionaryEntryType = forceDictionaryEntryType;
+	}
+
+	public String getDetailsLink() {
+		return detailsLink;
+	}
+
+	public void setDetailsLink(String detailsLink) {
+		this.detailsLink = detailsLink;
 	}
 }
