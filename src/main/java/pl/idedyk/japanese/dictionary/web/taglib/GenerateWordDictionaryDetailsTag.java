@@ -417,7 +417,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 						out.println("            </h4>");
 						out.println("         </td>");
 						
-						if (addableDictionaryEntryTypeInfoCounter > 1 && (forceDictionaryEntryType == null || forceDictionaryEntryType != currentDictionaryEntryType)) {
+						if (addableDictionaryEntryTypeInfoCounter > 1) {
 							
 							String kanji = dictionaryEntry.getKanji();
 							List<String> kanaList = dictionaryEntry.getKanaList();
