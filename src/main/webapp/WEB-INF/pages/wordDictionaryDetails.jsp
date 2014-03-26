@@ -13,7 +13,8 @@
 		<jdwt:generateWordDictionaryDetails
 			dictionaryEntry="${dictionaryEntry}"
 			forceDictionaryEntryType="${forceDictionaryEntryType}"
-			detailsLink="${pageContext.request.contextPath}/wordDictionaryDetails/%ID%/%KANJI%/%KANA%?forceDictionaryEntryType=%FORCEDICTIONARYENTRYTYPE%" />
+			detailsLink="${pageContext.request.contextPath}/wordDictionaryDetails/%ID%/%KANJI%/%KANA%"
+			detailsLinkWithForceDictionaryEntryType="${pageContext.request.contextPath}/wordDictionaryDetails/%ID%/%KANJI%/%KANA%?forceDictionaryEntryType=%FORCEDICTIONARYENTRYTYPE%" />
 				
 	</jsp:body>
 </t:template>

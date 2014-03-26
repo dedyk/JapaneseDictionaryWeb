@@ -14,6 +14,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import pl.idedyk.japanese.dictionary.api.dto.Attribute;
+import pl.idedyk.japanese.dictionary.api.dto.AttributeType;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
@@ -29,6 +31,8 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	private DictionaryEntryType forceDictionaryEntryType;
 	
 	private String detailsLink;
+	
+	private String detailsLinkWithForceDictionaryEntryType;
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -70,6 +74,9 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             
             // czesc mowy
             generateWordType(out, dictionaryManager, messageSource);
+            
+            // dodatkowe atrybuty
+            generateAttribute(out, dictionaryManager, messageSource);
                         
             return SKIP_BODY;
             
@@ -244,9 +251,9 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 			sb.append(romajiList.get(idx));
 			
-			out.println("            <td><h3>");
+			out.println("            <td><h4>");
 			out.println(sb.toString());
-			out.println("            </h3></td>");
+			out.println("            </h4></td>");
 			
 			out.println("            <td><div style=\"margin: 0 0 0 50px\">");
 			
@@ -422,7 +429,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 							String kanji = dictionaryEntry.getKanji();
 							List<String> kanaList = dictionaryEntry.getKanaList();
 							
-				            String link = detailsLink.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
+				            String link = detailsLinkWithForceDictionaryEntryType.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
 				            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
 				            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-").
 				            		replaceAll("%FORCEDICTIONARYENTRYTYPE%", currentDictionaryEntryType.toString());
@@ -446,92 +453,114 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		}
 	}
 	
+	private void generateAttribute(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
+		
+		List<Attribute> attributeList = dictionaryEntry.getAttributeList().getAttributeList();
+		
+		if (attributeList != null && attributeList.size() > 0) {
+			
+			out.println("<div class=\"panel panel-default\">");
+
+			out.println("   <div class=\"panel-heading\">");
+			out.println("      <h3 class=\"panel-title\">"
+					+ getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.atribute.title") + "</h3>");
+			out.println("   </div>");
+
+			out.println("   <div class=\"panel-body\">");
+			
+			for (Attribute currentAttribute : attributeList) {
+
+				AttributeType attributeType = currentAttribute.getAttributeType();
+
+				if (attributeType.isShow() == true) {
+					out.println("      <h4 style=\"margin-top: 0px;margin-bottom: 5px\">");
+					out.println(attributeType.getName());
+					out.println("      </h4>");
+				}
+					
+				if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR || attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR) {
+
+					Integer transitivityIntransitivityPairWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
+
+					final DictionaryEntry transitivityIntransitivityPairDictionaryEntry = dictionaryManager.getDictionaryEntryById(transitivityIntransitivityPairWordId);
+
+					if (transitivityIntransitivityPairDictionaryEntry != null) {
+						
+						out.println("      <table>");
+						out.println("         <tr>");
+						
+						out.println("            <td>");
+						
+						out.println("               <h4 style=\"margin-top: 0px; margin-bottom: 5px; margin-left: 30px\">");
+						out.println(attributeType.getName());
+						out.println("               </h4>");						
+						
+						out.println("            </td>");
+						
+						out.println("            <td rowspan=\"2\"><div style=\"margin: 0 0 0 50px\">");
+						
+						String kanji = transitivityIntransitivityPairDictionaryEntry.getKanji();
+						List<String> kanaList = transitivityIntransitivityPairDictionaryEntry.getKanaList();
+						
+			            String link = detailsLink.replaceAll("%ID%", String.valueOf(transitivityIntransitivityPairDictionaryEntry.getId())).
+			            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
+			            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-");
+
+						out.println("               <button type=\"button\" class=\"btn btn-default\" onclick=\"window.location = '" + link + "'\">" + 
+								getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.atribute.transitivityIntransitivityPairDictionaryEntry.show") + "</button>\n");
+
+								
+						out.println("            </div></td>");						
+						out.println("         </tr>");
+
+						
+						List<String> transitivityIntransitivityPairDictionaryEntryKanaList = transitivityIntransitivityPairDictionaryEntry.getKanaList();
+						List<String> transitivityIntransitivityPairDictionaryEntryRomajiList = transitivityIntransitivityPairDictionaryEntry.getRomajiList();
+
+						for (int transitivityIntransitivityPairDictionaryEntryKanaListIdx = 0; transitivityIntransitivityPairDictionaryEntryKanaListIdx < transitivityIntransitivityPairDictionaryEntryKanaList
+								.size(); transitivityIntransitivityPairDictionaryEntryKanaListIdx++) {
+
+							StringBuffer transitivityIntrasitivitySb = new StringBuffer();
+
+							if (transitivityIntransitivityPairDictionaryEntry.isKanjiExists() == true) {
+								transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntry.getKanji()).append(", ");
+							}
+
+							transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryKanaList.get(transitivityIntransitivityPairDictionaryEntryKanaListIdx)).append(", ");
+							
+							transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryRomajiList.get(transitivityIntransitivityPairDictionaryEntryKanaListIdx));
+
+							out.println("         <tr>");
+							out.println("            <td>");
+							
+							out.println("               <h4 style=\"margin-top: 0px; margin-bottom: 5px; margin-left: 30px\">");
+							out.println(transitivityIntrasitivitySb.toString());
+							out.println("               </h4>");
+							
+							out.println("            </td>");
+							out.println("         </tr>");
+						}
+						
+						out.println("      </table>");
+					}
+				}
+			}
+			
+			out.println("      </h4>");
+			
+			out.println("   </div>");
+
+			out.println("</div>");			
+		}
+	}
+
+	
 	/*
 
 		private List<IScreenItem> generateDetails(final DictionaryEntry dictionaryEntry,
 				DictionaryEntryType forceDictionaryEntryType, final ScrollView scrollMainLayout) {
 
 			List<IScreenItem> report = new ArrayList<IScreenItem>();
-
-			List<Attribute> attributeList = dictionaryEntry.getAttributeList().getAttributeList();
-
-			if (attributeList != null && attributeList.size() > 0) {
-				report.add(new TitleItem(getString(R.string.word_dictionary_details_attributes), 0));
-
-				for (Attribute currentAttribute : attributeList) {
-
-					AttributeType attributeType = currentAttribute.getAttributeType();
-
-					if (attributeType.isShow() == true) {
-						report.add(new StringValue(attributeType.getName(), 15.0f, 0));
-					}
-
-					if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR
-							|| attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR) {
-
-						Integer transitivityIntransitivityPairWordId = Integer.parseInt(currentAttribute
-								.getAttributeValue().get(0));
-
-						final DictionaryEntry transitivityIntransitivityPairDictionaryEntry = JapaneseAndroidLearnHelperApplication
-								.getInstance().getDictionaryManager(WordDictionaryDetails.this)
-								.getDictionaryEntryById(transitivityIntransitivityPairWordId);
-
-						if (transitivityIntransitivityPairDictionaryEntry != null) {
-
-							StringValue attributeTypeStringValue = new StringValue(attributeType.getName(), 15.0f, 0);
-
-							OnClickListener goToTransitivityIntransitivityPairDictionaryEntryDetails = new OnClickListener() {
-
-								@Override
-								public void onClick(View v) {
-
-									Intent intent = new Intent(getApplicationContext(), WordDictionaryDetails.class);
-
-									intent.putExtra("item", transitivityIntransitivityPairDictionaryEntry);
-
-									startActivity(intent);
-								}
-							};
-
-							attributeTypeStringValue
-									.setOnClickListener(goToTransitivityIntransitivityPairDictionaryEntryDetails);
-
-							report.add(attributeTypeStringValue);
-
-							List<String> transitivityIntransitivityPairDictionaryEntryKanaList = transitivityIntransitivityPairDictionaryEntry
-									.getKanaList();
-							List<String> transitivityIntransitivityPairDictionaryEntryRomajiList = transitivityIntransitivityPairDictionaryEntry
-									.getRomajiList();
-
-							for (int transitivityIntransitivityPairDictionaryEntryKanaListIdx = 0; transitivityIntransitivityPairDictionaryEntryKanaListIdx < transitivityIntransitivityPairDictionaryEntryKanaList
-									.size(); transitivityIntransitivityPairDictionaryEntryKanaListIdx++) {
-
-								StringBuffer transitivityIntrasitivitySb = new StringBuffer();
-
-								if (transitivityIntransitivityPairDictionaryEntry.isKanjiExists() == true) {
-									transitivityIntrasitivitySb.append(
-											transitivityIntransitivityPairDictionaryEntry.getKanji()).append(", ");
-								}
-
-								transitivityIntrasitivitySb.append(
-										transitivityIntransitivityPairDictionaryEntryKanaList
-												.get(transitivityIntransitivityPairDictionaryEntryKanaListIdx))
-										.append(", ");
-								transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryRomajiList
-										.get(transitivityIntransitivityPairDictionaryEntryKanaListIdx));
-
-								StringValue transitivityIntransitivityPairDictionaryEntryKanjiKanaRomajiListStringValue = new StringValue(
-										transitivityIntrasitivitySb.toString(), 15.0f, 1);
-
-								transitivityIntransitivityPairDictionaryEntryKanjiKanaRomajiListStringValue
-										.setOnClickListener(goToTransitivityIntransitivityPairDictionaryEntryDetails);
-
-								report.add(transitivityIntransitivityPairDictionaryEntryKanjiKanaRomajiListStringValue);
-							}
-						}
-					}
-				}
-			}
 
 			// dictionary groups
 			List<GroupEnum> groups = dictionaryEntry.getGroups();
@@ -1024,5 +1053,13 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 	public void setDetailsLink(String detailsLink) {
 		this.detailsLink = detailsLink;
+	}
+
+	public String getDetailsLinkWithForceDictionaryEntryType() {
+		return detailsLinkWithForceDictionaryEntryType;
+	}
+
+	public void setDetailsLinkWithForceDictionaryEntryType(String detailsLinkWithForceDictionaryEntryType) {
+		this.detailsLinkWithForceDictionaryEntryType = detailsLinkWithForceDictionaryEntryType;
 	}
 }
