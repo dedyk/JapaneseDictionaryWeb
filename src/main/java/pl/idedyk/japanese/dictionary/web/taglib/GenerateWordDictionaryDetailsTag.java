@@ -20,6 +20,12 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.html.Div;
+import pl.idedyk.japanese.dictionary.web.html.H;
+import pl.idedyk.japanese.dictionary.web.html.Table;
+import pl.idedyk.japanese.dictionary.web.html.Td;
+import pl.idedyk.japanese.dictionary.web.html.Text;
+import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 
 public class GenerateWordDictionaryDetailsTag extends TagSupport {
@@ -34,6 +40,10 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	
 	private String detailsLinkWithForceDictionaryEntryType;
 	
+	private MessageSource messageSource;
+	
+	private DictionaryManager dictionaryManager;
+	
 	@Override
 	public int doStartTag() throws JspException {
 		
@@ -41,8 +51,8 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
-		MessageSource messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
-		DictionaryManager dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
+		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
+		this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
 		
 		try {
             JspWriter out = pageContext.getOut();
@@ -51,17 +61,22 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             	           	
             	// nie znaleziono strony
             	out.println("<div class=\"alert alert-danger\">");
-            	out.println(getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.null"));            	
+            	out.println(getMessage("wordDictionaryDetails.page.dictionaryEntry.null"));            	
             	out.println("</div>");
             	
             	return SKIP_BODY;
             }
             
             // tytul strony
-            generateTitle(out, messageSource);
+            generateTitle(out);
+            
+            // generowanie informacji podstawowych
+            generateMainInfo(out);
             
             // kanji
-            generateKanjiSection(out, dictionaryManager, messageSource);
+            int fixme = 1;
+            
+            //generateKanjiSection(out, dictionaryManager, messageSource);
             
             // czytanie
             generateReadingSection(out, dictionaryManager, messageSource);
@@ -85,14 +100,47 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         }
 	}
 	
-	private void generateTitle(JspWriter out, MessageSource messageSource) throws IOException {
+	private void generateTitle(JspWriter out) throws IOException {
 		
         out.println("<h4 class=\"page-header\">");
-        out.println(getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.title"));
+        out.println(getMessage("wordDictionaryDetails.page.dictionaryEntry.title"));
         out.println("</h4>");		
 	}
 	
-	private void generateKanjiSection(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
+	private void generateMainInfo(JspWriter out) throws IOException {
+		
+		Div panelDiv = new Div("panel panel-default");
+		
+		Div panelHeading = new Div("panel-heading");
+		
+		// tytul sekcji
+		H h3Title = new H(3, "panel-title");
+		h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.mainInfo")));
+		
+		panelHeading.addHtmlElement(h3Title);
+		
+		panelDiv.addHtmlElement(panelHeading);
+		
+		// zawartosc sekcji
+		Div panelBody = new Div("panel-body");
+		
+		// kanji
+		Div kanjiDiv = generateKanjiSection();
+		
+		panelBody.addHtmlElement(kanjiDiv);
+		
+		
+		
+		
+		panelDiv.addHtmlElement(panelBody);
+		
+		// renderowanie
+		panelDiv.render(out);
+	}
+	
+	private Div generateKanjiSection() throws IOException {
+		
+		Div kanjiDiv = new Div();
 		
 		final String kanjiDrawId = "kanjiDrawId";
 		        
@@ -124,14 +172,24 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         
         if (addKanjiWrite == true) {
         	
-            out.println("<div class=\"panel panel-default\">");
-            
-            out.println("   <div class=\"panel-heading\">");
-            out.println("      <h3 class=\"panel-title\">" + getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.kanji.title") + "</h3>");
-            out.println("   </div>");
-            
-            out.println("   <div class=\"panel-body\">");
-       	
+        	Div row1Div = new Div("row");
+        	
+        	// kanji - tytul
+        	Div kanjiTitleDiv = new Div("col-md-1");
+        	
+        	H kanjiTitleH4 = new H(4, null, "margin-top: 0px");
+        	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
+        	
+        	kanjiTitleDiv.addHtmlElement(kanjiTitleH4);
+        	
+        	row1Div.addHtmlElement(kanjiTitleDiv);
+        	
+        	kanjiDiv.addHtmlElement(row1Div);
+        	
+        	Div row2Div = new Div("row");
+        	
+        	row2Div.addHtmlElement(new Div("col-md-1"));
+        	        	       		
             List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(dictionaryEntry);
         	            
             if (furiganaEntries != null && furiganaEntries.size() > 0 && addKanjiWrite == true) {
@@ -141,31 +199,39 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 					List<String> furiganaKanaParts = currentFuriganaEntry.getKanaPart();
 					List<String> furiganaKanjiParts = currentFuriganaEntry.getKanjiPart();
 					
-					out.println("<table>");
-					out.println("<tr style=\"font-size: 123%; text-align:center;\">");
+					Table kanjiTable = new Table();
 					
+					Tr kanaPartTr = new Tr(null, "font-size: 123%; text-align:center;");
+										
 					for (int idx = 0; idx < furiganaKanaParts.size(); ++idx) {
 						
 						String currentKanaPart = furiganaKanaParts.get(idx);
 						
-						out.println("<td>");
-						out.println(currentKanaPart);
-						out.println("</td>");
+						Td currentKanaPartTd = new Td();
+						
+						currentKanaPartTd.addHtmlElement(new Text(currentKanaPart));
+						
+						kanaPartTr.addTd(currentKanaPartTd);
 					}
 					
-					out.println("</tr>");
-					
-					out.println("<tr style=\"font-size: 300%;\">");
+					kanjiTable.addTr(kanaPartTr);
+										
+					Tr kanjiKanjiTr = new Tr(null, "font-size: 300%;");
 					
 					for (int idx = 0; idx < furiganaKanjiParts.size(); ++idx) {
 						
 						String currentKanjiPart = furiganaKanjiParts.get(idx);
 						
-						out.println("<td>");
-						out.println(currentKanjiPart);
-						out.println("</td>");
-					}		
+						Td currentKanjiPartTd = new Td();
+						
+						currentKanjiPartTd.addHtmlElement(new Text(currentKanjiPart));
+						
+						kanjiKanjiTr.addTd(currentKanjiPartTd);
+					}	
 					
+					kanjiTable.addTr(kanjiKanjiTr);
+					
+					/*
 					out.println("<td><div style=\"margin: 0 0 0 50px\">");
 					
 					// dodaj guzik pisania znakow kanji
@@ -175,28 +241,29 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 					
 					out.println("</tr>");
 					out.println("</table>");
+					*/
+					
+					row2Div.addHtmlElement(kanjiTable);
             	}
             	
             } else {
             	
-            	out.println("<table>");   	
-            	out.println("<tr style=\"font-size: 300%;\">");
+            	Div kanjiDivText = new Div(null, "font-size: 200%");
+            	Text kanjiText = new Text(kanjiSb.toString());
             	
-				out.println("<td>");
-				out.println(kanjiSb.toString());
-				out.println("</td>");            	
-            	
-            	out.println("</tr>");
-            	out.println("</table>");
+            	kanjiDivText.addHtmlElement(kanjiText);
+            	row2Div.addHtmlElement(kanjiDivText);
             }
         	            
-            out.println("   </div>");
-            
-            out.println("</div>");        	
+            kanjiDiv.addHtmlElement(row2Div);
         }
                 
         // wygeneruj okienko rysowania znaku kanji
+        /*
         GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, messageSource, kanjiSb.toString(), kanjiDrawId);
+        */
+        
+        return kanjiDiv;
 	}
 	
 	private void generateReadingSection(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
@@ -210,7 +277,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         out.println("<div class=\"panel panel-default\">");
         
         out.println("   <div class=\"panel-heading\">");
-        out.println("      <h3 class=\"panel-title\">" + getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.reading.title") + "</h3>");
+        out.println("      <h3 class=\"panel-title\">" + getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title") + "</h3>");
         out.println("   </div>");
         
         out.println("   <div class=\"panel-body\">");
@@ -258,7 +325,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			out.println("            <td><div style=\"margin: 0 0 0 50px\">");
 			
 			// dodaj guzik pisania znakow kana
-			GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanaDrawId, getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
+			GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanaDrawId, getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
 			
 			idAndTextList.add(new IdAndText(kanaDrawId, sb.toString()));
 			
@@ -289,7 +356,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 		out.println("   <div class=\"panel-heading\">");
 		out.println("      <h3 class=\"panel-title\">"
-				+ getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.translate.title") + "</h3>");
+				+ getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title") + "</h3>");
 		out.println("   </div>");
 
 		out.println("   <div class=\"panel-body\">");
@@ -329,7 +396,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 		out.println("   <div class=\"panel-heading\">");
 		out.println("      <h3 class=\"panel-title\">"
-				+ getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.info.title") + "</h3>");
+				+ getMessage("wordDictionaryDetails.page.dictionaryEntry.info.title") + "</h3>");
 		out.println("   </div>");
 
 		if (special == false) {
@@ -344,7 +411,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			
 			out.println("   <div class=\"panel-body\" style=\"font-family:monospace; font-size: 20%\">");
 			
-			String specialValue = getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.info.special");
+			String specialValue = getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special");
 			
 			out.println(specialValue);
 		}		
@@ -391,7 +458,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 				out.println("   <div class=\"panel-heading\">");
 				out.println("      <h3 class=\"panel-title\">"
-						+ getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.dictionaryType.title") + "</h3>");
+						+ getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.title") + "</h3>");
 				out.println("   </div>");
 
 				out.println("   <div class=\"panel-body\">");
@@ -403,7 +470,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 					out.println("            <td colspan=\"2\">");
 					
 					out.println("               <h5 style=\"margin: 0 0 10px 0\">");
-					out.println(getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.info"));
+					out.println(getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.info"));
 					out.println("               </h5>");
 					
 					out.println("            </td>");					
@@ -436,7 +503,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 							out.println("         <td><div style=\"margin: 0 0 5px 50px\">");
 							out.println("            <button type=\"button\" class=\"btn btn-default\" onclick=\"window.location = '" + link + "'\">" + 
-									getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.show") + "</button>\n");
+									getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.show") + "</button>\n");
 							out.println("         </div></td>");
 						}
 					}
@@ -463,7 +530,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 			out.println("   <div class=\"panel-heading\">");
 			out.println("      <h3 class=\"panel-title\">"
-					+ getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.atribute.title") + "</h3>");
+					+ getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.title") + "</h3>");
 			out.println("   </div>");
 
 			out.println("   <div class=\"panel-body\">");
@@ -507,7 +574,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-");
 
 						out.println("               <button type=\"button\" class=\"btn btn-default\" onclick=\"window.location = '" + link + "'\">" + 
-								getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.atribute.transitivityIntransitivityPairDictionaryEntry.show") + "</button>\n");
+								getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.transitivityIntransitivityPairDictionaryEntry.show") + "</button>\n");
 
 								
 						out.println("            </div></td>");						
@@ -1021,7 +1088,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 	*/
 	
-	private String getMessage(MessageSource messageSource, String code) {
+	private String getMessage(String code) {
 		return messageSource.getMessage(code, null, Locale.getDefault());
 	}
 
