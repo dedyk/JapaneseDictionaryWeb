@@ -20,6 +20,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Table;
@@ -127,10 +128,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		// kanji
 		Div kanjiDiv = generateKanjiSection();
 		
-		panelBody.addHtmlElement(kanjiDiv);
-		
-		
-		
+		panelBody.addHtmlElement(kanjiDiv);		
 		
 		panelDiv.addHtmlElement(panelBody);
 		
@@ -185,11 +183,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         	row1Div.addHtmlElement(kanjiTitleDiv);
         	
         	kanjiDiv.addHtmlElement(row1Div);
-        	
-        	Div row2Div = new Div("row");
-        	
-        	row2Div.addHtmlElement(new Div("col-md-1"));
-        	        	       		
+        	        	        	       		
             List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(dictionaryEntry);
         	            
             if (furiganaEntries != null && furiganaEntries.size() > 0 && addKanjiWrite == true) {
@@ -199,6 +193,12 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 					List<String> furiganaKanaParts = currentFuriganaEntry.getKanaPart();
 					List<String> furiganaKanjiParts = currentFuriganaEntry.getKanjiPart();
 					
+		        	Div row2Div = new Div("row");
+		        	
+		        	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+					
+		        	Div kanjiDivBody = new Div("col-md-10");
+		        	
 					Table kanjiTable = new Table();
 					
 					Tr kanaPartTr = new Tr(null, "font-size: 123%; text-align:center;");
@@ -211,12 +211,12 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 						
 						currentKanaPartTd.addHtmlElement(new Text(currentKanaPart));
 						
-						kanaPartTr.addTd(currentKanaPartTd);
+						kanaPartTr.addHtmlElement(currentKanaPartTd);
 					}
 					
-					kanjiTable.addTr(kanaPartTr);
+					kanjiTable.addHtmlElement(kanaPartTr);
 										
-					Tr kanjiKanjiTr = new Tr(null, "font-size: 300%;");
+					Tr kanjiKanjiTr = new Tr(null, "font-size: 300%; text-align:center;");
 					
 					for (int idx = 0; idx < furiganaKanjiParts.size(); ++idx) {
 						
@@ -226,16 +226,39 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 						
 						currentKanjiPartTd.addHtmlElement(new Text(currentKanjiPart));
 						
-						kanjiKanjiTr.addTd(currentKanjiPartTd);
+						kanjiKanjiTr.addHtmlElement(currentKanjiPartTd);
 					}	
+
+					// przerwa
+					kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
 					
-					kanjiTable.addTr(kanjiKanjiTr);
+					Td kanjiDrawButtonTd = new Td();
 					
+					Div kanjiDrawButtonDivBody = new Div("col-md-1");
+					
+					Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
+							getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
+
+					kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
+					
+					kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
+
+					kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
+					
+					///
+					
+					
+					kanjiTable.addHtmlElement(kanjiKanjiTr);
+					
+					kanjiDivBody.addHtmlElement(kanjiTable);
+					
+					row2Div.addHtmlElement(kanjiDivBody);
+															
 					/*
 					out.println("<td><div style=\"margin: 0 0 0 50px\">");
 					
 					// dodaj guzik pisania znakow kanji
-					GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanjiDrawId, getMessage(messageSource, "wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
+					GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanjiDrawId, );
 					
 					out.println("</div></td>");
 					
@@ -243,19 +266,26 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 					out.println("</table>");
 					*/
 					
-					row2Div.addHtmlElement(kanjiTable);
+					
+					
+					
+					kanjiDiv.addHtmlElement(row2Div);
             	}
             	
             } else {
+            	
+            	Div row2Div = new Div("row");
+            	
+            	row2Div.addHtmlElement(new Div("col-md-1"));
             	
             	Div kanjiDivText = new Div(null, "font-size: 200%");
             	Text kanjiText = new Text(kanjiSb.toString());
             	
             	kanjiDivText.addHtmlElement(kanjiText);
             	row2Div.addHtmlElement(kanjiDivText);
+            	
+            	kanjiDiv.addHtmlElement(row2Div);
             }
-        	            
-            kanjiDiv.addHtmlElement(row2Div);
         }
                 
         // wygeneruj okienko rysowania znaku kanji
@@ -324,8 +354,10 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			
 			out.println("            <td><div style=\"margin: 0 0 0 50px\">");
 			
+			int fixme = 1;
+			
 			// dodaj guzik pisania znakow kana
-			GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanaDrawId, getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
+			//GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanaDrawId, getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
 			
 			idAndTextList.add(new IdAndText(kanaDrawId, sb.toString()));
 			

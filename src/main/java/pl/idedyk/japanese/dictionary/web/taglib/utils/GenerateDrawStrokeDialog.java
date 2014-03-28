@@ -10,12 +10,29 @@ import org.springframework.context.MessageSource;
 
 import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.html.Button;
+import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
+import pl.idedyk.japanese.dictionary.web.html.Script;
+import pl.idedyk.japanese.dictionary.web.html.Text;
 
 public class GenerateDrawStrokeDialog {
 	
-	public static void addDrawStrokeButton(JspWriter out, String dialogId, String buttonText) throws IOException {
+	public static Button generateDrawStrokeButton(String dialogId, String buttonText) {
 		
-		out.println("<button type=\"button\" class=\"btn btn-default\" onclick=\"show" + dialogId + "Drawing()\">" + buttonText + "</button>\n");
+		Button button = new Button("btn btn-default");
+		
+		button.setButtonType(ButtonType.BUTTON);
+		
+		button.setOnClick("show" + dialogId + "Drawing()");
+		
+		Text buttonTextText = new Text(buttonText);
+		
+		button.addHtmlElement(buttonTextText);
+		
+		return button;
+		
+		/*
+		out.println("<button type=\"button\" class=\"\" onclick=\"show" + dialogId + "Drawing()\">" + buttonText + "</button>\n");
 		
 		out.println("<script>");
 		
@@ -28,6 +45,26 @@ public class GenerateDrawStrokeDialog {
 		
 		out.println("   }");
 		out.println("</script>");
+		*/
+	}
+	
+	public static Script generateDrawStrokeButtonScript(String dialogId, String buttonText) {
+		
+		Script script = new Script();
+		
+		StringBuffer scriptBody = new StringBuffer();
+		
+		scriptBody.append("   function show" + dialogId + "Drawing() {\n");
+		scriptBody.append("      $( '#" + dialogId + "Drawing').lazylinepainter('erase');\n");
+		scriptBody.append("      $( '#" + dialogId + "' ).modal();\n");		
+		scriptBody.append("      setTimeout(function() { $('#" + dialogId + "Drawing').lazylinepainter('paint'); }, 700);\n");
+		scriptBody.append("   }\n");
+		
+		Text scriptText = new Text(scriptBody.toString());
+		
+		script.addHtmlElement(scriptText);
+
+		return script;		
 	}
 	
 	public static void generateDrawStrokeDialog(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource,
