@@ -170,6 +170,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         
         if (addKanjiWrite == true) {
         	
+        	// wiersz z tytulem
         	Div row1Div = new Div("row");
         	
         	// kanji - tytul
@@ -182,6 +183,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         	
         	row1Div.addHtmlElement(kanjiTitleDiv);
         	
+        	// dodaj wiersz z tytulem
         	kanjiDiv.addHtmlElement(row1Div);
         	        	        	       		
             List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(dictionaryEntry);
@@ -193,16 +195,20 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 					List<String> furiganaKanaParts = currentFuriganaEntry.getKanaPart();
 					List<String> furiganaKanjiParts = currentFuriganaEntry.getKanjiPart();
 					
+					// wiersz ze znakiem kanji
 		        	Div row2Div = new Div("row");
 		        	
 		        	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
 					
+		        	// komorka ze znakiem kanji
 		        	Div kanjiDivBody = new Div("col-md-10");
 		        	
+		        	// tabelka ze znakiem kanji
 					Table kanjiTable = new Table();
 					
+					// czytanie
 					Tr kanaPartTr = new Tr(null, "font-size: 123%; text-align:center;");
-										
+								
 					for (int idx = 0; idx < furiganaKanaParts.size(); ++idx) {
 						
 						String currentKanaPart = furiganaKanaParts.get(idx);
@@ -215,7 +221,8 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 					}
 					
 					kanjiTable.addHtmlElement(kanaPartTr);
-										
+								
+					// znaki kanji
 					Tr kanjiKanjiTr = new Tr(null, "font-size: 300%; text-align:center;");
 					
 					for (int idx = 0; idx < furiganaKanjiParts.size(); ++idx) {
@@ -232,6 +239,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 					// przerwa
 					kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
 					
+					// komorka z guziczkiem
 					Td kanjiDrawButtonTd = new Td();
 					
 					Div kanjiDrawButtonDivBody = new Div("col-md-1");
@@ -240,34 +248,13 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 							getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
 
 					kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
-					
 					kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
 
 					kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
-					
-					///
-					
-					
 					kanjiTable.addHtmlElement(kanjiKanjiTr);
 					
 					kanjiDivBody.addHtmlElement(kanjiTable);
-					
-					row2Div.addHtmlElement(kanjiDivBody);
-															
-					/*
-					out.println("<td><div style=\"margin: 0 0 0 50px\">");
-					
-					// dodaj guzik pisania znakow kanji
-					GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanjiDrawId, );
-					
-					out.println("</div></td>");
-					
-					out.println("</tr>");
-					out.println("</table>");
-					*/
-					
-					
-					
+					row2Div.addHtmlElement(kanjiDivBody);					
 					
 					kanjiDiv.addHtmlElement(row2Div);
             	}
@@ -287,12 +274,13 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             	kanjiDiv.addHtmlElement(row2Div);
             }
         }
-                
-        // wygeneruj okienko rysowania znaku kanji
-        /*
-        GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, messageSource, kanjiSb.toString(), kanjiDrawId);
-        */
         
+        // skrypt otwierajacy okienko
+        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId));
+        
+        // tworzenie okienka rysowania znaku kanji
+        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanjiSb.toString(), kanjiDrawId));
+                
         return kanjiDiv;
 	}
 	
@@ -374,8 +362,10 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         
         for (IdAndText idAndText : idAndTextList) {
         	
+        	int fixme = 1;
+        	
             // wygeneruj okienko rysowania znakow kana
-            GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, messageSource, idAndText.text, idAndText.id);
+           // GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, messageSource, idAndText.text, idAndText.id);
 		}        
 	}
 	

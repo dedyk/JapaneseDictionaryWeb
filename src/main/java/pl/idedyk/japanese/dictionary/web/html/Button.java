@@ -9,6 +9,10 @@ public class Button extends HtmlElementCommon {
 	
 	private String onClick;
 	
+	private String dataDismiss;
+	
+	private String ariaHidden;
+	
 	public Button() { 
 		super();
 	}
@@ -31,6 +35,22 @@ public class Button extends HtmlElementCommon {
 
 	public String getOnClick() {
 		return onClick;
+	}
+
+	public String getDataDismiss() {
+		return dataDismiss;
+	}
+
+	public void setDataDismiss(String dataDismiss) {
+		this.dataDismiss = dataDismiss;
+	}
+
+	public String getAriaHidden() {
+		return ariaHidden;
+	}
+
+	public void setAriaHidden(String ariaHidden) {
+		this.ariaHidden = ariaHidden;
 	}
 
 	public void setOnClick(String onClick) {
@@ -60,6 +80,14 @@ public class Button extends HtmlElementCommon {
 			additionalTagAttributes.add(new String[] { "onclick", onClick });
 		}
 		
+		if (dataDismiss != null) {
+			additionalTagAttributes.add(new String[] { "data-dismiss", dataDismiss });
+		}
+
+		if (ariaHidden != null) {
+			additionalTagAttributes.add(new String[] { "aria-hidden", ariaHidden });
+		}
+
 		return additionalTagAttributes;
 	}	
 	

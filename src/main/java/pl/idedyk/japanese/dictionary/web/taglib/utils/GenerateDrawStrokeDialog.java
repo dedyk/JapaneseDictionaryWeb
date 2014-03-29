@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.jsp.JspWriter;
-
 import org.springframework.context.MessageSource;
 
 import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
+import pl.idedyk.japanese.dictionary.web.html.Div;
+import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Script;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 
@@ -22,33 +22,16 @@ public class GenerateDrawStrokeDialog {
 		Button button = new Button("btn btn-default");
 		
 		button.setButtonType(ButtonType.BUTTON);
-		
 		button.setOnClick("show" + dialogId + "Drawing()");
 		
 		Text buttonTextText = new Text(buttonText);
 		
 		button.addHtmlElement(buttonTextText);
 		
-		return button;
-		
-		/*
-		out.println("<button type=\"button\" class=\"\" onclick=\"show" + dialogId + "Drawing()\">" + buttonText + "</button>\n");
-		
-		out.println("<script>");
-		
-		out.println("   function show" + dialogId + "Drawing() {");
-		out.println("      $( '#" + dialogId + "Drawing').lazylinepainter('erase');");
-		out.println("      $( '#" + dialogId + "' ).modal();");		
-		out.println("      setTimeout(function() { $('#" + dialogId + "Drawing').lazylinepainter('paint'); }, 700);");
-
-		out.println("      ");
-		
-		out.println("   }");
-		out.println("</script>");
-		*/
+		return button;		
 	}
 	
-	public static Script generateDrawStrokeButtonScript(String dialogId, String buttonText) {
+	public static Script generateDrawStrokeButtonScript(String dialogId) {
 		
 		Script script = new Script();
 		
@@ -67,7 +50,7 @@ public class GenerateDrawStrokeDialog {
 		return script;		
 	}
 	
-	public static void generateDrawStrokeDialog(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource,
+	public static Div generateDrawStrokeDialog(DictionaryManager dictionaryManager, MessageSource messageSource,
 			String word, String dialogId) throws IOException {
 		
 		String dialogTitle = messageSource.getMessage("common.generateDrawStrokeDiv.dialog.title", new String[] { word }, null);
@@ -80,20 +63,104 @@ public class GenerateDrawStrokeDialog {
 		final int width = 900;
 		final int height = 200;
 		
-		out.println("<div id=\"" + dialogId + "\" width=\"" + width + "\" height=\"" + height + "\" class=\"modal fade\">\n");
-		out.println("  <div class=\"modal-dialog\" style=\"width: " + width + "px\">\n");
-		out.println("    <div class=\"modal-content\">\n");
-		out.println("      <div class=\"modal-header\">\n");
-		out.println("        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n");
-		out.println("        <h4 class=\"modal-title\">" + dialogTitle + "</h4>\n");
-		out.println("      </div>\n");
-		out.println("      <div class=\"modal-body\">\n");
-		out.println("        <div id=\"" + dialogId + "Drawing\" />");
+		// glowny div
+		Div drawStrokeDialogDiv = new Div("modal fade");
+		
+		drawStrokeDialogDiv.setId(dialogId);
+		drawStrokeDialogDiv.setWidth(width);
+		drawStrokeDialogDiv.setHeight(height);
+		
+		Div modalDialog = new Div("modal-dialog");
 
-		out.println("<script>");
-		out.println("	var pathObj_" + dialogId + " = {");
-		out.println("	    \"" + dialogId + "Drawing\": {");
-		out.println("	        \"strokepath\": [");
+		modalDialog.setStyle("width: " + width + "px");
+		drawStrokeDialogDiv.addHtmlElement(modalDialog);
+		
+		Div modalContent = new Div("modal-content");
+		modalDialog.addHtmlElement(modalContent);
+		
+		Div moldalHeader = new Div("modal-header");
+		modalContent.addHtmlElement(moldalHeader);
+		
+		// przycisk zamkniecia
+		Button closeButton = new Button("close");
+		
+		closeButton.setButtonType(ButtonType.BUTTON);
+		closeButton.setDataDismiss("modal");
+		closeButton.setAriaHidden("true");
+		
+		closeButton.addHtmlElement(new Text("&times;"));
+		
+		moldalHeader.addHtmlElement(closeButton);
+		
+		// tytul okienka
+		H dialogTitleH4 = new H(4, "modal-title");
+		dialogTitleH4.addHtmlElement(new Text(dialogTitle));
+		
+		moldalHeader.addHtmlElement(dialogTitleH4);
+		
+		// zawartosc glowna okienka
+		Div modalBody = new Div("modal-body");
+		modalContent.addHtmlElement(modalBody);
+		
+		Div drawingDiv = new Div();
+		
+		drawingDiv.setId(dialogId + "Drawing");
+		modalBody.addHtmlElement(drawingDiv);
+		
+		
+		//out.println("<div width=\"" + width + "\" height=\"" + height + "\" >\n");
+		//out.println("  <div class=\"\" style=\"\">\n");
+		//out.println("    <div class=\"modal-content\">\n");
+		//out.println("      <div class=\"modal-header\">\n");
+		//out.println("        <button data-dismiss=\"\" aria-hidden=\"true\"></button>\n");
+		//out.println("        <h4 class=\"modal-title\">" + dialogTitle + "</h4>\n");
+		//out.println("      </div>\n");
+		//out.println("      <div class=\"modal-body\">\n");
+		//out.println("        <div id=\"" + dialogId + "Drawing\" />");
+		
+		//out.println("</script>");
+		
+		//out.println("        </div>\n");
+		//out.println("      </div>\n");
+		
+		// naglowek okienka
+		Div modalFooter = new Div("modal-footer");
+		modalContent.addHtmlElement(modalFooter);
+		
+		// przycisk zamkniecia 2
+		Button closeButton2 = new Button("btn btn-default");
+		
+		closeButton2.setButtonType(ButtonType.BUTTON);
+		closeButton2.setDataDismiss("modal");
+		
+		closeButton2.addHtmlElement(new Text(closeButtonTitle));
+		
+		modalFooter.addHtmlElement(closeButton2);
+		
+		// przycisk rysowania ponownego
+		Button drawAgainButton = new Button("btn btn-primary");
+		
+		drawAgainButton.setButtonType(ButtonType.BUTTON);
+		drawAgainButton.setOnClick("draw" + dialogId + "Again()");
+		
+		drawAgainButton.addHtmlElement(new Text(drawAgainButtonTitle));
+		
+		modalFooter.addHtmlElement(drawAgainButton);
+		
+		//out.println("      <div class=\"modal-footer\">\n");
+		//out.println("        <button type=\"button\" class=\"\" data-dismiss=\"modal\">" + closeButtonTitle + "</button>\n");
+		//out.println("        <button type=\"button\" class=\"btn btn-primary\" onclick=\"draw" + dialogId + "Again()\">" + drawAgainButtonTitle + "</button>\n");
+		//out.println("      </div>\n");
+		//out.println("    </div><!-- /.modal-content -->\n");
+		//out.println("  </div><!-- /.modal-dialog -->\n");
+		//out.println("</div><!-- /.modal -->\n");
+				
+		// skrypt
+		StringBuffer scriptDrawingSb = new StringBuffer();
+		
+		scriptDrawingSb.append("	var pathObj_" + dialogId + " = {\n");
+		scriptDrawingSb.append("	    \"" + dialogId + "Drawing\": {\n");
+		scriptDrawingSb.append("	        \"strokepath\": [\n");
 				
 		for (int currentStrokePathsIdx = 0; currentStrokePathsIdx < strokePathsForWord.size(); ++currentStrokePathsIdx) {
 			
@@ -105,62 +172,53 @@ public class GenerateDrawStrokeDialog {
 				
 				String currentStrokePath = strokePaths.get(strokePathIdx);
 
-				out.println("				{");
-		        out.println("					\"path\": \"" + currentStrokePath + "\",");
-		        out.println("					\"duration\": 400,");
-		        out.println("					\"translateX\": " + (currentStrokePathsIdx * 100));
+				scriptDrawingSb.append("				{\n");
+				scriptDrawingSb.append("					\"path\": \"" + currentStrokePath + "\",\n");
+				scriptDrawingSb.append("					\"duration\": 400,\n");
+				scriptDrawingSb.append("					\"translateX\": " + (currentStrokePathsIdx * 100) + "\n");
 		        
 		        if (strokePathIdx != strokePaths.size() - 1 || currentStrokePathsIdx < strokePathsForWord.size()) {
-		        	out.println("				},");
+		        	scriptDrawingSb.append("				},\n");
 		       	
 		        } else {
-		        	out.println("				}");
+		        	scriptDrawingSb.append("				}\n");
 		        }								
 			}
 		}
 
-		out.println("	        ],");
-		out.println("	        \"dimensions\": {");
-		out.println("	            \"width\": " + (width - 80) + ",");
-		out.println("	            \"height\": " + (height - 80));
-		out.println("	        }");
-		out.println("	    }");
-		out.println("	};");
+		scriptDrawingSb.append("	        ],\n");
+		scriptDrawingSb.append("	        \"dimensions\": {\n");
+		scriptDrawingSb.append("	            \"width\": " + (width - 80) + ",\n");
+		scriptDrawingSb.append("	            \"height\": " + (height - 80) + "\n");
+		scriptDrawingSb.append("	        }\n");
+		scriptDrawingSb.append("	    }\n");
+		scriptDrawingSb.append("	};\n");
 
-		out.println("	$(document).ready(function() {");
+		scriptDrawingSb.append("	$(document).ready(function() {\n");
 		
-		out.println("		$('#" + dialogId + "Drawing').lazylinepainter({");
-		out.println("			\"svgData\": pathObj_" + dialogId + ",");
-		out.println("			\"strokeWidth\": 5,");
-		out.println("			\"strokeColor\": \"#262213\",");
-		out.println("	        \"viewBoxX\": 0,");
-		out.println("	        \"viewBoxY\": 0,");
-		out.println("	        \"viewBoxWidth\": " + (1.5 * (width - 80)) + ",");
-		out.println("	        \"viewBoxHeight\": " + (1.5 * (height - 80)) + ",");
-		out.println("	        \"viewBoxFit\": false");
-		out.println("		});");
+		scriptDrawingSb.append("		$('#" + dialogId + "Drawing').lazylinepainter({\n");
+		scriptDrawingSb.append("			\"svgData\": pathObj_" + dialogId + ",\n");
+		scriptDrawingSb.append("			\"strokeWidth\": 5,\n");
+		scriptDrawingSb.append("			\"strokeColor\": \"#262213\",\n");
+		scriptDrawingSb.append("	        \"viewBoxX\": 0,\n");
+		scriptDrawingSb.append("	        \"viewBoxY\": 0,\n");
+		scriptDrawingSb.append("	        \"viewBoxWidth\": " + (1.5 * (width - 80)) + ",\n");
+		scriptDrawingSb.append("	        \"viewBoxHeight\": " + (1.5 * (height - 80)) + ",\n");
+		scriptDrawingSb.append("	        \"viewBoxFit\": false\n");
+		scriptDrawingSb.append("		});\n");
 				
-		out.println("	});");
+		scriptDrawingSb.append("	});\n");
 
-		out.println("</script>");
+		scriptDrawingSb.append("   function draw" + dialogId + "Again() {\n");
+		scriptDrawingSb.append("      $( '#" + dialogId + "Drawing').lazylinepainter('erase');\n");
+		scriptDrawingSb.append("      setTimeout(function() { $( '#" + dialogId + "Drawing').lazylinepainter('erase'); $('#" + dialogId + "Drawing').lazylinepainter('paint'); }, 700);\n");
+		scriptDrawingSb.append("   }\n");
 		
-		out.println("        </div>\n");
-		out.println("      </div>\n");
-		out.println("      <div class=\"modal-footer\">\n");
-		out.println("        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">" + closeButtonTitle + "</button>\n");
-		out.println("        <button type=\"button\" class=\"btn btn-primary\" onclick=\"draw" + dialogId + "Again()\">" + drawAgainButtonTitle + "</button>\n");
-		out.println("      </div>\n");
-		out.println("    </div><!-- /.modal-content -->\n");
-		out.println("  </div><!-- /.modal-dialog -->\n");
-		out.println("</div><!-- /.modal -->\n");
+		Script scriptDrawing = new Script();
 		
-		out.println("<script>");
+		scriptDrawing.addHtmlElement(new Text(scriptDrawingSb.toString()));
+		drawStrokeDialogDiv.addHtmlElement(scriptDrawing);
 		
-		out.println("   function draw" + dialogId + "Again() {");
-		out.println("      $( '#" + dialogId + "Drawing').lazylinepainter('erase');");
-		out.println("      setTimeout(function() { $( '#" + dialogId + "Drawing').lazylinepainter('erase'); $('#" + dialogId + "Drawing').lazylinepainter('paint'); }, 700);");
-		out.println("   }");
-		
-		out.println("</script>");
+		return drawStrokeDialogDiv;
 	}
 }

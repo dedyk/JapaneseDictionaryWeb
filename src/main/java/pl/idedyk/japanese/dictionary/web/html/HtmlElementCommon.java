@@ -11,6 +11,11 @@ public abstract class HtmlElementCommon implements IHtmlElement {
 
 	protected List<IHtmlElement> htmlElementList = new ArrayList<IHtmlElement>();
 
+	protected String id;
+	
+	protected Integer width;
+	protected Integer height;
+	
 	protected String clazz;
 	
 	protected String style;
@@ -42,6 +47,30 @@ public abstract class HtmlElementCommon implements IHtmlElement {
 		this.clazz = clazz;
 	}
 		
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Integer getWidth() {
+		return width;
+	}
+
+	public void setWidth(Integer width) {
+		this.width = width;
+	}
+
+	public Integer getHeight() {
+		return height;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
 	public void addHtmlElement(IHtmlElement htmlElement) {
 		
 		if (isSupportHtmlElementList() == false) {
@@ -63,6 +92,18 @@ public abstract class HtmlElementCommon implements IHtmlElement {
 		
 		out.print("<" + getTagName() + " ");
 		
+		if (id != null) {
+			out.print("id=\"" + id + "\" ");
+		}
+		
+		if (width != null) {
+			out.print("width=\"" + width + "\" ");
+		}
+
+		if (height != null) {
+			out.print("height=\"" + height + "\" ");
+		}
+		
 		if (clazz != null) {
 			out.print("class=\"" + clazz + "\" ");
 		}
@@ -76,11 +117,11 @@ public abstract class HtmlElementCommon implements IHtmlElement {
 		if (additionalTagAttributes != null) {
 			
 			for (String[] currentAdditionalTagAttribute : additionalTagAttributes) {
-				out.println(currentAdditionalTagAttribute[0] + "=\"" + currentAdditionalTagAttribute[1] + "\"");
+				out.print(currentAdditionalTagAttribute[0] + "=\"" + currentAdditionalTagAttribute[1] + "\" ");
 			}
 		}
 		
-		out.println("/>");
+		out.println(">");
 		
 		if (isSupportHtmlElementList() == true) {
 			
