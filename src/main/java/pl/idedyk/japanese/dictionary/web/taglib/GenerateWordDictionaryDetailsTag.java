@@ -59,6 +59,8 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             JspWriter out = pageContext.getOut();
 
             if (dictionaryEntry == null) {
+            	
+            	int fixme = 1;
             	           	
             	// nie znaleziono strony
             	out.println("<div class=\"alert alert-danger\">");

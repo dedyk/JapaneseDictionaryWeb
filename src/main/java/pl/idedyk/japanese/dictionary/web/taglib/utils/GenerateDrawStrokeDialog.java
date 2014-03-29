@@ -106,23 +106,7 @@ public class GenerateDrawStrokeDialog {
 		
 		drawingDiv.setId(dialogId + "Drawing");
 		modalBody.addHtmlElement(drawingDiv);
-		
-		
-		//out.println("<div width=\"" + width + "\" height=\"" + height + "\" >\n");
-		//out.println("  <div class=\"\" style=\"\">\n");
-		//out.println("    <div class=\"modal-content\">\n");
-		//out.println("      <div class=\"modal-header\">\n");
-		//out.println("        <button data-dismiss=\"\" aria-hidden=\"true\"></button>\n");
-		//out.println("        <h4 class=\"modal-title\">" + dialogTitle + "</h4>\n");
-		//out.println("      </div>\n");
-		//out.println("      <div class=\"modal-body\">\n");
-		//out.println("        <div id=\"" + dialogId + "Drawing\" />");
-		
-		//out.println("</script>");
-		
-		//out.println("        </div>\n");
-		//out.println("      </div>\n");
-		
+				
 		// naglowek okienka
 		Div modalFooter = new Div("modal-footer");
 		modalContent.addHtmlElement(modalFooter);
@@ -146,15 +130,7 @@ public class GenerateDrawStrokeDialog {
 		drawAgainButton.addHtmlElement(new Text(drawAgainButtonTitle));
 		
 		modalFooter.addHtmlElement(drawAgainButton);
-		
-		//out.println("      <div class=\"modal-footer\">\n");
-		//out.println("        <button type=\"button\" class=\"\" data-dismiss=\"modal\">" + closeButtonTitle + "</button>\n");
-		//out.println("        <button type=\"button\" class=\"btn btn-primary\" onclick=\"draw" + dialogId + "Again()\">" + drawAgainButtonTitle + "</button>\n");
-		//out.println("      </div>\n");
-		//out.println("    </div><!-- /.modal-content -->\n");
-		//out.println("  </div><!-- /.modal-dialog -->\n");
-		//out.println("</div><!-- /.modal -->\n");
-				
+						
 		// skrypt
 		StringBuffer scriptDrawingSb = new StringBuffer();
 		
