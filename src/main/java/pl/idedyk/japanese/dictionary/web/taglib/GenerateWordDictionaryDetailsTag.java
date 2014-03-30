@@ -23,6 +23,7 @@ import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
+import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
@@ -76,10 +77,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             generateMainInfo(out);
             
             int fixme = 1;
-            
-            // tlumaczenie
-            generateTranslateSection(out, dictionaryManager, messageSource);
-            
+                        
             // generuj informacje dodatkowe
             generateAdditionalInfo(out, dictionaryManager, messageSource);
             
@@ -127,6 +125,10 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		// czytanie
 		Div readingDiv = generateReadingSection();
 		panelBody.addHtmlElement(readingDiv);
+		
+        // tlumaczenie
+        Div translate = generateTranslateSection();
+        panelBody.addHtmlElement(translate);
 		
 		panelDiv.addHtmlElement(panelBody);
 		
@@ -278,6 +280,8 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             // tworzenie okienka rysowania znaku kanji
             kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, dictionaryEntry.getKanji(), kanjiDrawId));
         }
+        
+        kanjiDiv.addHtmlElement(new Hr());
                 
         return kanjiDiv;
 	}
@@ -384,36 +388,52 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
 		}
         
+        readingDiv.addHtmlElement(new Hr());
+        
         return readingDiv;
 	}
 	
-	private void generateTranslateSection(JspWriter out, DictionaryManager dictionaryManager,
-			MessageSource messageSource) throws IOException {
-
+	private Div generateTranslateSection() throws IOException {
+		
+		Div translateDiv = new Div();
+		
 		List<String> translates = dictionaryEntry.getTranslates();
-
-		out.println("<div class=\"panel panel-default\">");
-
-		out.println("   <div class=\"panel-heading\">");
-		out.println("      <h3 class=\"panel-title\">"
-				+ getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title") + "</h3>");
-		out.println("   </div>");
-
-		out.println("   <div class=\"panel-body\">");
-						
-		for (int idx = 0; idx < translates.size(); ++idx) {
-
-			out.println("      <h4 style=\"margin-top: 0px;margin-bottom: 5px\">");
-			String currentTranslate = translates.get(idx);
-			
-			out.println(currentTranslate);
 		
-			out.println("      </h4>");
-		}
-		
-		out.println("   </div>");
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tlumaczenie - tytul
+    	Div translateTitleDiv = new Div("col-md-1");
+    	
+    	H translateTitleH4 = new H(4, null, "margin-top: 0px");
+    	translateTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title")));
+    	
+    	translateTitleDiv.addHtmlElement(translateTitleH4);
+    	
+    	row1Div.addHtmlElement(translateTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	translateDiv.addHtmlElement(row1Div);
 
-		out.println("</div>");
+		// wiersz z tlumaczeniem
+    	Div row2Div = new Div("row");
+    	translateDiv.addHtmlElement(row2Div);
+    	
+    	for (int idx = 0; idx < translates.size(); ++idx) {
+    		row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    		
+    		Div currentTranslateDiv = new Div("col-md-11");
+    		row2Div.addHtmlElement(currentTranslateDiv);
+    		
+    		H currentTranslateH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+    		currentTranslateH.addHtmlElement(new Text(translates.get(idx)));
+    		
+    		currentTranslateDiv.addHtmlElement(currentTranslateH);
+    	}
+
+    	translateDiv.addHtmlElement(new Hr());		
+		
+		return translateDiv;
 	}
 	
 	private void generateAdditionalInfo(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
