@@ -60,12 +60,11 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
             if (dictionaryEntry == null) {
             	
-            	int fixme = 1;
-            	           	
-            	// nie znaleziono strony
-            	out.println("<div class=\"alert alert-danger\">");
-            	out.println(getMessage("wordDictionaryDetails.page.dictionaryEntry.null"));            	
-            	out.println("</div>");
+            	Div errorDiv = new Div("alert alert-danger");
+            	
+            	errorDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.null")));
+            	
+            	errorDiv.render(out);
             	
             	return SKIP_BODY;
             }
@@ -76,13 +75,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             // generowanie informacji podstawowych
             generateMainInfo(out);
             
-            // kanji
             int fixme = 1;
-            
-            //generateKanjiSection(out, dictionaryManager, messageSource);
-            
-            // czytanie
-            //generateReadingSection(out, dictionaryManager, messageSource);
             
             // tlumaczenie
             generateTranslateSection(out, dictionaryManager, messageSource);
@@ -318,7 +311,9 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		// wiersz ze znakiem kanji
     	Div row2Div = new Div("row");
     	readingDiv.addHtmlElement(row2Div);
-						
+		
+    	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    	
         class IdAndText {
         	
         	public String id;
@@ -332,190 +327,62 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         }
         
         List<IdAndText> idAndTextList = new ArrayList<IdAndText>();
+        
+        Table readingTable = new Table();
+        row2Div.addHtmlElement(readingTable);
 
         for (int idx = 0; idx < kanaList.size(); ++idx) {
         	
         	final String kanaDrawId = "kanaDrawId" + idx;
         	
-    		StringBuffer fullKanaAndRomaji = new StringBuffer();
+    		StringBuffer fullKana = new StringBuffer();
+    		StringBuffer fullRomaji = new StringBuffer();
     		
 			if (prefixKana != null && prefixKana.equals("") == false) {
-				fullKanaAndRomaji.append("(").append(prefixKana).append(") ");
+				fullKana.append("(").append(prefixKana).append(") ");
 			}
 
-			fullKanaAndRomaji.append(kanaList.get(idx)).append(" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;");
+			fullKana.append(kanaList.get(idx));
 
 			if (prefixRomaji != null && prefixRomaji.equals("") == false) {
-				fullKanaAndRomaji.append("(").append(prefixRomaji).append(") ");
+				fullRomaji.append("(").append(prefixRomaji).append(") ");
 			}
 
-			fullKanaAndRomaji.append(romajiList.get(idx)).append("&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;");
+			fullRomaji.append(romajiList.get(idx));
 			
-			row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+			Tr readingTableTr = new Tr();
+			readingTable.addHtmlElement(readingTableTr);
 			
-			Div readingKanaDiv = new Div("col-md-3", "font-size: 150%");
-			row2Div.addHtmlElement(readingKanaDiv);
-			
-			readingKanaDiv.addHtmlElement(new Text(fullKanaAndRomaji.toString()));
+			Td readingTableKanaTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
+			readingTableTr.addHtmlElement(readingTableKanaTd);
 						
-			idAndTextList.add(new IdAndText(kanaDrawId, fullKanaAndRomaji.toString()));
+			readingTableKanaTd.addHtmlElement(new Text(fullKana.toString()));
+						
+			idAndTextList.add(new IdAndText(kanaDrawId, fullKana.toString()));
 			
-			Div readingButtonDiv = new Div("col-md-8");
-			row2Div.addHtmlElement(readingButtonDiv);
+			Td readingTableRomajiTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0");
+			readingTableTr.addHtmlElement(readingTableRomajiTd);
+			
+			readingTableRomajiTd.addHtmlElement(new Text(fullRomaji.toString()));
+			
+			Td readingTableButtonTd = new Td(null, "padding: 0 50px 5px 0;");
+			readingTableTr.addHtmlElement(readingTableButtonTd);
 			
 			// guzik rysowania
 			Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
 					getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
 
-			readingButtonDiv.addHtmlElement(kanaDrawButton);
-
-			
-			int fixme = 1;
-			
-			// dodaj guzik pisania znakow kana
-			//GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanaDrawId, getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
-			
-			
-			
-			//out.println("            </div></td>");
-			
-            //out.println("         </tr>");
+			readingTableButtonTd.addHtmlElement(kanaDrawButton);
         }
 
         for (IdAndText idAndText : idAndTextList) {
-        	
-        	int fixme = 1;
-        	
-            // wygeneruj okienko rysowania znakow kana
-           // GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, messageSource, idAndText.text, idAndText.id);
-        	
+        	        	
             // skrypt otwierajacy okienko
         	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id));
             
             // tworzenie okienka rysowania znaku kanji
         	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
 		}
-
-		
-		
-		
-		/*
-		// czytanie
-		Tr kanaPartTr = new Tr(null, "font-size: 123%; text-align:center;");
-					
-		for (int idx = 0; idx < furiganaKanaParts.size(); ++idx) {
-			
-			String currentKanaPart = furiganaKanaParts.get(idx);
-			
-			Td currentKanaPartTd = new Td();
-			
-			currentKanaPartTd.addHtmlElement(new Text(currentKanaPart));
-			
-			kanaPartTr.addHtmlElement(currentKanaPartTd);
-		}
-		
-		kanjiTable.addHtmlElement(kanaPartTr);
-					
-		// znaki kanji
-		Tr kanjiKanjiTr = new Tr(null, "font-size: 300%; text-align:center;");
-		
-		for (int idx = 0; idx < furiganaKanjiParts.size(); ++idx) {
-			
-			String currentKanjiPart = furiganaKanjiParts.get(idx);
-			
-			Td currentKanjiPartTd = new Td();
-			
-			currentKanjiPartTd.addHtmlElement(new Text(currentKanjiPart));
-			
-			kanjiKanjiTr.addHtmlElement(currentKanjiPartTd);
-		}	
-
-		// przerwa
-		kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
-		
-		// komorka z guziczkiem
-		Td kanjiDrawButtonTd = new Td();
-		
-		Div kanjiDrawButtonDivBody = new Div("col-md-1");
-		
-		Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
-				getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
-
-		kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
-		kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
-
-		kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
-		kanjiTable.addHtmlElement(kanjiKanjiTr);
-		
-		kanjiDivBody.addHtmlElement(kanjiTable);
-		row2Div.addHtmlElement(kanjiDivBody);					
-		
-		kanjiDiv.addHtmlElement(row2Div);
-    	*/
-    	
-    	
-    	
-    	
-		
-		/*
-
-        out.println("      <table>");
-        
-        
-        List<IdAndText> idAndTextList = new ArrayList<IdAndText>();
-                
-        for (int idx = 0; idx < kanaList.size(); ++idx) {
-        	
-        	final String kanaDrawId = "kanaDrawId" + idx;
-        	
-            out.println("         <tr>");
-
-			final StringBuffer sb = new StringBuffer();
-
-			if (prefixKana != null && prefixKana.equals("") == false) {
-				sb.append("(").append(prefixKana).append(") ");
-			}
-
-			sb.append(kanaList.get(idx)).append(" - ");
-
-			if (prefixRomaji != null && prefixRomaji.equals("") == false) {
-				sb.append("(").append(prefixRomaji).append(") ");
-			}
-
-			sb.append(romajiList.get(idx));
-			
-			out.println("            <td><h4>");
-			out.println(sb.toString());
-			out.println("            </h4></td>");
-			
-			out.println("            <td><div style=\"margin: 0 0 0 50px\">");
-			
-			int fixme = 1;
-			
-			// dodaj guzik pisania znakow kana
-			//GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanaDrawId, getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
-			
-			idAndTextList.add(new IdAndText(kanaDrawId, sb.toString()));
-			
-			out.println("            </div></td>");
-			
-            out.println("         </tr>");
-        }
-        
-        out.println("      </table>");
-		
-        out.println("   </div>");
-        
-        out.println("</div>");
-        
-        for (IdAndText idAndText : idAndTextList) {
-        	
-        	int fixme = 1;
-        	
-            // wygeneruj okienko rysowania znakow kana
-           // GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, messageSource, idAndText.text, idAndText.id);
-		}
-		*/   
         
         return readingDiv;
 	}
