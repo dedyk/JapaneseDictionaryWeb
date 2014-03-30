@@ -353,18 +353,21 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			
 			row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
 			
-			Div readingKanaDiv = new Div("col-md-11", "font-size: 150%");
+			Div readingKanaDiv = new Div("col-md-3", "font-size: 150%");
 			row2Div.addHtmlElement(readingKanaDiv);
 			
 			readingKanaDiv.addHtmlElement(new Text(fullKanaAndRomaji.toString()));
 						
 			idAndTextList.add(new IdAndText(kanaDrawId, fullKanaAndRomaji.toString()));
 			
+			Div readingButtonDiv = new Div("col-md-8");
+			row2Div.addHtmlElement(readingButtonDiv);
+			
 			// guzik rysowania
 			Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
 					getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
 
-			readingKanaDiv.addHtmlElement(kanaDrawButton);
+			readingButtonDiv.addHtmlElement(kanaDrawButton);
 
 			
 			int fixme = 1;
