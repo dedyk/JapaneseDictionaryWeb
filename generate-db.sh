@@ -18,7 +18,7 @@ export CLASSPATH=target/classes:$CLASSPATH
 java -cp $CLASSPATH pl.idedyk.japanese.dictionary.web.dictionary.lucene.LuceneDBGenerator
 
 cp db/kana.csv db/radical.csv db/transitive_intransitive_pairs.csv src/main/resources/db
-cp -r db-lucene src/main/resources/db
+cp -r db-lucene src/main/resources/db/db-lucene/
 
 rm -rf bin-db-generator
 rm -rf db-lucene

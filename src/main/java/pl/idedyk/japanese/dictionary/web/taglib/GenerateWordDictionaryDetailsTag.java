@@ -82,7 +82,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             //generateKanjiSection(out, dictionaryManager, messageSource);
             
             // czytanie
-            generateReadingSection(out, dictionaryManager, messageSource);
+            //generateReadingSection(out, dictionaryManager, messageSource);
             
             // tlumaczenie
             generateTranslateSection(out, dictionaryManager, messageSource);
@@ -129,8 +129,11 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		
 		// kanji
 		Div kanjiDiv = generateKanjiSection();
+		panelBody.addHtmlElement(kanjiDiv);
 		
-		panelBody.addHtmlElement(kanjiDiv);		
+		// czytanie
+		Div readingDiv = generateReadingSection();
+		panelBody.addHtmlElement(readingDiv);
 		
 		panelDiv.addHtmlElement(panelBody);
 		
@@ -275,18 +278,20 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             	
             	kanjiDiv.addHtmlElement(row2Div);
             }
+
+            // skrypt otwierajacy okienko
+            kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId));
+            
+            // tworzenie okienka rysowania znaku kanji
+            kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, dictionaryEntry.getKanji(), kanjiDrawId));
         }
-        
-        // skrypt otwierajacy okienko
-        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId));
-        
-        // tworzenie okienka rysowania znaku kanji
-        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanjiSb.toString(), kanjiDrawId));
                 
         return kanjiDiv;
 	}
 	
-	private void generateReadingSection(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
+	private Div generateReadingSection() throws IOException {
+		
+		Div readingDiv = new Div();
 		
 		String prefixKana = dictionaryEntry.getPrefixKana();
 		String prefixRomaji = dictionaryEntry.getPrefixRomaji();
@@ -294,16 +299,26 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		List<String> kanaList = dictionaryEntry.getKanaList();
 		List<String> romajiList = dictionaryEntry.getRomajiList();
 		
-        out.println("<div class=\"panel panel-default\">");
-        
-        out.println("   <div class=\"panel-heading\">");
-        out.println("      <h3 class=\"panel-title\">" + getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title") + "</h3>");
-        out.println("   </div>");
-        
-        out.println("   <div class=\"panel-body\">");
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// kanji - tytul
+    	Div readingTitleDiv = new Div("col-md-1");
+    	
+    	H readingTitleH4 = new H(4, null, "margin-top: 0px");
+    	readingTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title")));
+    	
+    	readingTitleDiv.addHtmlElement(readingTitleH4);
+    	
+    	row1Div.addHtmlElement(readingTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	readingDiv.addHtmlElement(row1Div);
 
-        out.println("      <table>");
-        
+		// wiersz ze znakiem kanji
+    	Div row2Div = new Div("row");
+    	readingDiv.addHtmlElement(row2Div);
+						
         class IdAndText {
         	
         	public String id;
@@ -315,6 +330,134 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 				this.text = text;
 			}        	
         }
+        
+        List<IdAndText> idAndTextList = new ArrayList<IdAndText>();
+
+        for (int idx = 0; idx < kanaList.size(); ++idx) {
+        	
+        	final String kanaDrawId = "kanaDrawId" + idx;
+        	
+    		StringBuffer fullKanaAndRomaji = new StringBuffer();
+    		
+			if (prefixKana != null && prefixKana.equals("") == false) {
+				fullKanaAndRomaji.append("(").append(prefixKana).append(") ");
+			}
+
+			fullKanaAndRomaji.append(kanaList.get(idx)).append(" &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;");
+
+			if (prefixRomaji != null && prefixRomaji.equals("") == false) {
+				fullKanaAndRomaji.append("(").append(prefixRomaji).append(") ");
+			}
+
+			fullKanaAndRomaji.append(romajiList.get(idx)).append("&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;");
+			
+			row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+			
+			Div readingKanaDiv = new Div("col-md-11", "font-size: 150%");
+			row2Div.addHtmlElement(readingKanaDiv);
+			
+			readingKanaDiv.addHtmlElement(new Text(fullKanaAndRomaji.toString()));
+						
+			idAndTextList.add(new IdAndText(kanaDrawId, fullKanaAndRomaji.toString()));
+			
+			// guzik rysowania
+			Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
+					getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
+
+			readingKanaDiv.addHtmlElement(kanaDrawButton);
+
+			
+			int fixme = 1;
+			
+			// dodaj guzik pisania znakow kana
+			//GenerateDrawStrokeDialog.addDrawStrokeButton(out, kanaDrawId, getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
+			
+			
+			
+			//out.println("            </div></td>");
+			
+            //out.println("         </tr>");
+        }
+
+        for (IdAndText idAndText : idAndTextList) {
+        	
+        	int fixme = 1;
+        	
+            // wygeneruj okienko rysowania znakow kana
+           // GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, messageSource, idAndText.text, idAndText.id);
+        	
+            // skrypt otwierajacy okienko
+        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id));
+            
+            // tworzenie okienka rysowania znaku kanji
+        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
+		}
+
+		
+		
+		
+		/*
+		// czytanie
+		Tr kanaPartTr = new Tr(null, "font-size: 123%; text-align:center;");
+					
+		for (int idx = 0; idx < furiganaKanaParts.size(); ++idx) {
+			
+			String currentKanaPart = furiganaKanaParts.get(idx);
+			
+			Td currentKanaPartTd = new Td();
+			
+			currentKanaPartTd.addHtmlElement(new Text(currentKanaPart));
+			
+			kanaPartTr.addHtmlElement(currentKanaPartTd);
+		}
+		
+		kanjiTable.addHtmlElement(kanaPartTr);
+					
+		// znaki kanji
+		Tr kanjiKanjiTr = new Tr(null, "font-size: 300%; text-align:center;");
+		
+		for (int idx = 0; idx < furiganaKanjiParts.size(); ++idx) {
+			
+			String currentKanjiPart = furiganaKanjiParts.get(idx);
+			
+			Td currentKanjiPartTd = new Td();
+			
+			currentKanjiPartTd.addHtmlElement(new Text(currentKanjiPart));
+			
+			kanjiKanjiTr.addHtmlElement(currentKanjiPartTd);
+		}	
+
+		// przerwa
+		kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
+		
+		// komorka z guziczkiem
+		Td kanjiDrawButtonTd = new Td();
+		
+		Div kanjiDrawButtonDivBody = new Div("col-md-1");
+		
+		Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
+				getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
+
+		kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
+		kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
+
+		kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
+		kanjiTable.addHtmlElement(kanjiKanjiTr);
+		
+		kanjiDivBody.addHtmlElement(kanjiTable);
+		row2Div.addHtmlElement(kanjiDivBody);					
+		
+		kanjiDiv.addHtmlElement(row2Div);
+    	*/
+    	
+    	
+    	
+    	
+		
+		/*
+
+        out.println("      <table>");
+        
         
         List<IdAndText> idAndTextList = new ArrayList<IdAndText>();
                 
@@ -368,7 +511,10 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         	
             // wygeneruj okienko rysowania znakow kana
            // GenerateDrawStrokeDialog.generateDrawStrokeDialog(out, dictionaryManager, messageSource, idAndText.text, idAndText.id);
-		}        
+		}
+		*/   
+        
+        return readingDiv;
 	}
 	
 	private void generateTranslateSection(JspWriter out, DictionaryManager dictionaryManager,
