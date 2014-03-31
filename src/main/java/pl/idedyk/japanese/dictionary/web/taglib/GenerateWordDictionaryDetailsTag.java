@@ -78,9 +78,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             
             int fixme = 1;
                         
-            // generuj informacje dodatkowe
-            generateAdditionalInfo(out, dictionaryManager, messageSource);
-            
             // czesc mowy
             generateWordType(out, dictionaryManager, messageSource);
             
@@ -129,6 +126,13 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         // tlumaczenie
         Div translate = generateTranslateSection();
         panelBody.addHtmlElement(translate);
+        
+        // generuj informacje dodatkowe
+        Div additionalInfo = generateAdditionalInfo();
+
+        if (additionalInfo != null) {
+        	panelBody.addHtmlElement(additionalInfo);
+        }
 		
 		panelDiv.addHtmlElement(panelBody);
 		
@@ -436,7 +440,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return translateDiv;
 	}
 	
-	private void generateAdditionalInfo(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
+	private Div generateAdditionalInfo() throws IOException {
 		
 		String info = dictionaryEntry.getInfo();
 		
@@ -449,36 +453,52 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		}
 		
 		if (!(info != null && info.length() > 0) && (special == false)) {
-			return;			
-		}		
+			return null;		
+		}	
 		
-		out.println("<div class=\"panel panel-default\">");
+		Div additionalInfoDiv = new Div();
+		
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tlumaczenie - tytul
+    	Div additionalInfoTitleDiv = new Div("col-md-3");
+    	
+    	H additionalInfoTitleH4 = new H(4, null, "margin-top: 0px");
+    	additionalInfoTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.title")));
+    	
+    	additionalInfoTitleDiv.addHtmlElement(additionalInfoTitleH4);
+    	
+    	row1Div.addHtmlElement(additionalInfoTitleDiv);
 
-		out.println("   <div class=\"panel-heading\">");
-		out.println("      <h3 class=\"panel-title\">"
-				+ getMessage("wordDictionaryDetails.page.dictionaryEntry.info.title") + "</h3>");
-		out.println("   </div>");
+    	// dodaj wiersz z tytulem
+    	additionalInfoDiv.addHtmlElement(row1Div);
+
+    	// wiersz z informacjami dodatkowymi
+    	Div row2Div = new Div("row");
+    	additionalInfoDiv.addHtmlElement(row2Div);
+
+		row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+		
+		Div additionalInfoTextDiv = new Div("col-md-11");
+		row2Div.addHtmlElement(additionalInfoTextDiv);
 
 		if (special == false) {
 			
-			out.println("   <div class=\"panel-body\">");
-		
-			out.println("      <h4 style=\"margin-top: 0px;margin-bottom: 5px\">");
-			out.println(info);
-			out.println("      </h4>");
+			H additionalInfoTextH4 = new H(4);
+			additionalInfoTextDiv.addHtmlElement(additionalInfoTextH4);
 			
+			additionalInfoTextH4.addHtmlElement(new Text(info));
+						
 		} else {
 			
-			out.println("   <div class=\"panel-body\" style=\"font-family:monospace; font-size: 20%\">");
+			Div specialDiv = new Div(null, "font-family:monospace; font-size: 40%");
+			additionalInfoTextDiv.addHtmlElement(specialDiv);
 			
-			String specialValue = getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special");
-			
-			out.println(specialValue);
+			specialDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special")));	
 		}		
-		
-		out.println("   </div>");
-
-		out.println("</div>");
+				
+		return additionalInfoDiv;
 	}
 	
 	// special
