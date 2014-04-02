@@ -21,6 +21,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.Button;
+import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
@@ -78,9 +79,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             
             int fixme = 1;
                         
-            // czesc mowy
-            generateWordType(out, dictionaryManager, messageSource);
-            
             // dodatkowe atrybuty
             generateAttribute(out, dictionaryManager, messageSource);
                         
@@ -132,6 +130,12 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
         if (additionalInfo != null) {
         	panelBody.addHtmlElement(additionalInfo);
+        }
+        
+        Div wordTypeDiv = generateWordType();
+        
+        if (wordTypeDiv != null) {
+        	panelBody.addHtmlElement(wordTypeDiv);
         }
 		
 		panelDiv.addHtmlElement(panelBody);
@@ -435,7 +439,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     		currentTranslateDiv.addHtmlElement(currentTranslateH);
     	}
 
-    	translateDiv.addHtmlElement(new Hr());		
+    	translateDiv.addHtmlElement(new Hr());
 		
 		return translateDiv;
 	}
@@ -461,7 +465,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	// wiersz z tytulem
     	Div row1Div = new Div("row");
     	
-    	// tlumaczenie - tytul
+    	// informacje dodatkowe - tytul
     	Div additionalInfoTitleDiv = new Div("col-md-3");
     	
     	H additionalInfoTitleH4 = new H(4, null, "margin-top: 0px");
@@ -515,91 +519,122 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return false;
 	}
 	
-	private void generateWordType(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
+	private Div generateWordType() throws IOException {
 		
 		List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
 		
-		if (dictionaryEntryTypeList != null) {
-			
-			int addableDictionaryEntryTypeInfoCounter = 0;
-
-			for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
-
-				boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
-
-				if (addableDictionaryEntryTypeInfo == true) {
-					addableDictionaryEntryTypeInfoCounter++;
-				}
-			}
-
-			if (addableDictionaryEntryTypeInfoCounter > 0) {
-					
-				out.println("<div class=\"panel panel-default\">");
-
-				out.println("   <div class=\"panel-heading\">");
-				out.println("      <h3 class=\"panel-title\">"
-						+ getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.title") + "</h3>");
-				out.println("   </div>");
-
-				out.println("   <div class=\"panel-body\">");
-				
-				out.println("      <table>");
-				
-				if (addableDictionaryEntryTypeInfoCounter > 1) {
-					out.println("         <tr>");
-					out.println("            <td colspan=\"2\">");
-					
-					out.println("               <h5 style=\"margin: 0 0 10px 0\">");
-					out.println(getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.info"));
-					out.println("               </h5>");
-					
-					out.println("            </td>");					
-					out.println("         </tr>");						
-				}
-				
-				for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
-
-					boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
-
-					out.println("         <tr>");
-					
-					if (addableDictionaryEntryTypeInfo == true) {
-						
-						out.println("         <td>");
-						out.println("            <h4 style=\"margin-top: 0px;margin-bottom: 5px\">");
-						out.println(currentDictionaryEntryType.getName());
-						out.println("            </h4>");
-						out.println("         </td>");
-						
-						if (addableDictionaryEntryTypeInfoCounter > 1) {
-							
-							String kanji = dictionaryEntry.getKanji();
-							List<String> kanaList = dictionaryEntry.getKanaList();
-							
-				            String link = detailsLinkWithForceDictionaryEntryType.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
-				            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
-				            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-").
-				            		replaceAll("%FORCEDICTIONARYENTRYTYPE%", currentDictionaryEntryType.toString());
-
-							out.println("         <td><div style=\"margin: 0 0 5px 50px\">");
-							out.println("            <button type=\"button\" class=\"btn btn-default\" onclick=\"window.location = '" + link + "'\">" + 
-									getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.show") + "</button>\n");
-							out.println("         </div></td>");
-						}
-					}
-					
-					out.println("         </tr>");
-				}
-				
-				out.println("      </table>");
-				
-				out.println("   </div>");
-
-				out.println("</div>");
-			}			
+		if (dictionaryEntryTypeList == null) {
+			return null;
 		}
+		
+		int addableDictionaryEntryTypeInfoCounter = 0;
+
+		for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
+
+			boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
+
+			if (addableDictionaryEntryTypeInfo == true) {
+				addableDictionaryEntryTypeInfoCounter++;
+			}
+		}
+		
+		if (addableDictionaryEntryTypeInfoCounter == 0) {
+			return null;
+		}
+		
+		Div wordTypeDiv = new Div();
+		
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// czesc mowy - tytul
+    	Div wordTypeTitleDiv = new Div("col-md-3");
+    	
+    	H wordTypeTitleH4 = new H(4, null, "margin-top: 0px");
+    	wordTypeTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.title")));
+    	
+    	wordTypeTitleDiv.addHtmlElement(wordTypeTitleH4);
+    	
+    	row1Div.addHtmlElement(wordTypeTitleDiv);
+
+    	// dodaj wiersz z tytulem
+    	wordTypeDiv.addHtmlElement(row1Div);
+    	
+    	if (addableDictionaryEntryTypeInfoCounter > 1) { // info o odmianach
+    		
+        	Div row2Div = new Div("row");
+        	wordTypeDiv.addHtmlElement(row2Div);
+
+        	Div wordTypeInfoDiv = new Div("col-md-12", "margin: -15px 0 0px 0");
+        	row2Div.addHtmlElement(wordTypeInfoDiv);
+        	
+    		H wordTypeInfoH5 = new H(5);
+    		wordTypeInfoDiv.addHtmlElement(wordTypeInfoH5);
+    		
+    		wordTypeInfoH5.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.info")));	
+    	}
+    	
+    	// czesci mowy
+    	Div row3Div = new Div("row");
+    	wordTypeDiv.addHtmlElement(row3Div);
+    	
+    	row3Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    	
+    	Div currentWordTypeDiv = new Div("col-md-11");
+    	row3Div.addHtmlElement(currentWordTypeDiv);
+    	
+    	Table row3Table = new Table();
+    	currentWordTypeDiv.addHtmlElement(row3Table);
+    	
+		for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
+
+			boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
+
+			if (addableDictionaryEntryTypeInfo == true) {
+				
+				Tr row3TableTr = new Tr();
+				row3Table.addHtmlElement(row3TableTr);
+				
+				Td row3TableTrTd1 = new Td();
+				row3TableTr.addHtmlElement(row3TableTrTd1);
+	    		
+	    		H currentWordTypeH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+	    		currentWordTypeH.addHtmlElement(new Text(currentDictionaryEntryType.getName()));
+	    		
+	    		row3TableTrTd1.addHtmlElement(currentWordTypeH);
+	    		
+	    		if (addableDictionaryEntryTypeInfoCounter > 1) {
+	    			
+					String kanji = dictionaryEntry.getKanji();
+					List<String> kanaList = dictionaryEntry.getKanaList();
+					
+		            String link = detailsLinkWithForceDictionaryEntryType.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
+		            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
+		            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-").
+		            		replaceAll("%FORCEDICTIONARYENTRYTYPE%", currentDictionaryEntryType.toString());
+		            
+		            Td row3TableTrTd2 = new Td();
+					row3TableTr.addHtmlElement(row3TableTrTd2);
+		            
+					Div row3TableTrTd2Div = new Div(null, "margin: 0 0 5px 50px");
+					row3TableTrTd2.addHtmlElement(row3TableTrTd2Div);
+					
+					Button linkButton = new Button("btn btn-default");
+					row3TableTrTd2Div.addHtmlElement(linkButton);
+
+					linkButton.setButtonType(ButtonType.BUTTON);
+					linkButton.setOnClick("window.location = '" + link + "'");
+					
+					linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.show")));	    			
+	    		}
+			}
+		}
+		
+		wordTypeDiv.addHtmlElement(new Hr());
+		
+		return wordTypeDiv;
 	}
-	
+		
 	private void generateAttribute(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
 		
 		List<Attribute> attributeList = dictionaryEntry.getAttributeList().getAttributeList();
