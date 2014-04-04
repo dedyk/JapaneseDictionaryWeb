@@ -10,3 +10,4 @@ db/transitive_intransitive_pairs.csv
 src/main/resources/db/kana.csv
 src/main/resources/db/radical.csv
 src/main/resources/db/transitive_intransitive_pairs.csv
+src/main/resources/db/db-lucene/
