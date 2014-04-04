@@ -125,7 +125,8 @@
 							url: '${pageContext.request.contextPath}/js/datatables/polish.json'
 						},
 						"aaSorting": [],
-						"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>"
+						"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+						"bLengthChange": false
 					});
 				});
 			</script>
