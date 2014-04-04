@@ -76,12 +76,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             
             // generowanie informacji podstawowych
             generateMainInfo(out);
-            
-            int fixme = 1;
-                        
-            // dodatkowe atrybuty
-            generateAttribute(out, dictionaryManager, messageSource);
-                        
+                                    
             return SKIP_BODY;
             
         } catch (IOException e) {
@@ -132,10 +127,18 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         	panelBody.addHtmlElement(additionalInfo);
         }
         
+        // czesc mowy
         Div wordTypeDiv = generateWordType();
         
         if (wordTypeDiv != null) {
         	panelBody.addHtmlElement(wordTypeDiv);
+        }
+        
+        // dodatkowe atrybuty
+		Div additionalAttribute = generateAttribute();
+
+        if (additionalAttribute != null) {
+        	panelBody.addHtmlElement(additionalAttribute);
         }
 		
 		panelDiv.addHtmlElement(panelBody);
@@ -580,11 +583,11 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	
     	row3Div.addHtmlElement(new Div("col-md-1")); // przerwa
     	
-    	Div currentWordTypeDiv = new Div("col-md-11");
-    	row3Div.addHtmlElement(currentWordTypeDiv);
+    	Div wordTypeBodyDiv = new Div("col-md-11");
+    	row3Div.addHtmlElement(wordTypeBodyDiv);
     	
     	Table row3Table = new Table();
-    	currentWordTypeDiv.addHtmlElement(row3Table);
+    	wordTypeBodyDiv.addHtmlElement(row3Table);
     	
 		for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
 
@@ -635,108 +638,135 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return wordTypeDiv;
 	}
 		
-	private void generateAttribute(JspWriter out, DictionaryManager dictionaryManager, MessageSource messageSource) throws IOException {
+	private Div generateAttribute() throws IOException {
 		
 		List<Attribute> attributeList = dictionaryEntry.getAttributeList().getAttributeList();
 		
-		if (attributeList != null && attributeList.size() > 0) {
-			
-			out.println("<div class=\"panel panel-default\">");
+		if (attributeList == null || attributeList.size() == 0) {
+			return null;
+		}
+		
+		Div attributeDiv = new Div();
+		
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// czesc mowy - tytul
+    	Div attributeTitleDiv = new Div("col-md-3");
+    	
+    	H attributeTitleH4 = new H(4, null, "margin-top: 0px");
+    	attributeTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.title")));
+    	
+    	attributeTitleDiv.addHtmlElement(attributeTitleH4);
+    	
+    	row1Div.addHtmlElement(attributeTitleDiv);
 
-			out.println("   <div class=\"panel-heading\">");
-			out.println("      <h3 class=\"panel-title\">"
-					+ getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.title") + "</h3>");
-			out.println("   </div>");
+    	// dodaj wiersz z tytulem
+    	attributeDiv.addHtmlElement(row1Div);
+    	
+    	// atrybuty
+    	Div row2Div = new Div("row");
+    	attributeDiv.addHtmlElement(row2Div);
+    	
+    	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    	
+    	Div attributeBodyDiv = new Div("col-md-11");
+    	row2Div.addHtmlElement(attributeBodyDiv);
+    	
+    	Table row2Table = new Table();
+    	attributeBodyDiv.addHtmlElement(row2Table);
 
-			out.println("   <div class=\"panel-body\">");
-			
-			for (Attribute currentAttribute : attributeList) {
+    	for (Attribute currentAttribute : attributeList) {
 
-				AttributeType attributeType = currentAttribute.getAttributeType();
+			AttributeType attributeType = currentAttribute.getAttributeType();
 
-				if (attributeType.isShow() == true) {
-					out.println("      <h4 style=\"margin-top: 0px;margin-bottom: 5px\">");
-					out.println(attributeType.getName());
-					out.println("      </h4>");
-				}
-					
-				if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR || attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR) {
-
-					Integer transitivityIntransitivityPairWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
-
-					final DictionaryEntry transitivityIntransitivityPairDictionaryEntry = dictionaryManager.getDictionaryEntryById(transitivityIntransitivityPairWordId);
-
-					if (transitivityIntransitivityPairDictionaryEntry != null) {
-						
-						out.println("      <table>");
-						out.println("         <tr>");
-						
-						out.println("            <td>");
-						
-						out.println("               <h4 style=\"margin-top: 0px; margin-bottom: 5px; margin-left: 30px\">");
-						out.println(attributeType.getName());
-						out.println("               </h4>");						
-						
-						out.println("            </td>");
-						
-						out.println("            <td rowspan=\"2\"><div style=\"margin: 0 0 0 50px\">");
-						
-						String kanji = transitivityIntransitivityPairDictionaryEntry.getKanji();
-						List<String> kanaList = transitivityIntransitivityPairDictionaryEntry.getKanaList();
-						
-			            String link = detailsLink.replaceAll("%ID%", String.valueOf(transitivityIntransitivityPairDictionaryEntry.getId())).
-			            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
-			            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-");
-
-						out.println("               <button type=\"button\" class=\"btn btn-default\" onclick=\"window.location = '" + link + "'\">" + 
-								getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.transitivityIntransitivityPairDictionaryEntry.show") + "</button>\n");
-
-								
-						out.println("            </div></td>");						
-						out.println("         </tr>");
-
-						
-						List<String> transitivityIntransitivityPairDictionaryEntryKanaList = transitivityIntransitivityPairDictionaryEntry.getKanaList();
-						List<String> transitivityIntransitivityPairDictionaryEntryRomajiList = transitivityIntransitivityPairDictionaryEntry.getRomajiList();
-
-						for (int transitivityIntransitivityPairDictionaryEntryKanaListIdx = 0; transitivityIntransitivityPairDictionaryEntryKanaListIdx < transitivityIntransitivityPairDictionaryEntryKanaList
-								.size(); transitivityIntransitivityPairDictionaryEntryKanaListIdx++) {
-
-							StringBuffer transitivityIntrasitivitySb = new StringBuffer();
-
-							if (transitivityIntransitivityPairDictionaryEntry.isKanjiExists() == true) {
-								transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntry.getKanji()).append(", ");
-							}
-
-							transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryKanaList.get(transitivityIntransitivityPairDictionaryEntryKanaListIdx)).append(", ");
-							
-							transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryRomajiList.get(transitivityIntransitivityPairDictionaryEntryKanaListIdx));
-
-							out.println("         <tr>");
-							out.println("            <td>");
-							
-							out.println("               <h4 style=\"margin-top: 0px; margin-bottom: 5px; margin-left: 30px\">");
-							out.println(transitivityIntrasitivitySb.toString());
-							out.println("               </h4>");
-							
-							out.println("            </td>");
-							out.println("         </tr>");
-						}
-						
-						out.println("      </table>");
-					}
-				}
+			if (attributeType.isShow() == true) {
+				
+				Tr row2TableTr = new Tr();
+				row2Table.addHtmlElement(row2TableTr);
+				
+				Td row2TableTrTd1 = new Td();
+				row2TableTr.addHtmlElement(row2TableTrTd1);
+				
+	    		H currentAttributeH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+	    		row2TableTrTd1.addHtmlElement(currentAttributeH);
+	    		
+	    		currentAttributeH.addHtmlElement(new Text(attributeType.getName()));
 			}
 			
-			out.println("      </h4>");
-			
-			out.println("   </div>");
+			if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR || attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR) {
+				
+				Integer transitivityIntransitivityPairWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
 
-			out.println("</div>");			
-		}
+				final DictionaryEntry transitivityIntransitivityPairDictionaryEntry = dictionaryManager.getDictionaryEntryById(transitivityIntransitivityPairWordId);
+
+				if (transitivityIntransitivityPairDictionaryEntry != null) {
+					
+					Tr row2TableTr = new Tr();
+					row2Table.addHtmlElement(row2TableTr);
+					
+					Td row2TableTrTd1 = new Td();
+					row2TableTr.addHtmlElement(row2TableTrTd1);
+
+		    		H currentAttributeH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 30px");
+		    		row2TableTrTd1.addHtmlElement(currentAttributeH);
+		    		
+		    		currentAttributeH.addHtmlElement(new Text(attributeType.getName()));
+
+		    		// czasownik przechodni / nieprzechodni
+					List<String> transitivityIntransitivityPairDictionaryEntryKanaList = transitivityIntransitivityPairDictionaryEntry.getKanaList();
+					List<String> transitivityIntransitivityPairDictionaryEntryRomajiList = transitivityIntransitivityPairDictionaryEntry.getRomajiList();
+
+					for (int transitivityIntransitivityPairDictionaryEntryKanaListIdx = 0; transitivityIntransitivityPairDictionaryEntryKanaListIdx < transitivityIntransitivityPairDictionaryEntryKanaList
+							.size(); transitivityIntransitivityPairDictionaryEntryKanaListIdx++) {
+
+						StringBuffer transitivityIntrasitivitySb = new StringBuffer();
+
+						if (transitivityIntransitivityPairDictionaryEntry.isKanjiExists() == true) {
+							transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntry.getKanji()).append(", ");
+						}
+
+						transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryKanaList.get(transitivityIntransitivityPairDictionaryEntryKanaListIdx)).append(", ");
+						
+						transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryRomajiList.get(transitivityIntransitivityPairDictionaryEntryKanaListIdx));
+						
+						Td row2TableTrTd2 = new Td();
+						row2TableTr.addHtmlElement(row2TableTrTd2);
+
+			    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px");
+			    		row2TableTrTd2.addHtmlElement(currentTransitivityIntrasitivityH);
+			    		
+			    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(transitivityIntrasitivitySb.toString()));
+					}		    		
+		    		
+		    		// przycisk
+					Td row2TableTrTd3 = new Td();
+					row2TableTr.addHtmlElement(row2TableTrTd3);
+					
+					Div row2TableTrTd3Div = new Div(null, "margin: 0 0 5px 50px");
+					row2TableTrTd3.addHtmlElement(row2TableTrTd3Div);
+					
+					String kanji = transitivityIntransitivityPairDictionaryEntry.getKanji();
+					List<String> kanaList = transitivityIntransitivityPairDictionaryEntry.getKanaList();
+					
+		            String link = detailsLink.replaceAll("%ID%", String.valueOf(transitivityIntransitivityPairDictionaryEntry.getId())).
+		            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
+		            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-");
+
+					Button linkButton = new Button("btn btn-default");
+					row2TableTrTd3Div.addHtmlElement(linkButton);
+
+					linkButton.setButtonType(ButtonType.BUTTON);
+					linkButton.setOnClick("window.location = '" + link + "'");
+					
+					linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.transitivityIntransitivityPairDictionaryEntry.show")));			
+				}				
+			}			
+    	}		
+		
+		return attributeDiv;		
 	}
 
-	
 	/*
 
 		private List<IScreenItem> generateDetails(final DictionaryEntry dictionaryEntry,

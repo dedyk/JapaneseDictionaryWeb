@@ -1,9 +1,14 @@
 package pl.idedyk.japanese.dictionary.web.html;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class Td extends HtmlElementCommon {
+	
+	private String colspan;
+	
+	private String rowspan;
 	
 	public Td() { 
 		super();
@@ -15,6 +20,22 @@ public class Td extends HtmlElementCommon {
 
 	public Td(String clazz, String style) {		
 		super(clazz, style);
+	}
+
+	public String getColspan() {
+		return colspan;
+	}
+
+	public void setColspan(String colspan) {
+		this.colspan = colspan;
+	}
+
+	public String getRowspan() {
+		return rowspan;
+	}
+
+	public void setRowspan(String rowspan) {
+		this.rowspan = rowspan;
 	}
 
 	@Override
@@ -29,6 +50,17 @@ public class Td extends HtmlElementCommon {
 	
 	@Override
 	protected List<String[]> getAdditionalTagAttributes() {
-		return null;
+		
+		List<String[]> additionalTagAttributes = new ArrayList<String[]>();
+
+		if (colspan != null) {
+			additionalTagAttributes.add(new String[] { "colspan", colspan });
+		}
+		
+		if (rowspan != null) {
+			additionalTagAttributes.add(new String[] { "rowspan", rowspan });
+		}
+
+		return additionalTagAttributes;
 	}	
 }
