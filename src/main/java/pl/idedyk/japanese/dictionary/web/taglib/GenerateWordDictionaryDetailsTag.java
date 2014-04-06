@@ -2,8 +2,10 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
@@ -20,6 +22,10 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
+import pl.idedyk.japanese.dictionary.api.gramma.GrammaConjugaterManager;
+import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateGroupTypeElements;
+import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResult;
+import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResultType;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
@@ -77,6 +83,9 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             
             // generowanie informacji podstawowych
             generateMainInfo(out);
+            
+            // odmiany gramatyczne
+            generateGrammaFormConjugate(out);
                                     
             return SKIP_BODY;
             
@@ -875,62 +884,119 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		
 		return knownKanjiDiv;
 	}
+	
+	private void generateGrammaFormConjugate(JspWriter out) throws IOException {
+		
+		int fixme = 1;
+		// FIXME: indeks
+		
+		Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache = new HashMap<GrammaFormConjugateResultType, GrammaFormConjugateResult>();
+		
+		// wylicz odmiany gramatyczne
+		List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = 
+				GrammaConjugaterManager.getGrammaConjufateResult(dictionaryManager.getKeigoHelper(), dictionaryEntry, grammaFormCache, forceDictionaryEntryType);
+		
+		if (grammaFormConjugateGroupTypeElementsList == null || grammaFormConjugateGroupTypeElementsList.size() == 0) {
+			return;
+		}
+		
+		Div panelDiv = new Div("panel panel-default");
+		
+		Div panelHeading = new Div("panel-heading");
+		
+		// tytul sekcji
+		H h3Title = new H(3, "panel-title");
+		h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));
+		
+		panelHeading.addHtmlElement(h3Title);
+		
+		panelDiv.addHtmlElement(panelHeading);
+		
+		// zawartosc sekcji
+		Div panelBody = new Div("panel-body");
+		
+		panelDiv.addHtmlElement(panelBody);
+		
+		for (int grammaFormConjugateGroupTypeElementsListIdx = 0; grammaFormConjugateGroupTypeElementsListIdx < grammaFormConjugateGroupTypeElementsList.size(); ++grammaFormConjugateGroupTypeElementsListIdx) {
+			
+			GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateGroupTypeElementsList.get(grammaFormConjugateGroupTypeElementsListIdx);
+			
+			panelBody.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements));
+			
+			if (grammaFormConjugateGroupTypeElementsListIdx != grammaFormConjugateGroupTypeElementsList.size() - 1) {
+				panelBody.addHtmlElement(new Hr());
+			}
+		}
+		
+		// renderowanie
+		panelDiv.render(out);		
+	}
+	
+	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements) {
+		
+		Div resultDiv = new Div();
+		
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// znaczenie znakow kanji - tytul
+    	Div row1TitleDiv = new Div("col-md-3");
+    	
+    	H row1TitleH4 = new H(4, null, "margin-top: 0px");
+    	row1TitleH4.addHtmlElement(new Text(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName()));
+    	
+    	row1TitleDiv.addHtmlElement(row1TitleH4);
+    	
+    	row1Div.addHtmlElement(row1TitleDiv);
+
+    	// dodaj wiersz z tytulem
+    	resultDiv.addHtmlElement(row1Div);
+
+    	// zawartosc sekcji
+    	Div row2Div = new Div("row");
+    	resultDiv.addHtmlElement(row2Div);
+    	
+    	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    	
+    	Div sectionBodyDiv = new Div("col-md-11");
+    	row2Div.addHtmlElement(sectionBodyDiv);
+    	
+		List<GrammaFormConjugateResult> grammaFormConjugateResults = grammaFormConjugateGroupTypeElements.getGrammaFormConjugateResults();
+
+		for (GrammaFormConjugateResult currentGrammaFormConjugateResult : grammaFormConjugateResults) {
+
+	    	// tytul sekcji dla elementu		    	
+	    	H currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4 = new H(4, null, "margin-top: 0px");
+	    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.addHtmlElement(
+	    			new Text(currentGrammaFormConjugateResult.getResultType().isShow() == false ? "" : currentGrammaFormConjugateResult.getResultType().getName()));
+	    			    	
+	    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4);				
+			
+			// sekcja dla grupy odmian
+	    	Div currentGrammaFormConjugateResultSectionBodyDiv = new Div("col-md-12");
+	    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDiv);
+
+	    	// zawartosc sekcji dla elementu
+//	    	Table currentGraamaFormConjugateResultSectionBodyTable = new Table();
+//	    	currentGrammaFormConjugateResultSectionBodyDiv.addHtmlElement(currentGraamaFormConjugateResultSectionBodyTable);
+//	    	
+//	    	Tr currentGraamaFormConjugateResultSectionBodyTr = new Tr();
+//	    	currentGraamaFormConjugateResultSectionBodyTable.addHtmlElement(currentGraamaFormConjugateResultSectionBodyTr);
+	    	
+	    	
+	    	
+				
+		}
+
+		return resultDiv;
+	}
+	
 
 	/*
 		private List<IScreenItem> generateDetails(final DictionaryEntry dictionaryEntry,
 				DictionaryEntryType forceDictionaryEntryType, final ScrollView scrollMainLayout) {
 
 			List<IScreenItem> report = new ArrayList<IScreenItem>();
-
-			// known kanji
-			List<KanjiEntry> knownKanji = null;
-
-			if (dictionaryEntry.isKanjiExists() == true) {
-				knownKanji = JapaneseAndroidLearnHelperApplication.getInstance().getDictionaryManager(this)
-						.findKnownKanji(dictionaryEntry.getKanji());
-			}
-
-			if (knownKanji != null && knownKanji.size() > 0) {
-
-				report.add(new StringValue("", 15.0f, 2));
-				report.add(new TitleItem(getString(R.string.word_dictionary_known_kanji), 0));
-				report.add(new StringValue(getString(R.string.word_dictionary_known_kanji_info), 12.0f, 0));
-
-				for (int knownKanjiIdx = 0; knownKanjiIdx < knownKanji.size(); ++knownKanjiIdx) {
-
-					final KanjiEntry kanjiEntry = knownKanji.get(knownKanjiIdx);
-
-					OnClickListener kanjiOnClickListener = new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-
-							// show kanji details
-
-							Intent intent = new Intent(getApplicationContext(), KanjiDetails.class);
-
-							intent.putExtra("item", kanjiEntry);
-
-							startActivity(intent);
-						}
-					};
-
-					StringValue knownKanjiStringValue = new StringValue(kanjiEntry.getKanji(), 16.0f, 1);
-					StringValue polishTranslateStringValue = new StringValue(kanjiEntry.getPolishTranslates().toString(),
-							16.0f, 1);
-
-					knownKanjiStringValue.setOnClickListener(kanjiOnClickListener);
-					polishTranslateStringValue.setOnClickListener(kanjiOnClickListener);
-
-					report.add(knownKanjiStringValue);
-					report.add(polishTranslateStringValue);
-
-					if (knownKanjiIdx != knownKanji.size() - 1) {
-						report.add(new StringValue("", 10.0f, 1));
-					}
-
-				}
-			}
 
 			// index
 			int indexStartPos = report.size();
