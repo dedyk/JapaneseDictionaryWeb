@@ -216,7 +216,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	// kanji - tytul
     	Div kanjiTitleDiv = new Div("col-md-1");
     	
-    	H kanjiTitleH4 = new H(4, null, "margin-top: 0px");
+    	H kanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
     	
     	kanjiTitleDiv.addHtmlElement(kanjiTitleH4);
@@ -340,7 +340,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	// kanji - tytul
     	Div readingTitleDiv = new Div("col-md-1");
     	
-    	H readingTitleH4 = new H(4, null, "margin-top: 0px");
+    	H readingTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	readingTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title")));
     	
     	readingTitleDiv.addHtmlElement(readingTitleH4);
@@ -444,7 +444,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	// tlumaczenie - tytul
     	Div translateTitleDiv = new Div("col-md-1");
     	
-    	H translateTitleH4 = new H(4, null, "margin-top: 0px");
+    	H translateTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	translateTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title")));
     	
     	translateTitleDiv.addHtmlElement(translateTitleH4);
@@ -497,7 +497,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	// informacje dodatkowe - tytul
     	Div additionalInfoTitleDiv = new Div("col-md-3");
     	
-    	H additionalInfoTitleH4 = new H(4, null, "margin-top: 0px");
+    	H additionalInfoTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	additionalInfoTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.title")));
     	
     	additionalInfoTitleDiv.addHtmlElement(additionalInfoTitleH4);
@@ -579,7 +579,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	// czesc mowy - tytul
     	Div wordTypeTitleDiv = new Div("col-md-3");
     	
-    	H wordTypeTitleH4 = new H(4, null, "margin-top: 0px");
+    	H wordTypeTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	wordTypeTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.title")));
     	
     	wordTypeTitleDiv.addHtmlElement(wordTypeTitleH4);
@@ -678,7 +678,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	// czesc mowy - tytul
     	Div attributeTitleDiv = new Div("col-md-3");
     	
-    	H attributeTitleH4 = new H(4, null, "margin-top: 0px");
+    	H attributeTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	attributeTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.title")));
     	
     	attributeTitleDiv.addHtmlElement(attributeTitleH4);
@@ -811,7 +811,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	// znaczenie znakow kanji - tytul
     	Div knownKanjiTitleDiv = new Div("col-md-3");
     	
-    	H knownKanjiTitleH4 = new H(4, null, "margin-top: 0px");
+    	H knownKanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	knownKanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.knownKanji.title")));
     	
     	knownKanjiTitleDiv.addHtmlElement(knownKanjiTitleH4);
@@ -906,7 +906,12 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		
 		// tytul sekcji
 		H h3Title = new H(3, "panel-title");
-		h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));
+		
+		if (forceDictionaryEntryType == null) {
+			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));			
+		} else {
+			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() })));
+		}		
 		
 		panelHeading.addHtmlElement(h3Title);
 		
@@ -942,7 +947,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	// znaczenie znakow kanji - tytul
     	Div row1TitleDiv = new Div("col-md-12");
     	
-    	H row1TitleH4 = new H(4, null, "margin-top: 0px");
+    	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	row1TitleH4.addHtmlElement(new Text(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName()));
     	
     	row1TitleDiv.addHtmlElement(row1TitleH4);
@@ -963,11 +968,13 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	
 		List<GrammaFormConjugateResult> grammaFormConjugateResults = grammaFormConjugateGroupTypeElements.getGrammaFormConjugateResults();
 
-		for (GrammaFormConjugateResult currentGrammaFormConjugateResult : grammaFormConjugateResults) {
+		for (int idx = 0; idx < grammaFormConjugateResults.size(); ++idx) {
+			
+			GrammaFormConjugateResult currentGrammaFormConjugateResult = grammaFormConjugateResults.get(idx);
 
 	    	// tytul sekcji dla elementu		 
 			if (currentGrammaFormConjugateResult.getResultType().isShow() == true) {
-		    	H currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4 = new H(4, null, "margin-top: 0px");
+		    	H currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
 		    	
 		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.addHtmlElement(new Text(currentGrammaFormConjugateResult.getResultType().getName()));
 		    			    	
@@ -982,7 +989,18 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	    	Table currentGraamaFormConjugateResultSectionBodyTable = new Table();
 	    	currentGrammaFormConjugateResultSectionBodyDiv.addHtmlElement(currentGraamaFormConjugateResultSectionBodyTable);
 	    	
-	    	generateGrammaFormConjugateResult(currentGraamaFormConjugateResultSectionBodyTable, currentGrammaFormConjugateResult);				
+	    	generateGrammaFormConjugateResult(currentGraamaFormConjugateResultSectionBodyTable, currentGrammaFormConjugateResult);	
+	    	
+	    	if (idx != grammaFormConjugateResults.size() - 1) {
+		    	// przerwa
+				Tr spaceTr = new Tr();
+				currentGraamaFormConjugateResultSectionBodyTable.addHtmlElement(spaceTr);
+				
+				Td spaceTrTd = new Td();
+				spaceTr.addHtmlElement(spaceTrTd);
+				
+				spaceTrTd.addHtmlElement(new Div(null, "margin-bottom: 15px;"));
+	    	}
 		}
 
 		return resultDiv;
@@ -990,8 +1008,8 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	
 	private void generateGrammaFormConjugateResult(Table table, GrammaFormConjugateResult grammaFormConjugateResult) {
 		
-		Tr tr = new Tr();
-		table.addHtmlElement(tr);
+		Tr tr1 = new Tr();
+		table.addHtmlElement(tr1);
 				
 		String grammaFormKanji = grammaFormConjugateResult.getKanji();
 
@@ -1001,7 +1019,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		StringBuffer grammaFormKanjiSb = new StringBuffer();
 
 		Td kanjiTd = new Td();
-		tr.addHtmlElement(kanjiTd);
+		tr1.addHtmlElement(kanjiTd);
 		
 		if (grammaFormKanji != null) {
 			if (prefixKana != null && prefixKana.equals("") == false) {
@@ -1029,10 +1047,13 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 			sb.append(grammaFormKanaList.get(idx));
 			
-			Td kanaTd = new Td();
-			tr.addHtmlElement(kanaTd);
+			Tr tr2 = new Tr();
+			table.addHtmlElement(tr2);
 			
-			H kanaTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px;");
+			Td kanaTd = new Td();
+			tr2.addHtmlElement(kanaTd);
+			
+			H kanaTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
 			kanaTd.addHtmlElement(kanaTdH4);
 			
 			kanaTdH4.addHtmlElement(new Text(sb.toString()));
@@ -1048,10 +1069,13 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			
 			grammaFormRomajiSb.append(grammaFormRomajiList.get(idx));
 
-			Td romajiTd = new Td();
-			tr.addHtmlElement(romajiTd);
+			Tr tr3 = new Tr();
+			table.addHtmlElement(tr3);
 			
-			H romajiTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px;");
+			Td romajiTd = new Td();
+			tr3.addHtmlElement(romajiTd);
+			
+			H romajiTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
 			romajiTd.addHtmlElement(romajiTdH4);
 			
 			romajiTdH4.addHtmlElement(new Text(grammaFormRomajiSb.toString()));
@@ -1060,6 +1084,14 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		GrammaFormConjugateResult alternative = grammaFormConjugateResult.getAlternative();
 		
 		if (alternative != null) {
+			Tr tr4 = new Tr();
+			table.addHtmlElement(tr4);
+			
+			Td tr4Td = new Td();
+			tr4.addHtmlElement(tr4Td);
+			
+			tr4Td.addHtmlElement(new Div(null, "margin-bottom: 15px;"));
+			
 			generateGrammaFormConjugateResult(table, alternative);
 		}
 	}
@@ -1454,11 +1486,9 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return messageSource.getMessage(code, null, Locale.getDefault());
 	}
 
-	/*
-	private String getMessage(MessageSource messageSource, String code, String[] args) {
+	private String getMessage(String code, String[] args) {
 		return messageSource.getMessage(code, args, Locale.getDefault());
 	}
-	*/
 	
 	public DictionaryEntry getDictionaryEntry() {
 		return dictionaryEntry;
