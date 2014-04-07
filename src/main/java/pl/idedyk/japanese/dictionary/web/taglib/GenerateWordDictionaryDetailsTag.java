@@ -920,7 +920,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		for (int grammaFormConjugateGroupTypeElementsListIdx = 0; grammaFormConjugateGroupTypeElementsListIdx < grammaFormConjugateGroupTypeElementsList.size(); ++grammaFormConjugateGroupTypeElementsListIdx) {
 			
 			GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateGroupTypeElementsList.get(grammaFormConjugateGroupTypeElementsListIdx);
-			
+						
 			panelBody.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements));
 			
 			if (grammaFormConjugateGroupTypeElementsListIdx != grammaFormConjugateGroupTypeElementsList.size() - 1) {
@@ -940,7 +940,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	Div row1Div = new Div("row");
     	
     	// znaczenie znakow kanji - tytul
-    	Div row1TitleDiv = new Div("col-md-3");
+    	Div row1TitleDiv = new Div("col-md-12");
     	
     	H row1TitleH4 = new H(4, null, "margin-top: 0px");
     	row1TitleH4.addHtmlElement(new Text(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName()));
@@ -965,31 +965,175 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 		for (GrammaFormConjugateResult currentGrammaFormConjugateResult : grammaFormConjugateResults) {
 
-	    	// tytul sekcji dla elementu		    	
-	    	H currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4 = new H(4, null, "margin-top: 0px");
-	    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.addHtmlElement(
-	    			new Text(currentGrammaFormConjugateResult.getResultType().isShow() == false ? "" : currentGrammaFormConjugateResult.getResultType().getName()));
-	    			    	
-	    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4);				
+	    	// tytul sekcji dla elementu		 
+			if (currentGrammaFormConjugateResult.getResultType().isShow() == true) {
+		    	H currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4 = new H(4, null, "margin-top: 0px");
+		    	
+		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.addHtmlElement(new Text(currentGrammaFormConjugateResult.getResultType().getName()));
+		    			    	
+		    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4);								
+			}
 			
 			// sekcja dla grupy odmian
 	    	Div currentGrammaFormConjugateResultSectionBodyDiv = new Div("col-md-12");
 	    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDiv);
 
 	    	// zawartosc sekcji dla elementu
-//	    	Table currentGraamaFormConjugateResultSectionBodyTable = new Table();
-//	    	currentGrammaFormConjugateResultSectionBodyDiv.addHtmlElement(currentGraamaFormConjugateResultSectionBodyTable);
-//	    	
-//	    	Tr currentGraamaFormConjugateResultSectionBodyTr = new Tr();
-//	    	currentGraamaFormConjugateResultSectionBodyTable.addHtmlElement(currentGraamaFormConjugateResultSectionBodyTr);
+	    	Table currentGraamaFormConjugateResultSectionBodyTable = new Table();
+	    	currentGrammaFormConjugateResultSectionBodyDiv.addHtmlElement(currentGraamaFormConjugateResultSectionBodyTable);
 	    	
-	    	
-	    	
-				
+	    	generateGrammaFormConjugateResult(currentGraamaFormConjugateResultSectionBodyTable, currentGrammaFormConjugateResult);				
 		}
 
 		return resultDiv;
 	}
+	
+	private void generateGrammaFormConjugateResult(Table table, GrammaFormConjugateResult grammaFormConjugateResult) {
+		
+		Tr tr = new Tr();
+		table.addHtmlElement(tr);
+				
+		String grammaFormKanji = grammaFormConjugateResult.getKanji();
+
+		String prefixKana = grammaFormConjugateResult.getPrefixKana();
+		String prefixRomaji = grammaFormConjugateResult.getPrefixRomaji();
+
+		StringBuffer grammaFormKanjiSb = new StringBuffer();
+
+		Td kanjiTd = new Td();
+		tr.addHtmlElement(kanjiTd);
+		
+		if (grammaFormKanji != null) {
+			if (prefixKana != null && prefixKana.equals("") == false) {
+				grammaFormKanjiSb.append("(").append(prefixKana).append(") ");
+			}
+
+			grammaFormKanjiSb.append(grammaFormKanji);
+						
+			H kanjiTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
+			kanjiTd.addHtmlElement(kanjiTdH4);
+			
+			kanjiTdH4.addHtmlElement(new Text(grammaFormKanjiSb.toString()));
+		}
+		
+		List<String> grammaFormKanaList = grammaFormConjugateResult.getKanaList();
+		List<String> grammaFormRomajiList = grammaFormConjugateResult.getRomajiList();
+
+		for (int idx = 0; idx < grammaFormKanaList.size(); ++idx) {
+
+			StringBuffer sb = new StringBuffer();
+
+			if (prefixKana != null && prefixKana.equals("") == false) {
+				sb.append("(").append(prefixKana).append(") ");
+			}
+
+			sb.append(grammaFormKanaList.get(idx));
+			
+			Td kanaTd = new Td();
+			tr.addHtmlElement(kanaTd);
+			
+			H kanaTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px;");
+			kanaTd.addHtmlElement(kanaTdH4);
+			
+			kanaTdH4.addHtmlElement(new Text(sb.toString()));
+		}
+		
+		for (int idx = 0; idx < grammaFormRomajiList.size(); ++idx) {
+
+			StringBuffer grammaFormRomajiSb = new StringBuffer();
+
+			if (prefixRomaji != null && prefixRomaji.equals("") == false) {
+				grammaFormRomajiSb.append("(").append(prefixRomaji).append(") ");
+			}
+			
+			grammaFormRomajiSb.append(grammaFormRomajiList.get(idx));
+
+			Td romajiTd = new Td();
+			tr.addHtmlElement(romajiTd);
+			
+			H romajiTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px;");
+			romajiTd.addHtmlElement(romajiTdH4);
+			
+			romajiTdH4.addHtmlElement(new Text(grammaFormRomajiSb.toString()));
+		}
+		
+		GrammaFormConjugateResult alternative = grammaFormConjugateResult.getAlternative();
+		
+		if (alternative != null) {
+			generateGrammaFormConjugateResult(table, alternative);
+		}
+	}
+	
+	/*
+	private void addGrammaFormConjugateResult(List<IScreenItem> report,
+			GrammaFormConjugateResult grammaFormConjugateResult) {
+
+		TableLayout actionButtons = new TableLayout(TableLayout.LayoutParam.WrapContent_WrapContent, true, null);
+		TableRow actionTableRow = new TableRow();
+
+
+		List<String> grammaFormKanaList = grammaFormConjugateResult.getKanaList();
+		List<String> grammaFormRomajiList = grammaFormConjugateResult.getRomajiList();
+
+		for (int idx = 0; idx < grammaFormKanaList.size(); ++idx) {
+
+			StringBuffer sb = new StringBuffer();
+
+			if (prefixKana != null && prefixKana.equals("") == false) {
+				sb.append("(").append(prefixKana).append(") ");
+			}
+
+			sb.append(grammaFormKanaList.get(idx));
+
+			report.add(new StringValue(sb.toString(), 15.0f, 2));
+
+			StringBuffer grammaFormRomajiSb = new StringBuffer();
+
+			if (prefixRomaji != null && prefixRomaji.equals("") == false) {
+				grammaFormRomajiSb.append("(").append(prefixRomaji).append(") ");
+			}
+
+			grammaFormRomajiSb.append(grammaFormRomajiList.get(idx));
+
+			report.add(new StringValue(grammaFormRomajiSb.toString(), 15.0f, 2));
+
+			// speak image
+			Image speakImage = new Image(getResources().getDrawable(android.R.drawable.ic_lock_silent_mode_off), 2);
+			speakImage.setOnClickListener(new TTSJapaneseSpeak(null, grammaFormKanaList.get(idx)));
+			actionTableRow.addScreenItem(speakImage);
+
+			// clipboard kanji
+			if (grammaFormKanji != null) {
+				Image clipboardKanji = new Image(getResources().getDrawable(R.drawable.clipboard_kanji), 0);
+				clipboardKanji.setOnClickListener(new CopyToClipboard(grammaFormKanji));
+				actionTableRow.addScreenItem(clipboardKanji);
+			}
+
+			// clipboard kana
+			Image clipboardKana = new Image(getResources().getDrawable(R.drawable.clipboard_kana), 0);
+			clipboardKana.setOnClickListener(new CopyToClipboard(grammaFormKanaList.get(idx)));
+			actionTableRow.addScreenItem(clipboardKana);
+
+			// clipboard romaji
+			Image clipboardRomaji = new Image(getResources().getDrawable(R.drawable.clipboard_romaji), 0);
+			clipboardRomaji.setOnClickListener(new CopyToClipboard(grammaFormRomajiList.get(idx)));
+			actionTableRow.addScreenItem(clipboardRomaji);
+
+			actionButtons.addTableRow(actionTableRow);
+
+			report.add(actionButtons);
+		}
+
+		GrammaFormConjugateResult alternative = grammaFormConjugateResult.getAlternative();
+
+		if (alternative != null) {
+			report.add(new StringValue("", 5.0f, 1));
+
+			addGrammaFormConjugateResult(report, alternative);
+		}
+	}
+
+	*/
 	
 
 	/*
@@ -1120,90 +1264,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 			for (IScreenItem currentDetailsReportItem : generatedDetails) {
 				currentDetailsReportItem.generate(this, getResources(), detailsMainLayout);
-			}
-		}
-
-		private void addGrammaFormConjugateResult(List<IScreenItem> report,
-				GrammaFormConjugateResult grammaFormConjugateResult) {
-
-			TableLayout actionButtons = new TableLayout(TableLayout.LayoutParam.WrapContent_WrapContent, true, null);
-			TableRow actionTableRow = new TableRow();
-
-			String grammaFormKanji = grammaFormConjugateResult.getKanji();
-
-			String prefixKana = grammaFormConjugateResult.getPrefixKana();
-			String prefixRomaji = grammaFormConjugateResult.getPrefixRomaji();
-
-			StringBuffer grammaFormKanjiSb = new StringBuffer();
-
-			if (grammaFormKanji != null) {
-				if (prefixKana != null && prefixKana.equals("") == false) {
-					grammaFormKanjiSb.append("(").append(prefixKana).append(") ");
-				}
-
-				grammaFormKanjiSb.append(grammaFormKanji);
-
-				report.add(new StringValue(grammaFormKanjiSb.toString(), 15.0f, 2));
-			}
-
-			List<String> grammaFormKanaList = grammaFormConjugateResult.getKanaList();
-			List<String> grammaFormRomajiList = grammaFormConjugateResult.getRomajiList();
-
-			for (int idx = 0; idx < grammaFormKanaList.size(); ++idx) {
-
-				StringBuffer sb = new StringBuffer();
-
-				if (prefixKana != null && prefixKana.equals("") == false) {
-					sb.append("(").append(prefixKana).append(") ");
-				}
-
-				sb.append(grammaFormKanaList.get(idx));
-
-				report.add(new StringValue(sb.toString(), 15.0f, 2));
-
-				StringBuffer grammaFormRomajiSb = new StringBuffer();
-
-				if (prefixRomaji != null && prefixRomaji.equals("") == false) {
-					grammaFormRomajiSb.append("(").append(prefixRomaji).append(") ");
-				}
-
-				grammaFormRomajiSb.append(grammaFormRomajiList.get(idx));
-
-				report.add(new StringValue(grammaFormRomajiSb.toString(), 15.0f, 2));
-
-				// speak image
-				Image speakImage = new Image(getResources().getDrawable(android.R.drawable.ic_lock_silent_mode_off), 2);
-				speakImage.setOnClickListener(new TTSJapaneseSpeak(null, grammaFormKanaList.get(idx)));
-				actionTableRow.addScreenItem(speakImage);
-
-				// clipboard kanji
-				if (grammaFormKanji != null) {
-					Image clipboardKanji = new Image(getResources().getDrawable(R.drawable.clipboard_kanji), 0);
-					clipboardKanji.setOnClickListener(new CopyToClipboard(grammaFormKanji));
-					actionTableRow.addScreenItem(clipboardKanji);
-				}
-
-				// clipboard kana
-				Image clipboardKana = new Image(getResources().getDrawable(R.drawable.clipboard_kana), 0);
-				clipboardKana.setOnClickListener(new CopyToClipboard(grammaFormKanaList.get(idx)));
-				actionTableRow.addScreenItem(clipboardKana);
-
-				// clipboard romaji
-				Image clipboardRomaji = new Image(getResources().getDrawable(R.drawable.clipboard_romaji), 0);
-				clipboardRomaji.setOnClickListener(new CopyToClipboard(grammaFormRomajiList.get(idx)));
-				actionTableRow.addScreenItem(clipboardRomaji);
-
-				actionButtons.addTableRow(actionTableRow);
-
-				report.add(actionButtons);
-			}
-
-			GrammaFormConjugateResult alternative = grammaFormConjugateResult.getAlternative();
-
-			if (alternative != null) {
-				report.add(new StringValue("", 5.0f, 1));
-
-				addGrammaFormConjugateResult(report, alternative);
 			}
 		}
 
