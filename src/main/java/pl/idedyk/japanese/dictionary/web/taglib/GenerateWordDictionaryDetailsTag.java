@@ -27,15 +27,18 @@ import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateGroupType
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResult;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResultType;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
+import pl.idedyk.japanese.dictionary.web.html.Li;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
+import pl.idedyk.japanese.dictionary.web.html.Ul;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 
 public class GenerateWordDictionaryDetailsTag extends TagSupport {
@@ -78,15 +81,30 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             	return SKIP_BODY;
             }
             
+            Div mainContentDiv = new Div();
+
             // tytul strony
-            generateTitle(out);
+            mainContentDiv.addHtmlElement(generateTitle());
+                        
+            Div contentDiv = new Div("col-md-10");
+            mainContentDiv.addHtmlElement(contentDiv);
             
             // generowanie informacji podstawowych
-            generateMainInfo(out);
+            contentDiv.addHtmlElement(generateMainInfo());
             
             // odmiany gramatyczne
-            generateGrammaFormConjugate(out);
-                                    
+            Div grammaFormConjugateDiv = generateGrammaFormConjugate();
+            
+            if (grammaFormConjugateDiv != null) {
+            	contentDiv.addHtmlElement(grammaFormConjugateDiv);
+            }
+            
+            // dodaj menu
+            mainContentDiv.addHtmlElement(generateMenu());
+
+            // renderowanie
+            mainContentDiv.render(out);
+            
             return SKIP_BODY;
             
         } catch (IOException e) {
@@ -94,14 +112,16 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         }
 	}
 	
-	private void generateTitle(JspWriter out) throws IOException {
+	private H generateTitle() throws IOException {
+			
+		H pageHeader = new H(4);
 		
-        out.println("<h4 class=\"page-header\">");
-        out.println(getMessage("wordDictionaryDetails.page.dictionaryEntry.title"));
-        out.println("</h4>");		
+		pageHeader.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.title")));
+		
+		return pageHeader;
 	}
 	
-	private void generateMainInfo(JspWriter out) throws IOException {
+	private Div generateMainInfo() throws IOException {
 		
 		Div panelDiv = new Div("panel panel-default");
 		
@@ -170,8 +190,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         		
 		panelDiv.addHtmlElement(panelBody);
 		
-		// renderowanie
-		panelDiv.render(out);
+		return panelDiv;
 	}
 	
 	private Div generateKanjiSection() throws IOException {
@@ -885,7 +904,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return knownKanjiDiv;
 	}
 	
-	private void generateGrammaFormConjugate(JspWriter out) throws IOException {
+	private Div generateGrammaFormConjugate() throws IOException {
 		
 		int fixme = 1;
 		// FIXME: indeks
@@ -897,7 +916,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 				GrammaConjugaterManager.getGrammaConjufateResult(dictionaryManager.getKeigoHelper(), dictionaryEntry, grammaFormCache, forceDictionaryEntryType);
 		
 		if (grammaFormConjugateGroupTypeElementsList == null || grammaFormConjugateGroupTypeElementsList.size() == 0) {
-			return;
+			return null;
 		}
 		
 		Div panelDiv = new Div("panel panel-default");
@@ -933,8 +952,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			}
 		}
 		
-		// renderowanie
-		panelDiv.render(out);		
+		return panelDiv;
 	}
 	
 	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements) {
@@ -1094,6 +1112,34 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			
 			generateGrammaFormConjugateResult(table, alternative);
 		}
+	}
+	
+	private Div generateMenu() {
+		
+        Div menuDiv = new Div("col-md-2");
+
+        Ul ul = new Ul("nav nav-stacked affix");
+		menuDiv.addHtmlElement(ul);
+		
+		ul.setId("sidebar");
+		
+		int fixme = 1;
+		
+		for (int idx = 0; idx < 5; ++idx) {
+			
+			Li li = new Li();
+			ul.addHtmlElement(li);
+			
+			A link = new A();
+			li.addHtmlElement(link);
+			
+			link.setHref("#");
+			
+			link.addHtmlElement(new Text("Menu: " + idx));
+			
+		}
+        
+        return menuDiv;
 	}
 	
 	/*

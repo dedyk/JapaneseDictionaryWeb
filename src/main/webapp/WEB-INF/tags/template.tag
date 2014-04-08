@@ -104,7 +104,7 @@
 				</div>
 			</nav>
 
-			<div id="content">
+			<div id="content" class="col-md-12">
 				<jsp:doBody />
 			</div>
 
