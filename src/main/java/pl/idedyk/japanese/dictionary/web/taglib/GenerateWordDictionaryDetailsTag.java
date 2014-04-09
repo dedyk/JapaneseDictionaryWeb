@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
@@ -40,6 +41,7 @@ import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.html.Ul;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
+import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
 
 public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	
@@ -82,6 +84,8 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             }
             
             Div mainContentDiv = new Div();
+            
+            Menu mainMenu = new Menu(null, null);
 
             // tytul strony
             mainContentDiv.addHtmlElement(generateTitle());
@@ -90,17 +94,17 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             mainContentDiv.addHtmlElement(contentDiv);
             
             // generowanie informacji podstawowych
-            contentDiv.addHtmlElement(generateMainInfo());
+            contentDiv.addHtmlElement(generateMainInfo(mainMenu));
             
             // odmiany gramatyczne
-            Div grammaFormConjugateDiv = generateGrammaFormConjugate();
+            Div grammaFormConjugateDiv = generateGrammaFormConjugate(mainMenu);
             
             if (grammaFormConjugateDiv != null) {
             	contentDiv.addHtmlElement(grammaFormConjugateDiv);
             }
             
             // dodaj menu
-            mainContentDiv.addHtmlElement(generateMenu());
+            mainContentDiv.addHtmlElement(generateMenu(mainMenu));
 
             // renderowanie
             mainContentDiv.render(out);
@@ -121,7 +125,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return pageHeader;
 	}
 	
-	private Div generateMainInfo() throws IOException {
+	private Div generateMainInfo(Menu mainMenu) throws IOException {
 		
 		Div panelDiv = new Div("panel panel-default");
 		
@@ -129,7 +133,12 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		
 		// tytul sekcji
 		H h3Title = new H(3, "panel-title");
+		h3Title.setId("mainInfoId");
+		
 		h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.mainInfo")));
+		
+		Menu mainInfoMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.mainInfo"));
+		mainMenu.getChildMenu().add(mainInfoMenu);
 		
 		panelHeading.addHtmlElement(h3Title);
 		
@@ -139,7 +148,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		Div panelBody = new Div("panel-body");
 		
 		// kanji
-		Div kanjiDiv = generateKanjiSection();
+		Div kanjiDiv = generateKanjiSection(mainInfoMenu);
 		
 		if (kanjiDiv != null) {
 			panelBody.addHtmlElement(kanjiDiv);	
@@ -148,7 +157,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		}
 		
 		// znaczenie znakow kanji
-        Div knownKanjiDiv = generateKnownKanjiDiv();
+        Div knownKanjiDiv = generateKnownKanjiDiv(mainInfoMenu);
         
         if (knownKanjiDiv != null) {
         	panelBody.addHtmlElement(knownKanjiDiv);
@@ -156,16 +165,16 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         }
 		
 		// czytanie
-		Div readingDiv = generateReadingSection();
+		Div readingDiv = generateReadingSection(mainInfoMenu);
 		panelBody.addHtmlElement(readingDiv);
 		panelBody.addHtmlElement(new Hr());
 		
         // tlumaczenie
-        Div translate = generateTranslateSection();
+        Div translate = generateTranslateSection(mainInfoMenu);
         panelBody.addHtmlElement(translate);
         
         // generuj informacje dodatkowe
-        Div additionalInfo = generateAdditionalInfo();
+        Div additionalInfo = generateAdditionalInfo(mainInfoMenu);
 
         if (additionalInfo != null) {
         	panelBody.addHtmlElement(new Hr());
@@ -173,7 +182,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         }
         
         // czesc mowy
-        Div wordTypeDiv = generateWordType();
+        Div wordTypeDiv = generateWordType(mainInfoMenu);
         
         if (wordTypeDiv != null) {
         	panelBody.addHtmlElement(new Hr());
@@ -181,7 +190,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         }
         
         // dodatkowe atrybuty
-		Div additionalAttributeDiv = generateAttribute();
+		Div additionalAttributeDiv = generateAttribute(mainInfoMenu);
 
         if (additionalAttributeDiv != null) {
         	panelBody.addHtmlElement(new Hr());
@@ -193,7 +202,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return panelDiv;
 	}
 	
-	private Div generateKanjiSection() throws IOException {
+	private Div generateKanjiSection(Menu menu) throws IOException {
 		
 		Div kanjiDiv = new Div();
 		
@@ -236,7 +245,11 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	Div kanjiTitleDiv = new Div("col-md-1");
     	
     	H kanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	kanjiTitleH4.setId("kanjiTitleId");
+    	
     	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
+    	menu.getChildMenu().add(new Menu(kanjiTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
     	
     	kanjiTitleDiv.addHtmlElement(kanjiTitleH4);
     	
@@ -343,7 +356,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         return kanjiDiv;
 	}
 	
-	private Div generateReadingSection() throws IOException {
+	private Div generateReadingSection(Menu menu) throws IOException {
 		
 		Div readingDiv = new Div();
 		
@@ -360,7 +373,11 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	Div readingTitleDiv = new Div("col-md-1");
     	
     	H readingTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	readingTitleH4.setId("readingId");
+    	
     	readingTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title")));
+    	menu.getChildMenu().add(new Menu(readingTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title")));
     	
     	readingTitleDiv.addHtmlElement(readingTitleH4);
     	
@@ -451,7 +468,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
         return readingDiv;
 	}
 	
-	private Div generateTranslateSection() throws IOException {
+	private Div generateTranslateSection(Menu menu) throws IOException {
 		
 		Div translateDiv = new Div();
 		
@@ -464,7 +481,11 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	Div translateTitleDiv = new Div("col-md-1");
     	
     	H translateTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	translateTitleH4.setId("translateId");
+    	
     	translateTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title")));
+    	menu.getChildMenu().add(new Menu(translateTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title")));    	
     	
     	translateTitleDiv.addHtmlElement(translateTitleH4);
     	
@@ -492,7 +513,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return translateDiv;
 	}
 	
-	private Div generateAdditionalInfo() throws IOException {
+	private Div generateAdditionalInfo(Menu menu) throws IOException {
 		
 		String info = dictionaryEntry.getInfo();
 		
@@ -517,7 +538,11 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	Div additionalInfoTitleDiv = new Div("col-md-3");
     	
     	H additionalInfoTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	additionalInfoTitleH4.setId("additionalInfoId");
+    	
     	additionalInfoTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.title")));
+    	menu.getChildMenu().add(new Menu(additionalInfoTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.info.title")));
     	
     	additionalInfoTitleDiv.addHtmlElement(additionalInfoTitleH4);
     	
@@ -567,7 +592,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return false;
 	}
 	
-	private Div generateWordType() throws IOException {
+	private Div generateWordType(Menu menu) throws IOException {
 		
 		List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
 		
@@ -599,7 +624,11 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	Div wordTypeTitleDiv = new Div("col-md-3");
     	
     	H wordTypeTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	wordTypeTitleH4.setId("wordTypeId");
+    	
     	wordTypeTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.title")));
+    	menu.getChildMenu().add(new Menu(wordTypeTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.title")));
     	
     	wordTypeTitleDiv.addHtmlElement(wordTypeTitleH4);
     	
@@ -681,7 +710,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return wordTypeDiv;
 	}
 		
-	private Div generateAttribute() throws IOException {
+	private Div generateAttribute(Menu menu) throws IOException {
 		
 		List<Attribute> attributeList = dictionaryEntry.getAttributeList().getAttributeList();
 		
@@ -698,7 +727,11 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	Div attributeTitleDiv = new Div("col-md-3");
     	
     	H attributeTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	attributeTitleH4.setId("attributeId");
+    	
     	attributeTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.title")));
+    	menu.getChildMenu().add(new Menu(attributeTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.title")));
     	
     	attributeTitleDiv.addHtmlElement(attributeTitleH4);
     	
@@ -810,7 +843,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return attributeDiv;		
 	}
 	
-	private Div generateKnownKanjiDiv() {
+	private Div generateKnownKanjiDiv(Menu menu) {
 		
 		if (dictionaryEntry.isKanjiExists() == false) {
 			return null;
@@ -831,7 +864,11 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	Div knownKanjiTitleDiv = new Div("col-md-3");
     	
     	H knownKanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	knownKanjiTitleH4.setId("knownKanjiId");
+    	
     	knownKanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.knownKanji.title")));
+    	menu.getChildMenu().add(new Menu(knownKanjiTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.knownKanji.title")));
     	
     	knownKanjiTitleDiv.addHtmlElement(knownKanjiTitleH4);
     	
@@ -904,7 +941,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return knownKanjiDiv;
 	}
 	
-	private Div generateGrammaFormConjugate() throws IOException {
+	private Div generateGrammaFormConjugate(Menu mainMenu) throws IOException {
 		
 		int fixme = 1;
 		// FIXME: indeks
@@ -926,11 +963,21 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		// tytul sekcji
 		H h3Title = new H(3, "panel-title");
 		
+		h3Title.setId("grammaFormConjugateId");
+		
+		Menu grammaFormConjugateMenu = null;
+		
 		if (forceDictionaryEntryType == null) {
-			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));			
+			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));
+			
+			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate"));			
 		} else {
 			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() })));
-		}		
+			
+			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() }));
+		}	
+		
+		mainMenu.getChildMenu().add(grammaFormConjugateMenu);
 		
 		panelHeading.addHtmlElement(h3Title);
 		
@@ -945,7 +992,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			
 			GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateGroupTypeElementsList.get(grammaFormConjugateGroupTypeElementsListIdx);
 						
-			panelBody.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements));
+			panelBody.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, grammaFormConjugateMenu));
 			
 			if (grammaFormConjugateGroupTypeElementsListIdx != grammaFormConjugateGroupTypeElementsList.size() - 1) {
 				panelBody.addHtmlElement(new Hr());
@@ -955,7 +1002,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return panelDiv;
 	}
 	
-	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements) {
+	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements, Menu menu) {
 		
 		Div resultDiv = new Div();
 		
@@ -966,7 +1013,14 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	Div row1TitleDiv = new Div("col-md-12");
     	
     	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	row1TitleH4.setId(UUID.randomUUID().toString());    	
+    	
     	row1TitleH4.addHtmlElement(new Text(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName()));
+    	
+    	Menu row1Menu = new Menu(row1TitleH4.getId(), grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName());
+    	
+    	menu.getChildMenu().add(row1Menu);
     	
     	row1TitleDiv.addHtmlElement(row1TitleH4);
     	
@@ -992,15 +1046,21 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 	    	// tytul sekcji dla elementu		 
 			if (currentGrammaFormConjugateResult.getResultType().isShow() == true) {
-		    	H currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+		    	H currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4 = new H(4, "col-md-11", "margin-top: 0px; font-weight:bold; margin-left: -25px;");
+		    	
+		    	String currentGrammaFormConjugateResultId = UUID.randomUUID().toString();
+		    	
+		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.setId(currentGrammaFormConjugateResultId);
 		    	
 		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.addHtmlElement(new Text(currentGrammaFormConjugateResult.getResultType().getName()));
-		    			    	
+		    	
+		    	row1Menu.getChildMenu().add(new Menu(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.getId(), currentGrammaFormConjugateResult.getResultType().getName()));
+		    	
 		    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4);								
 			}
 			
 			// sekcja dla grupy odmian
-	    	Div currentGrammaFormConjugateResultSectionBodyDiv = new Div("col-md-12");
+	    	Div currentGrammaFormConjugateResultSectionBodyDiv = new Div("col-md-11");
 	    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDiv);
 
 	    	// zawartosc sekcji dla elementu
@@ -1114,32 +1174,56 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		}
 	}
 	
-	private Div generateMenu() {
+	private Div generateMenu(Menu mainMenu) {
 		
         Div menuDiv = new Div("col-md-2");
 
-        Ul ul = new Ul("nav nav-stacked affix");
+        Ul ul = new Ul("nav nav-stacked", "width: 200%");
 		menuDiv.addHtmlElement(ul);
 		
 		ul.setId("sidebar");
 		
-		int fixme = 1;
+		List<Menu> mainMenuChildMenuList = mainMenu.getChildMenu();
 		
-		for (int idx = 0; idx < 5; ++idx) {
+		for (int idx = 0; idx < mainMenuChildMenuList.size(); ++idx) {
 			
-			Li li = new Li();
-			ul.addHtmlElement(li);
+			Menu currentMenu = mainMenuChildMenuList.get(idx);
 			
-			A link = new A();
-			li.addHtmlElement(link);
-			
-			link.setHref("#");
-			
-			link.addHtmlElement(new Text("Menu: " + idx));
-			
+			generateMenuPos(ul, currentMenu, 0);
 		}
         
         return menuDiv;
+	}
+	
+	private void generateMenuPos(Ul ul, Menu menu, int level) {
+		
+		Li li = new Li();
+		ul.addHtmlElement(li);
+		
+		A link = new A(null, "padding-bottom: 0px; padding-top: 0px");
+		li.addHtmlElement(link);
+		
+		link.setHref("#");
+		
+		link.setOnClick("$('html, body').animate({ " 
+				+ "scrollTop: $('#" + menu.getId() + "').offset().top - 15 " 
+				+ "}, 1000); return false; ");
+		
+		StringBuffer linkTextSb = new StringBuffer();
+		
+		for (int levelIdx = 0; levelIdx < level; ++levelIdx) {
+			linkTextSb.append("&nbsp; &nbsp; &nbsp;");
+		}
+		
+		linkTextSb.append(menu.getTitle());
+		
+		link.addHtmlElement(new Text(linkTextSb.toString()));
+		
+		List<Menu> childMenu = menu.getChildMenu();
+		
+		for (Menu currentChildMenu : childMenu) {
+			generateMenuPos(ul, currentChildMenu, level + 1);
+		}
 	}
 	
 	/*
