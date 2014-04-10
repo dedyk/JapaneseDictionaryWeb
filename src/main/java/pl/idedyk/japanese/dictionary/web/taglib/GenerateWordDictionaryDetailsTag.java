@@ -35,6 +35,7 @@ import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.Li;
+import pl.idedyk.japanese.dictionary.web.html.Script;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
@@ -1176,56 +1177,61 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	
 	private Div generateMenu(Menu mainMenu) {
 		
-        Div menuDiv = new Div("col-md-2");
-
-        Ul ul = new Ul("nav nav-stacked", "width: 200%");
+		Div menuDiv = new Div("col-md-2");
+		
+        Ul ul = new Ul("affix", "width: 300px");
 		menuDiv.addHtmlElement(ul);
 		
 		ul.setId("sidebar");
 		
-		List<Menu> mainMenuChildMenuList = mainMenu.getChildMenu();
+		generateMenuSubMenu(ul, mainMenu.getChildMenu());
 		
-		for (int idx = 0; idx < mainMenuChildMenuList.size(); ++idx) {
-			
-			Menu currentMenu = mainMenuChildMenuList.get(idx);
-			
-			generateMenuPos(ul, currentMenu, 0);
-		}
+		Script script = new Script();
+		
+		script.addHtmlElement(new Text("$(function() {\n"
+				+ "$( \"#sidebar\" ).menu(); \n"
+				+ "});"));
+		
+		menuDiv.addHtmlElement(script);
         
         return menuDiv;
 	}
 	
-	private void generateMenuPos(Ul ul, Menu menu, int level) {
+	private Ul generateMenuSubMenu(Ul parentUl, List<Menu> menuList) {
 		
-		Li li = new Li();
-		ul.addHtmlElement(li);
+		Ul ul = null;
 		
-		A link = new A(null, "padding-bottom: 0px; padding-top: 0px");
-		li.addHtmlElement(link);
-		
-		link.setHref("#");
-		
-		link.setOnClick("$('html, body').animate({ " 
-				+ "scrollTop: $('#" + menu.getId() + "').offset().top - 15 " 
-				+ "}, 1000); return false; ");
-		
-		StringBuffer linkTextSb = new StringBuffer();
-		
-		for (int levelIdx = 0; levelIdx < level; ++levelIdx) {
-			linkTextSb.append("&nbsp; &nbsp; &nbsp;");
+		if (parentUl != null) {
+			ul = parentUl;
+			
+		} else {
+			ul = new Ul(null, "width: 300px");
 		}
+				
+		for (Menu currentMenuList : menuList) {
+			
+			Li li = new Li();
+			ul.addHtmlElement(li);
+			
+			A link = new A(null, "padding-bottom: 0px; padding-top: 0px");
+			li.addHtmlElement(link);
+			
+			link.setHref("#");
+			
+			link.setOnClick("$('html, body').animate({ " 
+					+ "scrollTop: $('#" + currentMenuList.getId() + "').offset().top - 15 " 
+					+ "}, 1000); return false; ");
+					
+			link.addHtmlElement(new Text(currentMenuList.getTitle()));
+			
+			if (currentMenuList.getChildMenu().size() > 0) {
+				li.addHtmlElement(generateMenuSubMenu(null, currentMenuList.getChildMenu()));
+			}
+		}		
 		
-		linkTextSb.append(menu.getTitle());
-		
-		link.addHtmlElement(new Text(linkTextSb.toString()));
-		
-		List<Menu> childMenu = menu.getChildMenu();
-		
-		for (Menu currentChildMenu : childMenu) {
-			generateMenuPos(ul, currentChildMenu, level + 1);
-		}
+		return ul;		
 	}
-	
+		
 	/*
 	private void addGrammaFormConjugateResult(List<IScreenItem> report,
 			GrammaFormConjugateResult grammaFormConjugateResult) {
