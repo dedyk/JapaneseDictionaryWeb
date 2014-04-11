@@ -23,6 +23,8 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
+import pl.idedyk.japanese.dictionary.api.example.ExampleManager;
+import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupTypeElements;
 import pl.idedyk.japanese.dictionary.api.gramma.GrammaConjugaterManager;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateGroupTypeElements;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResult;
@@ -98,10 +100,19 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
             contentDiv.addHtmlElement(generateMainInfo(mainMenu));
             
             // odmiany gramatyczne
-            Div grammaFormConjugateDiv = generateGrammaFormConjugate(mainMenu);
+    		Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache = new HashMap<GrammaFormConjugateResultType, GrammaFormConjugateResult>();
+            
+            Div grammaFormConjugateDiv = generateGrammaFormConjugate(mainMenu, grammaFormCache);
             
             if (grammaFormConjugateDiv != null) {
             	contentDiv.addHtmlElement(grammaFormConjugateDiv);
+            }
+            
+            // przyklady
+            Div exampleDiv = generateExample(mainMenu, grammaFormCache);
+            
+            if (exampleDiv != null) {
+            	contentDiv.addHtmlElement(exampleDiv);
             }
             
             // dodaj menu
@@ -942,12 +953,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		return knownKanjiDiv;
 	}
 	
-	private Div generateGrammaFormConjugate(Menu mainMenu) throws IOException {
-		
-		int fixme = 1;
-		// FIXME: indeks
-		
-		Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache = new HashMap<GrammaFormConjugateResultType, GrammaFormConjugateResult>();
+	private Div generateGrammaFormConjugate(Menu mainMenu, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) throws IOException {
 		
 		// wylicz odmiany gramatyczne
 		List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = 
@@ -1175,6 +1181,50 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		}
 	}
 	
+	private Div generateExample(Menu mainMenu, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) throws IOException {
+		
+		List<ExampleGroupTypeElements> exampleGroupTypeElementsList = ExampleManager.getExamples(
+				dictionaryManager.getKeigoHelper(), dictionaryEntry, grammaFormCache, forceDictionaryEntryType);
+		
+		if (exampleGroupTypeElementsList == null || exampleGroupTypeElementsList.size() == 0) {
+			return null;
+		}
+		
+		Div panelDiv = new Div("panel panel-default");
+		
+		Div panelHeading = new Div("panel-heading");
+		
+		// tytul sekcji
+		H h3Title = new H(3, "panel-title");
+		
+		h3Title.setId("exampleId");
+		
+		Menu grammaFormConjugateMenu = null;
+		
+		if (forceDictionaryEntryType == null) {
+			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.example")));
+			
+			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.example"));			
+		} else {
+			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() })));
+			
+			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() }));
+		}	
+		
+		mainMenu.getChildMenu().add(grammaFormConjugateMenu);
+		
+		panelHeading.addHtmlElement(h3Title);
+		
+		panelDiv.addHtmlElement(panelHeading);
+		
+		// zawartosc sekcji
+		Div panelBody = new Div("panel-body");
+		
+		panelDiv.addHtmlElement(panelBody);		
+	
+		return panelDiv;
+	}
+	
 	private Div generateMenu(Menu mainMenu) {
 		
 		Div menuDiv = new Div("col-md-2");
@@ -1231,120 +1281,10 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		
 		return ul;		
 	}
-		
-	/*
-	private void addGrammaFormConjugateResult(List<IScreenItem> report,
-			GrammaFormConjugateResult grammaFormConjugateResult) {
-
-		TableLayout actionButtons = new TableLayout(TableLayout.LayoutParam.WrapContent_WrapContent, true, null);
-		TableRow actionTableRow = new TableRow();
-
-
-		List<String> grammaFormKanaList = grammaFormConjugateResult.getKanaList();
-		List<String> grammaFormRomajiList = grammaFormConjugateResult.getRomajiList();
-
-		for (int idx = 0; idx < grammaFormKanaList.size(); ++idx) {
-
-			StringBuffer sb = new StringBuffer();
-
-			if (prefixKana != null && prefixKana.equals("") == false) {
-				sb.append("(").append(prefixKana).append(") ");
-			}
-
-			sb.append(grammaFormKanaList.get(idx));
-
-			report.add(new StringValue(sb.toString(), 15.0f, 2));
-
-			StringBuffer grammaFormRomajiSb = new StringBuffer();
-
-			if (prefixRomaji != null && prefixRomaji.equals("") == false) {
-				grammaFormRomajiSb.append("(").append(prefixRomaji).append(") ");
-			}
-
-			grammaFormRomajiSb.append(grammaFormRomajiList.get(idx));
-
-			report.add(new StringValue(grammaFormRomajiSb.toString(), 15.0f, 2));
-
-			// speak image
-			Image speakImage = new Image(getResources().getDrawable(android.R.drawable.ic_lock_silent_mode_off), 2);
-			speakImage.setOnClickListener(new TTSJapaneseSpeak(null, grammaFormKanaList.get(idx)));
-			actionTableRow.addScreenItem(speakImage);
-
-			// clipboard kanji
-			if (grammaFormKanji != null) {
-				Image clipboardKanji = new Image(getResources().getDrawable(R.drawable.clipboard_kanji), 0);
-				clipboardKanji.setOnClickListener(new CopyToClipboard(grammaFormKanji));
-				actionTableRow.addScreenItem(clipboardKanji);
-			}
-
-			// clipboard kana
-			Image clipboardKana = new Image(getResources().getDrawable(R.drawable.clipboard_kana), 0);
-			clipboardKana.setOnClickListener(new CopyToClipboard(grammaFormKanaList.get(idx)));
-			actionTableRow.addScreenItem(clipboardKana);
-
-			// clipboard romaji
-			Image clipboardRomaji = new Image(getResources().getDrawable(R.drawable.clipboard_romaji), 0);
-			clipboardRomaji.setOnClickListener(new CopyToClipboard(grammaFormRomajiList.get(idx)));
-			actionTableRow.addScreenItem(clipboardRomaji);
-
-			actionButtons.addTableRow(actionTableRow);
-
-			report.add(actionButtons);
-		}
-
-		GrammaFormConjugateResult alternative = grammaFormConjugateResult.getAlternative();
-
-		if (alternative != null) {
-			report.add(new StringValue("", 5.0f, 1));
-
-			addGrammaFormConjugateResult(report, alternative);
-		}
-	}
-
-	*/
-	
 
 	/*
 		private List<IScreenItem> generateDetails(final DictionaryEntry dictionaryEntry,
 				DictionaryEntryType forceDictionaryEntryType, final ScrollView scrollMainLayout) {
-
-			List<IScreenItem> report = new ArrayList<IScreenItem>();
-
-			// index
-			int indexStartPos = report.size();
-
-			Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaCache = new HashMap<GrammaFormConjugateResultType, GrammaFormConjugateResult>();
-
-			// Conjugater
-			List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = GrammaConjugaterManager
-					.getGrammaConjufateResult(JapaneseAndroidLearnHelperApplication.getInstance()
-							.getDictionaryManager(this).getKeigoHelper(), dictionaryEntry, grammaCache,
-							forceDictionaryEntryType);
-
-			if (grammaFormConjugateGroupTypeElementsList != null) {
-				report.add(new StringValue("", 15.0f, 2));
-				report.add(new TitleItem(getString(R.string.word_dictionary_details_conjugater_label), 0));
-
-				for (GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements : grammaFormConjugateGroupTypeElementsList) {
-
-					report.add(new TitleItem(currentGrammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType()
-							.getName(), 1));
-
-					List<GrammaFormConjugateResult> grammaFormConjugateResults = currentGrammaFormConjugateGroupTypeElements
-							.getGrammaFormConjugateResults();
-
-					for (GrammaFormConjugateResult currentGrammaFormConjugateResult : grammaFormConjugateResults) {
-
-						if (currentGrammaFormConjugateResult.getResultType().isShow() == true) {
-							report.add(new TitleItem(currentGrammaFormConjugateResult.getResultType().getName(), 2));
-						}
-
-						addGrammaFormConjugateResult(report, currentGrammaFormConjugateResult);
-					}
-
-					report.add(new StringValue("", 15.0f, 1));
-				}
-			}
 
 			// Exampler
 			List<ExampleGroupTypeElements> exampleGroupTypeElementsList = ExampleManager.getExamples(
@@ -1522,100 +1462,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 				addExampleResult(report, alternative);
 			}
 		}
-
-
-		private StringValue createSmTsukiNiKawatteOshiokiYo() {
-
-			StringValue smStringValue = new StringValue(getString(R.string.sm_tsuki_ni_kawatte_oshioki_yo), 2.8f, 0);
-
-			smStringValue.setTypeface(Typeface.MONOSPACE);
-			smStringValue.setTextColor(Color.BLACK);
-			smStringValue.setBackgroundColor(Color.WHITE);
-			smStringValue.setGravity(Gravity.CENTER);
-
-			return smStringValue;
-		}
-
-		private class TTSJapaneseSpeak implements OnClickListener {
-
-			private final String prefix;
-
-			private final String kanjiKana;
-
-			public TTSJapaneseSpeak(String prefix, String kanjiKana) {
-				this.prefix = prefix;
-				this.kanjiKana = kanjiKana;
-			}
-
-			@Override
-			public void onClick(View v) {
-
-				StringBuffer text = new StringBuffer();
-
-				if (prefix != null) {
-					text.append(prefix);
-				}
-
-				if (kanjiKana != null) {
-					text.append(kanjiKana);
-				}
-
-				if (ttsConnector != null && ttsConnector.getOnInitResult() != null
-						&& ttsConnector.getOnInitResult().booleanValue() == true) {
-					ttsConnector.speak(text.toString());
-				} else {
-					AlertDialog alertDialog = new AlertDialog.Builder(WordDictionaryDetails.this).create();
-
-					alertDialog.setMessage(getString(R.string.tts_japanese_error));
-					alertDialog.setCancelable(false);
-
-					alertDialog.setButton(getString(R.string.tts_error_ok), new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							// noop
-						}
-					});
-
-					alertDialog.setButton2(getString(R.string.tts_google_play_go), new DialogInterface.OnClickListener() {
-
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-
-							Uri marketUri = Uri.parse(getString(R.string.tts_svox_market_url));
-
-							Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
-
-							startActivity(marketIntent);
-						}
-					});
-
-					alertDialog.show();
-				}
-			}
-		}
-
-		private class CopyToClipboard implements OnClickListener {
-
-			private final String text;
-
-			public CopyToClipboard(String text) {
-				this.text = text;
-			}
-
-			@Override
-			public void onClick(View v) {
-
-				ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-
-				clipboardManager.setText(text);
-
-				Toast.makeText(WordDictionaryDetails.this,
-						getString(R.string.word_dictionary_details_clipboard_copy, text), Toast.LENGTH_SHORT).show();
-			}
-		}
-	}
-
 	*/
 	
 	private String getMessage(String code) {
