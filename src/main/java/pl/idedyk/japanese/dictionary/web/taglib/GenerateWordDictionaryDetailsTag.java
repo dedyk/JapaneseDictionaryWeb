@@ -1228,13 +1228,19 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 						exampleMenuTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() });
 					}
 					
+					h3Title.addHtmlElement(new Text(exampleMenuTitle));
+					
 				} else if (exampleMenu == null) {
 					
 					if (forceDictionaryEntryType == null) {
 						exampleMenuTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.example.part", new String[] { String.valueOf(menuCounter + 1) });
 						
+						h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.example")));
+						
 					} else {
 						exampleMenuTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType.part", new String[] { String.valueOf(menuCounter + 1), forceDictionaryEntryType.getName() });
+						
+						h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType")));
 					}
 					
 				} else if (exampleMenu != null) {
@@ -1249,7 +1255,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 					}
 				}
 				
-				h3Title.addHtmlElement(new Text(exampleMenuTitle));
 				exampleMenu = new Menu(h3Title.getId(), exampleMenuTitle);
 				
 				mainMenu.getChildMenu().add(exampleMenu);					
