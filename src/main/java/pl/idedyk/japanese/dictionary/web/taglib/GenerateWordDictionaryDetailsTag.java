@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
@@ -1021,7 +1020,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	
     	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	
-    	row1TitleH4.setId(UUID.randomUUID().toString());    	
+    	row1TitleH4.setId(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().toString());  	
     	
     	row1TitleH4.addHtmlElement(new Text(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName()));
     	
@@ -1055,7 +1054,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			if (currentGrammaFormConjugateResult.getResultType().isShow() == true) {
 		    	H currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4 = new H(4, "col-md-11", "margin-top: 0px; font-weight:bold; margin-left: -25px;");
 		    	
-		    	String currentGrammaFormConjugateResultId = UUID.randomUUID().toString();
+		    	String currentGrammaFormConjugateResultId = grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().toString() + "_" + currentGrammaFormConjugateResult.getResultType().toString();
 		    	
 		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.setId(currentGrammaFormConjugateResultId);
 		    	
