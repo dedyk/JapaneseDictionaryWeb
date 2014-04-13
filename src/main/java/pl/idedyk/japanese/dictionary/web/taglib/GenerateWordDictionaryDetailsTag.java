@@ -1279,20 +1279,16 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			
 			ExampleResult currentExampleResult = exampleResults.get(idx);
 			
-	    	// tytul sekcji dla elementu		 
+	    	// dodatkowe info	 
+			String exampleGroupTypeElementsInfo = exampleGroupTypeElements.getExampleGroupType().getInfo();
 			
-	    	H currentExampleResultSectionBodyDivTitleDivTitleH4 = new H(4, "col-md-11", "margin-top: 0px; font-weight:bold; margin-left: -25px;");
-	    	
-	    	String currentExampleResultId = exampleGroupTypeElements.getExampleGroupType().toString() + "_" + idx;
-	    	
-	    	currentExampleResultSectionBodyDivTitleDivTitleH4.setId(currentExampleResultId);
-	    	
-	    	currentExampleResultSectionBodyDivTitleDivTitleH4.addHtmlElement(new Text("FIXME"));
-	    	int fixme = 1;
-	    	
-	    	row1Menu.getChildMenu().add(new Menu(currentExampleResultSectionBodyDivTitleDivTitleH4.getId(), "FIXME"));
-	    	
-	    	sectionBodyDiv.addHtmlElement(currentExampleResultSectionBodyDivTitleDivTitleH4);
+			if (exampleGroupTypeElementsInfo != null) {
+				H currentExampleResultSectionBodyDivInfoH5 = new H(5, "col-md-11", "margin-top: 0px; margin-left: -8%;");
+				
+				currentExampleResultSectionBodyDivInfoH5.addHtmlElement(new Text(exampleGroupTypeElementsInfo));
+				
+				sectionBodyDiv.addHtmlElement(currentExampleResultSectionBodyDivInfoH5);
+			}	    	
 			
 			// sekcja dla grupy przykladow
 	    	Div currentExampleResultSectionBodyDiv = new Div("col-md-11");
