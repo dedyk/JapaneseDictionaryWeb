@@ -23,6 +23,8 @@
 	<link href="<c:out value='${pageContext.request.contextPath}' />/css/datatables/jquery.dataTables.css" rel="stylesheet" />
 	<link href="<c:out value='${pageContext.request.contextPath}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet" />
 	
+	<link href="<c:out value='${pageContext.request.contextPath}' />/css/japanese-dictionary/japanese-dictionary.css" rel="stylesheet" />
+	
 	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery/jquery-1.11.0.js"></script>
 	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery/jquery-ui-1.10.4.custom.js"></script>
 	

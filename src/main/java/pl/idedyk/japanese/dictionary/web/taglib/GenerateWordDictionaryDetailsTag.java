@@ -1462,7 +1462,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		
 		Div menuDiv = new Div("col-md-2");
 		
-        Ul ul = new Ul("affix", "width: 300px");
+        Ul ul = new Ul(null, "width: 300px");
 		menuDiv.addHtmlElement(ul);
 		
 		ul.setId("sidebar");
@@ -1471,9 +1471,34 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		
 		Script script = new Script();
 		
-		script.addHtmlElement(new Text("$(function() {\n"
-				+ "$( \"#sidebar\" ).menu(); \n"
-				+ "});"));
+		StringBuffer scriptBody = new StringBuffer();
+		
+		scriptBody.append("$(function() {\n");
+		scriptBody.append("$( \"#sidebar\" ).menu(); \n");
+		scriptBody.append("});\n\n");
+				
+		scriptBody.append("$(function() {\n");
+		scriptBody.append("\n");
+		scriptBody.append("    var $sidebar   = $(\"#sidebar\"), \n");
+		scriptBody.append("        $window    = $(window),\n");
+		scriptBody.append("        offset     = $sidebar.offset(),\n");
+		scriptBody.append("        topPadding = 25;\n");
+		scriptBody.append("\n");
+		scriptBody.append("    $window.scroll(function() {\n");
+		scriptBody.append("        if ($window.scrollTop() > offset.top) {\n");
+		scriptBody.append("            $sidebar.stop().animate({\n");
+		scriptBody.append("                marginTop: $window.scrollTop() - offset.top + topPadding\n");
+		scriptBody.append("            });\n");
+		scriptBody.append("        } else {\n");
+		scriptBody.append("            $sidebar.stop().animate({\n");
+		scriptBody.append("                marginTop: 0\n");
+		scriptBody.append("            });\n");
+		scriptBody.append("        }\n");
+		scriptBody.append("    });\n");
+		scriptBody.append("    \n");
+		scriptBody.append("})\n");
+		
+		script.addHtmlElement(new Text(scriptBody.toString()));
 		
 		menuDiv.addHtmlElement(script);
 		
