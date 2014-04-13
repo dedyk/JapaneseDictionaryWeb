@@ -1072,7 +1072,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDiv);
 
 	    	// zawartosc sekcji dla elementu
-	    	Table currentGraamaFormConjugateResultSectionBodyTable = new Table();
+	    	Table currentGraamaFormConjugateResultSectionBodyTable = new Table(null, "width: 100%");
 	    	currentGrammaFormConjugateResultSectionBodyDiv.addHtmlElement(currentGraamaFormConjugateResultSectionBodyTable);
 	    	
 	    	generateGrammaFormConjugateResult(currentGraamaFormConjugateResultSectionBodyTable, currentGrammaFormConjugateResult);	
@@ -1295,7 +1295,8 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	    	sectionBodyDiv.addHtmlElement(currentExampleResultSectionBodyDiv);
 
 	    	// zawartosc sekcji dla elementu
-	    	Table currentExampleResultSectionBodyTable = new Table();
+	    	Table currentExampleResultSectionBodyTable = new Table(null, "width: 100%");
+	    	
 	    	currentExampleResultSectionBodyDiv.addHtmlElement(currentExampleResultSectionBodyTable);
 	    	
 	    	generateExampleResult(currentExampleResultSectionBodyTable, currentExampleResult);	
@@ -1316,6 +1317,23 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	}
 
 	private void generateExampleResult(Table table, ExampleResult exampleResult) {
+		
+		String info = exampleResult.getInfo();
+		
+		if (info != null) {
+			
+			Tr tr0 = new Tr();
+			table.addHtmlElement(tr0);
+			
+			Td infoTd = new Td();
+			tr0.addHtmlElement(infoTd);
+			
+			H infoH5 = new H(5, null, "margin-top: 0px;");
+			
+			infoH5.addHtmlElement(new Text(info));
+			
+			infoTd.addHtmlElement(infoH5);			
+		}
 		
 		Tr tr1 = new Tr();
 		table.addHtmlElement(tr1);
