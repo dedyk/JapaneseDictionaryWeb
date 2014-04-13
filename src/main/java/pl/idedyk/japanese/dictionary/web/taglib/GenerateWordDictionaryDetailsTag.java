@@ -1200,20 +1200,10 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		
 		h3Title.setId("exampleId");
 		
+		final int maxMenuSize = 20;
 		Menu exampleMenu = null;
-		
-		if (forceDictionaryEntryType == null) {
-			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.example")));
-			
-			exampleMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.example"));			
-		} else {
-			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() })));
-			
-			exampleMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() }));
-		}	
-		
-		mainMenu.getChildMenu().add(exampleMenu);
-		
+		int menuCounter = 0;
+				
 		panelHeading.addHtmlElement(h3Title);
 		
 		panelDiv.addHtmlElement(panelHeading);
@@ -1224,6 +1214,46 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		panelDiv.addHtmlElement(panelBody);		
 		
 		for (int exampleGroupTypeElementsListIdx = 0; exampleGroupTypeElementsListIdx < exampleGroupTypeElementsList.size(); ++exampleGroupTypeElementsListIdx) {
+			
+			if (exampleMenu == null || exampleMenu.getChildMenu().size() >= maxMenuSize) {
+				
+				String exampleMenuTitle = null;
+				
+				if (exampleMenu == null && exampleGroupTypeElementsList.size() <= maxMenuSize) {
+					
+					if (forceDictionaryEntryType == null) {
+						exampleMenuTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.example");
+						
+					} else {
+						exampleMenuTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() });
+					}
+					
+				} else if (exampleMenu == null) {
+					
+					if (forceDictionaryEntryType == null) {
+						exampleMenuTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.example.part", new String[] { String.valueOf(menuCounter + 1) });
+						
+					} else {
+						exampleMenuTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType.part", new String[] { String.valueOf(menuCounter + 1), forceDictionaryEntryType.getName() });
+					}
+					
+				} else if (exampleMenu != null) {
+					
+					menuCounter++;
+					
+					if (forceDictionaryEntryType == null) {
+						exampleMenuTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.example.part", new String[] { String.valueOf(menuCounter + 1) });
+						
+					} else {
+						exampleMenuTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType.part", new String[] { String.valueOf(menuCounter + 1), forceDictionaryEntryType.getName() });
+					}
+				}
+				
+				h3Title.addHtmlElement(new Text(exampleMenuTitle));
+				exampleMenu = new Menu(h3Title.getId(), exampleMenuTitle);
+				
+				mainMenu.getChildMenu().add(exampleMenu);					
+			}
 			
 			ExampleGroupTypeElements currentExampleGroupTypeElements = exampleGroupTypeElementsList.get(exampleGroupTypeElementsListIdx);
 						
@@ -1453,7 +1483,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			ul = parentUl;
 			
 		} else {
-			ul = new Ul(null, "width: 300px");
+			ul = new Ul(null, "width: 370px");
 		}
 				
 		for (Menu currentMenuList : menuList) {
