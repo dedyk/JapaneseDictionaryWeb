@@ -24,6 +24,7 @@ import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.example.ExampleManager;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupTypeElements;
+import pl.idedyk.japanese.dictionary.api.example.dto.ExampleResult;
 import pl.idedyk.japanese.dictionary.api.gramma.GrammaConjugaterManager;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateGroupTypeElements;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResult;
@@ -35,6 +36,7 @@ import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
+import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Li;
 import pl.idedyk.japanese.dictionary.web.html.Script;
 import pl.idedyk.japanese.dictionary.web.html.Table;
@@ -1015,7 +1017,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
     	// wiersz z tytulem
     	Div row1Div = new Div("row");
     	
-    	// znaczenie znakow kanji - tytul
+    	// tytul
     	Div row1TitleDiv = new Div("col-md-12");
     	
     	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
@@ -1198,19 +1200,19 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		
 		h3Title.setId("exampleId");
 		
-		Menu grammaFormConjugateMenu = null;
+		Menu exampleMenu = null;
 		
 		if (forceDictionaryEntryType == null) {
 			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.example")));
 			
-			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.example"));			
+			exampleMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.example"));			
 		} else {
 			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() })));
 			
-			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() }));
+			exampleMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() }));
 		}	
 		
-		mainMenu.getChildMenu().add(grammaFormConjugateMenu);
+		mainMenu.getChildMenu().add(exampleMenu);
 		
 		panelHeading.addHtmlElement(h3Title);
 		
@@ -1220,10 +1222,193 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		Div panelBody = new Div("panel-body");
 		
 		panelDiv.addHtmlElement(panelBody);		
+		
+		for (int exampleGroupTypeElementsListIdx = 0; exampleGroupTypeElementsListIdx < exampleGroupTypeElementsList.size(); ++exampleGroupTypeElementsListIdx) {
+			
+			ExampleGroupTypeElements currentExampleGroupTypeElements = exampleGroupTypeElementsList.get(exampleGroupTypeElementsListIdx);
+						
+			panelBody.addHtmlElement(generateExampleGroupTypeElements(currentExampleGroupTypeElements, exampleMenu));
+			
+			if (exampleGroupTypeElementsListIdx != exampleGroupTypeElementsList.size() - 1) {
+				panelBody.addHtmlElement(new Hr());
+			}
+		}
 	
 		return panelDiv;
 	}
 	
+	private IHtmlElement generateExampleGroupTypeElements(ExampleGroupTypeElements exampleGroupTypeElements, Menu menu) {
+		
+		Div resultDiv = new Div();
+		
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tytul
+    	Div row1TitleDiv = new Div("col-md-12");
+    	
+    	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	row1TitleH4.setId(exampleGroupTypeElements.getExampleGroupType().toString());  	
+    	
+    	row1TitleH4.addHtmlElement(new Text(exampleGroupTypeElements.getExampleGroupType().getName()));
+    	
+    	Menu row1Menu = new Menu(row1TitleH4.getId(), exampleGroupTypeElements.getExampleGroupType().getName());
+    	
+    	menu.getChildMenu().add(row1Menu);
+    	
+    	row1TitleDiv.addHtmlElement(row1TitleH4);
+    	
+    	row1Div.addHtmlElement(row1TitleDiv);
+
+    	// dodaj wiersz z tytulem
+    	resultDiv.addHtmlElement(row1Div);
+
+    	// zawartosc sekcji
+    	Div row2Div = new Div("row");
+    	resultDiv.addHtmlElement(row2Div);
+    	
+    	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    	
+    	Div sectionBodyDiv = new Div("col-md-11");
+    	row2Div.addHtmlElement(sectionBodyDiv);
+    	
+    	List<ExampleResult> exampleResults = exampleGroupTypeElements.getExampleResults();
+
+		for (int idx = 0; idx < exampleResults.size(); ++idx) {
+			
+			ExampleResult currentExampleResult = exampleResults.get(idx);
+			
+	    	// tytul sekcji dla elementu		 
+			
+	    	H currentExampleResultSectionBodyDivTitleDivTitleH4 = new H(4, "col-md-11", "margin-top: 0px; font-weight:bold; margin-left: -25px;");
+	    	
+	    	String currentExampleResultId = exampleGroupTypeElements.getExampleGroupType().toString() + "_" + idx;
+	    	
+	    	currentExampleResultSectionBodyDivTitleDivTitleH4.setId(currentExampleResultId);
+	    	
+	    	currentExampleResultSectionBodyDivTitleDivTitleH4.addHtmlElement(new Text("FIXME"));
+	    	int fixme = 1;
+	    	
+	    	row1Menu.getChildMenu().add(new Menu(currentExampleResultSectionBodyDivTitleDivTitleH4.getId(), "FIXME"));
+	    	
+	    	sectionBodyDiv.addHtmlElement(currentExampleResultSectionBodyDivTitleDivTitleH4);
+			
+			// sekcja dla grupy przykladow
+	    	Div currentExampleResultSectionBodyDiv = new Div("col-md-11");
+	    	sectionBodyDiv.addHtmlElement(currentExampleResultSectionBodyDiv);
+
+	    	// zawartosc sekcji dla elementu
+	    	Table currentExampleResultSectionBodyTable = new Table();
+	    	currentExampleResultSectionBodyDiv.addHtmlElement(currentExampleResultSectionBodyTable);
+	    	
+	    	generateExampleResult(currentExampleResultSectionBodyTable, currentExampleResult);	
+	    	
+	    	if (idx != exampleResults.size() - 1) {
+		    	// przerwa
+				Tr spaceTr = new Tr();
+				currentExampleResultSectionBodyTable.addHtmlElement(spaceTr);
+				
+				Td spaceTrTd = new Td();
+				spaceTr.addHtmlElement(spaceTrTd);
+				
+				spaceTrTd.addHtmlElement(new Div(null, "margin-bottom: 15px;"));
+	    	}
+		}
+
+		return resultDiv;
+	}
+
+	private void generateExampleResult(Table table, ExampleResult exampleResult) {
+		
+		Tr tr1 = new Tr();
+		table.addHtmlElement(tr1);
+				
+		String exampleKanji = exampleResult.getKanji();
+
+		String prefixKana = exampleResult.getPrefixKana();
+		String prefixRomaji = exampleResult.getPrefixRomaji();
+
+		StringBuffer exampleKanjiSb = new StringBuffer();
+
+		Td kanjiTd = new Td();
+		tr1.addHtmlElement(kanjiTd);
+		
+		if (exampleKanji != null) {
+			if (prefixKana != null && prefixKana.equals("") == false) {
+				exampleKanjiSb.append("(").append(prefixKana).append(") ");
+			}
+
+			exampleKanjiSb.append(exampleKanji);
+						
+			H kanjiTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
+			kanjiTd.addHtmlElement(kanjiTdH4);
+			
+			kanjiTdH4.addHtmlElement(new Text(exampleKanjiSb.toString()));
+		}
+		
+		List<String> exampleKanaList = exampleResult.getKanaList();
+		List<String> exampleRomajiList = exampleResult.getRomajiList();
+
+		for (int idx = 0; idx < exampleKanaList.size(); ++idx) {
+
+			StringBuffer sb = new StringBuffer();
+
+			if (prefixKana != null && prefixKana.equals("") == false) {
+				sb.append("(").append(prefixKana).append(") ");
+			}
+
+			sb.append(exampleKanaList.get(idx));
+			
+			Tr tr2 = new Tr();
+			table.addHtmlElement(tr2);
+			
+			Td kanaTd = new Td();
+			tr2.addHtmlElement(kanaTd);
+			
+			H kanaTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
+			kanaTd.addHtmlElement(kanaTdH4);
+			
+			kanaTdH4.addHtmlElement(new Text(sb.toString()));
+		}
+		
+		for (int idx = 0; idx < exampleRomajiList.size(); ++idx) {
+
+			StringBuffer exampleRomajiSb = new StringBuffer();
+
+			if (prefixRomaji != null && prefixRomaji.equals("") == false) {
+				exampleRomajiSb.append("(").append(prefixRomaji).append(") ");
+			}
+			
+			exampleRomajiSb.append(exampleRomajiList.get(idx));
+
+			Tr tr3 = new Tr();
+			table.addHtmlElement(tr3);
+			
+			Td romajiTd = new Td();
+			tr3.addHtmlElement(romajiTd);
+			
+			H romajiTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
+			romajiTd.addHtmlElement(romajiTdH4);
+			
+			romajiTdH4.addHtmlElement(new Text(exampleRomajiSb.toString()));
+		}
+		
+		ExampleResult alternative = exampleResult.getAlternative();
+		
+		if (alternative != null) {
+			Tr tr4 = new Tr();
+			table.addHtmlElement(tr4);
+			
+			Td tr4Td = new Td();
+			tr4.addHtmlElement(tr4Td);
+			
+			tr4Td.addHtmlElement(new Div(null, "margin-bottom: 15px;"));
+			
+			generateExampleResult(table, alternative);
+		}		
+	}
+
 	private Div generateMenu(Menu mainMenu) {
 		
 		Div menuDiv = new Div("col-md-2");
