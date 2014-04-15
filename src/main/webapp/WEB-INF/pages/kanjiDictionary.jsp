@@ -18,22 +18,16 @@
     		<ul class="nav nav-tabs">
         		<li class="active"><a data-toggle="tab" href="#meaning"> <spring:message code="kanjiDictionary.page.tab.meaning" /> </a></li>
         		<li><a data-toggle="tab" href="#radicals"> <spring:message code="kanjiDictionary.page.tab.radicals" /> </a></li>
-        		<li><a data-toggle="tab" href="#strokeCount"> <spring:message code="kanjiDictionary.page.tab.strokeCount" /> </a></li>
     		</ul>
     		
     		<div class="tab-content">
     		
         		<div id="meaning" class="tab-pane fade in active">
-            		<h3>Znaczenie</h3>
-            		
+            		<h3>Znaczenie</h3>          		           		
         		</div>
         
         		<div id="radicals" class="tab-pane fade">
             		<h3>Elementy podstawowe</h3>
-        		</div>
-
-        		<div id="strokeCount" class="tab-pane fade">
-            		<h3>Liczba kresek</h3>
         		</div>
     		</div>
 		</div>	

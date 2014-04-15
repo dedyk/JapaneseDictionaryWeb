@@ -15,27 +15,39 @@
 	
 	<title>${pageTitle}</title>
 	
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/excite-bike/jquery-ui-1.10.4.custom.css" rel="stylesheet" />
+	<spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
 	
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/bootstrap/bootstrap.css" rel="stylesheet" />
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/bootstrap-select/bootstrap-select.css" rel="stylesheet" />
+	<c:choose>
+      <c:when test="${useExternalStaticFiles == true}">
+      	<spring:eval var="staticFilePrefix" expression="@applicationProperties.getProperty('use.external.static.path')" />
+      </c:when>
+
+      <c:otherwise>
+      	<c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
+      </c:otherwise>
+	</c:choose>
 	
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/datatables/jquery.dataTables.css" rel="stylesheet" />
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/excite-bike/jquery-ui-1.10.4.custom.css" rel="stylesheet" />
 	
-	<link href="<c:out value='${pageContext.request.contextPath}' />/css/japanese-dictionary/japanese-dictionary.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap/bootstrap.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap-select/bootstrap-select.css" rel="stylesheet" />
 	
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery/jquery-1.11.0.js"></script>
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/jquery/jquery-ui-1.10.4.custom.js"></script>
+	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/jquery.dataTables.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet" />
 	
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/bootstrap/bootstrap.js"></script>
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/bootstrap-select/bootstrap-select.js"></script>
+	<link href="<c:out value='${staticFilePrefix}' />/css/japanese-dictionary/japanese-dictionary.css" rel="stylesheet" />
 	
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/datatables/jquery.dataTables.js"></script>
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/datatables/dataTables.bootstrap.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-1.11.0.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-ui-1.10.4.custom.js"></script>
 	
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/lazy-line-painter/jquery.lazylinepainter-1.4.1-fm.js"></script>
-	<script src="<c:out value='${pageContext.request.contextPath}' />/js/raphael/raphael.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap/bootstrap.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap-select/bootstrap-select.js"></script>
+	
+	<script src="<c:out value='${staticFilePrefix}' />/js/datatables/jquery.dataTables.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/datatables/dataTables.bootstrap.js"></script>
+	
+	<script src="<c:out value='${staticFilePrefix}' />/js/lazy-line-painter/jquery.lazylinepainter-1.4.1-fm.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/raphael/raphael.js"></script>
 
 <style>
 	body {
@@ -54,7 +66,7 @@
 
 				<table>
 					<tr>
-						<td><img src="${pageContext.request.contextPath}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px" /></td>
+						<td><img src="${staticFilePrefix}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px" /></td>
 
 						<td style="font-size: 150%;"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>
 					</tr>

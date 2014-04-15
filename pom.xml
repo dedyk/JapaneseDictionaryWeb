@@ -25,6 +25,42 @@
 		<!-- lucene version -->
 		<lucene.version>4.7.0</lucene.version>
 	</properties>
+	
+	<profiles>
+		<profile>
+			<id>dev</id>
+			
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			
+ 			<build>
+				<resources>
+					<resource>
+						<directory>profiles/dev</directory>
+						<includes>
+							<include>**/config/config.properties</include>
+						</includes>
+					</resource>
+				</resources>			
+			</build>
+		</profile>
+		
+		<profile>
+			<id>test</id>
+						
+ 			<build>
+				<resources>
+					<resource>
+						<directory>profiles/test</directory>
+						<includes>
+							<include>**/config/config.properties</include>
+						</includes>
+					</resource>
+				</resources>			
+			</build>
+		</profile>		
+	</profiles>
 
 	<dependencies>
 
@@ -140,6 +176,16 @@
 	<build>
 		<finalName>JapaneseDictionaryWeb</finalName>
 
+		<resources>
+  			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**</include>
+				</includes>
+			</resource>
+		</resources>
+		
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
