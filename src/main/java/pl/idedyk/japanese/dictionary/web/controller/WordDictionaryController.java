@@ -213,8 +213,6 @@ public class WordDictionaryController extends CommonController {
 		}
 	}
 	
-	
-	
 	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
 	public String start(@PathVariable("id") int id, @PathVariable("kanji") String kanji,
 			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) {

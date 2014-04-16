@@ -387,6 +387,7 @@ public class LuceneDBGenerator {
 
 		// kanji
 		document.add(new StringField(LuceneStatic.kanjiEntry_kanji, emptyIfNull(kanjiEntry.getKanji()), Field.Store.YES));
+		document.add(new StringField(LuceneStatic.kanjiEntry_sugestionList, emptyIfNull(kanjiEntry.getKanji()), Field.Store.YES));
 		
 		// polishTranslatesList
 		List<String> polishtranslatesList = kanjiEntry.getPolishTranslates();
@@ -394,6 +395,7 @@ public class LuceneDBGenerator {
 		for (String currentTranslate : polishtranslatesList) {
 			
 			document.add(new TextField(LuceneStatic.kanjiEntry_polishTranslatesList, currentTranslate, Field.Store.YES));
+			document.add(new TextField(LuceneStatic.kanjiEntry_sugestionList, currentTranslate, Field.Store.YES));
 			
 			String currentTranslateWithoutPolishChars = Utils.removePolishChars(currentTranslate);
 				

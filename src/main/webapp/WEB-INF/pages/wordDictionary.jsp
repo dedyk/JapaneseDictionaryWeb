@@ -8,9 +8,9 @@
 
 <c:set var="pageTitle"> <spring:message code="wordDictionary.page.title"/> </c:set>
 
-<c:set var="workPlaceStartWith"> <spring:message code="wordDictionary.page.label.wordPlace.startWith"/> </c:set>
-<c:set var="workPlaceAnyPlace"> <spring:message code="wordDictionary.page.label.wordPlace.anyPlace"/> </c:set>
-<c:set var="workPlaceExact"> <spring:message code="wordDictionary.page.label.wordPlace.exact"/> </c:set>
+<c:set var="wordPlaceStartWith"> <spring:message code="wordDictionary.page.label.wordPlace.startWith"/> </c:set>
+<c:set var="wordPlaceAnyPlace"> <spring:message code="wordDictionary.page.label.wordPlace.anyPlace"/> </c:set>
+<c:set var="wordPlaceExact"> <spring:message code="wordDictionary.page.label.wordPlace.exact"/> </c:set>
 
 <c:set var="searchInKanji"> <spring:message code="wordDictionary.page.label.searchIn.kanji"/> </c:set>
 <c:set var="searchInKana"> <spring:message code="wordDictionary.page.label.searchIn.kana"/> </c:set>
@@ -43,10 +43,10 @@
 					<td><form:label path="wordPlace"><spring:message code="wordDictionary.page.label.wordPlace"/></form:label></td>
 					<td>
 						<table>
-							<form:select id="workPlaceId" path="wordPlace">
-								<form:option value="START_WITH" label="${workPlaceStartWith}" />
-								<form:option value="ANY_PLACE" label="${workPlaceAnyPlace}" />
-								<form:option value="EXACT" label="${workPlaceExact}" />
+							<form:select id="wordPlaceId" path="wordPlace">
+								<form:option value="START_WITH" label="${wordPlaceStartWith}" />
+								<form:option value="ANY_PLACE" label="${wordPlaceAnyPlace}" />
+								<form:option value="EXACT" label="${wordPlaceExact}" />
 							</form:select>
 						</table>
 					</td>
@@ -142,7 +142,7 @@
 	
 				$( "#searchButton" ).button();
 
-				$( "#workPlaceId").selectpicker();
+				$( "#wordPlaceId").selectpicker();
 				
 				$( "#searchInId").selectpicker({
 					noneSelectedText: '${selectPickerNoneSelectedText}', 

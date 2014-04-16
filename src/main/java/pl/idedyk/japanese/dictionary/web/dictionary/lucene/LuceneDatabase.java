@@ -53,9 +53,12 @@ public class LuceneDatabase implements IDatabaseConnector {
 	private IndexReader reader;
 	private IndexSearcher searcher;
 
-	private LuceneDictionary dictionaryEntryDictionary;
-	private AnalyzingSuggester dictionaryEntryAnalyzingSuggester;
+	private LuceneDictionary wordDictionaryEntryDictionary;
+	private AnalyzingSuggester wordDictionaryEntryAnalyzingSuggester;
 
+	private LuceneDictionary kanjiEntryDictionary;
+	private AnalyzingSuggester kanjiEntryAnalyzingSuggester;
+	
 	public LuceneDatabase(String dbDir) {
 		this.dbDir = dbDir;		
 	}
@@ -67,11 +70,15 @@ public class LuceneDatabase implements IDatabaseConnector {
 		reader = DirectoryReader.open(index);
 		searcher = new IndexSearcher(reader);
 
-		dictionaryEntryDictionary = new LuceneDictionary(reader, LuceneStatic.dictionaryEntry_sugestionList);				
-		dictionaryEntryAnalyzingSuggester = new AnalyzingSuggester(analyzer);
+		wordDictionaryEntryDictionary = new LuceneDictionary(reader, LuceneStatic.dictionaryEntry_sugestionList);				
+		wordDictionaryEntryAnalyzingSuggester = new AnalyzingSuggester(analyzer);
 
-		dictionaryEntryAnalyzingSuggester.build(dictionaryEntryDictionary);
+		wordDictionaryEntryAnalyzingSuggester.build(wordDictionaryEntryDictionary);
 
+		kanjiEntryDictionary = new LuceneDictionary(reader, LuceneStatic.kanjiEntry_sugestionList);				
+		kanjiEntryAnalyzingSuggester = new AnalyzingSuggester(analyzer);
+
+		kanjiEntryAnalyzingSuggester.build(kanjiEntryDictionary);
 	}
 
 	public void close() throws IOException {
@@ -1152,7 +1159,20 @@ public class LuceneDatabase implements IDatabaseConnector {
 
 		List<String> result = new ArrayList<String>();
 
-		List<LookupResult> lookupResult = dictionaryEntryAnalyzingSuggester.lookup(term, false, limit);
+		List<LookupResult> lookupResult = wordDictionaryEntryAnalyzingSuggester.lookup(term, false, limit);
+
+		for (LookupResult currentLookupResult : lookupResult) {
+			result.add(currentLookupResult.key.toString());
+		}
+
+		return result;
+	}
+
+	public List<String> getKanjiAutocomplete(String term, int limit) {
+		
+		List<String> result = new ArrayList<String>();
+
+		List<LookupResult> lookupResult = kanjiEntryAnalyzingSuggester.lookup(term, false, limit);
 
 		for (LookupResult currentLookupResult : lookupResult) {
 			result.add(currentLookupResult.key.toString());
