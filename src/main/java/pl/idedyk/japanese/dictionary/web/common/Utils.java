@@ -87,4 +87,20 @@ public class Utils {
 		
 		return false;
 	}
+	
+	public static Integer parseInteger(String text) {
+		
+		if (text == null) {
+			return null;
+		}
+		
+		text = text.trim();
+		
+		try {
+			return Integer.parseInt(text);
+			
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
 }

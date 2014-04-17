@@ -45,7 +45,7 @@ public class WordDictionaryController extends CommonController {
 	@Autowired  
 	private WordDictionarySearchModelValidator wordDictionarySearchModelValidator;
 
-	 @Autowired private MessageSource messageSource;
+	@Autowired private MessageSource messageSource;
 	
 	@InitBinder(value = { "command" })
 	private void initBinder(WebDataBinder binder) {  
