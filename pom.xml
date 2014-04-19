@@ -133,6 +133,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>pl.idedyk.japanese</groupId>
+			<artifactId>JapaneseDictionaryLuceneCommon</artifactId>
+			<version>20140419</version>
+		</dependency>
+
+		<dependency>
 			<groupId>net.sourceforge.javacsv</groupId>
 			<artifactId>javacsv</artifactId>
 			<version>2.1</version>
