@@ -22,7 +22,7 @@ import pl.idedyk.japanese.dictionary.api.dto.TransitiveIntransitivePair;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.api.keigo.KeigoHelper;
 import pl.idedyk.japanese.dictionary.api.tools.KanaHelper;
-import pl.idedyk.japanese.dictionary.web.dictionary.lucene.LuceneDatabase;
+import pl.idedyk.japanese.dictionary.lucene.LuceneDatabase;
 
 import com.csvreader.CsvReader;
 

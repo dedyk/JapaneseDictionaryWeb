@@ -20,7 +20,7 @@ export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-sandbox/$LUCENE_V
 
 export CLASSPATH=target/classes:$CLASSPATH
 
-java -cp $CLASSPATH pl.idedyk.japanese.dictionary.web.dictionary.lucene.LuceneDBGenerator
+java -cp $CLASSPATH pl.idedyk.japanese.dictionary.lucene.LuceneDBGenerator db/word.csv db/kanji.csv db/radical.csv true db-lucene
 
 cp db/kana.csv db/radical.csv db/transitive_intransitive_pairs.csv src/main/resources/db
 cp -r db-lucene src/main/resources/db/db-lucene/
