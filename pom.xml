@@ -23,7 +23,7 @@
 		<spring.version>4.0.2.RELEASE</spring.version>
 
 		<!-- lucene version -->
-		<lucene.version>4.7.0</lucene.version>
+		<lucene.version>4.7.2</lucene.version>
 	</properties>
 	
 	<profiles>
@@ -131,7 +131,7 @@
 			<artifactId>artifact</artifactId>
 			<version>anything</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140416.jar</systemPath>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140419.jar</systemPath>
 		</dependency>
 
 		<dependency>

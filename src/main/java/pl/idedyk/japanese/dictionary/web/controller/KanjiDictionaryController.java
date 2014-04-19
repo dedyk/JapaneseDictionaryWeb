@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest.WordPlaceSearch;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.KanjiDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
@@ -67,31 +70,63 @@ public class KanjiDictionaryController extends CommonController {
 			return "kanjiDictionary";
 		}
 		
-		/*
-		// stworzenie obiektu FindWordRequest
-		FindWordRequest findWordRequest = createFindWordRequest(searchModel);
-		
-		logger.info("Wyszukiwanie słowek dla zapytania: " + findWordRequest);
-		
+		// stworzenie obiektu FindKanjiRequest
+		FindKanjiRequest findKanjiRequest = createFindKanjiRequest(searchModel);
+
+		logger.info("Wyszukiwanie kanji dla zapytania: " + findKanjiRequest);
+
 		// logowanie
 		int fixme = 1;
 
-		// szukanie		
-		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
-		
-		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
-		model.put("command", searchModel);
-		model.put("selectedMenu", "wordDictionary");
-		model.put("findWordRequest", findWordRequest);
-		model.put("findWordResult", findWordResult);
-		
-		return "wordDictionary";
-		*/
+		// szukanie
+		FindKanjiResult findKanjiResult = dictionaryManager.findKanji(findKanjiRequest);
 		
 		model.put("command", searchModel);
 		model.put("selectedMenu", "kanjiDictionary");
+		model.put("findKanjiRequest", findKanjiRequest);
+		model.put("findKanjiResult", findKanjiResult);
 		
 		return "kanjiDictionary";
+	}
+	
+	private FindKanjiRequest createFindKanjiRequest(KanjiDictionarySearchModel searchModel) {
+		
+		FindKanjiRequest findKanjiRequest = new FindKanjiRequest();
+
+		List<String> tokenWord = Utils.tokenWord(searchModel.getWord());
+		
+		StringBuffer wordJoined = new StringBuffer();
+		
+		for (int idx = 0; idx < tokenWord.size(); ++idx) {
+			
+			wordJoined.append(tokenWord.get(idx));
+			
+			if (idx != tokenWord.size() - 1) {
+				wordJoined.append(" ");
+			}
+		}
+		
+		// word
+		findKanjiRequest.word = wordJoined.toString();
+
+		// wordPlace
+		findKanjiRequest.wordPlaceSearch = FindKanjiRequest.WordPlaceSearch.valueOf(searchModel.getWordPlace());
+
+		// strokeCountFrom
+		String strokeCountFrom = searchModel.getStrokeCountFrom();
+		
+		if (strokeCountFrom != null && strokeCountFrom.trim().equals("") == false) {
+			findKanjiRequest.strokeCountFrom = Integer.parseInt(strokeCountFrom);
+		}
+
+		// strokeCountTo
+		String strokeCountTo = searchModel.getStrokeCountTo();
+		
+		if (strokeCountTo != null && strokeCountTo.trim().equals("") == false) {
+			findKanjiRequest.strokeCountTo = Integer.parseInt(strokeCountTo);
+		}
+
+		return findKanjiRequest;
 	}
 	
 	@RequestMapping(produces = "application/json;charset=UTF-8", 

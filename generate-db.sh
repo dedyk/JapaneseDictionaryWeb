@@ -4,7 +4,7 @@ mvn compile
 
 export CURDIR=`pwd`
 
-export CLASSPATH=$CURDIR/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140416.jar:$CLASSPATH
+export CLASSPATH=$CURDIR/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140419.jar:$CLASSPATH
 export CLASSPATH=$HOME/.m2/repository/net/sourceforge/javacsv/javacsv/2.1/javacsv-2.1.jar:$CLASSPATH
 
 export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-core/4.7.0/lucene-core-4.7.0.jar:$CLASSPATH
