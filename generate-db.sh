@@ -4,14 +4,17 @@ mvn compile
 
 export CURDIR=`pwd`
 
-export CLASSPATH=$CURDIR/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140419.jar:$CLASSPATH
+export JAPANESE_DICTIONARY_API_VERSION=20140419
+export LUCENE_VERSION=4.7.2
+
+export CLASSPATH=$HOME/.m2/repository/pl/idedyk/japanese/JapaneseDictionaryAPI/$JAPANESE_DICTIONARY_API_VERSION/JapaneseDictionaryAPI-$JAPANESE_DICTIONARY_API_VERSION.jar:$CLASSPATH
 export CLASSPATH=$HOME/.m2/repository/net/sourceforge/javacsv/javacsv/2.1/javacsv-2.1.jar:$CLASSPATH
 
-export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-core/4.7.0/lucene-core-4.7.0.jar:$CLASSPATH
-export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-analyzers-common/4.7.0/lucene-analyzers-common-4.7.0.jar:$CLASSPATH
-export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-queries/4.7.0/lucene-queries-4.7.0.jar:$CLASSPATH
-export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-queryparser/4.7.0/lucene-queryparser-4.7.0.jar:$CLASSPATH
-export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-sandbox/4.7.0/lucene-sandbox-4.7.0.jar:$CLASSPATH
+export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-core/$LUCENE_VERSION/lucene-core-$LUCENE_VERSION.jar:$CLASSPATH
+export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-analyzers-common/$LUCENE_VERSION/lucene-analyzers-common-$LUCENE_VERSION.jar:$CLASSPATH
+export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-queries/$LUCENE_VERSION/lucene-queries-$LUCENE_VERSION.jar:$CLASSPATH
+export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-queryparser/$LUCENE_VERSION/lucene-queryparser-$LUCENE_VERSION.jar:$CLASSPATH
+export CLASSPATH=$HOME/.m2/repository/org/apache/lucene/lucene-sandbox/$LUCENE_VERSION/lucene-sandbox-$LUCENE_VERSION.jar:$CLASSPATH
 
 export CLASSPATH=target/classes:$CLASSPATH
 

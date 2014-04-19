@@ -127,11 +127,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>group</groupId>
-			<artifactId>artifact</artifactId>
-			<version>anything</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/JapaneseDictionaryAPI-20140419.jar</systemPath>
+			<groupId>pl.idedyk.japanese</groupId>
+			<artifactId>JapaneseDictionaryAPI</artifactId>
+			<version>20140419</version>
 		</dependency>
 
 		<dependency>
