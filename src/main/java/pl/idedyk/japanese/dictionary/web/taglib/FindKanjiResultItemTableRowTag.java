@@ -9,7 +9,10 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
+import pl.idedyk.japanese.dictionary.web.html.Button;
+import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
@@ -45,63 +48,53 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
             
 	    	kanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, true)));
 	    	
+	    	// elementy podstawowe
+	    	Td radicalsTd = new Td();
+	    	tr.addHtmlElement(radicalsTd);
 
-
-            
-            /*
-            
-            
+	    	KanjiDic2Entry kanjiDic2Entry = resultItem.getKanjiDic2Entry();
 	    	
-	    	String prefixKana = resultItem.getPrefixKana();
-	    	List<String> kanaList = resultItem.getKanaList();
-	    	String prefixRomaji = resultItem.getPrefixRomaji();
-	    	List<String> romajiList = resultItem.getRomajiList();
-	    	List<String> translates = resultItem.getTranslates();
-	    	String info = resultItem.getInfo();
-
-	    	String tempPrefixKana = prefixKana != null && prefixKana.equals("") == false ? prefixKana : null;
-	    	String tempPrefixRomaji = prefixRomaji != null && prefixRomaji.equals("") == false ? prefixRomaji : null;
-            	    	
-            
-	    	// kana
-	    	Td kanaTd = new Td();
-	    	tr.addHtmlElement(kanaTd);
-	    	
-	    	if (kanaList != null && kanaList.size() > 0) {
-	    		kanaTd.addHtmlElement(new Text(getStringWithMark(toString(kanaList, tempPrefixKana), findWord, findWordRequest.searchKana)));
+	    	if (kanjiDic2Entry != null) {
+	    		List<String> radicals = kanjiDic2Entry.getRadicals();
+	    		
+	    		if (radicals != null) {
+	    			radicalsTd.addHtmlElement(new Text(getStringWithMark(toString(radicals, null, " "), findWord, true)));	    			
+	    		}
 	    	}
 	    	
-	    	// romaji
-	    	Td romajiTd = new Td();
-	    	tr.addHtmlElement(romajiTd);
+	    	// liczba kresek
+	    	Td strokeCountTd = new Td();
+	    	tr.addHtmlElement(strokeCountTd);
 	    	
-	    	if (romajiList != null && romajiList.size() > 0) {
-	    		romajiTd.addHtmlElement(new Text(getStringWithMark(toString(romajiList, tempPrefixRomaji), findWord, findWordRequest.searchRomaji)));
+	    	if (kanjiDic2Entry != null) {
+	    		strokeCountTd.addHtmlElement(new Text(String.valueOf(kanjiDic2Entry.getStrokeCount())));	    		
 	    	}
 	    	
-	    	// translates
+	    	// tlumaczenie
+	    	List<String> polishTranslates = resultItem.getPolishTranslates();
+	    	
 	    	Td translateTd = new Td();
 	    	tr.addHtmlElement(translateTd);
 	    	
-	    	if (translates != null && translates.size() > 0) {
-	    		translateTd.addHtmlElement(new Text(getStringWithMark(toString(translates, null), findWord, findWordRequest.searchTranslate)));
+	    	if (polishTranslates != null && polishTranslates.size() > 0) {
+	    		translateTd.addHtmlElement(new Text(getStringWithMark(toString(polishTranslates, null, "<br/>"), findWord, true)));
 	    	}
 	    	
-	    	// info
+	    	// informacje dodatkowe
+	    	String info = resultItem.getInfo();
+	    	
 	    	Td infoTd = new Td();
 	    	tr.addHtmlElement(infoTd);
 	    	
 	    	if (info != null && info.equals("") == false) {
-	    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, findWordRequest.searchInfo)));
+	    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, true)));
 	    	}
-            
-            // details link
+	    	// szczegoly
 	    	Td detailsLinkTd = new Td();
 	    	tr.addHtmlElement(detailsLinkTd);
             
-            String link = detailsLink.replaceAll("%ID%", String.valueOf(resultItem.getDictionaryEntry().getId())).
-            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
-            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-");
+            String link = detailsLink.replaceAll("%ID%", String.valueOf(resultItem.getId())).
+            		replaceAll("%KANJI%", kanji != null ? kanji : "-");
             
             Button linkButton = new Button();
             detailsLinkTd.addHtmlElement(linkButton);
@@ -111,7 +104,6 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
             linkButton.setOnClick("window.location = '" + link + "'");
             
             linkButton.addHtmlElement(new Text(detailsLinkValue));
-            */
             
             tr.render(out);
             
@@ -124,7 +116,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	
     private String getStringWithMark(String text, String findWord, boolean mark) {
     	
-    	if (mark == false) {
+    	if (mark == false || findWord == null || findWord.trim().equals("") == true) {
     		return text;
     	}
     	
@@ -158,7 +150,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 		return texStringBuffer.toString();
     }
     
-	private String toString(List<String> listString, String prefix) {
+	private String toString(List<String> listString, String prefix, String separator) {
 		
 		StringBuffer sb = new StringBuffer();
 				
@@ -170,7 +162,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 			sb.append(listString.get(idx));
 			
 			if (idx != listString.size() - 1) {
-				sb.append("<br/>");
+				sb.append(separator);
 			}
 		}
 				

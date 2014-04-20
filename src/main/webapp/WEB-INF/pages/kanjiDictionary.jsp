@@ -124,7 +124,7 @@
 					
 					<script>
 						$(document).ready(function() {
-							$('#kanjiDictionaryFindWordResult').dataTable({
+							$('#kanjiDictionaryFindKanjiResult').dataTable({
 								language: {
 									url: '${staticFilePrefix}/js/datatables/polish.json'
 								},
