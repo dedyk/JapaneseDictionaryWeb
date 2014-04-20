@@ -78,7 +78,7 @@ public class WordDictionaryController extends CommonController {
 		return "wordDictionary";
 	}
 
-	@RequestMapping(value = "/wordDictionaryDetails", method = RequestMethod.GET)
+	@RequestMapping(value = "/wordDictionarySearch", method = RequestMethod.GET)
 	public String search(@ModelAttribute("command") @Valid WordDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) {
 

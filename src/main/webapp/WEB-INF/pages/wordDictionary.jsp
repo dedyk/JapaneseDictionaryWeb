@@ -25,11 +25,23 @@
 
 <c:set var="wordDictionaryDetailsLinkValue"> <spring:message code="wordDictionary.page.search.table.column.details.value" /> </c:set>
 
+<spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
+
+<c:choose>
+     <c:when test="${useExternalStaticFiles == true}">
+     	<spring:eval var="staticFilePrefix" expression="@applicationProperties.getProperty('use.external.static.path')" />
+     </c:when>
+
+     <c:otherwise>
+     	<c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
+     </c:otherwise>
+</c:choose>
+
 <t:template pageTitle="${pageTitle}">
 
 	<jsp:body>
 			
-		<form:form method="get" action="${pageContext.request.contextPath}/wordDictionaryDetails">
+		<form:form method="get" action="${pageContext.request.contextPath}/wordDictionarySearch">
 			
 			<form:errors cssClass="alert alert-danger" path="*" element="div" />		
 			
@@ -91,7 +103,7 @@
 		
 		<c:if test="${findWordResult != null}">
 			
-			<hr id="findWordResulthrId" style="margin-bottom: 10px" />
+			<hr id="findWordResultHrId" style="margin-bottom: 10px" />
 		
 			<p class="text-left"><h4><spring:message code="wordDictionary.page.search.table.caption" /></h4></p>
 		
@@ -122,7 +134,7 @@
 				$(document).ready(function() {
 					$('#wordDictionaryFindWordResult').dataTable({
 						language: {
-							url: '${pageContext.request.contextPath}/js/datatables/polish.json'
+							url: '${staticFilePrefix}/js/datatables/polish.json'
 						},
 						"aaSorting": [],
 						"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
@@ -156,7 +168,7 @@
 
 				<c:if test="${findWordResult != null}">
 					$('html, body').animate({
-			        	scrollTop: $("#findWordResulthrId").offset().top
+			        	scrollTop: $("#findWordResultHrId").offset().top
 			    	}, 1000);
 				</c:if>				
 			});

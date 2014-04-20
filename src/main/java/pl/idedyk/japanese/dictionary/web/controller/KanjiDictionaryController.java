@@ -58,7 +58,7 @@ public class KanjiDictionaryController extends CommonController {
 		return "kanjiDictionary";
 	}
 	
-	@RequestMapping(value = "/kanjiDictionaryDetails", method = RequestMethod.GET)
+	@RequestMapping(value = "/kanjiDictionarySearch", method = RequestMethod.GET)
 	public String search(@ModelAttribute("command") @Valid KanjiDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) {
 

@@ -16,6 +16,20 @@
 
 <c:set var="search"> <spring:message code="kanjiDictionary.page.label.search"/> </c:set>
 
+<c:set var="kanjiDictionaryDetailsLinkValue"> <spring:message code="kanjiDictionary.page.search.table.column.details.value" /> </c:set>
+
+<spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
+
+<c:choose>
+     <c:when test="${useExternalStaticFiles == true}">
+     	<spring:eval var="staticFilePrefix" expression="@applicationProperties.getProperty('use.external.static.path')" />
+     </c:when>
+
+     <c:otherwise>
+     	<c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
+     </c:otherwise>
+</c:choose>
+
 <t:template pageTitle="${pageTitle}">
 
 	<jsp:body>
@@ -28,9 +42,9 @@
     		
     		<div class="tab-content">
     		
-        		<div id="meaning" class="tab-pane fade in active col-md-12" style="padding-top: 20px">
+        		<div id="meaning" class="tab-pane fade in active col-md-12" style="padding-top: 20px; padding-bottom: 20px">
             		
-            		<form:form method="get" action="${pageContext.request.contextPath}/kanjiDictionaryDetails">
+            		<form:form method="get" action="${pageContext.request.contextPath}/kanjiDictionarySearch">
             		
             			<form:errors cssClass="alert alert-danger" path="*" element="div" />
             		
@@ -73,10 +87,56 @@
             		</form:form>            		          		           		
         		</div>
         
-        		<div id="radicals" class="tab-pane fade col-md-12">
-            		<h3>Elementy podstawowe</h3>
+        		<div id="radicals" class="tab-pane fade col-md-12" style="padding-top: 20px; padding-bottom: 20px">
+            		<h3>FIXME - Elementy podstawowe</h3>
         		</div>
     		</div>
+    		
+			<c:if test="${findKanjiResult != null}">
+			
+				<div>
+					<hr id="findKanjiResultHrId" style="margin-top: 10px; margin-bottom: 10px" />
+				
+					<p class="text-left"><h4><spring:message code="kanjiDictionary.page.search.table.caption" /></h4></p>
+				
+					<table id="kanjiDictionaryFindKanjiResult" class="table table-striped" style="font-size: 120%;">
+						<thead>
+							<tr>
+								<th><spring:message code="kanjiDictionary.page.search.table.column.kanji" /></th>
+								<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
+								<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
+								<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
+								<th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tfood>
+							<c:forEach items="${findKanjiResult.result}" var="currentResult">
+								<jdwt:findKanjiResultItemTableRow
+									findKanjiRequest="${findKanjiRequest}"
+									resultItem="${currentResult}"
+									detailsLink="${pageContext.request.contextPath}/kanjiDictionaryDetails/%ID%/%KANJI%"
+									detailsLinkValue="${kanjiDictionaryDetailsLinkValue}" />
+							</c:forEach>
+						</tfood>
+						
+					</table>
+					
+					<script>
+						$(document).ready(function() {
+							$('#kanjiDictionaryFindWordResult').dataTable({
+								language: {
+									url: '${staticFilePrefix}/js/datatables/polish.json'
+								},
+								"aaSorting": [],
+								"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+								"bLengthChange": false
+							});
+						});
+					</script>
+				</div>
+			</c:if>
+
 		</div>	
 		
 		<script>
@@ -90,6 +150,12 @@
 				$( "#searchButton" ).button();
 
 				$( "#wordPlaceId").selectpicker();
+
+				<c:if test="${findKanjiResult != null}">
+				$('html, body').animate({
+		        	scrollTop: $("#findKanjiResultHrId").offset().top
+		    	}, 1000);
+				</c:if>
 
 			});
 		</script>

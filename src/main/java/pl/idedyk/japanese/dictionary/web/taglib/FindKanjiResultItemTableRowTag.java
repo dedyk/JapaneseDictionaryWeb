@@ -8,21 +8,19 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
-import pl.idedyk.japanese.dictionary.web.html.Button;
-import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 
-public class FindWordResultItemTableRowTag extends TagSupport {
+public class FindKanjiResultItemTableRowTag extends TagSupport {
 
 	private static final long serialVersionUID = 1L;
 	
-	private FindWordRequest findWordRequest;
+	private FindKanjiRequest findKanjiRequest;
 	
-	private FindWordResult.ResultItem resultItem;
+	private KanjiEntry resultItem;
 	
 	private String detailsLink;
 	private String detailsLinkValue;
@@ -33,13 +31,27 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		try {
             JspWriter out = pageContext.getOut();
             
-            Tr tr = new Tr();            
+            Tr tr = new Tr();    
             
             // pobranie danych
             //
-            String findWord = findWordRequest.word;
+            String findWord = findKanjiRequest.word;
+
+            String kanji = resultItem.getKanji();
             
-	    	String kanji = resultItem.getKanji();
+            // kanji
+	    	Td kanjiTd = new Td();
+	    	tr.addHtmlElement(kanjiTd);
+            
+	    	kanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, true)));
+	    	
+
+
+            
+            /*
+            
+            
+	    	
 	    	String prefixKana = resultItem.getPrefixKana();
 	    	List<String> kanaList = resultItem.getKanaList();
 	    	String prefixRomaji = resultItem.getPrefixRomaji();
@@ -50,18 +62,6 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	    	String tempPrefixKana = prefixKana != null && prefixKana.equals("") == false ? prefixKana : null;
 	    	String tempPrefixRomaji = prefixRomaji != null && prefixRomaji.equals("") == false ? prefixRomaji : null;
             	    	
-            // kanji
-	    	Td kanjiTd = new Td();
-	    	tr.addHtmlElement(kanjiTd);
-            
-	    	if (resultItem.isKanjiExists() == true) {
-
-	    		if (tempPrefixKana != null) {
-	    			kanjiTd.addHtmlElement(new Text("(" + getStringWithMark(tempPrefixKana, findWord, false) + ") "));
-	    		}
-
-	    		kanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));
-	    	}
             
 	    	// kana
 	    	Td kanaTd = new Td();
@@ -111,6 +111,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             linkButton.setOnClick("window.location = '" + link + "'");
             
             linkButton.addHtmlElement(new Text(detailsLinkValue));
+            */
             
             tr.render(out);
             
@@ -176,20 +177,20 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		return sb.toString();
 	}
 
-	public FindWordResult.ResultItem getResultItem() {
+	public FindKanjiRequest getFindKanjiRequest() {
+		return findKanjiRequest;
+	}
+
+	public void setFindKanjiRequest(FindKanjiRequest findKanjiRequest) {
+		this.findKanjiRequest = findKanjiRequest;
+	}
+
+	public KanjiEntry getResultItem() {
 		return resultItem;
 	}
 
-	public void setResultItem(FindWordResult.ResultItem resultItem) {
+	public void setResultItem(KanjiEntry resultItem) {
 		this.resultItem = resultItem;
-	}
-
-	public FindWordRequest getFindWordRequest() {
-		return findWordRequest;
-	}
-
-	public void setFindWordRequest(FindWordRequest findWordRequest) {
-		this.findWordRequest = findWordRequest;
 	}
 
 	public String getDetailsLink() {

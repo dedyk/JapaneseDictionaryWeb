@@ -57,7 +57,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		logger.info("Otwieranie bazy danych");
 		
 		try {
-			databaseConnector = luceneDatabase = new LuceneDatabase(DictionaryManager.class.getResource("/db/" + LUCENE_DB_DIR + "/").getPath()); 
+			databaseConnector = luceneDatabase = new LuceneDatabase(DictionaryManager.class.getResource("/db/" + LUCENE_DB_DIR + "/").getPath(), true); 
 			
 			luceneDatabase.open();
 			

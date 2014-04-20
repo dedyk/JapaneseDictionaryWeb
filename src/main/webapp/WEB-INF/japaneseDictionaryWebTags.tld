@@ -29,6 +29,31 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>findKanjiResultItemTableRow</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.FindKanjiResultItemTableRowTag</tagclass>
+		<info>Generuje wiersz tabeli z wynikiem wyszukiwania kanji</info>
+		<attribute>
+			<name>findKanjiRequest</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>resultItem</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>detailsLink</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>detailsLinkValue</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>	
+	<tag>
 		<name>generateWordDictionaryDetails</name>
 		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.GenerateWordDictionaryDetailsTag</tagclass>
 		<info>Generuje szczegoly slowa</info>
