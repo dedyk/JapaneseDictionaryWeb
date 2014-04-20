@@ -4,12 +4,18 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.springframework.context.MessageSource;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
+import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Td;
@@ -24,11 +30,16 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	
 	private FindWordResult.ResultItem resultItem;
 	
-	private String detailsLink;
-	private String detailsLinkValue;
-	
+	private MessageSource messageSource;
+		
 	@Override
 	public int doStartTag() throws JspException {
+		
+		ServletContext servletContext = pageContext.getServletContext();
+		
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+		
+		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
 		
 		try {
             JspWriter out = pageContext.getOut();
@@ -99,10 +110,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	    	Td detailsLinkTd = new Td();
 	    	tr.addHtmlElement(detailsLinkTd);
             
-            String link = detailsLink.replaceAll("%ID%", String.valueOf(resultItem.getDictionaryEntry().getId())).
-            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
-            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-");
-            
+            String link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), resultItem.getDictionaryEntry(), null);
             Button linkButton = new Button();
             detailsLinkTd.addHtmlElement(linkButton);
             
@@ -110,7 +118,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             linkButton.setClazz("btn btn-default");
             linkButton.setOnClick("window.location = '" + link + "'");
             
-            linkButton.addHtmlElement(new Text(detailsLinkValue));
+            linkButton.addHtmlElement(new Text(messageSource.getMessage(
+            		"wordDictionary.page.search.table.column.details.value", null, Locale.getDefault())));
             
             tr.render(out);
             
@@ -190,21 +199,5 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 
 	public void setFindWordRequest(FindWordRequest findWordRequest) {
 		this.findWordRequest = findWordRequest;
-	}
-
-	public String getDetailsLink() {
-		return detailsLink;
-	}
-
-	public void setDetailsLink(String detailsLink) {
-		this.detailsLink = detailsLink;
-	}
-
-	public String getDetailsLinkValue() {
-		return detailsLinkValue;
-	}
-
-	public void setDetailsLinkValue(String detailsLinkValue) {
-		this.detailsLinkValue = detailsLinkValue;
 	}
 }

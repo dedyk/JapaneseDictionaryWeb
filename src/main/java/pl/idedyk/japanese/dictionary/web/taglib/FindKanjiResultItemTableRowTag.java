@@ -4,13 +4,19 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.springframework.context.MessageSource;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
+import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Td;
@@ -24,12 +30,17 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	private FindKanjiRequest findKanjiRequest;
 	
 	private KanjiEntry resultItem;
-	
-	private String detailsLink;
-	private String detailsLinkValue;
+
+	private MessageSource messageSource;
 	
 	@Override
 	public int doStartTag() throws JspException {
+		
+		ServletContext servletContext = pageContext.getServletContext();
+		
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+		
+		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
 		
 		try {
             JspWriter out = pageContext.getOut();
@@ -93,8 +104,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	    	Td detailsLinkTd = new Td();
 	    	tr.addHtmlElement(detailsLinkTd);
             
-            String link = detailsLink.replaceAll("%ID%", String.valueOf(resultItem.getId())).
-            		replaceAll("%KANJI%", kanji != null ? kanji : "-");
+            String link = LinkGenerator.generateKanjiDetailsLink(pageContext.getServletContext().getContextPath(), resultItem);
             
             Button linkButton = new Button();
             detailsLinkTd.addHtmlElement(linkButton);
@@ -103,7 +113,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
             linkButton.setClazz("btn btn-default");
             linkButton.setOnClick("window.location = '" + link + "'");
             
-            linkButton.addHtmlElement(new Text(detailsLinkValue));
+            linkButton.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.details.value", null, Locale.getDefault())));
             
             tr.render(out);
             
@@ -183,21 +193,5 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 
 	public void setResultItem(KanjiEntry resultItem) {
 		this.resultItem = resultItem;
-	}
-
-	public String getDetailsLink() {
-		return detailsLink;
-	}
-
-	public void setDetailsLink(String detailsLink) {
-		this.detailsLink = detailsLink;
-	}
-
-	public String getDetailsLinkValue() {
-		return detailsLinkValue;
-	}
-
-	public void setDetailsLinkValue(String detailsLinkValue) {
-		this.detailsLinkValue = detailsLinkValue;
 	}
 }

@@ -29,6 +29,7 @@ import pl.idedyk.japanese.dictionary.api.gramma.GrammaConjugaterManager;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateGroupTypeElements;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResult;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResultType;
+import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Button;
@@ -54,11 +55,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	private DictionaryEntry dictionaryEntry;
 	
 	private DictionaryEntryType forceDictionaryEntryType;
-	
-	private String detailsLink;
-	
-	private String detailsLinkWithForceDictionaryEntryType;
-	
+		
 	private MessageSource messageSource;
 	
 	private DictionaryManager dictionaryManager;
@@ -695,14 +692,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 	    		
 	    		if (addableDictionaryEntryTypeInfoCounter > 1) {
 	    			
-					String kanji = dictionaryEntry.getKanji();
-					List<String> kanaList = dictionaryEntry.getKanaList();
-					
-		            String link = detailsLinkWithForceDictionaryEntryType.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
-		            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
-		            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-").
-		            		replaceAll("%FORCEDICTIONARYENTRYTYPE%", currentDictionaryEntryType.toString());
-		            
 		            Td row3TableTrTd2 = new Td();
 					row3TableTr.addHtmlElement(row3TableTrTd2);
 		            
@@ -711,6 +700,9 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 					
 					Button linkButton = new Button("btn btn-default");
 					row3TableTrTd2Div.addHtmlElement(linkButton);
+					
+		            String link = LinkGenerator.generateDictionaryEntryDetailsLink(
+		            		pageContext.getServletContext().getContextPath(), dictionaryEntry, currentDictionaryEntryType);
 
 					linkButton.setButtonType(ButtonType.BUTTON);
 					linkButton.setOnClick("window.location = '" + link + "'");
@@ -834,14 +826,10 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 					
 					Div row2TableTrTd3Div = new Div(null, "margin: 0 0 5px 50px");
 					row2TableTrTd3.addHtmlElement(row2TableTrTd3Div);
-					
-					String kanji = transitivityIntransitivityPairDictionaryEntry.getKanji();
-					List<String> kanaList = transitivityIntransitivityPairDictionaryEntry.getKanaList();
-					
-		            String link = detailsLink.replaceAll("%ID%", String.valueOf(transitivityIntransitivityPairDictionaryEntry.getId())).
-		            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
-		            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-");
-
+										
+		            String link = LinkGenerator.generateDictionaryEntryDetailsLink(
+		            		pageContext.getServletContext().getContextPath(), transitivityIntransitivityPairDictionaryEntry, null);
+		            
 					Button linkButton = new Button("btn btn-default");
 					row2TableTrTd3Div.addHtmlElement(linkButton);
 
@@ -939,8 +927,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			Td row2TableTrButtonTd = new Td(null, "margin-top: 0px; padding: 0px 50px 5px 0;");
 			row2TableTr.addHtmlElement(row2TableTrButtonTd);
 			
-			int fixme = 1;
-			String link = "FIXME";
+			String link = LinkGenerator.generateKanjiDetailsLink(pageContext.getServletContext().getContextPath(), currentKnownKanjiEntry);
 			
 			Button linkButton = new Button("btn btn-default");
 			row2TableTrButtonTd.addHtmlElement(linkButton);
@@ -1564,21 +1551,5 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 
 	public void setForceDictionaryEntryType(DictionaryEntryType forceDictionaryEntryType) {
 		this.forceDictionaryEntryType = forceDictionaryEntryType;
-	}
-
-	public String getDetailsLink() {
-		return detailsLink;
-	}
-
-	public void setDetailsLink(String detailsLink) {
-		this.detailsLink = detailsLink;
-	}
-
-	public String getDetailsLinkWithForceDictionaryEntryType() {
-		return detailsLinkWithForceDictionaryEntryType;
-	}
-
-	public void setDetailsLinkWithForceDictionaryEntryType(String detailsLinkWithForceDictionaryEntryType) {
-		this.detailsLinkWithForceDictionaryEntryType = detailsLinkWithForceDictionaryEntryType;
 	}
 }

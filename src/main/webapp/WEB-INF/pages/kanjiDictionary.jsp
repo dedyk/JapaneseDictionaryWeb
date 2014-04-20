@@ -16,8 +16,6 @@
 
 <c:set var="search"> <spring:message code="kanjiDictionary.page.label.search"/> </c:set>
 
-<c:set var="kanjiDictionaryDetailsLinkValue"> <spring:message code="kanjiDictionary.page.search.table.column.details.value" /> </c:set>
-
 <spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
 
 <c:choose>
@@ -114,9 +112,7 @@
 							<c:forEach items="${findKanjiResult.result}" var="currentResult">
 								<jdwt:findKanjiResultItemTableRow
 									findKanjiRequest="${findKanjiRequest}"
-									resultItem="${currentResult}"
-									detailsLink="${pageContext.request.contextPath}/kanjiDictionaryDetails/%ID%/%KANJI%"
-									detailsLinkValue="${kanjiDictionaryDetailsLinkValue}" />
+									resultItem="${currentResult}" />
 							</c:forEach>
 						</tfood>
 						

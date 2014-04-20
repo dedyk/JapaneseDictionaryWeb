@@ -73,7 +73,7 @@
 				</table>
 			</div>
 
-			<nav role="navigation" class="navbar navbar-default">
+ 			<nav class="navbar navbar-default">
 				<div class="navbar-header">
 					<a href="#" class="navbar-brand" onclick="goTo('')"><spring:message code="template.title.short.polish"/></a>
 				</div>

@@ -23,8 +23,6 @@
 <c:set var="selectPickerNoneSelectedText"> <spring:message code="common.selectpicker.noneSelectedText"/> </c:set>
 <c:set var="selectPickerCountSelectedText"> <spring:message code="common.selectpicker.countSelectedText"/> </c:set>
 
-<c:set var="wordDictionaryDetailsLinkValue"> <spring:message code="wordDictionary.page.search.table.column.details.value" /> </c:set>
-
 <spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
 
 <c:choose>
@@ -122,9 +120,7 @@
 					<c:forEach items="${findWordResult.result}" var="currentResult">
 						<jdwt:findWordResultItemTableRow
 							findWordRequest="${findWordRequest}"
-							resultItem="${currentResult}"
-							detailsLink="${pageContext.request.contextPath}/wordDictionaryDetails/%ID%/%KANJI%/%KANA%"
-							detailsLinkValue="${wordDictionaryDetailsLinkValue}" />
+							resultItem="${currentResult}" />
 					</c:forEach>
 				</tfood>
 				
