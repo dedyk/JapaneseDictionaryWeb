@@ -90,6 +90,28 @@
             		<script>
 						var selectedRadicals = [];
 
+						function updateRadicalsTableState(json) {
+
+							var allAvailableRadicals = json[0].allAvailableRadicals;
+							
+							$('#radicalTableId td').each(function() {
+								//$(this).css("background-color", "red");
+
+								//background-color: #CCCCCC
+								
+								var thisId = $(this).attr('id');
+
+								if (thisId != null && thisId.indexOf("strokeCount_") == 0) {
+									return;
+								}
+								
+								$(this).css("background-color", "red");
+								
+								
+								
+							});
+						}
+
 						function updateSelectedRadicals(radicalTd) {
 
 							var selectedRadicalTd = $(radicalTd);
@@ -121,7 +143,7 @@
 								dataType : "json",
 
 								success: function( json ) {
-									alert("Sukces");
+									updateRadicalsTableState(json);
 								},
 
 								error: function( xhr, status, errorThrown ) {
@@ -140,7 +162,7 @@
             		<c:set var="currentStrokeCount" value="" />
             		<c:set var="strokeCountCounter" value="0" />
             		            		
-	            		<table>
+	            		<table id="radicalTableId">
 	            			<c:forEach items="${radicalList}" var="currentRadical">
 	            				
 	            			  	<c:if test="${strokeCountCounter == 0}">
@@ -148,7 +170,7 @@
 	            				</c:if>
 	            				
 								<c:if test="${currentStrokeCount != currentRadical.strokeCount}">
-	            					<td style="padding: 5px; font-size: 200%; text-align: center; border: 1px solid black; background-color: #CCCCCC">${currentRadical.strokeCount}</td>
+	            					<td id="strokeCount_${currentRadical.strokeCount}" style="padding: 5px; font-size: 200%; text-align: center; border: 1px solid black; background-color: #CCCCCC">${currentRadical.strokeCount}</td>
 	            					
 	            					<c:set var="currentStrokeCount" value="${currentRadical.strokeCount}" />
 	            					<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />

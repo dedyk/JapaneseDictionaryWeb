@@ -3,6 +3,7 @@ package pl.idedyk.japanese.dictionary.web.controller;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -170,13 +171,21 @@ public class KanjiDictionaryController extends CommonController {
 	
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
 			value = "/kanjiDictionary/showAvailableRadicals", method = RequestMethod.POST)
-	public @ResponseBody String showAvailableRadicals(@RequestParam(value="selectedRadicals[]", required=true) String[] selectedRadicals) {
+	public @ResponseBody String showAvailableRadicals(@RequestParam(value="selectedRadicals[]", required=false) String[] selectedRadicals) {
 
+		if (selectedRadicals == null) {
+			selectedRadicals = new String[] { };
+		}
+		
 		logger.info("Pokaż dostępne elementy podstawowe dla zapytania: " + Arrays.toString(selectedRadicals));
 
+		Set<String> allAvailableRadicals = dictionaryManager.findAllAvailableRadicals(selectedRadicals);
+		
 		JSONArray jsonArray = new JSONArray();
 		
 		JSONObject jsonObject = new JSONObject();
+		
+		jsonObject.put("allAvailableRadicals", allAvailableRadicals);
 		
 		jsonArray.put(jsonObject);
 		
