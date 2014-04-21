@@ -92,9 +92,25 @@
 
 						function updateSelectedRadicals(radicalTd) {
 
-							var selectedRadical = $(radicalTd).text();
+							var selectedRadicalTd = $(radicalTd);
+							var selectedRadicalKanji = selectedRadicalTd.text();
+
+							var selectedRadicalIndexOf = selectedRadicals.indexOf(selectedRadicalKanji);
 							
-							alert("IIII: " + selectedRadical);						
+							if (selectedRadicalIndexOf == -1) {
+								selectedRadicals.push(selectedRadicalKanji);
+
+								selectedRadicalTd.css("background-color", "yellow");
+								
+							} else {
+								selectedRadicals.splice(selectedRadicalIndexOf, 1);
+
+								selectedRadicalTd.css("background-color", "");
+							}
+							
+							
+							
+							//alert("IIII: " + selectedRadicals);						
 
 
 						}
