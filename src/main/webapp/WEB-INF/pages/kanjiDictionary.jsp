@@ -87,34 +87,46 @@
         
         		<div id="radicals" class="tab-pane fade col-md-12" style="padding-top: 20px; padding-bottom: 20px">
             		
+            		<center>
+            		
             		<c:set var="currentStrokeCount" value="" />
             		<c:set var="strokeCountCounter" value="0" />
             		            		
-            		<table>
-            			<c:forEach items="${radicalList}" var="currentRadical">
-            				<c:if test="${currentStrokeCount != currentRadical.strokeCount}">
-            					<c:set var="currentStrokeCount" value="${currentRadical.strokeCount}" />
-            					<c:set var="strokeCountCounter" value="0" />
-            					
-            					<tr>
-            						<td><h3>${currentRadical.strokeCount}</h3></td>
-            					</tr>
-            				</c:if>
-            				
-            				<c:if test="${strokeCountCounter == 0}">
-            					<tr>
-            				</c:if>
-            				
-            				<td style="padding-right: 5px; font-size: 150%">${currentRadical.radical}</td>
-            				<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />
-            				
-            				<c:if test="${strokeCountCounter == 20}">
-            					<c:set var="strokeCountCounter" value="0" />
-            					</tr>
-            				</c:if>             				
-            				           				
-            			</c:forEach>
-            		</table>            		
+	            		<table>
+	            			<c:forEach items="${radicalList}" var="currentRadical">
+	            				
+	            			  	<c:if test="${strokeCountCounter == 0}">
+	            					<tr>
+	            				</c:if>
+	            				
+								<c:if test="${currentStrokeCount != currentRadical.strokeCount}">
+	            					<td style="padding: 5px; font-size: 200%; text-align: center; border: 1px solid black; background-color: #CCCCCC">${currentRadical.strokeCount}</td>
+	            					
+	            					<c:set var="currentStrokeCount" value="${currentRadical.strokeCount}" />
+	            					<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />
+	            				</c:if>
+	            				
+	            				
+	            				<c:if test="${strokeCountCounter == 30}">
+	            					<c:set var="strokeCountCounter" value="0" />
+	            					</tr>
+	            					<tr>
+	            				</c:if>             				
+	
+	            				<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;">${currentRadical.radical}</td>
+	            				<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />
+	            				
+	            				 <c:if test="${strokeCountCounter == 30}">
+	            					<c:set var="strokeCountCounter" value="0" />
+	            					</tr>
+	            					<tr>
+	            				</c:if>             				
+	            				 				
+	            			</c:forEach>
+	            			
+	            			</tr>
+	            		</table>            		
+					</center>
         		</div>
     		</div>
     		
