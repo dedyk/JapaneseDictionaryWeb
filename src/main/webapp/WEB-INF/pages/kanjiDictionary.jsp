@@ -87,6 +87,19 @@
         
         		<div id="radicals" class="tab-pane fade col-md-12" style="padding-top: 20px; padding-bottom: 20px">
             		
+            		<script>
+						var selectedRadicals = [];
+
+						function updateSelectedRadicals(radicalTd) {
+
+							var selectedRadical = $(radicalTd).text();
+							
+							alert("IIII: " + selectedRadical);						
+
+
+						}
+            		</script>
+            		
             		<center>
             		
             		<c:set var="currentStrokeCount" value="" />
@@ -106,14 +119,13 @@
 	            					<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />
 	            				</c:if>
 	            				
-	            				
 	            				<c:if test="${strokeCountCounter == 30}">
 	            					<c:set var="strokeCountCounter" value="0" />
 	            					</tr>
 	            					<tr>
 	            				</c:if>             				
 	
-	            				<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;">${currentRadical.radical}</td>
+	            				<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">${currentRadical.radical}</td>
 	            				<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />
 	            				
 	            				 <c:if test="${strokeCountCounter == 30}">
