@@ -86,7 +86,35 @@
         		</div>
         
         		<div id="radicals" class="tab-pane fade col-md-12" style="padding-top: 20px; padding-bottom: 20px">
-            		<h3>FIXME - Elementy podstawowe</h3>
+            		
+            		<c:set var="currentStrokeCount" value="" />
+            		<c:set var="strokeCountCounter" value="0" />
+            		            		
+            		<table>
+            			<c:forEach items="${radicalList}" var="currentRadical">
+            				<c:if test="${currentStrokeCount != currentRadical.strokeCount}">
+            					<c:set var="currentStrokeCount" value="${currentRadical.strokeCount}" />
+            					<c:set var="strokeCountCounter" value="0" />
+            					
+            					<tr>
+            						<td><h3>${currentRadical.strokeCount}</h3></td>
+            					</tr>
+            				</c:if>
+            				
+            				<c:if test="${strokeCountCounter == 0}">
+            					<tr>
+            				</c:if>
+            				
+            				<td style="padding-right: 5px; font-size: 150%">${currentRadical.radical}</td>
+            				<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />
+            				
+            				<c:if test="${strokeCountCounter == 20}">
+            					<c:set var="strokeCountCounter" value="0" />
+            					</tr>
+            				</c:if>             				
+            				           				
+            			</c:forEach>
+            		</table>            		
         		</div>
     		</div>
     		

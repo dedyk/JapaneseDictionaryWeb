@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
+import pl.idedyk.japanese.dictionary.api.dto.RadicalInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.KanjiDictionarySearchModelValidator;
@@ -51,8 +52,12 @@ public class KanjiDictionaryController extends CommonController {
 
 		// ustawienie domyslnych wartosci model szukania
 		kanjiDictionarySearchModel.setWordPlace(WordPlaceSearch.START_WITH.toString());
+		
+		// pobierz elementy podstawowe
+		List<RadicalInfo> radicalList = dictionaryManager.getRadicalList();
 
 		model.put("command", kanjiDictionarySearchModel);
+		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		
 		return "kanjiDictionary";
@@ -62,9 +67,13 @@ public class KanjiDictionaryController extends CommonController {
 	public String search(@ModelAttribute("command") @Valid KanjiDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) {
 
+		// pobierz elementy podstawowe
+		List<RadicalInfo> radicalList = dictionaryManager.getRadicalList();
+		
 		if (result.hasErrors() == true) {
 						
 			model.put("command", searchModel);
+			model.put("radicalList", radicalList);
 			model.put("selectedMenu", "kanjiDictionary");
 			
 			return "kanjiDictionary";
@@ -82,6 +91,7 @@ public class KanjiDictionaryController extends CommonController {
 		FindKanjiResult findKanjiResult = dictionaryManager.findKanji(findKanjiRequest);
 		
 		model.put("command", searchModel);
+		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("findKanjiRequest", findKanjiRequest);
 		model.put("findKanjiResult", findKanjiResult);
