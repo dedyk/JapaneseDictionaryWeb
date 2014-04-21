@@ -95,39 +95,44 @@
 							var allAvailableRadicals = json[0].allAvailableRadicals;
 							
 							$('#radicalTableId td').each(function() {
-								//$(this).css("background-color", "red");
-
-								//background-color: #CCCCCC
 								
 								var thisId = $(this).attr('id');
 
 								if (thisId != null && thisId.indexOf("strokeCount_") == 0) {
 									return;
 								}
-								
-								$(this).css("background-color", "red");
-								
-								
-								
+
+								var thisIdKanji = $(this).text();
+
+								if (allAvailableRadicals.indexOf(thisIdKanji) == -1) {
+									$(this).css("color", "silver");
+									
+								} else {
+									$(this).css("color", "black");
+								}
 							});
 						}
 
 						function updateSelectedRadicals(radicalTd) {
 
-							var selectedRadicalTd = $(radicalTd);
-							var selectedRadicalKanji = selectedRadicalTd.text();
 
-							var selectedRadicalIndexOf = selectedRadicals.indexOf(selectedRadicalKanji);
-							
-							if (selectedRadicalIndexOf == -1) {
-								selectedRadicals.push(selectedRadicalKanji);
+							if (radicalTd != null) {
 
-								selectedRadicalTd.css("background-color", "yellow");
+								var selectedRadicalTd = $(radicalTd);
+								var selectedRadicalKanji = selectedRadicalTd.text();
+
+								var selectedRadicalIndexOf = selectedRadicals.indexOf(selectedRadicalKanji);
 								
-							} else {
-								selectedRadicals.splice(selectedRadicalIndexOf, 1);
+								if (selectedRadicalIndexOf == -1) {
+									selectedRadicals.push(selectedRadicalKanji);
 
-								selectedRadicalTd.css("background-color", "");
+									selectedRadicalTd.css("background-color", "yellow");
+									
+								} else {
+									selectedRadicals.splice(selectedRadicalIndexOf, 1);
+
+									selectedRadicalTd.css("background-color", "");
+								}
 							}
 
 							$.ajax({
@@ -261,6 +266,8 @@
 		        	scrollTop: $("#findKanjiResultHrId").offset().top
 		    	}, 1000);
 				</c:if>
+
+				updateSelectedRadicals(null);
 
 			});
 		</script>
