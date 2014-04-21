@@ -107,12 +107,31 @@
 
 								selectedRadicalTd.css("background-color", "");
 							}
-							
-							
-							
-							//alert("IIII: " + selectedRadicals);						
 
+							$.ajax({
+								
+								url: "${pageContext.request.contextPath}/kanjiDictionary/showAvailableRadicals",
+									
+								data: {
+									selectedRadicals: selectedRadicals
+								},
+								
+								type: "POST",
 
+								dataType : "json",
+
+								success: function( json ) {
+									alert("Sukces");
+								},
+
+								error: function( xhr, status, errorThrown ) {
+									alert('<spring:message code="kanjiDictionary.page.search.radicals.problem" />');
+								},
+
+								complete: function( xhr, status ) {
+								}
+								});
+							
 						}
             		</script>
             		

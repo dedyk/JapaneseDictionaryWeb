@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -166,5 +167,19 @@ public class KanjiDictionaryController extends CommonController {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	@RequestMapping(produces = "application/json;charset=UTF-8", 
+			value = "/kanjiDictionary/showAvailableRadicals", method = RequestMethod.POST)
+	public @ResponseBody String showAvailableRadicals(@RequestParam(value="selectedRadicals[]", required=true) String[] selectedRadicals) {
 
+		logger.info("Pokaż dostępne elementy podstawowe dla zapytania: " + Arrays.toString(selectedRadicals));
+
+		JSONArray jsonArray = new JSONArray();
+		
+		JSONObject jsonObject = new JSONObject();
+		
+		jsonArray.put(jsonObject);
+		
+		return jsonArray.toString();
+	}
 }
