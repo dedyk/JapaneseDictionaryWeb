@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.RadicalInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
@@ -181,11 +183,34 @@ public class KanjiDictionaryController extends CommonController {
 
 		Set<String> allAvailableRadicals = dictionaryManager.findAllAvailableRadicals(selectedRadicals);
 		
+		List<KanjiEntry> findKnownKanjiFromRadicalsResult = dictionaryManager.findKnownKanjiFromRadicals(selectedRadicals);
+				
 		JSONArray jsonArray = new JSONArray();
 		
 		JSONObject jsonObject = new JSONObject();
 		
 		jsonObject.put("allAvailableRadicals", allAvailableRadicals);
+		
+		List<String> kanjiFromRadicals = new ArrayList<String>();
+		boolean kanjiFromRadicalsMore = false;
+		
+		if (findKnownKanjiFromRadicalsResult != null) {
+			
+			for (KanjiEntry currentKanjiEntry : findKnownKanjiFromRadicalsResult) {
+				
+				kanjiFromRadicals.add(currentKanjiEntry.getKanji());
+				
+				if (kanjiFromRadicals.size() > 23 - 1) {
+					
+					kanjiFromRadicalsMore = true;
+					
+					break;
+				}
+			}
+		}		
+		
+		jsonObject.put("kanjiFromRadicals", kanjiFromRadicals);
+		jsonObject.put("kanjiFromRadicalsMore", kanjiFromRadicalsMore);
 		
 		jsonArray.put(jsonObject);
 		

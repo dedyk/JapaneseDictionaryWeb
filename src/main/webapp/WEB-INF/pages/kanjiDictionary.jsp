@@ -82,7 +82,51 @@
 								</td>				
 							</tr>			
 						</table>
-            		</form:form>            		          		           		
+            		</form:form>   
+            		
+		            <c:if test="${findKanjiResult != null}">
+					
+						<div>
+							<hr id="findKanjiResultHrId" style="margin-top: 10px; margin-bottom: 10px" />
+						
+							<p class="text-left"><h4><spring:message code="kanjiDictionary.page.search.table.caption" /></h4></p>
+						
+							<table id="kanjiDictionaryFindKanjiResult" class="table table-striped" style="font-size: 120%;">
+								<thead>
+									<tr>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.kanji" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th>
+										<th></th>
+									</tr>
+								</thead>
+								<tfood>
+									<c:forEach items="${findKanjiResult.result}" var="currentResult">
+										<jdwt:findKanjiResultItemTableRow
+											findKanjiRequest="${findKanjiRequest}"
+											resultItem="${currentResult}" />
+									</c:forEach>
+								</tfood>
+								
+							</table>
+							
+							<script>
+								$(document).ready(function() {
+									$('#kanjiDictionaryFindKanjiResult').dataTable({
+										language: {
+											url: '${staticFilePrefix}/js/datatables/polish.json'
+										},
+										"aaSorting": [],
+										"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+										"bLengthChange": false
+									});
+								});
+							</script>
+						</div>
+					</c:if>
+            		         		          		           		
         		</div>
         
         		<div id="radicals" class="tab-pane fade col-md-12" style="padding-top: 20px; padding-bottom: 20px">
@@ -111,6 +155,30 @@
 									$(this).css("color", "black");
 								}
 							});
+
+							var kanjiFromRadicals = json[0].kanjiFromRadicals;
+							var kanjiFromRadicalsMore = json[0].kanjiFromRadicalsMore;
+
+							if (kanjiFromRadicals != null && kanjiFromRadicals.length > 0) {
+								$('#radicalTablePreviewId tr:first').empty();
+
+								$.each(kanjiFromRadicals, function(key, value) {
+									$('#radicalTablePreviewId tr:first').append("<td style='padding: 5px; font-size: 250%; text-align: center; border: 1px solid black;'>" + value + '</td>');
+							    });
+
+							    if (kanjiFromRadicalsMore == true) {
+							    	$('#radicalTablePreviewId tr:first').append("<td style='padding: 5px; text-align: center; border: 1px solid black;'>...</td>");
+							    }
+
+								// $('#radicalTablePreviewDivId').css("display", "show");
+							    
+							} else {
+								$('#radicalTablePreviewId tr:first').empty();
+
+								$('#radicalTablePreviewId tr:first').append("<td style='padding: 5px; text-align: center'></td>");
+								
+								//$('#radicalTablePreviewDivId').css("display", "none");
+							}
 						}
 
 						function updateSelectedRadicals(radicalTd) {
@@ -166,7 +234,7 @@
             		
             		<c:set var="currentStrokeCount" value="" />
             		<c:set var="strokeCountCounter" value="0" />
-            		            		
+      		
 	            		<table id="radicalTableId">
 	            			<c:forEach items="${radicalList}" var="currentRadical">
 	            				
@@ -201,52 +269,20 @@
 	            			</tr>
 	            		</table>            		
 					</center>
+					
+					<div id="radicalTablePreviewDivId" style="padding-top: 10px;">
+						<h4><spring:message code="kanjiDictionary.page.search.radicals.preview" /></h4>
+						
+						<center>
+							<table id="radicalTablePreviewId">
+								<tr>								
+								</tr>							
+							</table>						
+						</center>					
+					</div>
+			
         		</div>
     		</div>
-    		
-			<c:if test="${findKanjiResult != null}">
-			
-				<div>
-					<hr id="findKanjiResultHrId" style="margin-top: 10px; margin-bottom: 10px" />
-				
-					<p class="text-left"><h4><spring:message code="kanjiDictionary.page.search.table.caption" /></h4></p>
-				
-					<table id="kanjiDictionaryFindKanjiResult" class="table table-striped" style="font-size: 120%;">
-						<thead>
-							<tr>
-								<th><spring:message code="kanjiDictionary.page.search.table.column.kanji" /></th>
-								<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
-								<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
-								<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
-								<th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th>
-								<th></th>
-							</tr>
-						</thead>
-						<tfood>
-							<c:forEach items="${findKanjiResult.result}" var="currentResult">
-								<jdwt:findKanjiResultItemTableRow
-									findKanjiRequest="${findKanjiRequest}"
-									resultItem="${currentResult}" />
-							</c:forEach>
-						</tfood>
-						
-					</table>
-					
-					<script>
-						$(document).ready(function() {
-							$('#kanjiDictionaryFindKanjiResult').dataTable({
-								language: {
-									url: '${staticFilePrefix}/js/datatables/polish.json'
-								},
-								"aaSorting": [],
-								"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-								"bLengthChange": false
-							});
-						});
-					</script>
-				</div>
-			</c:if>
-
 		</div>	
 		
 		<script>

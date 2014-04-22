@@ -54,7 +54,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
             String kanji = resultItem.getKanji();
             
             // kanji
-	    	Td kanjiTd = new Td();
+	    	Td kanjiTd = new Td(null, "font-size: 150%");
 	    	tr.addHtmlElement(kanjiTd);
             
 	    	kanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, true)));
