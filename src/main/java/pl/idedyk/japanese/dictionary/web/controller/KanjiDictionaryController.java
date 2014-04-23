@@ -1,7 +1,8 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.RadicalInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
@@ -185,35 +187,48 @@ public class KanjiDictionaryController extends CommonController {
 		
 		List<KanjiEntry> findKnownKanjiFromRadicalsResult = dictionaryManager.findKnownKanjiFromRadicals(selectedRadicals);
 				
-		JSONArray jsonArray = new JSONArray();
-		
 		JSONObject jsonObject = new JSONObject();
 		
 		jsonObject.put("allAvailableRadicals", allAvailableRadicals);
+				
+		JSONArray kanjiFromRadicalsJSON = new JSONArray();
 		
-		List<String> kanjiFromRadicals = new ArrayList<String>();
-		boolean kanjiFromRadicalsMore = false;
+		Collections.sort(findKnownKanjiFromRadicalsResult, new Comparator<KanjiEntry>() {
+
+			@Override
+			public int compare(KanjiEntry k1, KanjiEntry k2) {
+				
+				KanjiDic2Entry k1Dic2Entry = k1.getKanjiDic2Entry();
+				KanjiDic2Entry k2Dic2Entry = k2.getKanjiDic2Entry();
+				
+				if (k1Dic2Entry == null) {
+					return -1;
+				}
+
+				if (k2Dic2Entry == null) {
+					return 1;
+				}
+				
+				return k1Dic2Entry.getStrokeCount() < k2Dic2Entry.getStrokeCount() ? -1 : k1Dic2Entry.getStrokeCount() > k2Dic2Entry.getStrokeCount() ? 1 : 0;
+			}
+		});
 		
 		if (findKnownKanjiFromRadicalsResult != null) {
 			
 			for (KanjiEntry currentKanjiEntry : findKnownKanjiFromRadicalsResult) {
 				
-				kanjiFromRadicals.add(currentKanjiEntry.getKanji());
+				JSONObject currentKanjiFromRadicalJSON = new JSONObject();
 				
-				if (kanjiFromRadicals.size() > 23 - 1) {
-					
-					kanjiFromRadicalsMore = true;
-					
-					break;
-				}
+				currentKanjiFromRadicalJSON.put("id", currentKanjiEntry.getId());
+				currentKanjiFromRadicalJSON.put("kanji", currentKanjiEntry.getKanji());
+				currentKanjiFromRadicalJSON.put("strokeCount", currentKanjiEntry.getKanjiDic2Entry() != null ? currentKanjiEntry.getKanjiDic2Entry().getStrokeCount() : 0);
+				
+				kanjiFromRadicalsJSON.put(currentKanjiFromRadicalJSON);		
 			}
 		}		
 		
-		jsonObject.put("kanjiFromRadicals", kanjiFromRadicals);
-		jsonObject.put("kanjiFromRadicalsMore", kanjiFromRadicalsMore);
-		
-		jsonArray.put(jsonObject);
-		
-		return jsonArray.toString();
+		jsonObject.put("kanjiFromRadicals", kanjiFromRadicalsJSON);
+				
+		return jsonObject.toString();
 	}
 }

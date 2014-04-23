@@ -136,7 +136,7 @@
 
 						function updateRadicalsTableState(json) {
 
-							var allAvailableRadicals = json[0].allAvailableRadicals;
+							var allAvailableRadicals = json.allAvailableRadicals;
 							
 							$('#radicalTableId td').each(function() {
 								
@@ -156,28 +156,49 @@
 								}
 							});
 
-							var kanjiFromRadicals = json[0].kanjiFromRadicals;
-							var kanjiFromRadicalsMore = json[0].kanjiFromRadicalsMore;
+							var kanjiFromRadicals = json.kanjiFromRadicals;
+							var kanjiFromRadicalsMore = json.kanjiFromRadicalsMore;
 
 							if (kanjiFromRadicals != null && kanjiFromRadicals.length > 0) {
-								$('#radicalTablePreviewId tr:first').empty();
+								$('#radicalTableFoundId').empty();
+								$('#radicalTableFoundId').css("width", "");
+
+								var currentStrokeCount = null;
+								var strokeCountCounter = 0;
 
 								$.each(kanjiFromRadicals, function(key, value) {
-									$('#radicalTablePreviewId tr:first').append("<td style='padding: 5px; font-size: 250%; text-align: center; border: 1px solid black;'>" + value + '</td>');
+									
+									if (strokeCountCounter == 0) {
+										$('#radicalTableFoundId').append("<tr></tr>");
+									}
+
+									if (currentStrokeCount != value.strokeCount) {
+										$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: 200%; text-align: center; border: 1px solid black; background-color: #CCCCCC">' + value.strokeCount + "</td>");
+
+										currentStrokeCount = value.strokeCount;
+										strokeCountCounter++;
+									}
+
+									if (strokeCountCounter == 28) {
+										$('#radicalTableFoundId').append("<tr></tr>");
+
+										strokeCountCounter = 0;
+									}
+
+									$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;">' + value.kanji + "</td>");								
+
+									strokeCountCounter++;
+
+									if (strokeCountCounter == 28) {
+										strokeCountCounter = 0;
+									}									
 							    });
-
-							    if (kanjiFromRadicalsMore == true) {
-							    	$('#radicalTablePreviewId tr:first').append("<td style='padding: 5px; text-align: center; border: 1px solid black;'>...</td>");
-							    }
-
-								// $('#radicalTablePreviewDivId').css("display", "show");
 							    
 							} else {
-								$('#radicalTablePreviewId tr:first').empty();
+								$('#radicalTableFoundId').empty();
 
-								$('#radicalTablePreviewId tr:first').append("<td style='padding: 5px; text-align: center'></td>");
-								
-								//$('#radicalTablePreviewDivId').css("display", "none");
+								$('#radicalTableFoundId').css("width", "100%");
+								$('#radicalTableFoundId').append('<tr style="width: 100%"><td style="padding: 5px; text-align: left"><spring:message code="kanjiDictionary.page.search.radicals.noFound" /></td></tr>');								
 							}
 						}
 
@@ -232,8 +253,8 @@
             		
             		<center>
             		
-            		<c:set var="currentStrokeCount" value="" />
-            		<c:set var="strokeCountCounter" value="0" />
+            			<c:set var="currentStrokeCount" value="" />
+            			<c:set var="strokeCountCounter" value="0" />
       		
 	            		<table id="radicalTableId">
 	            			<c:forEach items="${radicalList}" var="currentRadical">
@@ -271,12 +292,10 @@
 					</center>
 					
 					<div id="radicalTablePreviewDivId" style="padding-top: 10px;">
-						<h4><spring:message code="kanjiDictionary.page.search.radicals.preview" /></h4>
+						<h4><spring:message code="kanjiDictionary.page.search.radicals.found" /></h4>
 						
 						<center>
-							<table id="radicalTablePreviewId">
-								<tr>								
-								</tr>							
+							<table id="radicalTableFoundId">
 							</table>						
 						</center>					
 					</div>
