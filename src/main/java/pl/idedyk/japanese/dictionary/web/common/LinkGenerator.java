@@ -35,6 +35,8 @@ public class LinkGenerator {
 	
 	public static String generateKanjiDetailsLink(String contextPath, KanjiEntry kanjiEntry) {
 		
+		// UWAGA: Jesli tu zmieniasz, zmien rowniez w pliku kanjiDictionary.jsp
+		
 		String linkTemplate = contextPath + "/kanjiDictionaryDetails/%ID%/%KANJI%";
 
 		String kanji = kanjiEntry.getKanji();

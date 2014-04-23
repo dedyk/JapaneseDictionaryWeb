@@ -185,7 +185,8 @@
 										strokeCountCounter = 0;
 									}
 
-									$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;">' + value.kanji + "</td>");								
+									$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;">' + 
+											'<a href=\'<c:out value="${pageContext.request.contextPath}" />/kanjiDictionaryDetails/' + value.id + '/' + value.kanji + '\'>' + value.kanji + "</a></td>");								
 
 									strokeCountCounter++;
 
