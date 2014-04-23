@@ -179,7 +179,7 @@
 										strokeCountCounter++;
 									}
 
-									if (strokeCountCounter == 28) {
+									if (strokeCountCounter == 29) {
 										$('#radicalTableFoundId').append("<tr></tr>");
 
 										strokeCountCounter = 0;
@@ -189,7 +189,7 @@
 
 									strokeCountCounter++;
 
-									if (strokeCountCounter == 28) {
+									if (strokeCountCounter == 29) {
 										strokeCountCounter = 0;
 									}									
 							    });
@@ -238,6 +238,13 @@
 
 								success: function( json ) {
 									updateRadicalsTableState(json);
+
+									if (selectedRadicalIndexOf == -1) {
+
+										$('html, body').animate({
+								        	scrollTop: $("#radicalTableFoundDivId").offset().top
+								    	}, 1000);
+									}
 								},
 
 								error: function( xhr, status, errorThrown ) {
@@ -291,7 +298,7 @@
 	            		</table>            		
 					</center>
 					
-					<div id="radicalTablePreviewDivId" style="padding-top: 10px;">
+					<div id="radicalTableFoundDivId" style="padding-top: 10px;">
 						<h4><spring:message code="kanjiDictionary.page.search.radicals.found" /></h4>
 						
 						<center>
