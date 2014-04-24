@@ -205,7 +205,6 @@
 
 						function updateSelectedRadicals(radicalTd) {
 
-
 							if (radicalTd != null) {
 
 								var selectedRadicalTd = $(radicalTd);
@@ -307,7 +306,7 @@
 							</table>						
 						</center>					
 					</div>
-			
+								
         		</div>
     		</div>
 		</div>	
@@ -330,6 +329,17 @@
 		    	}, 1000);
 				</c:if>
 
+				<c:if test="${sessionScope.selectedRadicals != null}">
+					selectedRadicals = [];
+					
+					<c:forEach items="${sessionScope.selectedRadicals}" var="currentRadical">
+					selectedRadicals.push('<c:out value="${currentRadical}" />');
+
+					$('#radicalTableId td').filter(function() { return $.text([this]) == '<c:out value="${currentRadical}" />'; }).css("background-color", "yellow");
+										
+					</c:forEach>			
+				</c:if>
+		
 				updateSelectedRadicals(null);
 
 			});

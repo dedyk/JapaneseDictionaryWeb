@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
@@ -51,7 +52,7 @@ public class KanjiDictionaryController extends CommonController {
 	}
 
 	@RequestMapping(value = "/kanjiDictionary", method = RequestMethod.GET)
-	public String start(Map<String, Object> model) {
+	public String start(Map<String, Object> model, HttpSession session) {
 		
 		// utworzenie model szukania
 		KanjiDictionarySearchModel kanjiDictionarySearchModel = new KanjiDictionarySearchModel();
@@ -65,7 +66,7 @@ public class KanjiDictionaryController extends CommonController {
 		model.put("command", kanjiDictionarySearchModel);
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
-		
+				
 		return "kanjiDictionary";
 	}
 	
@@ -175,7 +176,8 @@ public class KanjiDictionaryController extends CommonController {
 	
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
 			value = "/kanjiDictionary/showAvailableRadicals", method = RequestMethod.POST)
-	public @ResponseBody String showAvailableRadicals(@RequestParam(value="selectedRadicals[]", required=false) String[] selectedRadicals) {
+	public @ResponseBody String showAvailableRadicals(@RequestParam(value="selectedRadicals[]", required=false) String[] selectedRadicals,
+			HttpSession session) {
 
 		if (selectedRadicals == null) {
 			selectedRadicals = new String[] { };
@@ -228,6 +230,8 @@ public class KanjiDictionaryController extends CommonController {
 		}		
 		
 		jsonObject.put("kanjiFromRadicals", kanjiFromRadicalsJSON);
+		
+		session.setAttribute("selectedRadicals", selectedRadicals);
 				
 		return jsonObject.toString();
 	}
