@@ -45,7 +45,8 @@ public class WordDictionaryController extends CommonController {
 	@Autowired  
 	private WordDictionarySearchModelValidator wordDictionarySearchModelValidator;
 
-	@Autowired private MessageSource messageSource;
+	@Autowired
+	private MessageSource messageSource;
 	
 	@InitBinder(value = { "command" })
 	private void initBinder(WebDataBinder binder) {  
@@ -214,7 +215,7 @@ public class WordDictionaryController extends CommonController {
 	}
 	
 	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
-	public String start(@PathVariable("id") int id, @PathVariable("kanji") String kanji,
+	public String showWordDictionaryDetails(@PathVariable("id") int id, @PathVariable("kanji") String kanji,
 			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) {
 		
 		// pobranie slowa

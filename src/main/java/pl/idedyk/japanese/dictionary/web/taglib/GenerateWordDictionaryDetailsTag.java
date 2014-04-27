@@ -1488,9 +1488,7 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 		script.addHtmlElement(new Text(scriptBody.toString()));
 		
 		menuDiv.addHtmlElement(script);
-		
-		// http://jsfiddle.net/dKDJz/2/
-        
+		        
         return menuDiv;
 	}
 	

@@ -48,4 +48,14 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	<tag>
+		<name>generateKanjiDictionaryDetails</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.GenerateKanjiDictionaryDetailsTag</tagclass>
+		<info>Generuje szczegoly slowa</info>
+		<attribute>
+			<name>kanjiEntry</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 </taglib> 

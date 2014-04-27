@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,11 +15,13 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,6 +48,9 @@ public class KanjiDictionaryController extends CommonController {
 	
 	@Autowired  
 	private KanjiDictionarySearchModelValidator kanjiDictionarySearchModelValidator;
+	
+	@Autowired
+	private MessageSource messageSource;
 	
 	@InitBinder(value = { "command" })
 	private void initBinder(WebDataBinder binder) {  
@@ -234,5 +240,43 @@ public class KanjiDictionaryController extends CommonController {
 		session.setAttribute("selectedRadicals", selectedRadicals);
 				
 		return jsonObject.toString();
+	}
+	
+	@RequestMapping(value = "/kanjiDictionaryDetails/{id}/{kanji}", method = RequestMethod.GET)
+	public String showKanjiDictionaryDetails(@PathVariable("id") int id, @PathVariable("kanji") String kanji, Map<String, Object> model) {
+		
+		// pobranie kanji entry
+		KanjiEntry kanjiEntry = dictionaryManager.findKanji(kanji);
+				
+		int fixme = 1;		
+		// zrobic powrot
+		// logowanie
+		
+		// tytul strony
+		if (kanjiEntry != null) {
+			
+			logger.info("Znaleziono kanji dla zapytania o szczegóły kanji: " + kanjiEntry);
+			
+			String kanjiEntryKanji = kanjiEntry.getKanji();
+									
+			String pageTitle = messageSource.getMessage("kanjiDictionaryDetails.page.title", 
+					new Object[] { kanjiEntryKanji }, Locale.getDefault());
+			
+			model.put("pageTitle", pageTitle);
+			
+		} else {
+			
+			logger.info("Nie znaleziono kanji dla zapytania o szczegóły kanji: " + id + " / " + kanji);
+			
+			String pageTitle = messageSource.getMessage("kanjiDictionaryDetails.page.title", 
+					new Object[] { "-", "-", "-" }, Locale.getDefault());
+			
+			model.put("pageTitle", pageTitle);
+		}
+						
+		model.put("kanjiEntry", kanjiEntry);
+		model.put("selectedMenu", "kanjiDictionary");
+		
+		return "kanjiDictionaryDetails";
 	}
 }
