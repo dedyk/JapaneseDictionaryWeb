@@ -49,9 +49,15 @@ public class GenerateDrawStrokeDialog {
 
 		return script;		
 	}
-	
+
 	public static Div generateDrawStrokeDialog(DictionaryManager dictionaryManager, MessageSource messageSource,
 			String word, String dialogId) throws IOException {
+		
+		return generateDrawStrokeDialog(dictionaryManager, messageSource, word, dialogId, 200, 1.5f);		
+	}
+	
+	public static Div generateDrawStrokeDialog(DictionaryManager dictionaryManager, MessageSource messageSource,
+			String word, String dialogId, int height, float zoomFactory) throws IOException {
 		
 		String dialogTitle = messageSource.getMessage("common.generateDrawStrokeDiv.dialog.title", new String[] { word }, null);
 		
@@ -61,7 +67,6 @@ public class GenerateDrawStrokeDialog {
 		List<KanjivgEntry> strokePathsForWord = dictionaryManager.getStrokePathsForWord(word);
 
 		final int width = 900;
-		final int height = 200;
 		
 		// glowny div
 		Div drawStrokeDialogDiv = new Div("modal fade");
@@ -178,8 +183,8 @@ public class GenerateDrawStrokeDialog {
 		scriptDrawingSb.append("			\"strokeColor\": \"#262213\",\n");
 		scriptDrawingSb.append("	        \"viewBoxX\": 0,\n");
 		scriptDrawingSb.append("	        \"viewBoxY\": 0,\n");
-		scriptDrawingSb.append("	        \"viewBoxWidth\": " + (1.5 * (width - 80)) + ",\n");
-		scriptDrawingSb.append("	        \"viewBoxHeight\": " + (1.5 * (height - 80)) + ",\n");
+		scriptDrawingSb.append("	        \"viewBoxWidth\": " + (zoomFactory * (width - 80)) + ",\n");
+		scriptDrawingSb.append("	        \"viewBoxHeight\": " + (zoomFactory * (height - 80)) + ",\n");
 		scriptDrawingSb.append("	        \"viewBoxFit\": false\n");
 		scriptDrawingSb.append("		});\n");
 				
