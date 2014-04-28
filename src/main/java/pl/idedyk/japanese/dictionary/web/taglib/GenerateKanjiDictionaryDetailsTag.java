@@ -1,13 +1,11 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
 
 import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
@@ -15,16 +13,18 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
-import pl.idedyk.japanese.dictionary.web.html.A;
+import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
-import pl.idedyk.japanese.dictionary.web.html.Li;
-import pl.idedyk.japanese.dictionary.web.html.Script;
+import pl.idedyk.japanese.dictionary.web.html.Hr;
+import pl.idedyk.japanese.dictionary.web.html.Table;
+import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
-import pl.idedyk.japanese.dictionary.web.html.Ul;
+import pl.idedyk.japanese.dictionary.web.html.Tr;
+import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
 
-public class GenerateKanjiDictionaryDetailsTag extends TagSupport {
+public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -67,6 +67,9 @@ public class GenerateKanjiDictionaryDetailsTag extends TagSupport {
                         
             Div contentDiv = new Div("col-md-10");
             mainContentDiv.addHtmlElement(contentDiv);
+            
+            // generowanie informacji podstawowych
+            contentDiv.addHtmlElement(generateMainInfo(mainMenu));
 
             // dodaj menu
             mainContentDiv.addHtmlElement(generateMenu(mainMenu));
@@ -90,88 +93,164 @@ public class GenerateKanjiDictionaryDetailsTag extends TagSupport {
 		return pageHeader;
 	}
 	
-	private Div generateMenu(Menu mainMenu) {
+	private Div generateMainInfo(Menu mainMenu) throws IOException {
 		
-		Div menuDiv = new Div("col-md-2");
+		Div panelDiv = new Div("panel panel-default");
 		
-        Ul ul = new Ul(null, "width: 300px");
-		menuDiv.addHtmlElement(ul);
+		Div panelHeading = new Div("panel-heading");
+
+		// tytul sekcji
+		H h3Title = new H(3, "panel-title");
+		h3Title.setId("mainInfoId");
+
+		h3Title.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.dictionaryEntry.mainInfo")));
 		
-		ul.setId("sidebar");
+		Menu mainInfoMenu = new Menu(h3Title.getId(), getMessage("kanjiDictionaryDetails.page.dictionaryEntry.mainInfo"));
+		mainMenu.getChildMenu().add(mainInfoMenu);
 		
-		generateMenuSubMenu(ul, mainMenu.getChildMenu());
+		panelHeading.addHtmlElement(h3Title);
 		
-		Script script = new Script();
+		panelDiv.addHtmlElement(panelHeading);
 		
-		StringBuffer scriptBody = new StringBuffer();
+		// zawartosc sekcji
+		Div panelBody = new Div("panel-body");
+
+		// kanji
+		Div kanjiDiv = generateKanjiSection(mainInfoMenu);
+
+		panelBody.addHtmlElement(kanjiDiv);	
+		panelBody.addHtmlElement(new Hr());
+
 		
-		scriptBody.append("$(function() {\n");
-		scriptBody.append("$( \"#sidebar\" ).menu(); \n");
-		scriptBody.append("});\n\n");
+		
+		/*
 				
-		scriptBody.append("$(function() {\n");
-		scriptBody.append("\n");
-		scriptBody.append("    var $sidebar   = $(\"#sidebar\"), \n");
-		scriptBody.append("        $window    = $(window),\n");
-		scriptBody.append("        offset     = $sidebar.offset(),\n");
-		scriptBody.append("        topPadding = 25;\n");
-		scriptBody.append("\n");
-		scriptBody.append("    $window.scroll(function() {\n");
-		scriptBody.append("        if ($window.scrollTop() > offset.top) {\n");
-		scriptBody.append("            $sidebar.stop().animate({\n");
-		scriptBody.append("                marginTop: $window.scrollTop() - offset.top + topPadding\n");
-		scriptBody.append("            });\n");
-		scriptBody.append("        } else {\n");
-		scriptBody.append("            $sidebar.stop().animate({\n");
-		scriptBody.append("                marginTop: 0\n");
-		scriptBody.append("            });\n");
-		scriptBody.append("        }\n");
-		scriptBody.append("    });\n");
-		scriptBody.append("    \n");
-		scriptBody.append("})\n");
+		// znaczenie znakow kanji
+        Div knownKanjiDiv = generateKnownKanjiDiv(mainInfoMenu);
+        
+        if (knownKanjiDiv != null) {
+        	panelBody.addHtmlElement(knownKanjiDiv);
+        	panelBody.addHtmlElement(new Hr());
+        }
 		
-		script.addHtmlElement(new Text(scriptBody.toString()));
+		// czytanie
+		Div readingDiv = generateReadingSection(mainInfoMenu);
+		panelBody.addHtmlElement(readingDiv);
+		panelBody.addHtmlElement(new Hr());
 		
-		menuDiv.addHtmlElement(script);
-		        
-        return menuDiv;
+        // tlumaczenie
+        Div translate = generateTranslateSection(mainInfoMenu);
+        panelBody.addHtmlElement(translate);
+        
+        // generuj informacje dodatkowe
+        Div additionalInfo = generateAdditionalInfo(mainInfoMenu);
+
+        if (additionalInfo != null) {
+        	panelBody.addHtmlElement(new Hr());
+        	panelBody.addHtmlElement(additionalInfo);
+        }
+        
+        // czesc mowy
+        Div wordTypeDiv = generateWordType(mainInfoMenu);
+        
+        if (wordTypeDiv != null) {
+        	panelBody.addHtmlElement(new Hr());
+        	panelBody.addHtmlElement(wordTypeDiv);
+        }
+        
+        // dodatkowe atrybuty
+		Div additionalAttributeDiv = generateAttribute(mainInfoMenu);
+
+        if (additionalAttributeDiv != null) {
+        	panelBody.addHtmlElement(new Hr());
+        	panelBody.addHtmlElement(additionalAttributeDiv);
+        }
+        		
+		*/
+		
+		panelDiv.addHtmlElement(panelBody);
+		
+		return panelDiv;
 	}
 	
-	private Ul generateMenuSubMenu(Ul parentUl, List<Menu> menuList) {
+	private Div generateKanjiSection(Menu menu) throws IOException {
 		
-		Ul ul = null;
+		Div kanjiDiv = new Div();
 		
-		if (parentUl != null) {
-			ul = parentUl;
-			
-		} else {
-			ul = new Ul(null, "width: 370px");
-		}
-				
-		for (Menu currentMenuList : menuList) {
-			
-			Li li = new Li();
-			ul.addHtmlElement(li);
-			
-			A link = new A(null, "padding-bottom: 0px; padding-top: 0px");
-			li.addHtmlElement(link);
-			
-			link.setHref("#");
-			
-			link.setOnClick("$('html, body').animate({ " 
-					+ "scrollTop: $('#" + currentMenuList.getId() + "').offset().top - 15 " 
-					+ "}, 1000); return false; ");
-					
-			link.addHtmlElement(new Text(currentMenuList.getTitle()));
-			
-			if (currentMenuList.getChildMenu().size() > 0) {
-				li.addHtmlElement(generateMenuSubMenu(null, currentMenuList.getChildMenu()));
-			}
-		}		
+		final String kanjiDrawId = "kanjiDrawId";
 		
-		return ul;		
+		String kanji = kanjiEntry.getKanji();
+		        	
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// kanji - tytul
+    	Div kanjiTitleDiv = new Div("col-md-1");
+    	
+    	H kanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	kanjiTitleH4.setId("kanjiTitleId");
+    	
+    	kanjiTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.dictionaryEntry.kanji.title")));
+    	menu.getChildMenu().add(new Menu(kanjiTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.dictionaryEntry.kanji.title")));
+    	
+    	kanjiTitleDiv.addHtmlElement(kanjiTitleH4);
+    	
+    	row1Div.addHtmlElement(kanjiTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	kanjiDiv.addHtmlElement(row1Div);
+    	
+		// wiersz ze znakiem kanji
+    	Div row2Div = new Div("row");
+    	
+    	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+		
+    	// komorka ze znakiem kanji
+    	Div kanjiDivBody = new Div("col-md-10");
+
+    	// tabelka ze znakiem kanji
+		Table kanjiTable = new Table();
+
+		// znaki kanji
+		Tr kanjiKanjiTr = new Tr(null, "font-size: 300%; text-align:center;");
+		
+		Td kanjiKanjiTd = new Td();
+    	
+		kanjiKanjiTd.addHtmlElement(new Text(kanji));
+		kanjiKanjiTr.addHtmlElement(kanjiKanjiTd);
+
+		// przerwa
+		kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
+		
+		// komorka z guziczkiem
+		Td kanjiDrawButtonTd = new Td();
+
+		Div kanjiDrawButtonDivBody = new Div("col-md-1");
+		
+		Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
+				getMessage("kanjiDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
+
+		kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
+		kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
+
+		kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
+		kanjiTable.addHtmlElement(kanjiKanjiTr);
+		
+		kanjiDivBody.addHtmlElement(kanjiTable);
+		row2Div.addHtmlElement(kanjiDivBody);					
+		
+		kanjiDiv.addHtmlElement(row2Div);
+
+        // skrypt otwierajacy okienko
+        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId));
+        
+        // tworzenie okienka rysowania znaku kanji
+        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId));
+                
+        return kanjiDiv;
 	}
-	
+		
 	private String getMessage(String code) {
 		return messageSource.getMessage(code, null, Locale.getDefault());
 	}

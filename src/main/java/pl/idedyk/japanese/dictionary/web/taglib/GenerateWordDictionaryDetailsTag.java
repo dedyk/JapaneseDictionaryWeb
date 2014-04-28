@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
 
 import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
@@ -31,24 +30,20 @@ import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResult;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResultType;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
-import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
-import pl.idedyk.japanese.dictionary.web.html.Li;
-import pl.idedyk.japanese.dictionary.web.html.Script;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
-import pl.idedyk.japanese.dictionary.web.html.Ul;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
 
-public class GenerateWordDictionaryDetailsTag extends TagSupport {
+public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -1443,88 +1438,6 @@ public class GenerateWordDictionaryDetailsTag extends TagSupport {
 			
 			generateExampleResult(table, alternative);
 		}		
-	}
-
-	private Div generateMenu(Menu mainMenu) {
-		
-		Div menuDiv = new Div("col-md-2");
-		
-        Ul ul = new Ul(null, "width: 300px");
-		menuDiv.addHtmlElement(ul);
-		
-		ul.setId("sidebar");
-		
-		generateMenuSubMenu(ul, mainMenu.getChildMenu());
-		
-		Script script = new Script();
-		
-		StringBuffer scriptBody = new StringBuffer();
-		
-		scriptBody.append("$(function() {\n");
-		scriptBody.append("$( \"#sidebar\" ).menu(); \n");
-		scriptBody.append("});\n\n");
-				
-		scriptBody.append("$(function() {\n");
-		scriptBody.append("\n");
-		scriptBody.append("    var $sidebar   = $(\"#sidebar\"), \n");
-		scriptBody.append("        $window    = $(window),\n");
-		scriptBody.append("        offset     = $sidebar.offset(),\n");
-		scriptBody.append("        topPadding = 25;\n");
-		scriptBody.append("\n");
-		scriptBody.append("    $window.scroll(function() {\n");
-		scriptBody.append("        if ($window.scrollTop() > offset.top) {\n");
-		scriptBody.append("            $sidebar.stop().animate({\n");
-		scriptBody.append("                marginTop: $window.scrollTop() - offset.top + topPadding\n");
-		scriptBody.append("            });\n");
-		scriptBody.append("        } else {\n");
-		scriptBody.append("            $sidebar.stop().animate({\n");
-		scriptBody.append("                marginTop: 0\n");
-		scriptBody.append("            });\n");
-		scriptBody.append("        }\n");
-		scriptBody.append("    });\n");
-		scriptBody.append("    \n");
-		scriptBody.append("})\n");
-		
-		script.addHtmlElement(new Text(scriptBody.toString()));
-		
-		menuDiv.addHtmlElement(script);
-		        
-        return menuDiv;
-	}
-	
-	private Ul generateMenuSubMenu(Ul parentUl, List<Menu> menuList) {
-		
-		Ul ul = null;
-		
-		if (parentUl != null) {
-			ul = parentUl;
-			
-		} else {
-			ul = new Ul(null, "width: 370px");
-		}
-				
-		for (Menu currentMenuList : menuList) {
-			
-			Li li = new Li();
-			ul.addHtmlElement(li);
-			
-			A link = new A(null, "padding-bottom: 0px; padding-top: 0px");
-			li.addHtmlElement(link);
-			
-			link.setHref("#");
-			
-			link.setOnClick("$('html, body').animate({ " 
-					+ "scrollTop: $('#" + currentMenuList.getId() + "').offset().top - 15 " 
-					+ "}, 1000); return false; ");
-					
-			link.addHtmlElement(new Text(currentMenuList.getTitle()));
-			
-			if (currentMenuList.getChildMenu().size() > 0) {
-				li.addHtmlElement(generateMenuSubMenu(null, currentMenuList.getChildMenu()));
-			}
-		}		
-		
-		return ul;		
 	}
 	
 	private String getMessage(String code) {
