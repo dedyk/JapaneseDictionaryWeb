@@ -53,11 +53,11 @@ public class GenerateDrawStrokeDialog {
 	public static Div generateDrawStrokeDialog(DictionaryManager dictionaryManager, MessageSource messageSource,
 			String word, String dialogId) throws IOException {
 		
-		return generateDrawStrokeDialog(dictionaryManager, messageSource, word, dialogId, 200, 1.5f);		
+		return generateDrawStrokeDialog(dictionaryManager, messageSource, word, dialogId, 200, 1.5f, 400);		
 	}
 	
 	public static Div generateDrawStrokeDialog(DictionaryManager dictionaryManager, MessageSource messageSource,
-			String word, String dialogId, int height, float zoomFactory) throws IOException {
+			String word, String dialogId, int height, float zoomFactory, int duration) throws IOException {
 		
 		String dialogTitle = messageSource.getMessage("common.generateDrawStrokeDiv.dialog.title", new String[] { word }, null);
 		

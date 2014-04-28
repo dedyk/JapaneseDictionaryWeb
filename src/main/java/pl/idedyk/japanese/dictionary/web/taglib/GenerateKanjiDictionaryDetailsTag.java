@@ -246,7 +246,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
         kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId));
         
         // tworzenie okienka rysowania znaku kanji
-        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId, 300, 0.5f));
+        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId, 300, 0.5f, 500));
                 
         return kanjiDiv;
 	}
