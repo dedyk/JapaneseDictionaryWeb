@@ -146,7 +146,7 @@
 											if(d.onComplete !== null) d.onComplete.call($this);
 										}
 									}
-								});
+								}, i);
 
 						}, d.playhead);
 
@@ -257,7 +257,7 @@
 	
  
 
-	var draw = function( settings ) {
+	var draw = function( settings, pathNo ) {
 
 		var canvas   = settings.canvas, 
 			pathstr  = settings.pathstr, 
@@ -281,7 +281,21 @@
 		if (typeof settings.translateX != 'undefined') {
 			path = path.translate(settings.translateX, 0);
 		}
-
+		
+		if (path.attrs.path[0][0] == "M") {
+			
+			var x = path.attrs.path[0][1] + 7;
+			var y = path.attrs.path[0][2] - 9;
+			
+			var textNode = canvas.text(x, y, (pathNo + 1));
+			
+			textNode.attr({
+				'fill' : '#00ff00',
+				"font-size": 7, 
+				"font-family": "Arial, Helvetica, sans-serif"
+				});
+		}		
+		
 		var interval_id = setInterval( function()
 		{
 			var elapsed_time = new Date().getTime() - start_time,
