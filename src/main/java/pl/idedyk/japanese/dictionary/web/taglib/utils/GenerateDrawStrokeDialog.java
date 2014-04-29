@@ -53,11 +53,11 @@ public class GenerateDrawStrokeDialog {
 	public static Div generateDrawStrokeDialog(DictionaryManager dictionaryManager, MessageSource messageSource,
 			String word, String dialogId) throws IOException {
 		
-		return generateDrawStrokeDialog(dictionaryManager, messageSource, word, dialogId, 200, 1.5f, 400);		
+		return generateDrawStrokeDialog(dictionaryManager, messageSource, word, dialogId, new GenerateDrawStrokeDialogParams());		
 	}
 	
 	public static Div generateDrawStrokeDialog(DictionaryManager dictionaryManager, MessageSource messageSource,
-			String word, String dialogId, int height, float zoomFactory, int duration) throws IOException {
+			String word, String dialogId, GenerateDrawStrokeDialogParams params) throws IOException {
 		
 		String dialogTitle = messageSource.getMessage("common.generateDrawStrokeDiv.dialog.title", new String[] { word }, null);
 		
@@ -65,19 +65,17 @@ public class GenerateDrawStrokeDialog {
 		String closeButtonTitle = messageSource.getMessage("common.generateDrawStrokeDiv.dialog.close", null, Locale.getDefault());
 		
 		List<KanjivgEntry> strokePathsForWord = dictionaryManager.getStrokePathsForWord(word);
-
-		final int width = 900;
 		
 		// glowny div
 		Div drawStrokeDialogDiv = new Div("modal fade");
 		
 		drawStrokeDialogDiv.setId(dialogId);
-		drawStrokeDialogDiv.setWidth(width);
-		drawStrokeDialogDiv.setHeight(height);
+		drawStrokeDialogDiv.setWidth(params.width);
+		drawStrokeDialogDiv.setHeight(params.height);
 		
 		Div modalDialog = new Div("modal-dialog");
 
-		modalDialog.setStyle("width: " + width + "px");
+		modalDialog.setStyle("width: " + params.width + "px");
 		drawStrokeDialogDiv.addHtmlElement(modalDialog);
 		
 		Div modalContent = new Div("modal-content");
@@ -155,8 +153,9 @@ public class GenerateDrawStrokeDialog {
 
 				scriptDrawingSb.append("				{\n");
 				scriptDrawingSb.append("					\"path\": \"" + currentStrokePath + "\",\n");
-				scriptDrawingSb.append("					\"duration\": 400,\n");
-				scriptDrawingSb.append("					\"translateX\": " + (currentStrokePathsIdx * 100) + "\n");
+				scriptDrawingSb.append("					\"duration\": " + params.duration + ",\n");
+				scriptDrawingSb.append("					\"translateX\": " + (currentStrokePathsIdx * 100) + ",\n");
+				scriptDrawingSb.append("					\"addPathNum\": " + params.addPathNum + "\n");
 		        
 		        if (strokePathIdx != strokePaths.size() - 1 || currentStrokePathsIdx < strokePathsForWord.size()) {
 		        	scriptDrawingSb.append("				},\n");
@@ -169,8 +168,8 @@ public class GenerateDrawStrokeDialog {
 
 		scriptDrawingSb.append("	        ],\n");
 		scriptDrawingSb.append("	        \"dimensions\": {\n");
-		scriptDrawingSb.append("	            \"width\": " + (width - 80) + ",\n");
-		scriptDrawingSb.append("	            \"height\": " + (height - 80) + "\n");
+		scriptDrawingSb.append("	            \"width\": " + (params.width - 80) + ",\n");
+		scriptDrawingSb.append("	            \"height\": " + (params.height - 80) + "\n");
 		scriptDrawingSb.append("	        }\n");
 		scriptDrawingSb.append("	    }\n");
 		scriptDrawingSb.append("	};\n");
@@ -183,8 +182,8 @@ public class GenerateDrawStrokeDialog {
 		scriptDrawingSb.append("			\"strokeColor\": \"#262213\",\n");
 		scriptDrawingSb.append("	        \"viewBoxX\": 0,\n");
 		scriptDrawingSb.append("	        \"viewBoxY\": 0,\n");
-		scriptDrawingSb.append("	        \"viewBoxWidth\": " + (zoomFactory * (width - 80)) + ",\n");
-		scriptDrawingSb.append("	        \"viewBoxHeight\": " + (zoomFactory * (height - 80)) + ",\n");
+		scriptDrawingSb.append("	        \"viewBoxWidth\": " + (params.zoomFactory * (params.width - 80)) + ",\n");
+		scriptDrawingSb.append("	        \"viewBoxHeight\": " + (params.zoomFactory * (params.height - 80)) + ",\n");
 		scriptDrawingSb.append("	        \"viewBoxFit\": false\n");
 		scriptDrawingSb.append("		});\n");
 				
@@ -201,5 +200,18 @@ public class GenerateDrawStrokeDialog {
 		drawStrokeDialogDiv.addHtmlElement(scriptDrawing);
 		
 		return drawStrokeDialogDiv;
+	}
+	
+	public static class GenerateDrawStrokeDialogParams {
+		
+		public int width = 900;
+		
+		public int height = 200;
+		
+		public float zoomFactory = 1.5f;
+		
+		public int duration = 400;
+		
+		public boolean addPathNum = false;
 	}
 }

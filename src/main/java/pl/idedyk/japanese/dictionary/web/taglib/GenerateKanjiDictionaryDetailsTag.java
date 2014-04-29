@@ -22,6 +22,7 @@ import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
+import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog.GenerateDrawStrokeDialogParams;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
 
 public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
@@ -246,7 +247,14 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
         kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId));
         
         // tworzenie okienka rysowania znaku kanji
-        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId, 300, 0.5f, 500));
+        GenerateDrawStrokeDialogParams generateDrawStrokeDialogParams = new GenerateDrawStrokeDialogParams();
+        
+        generateDrawStrokeDialogParams.height = 300;
+        generateDrawStrokeDialogParams.zoomFactory = 0.5f;
+        generateDrawStrokeDialogParams.duration = 700;
+        generateDrawStrokeDialogParams.addPathNum = true;
+        
+        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId, generateDrawStrokeDialogParams));
                 
         return kanjiDiv;
 	}

@@ -133,7 +133,8 @@
 								'pathstr'  : p, 
 								'duration' : val.duration, 
 								'attr'     : applyStyles( d, val ),
-								'translateX': val.translateX,
+								'translateX' : val.translateX,
+								'addPathNum' : val.addPathNum,
 								'callback' : function (e) {  
 
 									// remove reference to setTimeOut
@@ -297,7 +298,7 @@
 				if ( callback !== undefined ) callback();
 				guide_path.remove();
 				
-				if (path.attrs.path[0][0] == "M") {
+				if (settings.addPathNum == true && path.attrs.path[0][0] == "M") {
 					
 					var x = path.attrs.path[0][1] + 7;
 					var y = path.attrs.path[0][2] - 9;
