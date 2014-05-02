@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
@@ -11,7 +12,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
+import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Div;
@@ -119,9 +122,25 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		// kanji
 		Div kanjiDiv = generateKanjiSection(mainInfoMenu);
 
-		panelBody.addHtmlElement(kanjiDiv);	
-		panelBody.addHtmlElement(new Hr());
+		panelBody.addHtmlElement(kanjiDiv);
+		
+		// liczba kresek
+		Div strokeCountDiv = generateStrokeCountSection(mainInfoMenu);
 
+		if (strokeCountDiv != null) {
+			panelBody.addHtmlElement(new Hr());
+			
+			panelBody.addHtmlElement(strokeCountDiv);			
+		}
+		
+		// elementy podstawowe
+		Div radicalsDiv = generateRadicalsSection(mainInfoMenu);
+		
+		if (radicalsDiv != null) {
+			panelBody.addHtmlElement(new Hr());
+			
+			panelBody.addHtmlElement(radicalsDiv);			
+		}
 		
 		
 		/*
@@ -220,22 +239,29 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
     	
 		kanjiKanjiTd.addHtmlElement(new Text(kanji));
 		kanjiKanjiTr.addHtmlElement(kanjiKanjiTd);
-
-		// przerwa
-		kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
+		
+		final KanjivgEntry kanjivsEntry = kanjiEntry.getKanjivgEntry();
 		
 		// komorka z guziczkiem
-		Td kanjiDrawButtonTd = new Td();
+		if (kanjivsEntry != null && kanjivsEntry.getStrokePaths().size() > 0) {
+			
+			// przerwa
+			kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
 
-		Div kanjiDrawButtonDivBody = new Div("col-md-1");
+			Td kanjiDrawButtonTd = new Td();
+
+			Div kanjiDrawButtonDivBody = new Div("col-md-1");
+
+			Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
+					getMessage("kanjiDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
+
+			kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
+			kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
+
+			kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
+			
+		}
 		
-		Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
-				getMessage("kanjiDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
-
-		kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
-		kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
-
-		kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
 		kanjiTable.addHtmlElement(kanjiKanjiTr);
 		
 		kanjiDivBody.addHtmlElement(kanjiTable);
@@ -243,20 +269,122 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		kanjiDiv.addHtmlElement(row2Div);
 
-        // skrypt otwierajacy okienko
-        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId));
-        
-        // tworzenie okienka rysowania znaku kanji
-        GenerateDrawStrokeDialogParams generateDrawStrokeDialogParams = new GenerateDrawStrokeDialogParams();
-        
-        generateDrawStrokeDialogParams.height = 300;
-        generateDrawStrokeDialogParams.zoomFactory = 0.5f;
-        generateDrawStrokeDialogParams.duration = 700;
-        generateDrawStrokeDialogParams.addPathNum = true;
-        
-        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId, generateDrawStrokeDialogParams));
-                
+		if (kanjivsEntry != null && kanjivsEntry.getStrokePaths().size() > 0) {
+			
+			// skrypt otwierajacy okienko
+			kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId));
+
+			// tworzenie okienka rysowania znaku kanji
+			GenerateDrawStrokeDialogParams generateDrawStrokeDialogParams = new GenerateDrawStrokeDialogParams();
+
+			generateDrawStrokeDialogParams.height = 300;
+			generateDrawStrokeDialogParams.zoomFactory = 0.5f;
+			generateDrawStrokeDialogParams.duration = 700;
+			generateDrawStrokeDialogParams.addPathNum = true;
+
+			kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId, generateDrawStrokeDialogParams));
+			
+		}
+		
         return kanjiDiv;
+	}
+	
+	private Div generateStrokeCountSection(Menu menu) {
+		
+		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
+		
+		if (kanjiDic2Entry == null) {
+			return null;
+		}
+				
+		Div strokeCountDiv = new Div();
+		
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tytul
+    	Div strokeCountTitleDiv = new Div("col-md-10");
+    	
+    	H strokeCountTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	strokeCountTitleH4.setId("strokeCountId");
+    	
+    	strokeCountTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.dictionaryEntry.strokeCount.title")));
+    	menu.getChildMenu().add(new Menu(strokeCountTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.dictionaryEntry.strokeCount.title")));
+    	
+    	strokeCountTitleDiv.addHtmlElement(strokeCountTitleH4);
+    	
+    	row1Div.addHtmlElement(strokeCountTitleDiv);
+
+    	// dodaj wiersz z tytulem
+    	strokeCountDiv.addHtmlElement(row1Div);
+
+    	// wiersz z liczba kresek
+    	Div row2Div = new Div("row");
+    	strokeCountDiv.addHtmlElement(row2Div);
+
+		row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+		
+		Div strokeCountTextDiv = new Div("col-md-11");
+		row2Div.addHtmlElement(strokeCountTextDiv);
+
+		H strokeCountTextH4 = new H(4);
+		strokeCountTextDiv.addHtmlElement(strokeCountTextH4);
+		
+		strokeCountTextH4.addHtmlElement(new Text(String.valueOf(kanjiDic2Entry.getStrokeCount())));
+						
+		return strokeCountDiv;
+	}
+	
+	private Div generateRadicalsSection(Menu menu) throws IOException {
+		
+		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
+		
+		if (kanjiDic2Entry == null) {
+			return null;
+		}
+		
+		List<String> radicals = kanjiDic2Entry.getRadicals();
+		
+		Div radicalsDiv = new Div();
+				
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tytul
+    	Div radicalsTitleDiv = new Div("col-md-10");
+    	
+    	H radicalsTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	radicalsTitleH4.setId("radicalsId");
+    	
+    	radicalsTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.dictionaryEntry.radicals.title")));
+    	menu.getChildMenu().add(new Menu(radicalsTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.dictionaryEntry.radicals.title")));    	
+    	
+    	radicalsTitleDiv.addHtmlElement(radicalsTitleH4);
+    	
+    	row1Div.addHtmlElement(radicalsTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	radicalsDiv.addHtmlElement(row1Div);
+
+		// wiersz z elementami podstawowywmi
+    	Div row2Div = new Div("row");
+    	radicalsDiv.addHtmlElement(row2Div);
+    	
+    	for (int idx = 0; idx < radicals.size(); ++idx) {
+    		row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    		
+    		Div currentRadicalDiv = new Div("col-md-11");
+    		row2Div.addHtmlElement(currentRadicalDiv);
+    		
+    		H currentRadicalH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+    		currentRadicalH.addHtmlElement(new Text(radicals.get(idx)));
+    		
+    		currentRadicalDiv.addHtmlElement(currentRadicalH);
+    	}
+		
+		return radicalsDiv;
 	}
 		
 	private String getMessage(String code) {
@@ -274,6 +402,12 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	}
 
 	public void setKanjiEntry(KanjiEntry kanjiEntry) {
+		
+		int fixme = 1; // sprawdzic
+		
+		//kanjiEntry.setKanjiDic2Entry(null);
+		//kanjiEntry.setKanjivgEntry(null);
+				
 		this.kanjiEntry = kanjiEntry;
 	}
 	
@@ -284,47 +418,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		List<IScreenItem> report = new ArrayList<IScreenItem>();
 		
 		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
-
-		// Kanji		
-		report.add(new TitleItem(getString(R.string.kanji_details_kanji_label), 0));
-		
-		StringValue kanjiStringValue = new StringValue(kanjiEntry.getKanji(), 35.0f, 0);
-		
-		report.add(kanjiStringValue);
-		
-		final KanjivgEntry kanjivsEntry = kanjiEntry.getKanjivgEntry();
-		
-		if (kanjivsEntry != null && kanjivsEntry.getStrokePaths().size() > 0) {
-			report.add(new StringValue(getString(R.string.kanji_details_kanji_info), 12.0f, 0));
-			
-			kanjiStringValue.setOnClickListener(new OnClickListener() {
 				
-				public void onClick(View view) {
-
-					StrokePathInfo strokePathInfo = new StrokePathInfo();
-					
-					List<KanjivgEntry> kanjivsEntryStrokePathsList = new ArrayList<KanjivgEntry>();
-					kanjivsEntryStrokePathsList.add(kanjivsEntry);
-					strokePathInfo.setStrokePaths(kanjivsEntryStrokePathsList);
-					
-					Intent intent = new Intent(getApplicationContext(), SodActivity.class);
-										
-					intent.putExtra("strokePathsInfo", strokePathInfo);
-					
-					startActivity(intent);
-				}
-			});
-		}
-		
-		// Stroke count
-		report.add(new TitleItem(getString(R.string.kanji_details_stroke_count_label), 0));
-		
-		if (kanjiDic2Entry != null) {
-			report.add(new StringValue(String.valueOf(kanjiDic2Entry.getStrokeCount()), 20.0f, 0));
-		} else {
-			report.add(new StringValue("-", 20.0f, 0));
-		}
-		
 		// Radicals
 		report.add(new TitleItem(getString(R.string.kanji_details_radicals), 0));
 		

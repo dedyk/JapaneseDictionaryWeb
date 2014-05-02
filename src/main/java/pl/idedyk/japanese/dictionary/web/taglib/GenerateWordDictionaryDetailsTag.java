@@ -857,7 +857,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	Div row1Div = new Div("row");
     	
     	// znaczenie znakow kanji - tytul
-    	Div knownKanjiTitleDiv = new Div("col-md-3");
+    	Div knownKanjiTitleDiv = new Div("col-md-10");
     	
     	H knownKanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	
