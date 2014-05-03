@@ -175,13 +175,13 @@ public class WordDictionaryController extends CommonController {
 		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
 		
 		if (dictionaryTypeStringList.size() == addableDictionaryEntryList.size()) {			
-			findWordRequest.dictionaryEntryList = null;
+			findWordRequest.dictionaryEntryTypeList = null;
 			
 		} else {
-			findWordRequest.dictionaryEntryList = new ArrayList<DictionaryEntryType>();
+			findWordRequest.dictionaryEntryTypeList = new ArrayList<DictionaryEntryType>();
 			
 			for (String currentDictionaryTypeString : dictionaryTypeStringList) {
-				findWordRequest.dictionaryEntryList.add(DictionaryEntryType.valueOf(currentDictionaryTypeString));
+				findWordRequest.dictionaryEntryTypeList.add(DictionaryEntryType.valueOf(currentDictionaryTypeString));
 			}			
 		}		
 		
