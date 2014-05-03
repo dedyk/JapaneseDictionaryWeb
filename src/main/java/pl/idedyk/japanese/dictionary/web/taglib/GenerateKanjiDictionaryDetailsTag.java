@@ -12,6 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
@@ -55,7 +56,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
             	
             	Div errorDiv = new Div("alert alert-danger");
             	
-            	errorDiv.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.dictionaryEntry.null")));
+            	errorDiv.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.null")));
             	
             	errorDiv.render(out);
             	
@@ -92,7 +93,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		H pageHeader = new H(4);
 		
-		pageHeader.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.dictionaryEntry.title")));
+		pageHeader.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.title")));
 		
 		return pageHeader;
 	}
@@ -107,9 +108,9 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		H h3Title = new H(3, "panel-title");
 		h3Title.setId("mainInfoId");
 
-		h3Title.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.dictionaryEntry.mainInfo")));
+		h3Title.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.mainInfo")));
 		
-		Menu mainInfoMenu = new Menu(h3Title.getId(), getMessage("kanjiDictionaryDetails.page.dictionaryEntry.mainInfo"));
+		Menu mainInfoMenu = new Menu(h3Title.getId(), getMessage("kanjiDictionaryDetails.page.kanjiEntry.mainInfo"));
 		mainMenu.getChildMenu().add(mainInfoMenu);
 		
 		panelHeading.addHtmlElement(h3Title);
@@ -142,7 +143,48 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			panelBody.addHtmlElement(radicalsDiv);			
 		}
 		
+		// czytanie kun'yomi
+		Div kunYomiDiv = generateKunYomiSection(mainInfoMenu);
+
+		if (kunYomiDiv != null) {
+			panelBody.addHtmlElement(new Hr());
+			
+			panelBody.addHtmlElement(kunYomiDiv);
+		}
+
+		// czytanie on'yomi
+		Div onYomiDiv = generateOnYomiSection(mainInfoMenu);
+
+		if (onYomiDiv != null) {
+			panelBody.addHtmlElement(new Hr());
+			
+			panelBody.addHtmlElement(onYomiDiv);
+		}
 		
+		// tlumaczenie
+		Div translateDiv = generateTranslateSection(mainInfoMenu);
+		
+		panelBody.addHtmlElement(new Hr());		
+		panelBody.addHtmlElement(translateDiv);
+		
+		// informacje dodatkowe
+		Div infoDiv = generateInfoSection(mainInfoMenu);
+		
+		if (infoDiv != null) {
+			panelBody.addHtmlElement(new Hr());
+			
+			panelBody.addHtmlElement(infoDiv);			
+		}
+		
+		// wystepowanie znaku
+		Div kanjiGroups = generateKanjiGroupsSection(mainInfoMenu);
+		
+		if (kanjiGroups != null) {
+			panelBody.addHtmlElement(new Hr());
+			
+			panelBody.addHtmlElement(kanjiGroups);			
+		}
+				
 		/*
 				
 		// znaczenie znakow kanji
@@ -211,8 +253,8 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
     	
     	kanjiTitleH4.setId("kanjiTitleId");
     	
-    	kanjiTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.dictionaryEntry.kanji.title")));
-    	menu.getChildMenu().add(new Menu(kanjiTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.dictionaryEntry.kanji.title")));
+    	kanjiTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.kanji.title")));
+    	menu.getChildMenu().add(new Menu(kanjiTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.kanjiEntry.kanji.title")));
     	
     	kanjiTitleDiv.addHtmlElement(kanjiTitleH4);
     	
@@ -253,7 +295,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			Div kanjiDrawButtonDivBody = new Div("col-md-1");
 
 			Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
-					getMessage("kanjiDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
+					getMessage("kanjiDictionaryDetails.page.kanjiEntry.kanji.showKanjiDraw"));
 
 			kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
 			kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
@@ -309,8 +351,8 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
     	
     	strokeCountTitleH4.setId("strokeCountId");
     	
-    	strokeCountTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.dictionaryEntry.strokeCount.title")));
-    	menu.getChildMenu().add(new Menu(strokeCountTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.dictionaryEntry.strokeCount.title")));
+    	strokeCountTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.strokeCount.title")));
+    	menu.getChildMenu().add(new Menu(strokeCountTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.kanjiEntry.strokeCount.title")));
     	
     	strokeCountTitleDiv.addHtmlElement(strokeCountTitleH4);
     	
@@ -358,8 +400,8 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
     	
     	radicalsTitleH4.setId("radicalsId");
     	
-    	radicalsTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.dictionaryEntry.radicals.title")));
-    	menu.getChildMenu().add(new Menu(radicalsTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.dictionaryEntry.radicals.title")));    	
+    	radicalsTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.radicals.title")));
+    	menu.getChildMenu().add(new Menu(radicalsTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.kanjiEntry.radicals.title")));    	
     	
     	radicalsTitleDiv.addHtmlElement(radicalsTitleH4);
     	
@@ -385,6 +427,250 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
     	}
 		
 		return radicalsDiv;
+	}
+	
+	private Div generateKunYomiSection(Menu menu) {
+		
+		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
+		
+		if (kanjiDic2Entry == null) {
+			return null;
+		}
+		
+		List<String> kunReading = kanjiDic2Entry.getKunReading();
+		
+		Div kunReadingDiv = new Div();
+				
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tytul
+    	Div kunReadingTitleDiv = new Div("col-md-10");
+    	
+    	H kunReadingTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	kunReadingTitleH4.setId("kunReadingId");
+    	
+    	kunReadingTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.kunReading.title")));
+    	menu.getChildMenu().add(new Menu(kunReadingTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.kanjiEntry.kunReading.title")));    	
+    	
+    	kunReadingTitleDiv.addHtmlElement(kunReadingTitleH4);
+    	
+    	row1Div.addHtmlElement(kunReadingTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	kunReadingDiv.addHtmlElement(row1Div);
+
+		// wiersz z czytaniem kun
+    	Div row2Div = new Div("row");
+    	kunReadingDiv.addHtmlElement(row2Div);
+    	
+    	for (int idx = 0; idx < kunReading.size(); ++idx) {
+    		row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    		
+    		Div currentKunReadingDiv = new Div("col-md-11");
+    		row2Div.addHtmlElement(currentKunReadingDiv);
+    		
+    		H currentKunReadingH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+    		currentKunReadingH.addHtmlElement(new Text(kunReading.get(idx)));
+    		
+    		currentKunReadingDiv.addHtmlElement(currentKunReadingH);
+    	}
+		
+		return kunReadingDiv;		
+	}
+	
+	private Div generateOnYomiSection(Menu menu) {
+		
+		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
+		
+		if (kanjiDic2Entry == null) {
+			return null;
+		}
+		
+		List<String> onReading = kanjiDic2Entry.getOnReading();
+		
+		Div onReadingDiv = new Div();
+				
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tytul
+    	Div onReadingTitleDiv = new Div("col-md-10");
+    	
+    	H onReadingTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	onReadingTitleH4.setId("onReadingId");
+    	
+    	onReadingTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.onReading.title")));
+    	menu.getChildMenu().add(new Menu(onReadingTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.kanjiEntry.onReading.title")));    	
+    	
+    	onReadingTitleDiv.addHtmlElement(onReadingTitleH4);
+    	
+    	row1Div.addHtmlElement(onReadingTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	onReadingDiv.addHtmlElement(row1Div);
+
+		// wiersz z czytaniem on
+    	Div row2Div = new Div("row");
+    	onReadingDiv.addHtmlElement(row2Div);
+    	
+    	for (int idx = 0; idx < onReading.size(); ++idx) {
+    		row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    		
+    		Div currentOnReadingDiv = new Div("col-md-11");
+    		row2Div.addHtmlElement(currentOnReadingDiv);
+    		
+    		H currentOnReadingH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+    		currentOnReadingH.addHtmlElement(new Text(onReading.get(idx)));
+    		
+    		currentOnReadingDiv.addHtmlElement(currentOnReadingH);
+    	}
+		
+		return onReadingDiv;		
+	}
+	
+	private Div generateTranslateSection(Menu menu) {
+				
+		List<String> translate = kanjiEntry.getPolishTranslates();
+		
+		Div translateDiv = new Div();
+				
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tytul
+    	Div translateTitleDiv = new Div("col-md-10");
+    	
+    	H translateTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	translateTitleH4.setId("translateId");
+    	
+    	translateTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.translate.title")));
+    	menu.getChildMenu().add(new Menu(translateTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.kanjiEntry.translate.title")));    	
+    	
+    	translateTitleDiv.addHtmlElement(translateTitleH4);
+    	
+    	row1Div.addHtmlElement(translateTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	translateDiv.addHtmlElement(row1Div);
+
+		// wiersz z tlumaczeniem
+    	Div row2Div = new Div("row");
+    	translateDiv.addHtmlElement(row2Div);
+    	
+    	for (int idx = 0; idx < translate.size(); ++idx) {
+    		row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    		
+    		Div currentTranslateDiv = new Div("col-md-11");
+    		row2Div.addHtmlElement(currentTranslateDiv);
+    		
+    		H currentTranslateH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+    		currentTranslateH.addHtmlElement(new Text(translate.get(idx)));
+    		
+    		currentTranslateDiv.addHtmlElement(currentTranslateH);
+    	}
+		
+		return translateDiv;		
+	}
+	
+	private Div generateInfoSection(Menu menu) {
+		
+		String info = kanjiEntry.getInfo();
+		
+		if (info == null || info.length() <= 0) {
+			return null;
+		}
+						
+		Div infoDiv = new Div();
+		
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tytul
+    	Div infoTitleDiv = new Div("col-md-10");
+    	
+    	H infoTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	infoTitleH4.setId("infoId");
+    	
+    	infoTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.info.title")));
+    	menu.getChildMenu().add(new Menu(infoTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.kanjiEntry.info.title")));
+    	
+    	infoTitleDiv.addHtmlElement(infoTitleH4);
+    	
+    	row1Div.addHtmlElement(infoTitleDiv);
+
+    	// dodaj wiersz z tytulem
+    	infoDiv.addHtmlElement(row1Div);
+
+    	// wiersz z informacjami dodatkowymi
+    	Div row2Div = new Div("row");
+    	infoDiv.addHtmlElement(row2Div);
+
+		row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+		
+		Div infoTextDiv = new Div("col-md-11");
+		row2Div.addHtmlElement(infoTextDiv);
+
+		H infoTextH4 = new H(4);
+		infoTextDiv.addHtmlElement(infoTextH4);
+		
+		infoTextH4.addHtmlElement(new Text(String.valueOf(info)));
+						
+		return infoDiv;
+	}
+	
+	private Div generateKanjiGroupsSection(Menu menu) {
+		
+		// kanji groups
+		List<GroupEnum> groups = kanjiEntry.getGroups();
+		
+		if (groups == null || groups.size() == 0) {
+			return null;
+		}
+		
+		Div kanjiGroupsDiv = new Div();
+		
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tytul
+    	Div kanjiGroupsTitleDiv = new Div("col-md-10");
+    	
+    	H kanjiGroupsTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	kanjiGroupsTitleH4.setId("kanjiGroupsId");
+    	
+    	kanjiGroupsTitleH4.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.groups.title")));
+    	menu.getChildMenu().add(new Menu(kanjiGroupsTitleH4.getId(), getMessage("kanjiDictionaryDetails.page.kanjiEntry.groups.title")));    	
+    	
+    	kanjiGroupsTitleDiv.addHtmlElement(kanjiGroupsTitleH4);
+    	
+    	row1Div.addHtmlElement(kanjiGroupsTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	kanjiGroupsDiv.addHtmlElement(row1Div);
+
+		// wiersz z grupami
+    	Div row2Div = new Div("row");
+    	kanjiGroupsDiv.addHtmlElement(row2Div);
+    	
+    	for (int idx = 0; idx < groups.size(); ++idx) {
+    		row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    		
+    		Div currentKanjiGroupDiv = new Div("col-md-11");
+    		row2Div.addHtmlElement(currentKanjiGroupDiv);
+    		
+    		H currentKanjiGroupH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+    		currentKanjiGroupH.addHtmlElement(new Text(groups.get(idx).getValue()));
+    		
+    		currentKanjiGroupDiv.addHtmlElement(currentKanjiGroupH);
+    	}
+		
+		return kanjiGroupsDiv;		
 	}
 		
 	private String getMessage(String code) {
