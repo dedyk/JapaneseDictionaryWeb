@@ -82,6 +82,8 @@ public class WordDictionaryController extends CommonController {
 	@RequestMapping(value = "/wordDictionarySearch", method = RequestMethod.GET)
 	public String search(@ModelAttribute("command") @Valid WordDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) {
+		
+		// gdy cos bedzie zmieniane trzeba rowniez zmienic w link generatorze
 
 		if (result.hasErrors() == true) {
 						

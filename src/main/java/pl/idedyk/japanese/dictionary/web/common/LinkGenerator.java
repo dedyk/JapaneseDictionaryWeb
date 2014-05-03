@@ -5,6 +5,7 @@ import java.util.List;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
+import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 
 public class LinkGenerator {
 
@@ -43,5 +44,48 @@ public class LinkGenerator {
 		
 		return linkTemplate.replaceAll("%ID%", String.valueOf(kanjiEntry.getId())).
         		replaceAll("%KANJI%", kanji != null ? kanji : "-");
+	}
+	
+	public static String generateWordSearchLink(String contextPath, WordDictionarySearchModel searchModel) {
+		
+		StringBuffer link = new StringBuffer(contextPath + "/wordDictionarySearch?");
+		
+		// word
+		String word = searchModel.getWord();
+		
+		link.append("word=");
+		
+		if (word != null) {
+			link.append(word);
+		}
+		
+		//word place
+		String wordPlace = searchModel.getWordPlace();
+		
+		link.append("&wordPlace=");
+		
+		if (wordPlace != null) {
+			link.append(wordPlace);
+		}
+		
+		// searchIn
+		List<String> searchIn = searchModel.getSearchIn();
+		
+		if (searchIn != null && searchIn.size() > 0) {			
+			for (String currentSearchIn : searchIn) {
+				link.append("&searchIn=").append(currentSearchIn);
+			}
+		}
+
+		// dictionaryTypeStringList
+		List<String> dictionaryTypeStringList = searchModel.getDictionaryTypeStringList();
+		
+		if (dictionaryTypeStringList != null && dictionaryTypeStringList.size() > 0) {			
+			for (String currentDictionaryTypeString : dictionaryTypeStringList) {
+				link.append("&dictionaryTypeStringList=").append(currentDictionaryTypeString);
+			}
+		}		
+		
+		return link.toString();
 	}
 }

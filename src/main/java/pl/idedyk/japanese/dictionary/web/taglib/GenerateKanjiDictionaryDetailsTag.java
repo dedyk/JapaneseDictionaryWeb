@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -12,12 +13,17 @@ import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
+import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
+import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.Button;
+import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
@@ -185,51 +191,6 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			panelBody.addHtmlElement(kanjiGroups);			
 		}
 				
-		/*
-				
-		// znaczenie znakow kanji
-        Div knownKanjiDiv = generateKnownKanjiDiv(mainInfoMenu);
-        
-        if (knownKanjiDiv != null) {
-        	panelBody.addHtmlElement(knownKanjiDiv);
-        	panelBody.addHtmlElement(new Hr());
-        }
-		
-		// czytanie
-		Div readingDiv = generateReadingSection(mainInfoMenu);
-		panelBody.addHtmlElement(readingDiv);
-		panelBody.addHtmlElement(new Hr());
-		
-        // tlumaczenie
-        Div translate = generateTranslateSection(mainInfoMenu);
-        panelBody.addHtmlElement(translate);
-        
-        // generuj informacje dodatkowe
-        Div additionalInfo = generateAdditionalInfo(mainInfoMenu);
-
-        if (additionalInfo != null) {
-        	panelBody.addHtmlElement(new Hr());
-        	panelBody.addHtmlElement(additionalInfo);
-        }
-        
-        // czesc mowy
-        Div wordTypeDiv = generateWordType(mainInfoMenu);
-        
-        if (wordTypeDiv != null) {
-        	panelBody.addHtmlElement(new Hr());
-        	panelBody.addHtmlElement(wordTypeDiv);
-        }
-        
-        // dodatkowe atrybuty
-		Div additionalAttributeDiv = generateAttribute(mainInfoMenu);
-
-        if (additionalAttributeDiv != null) {
-        	panelBody.addHtmlElement(new Hr());
-        	panelBody.addHtmlElement(additionalAttributeDiv);
-        }
-        		
-		*/
-		
 		panelDiv.addHtmlElement(panelBody);
 		
 		return panelDiv;
@@ -301,8 +262,43 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
 
 			kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
-			
 		}
+		
+		// wystapienie znaku w slowniku - guziczek
+		
+		// przerwa
+		kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
+
+		Td kanjiKanjiAppearanceButtonTd = new Td();
+		kanjiKanjiTr.addHtmlElement(kanjiKanjiAppearanceButtonTd);
+		
+		Button kanjiKanjiAppearanceButton = new Button("btn btn-default");
+		kanjiKanjiAppearanceButtonTd.addHtmlElement(kanjiKanjiAppearanceButton);
+		
+		WordDictionarySearchModel searchModel = new WordDictionarySearchModel();
+		
+		searchModel.setWord(kanjiEntry.getKanji());
+		searchModel.setWordPlace(FindWordRequest.WordPlaceSearch.ANY_PLACE.toString());
+		
+		List<String> searchIn = new ArrayList<String>();
+		searchIn.add("KANJI");
+		
+		searchModel.setSearchIn(searchIn);
+		
+		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
+		
+		for (DictionaryEntryType dictionaryEntryType : addableDictionaryEntryList) {
+			searchModel.addDictionaryType(dictionaryEntryType);
+		}
+		
+		String link = LinkGenerator.generateWordSearchLink(pageContext.getServletContext().getContextPath(), searchModel);
+		
+		kanjiKanjiAppearanceButton.setButtonType(ButtonType.BUTTON);
+		kanjiKanjiAppearanceButton.setOnClick("window.location = '" + link + "'");
+		
+		kanjiKanjiAppearanceButton.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.kanji.showKanjiAppearanceInWordDictionary")));
+		
+		//
 		
 		kanjiTable.addHtmlElement(kanjiKanjiTr);
 		
@@ -325,7 +321,6 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			generateDrawStrokeDialogParams.addPathNum = true;
 
 			kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId, generateDrawStrokeDialogParams));
-			
 		}
 		
         return kanjiDiv;
@@ -676,13 +671,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	private String getMessage(String code) {
 		return messageSource.getMessage(code, null, Locale.getDefault());
 	}
-
-	/*
-	private String getMessage(String code, String[] args) {
-		return messageSource.getMessage(code, args, Locale.getDefault());
-	}
-	*/
-
+	
 	public KanjiEntry getKanjiEntry() {
 		return kanjiEntry;
 	}
@@ -695,122 +684,5 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		//kanjiEntry.setKanjivgEntry(null);
 				
 		this.kanjiEntry = kanjiEntry;
-	}
-	
-	/*
-
-	private List<IScreenItem> generateDetails(final KanjiEntry kanjiEntry) {
-		
-		List<IScreenItem> report = new ArrayList<IScreenItem>();
-		
-		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
-				
-		// Radicals
-		report.add(new TitleItem(getString(R.string.kanji_details_radicals), 0));
-		
-		if (kanjiDic2Entry != null) {
-			List<String> radicals = kanjiDic2Entry.getRadicals();
-			
-			for (String currentRadical : radicals) {
-				report.add(new StringValue(currentRadical, 20.0f, 0));
-			}
-		} else {
-			report.add(new StringValue("-", 20.0f, 0));
-		}
-				
-		// Kun reading
-		report.add(new TitleItem(getString(R.string.kanji_details_kun_reading), 0));
-		
-		if (kanjiDic2Entry != null) {
-			List<String> kunReading = kanjiDic2Entry.getKunReading();
-			
-			for (String currentKun : kunReading) {
-				report.add(new StringValue(currentKun, 20.0f, 0));
-			}
-		} else {
-			report.add(new StringValue("-", 20.0f, 0));
-		}
-		
-		// On reading
-		report.add(new TitleItem(getString(R.string.kanji_details_on_reading), 0));
-		
-		if (kanjiDic2Entry != null) {
-			List<String> onReading = kanjiDic2Entry.getOnReading();
-			
-			for (String currentOn : onReading) {
-				report.add(new StringValue(currentOn, 20.0f, 0));
-			}
-		} else {
-			report.add(new StringValue("-", 20.0f, 0));
-		}
-			
-		// Translate
-		report.add(new TitleItem(getString(R.string.kanji_details_translate_label), 0));
-		
-		List<String> translates = kanjiEntry.getPolishTranslates();
-		
-		for (int idx = 0; idx < translates.size(); ++idx) {
-			report.add(new StringValue(translates.get(idx), 20.0f, 0));
-		}
-		
-		// Additional info
-		report.add(new TitleItem(getString(R.string.kanji_details_additional_info_label), 0));
-		
-		String info = kanjiEntry.getInfo();
-		
-		if (info != null && info.length() > 0) {
-			report.add(new StringValue(info, 20.0f, 0));
-		} else {
-			report.add(new StringValue("-", 20.0f, 0));
-		}
-		
-		// kanji appearance
-		List<GroupEnum> groups = kanjiEntry.getGroups();
-		
-		if (groups != null && groups.size() > 0) {
-			report.add(new TitleItem(getString(R.string.kanji_details_kanji_appearance_label), 0));
-			
-			for (int idx = 0; idx < groups.size(); ++idx) {
-				report.add(new StringValue(groups.get(idx).getValue(), 20.0f, 0));
-			}			
-		}		
-		
-		report.add(new StringValue("", 15.0f, 2));
-		
-		// find kanji in words
-		pl.idedyk.android.japaneselearnhelper.screen.Button findWordWithKanji = new pl.idedyk.android.japaneselearnhelper.screen.Button(
-				getString(R.string.kanji_details_find_kanji_in_words));
-		
-		findWordWithKanji.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View view) {
-
-				Intent intent = new Intent(getApplicationContext(), WordDictionaryTab.class);
-				
-				FindWordRequest findWordRequest = new FindWordRequest();
-				
-				findWordRequest.word = kanjiEntry.getKanji();
-				findWordRequest.searchKanji = true;
-				findWordRequest.searchKana = false;
-				findWordRequest.searchRomaji = false;
-				findWordRequest.searchTranslate = false;
-				findWordRequest.searchInfo = false;
-				findWordRequest.searchGrammaFormAndExamples = false;
-				
-				findWordRequest.wordPlaceSearch = WordPlaceSearch.ANY_PLACE;
-				
-				findWordRequest.dictionaryEntryList = null;
-				
-				intent.putExtra("findWordRequest", findWordRequest);
-				
-				startActivity(intent);
-			}
-		});
-		
-		report.add(findWordWithKanji);
-		
-		return report;
-	}
-
-	 */
+	}	
 }

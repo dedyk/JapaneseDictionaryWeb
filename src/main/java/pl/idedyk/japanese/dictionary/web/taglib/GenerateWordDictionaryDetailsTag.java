@@ -930,7 +930,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			linkButton.setButtonType(ButtonType.BUTTON);
 			linkButton.setOnClick("window.location = '" + link + "'");
 			
-			linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.knownKanji.kanji.show")));			
+			linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.knownKanji.kanji.show")));
 		}
 		
 		return knownKanjiDiv;
