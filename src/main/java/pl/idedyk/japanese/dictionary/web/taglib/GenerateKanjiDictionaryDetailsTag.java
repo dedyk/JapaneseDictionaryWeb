@@ -676,13 +676,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		return kanjiEntry;
 	}
 
-	public void setKanjiEntry(KanjiEntry kanjiEntry) {
-		
-		int fixme = 1; // sprawdzic
-		
-		//kanjiEntry.setKanjiDic2Entry(null);
-		//kanjiEntry.setKanjivgEntry(null);
-				
+	public void setKanjiEntry(KanjiEntry kanjiEntry) {				
 		this.kanjiEntry = kanjiEntry;
 	}	
 }
