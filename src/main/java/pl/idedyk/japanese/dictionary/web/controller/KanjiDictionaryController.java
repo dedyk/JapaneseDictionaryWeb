@@ -68,22 +68,60 @@ public class KanjiDictionaryController extends CommonController {
 		
 		// testy !!!!!
 		
-		Character character = zinniaManager.createNewCharacter();
+		Runnable runnable = new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				for (int aaa = 0; aaa < 100; ++aaa) {
+				
+					Character character = zinniaManager.createNewCharacter();
+					
+					character.setWidth(500);
+					character.setHeight(500);
+					
+					for (int x = 50; x < 400; ++x) {			
+						character.add(0, x, 250);
+					}
+					
+					List<KanjiRecognizerResultItem> recognize = character.recognize(200);
+					
+					character.destroy();
+					
+					String[] expectedResult = new String[] { "一", "士", "日", "田", "且" };
+	
+					for (int idx = 0; idx < 5; ++idx) {
+						KanjiRecognizerResultItem kanjiRecognizerResultItem = recognize.get(idx);
+						
+						System.out.println(kanjiRecognizerResultItem.getKanji() + " vs " + expectedResult[idx] + " - " + kanjiRecognizerResultItem.getScore());
+						
+						if (kanjiRecognizerResultItem.getKanji().equals(expectedResult[idx]) == false) {
+							throw new RuntimeException("Blad");
+						}					
+					}				
+				}
+			}
+		};
 		
-		character.setWidth(500);
-		character.setHeight(500);
+		Thread[] threads = new Thread[50];
 		
-		for (int x = 50; x < 400; ++x) {			
-			character.add(0, x, 250);
+		for (int idx = 0; idx < threads.length; ++idx) {
+			threads[idx] = new Thread(runnable);
+		}
+
+		for (int idx = 0; idx < threads.length; ++idx) {
+			threads[idx].start();
+		}
+
+		try {
+			for (int idx = 0; idx < threads.length; ++idx) {
+				threads[idx].join();
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 		
-		List<KanjiRecognizerResultItem> recognize = character.recognize(50);
 		
-		character.destroy();
-		
-		for (KanjiRecognizerResultItem kanjiRecognizerResultItem : recognize) {
-			System.out.println(kanjiRecognizerResultItem.getKanji() + " - " + kanjiRecognizerResultItem.getScore());
-		}
 		
 		
 		
