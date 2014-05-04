@@ -19,6 +19,9 @@ public class ZinniaManager {
 	
 	private String zinniaArch;
 	
+	private String libzinnia;
+	private String libzinniajni;
+	
 	private Zinnia zinnia = new Zinnia();
 	
 	private long zinniaHandler = 0;
@@ -28,8 +31,8 @@ public class ZinniaManager {
 
 		logger.info("Inicjalizacja Zinnia Manager");
 		
-		String libZinniaPath = ZinniaManager.class.getResource("/zinnia/" + zinniaArch + "/libzinnia.so").getPath();
-		String libZinniaJniPath = ZinniaManager.class.getResource("/zinnia/" + zinniaArch + "/libzinniajni.so").getPath();
+		String libZinniaPath = ZinniaManager.class.getResource("/zinnia/" + zinniaArch + "/" + libzinnia).getPath();
+		String libZinniaJniPath = ZinniaManager.class.getResource("/zinnia/" + zinniaArch + "/" + libzinniajni).getPath();
 		
 		System.load(libZinniaPath);
 		System.load(libZinniaJniPath);
@@ -51,15 +54,7 @@ public class ZinniaManager {
 	public void destroy() {
 		zinnia.zinnia_recognizer_destroy(zinniaHandler);
 	}
-	
-	public String getZinniaArch() {
-		return zinniaArch;
-	}
-
-	public void setZinniaArch(String zinniaArch) {	
-		this.zinniaArch = zinniaArch;
-	}
-	
+		
 	public Character createNewCharacter() {
 				
 		return new Character();		
@@ -109,5 +104,29 @@ public class ZinniaManager {
 		public void destroy() {
 			zinnia.zinnia_character_destroy(character);
 		}
+	}
+	
+	public String getZinniaArch() {
+		return zinniaArch;
+	}
+
+	public void setZinniaArch(String zinniaArch) {	
+		this.zinniaArch = zinniaArch;
+	}
+
+	public String getLibzinnia() {
+		return libzinnia;
+	}
+
+	public void setLibzinnia(String libzinnia) {
+		this.libzinnia = libzinnia;
+	}
+
+	public String getLibzinniajni() {
+		return libzinniajni;
+	}
+
+	public void setLibzinniajni(String libzinniajni) {
+		this.libzinniajni = libzinniajni;
 	}
 }

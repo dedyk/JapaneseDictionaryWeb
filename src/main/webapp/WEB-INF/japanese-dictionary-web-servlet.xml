@@ -61,5 +61,7 @@
     
     <bean id="zinniaManager" class="pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager">
     	<property name="zinniaArch" value="${zinnia.arch}" />    
+    	<property name="libzinnia" value="${zinnia.libzinnia}" />
+    	<property name="libzinniajni" value="${zinnia.libzinniajni}" />
     </bean>
 </beans>
