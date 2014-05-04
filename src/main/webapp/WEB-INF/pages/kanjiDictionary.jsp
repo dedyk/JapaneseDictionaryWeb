@@ -31,11 +31,101 @@
 <t:template pageTitle="${pageTitle}">
 
 	<jsp:body>
+
+		<script>
+			// rysowanie
+			var canvas, stage;
+			var drawingCanvas;
+			var oldPt;
+	        var oldMidPt;
+	        var color;
+	        var stroke;
+		
+			$(document).ready(function() {
+
+				$( "#word" ).autocomplete({
+				 	source: "${pageContext.request.contextPath}/kanjiDictionary/autocomplete",
+				 	minLength: 1
+				});				
+
+				$( "#searchButton" ).button();
+
+				$( "#wordPlaceId").selectpicker();
+
+				<c:if test="${findKanjiResult != null}">
+				$('html, body').animate({
+		        	scrollTop: $("#findKanjiResultHrId").offset().top
+		    	}, 1000);
+				</c:if>
+
+				<c:if test="${sessionScope.selectedRadicals != null}">
+					selectedRadicals = [];
+					
+					<c:forEach items="${sessionScope.selectedRadicals}" var="currentRadical">
+					selectedRadicals.push('<c:out value="${currentRadical}" />');
+
+					$('#radicalTableId td').filter(function() { return $.text([this]) == '<c:out value="${currentRadical}" />'; }).css("background-color", "yellow");
+										
+					</c:forEach>			
+				</c:if>
+		
+				updateSelectedRadicals(null);
+
+				// rysowanie				
+				canvas = document.getElementById("detectCanvas");
+
+	            stage = new createjs.Stage(canvas);
+	            stage.autoClear = false;
+	            stage.enableDOMEvents(true);
+
+	            createjs.Touch.enable(stage);
+	            createjs.Ticker.setFPS(24);
+
+	            drawingCanvas = new createjs.Shape();
+
+	            stage.addEventListener("stagemousedown", handleMouseDown);
+	            stage.addEventListener("stagemouseup", handleMouseUp);
+
+	            stage.addChild(drawingCanvas);
+	            stage.update();	
+			});
+
+	        function handleMouseDown(event) {
+	            
+	            color = "#000000";
+	            stroke = 10;
+
+	            oldPt = new createjs.Point(stage.mouseX, stage.mouseY);
+	            oldMidPt = oldPt;
+	            
+	            stage.addEventListener("stagemousemove" , handleMouseMove);
+	        }
+
+	        function handleMouseMove(event) {
+	            var midPt = new createjs.Point(oldPt.x + stage.mouseX>>1, oldPt.y+stage.mouseY>>1);
+
+	            drawingCanvas.graphics.clear().setStrokeStyle(stroke, 'round', 'round').beginStroke(color).moveTo(midPt.x, midPt.y).curveTo(oldPt.x, oldPt.y, oldMidPt.x, oldMidPt.y);
+
+	            oldPt.x = stage.mouseX;
+	            oldPt.y = stage.mouseY;
+
+	            oldMidPt.x = midPt.x;
+	            oldMidPt.y = midPt.y;
+
+	            stage.update();
+	        }
+
+	        function handleMouseUp(event) {
+	            stage.removeEventListener("stagemousemove" , handleMouseMove);
+	        }
+
+		</script>
 	
 		<div>		
     		<ul class="nav nav-tabs">
         		<li class="active"><a data-toggle="tab" href="#meaning"> <spring:message code="kanjiDictionary.page.tab.meaning" /> </a></li>
         		<li><a data-toggle="tab" href="#radicals"> <spring:message code="kanjiDictionary.page.tab.radicals" /> </a></li>
+        		<li><a data-toggle="tab" href="#detect"> <spring:message code="kanjiDictionary.page.tab.detect" /> </a></li>
     		</ul>
     		
     		<div class="tab-content">
@@ -305,46 +395,18 @@
 							<table id="radicalTableFoundId">
 							</table>						
 						</center>					
-					</div>
-								
+					</div>		
         		</div>
+        		
+        		<div id="detect" class="tab-pane fade col-md-12" style="padding-top: 20px; padding-bottom: 20px">
+        			
+        			<center>
+	        			  <canvas id="detectCanvas" width="500" height="500" style="border: 1px solid black;"/>        			
+					</center>
+        		</div>        		
     		</div>
 		</div>	
-		
-		<script>
-			$(document).ready(function() {
-
-				$( "#word" ).autocomplete({
-				 	source: "${pageContext.request.contextPath}/kanjiDictionary/autocomplete",
-				 	minLength: 1
-				});				
-
-				$( "#searchButton" ).button();
-
-				$( "#wordPlaceId").selectpicker();
-
-				<c:if test="${findKanjiResult != null}">
-				$('html, body').animate({
-		        	scrollTop: $("#findKanjiResultHrId").offset().top
-		    	}, 1000);
-				</c:if>
-
-				<c:if test="${sessionScope.selectedRadicals != null}">
-					selectedRadicals = [];
-					
-					<c:forEach items="${sessionScope.selectedRadicals}" var="currentRadical">
-					selectedRadicals.push('<c:out value="${currentRadical}" />');
-
-					$('#radicalTableId td').filter(function() { return $.text([this]) == '<c:out value="${currentRadical}" />'; }).css("background-color", "yellow");
-										
-					</c:forEach>			
-				</c:if>
-		
-				updateSelectedRadicals(null);
-
-			});
-		</script>
-	
+			
 	</jsp:body>
 	
 </t:template>

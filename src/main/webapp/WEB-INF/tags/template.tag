@@ -48,6 +48,8 @@
 	
 	<script src="<c:out value='${staticFilePrefix}' />/js/lazy-line-painter/jquery.lazylinepainter-1.4.1-fm.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/raphael/raphael.js"></script>
+	
+	<script src="<c:out value='${staticFilePrefix}' />/js/easeljs/easeljs-0.7.1.min.js"></script>
 
 <style>
 	body {
