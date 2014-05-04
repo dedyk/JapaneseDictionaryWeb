@@ -32,11 +32,14 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest.WordPla
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.api.dto.RadicalInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.KanjiDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager.Character;
 
 @Controller
 public class KanjiDictionaryController extends CommonController {
@@ -45,6 +48,9 @@ public class KanjiDictionaryController extends CommonController {
 
 	@Autowired
 	private DictionaryManager dictionaryManager;
+	
+	@Autowired
+	private ZinniaManager zinniaManager;
 	
 	@Autowired  
 	private KanjiDictionarySearchModelValidator kanjiDictionarySearchModelValidator;
@@ -60,6 +66,29 @@ public class KanjiDictionaryController extends CommonController {
 	@RequestMapping(value = "/kanjiDictionary", method = RequestMethod.GET)
 	public String start(Map<String, Object> model, HttpSession session) {
 		
+		// testy !!!!!
+		
+		Character character = zinniaManager.createNewCharacter();
+		
+		character.setWidth(500);
+		character.setHeight(500);
+		
+		for (int x = 50; x < 400; ++x) {			
+			character.add(0, x, 250);
+		}
+		
+		List<KanjiRecognizerResultItem> recognize = character.recognize(50);
+		
+		character.destroy();
+		
+		for (KanjiRecognizerResultItem kanjiRecognizerResultItem : recognize) {
+			System.out.println(kanjiRecognizerResultItem.getKanji() + " - " + kanjiRecognizerResultItem.getScore());
+		}
+		
+		
+		
+		////////////		
+				
 		// utworzenie model szukania
 		KanjiDictionarySearchModel kanjiDictionarySearchModel = new KanjiDictionarySearchModel();
 

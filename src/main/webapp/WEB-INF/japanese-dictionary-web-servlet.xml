@@ -57,5 +57,9 @@
  			</list>
  		</property>
     	<property name="defaultEncoding" value="UTF-8"/>
-    </bean>	
+    </bean>
+    
+    <bean id="zinniaManager" class="pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager">
+    	<property name="zinniaArch" value="${zinnia.arch}" />    
+    </bean>
 </beans>
