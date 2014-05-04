@@ -40,6 +40,9 @@
 	        var oldMidPt;
 	        var color;
 	        var stroke;
+
+	        var strokePaths = [];
+	        var currentPath = [];
 		
 			$(document).ready(function() {
 
@@ -91,6 +94,8 @@
 			});
 
 	        function handleMouseDown(event) {
+
+	        	currentPath = [];
 	            
 	            color = "#000000";
 	            stroke = 10;
@@ -112,11 +117,20 @@
 	            oldMidPt.x = midPt.x;
 	            oldMidPt.y = midPt.y;
 
+	            currentPath.push([midPt.x, midPt.y]);
+
 	            stage.update();
 	        }
 
 	        function handleMouseUp(event) {
 	            stage.removeEventListener("stagemousemove" , handleMouseMove);
+
+				if (currentPath.length != 0) {
+
+					strokePaths.push(currentPath);
+					
+					currentPath = [];					
+				}	            
 	        }
 
 		</script>
