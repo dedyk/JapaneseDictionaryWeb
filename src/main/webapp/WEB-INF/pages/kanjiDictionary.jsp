@@ -414,9 +414,86 @@
         		
         		<div id="detect" class="tab-pane fade col-md-12" style="padding-top: 20px; padding-bottom: 20px">
         			
-        			<center>
-	        			  <canvas id="detectCanvas" width="500" height="500" style="border: 1px solid black;"/>        			
-					</center>
+        			<div class="col-md-12">
+        				<div class="col-md-2"></div>
+        				<div class="col-md-6">
+        					<canvas id="detectCanvas" width="500" height="500" style="border: 1px solid black;"/>
+        				</div>
+        				<div class="col-md-2">
+        					<table>
+        					
+        						<tr><td>
+        							<button onclick="detect();" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 180px;">
+        								<b><spring:message code="kanjiDictionary.page.tab.detect.detect" /></b>
+        							</button>
+        						</td></tr>
+        					
+        					    <tr><td>
+		        					<button onclick="alert('FIXME');" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 180px;">
+		        						<spring:message code="kanjiDictionary.page.tab.detect.undo" />
+		        					</button>
+        						</td></tr>
+        					
+        						<tr><td>
+        							<button onclick="alert('FIXME');" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 180px;">
+        								<spring:message code="kanjiDictionary.page.tab.detect.clear" />
+        							</button>
+        						</td></tr>
+        						
+        					</table>
+        				</div>
+        			</div>
+        			
+        			<script>
+						function detect() {
+								// sprawdzic, czy znaki sa narysowane
+								// FIXME
+								
+								var detectStrokePaths = [];
+																
+								for (var idx = 0; idx < strokePaths.length; ++idx) {
+									var currentStrokePath = strokePaths[idx];
+
+									var currentStringStrokePath = "";
+
+									for (var ydx = 0; ydx < currentStrokePath.length; ++ydx) {
+										currentStringStrokePath += currentStrokePath[ydx][0] + "," + currentStrokePath[ydx][1] + ";";
+									}
+
+									detectStrokePaths.push(currentStringStrokePath);
+								}
+
+								if (detectStrokePaths.length == 1) {
+									detectStrokePaths.push("");
+								}
+								
+								$.ajax({
+									
+									url: "${pageContext.request.contextPath}/kanjiDictionary/detect",
+										
+									data: {
+										strokePaths: detectStrokePaths
+									},
+									
+									type: "POST",
+	
+									dataType : "json",
+	
+									success: function( json ) {
+										alert("Sukces - FIXME");
+									},
+	
+									error: function( xhr, status, errorThrown ) {
+										alert("Blad - FIXME");
+										//alert('<spring:message code="kanjiDictionary.page.search.radicals.problem" />');
+									},
+	
+									complete: function( xhr, status ) {
+									}
+									});								
+							}
+
+        			</script>        			
         		</div>        		
     		</div>
 		</div>	
