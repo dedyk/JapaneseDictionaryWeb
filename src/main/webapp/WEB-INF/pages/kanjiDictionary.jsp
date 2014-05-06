@@ -102,13 +102,15 @@
 
 	            oldPt = new createjs.Point(stage.mouseX, stage.mouseY);
 	            oldMidPt = oldPt;
+
+	            currentPath.push([stage.mouseX, stage.mouseY]);
 	            
 	            stage.addEventListener("stagemousemove" , handleMouseMove);
 	        }
 
 	        function handleMouseMove(event) {
 	            var midPt = new createjs.Point(oldPt.x + stage.mouseX>>1, oldPt.y+stage.mouseY>>1);
-
+	            
 	            drawingCanvas.graphics.clear().setStrokeStyle(stroke, 'round', 'round').beginStroke(color).moveTo(midPt.x, midPt.y).curveTo(oldPt.x, oldPt.y, oldMidPt.x, oldMidPt.y);
 
 	            oldPt.x = stage.mouseX;
@@ -117,7 +119,7 @@
 	            oldMidPt.x = midPt.x;
 	            oldMidPt.y = midPt.y;
 
-	            currentPath.push([midPt.x, midPt.y]);
+	            currentPath.push([stage.mouseX, stage.mouseY]);
 
 	            stage.update();
 	        }
@@ -126,10 +128,9 @@
 	            stage.removeEventListener("stagemousemove" , handleMouseMove);
 
 				if (currentPath.length != 0) {
-
 					strokePaths.push(currentPath);
 					
-					currentPath = [];					
+					currentPath = [];
 				}	            
 	        }
 
@@ -429,13 +430,13 @@
         						</td></tr>
         					
         					    <tr><td>
-		        					<button onclick="alert('FIXME');" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 180px;">
+		        					<button onclick="undoStrokeDetect();" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 180px;">
 		        						<spring:message code="kanjiDictionary.page.tab.detect.undo" />
 		        					</button>
         						</td></tr>
         					
         						<tr><td>
-        							<button onclick="alert('FIXME');" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 180px;">
+        							<button onclick="clearDetect();" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 180px;">
         								<spring:message code="kanjiDictionary.page.tab.detect.clear" />
         							</button>
         						</td></tr>
@@ -491,6 +492,47 @@
 									complete: function( xhr, status ) {
 									}
 									});								
+							}
+
+							function undoStrokeDetect() {
+
+								stage.clear();
+
+								if (strokePaths.length > 0) {
+									strokePaths.pop();
+
+						            color = "#000000";
+						            stroke = 10;
+									
+									for (var idx = 0; idx < strokePaths.length; ++idx) {
+										var currentStrokePath = strokePaths[idx];
+
+										oldPt = new createjs.Point(currentStrokePath[0][0], currentStrokePath[0][1]);
+							            oldMidPt = oldPt;
+
+										for (var currentStrokePathIdx = 0; currentStrokePathIdx < currentStrokePath.length; ++currentStrokePathIdx) {
+
+								            var midPt = new createjs.Point(oldPt.x + currentStrokePath[currentStrokePathIdx][0]>>1, oldPt.y + currentStrokePath[currentStrokePathIdx][1]>>1);
+
+								            drawingCanvas.graphics.clear().setStrokeStyle(stroke, 'round', 'round').beginStroke(color).moveTo(midPt.x, midPt.y).curveTo(oldPt.x, oldPt.y, oldMidPt.x, oldMidPt.y);
+
+								            oldPt.x = currentStrokePath[currentStrokePathIdx][0];
+								            oldPt.y = currentStrokePath[currentStrokePathIdx][1];
+
+								            oldMidPt.x = midPt.x;
+								            oldMidPt.y = midPt.y;
+
+								            stage.update();
+										}
+									}
+								}
+							}
+
+							function clearDetect() {
+
+								strokePaths = [];
+
+								stage.clear();
 							}
 
         			</script>        			
