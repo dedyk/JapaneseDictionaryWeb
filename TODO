@@ -26,3 +26,4 @@
 * Powrot do wyszukiwania znakow po elementach podstawowych
 * Szybkosc pisania kresek kanji
 * Rysowanie znaku: czyszczenie, cofniecie kreski, pisanie numeru linii, rozpoznawanie
+* Przeniesienie skryptow JS z JSP do osobnych plikow
