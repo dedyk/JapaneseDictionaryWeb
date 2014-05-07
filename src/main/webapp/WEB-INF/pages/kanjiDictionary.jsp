@@ -446,9 +446,12 @@
         			</div>
         			
         			<script>
-						function detect() {
-								// sprawdzic, czy znaki sa narysowane
-								// FIXME
+						function detect() {								
+								if (strokePaths.length == 0) {
+									alert('<spring:message code="kanjiDictionary.page.tab.detect.pleaseDraw" />');
+									
+									return;
+								}
 								
 								var detectStrokePaths = [];
 																
@@ -485,8 +488,7 @@
 									},
 	
 									error: function( xhr, status, errorThrown ) {
-										alert("Blad - FIXME");
-										//alert('<spring:message code="kanjiDictionary.page.search.radicals.problem" />');
+										alert('<spring:message code="kanjiDictionary.page.tab.detect.problem" />');
 									},
 	
 									complete: function( xhr, status ) {

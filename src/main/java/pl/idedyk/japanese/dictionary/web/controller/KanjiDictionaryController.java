@@ -287,91 +287,92 @@ public class KanjiDictionaryController extends CommonController {
 	
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
 			value = "/kanjiDictionary/detect", method = RequestMethod.POST)
-	public @ResponseBody String detect(@RequestParam(value="strokePaths[]", required=true) String[] strokePaths) throws Exception {
+	public @ResponseBody String detect(@RequestParam(value="strokePaths[]", required=false) String[] strokePaths) throws Exception {
 		
-		StringBuffer strokePathsAll = new StringBuffer();
+		JSONObject jsonObject = new JSONObject();
 		
-		for (String currentStrokePath : strokePaths) {
-			strokePathsAll.append(currentStrokePath).append("\n");
-		}
-		
-		logger.info("Rozpoznawanie znakow kanji dla: " + strokePathsAll.toString());
-		
-		final int maxX = 500;
-		final int maxY = 500;
-		
-		// testy
-		ZinniaManager.Character character = null;
-		
-		try {
-			character = zinniaManager.createNewCharacter();
-			
-			character.setWidth(maxX);
-			character.setHeight(maxY);
-			
-			for (int strokePathNo = 0; strokePathNo < strokePaths.length; ++strokePathNo) {
-				String currentStrokePath = strokePaths[strokePathNo];
-				
-				if (currentStrokePath == null) {
-					throw new Exception("Pusta aktualna sciezka");
-				}
-				
-				if (currentStrokePath.equals("") == true) {
-					break;
-				}
-				
-				String[] points = currentStrokePath.split(";");
-				
-				if (points == null || points.length == 0) {
-					throw new Exception("Puste punkty");
-				}
-				
-				for (String currentPoint : points) {
-					
-					if (currentPoint == null) {
-						throw new Exception("Pusty aktualny punkt");
-					}
-					
-					String[] currentPointSplited = currentPoint.split(",");
-					
-					if (currentPointSplited == null || currentPointSplited.length != 2) {
-						throw new Exception("Niepoprawny aktualny punkt");
-					}
-					
-					try {				
-						Integer currentPointX = Integer.parseInt(currentPointSplited[0]);
-						
-						if (currentPointX < 0 || currentPointX > maxX) {
-							throw new Exception("Niepoprawny aktualny punkt X: " + currentPointSplited[0]);
-						}
-						
-						Integer currentPointY = Integer.parseInt(currentPointSplited[1]);
-	
-						if (currentPointY < 0 || currentPointY > maxY) {
-							throw new Exception("Niepoprawny aktualny punkt Y: " + currentPointSplited[1]);
-						}
-						
-						character.add(strokePathNo, currentPointX, currentPointY);
-						
-					} catch (NumberFormatException e) {
-						throw new Exception("Niepoprawny aktualny punkt: " + currentPointSplited[0] + " - " + currentPointSplited[1]);
-					}				
-				}			
-			}
-			
-			List<KanjiRecognizerResultItem> recognize = character.recognize(20);
-			
-			for (KanjiRecognizerResultItem kanjiRecognizerResultItem : recognize) {
-				System.out.println(kanjiRecognizerResultItem.getKanji() + " - " + kanjiRecognizerResultItem.getScore());
-			}			
+		if (strokePaths != null) {
 
-		} finally {
-			if (character != null) {
-				character.destroy();
+			StringBuffer strokePathsAll = new StringBuffer();
+
+			for (String currentStrokePath : strokePaths) {
+				strokePathsAll.append(currentStrokePath).append("\n");
 			}
-			
-		}
+
+			logger.info("Rozpoznawanie znakow kanji dla: " + strokePathsAll.toString());
+
+			final int maxX = 500;
+			final int maxY = 500;
+
+			ZinniaManager.Character character = null;
+
+			try {
+				character = zinniaManager.createNewCharacter();
+
+				character.setWidth(maxX);
+				character.setHeight(maxY);
+
+				for (int strokePathNo = 0; strokePathNo < strokePaths.length; ++strokePathNo) {
+					String currentStrokePath = strokePaths[strokePathNo];
+
+					if (currentStrokePath == null) {
+						throw new Exception("Pusta aktualna sciezka");
+					}
+
+					if (currentStrokePath.equals("") == true) {
+						break;
+					}
+
+					String[] points = currentStrokePath.split(";");
+
+					if (points == null || points.length == 0) {
+						throw new Exception("Puste punkty");
+					}
+
+					for (String currentPoint : points) {
+
+						if (currentPoint == null) {
+							throw new Exception("Pusty aktualny punkt");
+						}
+
+						String[] currentPointSplited = currentPoint.split(",");
+
+						if (currentPointSplited == null || currentPointSplited.length != 2) {
+							throw new Exception("Niepoprawny aktualny punkt");
+						}
+
+						try {				
+							Integer currentPointX = Integer.parseInt(currentPointSplited[0]);
+
+							if (currentPointX < 0 || currentPointX > maxX) {
+								throw new Exception("Niepoprawny aktualny punkt X: " + currentPointSplited[0]);
+							}
+
+							Integer currentPointY = Integer.parseInt(currentPointSplited[1]);
+
+							if (currentPointY < 0 || currentPointY > maxY) {
+								throw new Exception("Niepoprawny aktualny punkt Y: " + currentPointSplited[1]);
+							}
+
+							character.add(strokePathNo, currentPointX, currentPointY);
+
+						} catch (NumberFormatException e) {
+							throw new Exception("Niepoprawny aktualny punkt: " + currentPointSplited[0] + " - " + currentPointSplited[1]);
+						}				
+					}			
+				}
+
+				List<KanjiRecognizerResultItem> recognize = character.recognize(50);
+				
+				jsonObject.put("result", "ok");
+				
+			} finally {
+				if (character != null) {
+					character.destroy();
+				}
+			}
+		} 
 		
-		return "";
+		return jsonObject.toString();
 	}
 }
