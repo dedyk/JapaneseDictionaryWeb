@@ -24,7 +24,7 @@
 		<info>Generuje wiersz tabeli z wynikiem wyszukiwania kanji</info>
 		<attribute>
 			<name>findKanjiRequest</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>

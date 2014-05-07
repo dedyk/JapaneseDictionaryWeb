@@ -48,8 +48,12 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
             Tr tr = new Tr();    
             
             // pobranie danych
-            //
-            String findWord = findKanjiRequest.word;
+            
+            String findWord = null;
+            
+            if (findKanjiRequest != null) {
+            	findWord = findKanjiRequest.word;
+            }            
 
             String kanji = resultItem.getKanji();
             

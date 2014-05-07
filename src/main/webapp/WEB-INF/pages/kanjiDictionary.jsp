@@ -210,7 +210,6 @@
 								<tfood>
 									<c:forEach items="${findKanjiResult.result}" var="currentResult">
 										<jdwt:findKanjiResultItemTableRow
-											findKanjiRequest="${findKanjiRequest}"
 											resultItem="${currentResult}" />
 									</c:forEach>
 								</tfood>
@@ -444,6 +443,49 @@
         					</table>
         				</div>
         			</div>
+
+		            <c:if test="${findKanjiDetectResult != null}">
+					
+						<div>
+							<hr id="findKanjiDetectResultHrId" style="margin-top: 10px; margin-bottom: 10px" />
+						
+							<p class="text-left"><h4><spring:message code="kanjiDictionary.page.search.table.caption" /></h4></p>
+						
+							<table id="kanjiDictionaryFindKanjiDetectResult" class="table table-striped" style="font-size: 120%;">
+								<thead>
+									<tr>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.kanji" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th>
+										<th></th>
+									</tr>
+								</thead>
+								<tfood>
+									<c:forEach items="${findKanjiDetectResult.result}" var="currentResult">
+										<jdwt:findKanjiResultItemTableRow
+											findKanjiRequest="${findKanjiRequest}"
+											resultItem="${currentResult}" />
+									</c:forEach>
+								</tfood>
+								
+							</table>
+							
+							<script>
+								$(document).ready(function() {
+									$('#kanjiDictionaryFindKanjiDetectResult').dataTable({
+										language: {
+											url: '${staticFilePrefix}/js/datatables/polish.json'
+										},
+										"aaSorting": [],
+										"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+										"bLengthChange": false
+									});
+								});
+							</script>
+						</div>
+					</c:if>
         			
         			<script>
 						function detect() {								
@@ -484,7 +526,10 @@
 									dataType : "json",
 	
 									success: function( json ) {
-										alert("Sukces - FIXME");
+
+										if (json.result == 'ok') {
+											window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/kanjiDictionaryDetectSearch";
+										}
 									},
 	
 									error: function( xhr, status, errorThrown ) {

@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -287,7 +288,7 @@ public class KanjiDictionaryController extends CommonController {
 	
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
 			value = "/kanjiDictionary/detect", method = RequestMethod.POST)
-	public @ResponseBody String detect(@RequestParam(value="strokePaths[]", required=false) String[] strokePaths) throws Exception {
+	public @ResponseBody String detect(@RequestParam(value="strokePaths[]", required=false) String[] strokePaths, HttpSession session) throws Exception {
 		
 		JSONObject jsonObject = new JSONObject();
 		
@@ -340,7 +341,19 @@ public class KanjiDictionaryController extends CommonController {
 						if (currentPointSplited == null || currentPointSplited.length != 2) {
 							throw new Exception("Niepoprawny aktualny punkt");
 						}
+																		
+						int pointIdx = currentPointSplited[0].indexOf(".");
+						
+						if (pointIdx != -1) {
+							currentPointSplited[0] = currentPointSplited[0].substring(0, pointIdx);
+						}
 
+						pointIdx = currentPointSplited[1].indexOf(".");
+						
+						if (pointIdx != -1) {
+							currentPointSplited[1] = currentPointSplited[1].substring(0, pointIdx);
+						}
+						
 						try {				
 							Integer currentPointX = Integer.parseInt(currentPointSplited[0]);
 
@@ -362,7 +375,9 @@ public class KanjiDictionaryController extends CommonController {
 					}			
 				}
 
-				List<KanjiRecognizerResultItem> recognize = character.recognize(50);
+				List<KanjiRecognizerResultItem> recognizeResult = character.recognize(50);
+				
+				session.setAttribute("findKanjiRecognizerResultItem", recognizeResult);
 				
 				jsonObject.put("result", "ok");
 				
@@ -374,5 +389,43 @@ public class KanjiDictionaryController extends CommonController {
 		} 
 		
 		return jsonObject.toString();
+	}
+	
+	@RequestMapping(value = "/kanjiDictionaryDetectSearch", method = RequestMethod.GET)
+	public String detectSearchResult(HttpSession session, Map<String, Object> model) {
+		
+		@SuppressWarnings("unchecked")
+		List<KanjiRecognizerResultItem> recognizeResult = (List<KanjiRecognizerResultItem>)session.getAttribute("findKanjiRecognizerResultItem");
+		
+		if (recognizeResult == null) {
+			return "redirect:/kanjiDictionary";
+		}
+				
+		logger.info("Generowanie listy rozpoznanych znakow kanji");
+		
+		// utworzenie model szukania
+		KanjiDictionarySearchModel kanjiDictionarySearchModel = new KanjiDictionarySearchModel();
+
+		// ustawienie domyslnych wartosci model szukania
+		kanjiDictionarySearchModel.setWordPlace(WordPlaceSearch.START_WITH.toString());
+		
+		// pobierz elementy podstawowe
+		List<RadicalInfo> radicalList = dictionaryManager.getRadicalList();
+
+		model.put("command", kanjiDictionarySearchModel);
+		model.put("radicalList", radicalList);
+		model.put("selectedMenu", "kanjiDictionary");
+		
+		// uzupelnienie wynikowej listy
+		FindKanjiResult findKanjiDetectResult = new FindKanjiResult();
+		findKanjiDetectResult.setResult(new ArrayList<KanjiEntry>());
+		
+		for (KanjiRecognizerResultItem kanjiRecognizerResultItem : recognizeResult) {
+			findKanjiDetectResult.getResult().add(dictionaryManager.findKanji(kanjiRecognizerResultItem.getKanji()));
+		}		
+
+		model.put("findKanjiDetectResult", findKanjiDetectResult);
+				
+		return "kanjiDictionary";
 	}
 }
