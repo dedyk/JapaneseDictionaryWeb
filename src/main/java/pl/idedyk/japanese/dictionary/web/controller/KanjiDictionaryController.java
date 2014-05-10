@@ -37,6 +37,7 @@ import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.api.dto.RadicalInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
+import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryTab;
 import pl.idedyk.japanese.dictionary.web.controller.validator.KanjiDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager;
@@ -78,6 +79,8 @@ public class KanjiDictionaryController extends CommonController {
 		model.put("command", kanjiDictionarySearchModel);
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
+		model.put("tabs", KanjiDictionaryTab.values());
+		model.put("selectTab", KanjiDictionaryTab.MEANING.getId());
 				
 		return "kanjiDictionary";
 	}
@@ -94,6 +97,8 @@ public class KanjiDictionaryController extends CommonController {
 			model.put("command", searchModel);
 			model.put("radicalList", radicalList);
 			model.put("selectedMenu", "kanjiDictionary");
+			model.put("tabs", KanjiDictionaryTab.values());
+			model.put("selectTab", KanjiDictionaryTab.MEANING.getId());
 			
 			return "kanjiDictionary";
 		}
@@ -112,6 +117,9 @@ public class KanjiDictionaryController extends CommonController {
 		model.put("command", searchModel);
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
+		model.put("tabs", KanjiDictionaryTab.values());
+		model.put("selectTab", KanjiDictionaryTab.MEANING.getId());
+		
 		model.put("findKanjiRequest", findKanjiRequest);
 		model.put("findKanjiResult", findKanjiResult);
 		
@@ -282,6 +290,8 @@ public class KanjiDictionaryController extends CommonController {
 						
 		model.put("kanjiEntry", kanjiEntry);
 		model.put("selectedMenu", "kanjiDictionary");
+		model.put("tabs", KanjiDictionaryTab.values());
+		model.put("selectTab", KanjiDictionaryTab.MEANING.getId());
 		
 		return "kanjiDictionaryDetails";
 	}
@@ -415,6 +425,8 @@ public class KanjiDictionaryController extends CommonController {
 		model.put("command", kanjiDictionarySearchModel);
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
+		model.put("tabs", KanjiDictionaryTab.values());
+		model.put("selectTab", KanjiDictionaryTab.DETECT.getId());
 		
 		// uzupelnienie wynikowej listy
 		FindKanjiResult findKanjiDetectResult = new FindKanjiResult();

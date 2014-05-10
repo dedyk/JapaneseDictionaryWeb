@@ -46,6 +46,7 @@
 		
 			$(document).ready(function() {
 
+				// wyszukiwanie
 				$( "#word" ).autocomplete({
 				 	source: "${pageContext.request.contextPath}/kanjiDictionary/autocomplete",
 				 	minLength: 1
@@ -54,25 +55,6 @@
 				$( "#searchButton" ).button();
 
 				$( "#wordPlaceId").selectpicker();
-
-				<c:if test="${findKanjiResult != null}">
-				$('html, body').animate({
-		        	scrollTop: $("#findKanjiResultHrId").offset().top
-		    	}, 1000);
-				</c:if>
-
-				<c:if test="${sessionScope.selectedRadicals != null}">
-					selectedRadicals = [];
-					
-					<c:forEach items="${sessionScope.selectedRadicals}" var="currentRadical">
-					selectedRadicals.push('<c:out value="${currentRadical}" />');
-
-					$('#radicalTableId td').filter(function() { return $.text([this]) == '<c:out value="${currentRadical}" />'; }).css("background-color", "yellow");
-										
-					</c:forEach>			
-				</c:if>
-		
-				updateSelectedRadicals(null);
 
 				// rysowanie				
 				canvas = document.getElementById("detectCanvas");
@@ -91,6 +73,68 @@
 
 	            stage.addChild(drawingCanvas);
 	            stage.update();	
+
+	            // tabelki
+				$('#kanjiDictionaryFindKanjiResult').dataTable({
+					language: {
+						url: '${staticFilePrefix}/js/datatables/polish.json'
+					},
+					"aaSorting": [],
+					"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+					"bLengthChange": false
+				});
+
+				$('#kanjiDictionaryFindKanjiDetectResult').dataTable({
+					language: {
+						url: '${staticFilePrefix}/js/datatables/polish.json'
+					},
+					"aaSorting": [],
+					"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+					"bLengthChange": false
+				});
+
+				// zaznaczenie wybranych elementow podstawowych
+				<c:if test="${sessionScope.selectedRadicals != null}">
+					selectedRadicals = [];
+					
+					<c:forEach items="${sessionScope.selectedRadicals}" var="currentRadical">
+					selectedRadicals.push('<c:out value="${currentRadical}" />');
+
+					$('#radicalTableId td').filter(function() { return $.text([this]) == '<c:out value="${currentRadical}" />'; }).css("background-color", "yellow");
+										
+					</c:forEach>			
+				</c:if>
+		
+				updateSelectedRadicals(null);
+
+	            // wybor zakladki
+	            <c:if test="${selectTab != null}">
+	            $('#<c:out value="${selectTab}" />').tab('show');
+	            </c:if>
+
+				// przesuniecie ekranu po wyszukiwaniu znakow kanji
+				<c:if test="${findKanjiResult != null}">
+
+				window.setTimeout(function() {
+
+					$('html, body').animate({
+			        	scrollTop: $("#findKanjiResultHrId").offset().top
+			    	}, 1000);
+			    	
+				}, 300);
+				
+				</c:if>
+
+				// przesuniecie ekranu po rozpoznawaniu znakow kanji
+				<c:if test="${findKanjiDetectResult != null}">
+
+				window.setTimeout(function() { 
+					$('html, body').animate({
+			        	scrollTop: $("#findKanjiDetectResultHrId").offset().top
+			    	}, 1000);
+				}, 300);
+				
+				</c:if>
 			});
 
 	        function handleMouseDown(event) {
@@ -138,9 +182,9 @@
 	
 		<div>		
     		<ul class="nav nav-tabs">
-        		<li class="active"><a data-toggle="tab" href="#meaning"> <spring:message code="kanjiDictionary.page.tab.meaning" /> </a></li>
-        		<li><a data-toggle="tab" href="#radicals"> <spring:message code="kanjiDictionary.page.tab.radicals" /> </a></li>
-        		<li><a data-toggle="tab" href="#detect"> <spring:message code="kanjiDictionary.page.tab.detect" /> </a></li>
+        		<li class="active"><a data-toggle="tab" href="#meaning" id='<c:out value="${tabs[0].id}" />'> <spring:message code="kanjiDictionary.page.tab.meaning" /> </a></li>
+        		<li><a data-toggle="tab" href="#radicals" id='<c:out value="${tabs[1].id}" />'> <spring:message code="kanjiDictionary.page.tab.radicals" /> </a></li>
+        		<li><a data-toggle="tab" href="#detect" id='<c:out value="${tabs[2].id}" />'> <spring:message code="kanjiDictionary.page.tab.detect" /> </a></li>
     		</ul>
     		
     		<div class="tab-content">
@@ -191,7 +235,7 @@
             		
 		            <c:if test="${findKanjiResult != null}">
 					
-						<div>
+						<div class="col-md-12">
 							<hr id="findKanjiResultHrId" style="margin-top: 10px; margin-bottom: 10px" />
 						
 							<p class="text-left"><h4><spring:message code="kanjiDictionary.page.search.table.caption" /></h4></p>
@@ -214,20 +258,7 @@
 									</c:forEach>
 								</tfood>
 								
-							</table>
-							
-							<script>
-								$(document).ready(function() {
-									$('#kanjiDictionaryFindKanjiResult').dataTable({
-										language: {
-											url: '${staticFilePrefix}/js/datatables/polish.json'
-										},
-										"aaSorting": [],
-										"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-										"bLengthChange": false
-									});
-								});
-							</script>
+							</table>							
 						</div>
 					</c:if>
             		         		          		           		
@@ -446,7 +477,7 @@
 
 		            <c:if test="${findKanjiDetectResult != null}">
 					
-						<div>
+						<div class="col-md-12">
 							<hr id="findKanjiDetectResultHrId" style="margin-top: 10px; margin-bottom: 10px" />
 						
 							<p class="text-left"><h4><spring:message code="kanjiDictionary.page.search.table.caption" /></h4></p>
@@ -470,20 +501,7 @@
 									</c:forEach>
 								</tfood>
 								
-							</table>
-							
-							<script>
-								$(document).ready(function() {
-									$('#kanjiDictionaryFindKanjiDetectResult').dataTable({
-										language: {
-											url: '${staticFilePrefix}/js/datatables/polish.json'
-										},
-										"aaSorting": [],
-										"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-										"bLengthChange": false
-									});
-								});
-							</script>
+							</table>							
 						</div>
 					</c:if>
         			
