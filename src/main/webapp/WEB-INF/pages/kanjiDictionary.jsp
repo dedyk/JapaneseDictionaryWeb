@@ -135,6 +135,29 @@
 				}, 300);
 				
 				</c:if>
+
+				// narysowanie znaku
+				<c:if test="${kanjiDictionaryDrawStroke != null}">
+
+					strokePaths = [];
+				
+					<c:forEach items="${kanjiDictionaryDrawStroke.strokes}" var="currentStroke">
+
+					currentPath = [];
+
+						<c:forEach items="${currentStroke}" var="currentPoint">					
+							currentPath.push([<c:out value="${currentPoint.x}" />, <c:out value="${currentPoint.y}" />]);									
+						</c:forEach>
+
+						strokePaths.push(currentPath);
+
+						currentPath = [];
+						
+					</c:forEach>
+
+					reDrawDetect();
+					
+				</c:if>				
 			});
 
 	        function handleMouseDown(event) {
@@ -561,34 +584,39 @@
 
 							function undoStrokeDetect() {
 
-								stage.clear();
-
 								if (strokePaths.length > 0) {
 									strokePaths.pop();
 
-						            color = "#000000";
-						            stroke = 10;
-									
-									for (var idx = 0; idx < strokePaths.length; ++idx) {
-										var currentStrokePath = strokePaths[idx];
+									reDrawDetect();
+								}
+							}
 
-										oldPt = new createjs.Point(currentStrokePath[0][0], currentStrokePath[0][1]);
-							            oldMidPt = oldPt;
+							function reDrawDetect() {
 
-										for (var currentStrokePathIdx = 0; currentStrokePathIdx < currentStrokePath.length; ++currentStrokePathIdx) {
+								stage.clear();
 
-								            var midPt = new createjs.Point(oldPt.x + currentStrokePath[currentStrokePathIdx][0]>>1, oldPt.y + currentStrokePath[currentStrokePathIdx][1]>>1);
+					            color = "#000000";
+					            stroke = 10;
+								
+								for (var idx = 0; idx < strokePaths.length; ++idx) {
+									var currentStrokePath = strokePaths[idx];
 
-								            drawingCanvas.graphics.clear().setStrokeStyle(stroke, 'round', 'round').beginStroke(color).moveTo(midPt.x, midPt.y).curveTo(oldPt.x, oldPt.y, oldMidPt.x, oldMidPt.y);
+									oldPt = new createjs.Point(currentStrokePath[0][0], currentStrokePath[0][1]);
+						            oldMidPt = oldPt;
 
-								            oldPt.x = currentStrokePath[currentStrokePathIdx][0];
-								            oldPt.y = currentStrokePath[currentStrokePathIdx][1];
+									for (var currentStrokePathIdx = 0; currentStrokePathIdx < currentStrokePath.length; ++currentStrokePathIdx) {
 
-								            oldMidPt.x = midPt.x;
-								            oldMidPt.y = midPt.y;
+							            var midPt = new createjs.Point(oldPt.x + currentStrokePath[currentStrokePathIdx][0]>>1, oldPt.y + currentStrokePath[currentStrokePathIdx][1]>>1);
 
-								            stage.update();
-										}
+							            drawingCanvas.graphics.clear().setStrokeStyle(stroke, 'round', 'round').beginStroke(color).moveTo(midPt.x, midPt.y).curveTo(oldPt.x, oldPt.y, oldMidPt.x, oldMidPt.y);
+
+							            oldPt.x = currentStrokePath[currentStrokePathIdx][0];
+							            oldPt.y = currentStrokePath[currentStrokePathIdx][1];
+
+							            oldMidPt.x = midPt.x;
+							            oldMidPt.y = midPt.y;
+
+							            stage.update();
 									}
 								}
 							}

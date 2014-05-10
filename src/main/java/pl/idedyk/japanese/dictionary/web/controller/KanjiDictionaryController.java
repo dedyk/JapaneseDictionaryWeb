@@ -36,6 +36,7 @@ import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.api.dto.RadicalInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryTab;
 import pl.idedyk.japanese.dictionary.web.controller.validator.KanjiDictionarySearchModelValidator;
@@ -312,6 +313,8 @@ public class KanjiDictionaryController extends CommonController {
 
 			logger.info("Rozpoznawanie znakow kanji dla: " + strokePathsAll.toString());
 
+			KanjiDictionaryDrawStroke kanjiDictionaryDrawStroke = new KanjiDictionaryDrawStroke();
+			
 			final int maxX = 500;
 			final int maxY = 500;
 
@@ -324,6 +327,9 @@ public class KanjiDictionaryController extends CommonController {
 				character.setHeight(maxY);
 
 				for (int strokePathNo = 0; strokePathNo < strokePaths.length; ++strokePathNo) {
+					
+					kanjiDictionaryDrawStroke.newStroke();
+					
 					String currentStrokePath = strokePaths[strokePathNo];
 
 					if (currentStrokePath == null) {
@@ -378,6 +384,8 @@ public class KanjiDictionaryController extends CommonController {
 							}
 
 							character.add(strokePathNo, currentPointX, currentPointY);
+							
+							kanjiDictionaryDrawStroke.addPoint(currentPointX, currentPointY);
 
 						} catch (NumberFormatException e) {
 							throw new Exception("Niepoprawny aktualny punkt: " + currentPointSplited[0] + " - " + currentPointSplited[1]);
@@ -388,6 +396,7 @@ public class KanjiDictionaryController extends CommonController {
 				List<KanjiRecognizerResultItem> recognizeResult = character.recognize(50);
 				
 				session.setAttribute("findKanjiRecognizerResultItem", recognizeResult);
+				session.setAttribute("kanjiDictionaryDrawStroke", kanjiDictionaryDrawStroke);
 				
 				jsonObject.put("result", "ok");
 				
@@ -406,11 +415,15 @@ public class KanjiDictionaryController extends CommonController {
 		
 		@SuppressWarnings("unchecked")
 		List<KanjiRecognizerResultItem> recognizeResult = (List<KanjiRecognizerResultItem>)session.getAttribute("findKanjiRecognizerResultItem");
+		session.removeAttribute("findKanjiRecognizerResultItem");
 		
 		if (recognizeResult == null) {
 			return "redirect:/kanjiDictionary";
 		}
-				
+		
+		KanjiDictionaryDrawStroke kanjiDictionaryDrawStroke = (KanjiDictionaryDrawStroke)session.getAttribute("kanjiDictionaryDrawStroke");
+		session.removeAttribute("kanjiDictionaryDrawStroke");
+		
 		logger.info("Generowanie listy rozpoznanych znakow kanji");
 		
 		// utworzenie model szukania
@@ -437,6 +450,7 @@ public class KanjiDictionaryController extends CommonController {
 		}		
 
 		model.put("findKanjiDetectResult", findKanjiDetectResult);
+		model.put("kanjiDictionaryDrawStroke", kanjiDictionaryDrawStroke);
 				
 		return "kanjiDictionary";
 	}
