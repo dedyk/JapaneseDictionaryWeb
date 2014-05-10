@@ -467,12 +467,22 @@
         		</div>
         		
         		<div id="detect" class="tab-pane fade col-md-12" style="padding-top: 20px; padding-bottom: 20px">
-        			
+        		        			
+        		    <form id="detectForm" method="post" action="${pageContext.request.contextPath}/kanjiDictionaryDetectSearch">
+        		    	<input id="detectFormStrokes" type="hidden" name="strokes" value="" />
+        		    </form>
+        		        			
         			<div class="col-md-12">
         				<h4><spring:message code="kanjiDictionary.page.tab.detect.info1" /></h4>
         				<h5><spring:message code="kanjiDictionary.page.tab.detect.info2" /></h5>
         				<hr/>
         			</div>
+        			
+        			<c:if test="${kanjiDictionaryDetectErrorMessage != null}">
+        			<div class="col-md-12 alert alert-danger">
+        				<c:out value="${kanjiDictionaryDetectErrorMessage}" />
+        			</div>        			
+        			</c:if>
         			
         			<div class="col-md-12">
         				<div class="col-md-2">
@@ -543,7 +553,7 @@
 									return;
 								}
 								
-								var detectStrokePaths = [];
+								var detectStrokePathsString = "";
 																
 								for (var idx = 0; idx < strokePaths.length; ++idx) {
 									var currentStrokePath = strokePaths[idx];
@@ -554,39 +564,12 @@
 										currentStringStrokePath += currentStrokePath[ydx][0] + "," + currentStrokePath[ydx][1] + ";";
 									}
 
-									detectStrokePaths.push(currentStringStrokePath);
+									detectStrokePathsString += currentStringStrokePath + "\n";
 								}
 
-								if (detectStrokePaths.length == 1) {
-									detectStrokePaths.push("");
-								}
+								$("#detectFormStrokes").val(detectStrokePathsString);
 								
-								$.ajax({
-									
-									url: "${pageContext.request.contextPath}/kanjiDictionary/detect",
-										
-									data: {
-										strokePaths: detectStrokePaths
-									},
-									
-									type: "POST",
-	
-									dataType : "json",
-	
-									success: function( json ) {
-
-										if (json.result == 'ok') {
-											window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/kanjiDictionaryDetectSearch";
-										}
-									},
-	
-									error: function( xhr, status, errorThrown ) {
-										alert('<spring:message code="kanjiDictionary.page.tab.detect.problem" />');
-									},
-	
-									complete: function( xhr, status ) {
-									}
-									});								
+								$("#detectForm").submit();
 							}
 
 							function undoStrokeDetect() {

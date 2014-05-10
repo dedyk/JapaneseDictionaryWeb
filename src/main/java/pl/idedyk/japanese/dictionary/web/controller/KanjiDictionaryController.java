@@ -296,136 +296,26 @@ public class KanjiDictionaryController extends CommonController {
 		
 		return "kanjiDictionaryDetails";
 	}
-	
-	@RequestMapping(produces = "application/json;charset=UTF-8", 
-			value = "/kanjiDictionary/detect", method = RequestMethod.POST)
-	public @ResponseBody String detect(@RequestParam(value="strokePaths[]", required=false) String[] strokePaths, HttpSession session) throws Exception {
 		
-		JSONObject jsonObject = new JSONObject();
+	@RequestMapping(value = "/kanjiDictionaryDetectSearch", method = RequestMethod.POST)
+	public String detectSearchResult(Map<String, Object> model, @RequestParam(value="strokes", required=false) String strokes) {
 		
-		if (strokePaths != null) {
-
-			StringBuffer strokePathsAll = new StringBuffer();
-
-			for (String currentStrokePath : strokePaths) {
-				strokePathsAll.append(currentStrokePath).append("\n");
-			}
-
-			logger.info("Rozpoznawanie znakow kanji dla: " + strokePathsAll.toString());
-
-			KanjiDictionaryDrawStroke kanjiDictionaryDrawStroke = new KanjiDictionaryDrawStroke();
+		logger.info("Rozpoznawanie znakow kanji dla: " + strokes);
+		
+		List<KanjiRecognizerResultItem> detectKanjiResult = null;
+		String errorMessage = null;
+		
+		KanjiDictionaryDrawStroke kanjiDictionaryDrawStroke = new KanjiDictionaryDrawStroke();
+		
+		try {
+			detectKanjiResult = detectKanji(strokes, kanjiDictionaryDrawStroke);
 			
-			final int maxX = 500;
-			final int maxY = 500;
-
-			ZinniaManager.Character character = null;
-
-			try {
-				character = zinniaManager.createNewCharacter();
-
-				character.setWidth(maxX);
-				character.setHeight(maxY);
-
-				for (int strokePathNo = 0; strokePathNo < strokePaths.length; ++strokePathNo) {
-					
-					kanjiDictionaryDrawStroke.newStroke();
-					
-					String currentStrokePath = strokePaths[strokePathNo];
-
-					if (currentStrokePath == null) {
-						throw new Exception("Pusta aktualna sciezka");
-					}
-
-					if (currentStrokePath.equals("") == true) {
-						break;
-					}
-
-					String[] points = currentStrokePath.split(";");
-
-					if (points == null || points.length == 0) {
-						throw new Exception("Puste punkty");
-					}
-
-					for (String currentPoint : points) {
-
-						if (currentPoint == null) {
-							throw new Exception("Pusty aktualny punkt");
-						}
-
-						String[] currentPointSplited = currentPoint.split(",");
-
-						if (currentPointSplited == null || currentPointSplited.length != 2) {
-							throw new Exception("Niepoprawny aktualny punkt");
-						}
-																		
-						int pointIdx = currentPointSplited[0].indexOf(".");
-						
-						if (pointIdx != -1) {
-							currentPointSplited[0] = currentPointSplited[0].substring(0, pointIdx);
-						}
-
-						pointIdx = currentPointSplited[1].indexOf(".");
-						
-						if (pointIdx != -1) {
-							currentPointSplited[1] = currentPointSplited[1].substring(0, pointIdx);
-						}
-						
-						try {				
-							Integer currentPointX = Integer.parseInt(currentPointSplited[0]);
-
-							if (currentPointX < 0 || currentPointX > maxX) {
-								throw new Exception("Niepoprawny aktualny punkt X: " + currentPointSplited[0]);
-							}
-
-							Integer currentPointY = Integer.parseInt(currentPointSplited[1]);
-
-							if (currentPointY < 0 || currentPointY > maxY) {
-								throw new Exception("Niepoprawny aktualny punkt Y: " + currentPointSplited[1]);
-							}
-
-							character.add(strokePathNo, currentPointX, currentPointY);
-							
-							kanjiDictionaryDrawStroke.addPoint(currentPointX, currentPointY);
-
-						} catch (NumberFormatException e) {
-							throw new Exception("Niepoprawny aktualny punkt: " + currentPointSplited[0] + " - " + currentPointSplited[1]);
-						}				
-					}			
-				}
-
-				List<KanjiRecognizerResultItem> recognizeResult = character.recognize(50);
-				
-				session.setAttribute("findKanjiRecognizerResultItem", recognizeResult);
-				session.setAttribute("kanjiDictionaryDrawStroke", kanjiDictionaryDrawStroke);
-				
-				jsonObject.put("result", "ok");
-				
-			} finally {
-				if (character != null) {
-					character.destroy();
-				}
-			}
-		} 
-		
-		return jsonObject.toString();
-	}
-	
-	@RequestMapping(value = "/kanjiDictionaryDetectSearch", method = RequestMethod.GET)
-	public String detectSearchResult(HttpSession session, Map<String, Object> model) {
-		
-		@SuppressWarnings("unchecked")
-		List<KanjiRecognizerResultItem> recognizeResult = (List<KanjiRecognizerResultItem>)session.getAttribute("findKanjiRecognizerResultItem");
-		session.removeAttribute("findKanjiRecognizerResultItem");
-		
-		if (recognizeResult == null) {
-			return "redirect:/kanjiDictionary";
+		} catch (Exception e) {
+			errorMessage = e.getMessage();
+			
+			logger.error("Bład podczas rozpoznawania znaków kanji: " + errorMessage);
 		}
-		
-		KanjiDictionaryDrawStroke kanjiDictionaryDrawStroke = (KanjiDictionaryDrawStroke)session.getAttribute("kanjiDictionaryDrawStroke");
-		session.removeAttribute("kanjiDictionaryDrawStroke");
-		
-		logger.info("Generowanie listy rozpoznanych znakow kanji");
-		
+				
 		// utworzenie model szukania
 		KanjiDictionarySearchModel kanjiDictionarySearchModel = new KanjiDictionarySearchModel();
 
@@ -435,23 +325,136 @@ public class KanjiDictionaryController extends CommonController {
 		// pobierz elementy podstawowe
 		List<RadicalInfo> radicalList = dictionaryManager.getRadicalList();
 
+		// uzupelnienie wynikowej listy
+		FindKanjiResult findKanjiDetectResult = null;
+		
+		if (detectKanjiResult != null) {
+			findKanjiDetectResult = new FindKanjiResult();
+			findKanjiDetectResult.setResult(new ArrayList<KanjiEntry>());
+			
+			for (KanjiRecognizerResultItem kanjiRecognizerResultItem : detectKanjiResult) {
+				findKanjiDetectResult.getResult().add(dictionaryManager.findKanji(kanjiRecognizerResultItem.getKanji()));
+			}	
+			
+		} else {
+			kanjiDictionaryDrawStroke = null;
+		}
+
 		model.put("command", kanjiDictionarySearchModel);
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
 		model.put("selectTab", KanjiDictionaryTab.DETECT.getId());
 		
-		// uzupelnienie wynikowej listy
-		FindKanjiResult findKanjiDetectResult = new FindKanjiResult();
-		findKanjiDetectResult.setResult(new ArrayList<KanjiEntry>());
-		
-		for (KanjiRecognizerResultItem kanjiRecognizerResultItem : recognizeResult) {
-			findKanjiDetectResult.getResult().add(dictionaryManager.findKanji(kanjiRecognizerResultItem.getKanji()));
-		}		
-
+		model.put("kanjiDictionaryDetectErrorMessage", errorMessage);
 		model.put("findKanjiDetectResult", findKanjiDetectResult);
 		model.put("kanjiDictionaryDrawStroke", kanjiDictionaryDrawStroke);
 				
 		return "kanjiDictionary";
+	}
+	
+	private List<KanjiRecognizerResultItem> detectKanji(String strokes, KanjiDictionaryDrawStroke kanjiDictionaryDrawStroke) throws Exception {
+		
+		if (strokes == null) {
+			throw new Exception(messageSource.getMessage("kanjiDictionaryDetails.page.title", new Object[] { }, Locale.getDefault()));
+		}
+		
+		String[] strokesSplited = strokes.split("\n");
+		
+		if (strokesSplited.length == 0) {
+			throw new Exception(messageSource.getMessage("kanjiDictionaryDetails.page.title", new Object[] { }, Locale.getDefault()));
+		}
+		
+		final int maxX = 500;
+		final int maxY = 500;
+
+		ZinniaManager.Character character = null;
+
+		try {
+			character = zinniaManager.createNewCharacter();
+
+			character.setWidth(maxX);
+			character.setHeight(maxY);
+
+			for (int strokePathNo = 0; strokePathNo < strokesSplited.length; ++strokePathNo) {
+				
+				kanjiDictionaryDrawStroke.newStroke();
+				
+				String currentStrokePath = strokesSplited[strokePathNo];
+
+				if (currentStrokePath == null) {
+					throw new Exception(messageSource.getMessage("kanjiDictionary.page.tab.detect.problem", new Object[] { }, Locale.getDefault()));
+				}
+
+				if (currentStrokePath.equals("") == true) {
+					break;
+				}
+
+				String[] points = currentStrokePath.split(";");
+
+				if (points == null || points.length == 0) {
+					throw new Exception(messageSource.getMessage("kanjiDictionary.page.tab.detect.problem", new Object[] { }, Locale.getDefault()));
+				}
+
+				for (String currentPoint : points) {
+
+					if (currentPoint == null) {
+						throw new Exception(messageSource.getMessage("kanjiDictionary.page.tab.detect.problem", new Object[] { }, Locale.getDefault()));
+					}
+					
+					currentPoint = currentPoint.trim();
+					
+					if (currentPoint.equals("") == true) {
+						continue;
+					}
+
+					String[] currentPointSplited = currentPoint.split(",");
+
+					if (currentPointSplited == null || currentPointSplited.length != 2) {
+						throw new Exception(messageSource.getMessage("kanjiDictionary.page.tab.detect.problem", new Object[] { }, Locale.getDefault()));
+					}
+																	
+					int pointIdx = currentPointSplited[0].indexOf(".");
+					
+					if (pointIdx != -1) {
+						currentPointSplited[0] = currentPointSplited[0].substring(0, pointIdx);
+					}
+
+					pointIdx = currentPointSplited[1].indexOf(".");
+					
+					if (pointIdx != -1) {
+						currentPointSplited[1] = currentPointSplited[1].substring(0, pointIdx);
+					}
+					
+					try {				
+						Integer currentPointX = Integer.parseInt(currentPointSplited[0]);
+
+						if (currentPointX < 0 || currentPointX > maxX) {
+							throw new Exception(messageSource.getMessage("kanjiDictionary.page.tab.detect.problem", new Object[] { }, Locale.getDefault()));
+						}
+
+						Integer currentPointY = Integer.parseInt(currentPointSplited[1]);
+
+						if (currentPointY < 0 || currentPointY > maxY) {
+							throw new Exception(messageSource.getMessage("kanjiDictionary.page.tab.detect.problem", new Object[] { }, Locale.getDefault()));
+						}
+
+						character.add(strokePathNo, currentPointX, currentPointY);
+						
+						kanjiDictionaryDrawStroke.addPoint(currentPointX, currentPointY);
+
+					} catch (NumberFormatException e) {
+						throw new Exception(messageSource.getMessage("kanjiDictionary.page.tab.detect.problem", new Object[] { }, Locale.getDefault()));
+					}				
+				}			
+			}
+
+			return character.recognize(50);
+						
+		} finally {
+			if (character != null) {
+				character.destroy();
+			}
+		}		
 	}
 }
