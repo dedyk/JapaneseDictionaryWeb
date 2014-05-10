@@ -469,7 +469,14 @@
         		<div id="detect" class="tab-pane fade col-md-12" style="padding-top: 20px; padding-bottom: 20px">
         			
         			<div class="col-md-12">
-        				<div class="col-md-2"></div>
+        				<h4><spring:message code="kanjiDictionary.page.tab.detect.info1" /></h4>
+        				<h5><spring:message code="kanjiDictionary.page.tab.detect.info2" /></h5>
+        				<hr/>
+        			</div>
+        			
+        			<div class="col-md-12">
+        				<div class="col-md-2">
+        				</div>
         				<div class="col-md-6">
         					<canvas id="detectCanvas" width="500" height="500" style="border: 1px solid black;"/>
         				</div>
