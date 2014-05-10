@@ -383,6 +383,10 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		List<String> radicals = kanjiDic2Entry.getRadicals();
 		
+		if (radicals == null || radicals.size() == 0) {
+			return null;
+		}
+		
 		Div radicalsDiv = new Div();
 				
     	// wiersz z tytulem
