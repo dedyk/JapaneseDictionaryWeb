@@ -5,13 +5,16 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:jms="http://www.springframework.org/schema/jms"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans     
         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
         http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context-4.0.xsd
         http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/jms
+        http://www.springframework.org/schema/jms/spring-jms-3.0.xsd">
 
 	<context:component-scan base-package="pl.idedyk.japanese.dictionary.web" />
 
@@ -20,6 +23,25 @@
 	<mvc:resources mapping="/img/**" location="/img/" />
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/js/**" location="/js/" />
+
+	<bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="vm://localhost" />
+	</bean>
+
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="activeMQConnectionFactory" />
+	</bean>	
+	
+	<bean id="loggerQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="QUEUE.LOGGER" />
+	</bean>
+	
+	<bean id="loggerSender" class="pl.idedyk.japanese.dictionary.web.logger.LoggerSender">
+		<property name="jmsTemplate" ref="jmsTemplate" />
+		<property name="destination" ref="loggerQueue" />
+	</bean>
+	
+	<bean id="loggerMessageListener" class="pl.idedyk.japanese.dictionary.web.logger.LoggerListener" />
 		
 	<bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
 		<property name="locations">
@@ -64,4 +86,8 @@
     	<property name="libzinnia" value="${zinnia.libzinnia}" />
     	<property name="libzinniajni" value="${zinnia.libzinniajni}" />
     </bean>
+    
+	<jms:listener-container container-type="default" connection-factory="activeMQConnectionFactory" acknowledge="auto">
+		<jms:listener destination="QUEUE.LOGGER" ref="loggerMessageListener" method="onMessage" />
+	</jms:listener-container>
 </beans>

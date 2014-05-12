@@ -33,6 +33,7 @@ import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.WordDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 
 @Controller
 public class WordDictionaryController extends CommonController {
@@ -52,6 +53,9 @@ public class WordDictionaryController extends CommonController {
 	private void initBinder(WebDataBinder binder) {  
 		binder.setValidator(wordDictionarySearchModelValidator);  
 	}
+	
+	@Autowired
+	private LoggerSender loggerSender;
 
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
 	public String start(Map<String, Object> model) {
@@ -76,6 +80,11 @@ public class WordDictionaryController extends CommonController {
 		model.put("command", wordDictionarySearchModel);
 		model.put("selectedMenu", "wordDictionary");
 
+		//////
+		int fixme = 1; // testy
+		
+		loggerSender.sendTestMessage();
+		
 		return "wordDictionary";
 	}
 
