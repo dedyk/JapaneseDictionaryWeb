@@ -1,0 +1,41 @@
+package pl.idedyk.japanese.dictionary.web.logger.model;
+
+import java.io.Serializable;
+
+public class WordDictionaryAutocompleLoggerModel implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+
+	private String term;
+	
+	private int foundElemets;
+	
+	public WordDictionaryAutocompleLoggerModel() {
+	}
+	
+	public WordDictionaryAutocompleLoggerModel(String term, int foundElemets) {
+		this.term = term;
+		this.foundElemets = foundElemets;
+	}
+
+	public String getTerm() {
+		return term;
+	}
+
+	public void setTerm(String term) {
+		this.term = term;
+	}
+
+	public int getFoundElemets() {
+		return foundElemets;
+	}
+
+	public void setFoundElemets(int foundElemets) {
+		this.foundElemets = foundElemets;
+	}
+
+	@Override
+	public String toString() {
+		return "WordDictionaryAutocompleLoggerModel [term=" + term + ", foundElemets=" + foundElemets + "]";
+	}
+}

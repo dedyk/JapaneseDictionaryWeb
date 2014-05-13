@@ -34,6 +34,9 @@ import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchMo
 import pl.idedyk.japanese.dictionary.web.controller.validator.WordDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 
 @Controller
 public class WordDictionaryController extends CommonController {
@@ -79,11 +82,6 @@ public class WordDictionaryController extends CommonController {
 		model.put("addableDictionaryEntryList", addableDictionaryEntryList);
 		model.put("command", wordDictionarySearchModel);
 		model.put("selectedMenu", "wordDictionary");
-
-		//////
-		int fixme = 1; // testy
-		
-		loggerSender.sendTestMessage();
 		
 		return "wordDictionary";
 	}
@@ -108,11 +106,11 @@ public class WordDictionaryController extends CommonController {
 		
 		logger.info("Wyszukiwanie słowek dla zapytania: " + findWordRequest);
 		
-		// logowanie
-		int fixme = 1;
-
 		// szukanie		
 		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
+		
+		// logowanie
+		loggerSender.sendWordDictionarySearchLog(new WordDictionarySearchLoggerModel(findWordRequest, findWordResult));
 		
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
@@ -202,10 +200,13 @@ public class WordDictionaryController extends CommonController {
 	public @ResponseBody String autocomplete(@RequestParam(value="term", required=true) String term) {
 
 		logger.info("Podpowiadacz słówkowy dla wyrażenia: " + term);
-
+		
 		try {
 			List<String> wordAutocomplete = dictionaryManager.getWordAutocomplete(term, 5);
 
+			// logowanie
+			loggerSender.sendWordDictionaryAutocompleteLog(new WordDictionaryAutocompleLoggerModel(term, wordAutocomplete.size()));
+			
 			JSONArray jsonArray = new JSONArray();
 
 			for (String currentWordAutocomplete : wordAutocomplete) {
@@ -234,12 +235,14 @@ public class WordDictionaryController extends CommonController {
 		
 		int fixme = 1;		
 		// zrobic powrot
-		// logowanie
-		
+				
 		// tytul strony
 		if (dictionaryEntry != null) {
 			
 			logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
+			
+			// logowanie
+			loggerSender.sendWordDictionaryDetailsLog(new WordDictionaryDetailsLoggerModel(dictionaryEntry));
 			
 			String dictionaryEntryKanji = dictionaryEntry.getKanji();
 			List<String> dictionaryEntryKanaList = dictionaryEntry.getKanaList();

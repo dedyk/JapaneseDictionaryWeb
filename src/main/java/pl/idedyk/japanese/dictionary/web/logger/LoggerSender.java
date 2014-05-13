@@ -1,13 +1,19 @@
 package pl.idedyk.japanese.dictionary.web.logger;
 
+import java.io.Serializable;
+
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
+import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
+
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 
 public class LoggerSender {
 
@@ -15,39 +21,32 @@ public class LoggerSender {
 	
 	private Destination destination;
 	
-	public void sendTestMessage() {
+	public void sendWordDictionarySearchLog(WordDictionarySearchLoggerModel wordDictionarySearchLoggerModel) {
+		sendSerializable(wordDictionarySearchLoggerModel);
+	}
+
+	public void sendWordDictionaryAutocompleteLog(WordDictionaryAutocompleLoggerModel wordDictionaryAutocompleteLoggerModel) {
+		sendSerializable(wordDictionaryAutocompleteLoggerModel);
+	}
 	
-		int fixme = 1;
-		
-		System.out.println("!!!!!!!");
+	public void sendWordDictionaryDetailsLog(WordDictionaryDetailsLoggerModel wordDictionaryDetailsLoggerModel) {
+		sendSerializable(wordDictionaryDetailsLoggerModel);
+	}
+
+	private void sendSerializable(final Serializable serializable) { 
 		
 		jmsTemplate.send(destination, new MessageCreator() {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
 				
-				TextMessage message = null;
+				ObjectMessage message = session.createObjectMessage();
 				
-                try {
-                    message = session.createTextMessage();
-                    message.setStringProperty("text", "Hello World");
-                    
-                } catch (JMSException e) {
-                    e.printStackTrace();
-                }
-                
+				message.setObject(serializable);
+				                
                 return message;
 			}
-		});
-		
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		System.out.println("!!!!!!! - 22222");
+		});		
 	}
 
 	public JmsTemplate getJmsTemplate() {
