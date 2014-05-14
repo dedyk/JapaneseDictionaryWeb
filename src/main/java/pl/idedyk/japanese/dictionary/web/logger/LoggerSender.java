@@ -11,9 +11,7 @@ import javax.jms.Session;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
-import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleLoggerModel;
-import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
-import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 
 public class LoggerSender {
 
@@ -21,16 +19,8 @@ public class LoggerSender {
 	
 	private Destination destination;
 	
-	public void sendWordDictionarySearchLog(WordDictionarySearchLoggerModel wordDictionarySearchLoggerModel) {
-		sendSerializable(wordDictionarySearchLoggerModel);
-	}
-
-	public void sendWordDictionaryAutocompleteLog(WordDictionaryAutocompleLoggerModel wordDictionaryAutocompleteLoggerModel) {
-		sendSerializable(wordDictionaryAutocompleteLoggerModel);
-	}
-	
-	public void sendWordDictionaryDetailsLog(WordDictionaryDetailsLoggerModel wordDictionaryDetailsLoggerModel) {
-		sendSerializable(wordDictionaryDetailsLoggerModel);
+	public void sendLog(LoggerModelCommon log) {
+		sendSerializable(log);
 	}
 
 	private void sendSerializable(final Serializable serializable) { 

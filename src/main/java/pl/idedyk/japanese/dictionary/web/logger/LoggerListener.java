@@ -9,9 +9,11 @@ import javax.jms.ObjectMessage;
 
 import org.apache.log4j.Logger;
 
+import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
 
 public class LoggerListener implements MessageListener {
 	
@@ -34,12 +36,27 @@ public class LoggerListener implements MessageListener {
 				return;
 			}
 			
-			if (object instanceof WordDictionarySearchLoggerModel) {
+			if (object instanceof LoggerModelCommon) {
+				
+				int fixme = 1; // obsluga
+				
+				LoggerModelCommon loggerModelCommon = (LoggerModelCommon)object;
+				
+				logger.info(loggerModelCommon.getSessionId() + " - " + loggerModelCommon.getRemoteIp() + " - " + loggerModelCommon.getRemoteHost());
+			}
+			
+			// i inne typy
+			
+			if (object instanceof WordDictionaryStartLoggerModel) {
 				int fixme = 1; // obsluga
 				
 				logger.info(object);
+			
+			} else if (object instanceof WordDictionarySearchLoggerModel) {
+				int fixme = 1; // obsluga
 				
-				
+				logger.info(object);
+								
 			} else if (object instanceof WordDictionaryAutocompleLoggerModel) {
 				int fixme = 1; // obsluga
 				

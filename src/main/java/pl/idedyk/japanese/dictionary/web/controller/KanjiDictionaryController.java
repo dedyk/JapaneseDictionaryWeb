@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -42,6 +43,13 @@ import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryTab;
 import pl.idedyk.japanese.dictionary.web.controller.validator.KanjiDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager;
+import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 
 @Controller
 public class KanjiDictionaryController extends CommonController {
@@ -64,9 +72,12 @@ public class KanjiDictionaryController extends CommonController {
 	private void initBinder(WebDataBinder binder) {  
 		binder.setValidator(kanjiDictionarySearchModelValidator);  
 	}
+	
+	@Autowired
+	private LoggerSender loggerSender;
 
 	@RequestMapping(value = "/kanjiDictionary", method = RequestMethod.GET)
-	public String start(Map<String, Object> model, HttpSession session) {
+	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
 						
 		// utworzenie model szukania
 		KanjiDictionarySearchModel kanjiDictionarySearchModel = new KanjiDictionarySearchModel();
@@ -77,6 +88,9 @@ public class KanjiDictionaryController extends CommonController {
 		// pobierz elementy podstawowe
 		List<RadicalInfo> radicalList = dictionaryManager.getRadicalList();
 
+		// logowanie
+		loggerSender.sendLog(new KanjiDictionaryStartLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost()));
+		
 		model.put("command", kanjiDictionarySearchModel);
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
@@ -87,7 +101,7 @@ public class KanjiDictionaryController extends CommonController {
 	}
 	
 	@RequestMapping(value = "/kanjiDictionarySearch", method = RequestMethod.GET)
-	public String search(@ModelAttribute("command") @Valid KanjiDictionarySearchModel searchModel,
+	public String search(HttpServletRequest request, HttpSession session, @ModelAttribute("command") @Valid KanjiDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) {
 
 		// pobierz elementy podstawowe
@@ -109,11 +123,11 @@ public class KanjiDictionaryController extends CommonController {
 
 		logger.info("Wyszukiwanie kanji dla zapytania: " + findKanjiRequest);
 
-		// logowanie
-		int fixme = 1;
-
 		// szukanie
 		FindKanjiResult findKanjiResult = dictionaryManager.findKanji(findKanjiRequest);
+		
+		// logowanie
+		loggerSender.sendLog(new KanjiDictionarySearchLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), findKanjiRequest, findKanjiResult));
 		
 		model.put("command", searchModel);
 		model.put("radicalList", radicalList);
@@ -169,13 +183,16 @@ public class KanjiDictionaryController extends CommonController {
 	
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
 			value = "/kanjiDictionary/autocomplete", method = RequestMethod.GET)
-	public @ResponseBody String autocomplete(@RequestParam(value="term", required=true) String term) {
+	public @ResponseBody String autocomplete(HttpServletRequest request, HttpSession session, @RequestParam(value="term", required=true) String term) {
 
 		logger.info("Podpowiadacz słówkowy kanji dla wyrażenia: " + term);
 
 		try {
 			List<String> kanjiAutocomplete = dictionaryManager.getKanjiAutocomplete(term, 5);
 
+			// logowanie
+			loggerSender.sendLog(new KanjiDictionaryAutocompleLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), term, kanjiAutocomplete.size()));
+			
 			JSONArray jsonArray = new JSONArray();
 
 			for (String currentWordAutocomplete : kanjiAutocomplete) {
@@ -197,8 +214,7 @@ public class KanjiDictionaryController extends CommonController {
 	
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
 			value = "/kanjiDictionary/showAvailableRadicals", method = RequestMethod.POST)
-	public @ResponseBody String showAvailableRadicals(@RequestParam(value="selectedRadicals[]", required=false) String[] selectedRadicals,
-			HttpSession session) {
+	public @ResponseBody String showAvailableRadicals(HttpServletRequest request, HttpSession session, @RequestParam(value="selectedRadicals[]", required=false) String[] selectedRadicals) {
 
 		if (selectedRadicals == null) {
 			selectedRadicals = new String[] { };
@@ -209,7 +225,12 @@ public class KanjiDictionaryController extends CommonController {
 		Set<String> allAvailableRadicals = dictionaryManager.findAllAvailableRadicals(selectedRadicals);
 		
 		List<KanjiEntry> findKnownKanjiFromRadicalsResult = dictionaryManager.findKnownKanjiFromRadicals(selectedRadicals);
-				
+		
+		// logowanie
+		if (selectedRadicals.length > 0) {
+			loggerSender.sendLog(new KanjiDictionaryRadicalsLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), selectedRadicals, findKnownKanjiFromRadicalsResult.size()));
+		}
+		
 		JSONObject jsonObject = new JSONObject();
 		
 		jsonObject.put("allAvailableRadicals", allAvailableRadicals);
@@ -258,19 +279,21 @@ public class KanjiDictionaryController extends CommonController {
 	}
 	
 	@RequestMapping(value = "/kanjiDictionaryDetails/{id}/{kanji}", method = RequestMethod.GET)
-	public String showKanjiDictionaryDetails(@PathVariable("id") int id, @PathVariable("kanji") String kanji, Map<String, Object> model) {
+	public String showKanjiDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji, Map<String, Object> model) {
 		
 		// pobranie kanji entry
 		KanjiEntry kanjiEntry = dictionaryManager.findKanji(kanji);
 				
 		int fixme = 1;		
 		// zrobic powrot
-		// logowanie
 		
 		// tytul strony
 		if (kanjiEntry != null) {
 			
 			logger.info("Znaleziono kanji dla zapytania o szczegóły kanji: " + kanjiEntry);
+			
+			// logowanie
+			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), kanjiEntry));
 			
 			String kanjiEntryKanji = kanjiEntry.getKanji();
 									
@@ -298,7 +321,7 @@ public class KanjiDictionaryController extends CommonController {
 	}
 		
 	@RequestMapping(value = "/kanjiDictionaryDetectSearch", method = RequestMethod.POST)
-	public String detectSearchResult(Map<String, Object> model, @RequestParam(value="strokes", required=false) String strokes) {
+	public String detectSearchResult(HttpServletRequest request, HttpSession session, Map<String, Object> model, @RequestParam(value="strokes", required=false) String strokes) {
 		
 		logger.info("Rozpoznawanie znakow kanji dla: " + strokes);
 		
@@ -329,6 +352,9 @@ public class KanjiDictionaryController extends CommonController {
 		FindKanjiResult findKanjiDetectResult = null;
 		
 		if (detectKanjiResult != null) {
+			// logowanie
+			loggerSender.sendLog(new KanjiDictionaryDetectLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), strokes, detectKanjiResult));
+			
 			findKanjiDetectResult = new FindKanjiResult();
 			findKanjiDetectResult.setResult(new ArrayList<KanjiEntry>());
 			

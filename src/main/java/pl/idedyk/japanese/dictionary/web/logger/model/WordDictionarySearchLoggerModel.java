@@ -1,22 +1,20 @@
 package pl.idedyk.japanese.dictionary.web.logger.model;
 
-import java.io.Serializable;
-
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 
-public class WordDictionarySearchLoggerModel implements Serializable {
+public class WordDictionarySearchLoggerModel extends LoggerModelCommon {
 
 	private static final long serialVersionUID = 1L;
 
 	private FindWordRequest findWordRequest;
 	
 	private FindWordResult findWordResult;
+	
+	public WordDictionarySearchLoggerModel(String sessionId, String remoteIp, String remoteHost, FindWordRequest findWordRequest, FindWordResult findWordResult) {
 		
-	public WordDictionarySearchLoggerModel() {
-	}
-
-	public WordDictionarySearchLoggerModel(FindWordRequest findWordRequest, FindWordResult findWordResult) {
+		super(sessionId, remoteIp, remoteHost);
+		
 		this.findWordRequest = findWordRequest;
 		this.findWordResult = findWordResult;
 	}

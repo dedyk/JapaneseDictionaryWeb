@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
@@ -37,6 +39,7 @@ import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
 
 @Controller
 public class WordDictionaryController extends CommonController {
@@ -61,8 +64,8 @@ public class WordDictionaryController extends CommonController {
 	private LoggerSender loggerSender;
 
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
-	public String start(Map<String, Object> model) {
-
+	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
+		
 		// utworzenie model szukania
 		WordDictionarySearchModel wordDictionarySearchModel = new WordDictionarySearchModel();
 
@@ -78,6 +81,9 @@ public class WordDictionaryController extends CommonController {
 		for (DictionaryEntryType dictionaryEntryType : addableDictionaryEntryList) {
 			wordDictionarySearchModel.addDictionaryType(dictionaryEntryType);
 		}
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryStartLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost()));
 
 		model.put("addableDictionaryEntryList", addableDictionaryEntryList);
 		model.put("command", wordDictionarySearchModel);
@@ -87,7 +93,7 @@ public class WordDictionaryController extends CommonController {
 	}
 
 	@RequestMapping(value = "/wordDictionarySearch", method = RequestMethod.GET)
-	public String search(@ModelAttribute("command") @Valid WordDictionarySearchModel searchModel,
+	public String search(HttpServletRequest request, HttpSession session, @ModelAttribute("command") @Valid WordDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) {
 		
 		// gdy cos bedzie zmieniane trzeba rowniez zmienic w link generatorze
@@ -110,7 +116,7 @@ public class WordDictionaryController extends CommonController {
 		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
 		
 		// logowanie
-		loggerSender.sendWordDictionarySearchLog(new WordDictionarySearchLoggerModel(findWordRequest, findWordResult));
+		loggerSender.sendLog(new WordDictionarySearchLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), findWordRequest, findWordResult));
 		
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
@@ -197,7 +203,7 @@ public class WordDictionaryController extends CommonController {
 
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
 			value = "/wordDictionary/autocomplete", method = RequestMethod.GET)
-	public @ResponseBody String autocomplete(@RequestParam(value="term", required=true) String term) {
+	public @ResponseBody String autocomplete(HttpServletRequest request, HttpSession session, @RequestParam(value="term", required=true) String term) {
 
 		logger.info("Podpowiadacz słówkowy dla wyrażenia: " + term);
 		
@@ -205,7 +211,7 @@ public class WordDictionaryController extends CommonController {
 			List<String> wordAutocomplete = dictionaryManager.getWordAutocomplete(term, 5);
 
 			// logowanie
-			loggerSender.sendWordDictionaryAutocompleteLog(new WordDictionaryAutocompleLoggerModel(term, wordAutocomplete.size()));
+			loggerSender.sendLog(new WordDictionaryAutocompleLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), term, wordAutocomplete.size()));
 			
 			JSONArray jsonArray = new JSONArray();
 
@@ -227,7 +233,7 @@ public class WordDictionaryController extends CommonController {
 	}
 	
 	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
-	public String showWordDictionaryDetails(@PathVariable("id") int id, @PathVariable("kanji") String kanji,
+	public String showWordDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
 			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) {
 		
 		// pobranie slowa
@@ -242,7 +248,7 @@ public class WordDictionaryController extends CommonController {
 			logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
 			
 			// logowanie
-			loggerSender.sendWordDictionaryDetailsLog(new WordDictionaryDetailsLoggerModel(dictionaryEntry));
+			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), dictionaryEntry));
 			
 			String dictionaryEntryKanji = dictionaryEntry.getKanji();
 			List<String> dictionaryEntryKanaList = dictionaryEntry.getKanaList();
