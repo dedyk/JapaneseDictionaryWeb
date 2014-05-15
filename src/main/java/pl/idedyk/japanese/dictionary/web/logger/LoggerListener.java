@@ -8,20 +8,27 @@ import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
+import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 
 public class LoggerListener implements MessageListener {
 	
 	private static final Logger logger = Logger.getLogger(LoggerListener.class);
 
+	@Autowired
+	private MySQLConnector mySQLConnector;
+	
 	@Override
 	public void onMessage(Message message) {
-				
+		
+		mySQLConnector.test();
+		
 		if (message instanceof ObjectMessage) {
 			
 			ObjectMessage objectMessage = (ObjectMessage)message;
