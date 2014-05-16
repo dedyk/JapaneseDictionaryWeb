@@ -44,7 +44,7 @@ import pl.idedyk.japanese.dictionary.web.controller.validator.KanjiDictionarySea
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
-import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
@@ -191,7 +191,7 @@ public class KanjiDictionaryController extends CommonController {
 			List<String> kanjiAutocomplete = dictionaryManager.getKanjiAutocomplete(term, 5);
 
 			// logowanie
-			loggerSender.sendLog(new KanjiDictionaryAutocompleLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), term, kanjiAutocomplete.size()));
+			loggerSender.sendLog(new KanjiDictionaryAutocompleteLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), term, kanjiAutocomplete.size()));
 			
 			JSONArray jsonArray = new JSONArray();
 

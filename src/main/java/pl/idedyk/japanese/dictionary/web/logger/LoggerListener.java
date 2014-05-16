@@ -1,6 +1,8 @@
 package pl.idedyk.japanese.dictionary.web.logger;
 
 import java.io.Serializable;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -10,12 +12,20 @@ import javax.jms.ObjectMessage;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
-import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 
 public class LoggerListener implements MessageListener {
 	
@@ -27,16 +37,18 @@ public class LoggerListener implements MessageListener {
 	@Override
 	public void onMessage(Message message) {
 		
-		mySQLConnector.test();
-		
 		if (message instanceof ObjectMessage) {
 			
 			ObjectMessage objectMessage = (ObjectMessage)message;
 			
 			Serializable object = null;
+			long jmsTimestamp = 0;
 			
 			try {
 				object = objectMessage.getObject();
+				
+				jmsTimestamp = message.getJMSTimestamp();
+				
 			} catch (JMSException e) {
 				logger.error("Bład pobierania obiektu z ObjectMessage: " + message, e);
 				
@@ -45,11 +57,25 @@ public class LoggerListener implements MessageListener {
 			
 			if (object instanceof LoggerModelCommon) {
 				
-				int fixme = 1; // obsluga
-				
 				LoggerModelCommon loggerModelCommon = (LoggerModelCommon)object;
 				
-				logger.info(loggerModelCommon.getSessionId() + " - " + loggerModelCommon.getRemoteIp() + " - " + loggerModelCommon.getRemoteHost());
+				// utworzenie wpisu do bazy danych
+				GenericLog genericLog = new GenericLog();
+				
+				genericLog.setTimestamp(new Timestamp(jmsTimestamp));
+				genericLog.setSessionId(loggerModelCommon.getSessionId());
+				genericLog.setRemoteIp(loggerModelCommon.getRemoteIp());
+				genericLog.setRemoteHost(loggerModelCommon.getRemoteHost());
+				genericLog.setOperation(mapClassToGenericLogOperationEnum(object.getClass()));
+				
+				// wstawienie wpisu do bazy danych
+				try {
+					mySQLConnector.insertGenericLog(genericLog);
+				} catch (SQLException e) {
+					logger.error("Błąd podczas zapisu do bazy danych", e);
+					
+					throw new RuntimeException(e);
+				}
 			}
 			
 			// i inne typy
@@ -64,7 +90,7 @@ public class LoggerListener implements MessageListener {
 				
 				logger.info(object);
 								
-			} else if (object instanceof WordDictionaryAutocompleLoggerModel) {
+			} else if (object instanceof WordDictionaryAutocompleteLoggerModel) {
 				int fixme = 1; // obsluga
 				
 				logger.info(object);
@@ -81,6 +107,43 @@ public class LoggerListener implements MessageListener {
 			
 		} else {
 			logger.error("Odebrano nieznany typ komunikatu: " + message);
+		}
+	}
+	
+	private GenericLogOperationEnum mapClassToGenericLogOperationEnum(Class<?> clazz) {
+		
+		if (WordDictionaryStartLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.WORD_DICTIONARY_START;
+			
+		} else if (WordDictionaryAutocompleteLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE;
+			
+		} else if (WordDictionarySearchLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.WORD_DICTIONARY_SEARCH;
+
+		} else if (WordDictionaryDetailsLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.WORD_DICTIONARY_DETAILS;
+
+		} else if (KanjiDictionaryStartLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.KANJI_DICTIONARY_START;
+
+		} else if (KanjiDictionaryAutocompleteLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE;
+
+		} else if (KanjiDictionarySearchLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH;
+
+		} else if (KanjiDictionaryRadicalsLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.KANJI_DICTIONARY_RADICALS;
+
+		} else if (KanjiDictionaryDetectLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.KANJI_DICTIONARY_DETECT;
+
+		} else if (KanjiDictionaryDetailsLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS;
+
+		} else {
+			throw new RuntimeException("Nieznany klasa: " + clazz);
 		}
 	}
 }

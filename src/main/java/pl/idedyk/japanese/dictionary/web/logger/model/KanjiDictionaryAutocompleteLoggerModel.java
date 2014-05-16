@@ -1,7 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.logger.model;
 
 
-public class KanjiDictionaryAutocompleLoggerModel extends LoggerModelCommon {
+public class KanjiDictionaryAutocompleteLoggerModel extends LoggerModelCommon {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -9,7 +9,7 @@ public class KanjiDictionaryAutocompleLoggerModel extends LoggerModelCommon {
 	
 	private int foundElemets;
 		
-	public KanjiDictionaryAutocompleLoggerModel(String sessionId, String remoteIp, String remoteHost, String term, int foundElemets) {
+	public KanjiDictionaryAutocompleteLoggerModel(String sessionId, String remoteIp, String remoteHost, String term, int foundElemets) {
 		
 		super(sessionId, remoteIp, remoteHost);
 		

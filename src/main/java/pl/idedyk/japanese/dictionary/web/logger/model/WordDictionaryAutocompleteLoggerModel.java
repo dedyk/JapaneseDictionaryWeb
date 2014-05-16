@@ -1,7 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.logger.model;
 
 
-public class WordDictionaryAutocompleLoggerModel extends LoggerModelCommon {
+public class WordDictionaryAutocompleteLoggerModel extends LoggerModelCommon {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -9,7 +9,7 @@ public class WordDictionaryAutocompleLoggerModel extends LoggerModelCommon {
 	
 	private int foundElemets;
 		
-	public WordDictionaryAutocompleLoggerModel(String sessionId, String remoteIp, String remoteHost, String term, int foundElemets) {
+	public WordDictionaryAutocompleteLoggerModel(String sessionId, String remoteIp, String remoteHost, String term, int foundElemets) {
 		
 		super(sessionId, remoteIp, remoteHost);
 		

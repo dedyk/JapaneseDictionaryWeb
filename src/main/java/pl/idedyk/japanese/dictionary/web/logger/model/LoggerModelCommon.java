@@ -2,7 +2,7 @@ package pl.idedyk.japanese.dictionary.web.logger.model;
 
 import java.io.Serializable;
 
-public class LoggerModelCommon implements Serializable {
+public abstract class LoggerModelCommon implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,5 +40,5 @@ public class LoggerModelCommon implements Serializable {
 
 	public void setRemoteHost(String remoteHost) {
 		this.remoteHost = remoteHost;
-	}	
+	}
 }

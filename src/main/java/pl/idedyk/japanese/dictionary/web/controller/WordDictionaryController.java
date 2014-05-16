@@ -36,7 +36,7 @@ import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchMo
 import pl.idedyk.japanese.dictionary.web.controller.validator.WordDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
-import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
@@ -211,7 +211,7 @@ public class WordDictionaryController extends CommonController {
 			List<String> wordAutocomplete = dictionaryManager.getWordAutocomplete(term, 5);
 
 			// logowanie
-			loggerSender.sendLog(new WordDictionaryAutocompleLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), term, wordAutocomplete.size()));
+			loggerSender.sendLog(new WordDictionaryAutocompleteLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), term, wordAutocomplete.size()));
 			
 			JSONArray jsonArray = new JSONArray();
 

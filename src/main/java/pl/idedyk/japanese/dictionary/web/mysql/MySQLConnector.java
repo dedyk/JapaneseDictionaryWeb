@@ -5,15 +5,14 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.log4j.Logger;
 
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import snaq.db.ConnectionPool;
 
 public class MySQLConnector {
@@ -47,7 +46,6 @@ public class MySQLConnector {
 			
 			connectionPool = new ConnectionPool( "mysql",  minPool, maxPool, maxSize, idleTimeout, url, user, password);
 			
-			
 		} catch (Exception e) {
 			logger.error("Bład inicjalizacji MySQLConnector", e);
 			
@@ -63,6 +61,39 @@ public class MySQLConnector {
 		}
 	}
 	
+	public void insertGenericLog(GenericLog genericLog) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement("insert into generic_log(timestamp, session_id, remote_ip, remote_host, operation) "
+					+ "values(?, ?, ?, ?, ?)");
+			
+			preparedStatement.setTimestamp(1, genericLog.getTimestamp());
+			preparedStatement.setString(2, genericLog.getSessionId());
+			preparedStatement.setString(3, genericLog.getRemoteIp());
+			preparedStatement.setString(4, genericLog.getRemoteHost());
+			preparedStatement.setString(5, genericLog.getOperation().toString());
+			
+			preparedStatement.executeUpdate();
+			
+		} finally {
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	/*
 	public void test() {
 		
 		int fixme = 1;
@@ -89,6 +120,7 @@ public class MySQLConnector {
 			throw new RuntimeException(e);
 		}
 	}
+	*/
 	
 	public String getUrl() {
 		return url;
