@@ -9,9 +9,9 @@ public class KanjiDictionaryAutocompleteLoggerModel extends LoggerModelCommon {
 	
 	private int foundElemets;
 		
-	public KanjiDictionaryAutocompleteLoggerModel(String sessionId, String remoteIp, String remoteHost, String term, int foundElemets) {
+	public KanjiDictionaryAutocompleteLoggerModel(String sessionId, String remoteIp, String term, int foundElemets) {
 		
-		super(sessionId, remoteIp, remoteHost);
+		super(sessionId, remoteIp);
 		
 		this.term = term;
 		this.foundElemets = foundElemets;

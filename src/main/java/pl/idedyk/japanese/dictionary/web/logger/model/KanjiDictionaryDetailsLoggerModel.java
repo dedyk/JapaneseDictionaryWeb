@@ -8,9 +8,9 @@ public class KanjiDictionaryDetailsLoggerModel extends LoggerModelCommon {
 
 	private KanjiEntry kanjiEntry;
 		
-	public KanjiDictionaryDetailsLoggerModel(String sessionId, String remoteIp, String remoteHost, KanjiEntry kanjiEntry) {
+	public KanjiDictionaryDetailsLoggerModel(String sessionId, String remoteIp, KanjiEntry kanjiEntry) {
 		
-		super(sessionId, remoteIp, remoteHost);
+		super(sessionId, remoteIp);
 		
 		this.kanjiEntry = kanjiEntry;
 	}

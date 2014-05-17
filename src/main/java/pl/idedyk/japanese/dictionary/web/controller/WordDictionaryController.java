@@ -83,7 +83,7 @@ public class WordDictionaryController extends CommonController {
 		}
 		
 		// logowanie
-		loggerSender.sendLog(new WordDictionaryStartLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost()));
+		loggerSender.sendLog(new WordDictionaryStartLoggerModel(session.getId(), Utils.getRemoteIp(request)));
 
 		model.put("addableDictionaryEntryList", addableDictionaryEntryList);
 		model.put("command", wordDictionarySearchModel);
@@ -116,7 +116,7 @@ public class WordDictionaryController extends CommonController {
 		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
 		
 		// logowanie
-		loggerSender.sendLog(new WordDictionarySearchLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), findWordRequest, findWordResult));
+		loggerSender.sendLog(new WordDictionarySearchLoggerModel(session.getId(), Utils.getRemoteIp(request), findWordRequest, findWordResult));
 		
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
@@ -211,7 +211,7 @@ public class WordDictionaryController extends CommonController {
 			List<String> wordAutocomplete = dictionaryManager.getWordAutocomplete(term, 5);
 
 			// logowanie
-			loggerSender.sendLog(new WordDictionaryAutocompleteLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), term, wordAutocomplete.size()));
+			loggerSender.sendLog(new WordDictionaryAutocompleteLoggerModel(session.getId(), Utils.getRemoteIp(request), term, wordAutocomplete.size()));
 			
 			JSONArray jsonArray = new JSONArray();
 
@@ -248,7 +248,7 @@ public class WordDictionaryController extends CommonController {
 			logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
 			
 			// logowanie
-			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), dictionaryEntry));
+			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(session.getId(), Utils.getRemoteIp(request), dictionaryEntry));
 			
 			String dictionaryEntryKanji = dictionaryEntry.getKanji();
 			List<String> dictionaryEntryKanaList = dictionaryEntry.getKanaList();

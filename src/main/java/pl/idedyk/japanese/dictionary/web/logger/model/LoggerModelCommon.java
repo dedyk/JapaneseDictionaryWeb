@@ -9,13 +9,10 @@ public abstract class LoggerModelCommon implements Serializable {
 	private String sessionId;
 	
 	private String remoteIp;
-	
-	private String remoteHost;
 
-	public LoggerModelCommon(String sessionId, String remoteIp, String remoteHost) {
+	public LoggerModelCommon(String sessionId, String remoteIp) {
 		this.sessionId = sessionId;
 		this.remoteIp = remoteIp;
-		this.remoteHost = remoteHost;
 	}
 
 	public String getSessionId() {
@@ -32,13 +29,5 @@ public abstract class LoggerModelCommon implements Serializable {
 
 	public void setRemoteIp(String remoteIp) {
 		this.remoteIp = remoteIp;
-	}
-
-	public String getRemoteHost() {
-		return remoteHost;
-	}
-
-	public void setRemoteHost(String remoteHost) {
-		this.remoteHost = remoteHost;
 	}
 }

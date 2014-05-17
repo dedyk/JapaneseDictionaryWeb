@@ -89,7 +89,7 @@ public class KanjiDictionaryController extends CommonController {
 		List<RadicalInfo> radicalList = dictionaryManager.getRadicalList();
 
 		// logowanie
-		loggerSender.sendLog(new KanjiDictionaryStartLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost()));
+		loggerSender.sendLog(new KanjiDictionaryStartLoggerModel(session.getId(), Utils.getRemoteIp(request)));
 		
 		model.put("command", kanjiDictionarySearchModel);
 		model.put("radicalList", radicalList);
@@ -127,7 +127,7 @@ public class KanjiDictionaryController extends CommonController {
 		FindKanjiResult findKanjiResult = dictionaryManager.findKanji(findKanjiRequest);
 		
 		// logowanie
-		loggerSender.sendLog(new KanjiDictionarySearchLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), findKanjiRequest, findKanjiResult));
+		loggerSender.sendLog(new KanjiDictionarySearchLoggerModel(session.getId(), Utils.getRemoteIp(request), findKanjiRequest, findKanjiResult));
 		
 		model.put("command", searchModel);
 		model.put("radicalList", radicalList);
@@ -191,7 +191,7 @@ public class KanjiDictionaryController extends CommonController {
 			List<String> kanjiAutocomplete = dictionaryManager.getKanjiAutocomplete(term, 5);
 
 			// logowanie
-			loggerSender.sendLog(new KanjiDictionaryAutocompleteLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), term, kanjiAutocomplete.size()));
+			loggerSender.sendLog(new KanjiDictionaryAutocompleteLoggerModel(session.getId(), Utils.getRemoteIp(request), term, kanjiAutocomplete.size()));
 			
 			JSONArray jsonArray = new JSONArray();
 
@@ -228,7 +228,7 @@ public class KanjiDictionaryController extends CommonController {
 		
 		// logowanie
 		if (selectedRadicals.length > 0) {
-			loggerSender.sendLog(new KanjiDictionaryRadicalsLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), selectedRadicals, findKnownKanjiFromRadicalsResult.size()));
+			loggerSender.sendLog(new KanjiDictionaryRadicalsLoggerModel(session.getId(), Utils.getRemoteIp(request), selectedRadicals, findKnownKanjiFromRadicalsResult.size()));
 		}
 		
 		JSONObject jsonObject = new JSONObject();
@@ -293,7 +293,7 @@ public class KanjiDictionaryController extends CommonController {
 			logger.info("Znaleziono kanji dla zapytania o szczegóły kanji: " + kanjiEntry);
 			
 			// logowanie
-			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), kanjiEntry));
+			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(session.getId(), Utils.getRemoteIp(request), kanjiEntry));
 			
 			String kanjiEntryKanji = kanjiEntry.getKanji();
 									
@@ -353,7 +353,7 @@ public class KanjiDictionaryController extends CommonController {
 		
 		if (detectKanjiResult != null) {
 			// logowanie
-			loggerSender.sendLog(new KanjiDictionaryDetectLoggerModel(session.getId(), request.getRemoteAddr(), request.getRemoteHost(), strokes, detectKanjiResult));
+			loggerSender.sendLog(new KanjiDictionaryDetectLoggerModel(session.getId(), Utils.getRemoteIp(request), strokes, detectKanjiResult));
 			
 			findKanjiDetectResult = new FindKanjiResult();
 			findKanjiDetectResult.setResult(new ArrayList<KanjiEntry>());

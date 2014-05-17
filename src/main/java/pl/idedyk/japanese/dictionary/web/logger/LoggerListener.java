@@ -12,6 +12,7 @@ import javax.jms.ObjectMessage;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
@@ -65,7 +66,7 @@ public class LoggerListener implements MessageListener {
 				genericLog.setTimestamp(new Timestamp(jmsTimestamp));
 				genericLog.setSessionId(loggerModelCommon.getSessionId());
 				genericLog.setRemoteIp(loggerModelCommon.getRemoteIp());
-				genericLog.setRemoteHost(loggerModelCommon.getRemoteHost());
+				genericLog.setRemoteHost(Utils.getHostname(loggerModelCommon.getRemoteIp()));
 				genericLog.setOperation(mapClassToGenericLogOperationEnum(object.getClass()));
 				
 				// wstawienie wpisu do bazy danych

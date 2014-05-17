@@ -1,8 +1,11 @@
 package pl.idedyk.japanese.dictionary.web.common;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class Utils {
 	
@@ -101,6 +104,35 @@ public class Utils {
 			
 		} catch (NumberFormatException e) {
 			return null;
+		}
+	}
+	
+	public static String getRemoteIp(HttpServletRequest httpServletRequest) {
+				
+		String remoteIp = httpServletRequest.getHeader("x-forwarded-for");
+		
+		if (remoteIp != null) {
+			return remoteIp;
+		}
+		
+		remoteIp = httpServletRequest.getHeader("x-real-ip");
+
+		if (remoteIp != null) {
+			return remoteIp;
+		}
+
+		return httpServletRequest.getRemoteAddr();		
+	}
+	
+	public static String getHostname(String ip) {
+		
+		try {
+			InetAddress addr = InetAddress.getByName(ip);
+		
+			return addr.getHostName();
+		
+		} catch (Exception e) {
+			return ip;
 		}
 	}
 }

@@ -5,7 +5,7 @@ public class WordDictionaryStartLoggerModel extends LoggerModelCommon {
 	
 	private static final long serialVersionUID = 1L;
 		
-	public WordDictionaryStartLoggerModel(String sessionId, String remoteIp, String remoteHost) {		
-		super(sessionId, remoteIp, remoteHost);
+	public WordDictionaryStartLoggerModel(String sessionId, String remoteIp) {		
+		super(sessionId, remoteIp);
 	}
 }

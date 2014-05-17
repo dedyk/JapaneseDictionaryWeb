@@ -12,8 +12,8 @@ public class KanjiDictionaryDetectLoggerModel extends LoggerModelCommon {
 	
 	private List<KanjiRecognizerResultItem> detectKanjiResult;
 
-	public KanjiDictionaryDetectLoggerModel(String sessionId, String remoteIp, String remoteHost, String strokes, List<KanjiRecognizerResultItem> detectKanjiResult) {
-		super(sessionId, remoteIp, remoteHost);
+	public KanjiDictionaryDetectLoggerModel(String sessionId, String remoteIp, String strokes, List<KanjiRecognizerResultItem> detectKanjiResult) {
+		super(sessionId, remoteIp);
 	}
 
 	public String getStrokes() {
