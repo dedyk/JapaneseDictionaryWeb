@@ -5,7 +5,9 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -13,6 +15,7 @@ import javax.annotation.PreDestroy;
 import org.apache.log4j.Logger;
 
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocomplete;
 import snaq.db.ConnectionPool;
 
 public class MySQLConnector {
@@ -67,11 +70,13 @@ public class MySQLConnector {
 		
 		PreparedStatement preparedStatement = null;
 		
+		ResultSet generatedKeys = null;
+		
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement("insert into generic_log(timestamp, session_id, remote_ip, remote_host, operation) "
-					+ "values(?, ?, ?, ?, ?)");
+			preparedStatement = connection.prepareStatement( "insert into generic_log(timestamp, session_id, remote_ip, remote_host, operation) "
+					+ "values(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			preparedStatement.setTimestamp(1, genericLog.getTimestamp());
 			preparedStatement.setString(2, genericLog.getSessionId());
@@ -81,7 +86,19 @@ public class MySQLConnector {
 			
 			preparedStatement.executeUpdate();
 			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			genericLog.setId(generatedKeys.getLong(1));
+			
 		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
 			
 			if (preparedStatement != null) {
 				preparedStatement.close();
@@ -93,34 +110,49 @@ public class MySQLConnector {
 		}		
 	}
 	
-	/*
-	public void test() {
+	public void insertWordDictionaryAutocomplete(WordDictionaryAutocomplete wordDictionaryAutocomplete) throws SQLException {
+
+		Connection connection = null;
 		
-		int fixme = 1;
-		// testy
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
 		
 		try {
-			Connection connection = connectionPool.getConnection();
+			connection = connectionPool.getConnection();
 			
-			PreparedStatement prepareStatement = connection.prepareStatement("select curtime()");
+			preparedStatement = connection.prepareStatement( "insert into word_dictionary_autocomplete(generic_log_id, term, found_elements) "
+					+ "values(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
-			ResultSet resultSet = prepareStatement.executeQuery();
+			preparedStatement.setLong(1, wordDictionaryAutocomplete.getGenericLogId());
+			preparedStatement.setString(2, wordDictionaryAutocomplete.getTerm());
+			preparedStatement.setInt(3, wordDictionaryAutocomplete.getFoundElements());
 			
-			resultSet.first();
+			preparedStatement.executeUpdate();
 			
-			Time time = resultSet.getTime(1);
+			generatedKeys = preparedStatement.getGeneratedKeys();
 			
-			logger.info("Test: " + time);
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
 			
-			resultSet.close();
-			prepareStatement.close();
-			connection.close();
+			wordDictionaryAutocomplete.setId(generatedKeys.getLong(1));
 			
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
 	}
-	*/
 	
 	public String getUrl() {
 		return url;

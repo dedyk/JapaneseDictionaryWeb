@@ -27,6 +27,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerM
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocomplete;
 
 public class LoggerListener implements MessageListener {
 	
@@ -56,18 +57,22 @@ public class LoggerListener implements MessageListener {
 				return;
 			}
 			
+			GenericLogOperationEnum operation = mapClassToGenericLogOperationEnum(object.getClass());
+			
+			GenericLog genericLog = null;
+			
 			if (object instanceof LoggerModelCommon) {
 				
 				LoggerModelCommon loggerModelCommon = (LoggerModelCommon)object;
 				
 				// utworzenie wpisu do bazy danych
-				GenericLog genericLog = new GenericLog();
+				genericLog = new GenericLog();
 				
 				genericLog.setTimestamp(new Timestamp(jmsTimestamp));
 				genericLog.setSessionId(loggerModelCommon.getSessionId());
 				genericLog.setRemoteIp(loggerModelCommon.getRemoteIp());
 				genericLog.setRemoteHost(Utils.getHostname(loggerModelCommon.getRemoteIp()));
-				genericLog.setOperation(mapClassToGenericLogOperationEnum(object.getClass()));
+				genericLog.setOperation(operation);
 				
 				// wstawienie wpisu do bazy danych
 				try {
@@ -79,8 +84,34 @@ public class LoggerListener implements MessageListener {
 				}
 			}
 			
+			// obsluga specyficznych typow
+			if (operation == GenericLogOperationEnum.WORD_DICTIONARY_START) {
+				// noop
+				
+			} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE) {
+				
+				WordDictionaryAutocompleteLoggerModel wordDictionaryAutocompleteLoggerModel = (WordDictionaryAutocompleteLoggerModel)object;
+				
+				// utworzenie wpisu do bazy danych
+				WordDictionaryAutocomplete wordDictionaryAutocomplete = new WordDictionaryAutocomplete();
+				
+				wordDictionaryAutocomplete.setGenericLogId(genericLog.getId());
+				wordDictionaryAutocomplete.setTerm(wordDictionaryAutocompleteLoggerModel.getTerm());
+				wordDictionaryAutocomplete.setFoundElements(wordDictionaryAutocompleteLoggerModel.getFoundElemets());
+				
+				// wstawienie wpisu do bazy danych
+				try {
+					mySQLConnector.insertWordDictionaryAutocomplete(wordDictionaryAutocomplete);
+				} catch (SQLException e) {
+					logger.error("Błąd podczas zapisu do bazy danych", e);
+					
+					throw new RuntimeException(e);
+				}				
+			}
+			
 			// i inne typy
 			
+			/*
 			if (object instanceof WordDictionaryStartLoggerModel) {
 				int fixme = 1; // obsluga
 				
@@ -105,6 +136,7 @@ public class LoggerListener implements MessageListener {
 			} else {
 				logger.error("Nieznany typ obiektu: " + object.getClass());
 			}
+			*/
 			
 		} else {
 			logger.error("Odebrano nieznany typ komunikatu: " + message);
