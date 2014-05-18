@@ -30,6 +30,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 
 public class LoggerListener implements MessageListener {
@@ -149,6 +150,43 @@ public class LoggerListener implements MessageListener {
 				// wstawienie wpisu do bazy danych
 				try {
 					mySQLConnector.insertWordDictionarySearchLog(wordDictionarySearchLog);
+				} catch (SQLException e) {
+					logger.error("Błąd podczas zapisu do bazy danych", e);
+					
+					throw new RuntimeException(e);
+				}
+				
+			} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_DETAILS) {
+				
+				WordDictionaryDetailsLoggerModel wordDictionaryDetailsLoggerModel = (WordDictionaryDetailsLoggerModel)object;
+				
+				// utworzenie wpisu do bazy danych
+				WordDictionaryDetailsLog wordDictionaryDetailsLog = new WordDictionaryDetailsLog();
+				
+				wordDictionaryDetailsLog.setGenericLogId(genericLog.getId());
+
+				wordDictionaryDetailsLog.setDictionaryEntryId(wordDictionaryDetailsLoggerModel.getDictionaryEntry().getId());
+				
+				wordDictionaryDetailsLog.setDictionaryEntryKanji(wordDictionaryDetailsLoggerModel.getDictionaryEntry().getKanji());
+				
+				wordDictionaryDetailsLog.setDictionaryEntryKanaList(
+						pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
+								wordDictionaryDetailsLoggerModel.getDictionaryEntry().getKanaList()));
+
+				wordDictionaryDetailsLog.setDictionaryEntryRomajiList(
+						pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
+								wordDictionaryDetailsLoggerModel.getDictionaryEntry().getRomajiList()));
+
+				wordDictionaryDetailsLog.setDictionaryEntryTranslateList(
+						pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
+								wordDictionaryDetailsLoggerModel.getDictionaryEntry().getTranslates()));
+
+				wordDictionaryDetailsLog.setDictionaryEntryInfo(
+						wordDictionaryDetailsLoggerModel.getDictionaryEntry().getInfo());
+				
+				// wstawienie wpisu do bazy danych
+				try {
+					mySQLConnector.insertWordDictionaryDetailsLog(wordDictionaryDetailsLog);
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					

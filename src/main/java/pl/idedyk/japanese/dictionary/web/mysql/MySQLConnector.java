@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import snaq.db.ConnectionPool;
 
@@ -196,6 +197,66 @@ public class MySQLConnector {
 			}
 			
 			wordDictionarySearchLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	/*
+    dictionary_entry_kanji text null,
+    dictionary_entry_kanaList text null,
+    dictionary_entry_romajiList text null,
+    dictionary_entry_translateList text null
+
+	 */
+	
+	public void insertWordDictionaryDetailsLog(WordDictionaryDetailsLog wordDictionaryDetailsLog) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into word_dictionary_details_log(generic_log_id, dictionary_entry_id, "
+					+ "dictionary_entry_kanji, dictionary_entry_kanaList, dictionary_entry_romajiList, "
+					+ "dictionary_entry_translateList, dictionary_entry_info) "
+					+ "values(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, wordDictionaryDetailsLog.getGenericLogId());
+			
+			preparedStatement.setInt(2, wordDictionaryDetailsLog.getDictionaryEntryId());
+			
+			preparedStatement.setString(3, wordDictionaryDetailsLog.getDictionaryEntryKanji());
+			preparedStatement.setString(4, wordDictionaryDetailsLog.getDictionaryEntryKanaList());
+			preparedStatement.setString(5, wordDictionaryDetailsLog.getDictionaryEntryRomajiList());
+			preparedStatement.setString(6, wordDictionaryDetailsLog.getDictionaryEntryTranslateList());
+			preparedStatement.setString(7, wordDictionaryDetailsLog.getDictionaryEntryInfo());
+			
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			wordDictionaryDetailsLog.setId(generatedKeys.getLong(1));
 			
 		} finally {
 			
