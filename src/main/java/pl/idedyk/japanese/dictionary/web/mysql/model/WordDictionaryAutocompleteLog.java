@@ -1,6 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.mysql.model;
 
-public class WordDictionaryAutocomplete {
+public class WordDictionaryAutocompleteLog {
 
 	private Long id;
 	

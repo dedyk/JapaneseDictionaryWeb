@@ -3,6 +3,7 @@ package pl.idedyk.japanese.dictionary.web.logger;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -12,6 +13,7 @@ import javax.jms.ObjectMessage;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
@@ -27,7 +29,8 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerM
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
-import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocomplete;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 
 public class LoggerListener implements MessageListener {
 	
@@ -93,15 +96,59 @@ public class LoggerListener implements MessageListener {
 				WordDictionaryAutocompleteLoggerModel wordDictionaryAutocompleteLoggerModel = (WordDictionaryAutocompleteLoggerModel)object;
 				
 				// utworzenie wpisu do bazy danych
-				WordDictionaryAutocomplete wordDictionaryAutocomplete = new WordDictionaryAutocomplete();
+				WordDictionaryAutocompleteLog wordDictionaryAutocompleteLog = new WordDictionaryAutocompleteLog();
 				
-				wordDictionaryAutocomplete.setGenericLogId(genericLog.getId());
-				wordDictionaryAutocomplete.setTerm(wordDictionaryAutocompleteLoggerModel.getTerm());
-				wordDictionaryAutocomplete.setFoundElements(wordDictionaryAutocompleteLoggerModel.getFoundElemets());
+				wordDictionaryAutocompleteLog.setGenericLogId(genericLog.getId());
+				wordDictionaryAutocompleteLog.setTerm(wordDictionaryAutocompleteLoggerModel.getTerm());
+				wordDictionaryAutocompleteLog.setFoundElements(wordDictionaryAutocompleteLoggerModel.getFoundElemets());
 				
 				// wstawienie wpisu do bazy danych
 				try {
-					mySQLConnector.insertWordDictionaryAutocomplete(wordDictionaryAutocomplete);
+					mySQLConnector.insertWordDictionaryAutocompleteLog(wordDictionaryAutocompleteLog);
+				} catch (SQLException e) {
+					logger.error("Błąd podczas zapisu do bazy danych", e);
+					
+					throw new RuntimeException(e);
+				}
+				
+			} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_SEARCH) {
+				
+				WordDictionarySearchLoggerModel wordDictionarySearchLoggerModel = (WordDictionarySearchLoggerModel)object;
+				
+				// utworzenie wpisu do bazy danych
+				WordDictionarySearchLog wordDictionarySearchLog = new WordDictionarySearchLog();
+				
+				wordDictionarySearchLog.setGenericLogId(genericLog.getId());
+				
+				wordDictionarySearchLog.setFindWordRequestWord(wordDictionarySearchLoggerModel.getFindWordRequest().word);
+				
+				wordDictionarySearchLog.setFindWordRequestKanji(wordDictionarySearchLoggerModel.getFindWordRequest().searchKanji);
+				wordDictionarySearchLog.setFindWordRequestKana(wordDictionarySearchLoggerModel.getFindWordRequest().searchKana);
+				wordDictionarySearchLog.setFindWordRequestRomaji(wordDictionarySearchLoggerModel.getFindWordRequest().searchRomaji);
+				wordDictionarySearchLog.setFindWordRequestTranslate(wordDictionarySearchLoggerModel.getFindWordRequest().searchTranslate);
+				wordDictionarySearchLog.setFindWordRequestInfo(wordDictionarySearchLoggerModel.getFindWordRequest().searchInfo);
+				
+				wordDictionarySearchLog.setFindWordRequestWordPlace(wordDictionarySearchLoggerModel.getFindWordRequest().wordPlaceSearch.toString());
+				
+				List<DictionaryEntryType> dictionaryEntryTypeList = wordDictionarySearchLoggerModel.getFindWordRequest().dictionaryEntryTypeList;
+				
+				StringBuffer dictionaryEntryTypeListSb = new StringBuffer();
+				
+				for (int dictionaryEntryTypeListIdx = 0; dictionaryEntryTypeList != null && dictionaryEntryTypeListIdx < dictionaryEntryTypeList.size(); ++dictionaryEntryTypeListIdx) {
+					dictionaryEntryTypeListSb.append(dictionaryEntryTypeList.get(dictionaryEntryTypeListIdx).toString());
+					
+					if (dictionaryEntryTypeListIdx != dictionaryEntryTypeList.size() - 1) {
+						dictionaryEntryTypeListSb.append("\n");
+					}
+				}
+				
+				wordDictionarySearchLog.setFindWordRequestDictionaryEntryTypeList(dictionaryEntryTypeListSb.toString());
+				
+				wordDictionarySearchLog.setFindWordResultResultSize(wordDictionarySearchLoggerModel.getFindWordResult().result.size());
+				
+				// wstawienie wpisu do bazy danych
+				try {
+					mySQLConnector.insertWordDictionarySearchLog(wordDictionarySearchLog);
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					

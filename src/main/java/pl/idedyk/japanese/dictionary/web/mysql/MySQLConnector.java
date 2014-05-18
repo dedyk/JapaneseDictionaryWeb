@@ -15,7 +15,8 @@ import javax.annotation.PreDestroy;
 import org.apache.log4j.Logger;
 
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
-import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocomplete;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import snaq.db.ConnectionPool;
 
 public class MySQLConnector {
@@ -110,7 +111,7 @@ public class MySQLConnector {
 		}		
 	}
 	
-	public void insertWordDictionaryAutocomplete(WordDictionaryAutocomplete wordDictionaryAutocomplete) throws SQLException {
+	public void insertWordDictionaryAutocompleteLog(WordDictionaryAutocompleteLog wordDictionaryAutocompleteLog) throws SQLException {
 
 		Connection connection = null;
 		
@@ -121,12 +122,12 @@ public class MySQLConnector {
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "insert into word_dictionary_autocomplete(generic_log_id, term, found_elements) "
+			preparedStatement = connection.prepareStatement( "insert into word_dictionary_autocomplete_log(generic_log_id, term, found_elements) "
 					+ "values(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
-			preparedStatement.setLong(1, wordDictionaryAutocomplete.getGenericLogId());
-			preparedStatement.setString(2, wordDictionaryAutocomplete.getTerm());
-			preparedStatement.setInt(3, wordDictionaryAutocomplete.getFoundElements());
+			preparedStatement.setLong(1, wordDictionaryAutocompleteLog.getGenericLogId());
+			preparedStatement.setString(2, wordDictionaryAutocompleteLog.getTerm());
+			preparedStatement.setInt(3, wordDictionaryAutocompleteLog.getFoundElements());
 			
 			preparedStatement.executeUpdate();
 			
@@ -136,7 +137,65 @@ public class MySQLConnector {
 				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
 			}
 			
-			wordDictionaryAutocomplete.setId(generatedKeys.getLong(1));
+			wordDictionaryAutocompleteLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public void insertWordDictionarySearchLog(WordDictionarySearchLog wordDictionarySearchLog) throws SQLException {
+				
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into word_dictionary_search_log(generic_log_id, find_word_request_word, find_word_request_search_kanji, "
+					+ "find_word_request_search_kana, find_word_request_search_romaji, find_word_request_search_translate, find_word_request_search_info, find_word_request_word_place, "
+					+ "find_word_request_dictionary_entry_type_list, find_word_result_result_size) "
+					+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, wordDictionarySearchLog.getGenericLogId());
+			
+			preparedStatement.setString(2, wordDictionarySearchLog.getFindWordRequestWord());
+			
+			preparedStatement.setBoolean(3, wordDictionarySearchLog.getFindWordRequestKanji());
+			preparedStatement.setBoolean(4, wordDictionarySearchLog.getFindWordRequestKana());
+			preparedStatement.setBoolean(5, wordDictionarySearchLog.getFindWordRequestRomaji());
+			preparedStatement.setBoolean(6, wordDictionarySearchLog.getFindWordRequestTranslate());
+			preparedStatement.setBoolean(7, wordDictionarySearchLog.getFindWordRequestInfo());
+			
+			preparedStatement.setString(8, wordDictionarySearchLog.getFindWordRequestWordPlace());
+			
+			preparedStatement.setString(9, wordDictionarySearchLog.getFindWordRequestDictionaryEntryTypeList());
+			
+			preparedStatement.setInt(10, wordDictionarySearchLog.getFindWordResultResultSize());
+			
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			wordDictionarySearchLog.setId(generatedKeys.getLong(1));
 			
 		} finally {
 			

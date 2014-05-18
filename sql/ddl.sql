@@ -7,9 +7,23 @@ create table generic_log (
     operation varchar(40) not null
 ) default character set = utf8 collate = utf8_polish_ci;
 
-create table word_dictionary_autocomplete (
+create table word_dictionary_autocomplete_log (
     id int not null auto_increment, primary key(id),
     generic_log_id int not null, index(generic_log_id),
-    term varchar(50) null,
+    term text null,
     found_elements int null
+) default character set = utf8 collate = utf8_polish_ci;
+
+create table word_dictionary_search_log (
+    id int not null auto_increment, primary key(id),
+    generic_log_id int not null, index(generic_log_id),
+    find_word_request_word text null,
+    find_word_request_search_kanji boolean null,
+    find_word_request_search_kana boolean null,
+    find_word_request_search_romaji boolean null,
+    find_word_request_search_translate boolean null,
+    find_word_request_search_info boolean null,
+    find_word_request_word_place varchar(20) null,
+    find_word_request_dictionary_entry_type_list text null,
+    find_word_result_result_size int null
 ) default character set = utf8 collate = utf8_polish_ci;
