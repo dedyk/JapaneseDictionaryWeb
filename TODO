@@ -30,3 +30,5 @@
 * Generowanie raportow z wyszukiwan
 * Informacje o uzytych licencjach
 * Sprawdzic/poprawic wyglad na telefonie
+* Gdy blad, wpis do kolejki i do bazy danych
+* Execution of JMS message listener failed, and no ***ErrorHandler*** has been set

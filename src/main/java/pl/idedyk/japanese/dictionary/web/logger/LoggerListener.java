@@ -29,6 +29,8 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerM
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
@@ -191,37 +193,55 @@ public class LoggerListener implements MessageListener {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
 					throw new RuntimeException(e);
+				}
+				
+			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE) {
+					
+				KanjiDictionaryAutocompleteLoggerModel kanjiDictionaryAutocompleteLoggerModel = (KanjiDictionaryAutocompleteLoggerModel)object;
+
+				// utworzenie wpisu do bazy danych
+				KanjiDictionaryAutocompleteLog kanjiDictionaryAutocompleteLog = new KanjiDictionaryAutocompleteLog();
+
+				kanjiDictionaryAutocompleteLog.setGenericLogId(genericLog.getId());
+				kanjiDictionaryAutocompleteLog.setTerm(kanjiDictionaryAutocompleteLoggerModel.getTerm());
+				kanjiDictionaryAutocompleteLog.setFoundElements(kanjiDictionaryAutocompleteLoggerModel.getFoundElemets());
+
+				// wstawienie wpisu do bazy danych
+				try {
+					mySQLConnector.insertKanjiDictionaryAutocompleteLog(kanjiDictionaryAutocompleteLog);
+				} catch (SQLException e) {
+					logger.error("Błąd podczas zapisu do bazy danych", e);
+
+					throw new RuntimeException(e);
+				}
+
+			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH) {
+				
+				KanjiDictionarySearchLoggerModel kanjiDictionarySearchLoggerModel = (KanjiDictionarySearchLoggerModel)object;
+				
+				// utworzenie wpisu do bazy danych
+				KanjiDictionarySearchLog kanjiDictionarySearchLog = new KanjiDictionarySearchLog();
+				
+				kanjiDictionarySearchLog.setGenericLogId(genericLog.getId());
+				
+				kanjiDictionarySearchLog.setFindKanjiRequestWord(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().word);
+				
+				kanjiDictionarySearchLog.setFindKanjiRequestWordPlace(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().wordPlaceSearch.toString());
+				
+				kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountFrom(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().strokeCountFrom);
+				kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountTo(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().strokeCountTo);
+				
+				kanjiDictionarySearchLog.setFindKanjiResultResultSize(kanjiDictionarySearchLoggerModel.getFindKanjiResult().result.size());
+								
+				// wstawienie wpisu do bazy danych
+				try {
+					mySQLConnector.insertKanjiDictionarySearchLog(kanjiDictionarySearchLog);
+				} catch (SQLException e) {
+					logger.error("Błąd podczas zapisu do bazy danych", e);
+					
+					throw new RuntimeException(e);
 				}				
 			}
-			
-			// i inne typy
-			
-			/*
-			if (object instanceof WordDictionaryStartLoggerModel) {
-				int fixme = 1; // obsluga
-				
-				logger.info(object);
-			
-			} else if (object instanceof WordDictionarySearchLoggerModel) {
-				int fixme = 1; // obsluga
-				
-				logger.info(object);
-								
-			} else if (object instanceof WordDictionaryAutocompleteLoggerModel) {
-				int fixme = 1; // obsluga
-				
-				logger.info(object);
-				
-				
-			} else if (object instanceof WordDictionaryDetailsLoggerModel) {
-				int fixme = 1; // obsluga
-				
-				logger.info(object);				
-				
-			} else {
-				logger.error("Nieznany typ obiektu: " + object.getClass());
-			}
-			*/
 			
 		} else {
 			logger.error("Odebrano nieznany typ komunikatu: " + message);

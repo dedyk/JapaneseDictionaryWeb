@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -15,6 +16,8 @@ import javax.annotation.PreDestroy;
 import org.apache.log4j.Logger;
 
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
@@ -213,15 +216,7 @@ public class MySQLConnector {
 			}			
 		}		
 	}
-	
-	/*
-    dictionary_entry_kanji text null,
-    dictionary_entry_kanaList text null,
-    dictionary_entry_romajiList text null,
-    dictionary_entry_translateList text null
-
-	 */
-	
+		
 	public void insertWordDictionaryDetailsLog(WordDictionaryDetailsLog wordDictionaryDetailsLog) throws SQLException {
 		
 		Connection connection = null;
@@ -257,6 +252,109 @@ public class MySQLConnector {
 			}
 			
 			wordDictionaryDetailsLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public void insertKanjiDictionaryAutocompleteLog(KanjiDictionaryAutocompleteLog kanjiDictionaryAutocompleteLog) throws SQLException {
+
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into kanji_dictionary_autocomplete_log(generic_log_id, term, found_elements) "
+					+ "values(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, kanjiDictionaryAutocompleteLog.getGenericLogId());
+			preparedStatement.setString(2, kanjiDictionaryAutocompleteLog.getTerm());
+			preparedStatement.setInt(3, kanjiDictionaryAutocompleteLog.getFoundElements());
+			
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			kanjiDictionaryAutocompleteLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+
+	public void insertKanjiDictionarySearchLog(KanjiDictionarySearchLog kanjiDictionarySearchLog) throws SQLException {
+
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+						
+			preparedStatement = connection.prepareStatement( "insert into kanji_dictionary_search_log(generic_log_id, find_kanji_request_word, find_kanji_request_word_place, "
+					+ "find_kanji_request_stroke_count_from, find_kanji_request_stroke_count_to, find_kanji_result_result_size) "
+					+ "values(?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, kanjiDictionarySearchLog.getGenericLogId());
+			preparedStatement.setString(2, kanjiDictionarySearchLog.getFindKanjiRequestWord());
+			preparedStatement.setString(3, kanjiDictionarySearchLog.getFindKanjiRequestWordPlace());
+			
+			if (kanjiDictionarySearchLog.getFindKanjiRequestStrokeCountFrom() != null) {
+				preparedStatement.setInt(4, kanjiDictionarySearchLog.getFindKanjiRequestStrokeCountFrom());
+			} else {
+				preparedStatement.setNull(4, Types.INTEGER);
+			}
+			
+			if (kanjiDictionarySearchLog.getFindKanjiRequestStrokeCountTo() != null) {
+				preparedStatement.setInt(5, kanjiDictionarySearchLog.getFindKanjiRequestStrokeCountTo());
+			} else {
+				preparedStatement.setNull(5, Types.INTEGER);
+			}			
+			
+			preparedStatement.setInt(6, kanjiDictionarySearchLog.getFindKanjiResultResultSize());
+			
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			kanjiDictionarySearchLog.setId(generatedKeys.getLong(1));
 			
 		} finally {
 			

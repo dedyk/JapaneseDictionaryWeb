@@ -38,3 +38,20 @@ create table word_dictionary_details_log (
     dictionary_entry_translateList text null,
     dictionary_entry_info text null
 ) default character set = utf8 collate = utf8_polish_ci;
+
+create table kanji_dictionary_autocomplete_log (
+    id int not null auto_increment, primary key(id),
+    generic_log_id int not null, index(generic_log_id),
+    term text null,
+    found_elements int null
+) default character set = utf8 collate = utf8_polish_ci;
+
+create table kanji_dictionary_search_log (
+    id int not null auto_increment, primary key(id),
+    generic_log_id int not null, index(generic_log_id),
+    find_kanji_request_word text null,
+    find_kanji_request_word_place varchar(20) null,
+    find_kanji_request_stroke_count_from int null,
+    find_kanji_request_stroke_count_to int null,
+    find_kanji_result_result_size int null
+) default character set = utf8 collate = utf8_polish_ci;
