@@ -55,3 +55,27 @@ create table kanji_dictionary_search_log (
     find_kanji_request_stroke_count_to int null,
     find_kanji_result_result_size int null
 ) default character set = utf8 collate = utf8_polish_ci;
+
+create table kanji_dictionary_radicals_log (
+    id int not null auto_increment, primary key(id),
+    generic_log_id int not null, index(generic_log_id),
+    radicals text null,
+    found_elements int null
+) default character set = utf8 collate = utf8_polish_ci;
+
+create table kanji_dictionary_detect_log (
+    id int not null auto_increment, primary key(id),
+    generic_log_id int not null, index(generic_log_id),
+    strokes text null,
+    detect_kanji_result text
+) default character set = utf8 collate = utf8_polish_ci;
+
+create table kanji_dictionary_details_log (
+    id int not null auto_increment, primary key(id),
+    generic_log_id int not null, index(generic_log_id),
+    kanji_entry_id int not null,
+    kanji_entry_kanji text null,
+    kanji_entry_translateList text null,
+    kanji_entry_info text null
+) default character set = utf8 collate = utf8_polish_ci;
+

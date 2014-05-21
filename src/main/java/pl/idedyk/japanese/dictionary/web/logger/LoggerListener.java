@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
@@ -30,6 +31,8 @@ import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
@@ -240,7 +243,78 @@ public class LoggerListener implements MessageListener {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
 					throw new RuntimeException(e);
-				}				
+				}
+				
+			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_RADICALS) {
+				
+				KanjiDictionaryRadicalsLoggerModel kanjiDictionaryRadicalsLoggerModel = (KanjiDictionaryRadicalsLoggerModel)object;
+				
+				// utworzenie wpisu do bazy danych
+				KanjiDictionaryRadicalsLog kanjiDictionaryRadicalsLog = new KanjiDictionaryRadicalsLog();
+				
+				kanjiDictionaryRadicalsLog.setGenericLogId(genericLog.getId());
+				
+				String[] radicals = kanjiDictionaryRadicalsLoggerModel.getRadicals();
+				
+				if (radicals != null && radicals.length > 0) {
+					
+					StringBuffer radicalsJoined = new StringBuffer();
+					
+					for (String currentRadical : radicals) {
+						radicalsJoined.append(currentRadical);
+					}
+					
+					kanjiDictionaryRadicalsLog.setRadicals(radicalsJoined.toString());					
+				}
+				
+				kanjiDictionaryRadicalsLog.setFoundElements(kanjiDictionaryRadicalsLoggerModel.getFoundElemets());
+				
+				// wstawienie wpisu do bazy danych
+				try {
+					mySQLConnector.insertKanjiDictionaryRadicalsLog(kanjiDictionaryRadicalsLog);
+				} catch (SQLException e) {
+					logger.error("Błąd podczas zapisu do bazy danych", e);
+					
+					throw new RuntimeException(e);
+				}
+				
+			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETECT) {
+				
+				KanjiDictionaryDetectLoggerModel kanjiDictionaryDetectLoggerModel = (KanjiDictionaryDetectLoggerModel)object;
+				
+				// utworzenie wpisu do bazy danych
+				KanjiDictionaryDetectLog kanjiDictionaryDetectLog = new KanjiDictionaryDetectLog();
+				
+				kanjiDictionaryDetectLog.setGenericLogId(genericLog.getId());
+				
+				kanjiDictionaryDetectLog.setStrokes(kanjiDictionaryDetectLoggerModel.getStrokes());
+				
+				List<KanjiRecognizerResultItem> detectKanjiResultList = kanjiDictionaryDetectLoggerModel.getDetectKanjiResult();
+				
+				StringBuffer detectKanjiResultSb = new StringBuffer();
+				
+				for (int idx = 0; idx < 5 && idx < detectKanjiResultList.size(); ++idx) {
+					
+					KanjiRecognizerResultItem currentKanjiRecognizerResultItem = detectKanjiResultList.get(idx);
+					
+					detectKanjiResultSb.append(currentKanjiRecognizerResultItem.getKanji() + " " + currentKanjiRecognizerResultItem.getScore());
+					
+					if (idx != 5 - 1) {
+						detectKanjiResultSb.append("\n");
+					}
+				}
+				
+				kanjiDictionaryDetectLog.setDetectKanjiResult(detectKanjiResultSb.toString());
+				
+				// wstawienie wpisu do bazy danych
+				try {
+					mySQLConnector.insertKanjiDictionaryDetectLog(kanjiDictionaryDetectLog);
+				} catch (SQLException e) {
+					logger.error("Błąd podczas zapisu do bazy danych", e);
+					
+					throw new RuntimeException(e);
+				}
+				
 			}
 			
 		} else {
