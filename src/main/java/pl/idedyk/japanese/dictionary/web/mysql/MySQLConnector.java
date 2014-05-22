@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
@@ -445,6 +446,52 @@ public class MySQLConnector {
 			}
 			
 			kanjiDictionaryDetectLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+
+	public void insertKanjiDictionaryDetailsLog(KanjiDictionaryDetailsLog kanjiDictionaryDetailsLog) throws SQLException {
+
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into kanji_dictionary_details_log(generic_log_id, kanji_entry_id, kanji_entry_kanji, kanji_entry_translateList, kanji_entry_info) "
+					+ "values(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, kanjiDictionaryDetailsLog.getGenericLogId());
+			preparedStatement.setInt(2, kanjiDictionaryDetailsLog.getKanjiEntryId());
+			preparedStatement.setString(3, kanjiDictionaryDetailsLog.getKanjiEntryKanji());
+			preparedStatement.setString(4, kanjiDictionaryDetailsLog.getKanjiEntryTranslateList());
+			preparedStatement.setString(5, kanjiDictionaryDetailsLog.getKanjiEntryInfo());
+			
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			kanjiDictionaryDetailsLog.setId(generatedKeys.getLong(1));
 			
 		} finally {
 			
