@@ -97,6 +97,12 @@
     	<property name="idleTimeout" value="${mysql.idleTimeout}" />
     </bean>
     
+    <bean id="mailSender" class="pl.idedyk.japanese.dictionary.web.mail.MailSender">
+    	<property name="smtpHost" value="${mail.smtp.host}" />
+    	<property name="smtpFrom" value="${mail.smtp.from}" />
+    	<property name="smtpTo" value="${mail.smtp.to}" />    
+    </bean>
+    
 	<jms:listener-container container-type="default" connection-factory="activeMQConnectionFactory" acknowledge="auto">
 		<jms:listener destination="QUEUE.LOGGER" ref="loggerMessageListener" method="onMessage" />
 	</jms:listener-container>
