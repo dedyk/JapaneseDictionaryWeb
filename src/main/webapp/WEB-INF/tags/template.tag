@@ -100,11 +100,11 @@
 						</c:choose>
 
 						<c:choose>
-							<c:when test="${selectedMenu == 'suggetion'}">
-								<li class="active"><a href="#" onclick="goTo('suggetion')"><spring:message code="template.menu.suggestion"/></a></li>
+							<c:when test="${selectedMenu == 'suggestion'}">
+								<li class="active"><a href="#" onclick="goTo('suggestion')"><spring:message code="template.menu.suggestion"/></a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="#" onclick="goTo('suggetion')"><spring:message code="template.menu.suggestion"/></a></li>
+								<li><a href="#" onclick="goTo('suggestion')"><spring:message code="template.menu.suggestion"/></a></li>
 							</c:otherwise>
 						</c:choose>
 

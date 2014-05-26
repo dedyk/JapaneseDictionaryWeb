@@ -13,6 +13,8 @@ public class Button extends HtmlElementCommon {
 	
 	private String ariaHidden;
 	
+	private String name;
+	
 	public Button() { 
 		super();
 	}
@@ -57,6 +59,14 @@ public class Button extends HtmlElementCommon {
 		this.onClick = onClick;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	protected String getTagName() {
 		return "button";
@@ -86,6 +96,10 @@ public class Button extends HtmlElementCommon {
 
 		if (ariaHidden != null) {
 			additionalTagAttributes.add(new String[] { "aria-hidden", ariaHidden });
+		}
+
+		if (name != null) {
+			additionalTagAttributes.add(new String[] { "name", name });
 		}
 
 		return additionalTagAttributes;

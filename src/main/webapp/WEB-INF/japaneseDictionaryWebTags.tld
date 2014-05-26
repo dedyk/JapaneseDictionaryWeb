@@ -58,4 +58,9 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	<tag>
+		<name>suggestion</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.SuggestionTag</tagclass>
+		<info>Zglaszanie sugestii</info>
+	</tag>	
 </taglib> 

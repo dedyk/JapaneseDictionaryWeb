@@ -23,11 +23,11 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLog
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
+import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
-import pl.idedyk.japanese.dictionary.web.mail.MailSender;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
@@ -46,10 +46,7 @@ public class LoggerListener implements MessageListener {
 
 	@Autowired
 	private MySQLConnector mySQLConnector;
-	
-	@Autowired
-	private MailSender mailSender;
-	
+		
 	@Override
 	public void onMessage(Message message) {
 		
@@ -95,10 +92,7 @@ public class LoggerListener implements MessageListener {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
 					throw new RuntimeException(e);
-				}
-				
-				int fixme = 1;
-				mailSender.sendMail("TEST: " + genericLog.getId(), "Tresc wiadomosci: " + genericLog.getSessionId() + "\nAAAA: " + genericLog.getTimestamp() + "\nBBBB: " + genericLog.getOperation());
+				}				
 			}
 			
 			// obsluga specyficznych typow
@@ -388,6 +382,9 @@ public class LoggerListener implements MessageListener {
 		} else if (KanjiDictionaryDetailsLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS;
 
+		} else if (SuggestionStartLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.SUGGESTION_START;
+			
 		} else {
 			throw new RuntimeException("Nieznany klasa: " + clazz);
 		}
