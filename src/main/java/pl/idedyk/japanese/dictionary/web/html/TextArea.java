@@ -8,6 +8,8 @@ public class TextArea extends HtmlElementCommon {
 	private String name;
 	
 	private Integer rows;
+	
+	private String required;
 
 	public TextArea() { 
 		super();
@@ -44,6 +46,10 @@ public class TextArea extends HtmlElementCommon {
 			additionalTagAttributes.add(new String[] { "rows", rows.toString() });
 		}
 
+		if (required != null) {
+			additionalTagAttributes.add(new String[] { "required", required });
+		}
+		
 		return additionalTagAttributes;		
 	}
 
@@ -61,5 +67,13 @@ public class TextArea extends HtmlElementCommon {
 
 	public void setRows(Integer rows) {
 		this.rows = rows;
+	}
+
+	public String getRequired() {
+		return required;
+	}
+
+	public void setRequired(String required) {
+		this.required = required;
 	}
 }

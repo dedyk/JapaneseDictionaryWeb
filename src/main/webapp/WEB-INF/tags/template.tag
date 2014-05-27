@@ -40,6 +40,9 @@
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-1.11.0.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-ui-1.10.4.custom.js"></script>
 	
+	<script src="<c:out value='${staticFilePrefix}' />/js/jquery-validate/jquery.validate.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/jquery-validate/messages_pl.js"></script>
+	
 	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap/bootstrap.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap-select/bootstrap-select.js"></script>
 	

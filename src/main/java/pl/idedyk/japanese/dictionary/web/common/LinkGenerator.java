@@ -88,4 +88,12 @@ public class LinkGenerator {
 		
 		return link.toString();
 	}
+	
+	public static String generateSendSuggestionLink(String contextPath) {
+		
+		// UWAGA: Jesli tu zmieniasz, zmien rowniez w pliku SuggestionController.java
+		
+		return contextPath + "/suggestion/sendSuggestion";
+	}
+
 }

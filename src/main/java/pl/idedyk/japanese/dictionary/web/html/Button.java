@@ -107,7 +107,9 @@ public class Button extends HtmlElementCommon {
 	
 	public static enum ButtonType {
 		
-		BUTTON("button");
+		BUTTON("button"),
+		
+		SUBMIT("submit");
 		
 		private String type;
 		
