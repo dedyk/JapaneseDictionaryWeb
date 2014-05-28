@@ -13,6 +13,8 @@ public class Input extends HtmlElementCommon {
 	
 	private InputType type;
 	
+	private String value;
+	
 	public Input() { 
 		super();
 	}
@@ -54,6 +56,10 @@ public class Input extends HtmlElementCommon {
 
 		if (type != null) {
 			additionalTagAttributes.add(new String[] { "type", type.getValue() });
+		}
+
+		if (value != null) {
+			additionalTagAttributes.add(new String[] { "value", value });
 		}
 
 		return additionalTagAttributes;		
@@ -106,5 +112,13 @@ public class Input extends HtmlElementCommon {
 
 	public void setType(InputType type) {
 		this.type = type;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 }

@@ -21,6 +21,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
@@ -509,6 +510,51 @@ public class MySQLConnector {
 		}		
 	}
 	
+	public void insertSuggestionSendLoggerModel(SuggestionSendLog suggestionSendLog) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into suggestion_send_log(generic_log_id, title, sender, body) "
+					+ "values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, suggestionSendLog.getGenericLogId());
+			preparedStatement.setString(2, suggestionSendLog.getTitle());
+			preparedStatement.setString(3, suggestionSendLog.getSender());
+			preparedStatement.setString(4, suggestionSendLog.getBody());
+			
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			suggestionSendLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
 	public String getUrl() {
 		return url;
 	}
@@ -565,18 +611,3 @@ public class MySQLConnector {
 		this.idleTimeout = idleTimeout;
 	}
 }
-
-/*
-DBPoolDataSource ds = new DBPoolDataSource();
-ds.setName("pool-ds");
-ds.setDescription("Pooling DataSource");
-ds.setDriverClassName("com.mysql.jdbc.Driver");
-ds.setUrl("jdbc:mysql://192.168.1.101:3306/ReplicantDB");
-ds.setUser("Deckard");
-ds.setPassword("TyrellCorp1982");
-ds.setMinPool(5);
-ds.setMaxPool(10);
-ds.setMaxSize(30);
-ds.setIdleTimeout(3600);  // Specified in seconds.
-ds.setValidationQuery("SELECT COUNT(*) FROM Replicants");
-*/

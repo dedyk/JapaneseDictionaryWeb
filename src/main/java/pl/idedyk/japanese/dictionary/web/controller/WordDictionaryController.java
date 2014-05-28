@@ -83,6 +83,8 @@ public class WordDictionaryController extends CommonController {
 		}
 		
 		// logowanie
+		logger.info("WordDictionaryController: start");
+		
 		loggerSender.sendLog(new WordDictionaryStartLoggerModel(session.getId(), Utils.getRemoteIp(request)));
 
 		model.put("addableDictionaryEntryList", addableDictionaryEntryList);

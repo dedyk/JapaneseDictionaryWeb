@@ -95,6 +95,7 @@ public class SuggestionTag extends TagSupport {
             titleInput.setName("title");
             titleInput.setPlaceholder(getMessage("suggestion.tag.suggestion.title.input.placeholder"));
             //titleInput.setRequired("");
+            titleInput.setValue("Tytul");
             titleInput.setType(InputType.TEXT);
             
             // nadawca
@@ -118,6 +119,7 @@ public class SuggestionTag extends TagSupport {
             senderInput.setName("sender");
             senderInput.setPlaceholder(getMessage("suggestion.tag.suggestion.sender.input.placeholder"));
             //senderInput.setRequired("");
+            senderInput.setValue("aaa@a.pl");
             senderInput.setType(InputType.EMAIL);
             
             // tresc sugestii
@@ -141,6 +143,7 @@ public class SuggestionTag extends TagSupport {
             bodyTextArea.setId("bodyId");
             bodyTextArea.setName("body");
             bodyTextArea.setRows(6);
+            bodyTextArea.addHtmlElement(new Text("Tresc"));
             //bodyTextArea.setRequired("");
 
             // wyslij
@@ -202,13 +205,13 @@ public class SuggestionTag extends TagSupport {
 		
 		scriptBody.append("        },\n");
 		scriptBody.append("        submitHandler: function(form) {\n");
-		           	
+		
 		scriptBody.append("			$.ajax({\n");
 											
 		scriptBody.append("				url: \"" + LinkGenerator.generateSendSuggestionLink(pageContext.getServletContext().getContextPath()) + "\",\n");
 												
 		scriptBody.append("				data: {\n");
-		scriptBody.append("					aaa: 'aaaa'\n"); int fixme3 = 1;
+		scriptBody.append("					suggestion: { title : $( '#titleId' ).val(), sender : $( '#senderId' ).val(), body : $( '#bodyId' ).val() } \n");
 		scriptBody.append("				},\n");
 											
 		scriptBody.append("				type: \"POST\",\n");
@@ -216,17 +219,20 @@ public class SuggestionTag extends TagSupport {
 		scriptBody.append("				dataType : \"json\",\n");
 										
 		scriptBody.append("				success: function( json ) {\n");
-										
+		scriptBody.append("					$( '#titleId' ).val('');\n");
+		scriptBody.append("					$( '#senderId' ).val('');\n");
+		scriptBody.append("					$( '#bodyId' ).val('');\n\n");
+		scriptBody.append("					alert('" + getMessage("suggestion.tag.suggestion.send.ok") + "');\n");
 		scriptBody.append("				},\n");
 										
 		scriptBody.append("				error: function( xhr, status, errorThrown ) {\n");
-		scriptBody.append("					alert('" + getMessage("suggestion.tag.suggestion.send.problem") + "');\n"); int fixme4 = 1; // sprawdzic
+		scriptBody.append("					alert('" + getMessage("suggestion.tag.suggestion.send.problem") + "');\n");
 		scriptBody.append("				},\n");
 										
 		scriptBody.append("				complete: function( xhr, status ) {\n");
 		scriptBody.append("					}\n");
 		scriptBody.append("				});\n");
-
+		
 		scriptBody.append("         return false;\n");
 		scriptBody.append("        }\n");
 		scriptBody.append("    });\n");

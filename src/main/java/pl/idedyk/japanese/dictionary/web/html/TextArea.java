@@ -10,7 +10,7 @@ public class TextArea extends HtmlElementCommon {
 	private Integer rows;
 	
 	private String required;
-
+	
 	public TextArea() { 
 		super();
 	}
@@ -30,7 +30,7 @@ public class TextArea extends HtmlElementCommon {
 
 	@Override
 	protected boolean isSupportHtmlElementList() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class TextArea extends HtmlElementCommon {
 		if (required != null) {
 			additionalTagAttributes.add(new String[] { "required", required });
 		}
-		
+				
 		return additionalTagAttributes;		
 	}
 
@@ -75,5 +75,5 @@ public class TextArea extends HtmlElementCommon {
 
 	public void setRequired(String required) {
 		this.required = required;
-	}
+	}	
 }

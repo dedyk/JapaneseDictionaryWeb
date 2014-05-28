@@ -89,6 +89,8 @@ public class KanjiDictionaryController extends CommonController {
 		List<RadicalInfo> radicalList = dictionaryManager.getRadicalList();
 
 		// logowanie
+		logger.info("KanjiDictionaryController: start");
+		
 		loggerSender.sendLog(new KanjiDictionaryStartLoggerModel(session.getId(), Utils.getRemoteIp(request)));
 		
 		model.put("command", kanjiDictionarySearchModel);

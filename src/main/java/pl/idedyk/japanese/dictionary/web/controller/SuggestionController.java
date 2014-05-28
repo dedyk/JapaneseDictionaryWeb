@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionStartLoggerModel;
 
 @Controller
@@ -32,11 +33,10 @@ public class SuggestionController extends CommonController {
 
 	@RequestMapping(value = "/suggestion", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
-
-		int fixme = 1;
-		// log do pliku: logger
 		
 		// logowanie
+		logger.info("SuggestionController: start");
+		
 		loggerSender.sendLog(new SuggestionStartLoggerModel(session.getId(), Utils.getRemoteIp(request)));
 	
 		model.put("selectedMenu", "suggestion");
@@ -47,13 +47,18 @@ public class SuggestionController extends CommonController {
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
 			value = "/suggestion/sendSuggestion", method = RequestMethod.POST) // INFO: jesli to zmieniasz, zmien rowniez w LinkGenerator
 	
-	public @ResponseBody String sendSuggestion(HttpServletRequest request, HttpSession session, @RequestParam(value="selectedRadicals[]", required=false) String[] selectedRadicals) {
+	public @ResponseBody String sendSuggestion(HttpServletRequest request, HttpSession session,
+			@RequestParam(value="suggestion[title]", required=true) String title,
+			@RequestParam(value="suggestion[sender]", required=true) String sender,
+			@RequestParam(value="suggestion[body]", required=true) String body) {
 		
 		JSONObject jsonObject = new JSONObject();
 		
-		int fixme = 1;
+		// logowanie
+		logger.info("Wysyłanie treści sugestii:\n\tTytul: " + title + "\n\tNadawca: " + sender + "\n\tTresc: " + body);
 		
-		logger.info("AAAAAAAAAAAAA"); 
+		// wysylanie do logger'a i wysylacza mail'i
+		loggerSender.sendLog(new SuggestionSendLoggerModel(session.getId(), Utils.getRemoteIp(request), title, sender, body));
 		
 		return jsonObject.toString();
 	}

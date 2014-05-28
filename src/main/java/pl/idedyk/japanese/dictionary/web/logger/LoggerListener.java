@@ -23,11 +23,13 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLog
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
+import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
+import pl.idedyk.japanese.dictionary.web.mail.MailSender;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
@@ -36,6 +38,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
@@ -46,6 +49,9 @@ public class LoggerListener implements MessageListener {
 
 	@Autowired
 	private MySQLConnector mySQLConnector;
+	
+	@Autowired
+	private MailSender mailSender;
 		
 	@Override
 	public void onMessage(Message message) {
@@ -342,7 +348,30 @@ public class LoggerListener implements MessageListener {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
 					throw new RuntimeException(e);
-				}				
+				}
+				
+			} else if (operation == GenericLogOperationEnum.SUGGESTION_SEND) {
+				
+				SuggestionSendLoggerModel suggestionSendLoggerModel = (SuggestionSendLoggerModel)object;
+				
+				// utworzenie wpisu do bazy danych
+				SuggestionSendLog suggestionSendLog = new SuggestionSendLog();
+				
+				suggestionSendLog.setGenericLogId(genericLog.getId());
+
+				suggestionSendLog.setTitle(suggestionSendLoggerModel.getTitle());
+				suggestionSendLog.setSender(suggestionSendLoggerModel.getSender());
+				suggestionSendLog.setBody(suggestionSendLoggerModel.getBody());
+				
+				// wstawienie wpisu do bazy danych
+				try {
+					mySQLConnector.insertSuggestionSendLoggerModel(suggestionSendLog);
+				} catch (SQLException e) {
+					logger.error("Błąd podczas zapisu do bazy danych", e);
+				}
+				
+				// wysylanie mail'a
+				mailSender.sendSuggestion(genericLog, suggestionSendLog);				
 			}
 			
 		} else {
@@ -385,6 +414,9 @@ public class LoggerListener implements MessageListener {
 		} else if (SuggestionStartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.SUGGESTION_START;
 			
+		} else if (SuggestionSendLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.SUGGESTION_SEND;
+		
 		} else {
 			throw new RuntimeException("Nieznany klasa: " + clazz);
 		}
