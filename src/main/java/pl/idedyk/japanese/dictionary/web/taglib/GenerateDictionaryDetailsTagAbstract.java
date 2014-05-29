@@ -1,11 +1,16 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.springframework.context.MessageSource;
+
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
+import pl.idedyk.japanese.dictionary.web.html.Hr;
+import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Li;
 import pl.idedyk.japanese.dictionary.web.html.Script;
 import pl.idedyk.japanese.dictionary.web.html.Text;
@@ -79,24 +84,53 @@ public abstract class GenerateDictionaryDetailsTagAbstract extends TagSupport {
 			Li li = new Li();
 			ul.addHtmlElement(li);
 			
+			IHtmlElement beforeHtmlElement = currentMenuList.getBeforeHtmlElement();
+			
+			if (beforeHtmlElement != null) {
+				li.addHtmlElement(beforeHtmlElement);
+			}
+			
 			A link = new A(null, "padding-bottom: 0px; padding-top: 0px");
 			li.addHtmlElement(link);
 			
 			link.setHref("#");
 			
-			link.setOnClick("$('html, body').animate({ " 
-					+ "scrollTop: $('#" + currentMenuList.getId() + "').offset().top - 15 " 
-					+ "}, 1000); return false; ");
-					
-			link.addHtmlElement(new Text(currentMenuList.getTitle()));
+			String customOnClick = currentMenuList.getCustomOnClick();
 			
+			if (customOnClick == null) {
+			
+				link.setOnClick("$('html, body').animate({ " 
+						+ "scrollTop: $('#" + currentMenuList.getId() + "').offset().top - 15 " 
+						+ "}, 1000); return false; ");
+
+			} else {
+				link.setOnClick(customOnClick);
+			}
+			
+			link.addHtmlElement(new Text(currentMenuList.getTitle()));
+				
 			if (currentMenuList.getChildMenu().size() > 0) {
 				li.addHtmlElement(generateMenuSubMenu(null, currentMenuList.getChildMenu()));
-			}
-		}		
+			}				
+		}			
 		
 		return ul;		
 	}
-
 	
+	public void addSuggestionMenuPos(Menu mainMenu, MessageSource messageSource) {
+		
+		// linia		
+		Hr hr = new Hr();
+		hr.setStyle("margin: 5px");
+				
+		// pozycja
+		Menu suggestionMenu = new Menu(null, messageSource.getMessage("GenerateDictionaryDetailsTagAbstract.menu.suggestion", new Object[] { }, Locale.getDefault()));
+		
+		int fixme = 1;
+		
+		suggestionMenu.setCustomOnClick("alert('ffffff');");
+		suggestionMenu.setBeforeHtmlElement(hr);
+		
+		mainMenu.getChildMenu().add(suggestionMenu);
+	}	
 }

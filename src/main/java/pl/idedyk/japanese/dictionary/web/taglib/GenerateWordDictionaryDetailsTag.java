@@ -108,6 +108,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             	contentDiv.addHtmlElement(exampleDiv);
             }
             
+            // dodaj w menu pozycje do zglaszania sugestii
+            addSuggestionMenuPos(mainMenu, messageSource);
+            
             // dodaj menu
             mainContentDiv.addHtmlElement(generateMenu(mainMenu));
 
