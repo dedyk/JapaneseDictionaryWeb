@@ -8,7 +8,10 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.springframework.context.MessageSource;
 
 import pl.idedyk.japanese.dictionary.web.html.A;
+import pl.idedyk.japanese.dictionary.web.html.Button;
+import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Div;
+import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Li;
@@ -117,7 +120,7 @@ public abstract class GenerateDictionaryDetailsTagAbstract extends TagSupport {
 		return ul;		
 	}
 	
-	public void addSuggestionMenuPos(Menu mainMenu, MessageSource messageSource) {
+	protected void addSuggestionMenuPos(Menu mainMenu, MessageSource messageSource) {
 		
 		// linia		
 		Hr hr = new Hr();
@@ -125,12 +128,92 @@ public abstract class GenerateDictionaryDetailsTagAbstract extends TagSupport {
 				
 		// pozycja
 		Menu suggestionMenu = new Menu(null, messageSource.getMessage("GenerateDictionaryDetailsTagAbstract.menu.suggestion", new Object[] { }, Locale.getDefault()));
-		
-		int fixme = 1;
-		
-		suggestionMenu.setCustomOnClick("alert('ffffff');");
+				
+		suggestionMenu.setCustomOnClick("showSuggestionDialog();");
 		suggestionMenu.setBeforeHtmlElement(hr);
 		
 		mainMenu.getChildMenu().add(suggestionMenu);
 	}	
+	
+	protected IHtmlElement addSuggestionDialog(MessageSource messageSource, String defaultTitle) {
+		
+		final String dialogId = "suggestionDialogId";
+		
+		final int width = 900;
+		final int height = 500;
+		
+		// glowny div calosci
+		Div mainDiv = new Div();
+		
+		// skrypt wyswietlajacy okienko
+		Script script = new Script();
+		
+		StringBuffer scriptBody = new StringBuffer();
+		
+		scriptBody.append("   function showSuggestionDialog() {\n");
+		scriptBody.append("      $( '#" + dialogId + "' ).modal();\n");
+		scriptBody.append("   }\n");
+		
+		Text scriptText = new Text(scriptBody.toString());
+		
+		script.addHtmlElement(scriptText);
+		
+		mainDiv.addHtmlElement(script);
+		
+		String dialogTitle = messageSource.getMessage("suggestion.dialog.title", new String[] { }, null);
+		
+		// glowny div
+		Div suggestionDialogDiv = new Div("modal fade");
+		
+		suggestionDialogDiv.setId(dialogId);
+		suggestionDialogDiv.setWidth(width);
+		suggestionDialogDiv.setHeight(height);
+
+		Div modalDialog = new Div("modal-dialog");
+
+		modalDialog.setStyle("width: " + width + "px");
+		suggestionDialogDiv.addHtmlElement(modalDialog);
+		
+		Div modalContent = new Div("modal-content");
+		modalDialog.addHtmlElement(modalContent);
+		
+		Div moldalHeader = new Div("modal-header");
+		modalContent.addHtmlElement(moldalHeader);
+
+		// przycisk zamkniecia
+		Button closeButton = new Button("close");
+		
+		closeButton.setButtonType(ButtonType.BUTTON);
+		closeButton.setDataDismiss("modal");
+		closeButton.setAriaHidden("true");
+		
+		closeButton.addHtmlElement(new Text("&times;"));
+		
+		moldalHeader.addHtmlElement(closeButton);
+
+		// tytul okienka
+		H dialogTitleH4 = new H(4, "modal-title");
+		dialogTitleH4.addHtmlElement(new Text(dialogTitle));
+		
+		moldalHeader.addHtmlElement(dialogTitleH4);
+		
+		// zawartosc glowna okienka
+		Div modalBody = new Div("modal-body");
+		modalContent.addHtmlElement(modalBody);
+		
+		modalBody.addHtmlElement(SuggestionTag.generateBody(pageContext, messageSource, dialogId, defaultTitle));		
+
+		Div suggestionBodyDiv = new Div();
+		
+		suggestionBodyDiv.setId(dialogId + "SuggestionBody");
+		modalBody.addHtmlElement(suggestionBodyDiv);
+				
+		// naglowek okienka
+		Div modalFooter = new Div("modal-footer");
+		modalContent.addHtmlElement(modalFooter);
+				
+		mainDiv.addHtmlElement(suggestionDialogDiv);
+				
+		return mainDiv;
+	}
 }
