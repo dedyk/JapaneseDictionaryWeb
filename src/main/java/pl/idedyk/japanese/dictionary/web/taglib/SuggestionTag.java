@@ -104,7 +104,6 @@ public class SuggestionTag extends TagSupport {
         titleInput.setId("titleId");
         titleInput.setName("title");
         titleInput.setPlaceholder(getMessage(messageSource, "suggestion.tag.suggestion.title.input.placeholder"));
-        //titleInput.setRequired("");
         
         if (defaultTitle != null) {
         	titleInput.setValue(defaultTitle);
@@ -132,7 +131,6 @@ public class SuggestionTag extends TagSupport {
         senderInput.setId("senderId");
         senderInput.setName("sender");
         senderInput.setPlaceholder(getMessage(messageSource, "suggestion.tag.suggestion.sender.input.placeholder"));
-        //senderInput.setRequired("");
         senderInput.setValue("");
         senderInput.setType(InputType.EMAIL);
         
@@ -157,8 +155,6 @@ public class SuggestionTag extends TagSupport {
         bodyTextArea.setId("bodyId");
         bodyTextArea.setName("body");
         bodyTextArea.setRows(6);
-        bodyTextArea.addHtmlElement(new Text(""));
-        //bodyTextArea.setRequired("");
 
         // wyslij
         Div sendDiv = new Div("form-group");

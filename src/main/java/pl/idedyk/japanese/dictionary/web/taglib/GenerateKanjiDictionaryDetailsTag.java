@@ -27,6 +27,7 @@ import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
+import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
@@ -81,6 +82,9 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
             
             // generowanie informacji podstawowych
             contentDiv.addHtmlElement(generateMainInfo(mainMenu));
+            
+            // dodaj w menu pozycje do zglaszania sugestii
+            mainContentDiv.addHtmlElement(addSuggestionElements(mainMenu));
 
             // dodaj menu
             mainContentDiv.addHtmlElement(generateMenu(mainMenu));
@@ -670,6 +674,20 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
     	}
 		
 		return kanjiGroupsDiv;		
+	}
+	
+	private IHtmlElement addSuggestionElements(Menu mainMenu) {
+		
+        addSuggestionMenuPos(mainMenu, messageSource);
+        
+        int id = kanjiEntry.getId();
+        String kanji = kanjiEntry.getKanji();
+
+		String defaultSuggestion = messageSource.getMessage("kanjiDictionaryDetails.page.suggestion.default", 
+				new Object[] { kanji, String.valueOf(id) }, Locale.getDefault());
+        
+        // dodaj okienko z sugestia
+        return addSuggestionDialog(messageSource, defaultSuggestion);		
 	}
 		
 	private String getMessage(String code) {

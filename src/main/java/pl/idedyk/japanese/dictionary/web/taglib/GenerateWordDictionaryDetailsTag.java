@@ -1447,6 +1447,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
         addSuggestionMenuPos(mainMenu, messageSource);
         
+        int id = dictionaryEntry.getId();
 		String dictionaryEntryKanji = dictionaryEntry.getKanji();
 		List<String> dictionaryEntryKanaList = dictionaryEntry.getKanaList();
 		List<String> dictionaryEntryRomajiList = dictionaryEntry.getRomajiList();        
@@ -1455,13 +1456,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
 						dictionaryEntryKanaList != null && dictionaryEntryKanaList.size() > 0 ? dictionaryEntryKanaList.get(0) : "-",
 						dictionaryEntryRomajiList != null && dictionaryEntryRomajiList.size() > 0 ? dictionaryEntryRomajiList.get(0) : "-",
+						String.valueOf(id)
 				}, Locale.getDefault());
 		
         
         // dodaj okienko z sugestia
         return addSuggestionDialog(messageSource, defaultSuggestion);		
 	}
-
 	
 	private String getMessage(String code) {
 		return messageSource.getMessage(code, null, Locale.getDefault());
