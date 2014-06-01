@@ -25,16 +25,16 @@
 		<!-- lucene version -->
 		<lucene.version>4.7.2</lucene.version>
 	</properties>
-	
+
 	<profiles>
 		<profile>
 			<id>dev</id>
-			
+
 			<activation>
 				<activeByDefault>true</activeByDefault>
 			</activation>
-			
- 			<build>
+
+			<build>
 				<resources>
 					<resource>
 						<directory>profiles/dev</directory>
@@ -42,14 +42,14 @@
 							<include>**/config/config.properties</include>
 						</includes>
 					</resource>
-				</resources>			
+				</resources>
 			</build>
 		</profile>
-		
+
 		<profile>
 			<id>test</id>
-						
- 			<build>
+
+			<build>
 				<resources>
 					<resource>
 						<directory>profiles/test</directory>
@@ -58,7 +58,7 @@
 						</includes>
 					</resource>
 				</resources>
-				
+
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -71,7 +71,8 @@
 								<inherited>false</inherited>
 								<configuration>
 									<target>
-										<zip destfile="${project.build.directory}/static-package.zip" basedir="src/main/webapp" includes="css/** img/** js/**" />
+										<zip destfile="${project.build.directory}/static-package.zip"
+											basedir="src/main/webapp" includes="css/** img/** js/**" />
 									</target>
 								</configuration>
 								<goals>
@@ -79,11 +80,11 @@
 								</goals>
 							</execution>
 						</executions>
-					</plugin>				
-				</plugins>			
+					</plugin>
+				</plugins>
 			</build>
 
-		</profile>		
+		</profile>
 	</profiles>
 
 	<dependencies>
@@ -197,7 +198,7 @@
 			<artifactId>validation-api</artifactId>
 			<version>1.0.0.GA</version>
 		</dependency>
-        
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -210,7 +211,7 @@
 			<artifactId>activemq-all</artifactId>
 			<version>5.9.1</version>
 		</dependency>
-				  		
+
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-web-api</artifactId>
@@ -242,7 +243,7 @@
 		<finalName>JapaneseDictionaryWeb</finalName>
 
 		<resources>
-  			<resource>
+			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>false</filtering>
 				<includes>
@@ -250,8 +251,31 @@
 				</includes>
 			</resource>
 		</resources>
-		
+
 		<plugins>
+
+			<plugin>
+				<groupId>org.jvnet.jaxb2.maven2</groupId>
+				<artifactId>maven-jaxb2-plugin</artifactId>
+				<version>0.9.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<args>
+								<arg>-XautoNameResolution</arg>
+							</args>
+							<schemaDirectory>${basedir}/src/main/resources/sitemap</schemaDirectory>
+							<generatePackage>pl.idedyk.japanese.dictionary.web.sitemap.model</generatePackage>
+							<generateDirectory>${project.build.directory}/generated-sources/sitemap</generateDirectory>
+						</configuration>
+
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${version.compiler.plugin}</version>

@@ -103,6 +103,10 @@
     	<property name="smtpTo" value="${mail.smtp.to}" />    
     </bean>
     
+    <bean id="sitemapManager" class="pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager">
+    	<property name="baseServer" value="${base.server}" />
+    </bean>
+    
 	<jms:listener-container container-type="default" connection-factory="activeMQConnectionFactory" acknowledge="auto">
 		<jms:listener destination="QUEUE.LOGGER" ref="loggerMessageListener" method="onMessage" />
 	</jms:listener-container>
