@@ -23,6 +23,9 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLog
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
+import pl.idedyk.japanese.dictionary.web.logger.model.RobotsGenerateLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.SitemapGenerateLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.StartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
@@ -381,7 +384,16 @@ public class LoggerListener implements MessageListener {
 	
 	private GenericLogOperationEnum mapClassToGenericLogOperationEnum(Class<?> clazz) {
 		
-		if (WordDictionaryStartLoggerModel.class.isAssignableFrom(clazz) == true) {
+		if (StartLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.START;
+			
+		} else if (RobotsGenerateLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.ROBOTS_GENERATE;
+			
+		} else if (SitemapGenerateLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.SITEMAP_GENERATE;
+			
+		} else if (WordDictionaryStartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.WORD_DICTIONARY_START;
 			
 		} else if (WordDictionaryAutocompleteLoggerModel.class.isAssignableFrom(clazz) == true) {
