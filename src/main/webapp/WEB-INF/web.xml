@@ -25,6 +25,10 @@
 	<servlet>
 		<servlet-name>japanese-dictionary-web</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/applicationContext.xml</param-value>
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
@@ -37,11 +41,11 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/japanese-dictionary-web-servlet.xml</param-value>
 	</context-param>
-	
+
 	<context-param>
-        <param-name>log4jConfigLocation</param-name>
-        <param-value>/WEB-INF/classes/log4j/log4j.properties</param-value>
-    </context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/classes/log4j/log4j.properties</param-value>
+	</context-param>
 
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -57,5 +61,5 @@
 			<trim-directive-whitespaces>true</trim-directive-whitespaces>
 		</jsp-property-group>
 	</jsp-config>
- 
+
 </web-app>

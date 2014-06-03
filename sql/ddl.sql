@@ -88,3 +88,6 @@ create table suggestion_send_log (
     body text null
 ) default character set = utf8 collate = utf8_polish_ci;
 
+create table daily_log_processed_ids (
+    id int not null, primary key(id)
+)  default character set = utf8 collate = utf8_polish_ci;

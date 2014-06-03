@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.StartLoggerModel;
+import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask;
 
 @Controller
 public class StartController extends CommonController {
@@ -23,6 +24,9 @@ public class StartController extends CommonController {
 	@Autowired
 	private LoggerSender loggerSender;
 	
+	@Autowired
+	private ScheduleTask scheduleTask;
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
 		
@@ -30,6 +34,9 @@ public class StartController extends CommonController {
 		
 		// logowanie
 		loggerSender.sendLog(new StartLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent")));
+		
+		int fixme = 1;
+		scheduleTask.generateDailyReport();
 		
 		return "start";
 	}

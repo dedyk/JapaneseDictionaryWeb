@@ -15,6 +15,7 @@ import javax.annotation.PreDestroy;
 
 import org.apache.log4j.Logger;
 
+import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
@@ -554,6 +555,55 @@ public class MySQLConnector {
 				connection.close();
 			}			
 		}		
+	}
+	
+	public DailyLogProcessedMinMaxIds getCurrentDailyLogProcessedMinMaxIds() throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "select min(gl.id), max(gl.id) from generic_log gl where gl.id not in (select dlpi.id from daily_log_processed_ids dlpi where dlpi.id = gl.id)");
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.next() == false) {
+				return null;
+			}
+			
+			Long minId = resultSet.getLong(1);
+			Long maxId = resultSet.getLong(2);
+			
+			if (minId == null || minId == 0 || maxId == null || maxId == 0) {
+				return null;
+			}
+			
+			DailyLogProcessedMinMaxIds result = new DailyLogProcessedMinMaxIds();
+			
+			result.setMinId(minId);
+			result.setMaxId(maxId);
+			
+			return result;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}
 	}
 	
 	public String getUrl() {
