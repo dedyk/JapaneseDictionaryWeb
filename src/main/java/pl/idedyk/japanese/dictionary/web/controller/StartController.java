@@ -29,7 +29,7 @@ public class StartController extends CommonController {
 		logger.info("Wyswietlanie glownej strony");
 		
 		// logowanie
-		loggerSender.sendLog(new StartLoggerModel(session.getId(), Utils.getRemoteIp(request)));
+		loggerSender.sendLog(new StartLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent")));
 		
 		return "start";
 	}

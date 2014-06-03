@@ -5,7 +5,7 @@ public class StartLoggerModel extends LoggerModelCommon {
 	
 	private static final long serialVersionUID = 1L;
 		
-	public StartLoggerModel(String sessionId, String remoteIp) {		
-		super(sessionId, remoteIp);
+	public StartLoggerModel(String sessionId, String remoteIp, String userAgent) {		
+		super(sessionId, remoteIp, userAgent);
 	}
 }

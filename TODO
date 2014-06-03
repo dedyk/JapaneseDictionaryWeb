@@ -34,3 +34,4 @@
 * Execution of JMS message listener failed, and no ***ErrorHandler*** has been set
 * Zamienic JS na wersje min
 * Obsluga bledow, wysylka maili, ladna strona i etc
+* User-agent

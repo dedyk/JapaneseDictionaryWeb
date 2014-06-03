@@ -34,7 +34,7 @@ public class RobotsController extends CommonController {
 		logger.info("Generowanie pliku robots.txt");
 		
 		// logowanie
-		loggerSender.sendLog(new RobotsGenerateLoggerModel(session.getId(), Utils.getRemoteIp(request)));
+		loggerSender.sendLog(new RobotsGenerateLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent")));
 
 		StringBuffer robotsBody = new StringBuffer();
     	

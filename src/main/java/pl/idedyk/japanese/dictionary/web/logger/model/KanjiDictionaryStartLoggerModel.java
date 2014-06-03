@@ -5,7 +5,7 @@ public class KanjiDictionaryStartLoggerModel extends LoggerModelCommon {
 	
 	private static final long serialVersionUID = 1L;
 		
-	public KanjiDictionaryStartLoggerModel(String sessionId, String remoteIp) {		
-		super(sessionId, remoteIp);
+	public KanjiDictionaryStartLoggerModel(String sessionId, String remoteIp, String userAgent) {		
+		super(sessionId, remoteIp, userAgent);
 	}
 }

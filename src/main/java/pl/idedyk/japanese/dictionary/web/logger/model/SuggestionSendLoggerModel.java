@@ -10,8 +10,9 @@ public class SuggestionSendLoggerModel extends LoggerModelCommon {
 	
 	private String body;
 		
-	public SuggestionSendLoggerModel(String sessionId, String remoteIp, String title, String sender, String body) {		
-		super(sessionId, remoteIp);
+	public SuggestionSendLoggerModel(String sessionId, String remoteIp, String userAgent, String title, String sender, String body) {
+		
+		super(sessionId, remoteIp, userAgent);
 		
 		this.title = title;
 		this.sender = sender;

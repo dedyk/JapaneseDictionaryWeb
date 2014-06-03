@@ -91,6 +91,7 @@ public class LoggerListener implements MessageListener {
 				genericLog.setTimestamp(new Timestamp(jmsTimestamp));
 				genericLog.setSessionId(loggerModelCommon.getSessionId());
 				genericLog.setRemoteIp(loggerModelCommon.getRemoteIp());
+				genericLog.setUserAgent(loggerModelCommon.getUserAgent());
 				genericLog.setRemoteHost(Utils.getHostname(loggerModelCommon.getRemoteIp()));
 				genericLog.setOperation(operation);
 				

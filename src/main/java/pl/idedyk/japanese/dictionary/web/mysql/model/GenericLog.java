@@ -10,6 +10,8 @@ public class GenericLog {
 
 	private String sessionId;
 	
+	private String userAgent;
+	
 	private String remoteIp;
 	
 	private String remoteHost;
@@ -38,6 +40,14 @@ public class GenericLog {
 
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
+	}
+
+	public String getUserAgent() {
+		return userAgent;
+	}
+
+	public void setUserAgent(String userAgent) {
+		this.userAgent = userAgent;
 	}
 
 	public String getRemoteIp() {

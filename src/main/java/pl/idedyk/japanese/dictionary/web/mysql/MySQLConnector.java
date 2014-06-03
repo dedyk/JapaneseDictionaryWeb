@@ -84,14 +84,15 @@ public class MySQLConnector {
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "insert into generic_log(timestamp, session_id, remote_ip, remote_host, operation) "
-					+ "values(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			preparedStatement = connection.prepareStatement( "insert into generic_log(timestamp, session_id, user_agent, remote_ip, remote_host, operation) "
+					+ "values(?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			preparedStatement.setTimestamp(1, genericLog.getTimestamp());
 			preparedStatement.setString(2, genericLog.getSessionId());
-			preparedStatement.setString(3, genericLog.getRemoteIp());
-			preparedStatement.setString(4, genericLog.getRemoteHost());
-			preparedStatement.setString(5, genericLog.getOperation().toString());
+			preparedStatement.setString(3, genericLog.getUserAgent());
+			preparedStatement.setString(4, genericLog.getRemoteIp());
+			preparedStatement.setString(5, genericLog.getRemoteHost());
+			preparedStatement.setString(6, genericLog.getOperation().toString());
 			
 			preparedStatement.executeUpdate();
 			

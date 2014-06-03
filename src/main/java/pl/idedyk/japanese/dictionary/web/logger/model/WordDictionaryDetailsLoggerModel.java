@@ -8,9 +8,9 @@ public class WordDictionaryDetailsLoggerModel extends LoggerModelCommon {
 
 	private DictionaryEntry dictionaryEntry;
 		
-	public WordDictionaryDetailsLoggerModel(String sessionId, String remoteIp, DictionaryEntry dictionaryEntry) {
+	public WordDictionaryDetailsLoggerModel(String sessionId, String remoteIp, String userAgent, DictionaryEntry dictionaryEntry) {
 		
-		super(sessionId, remoteIp);
+		super(sessionId, remoteIp, userAgent);
 		
 		this.dictionaryEntry = dictionaryEntry;
 	}

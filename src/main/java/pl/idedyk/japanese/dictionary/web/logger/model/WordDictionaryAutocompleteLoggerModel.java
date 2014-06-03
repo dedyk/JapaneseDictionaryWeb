@@ -9,9 +9,9 @@ public class WordDictionaryAutocompleteLoggerModel extends LoggerModelCommon {
 	
 	private int foundElemets;
 		
-	public WordDictionaryAutocompleteLoggerModel(String sessionId, String remoteIp, String term, int foundElemets) {
+	public WordDictionaryAutocompleteLoggerModel(String sessionId, String remoteIp, String userAgent, String term, int foundElemets) {
 		
-		super(sessionId, remoteIp);
+		super(sessionId, remoteIp, userAgent);
 		
 		this.term = term;
 		this.foundElemets = foundElemets;

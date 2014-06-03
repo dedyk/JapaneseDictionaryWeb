@@ -5,7 +5,7 @@ public class SuggestionStartLoggerModel extends LoggerModelCommon {
 	
 	private static final long serialVersionUID = 1L;
 		
-	public SuggestionStartLoggerModel(String sessionId, String remoteIp) {		
-		super(sessionId, remoteIp);
+	public SuggestionStartLoggerModel(String sessionId, String remoteIp, String userAgent) {		
+		super(sessionId, remoteIp, userAgent);
 	}
 }
