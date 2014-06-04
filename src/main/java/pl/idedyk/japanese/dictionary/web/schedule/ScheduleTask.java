@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordKanjiSearchNoFoundStat;
 
 @Service
 public class ScheduleTask {
@@ -84,11 +85,33 @@ public class ScheduleTask {
 				
 				report.append("\n\n");
 				
-				// slowa wyszukiwania slowek i kanji
-				// uzupelnienie slowek i kanji
+				// wyszukiwanie slowek bez wynikow
+				List<WordKanjiSearchNoFoundStat> wordDictionarySearchNoFoundStatList = mySQLConnector.getWordDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				// data generowania
+				for (WordKanjiSearchNoFoundStat wordKanjiSearchNoFoundStat : wordDictionarySearchNoFoundStatList) {
+					
+					String word = wordKanjiSearchNoFoundStat.getWord();
+					
+					report.append(word);
+					
+					for (int idx = word.length(); idx < 40; ++idx) {
+						report.append(" ");
+					}
+					
+					report.append(" ").append(wordKanjiSearchNoFoundStat.getStat()).append("\n");
+				}
 				
+				report.append("\n\n");
+
+				
+				
+				
+				
+				
+				
+				// slowa wyszukiwania slowek i kanji bez wynikow
+				// uzupelnienie slowek i kanji bez wynikow
+								
 				// na koniec zablokowanie wpisow
 				
 				

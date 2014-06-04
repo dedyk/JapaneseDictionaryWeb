@@ -30,6 +30,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordKanjiSearchNoFoundStat;
 import snaq.db.ConnectionPool;
 
 public class MySQLConnector {
@@ -638,6 +639,60 @@ public class MySQLConnector {
 				genericLogOperationStat.setStat(resultSet.getLong(2));
 				
 				result.add(genericLogOperationStat);
+			}
+			
+			return result;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+
+	public List<WordKanjiSearchNoFoundStat> getWordDictionarySearchNoFoundStat(long startId, long endId) throws SQLException {
+	
+		return getGenericSearchNoFoundStat("select find_word_request_word, count(*) from word_dictionary_search_log "
+				+ "where find_word_result_result_size = 0 and generic_log_id >= ? and generic_log_id <= ? group by find_word_request_word order by 2 desc, 1", startId, endId);		
+	}
+		
+	private List<WordKanjiSearchNoFoundStat> getGenericSearchNoFoundStat(String sql, long startId, long endId) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		try {
+			List<WordKanjiSearchNoFoundStat> result = new ArrayList<WordKanjiSearchNoFoundStat>();
+			
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.setLong(1, startId);
+			preparedStatement.setLong(2, endId);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {
+				
+				WordKanjiSearchNoFoundStat wordKanjiSearchNoFoundStat = new WordKanjiSearchNoFoundStat();
+				
+				wordKanjiSearchNoFoundStat.setWord(resultSet.getString(1));
+				wordKanjiSearchNoFoundStat.setStat(resultSet.getLong(2));
+				
+				result.add(wordKanjiSearchNoFoundStat);
 			}
 			
 			return result;
