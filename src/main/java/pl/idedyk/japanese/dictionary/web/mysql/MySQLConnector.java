@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -17,6 +19,8 @@ import org.apache.log4j.Logger;
 
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
@@ -604,6 +608,54 @@ public class MySQLConnector {
 				connection.close();
 			}			
 		}
+	}
+	
+	public List<GenericLogOperationStat> getGenericLogOperationStat(long startId, long endId) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		try {
+			List<GenericLogOperationStat> result = new ArrayList<GenericLogOperationStat>();
+			
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "select operation, count(*) from generic_log where id >= ? and id <= ? group by operation order by 2 desc");
+			
+			preparedStatement.setLong(1, startId);
+			preparedStatement.setLong(2, endId);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {
+				
+				GenericLogOperationStat genericLogOperationStat = new GenericLogOperationStat();
+				
+				genericLogOperationStat.setOperation(GenericLogOperationEnum.valueOf(resultSet.getString(1)));
+				genericLogOperationStat.setStat(resultSet.getLong(2));
+				
+				result.add(genericLogOperationStat);
+			}
+			
+			return result;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
 	}
 	
 	public String getUrl() {
