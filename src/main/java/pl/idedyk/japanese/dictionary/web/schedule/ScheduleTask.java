@@ -43,19 +43,23 @@ public class ScheduleTask {
 			if (dailyLogProcessedMinMaxIds == null) {
 				logger.info("Brak wpisow do przetworzenia");
 				
-			} else {	
-				logger.info("Przetwarzam wpisy od " + dailyLogProcessedMinMaxIds.getMinId() + " do " + dailyLogProcessedMinMaxIds.getMaxId());
+			} else {
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				
+				logger.info("Przetwarzam wpisy od " + dailyLogProcessedMinMaxIds.getMinId() + " do " + dailyLogProcessedMinMaxIds.getMaxId() + 
+						" (" + simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMinDate()) + " - " + simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMaxDate()));
 				
 				StringBuffer report = new StringBuffer();
 				
 				// tytul
 				report.append(messageSource.getMessage("schedule.task.generate.daily.title", 
-						new Object[] { dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId() }, Locale.getDefault()));
+						new Object[] { dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId(), simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMinDate()),
+						simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMaxDate())}, Locale.getDefault()));
 				
 				report.append("\n\n");
 				
 				// data raportu
-				String currentDateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+				String currentDateString = simpleDateFormat.format(new Date());
 				
 				report.append(messageSource.getMessage("schedule.task.generate.daily.report.date",
 						new Object[] { currentDateString }, Locale.getDefault()));
@@ -84,41 +88,33 @@ public class ScheduleTask {
 				}
 				
 				report.append("\n\n");
-				
-				// wyszukiwanie slowek bez wynikow
+
+				// wyszukiwanie slowek bez wynikow				
 				List<WordKanjiSearchNoFoundStat> wordDictionarySearchNoFoundStatList = mySQLConnector.getWordDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				for (WordKanjiSearchNoFoundStat wordKanjiSearchNoFoundStat : wordDictionarySearchNoFoundStatList) {
-					
-					String word = wordKanjiSearchNoFoundStat.getWord();
-					
-					report.append(word);
-					
-					for (int idx = word.length(); idx < 40; ++idx) {
-						report.append(" ");
-					}
-					
-					report.append(" ").append(wordKanjiSearchNoFoundStat.getStat()).append("\n");
-				}
+				appendWordKanjiSearchNoFoundStat(report, "schedule.task.generate.daily.report.word.dictionary.no.found", wordDictionarySearchNoFoundStatList);
 				
-				report.append("\n\n");
-
+				// wyszukiwanie automatycznego uzupelniania slowek bez wynikow
+				List<WordKanjiSearchNoFoundStat> wordDictionaryAutocompleteNoFoundStat = mySQLConnector.getWordDictionaryAutocompleteNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
+				appendWordKanjiSearchNoFoundStat(report, "schedule.task.generate.daily.report.word.dictionary.autocomplete.no.found", wordDictionaryAutocompleteNoFoundStat);
 				
+				// wyszukiwanie kanji bez wynikow				
+				List<WordKanjiSearchNoFoundStat> kanjiDictionarySearchNoFoundStatList = mySQLConnector.getKanjiDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
+				appendWordKanjiSearchNoFoundStat(report, "schedule.task.generate.daily.report.kanji.dictionary.no.found", kanjiDictionarySearchNoFoundStatList);
 				
+				// wyszukiwanie automatycznego uzupelniania kanji bez wynikow
+				List<WordKanjiSearchNoFoundStat> kanjiDictionaryAutocompleteNoFoundStat = mySQLConnector.getKanjiDictionaryAutocompleteNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
+				appendWordKanjiSearchNoFoundStat(report, "schedule.task.generate.daily.report.kanji.dictionary.autocomplete.no.found", kanjiDictionaryAutocompleteNoFoundStat);
 				
-				// slowa wyszukiwania slowek i kanji bez wynikow
-				// uzupelnienie slowek i kanji bez wynikow
-								
-				// na koniec zablokowanie wpisow
+				logger.info("Wygenerowano dzienny raport: \n\n" + report.toString());
 				
+				// zablokuj wpisy
+				mySQLConnector.blockDailyLogProcessedIds(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				
-				int fixme3 = 1;
-				
-				System.out.println(report.toString());
+				// publikacja do kolejki
 			}
 			
 			
@@ -134,4 +130,25 @@ public class ScheduleTask {
 		logger.info("Generowanie raportu zakonczone");
 	}
 	
+	private void appendWordKanjiSearchNoFoundStat(StringBuffer report, String titleCode, List<WordKanjiSearchNoFoundStat> wordKanjiSearchNoFoundStatList) {
+		
+		report.append(messageSource.getMessage(titleCode, new Object[] { }, Locale.getDefault()));
+		
+		report.append("\n\n");
+		
+		for (WordKanjiSearchNoFoundStat wordKanjiSearchNoFoundStat : wordKanjiSearchNoFoundStatList) {
+			
+			String word = wordKanjiSearchNoFoundStat.getWord();
+			
+			report.append(word);
+			
+			for (int idx = word.length(); idx < 40; ++idx) {
+				report.append(" ");
+			}
+			
+			report.append(" ").append(wordKanjiSearchNoFoundStat.getStat()).append("\n");
+		}
+		
+		report.append("\n\n");
+	}
 }

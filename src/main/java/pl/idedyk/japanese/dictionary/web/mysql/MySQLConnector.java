@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -573,7 +574,7 @@ public class MySQLConnector {
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "select min(gl.id), max(gl.id) from generic_log gl where gl.id not in (select dlpi.id from daily_log_processed_ids dlpi where dlpi.id = gl.id)");
+			preparedStatement = connection.prepareStatement( "select min(gl.id), min(gl.timestamp), max(gl.id), max(gl.timestamp) from generic_log gl where gl.id not in (select dlpi.id from daily_log_processed_ids dlpi where dlpi.id = gl.id)");
 			
 			resultSet = preparedStatement.executeQuery();
 			
@@ -582,7 +583,10 @@ public class MySQLConnector {
 			}
 			
 			Long minId = resultSet.getLong(1);
-			Long maxId = resultSet.getLong(2);
+			Date minDate = resultSet.getTimestamp(2);
+			
+			Long maxId = resultSet.getLong(3);
+			Date maxDate = resultSet.getTimestamp(4);
 			
 			if (minId == null || minId == 0 || maxId == null || maxId == 0) {
 				return null;
@@ -591,7 +595,10 @@ public class MySQLConnector {
 			DailyLogProcessedMinMaxIds result = new DailyLogProcessedMinMaxIds();
 			
 			result.setMinId(minId);
+			result.setMinDate(minDate);
+			
 			result.setMaxId(maxId);
+			result.setMaxDate(maxDate);
 			
 			return result;
 			
@@ -664,7 +671,53 @@ public class MySQLConnector {
 		return getGenericSearchNoFoundStat("select find_word_request_word, count(*) from word_dictionary_search_log "
 				+ "where find_word_result_result_size = 0 and generic_log_id >= ? and generic_log_id <= ? group by find_word_request_word order by 2 desc, 1", startId, endId);		
 	}
+	
+	public List<WordKanjiSearchNoFoundStat> getWordDictionaryAutocompleteNoFoundStat(long startId, long endId) throws SQLException {
 		
+		return getGenericSearchNoFoundStat("select term, count(*) from word_dictionary_autocomplete_log where found_elements = 0 "
+				+ "and generic_log_id >= ? and generic_log_id <= ? group by term order by 2 desc, 1 desc", startId, endId);
+	}
+
+	public List<WordKanjiSearchNoFoundStat> getKanjiDictionarySearchNoFoundStat(long startId, long endId) throws SQLException {
+		
+		return getGenericSearchNoFoundStat("select find_kanji_request_word, count(*) from kanji_dictionary_search_log "
+				+ "where find_kanji_result_result_size = 0 and generic_log_id >= ? and generic_log_id <= ? group by find_kanji_request_word order by 2 desc, 1", startId, endId);		
+	}
+	
+	public List<WordKanjiSearchNoFoundStat> getKanjiDictionaryAutocompleteNoFoundStat(long startId, long endId) throws SQLException {
+		
+		return getGenericSearchNoFoundStat("select term, count(*) from kanji_dictionary_autocomplete_log where found_elements = 0 "
+				+ "and generic_log_id >= ? and generic_log_id <= ? group by term order by 2 desc, 1 desc", startId, endId);
+	}
+	
+	public void blockDailyLogProcessedIds(long startId, long endId) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+				
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement("insert into daily_log_processed_ids select id from generic_log where id >= ? and id <= ?");
+			
+			preparedStatement.setLong(1, startId);
+			preparedStatement.setLong(2, endId);
+			
+			preparedStatement.executeUpdate();
+			
+		} finally {
+									
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+
 	private List<WordKanjiSearchNoFoundStat> getGenericSearchNoFoundStat(String sql, long startId, long endId) throws SQLException {
 		
 		Connection connection = null;
