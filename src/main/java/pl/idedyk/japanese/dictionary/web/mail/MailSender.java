@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
+import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 
@@ -43,6 +44,11 @@ public class MailSender {
 				suggestionSendLog.getBody() }, Locale.getDefault());
 		
 		sendMail(subject, body);
+	}
+	
+	public void sendDailyReport(DailyReportSendLog dailyReportSendLog) {
+		
+		sendMail(dailyReportSendLog.getTitle(), dailyReportSendLog.getReport());
 	}
 
 	public void sendMail(String subject, String body) {

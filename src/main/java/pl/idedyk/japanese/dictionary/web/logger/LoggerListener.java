@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
@@ -34,6 +35,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLogger
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.mail.MailSender;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
+import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
@@ -375,7 +377,29 @@ public class LoggerListener implements MessageListener {
 				}
 				
 				// wysylanie mail'a
-				mailSender.sendSuggestion(genericLog, suggestionSendLog);				
+				mailSender.sendSuggestion(genericLog, suggestionSendLog);
+				
+			} else if (operation == GenericLogOperationEnum.DAILY_REPORT) {
+				
+				DailyReportLoggerModel dailyReportLoggerModel = (DailyReportLoggerModel)object;
+				
+				// utworzenie wpisu do bazy danych
+				DailyReportSendLog dailyReportSendLog = new DailyReportSendLog();
+				
+				dailyReportSendLog.setGenericLogId(genericLog.getId());
+
+				dailyReportSendLog.setTitle(dailyReportLoggerModel.getTitle());
+				dailyReportSendLog.setReport(dailyReportLoggerModel.getReport());
+				
+				// wstawienie wpisu do bazy danych
+				try {
+					mySQLConnector.insertDailyReportSendLog(dailyReportSendLog);
+				} catch (SQLException e) {
+					logger.error("Błąd podczas zapisu do bazy danych", e);
+				}
+
+				// wysylanie mail'a
+				mailSender.sendDailyReport(dailyReportSendLog);				
 			}
 			
 		} else {
@@ -429,6 +453,9 @@ public class LoggerListener implements MessageListener {
 			
 		} else if (SuggestionSendLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.SUGGESTION_SEND;
+		
+		} else if (DailyReportLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.DAILY_REPORT;
 		
 		} else {
 			throw new RuntimeException("Nieznany klasa: " + clazz);

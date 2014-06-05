@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
@@ -26,16 +28,16 @@ public class ScheduleTask {
 	@Autowired
 	private MessageSource messageSource;
 	
+	@Autowired
+	private LoggerSender loggerSender;
+	
 	//@Scheduled(cron="*/5 * * * * ?")
 	public synchronized void generateDailyReport() {
 		
 		int fixme = 1; // scheduled
 		
 		logger.info("Generowanie dziennego raportu");
-		
-		// logowanie
-		int fixme2 = 1;
-						
+								
 		// pobranie przedzialu wpisow
 		try {
 			DailyLogProcessedMinMaxIds dailyLogProcessedMinMaxIds = mySQLConnector.getCurrentDailyLogProcessedMinMaxIds();
@@ -52,9 +54,11 @@ public class ScheduleTask {
 				StringBuffer report = new StringBuffer();
 				
 				// tytul
-				report.append(messageSource.getMessage("schedule.task.generate.daily.title", 
+				String title = messageSource.getMessage("schedule.task.generate.daily.title", 
 						new Object[] { dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId(), simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMinDate()),
-						simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMaxDate())}, Locale.getDefault()));
+						simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMaxDate())}, Locale.getDefault());
+				
+				report.append(title);
 				
 				report.append("\n\n");
 				
@@ -114,19 +118,14 @@ public class ScheduleTask {
 				// zablokuj wpisy
 				mySQLConnector.blockDailyLogProcessedIds(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				// publikacja do kolejki
+				// publikacja do kolejki i do wyslania
+				loggerSender.sendLog(new DailyReportLoggerModel(title, report.toString()));
 			}
-			
-			
-			
-			
 			
 		} catch (Exception e) {
 			logger.error("Blad generowania dziennego raportu", e);
 		}
-		
-		//a:
-		
+				
 		logger.info("Generowanie raportu zakonczone");
 	}
 	
