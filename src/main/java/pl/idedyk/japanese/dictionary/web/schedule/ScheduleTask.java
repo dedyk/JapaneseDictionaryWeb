@@ -8,6 +8,7 @@ import java.util.Locale;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
@@ -31,11 +32,10 @@ public class ScheduleTask {
 	@Autowired
 	private LoggerSender loggerSender;
 	
-	//@Scheduled(cron="*/5 * * * * ?")
+	//@Scheduled(cron="0 * * * * ?") // co minute
+	@Scheduled(cron="0 0 0 * * ?") // o polnocy
 	public synchronized void generateDailyReport() {
-		
-		int fixme = 1; // scheduled
-		
+				
 		logger.info("Generowanie dziennego raportu");
 								
 		// pobranie przedzialu wpisow

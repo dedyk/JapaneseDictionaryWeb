@@ -34,10 +34,7 @@ public class StartController extends CommonController {
 		
 		// logowanie
 		loggerSender.sendLog(new StartLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent")));
-		
-		int fixme = 1;
-		scheduleTask.generateDailyReport();
-		
+				
 		return "start";
 	}
 }
