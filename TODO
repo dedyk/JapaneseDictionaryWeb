@@ -35,3 +35,4 @@
 * Zamienic JS na wersje min
 * Obsluga bledow, wysylka maili, ladna strona i etc
 * User-agent
+* Brak log4j na starcie aplikacji

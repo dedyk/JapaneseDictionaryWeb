@@ -2,6 +2,7 @@
 	trimDirectiveWhitespaces="true"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="jdwt" uri="/WEB-INF/japaneseDictionaryWebTags.tld" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <%@attribute name="header" fragment="true"%>
@@ -122,6 +123,8 @@
 					</ul>
 				</div>
 			</nav>
+			
+			<jdwt:startInfo />
 
 			<div id="content" class="col-md-12">
 				<jsp:doBody />

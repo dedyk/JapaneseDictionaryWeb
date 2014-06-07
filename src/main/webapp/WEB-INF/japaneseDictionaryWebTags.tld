@@ -63,4 +63,9 @@
 		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.SuggestionTag</tagclass>
 		<info>Zglaszanie sugestii</info>
 	</tag>	
+	<tag>
+		<name>startInfo</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.StartInfoTag</tagclass>
+		<info>Informacja poczatkowa</info>
+	</tag>	
 </taglib> 
