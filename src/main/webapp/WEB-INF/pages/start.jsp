@@ -11,7 +11,7 @@
 
 	<jsp:body>
 		
-		Tutaj powinna znaleźć się jakaś informacja
+		<spring:message code="start.page.welcome1"/>&nbsp;<b><spring:message code="start.page.welcome2"/></b><spring:message code="start.page.welcome3"/>
 			
 	</jsp:body>
 </t:template>
