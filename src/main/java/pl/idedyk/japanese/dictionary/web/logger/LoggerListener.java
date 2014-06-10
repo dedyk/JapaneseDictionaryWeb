@@ -17,6 +17,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.InfoLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
@@ -457,6 +458,9 @@ public class LoggerListener implements MessageListener {
 		} else if (DailyReportLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.DAILY_REPORT;
 		
+		} else if (InfoLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.INFO;
+					
 		} else {
 			throw new RuntimeException("Nieznany klasa: " + clazz);
 		}

@@ -21,5 +21,7 @@ public enum GenericLogOperationEnum {
 	SUGGESTION_START,
 	SUGGESTION_SEND,
 	
-	DAILY_REPORT;
+	DAILY_REPORT,
+	
+	INFO;
 }

@@ -86,12 +86,12 @@ public class SitemapManager {
 		List<TUrl> urlList = templateSitemap.getUrl();
 		
 		// dodanie statycznych linkow
-		int fixme = 1; // dodac inne statyczne linki
 		
 		urlList.add(createUrl(objectFactory, "", TChangeFreq.WEEKLY));
 		urlList.add(createUrl(objectFactory, "/wordDictionary", TChangeFreq.WEEKLY));
 		urlList.add(createUrl(objectFactory, "/kanjiDictionary", TChangeFreq.WEEKLY));
 		urlList.add(createUrl(objectFactory, "/suggestion", TChangeFreq.WEEKLY));
+		urlList.add(createUrl(objectFactory, "/info", TChangeFreq.WEEKLY));
 				
 		// pobranie ilosci slow
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
