@@ -120,6 +120,20 @@ public class WordDictionaryController extends CommonController {
 		// logowanie
 		loggerSender.sendLog(new WordDictionarySearchLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), findWordRequest, findWordResult));
 		
+		// sprawdzanie, czy uruchomic animacje przewijania
+		Integer lastWordDictionarySearchHash = (Integer)session.getAttribute("lastWordDictionarySearchHash");
+		
+		session.setAttribute("lastWordDictionarySearchHash", findWordRequest.hashCode());
+		
+		if (lastWordDictionarySearchHash == null) {
+			
+			model.put("runScrollAnim", true);
+			
+		} else {
+			
+			model.put("runScrollAnim", findWordRequest.hashCode() != lastWordDictionarySearchHash);
+		}
+		
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
 		model.put("selectedMenu", "wordDictionary");
@@ -240,10 +254,7 @@ public class WordDictionaryController extends CommonController {
 		
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
-		
-		int fixme = 1;		
-		// zrobic powrot
-				
+						
 		// tytul strony
 		if (dictionaryEntry != null) {
 			

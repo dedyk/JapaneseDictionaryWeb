@@ -132,6 +132,7 @@
 						language: {
 							url: '${staticFilePrefix}/js/datatables/polish.json'
 						},
+						stateSave: true,
 						"aaSorting": [],
 						"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
 						"bLengthChange": false
@@ -162,7 +163,7 @@
 					countSelectedText: '${selectPickerCountSelectedText}'
 				});
 
-				<c:if test="${findWordResult != null}">
+				<c:if test="${findWordResult != null && runScrollAnim == true}">
 					$('html, body').animate({
 			        	scrollTop: $("#findWordResultHrId").offset().top
 			    	}, 1000);
