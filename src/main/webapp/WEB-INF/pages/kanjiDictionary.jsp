@@ -79,18 +79,22 @@
 					language: {
 						url: '${staticFilePrefix}/js/datatables/polish.json'
 					},
+					"bStateSave": true,
 					"aaSorting": [],
 					"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-					"bLengthChange": false
+					"bLengthChange": false,
+					"bPaginate": false
 				});
 
 				$('#kanjiDictionaryFindKanjiDetectResult').dataTable({
 					language: {
 						url: '${staticFilePrefix}/js/datatables/polish.json'
 					},
+					"bStateSave": true,
 					"aaSorting": [],
 					"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-					"bLengthChange": false
+					"bLengthChange": false,
+					"bPaginate": false
 				});
 
 				// zaznaczenie wybranych elementow podstawowych
@@ -113,7 +117,7 @@
 	            </c:if>
 
 				// przesuniecie ekranu po wyszukiwaniu znakow kanji
-				<c:if test="${findKanjiResult != null}">
+				<c:if test="${findKanjiResult != null && runScrollAnim == true}">
 
 				window.setTimeout(function() {
 
@@ -126,7 +130,7 @@
 				</c:if>
 
 				// przesuniecie ekranu po rozpoznawaniu znakow kanji
-				<c:if test="${findKanjiDetectResult != null}">
+				<c:if test="${findKanjiDetectResult != null && runScrollAnim == true}">
 
 				window.setTimeout(function() { 
 					$('html, body').animate({

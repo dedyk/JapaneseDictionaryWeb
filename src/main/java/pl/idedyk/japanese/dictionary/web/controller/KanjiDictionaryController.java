@@ -131,6 +131,18 @@ public class KanjiDictionaryController extends CommonController {
 		// logowanie
 		loggerSender.sendLog(new KanjiDictionarySearchLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), findKanjiRequest, findKanjiResult));
 		
+		// sprawdzanie, czy uruchomic animacje przewijania
+		Integer lastKanjiDictionarySearchHash = (Integer)session.getAttribute("lastKanjiDictionarySearchHash");
+		
+		session.setAttribute("lastKanjiDictionarySearchHash", findKanjiRequest.hashCode());
+		
+		if (lastKanjiDictionarySearchHash == null) {			
+			model.put("runScrollAnim", true);
+						
+		} else {			
+			model.put("runScrollAnim", findKanjiRequest.hashCode() != lastKanjiDictionarySearchHash);
+		}
+		
 		model.put("command", searchModel);
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
@@ -366,6 +378,18 @@ public class KanjiDictionaryController extends CommonController {
 			
 		} else {
 			kanjiDictionaryDrawStroke = null;
+		}
+		
+		// sprawdzanie, czy uruchomic animacje przewijania
+		Integer lastKanjiDetectSearchResultHash = (Integer)session.getAttribute("lastKanjiDetectSearchResultHash");
+		
+		session.setAttribute("lastKanjiDetectSearchResultHash", strokes.hashCode());
+		
+		if (lastKanjiDetectSearchResultHash == null) {			
+			model.put("runScrollAnim", true);
+						
+		} else {			
+			model.put("runScrollAnim", strokes.hashCode() != lastKanjiDetectSearchResultHash);
 		}
 
 		model.put("command", kanjiDictionarySearchModel);
