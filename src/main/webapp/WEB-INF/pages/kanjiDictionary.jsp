@@ -161,7 +161,24 @@
 
 					reDrawDetect();
 					
-				</c:if>				
+				</c:if>		
+
+				// zmiana zakladki
+				$("#meaningTabLiId").on("click", function(e) {
+
+					saveCurrectTab('meaningTabLiId');
+				});		
+
+				$("#radicalsTabLiId").on("click", function(e) {
+
+					saveCurrectTab('radicalsTabLiId');
+				});		
+
+				$("#detectTabLiId").on("click", function(e) {
+
+					saveCurrectTab('detectTabLiId');
+				});		
+				
 			});
 
 	        function handleMouseDown(event) {
@@ -204,6 +221,11 @@
 					currentPath = [];
 				}	            
 	        }
+
+	        function saveCurrectTab(tabId) {
+
+	        	$.get( "${pageContext.request.contextPath}/kanjiDictionary/saveCurrectTab", { tabId: tabId } );
+		    }
 
 		</script>
 	

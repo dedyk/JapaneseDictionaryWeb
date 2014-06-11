@@ -97,9 +97,35 @@ public class KanjiDictionaryController extends CommonController {
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
-		model.put("selectTab", KanjiDictionaryTab.MEANING.getId());
+		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 				
 		return "kanjiDictionary";
+	}
+	
+	@RequestMapping(value = "/kanjiDictionary/saveCurrectTab", method = RequestMethod.GET)
+	public @ResponseBody String saveCurrectTab(HttpServletRequest request, HttpSession session, @RequestParam(value="tabId", required=true) String tabId) {
+
+		KanjiDictionaryTab[] kanjiDictionaryTabValues = KanjiDictionaryTab.values();
+		
+		for (KanjiDictionaryTab kanjiDictionaryTab : kanjiDictionaryTabValues) {
+			
+			if (kanjiDictionaryTab.getId().equals(tabId) == true) {
+				session.setAttribute("kanjiDictionarySelectedTab", tabId);
+			}
+		}
+		
+		return "ok";
+	}
+	
+	private String getSelectTabId(HttpSession session, KanjiDictionaryTab defaultTab) {
+		
+		String kanjiDictionarySelectedTab = (String) session.getAttribute("kanjiDictionarySelectedTab");
+		
+		if (kanjiDictionarySelectedTab != null) {
+			return kanjiDictionarySelectedTab;
+		}
+		
+		return defaultTab.getId();
 	}
 	
 	@RequestMapping(value = "/kanjiDictionarySearch", method = RequestMethod.GET)
@@ -115,7 +141,7 @@ public class KanjiDictionaryController extends CommonController {
 			model.put("radicalList", radicalList);
 			model.put("selectedMenu", "kanjiDictionary");
 			model.put("tabs", KanjiDictionaryTab.values());
-			model.put("selectTab", KanjiDictionaryTab.MEANING.getId());
+			model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 			
 			return "kanjiDictionary";
 		}
@@ -147,7 +173,7 @@ public class KanjiDictionaryController extends CommonController {
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
-		model.put("selectTab", KanjiDictionaryTab.MEANING.getId());
+		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 		
 		model.put("findKanjiRequest", findKanjiRequest);
 		model.put("findKanjiResult", findKanjiResult);
@@ -297,10 +323,7 @@ public class KanjiDictionaryController extends CommonController {
 		
 		// pobranie kanji entry
 		KanjiEntry kanjiEntry = dictionaryManager.findKanji(kanji);
-				
-		int fixme = 1;		
-		// zrobic powrot
-		
+						
 		// tytul strony
 		if (kanjiEntry != null) {
 			
@@ -329,7 +352,7 @@ public class KanjiDictionaryController extends CommonController {
 		model.put("kanjiEntry", kanjiEntry);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
-		model.put("selectTab", KanjiDictionaryTab.MEANING.getId());
+		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 		
 		return "kanjiDictionaryDetails";
 	}
@@ -396,7 +419,7 @@ public class KanjiDictionaryController extends CommonController {
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
-		model.put("selectTab", KanjiDictionaryTab.DETECT.getId());
+		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.DETECT));
 		
 		model.put("kanjiDictionaryDetectErrorMessage", errorMessage);
 		model.put("findKanjiDetectResult", findKanjiDetectResult);
