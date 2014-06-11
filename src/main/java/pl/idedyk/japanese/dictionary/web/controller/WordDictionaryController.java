@@ -216,7 +216,7 @@ public class WordDictionaryController extends CommonController {
 		
 		return findWordRequest;
 	}
-
+	
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
 			value = "/wordDictionary/autocomplete", method = RequestMethod.GET)
 	public @ResponseBody String autocomplete(HttpServletRequest request, HttpSession session, @RequestParam(value="term", required=true) String term) {

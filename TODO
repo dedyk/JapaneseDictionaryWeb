@@ -37,3 +37,4 @@
 * User-agent
 * Brak log4j na starcie aplikacji
 * Slowa kluczowe, tagi
+* Ponawianie bledow z kolejki
