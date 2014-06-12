@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.logger.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public abstract class LoggerModelCommon implements Serializable {
 
@@ -11,11 +12,15 @@ public abstract class LoggerModelCommon implements Serializable {
 	private String remoteIp;
 	
 	private String userAgent;
+	
+	private Date date;
 
 	public LoggerModelCommon(String sessionId, String remoteIp, String userAgent) {
 		this.sessionId = sessionId;
 		this.remoteIp = remoteIp;
 		this.userAgent = userAgent;
+		
+		date = new Date();
 	}
 
 	public String getSessionId() {
@@ -40,5 +45,13 @@ public abstract class LoggerModelCommon implements Serializable {
 
 	public void setUserAgent(String userAgent) {
 		this.userAgent = userAgent;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }

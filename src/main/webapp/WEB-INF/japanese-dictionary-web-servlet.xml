@@ -1,11 +1,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:jms="http://www.springframework.org/schema/jms"
 	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans     
@@ -22,41 +19,24 @@
 	<context:component-scan base-package="pl.idedyk.japanese.dictionary.web" />
 
 	<mvc:annotation-driven />
-	
+
 	<task:annotation-driven />
 
 	<mvc:resources mapping="/img/**" location="/img/" />
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/js/**" location="/js/" />
-
-	<bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-		<property name="brokerURL" value="vm://localhost" />
-	</bean>
-
-	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-		<property name="connectionFactory" ref="activeMQConnectionFactory" />
-	</bean>	
 	
-	<bean id="loggerQueue" class="org.apache.activemq.command.ActiveMQQueue">
-		<constructor-arg value="QUEUE.LOGGER" />
-	</bean>
-	
-	<bean id="loggerSender" class="pl.idedyk.japanese.dictionary.web.logger.LoggerSender">
-		<property name="jmsTemplate" ref="jmsTemplate" />
-		<property name="destination" ref="loggerQueue" />
-	</bean>
-	
-	<bean id="loggerMessageListener" class="pl.idedyk.japanese.dictionary.web.logger.LoggerListener" />
-		
-	<bean id="propertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+	<bean id="propertyConfigurer"
+		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
 		<property name="locations">
 			<list>
 				<value>classpath:/config/config.properties</value>
 			</list>
 		</property>
 	</bean>
-	
-	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+
+	<bean id="applicationProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="singleton" value="true" />
 		<property name="properties">
 			<props>
@@ -66,54 +46,108 @@
 			</props>
 		</property>
 	</bean>
-	
-	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
 			<value>/WEB-INF/pages/</value>
 		</property>
-		
+
 		<property name="suffix">
 			<value>.jsp</value>
 		</property>
 	</bean>
 
- 	<bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource" id="messageSource">
- 		<property name="basenames">
- 			<list>
- 				<value>classpath:messages/messages</value>
- 				<value>classpath:messages/messages_special</value>
- 			</list>
- 		</property>
-    	<property name="defaultEncoding" value="UTF-8"/>
-    </bean>
-    
-    <bean id="zinniaManager" class="pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager">
-    	<property name="zinniaArch" value="${zinnia.arch}" />    
-    	<property name="libzinnia" value="${zinnia.libzinnia}" />
-    	<property name="libzinniajni" value="${zinnia.libzinniajni}" />
-    </bean>
-    
-    <bean id="mySqlConnector" class="pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector">
-    	<property name="url" value="${mysql.url}" />
-    	<property name="user" value="${mysql.user}" />
-    	<property name="password" value="${mysql.password}" />
-    	<property name="minPool" value="${mysql.minPool}" />
-    	<property name="maxPool" value="${mysql.maxPool}" />
-    	<property name="maxSize" value="${mysql.maxSize}" />
-    	<property name="idleTimeout" value="${mysql.idleTimeout}" />
-    </bean>
-    
-    <bean id="mailSender" class="pl.idedyk.japanese.dictionary.web.mail.MailSender">
-    	<property name="smtpHost" value="${mail.smtp.host}" />
-    	<property name="smtpFrom" value="${mail.smtp.from}" />
-    	<property name="smtpTo" value="${mail.smtp.to}" />    
-    </bean>
-    
-    <bean id="sitemapManager" class="pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager">
-    	<property name="baseServer" value="${base.server}" />
-    </bean>
-    
-	<jms:listener-container container-type="default" connection-factory="activeMQConnectionFactory" acknowledge="auto">
-		<jms:listener destination="QUEUE.LOGGER" ref="loggerMessageListener" method="onMessage" />
+	<bean
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+		id="messageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:messages/messages</value>
+				<value>classpath:messages/messages_special</value>
+			</list>
+		</property>
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	
+	<bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="vm://localhost" />
+		<property name="useAsyncSend" value="true" />
+		<property name="redeliveryPolicy">
+			<bean class="org.apache.activemq.RedeliveryPolicy">
+			    <property name="queue" value="*" />
+			    <property name="initialRedeliveryDelay" value="2000" />
+			    <property name="redeliveryDelay" value="2000" />
+			    <property name="maximumRedeliveries" value="-1" />
+			    <property name="useExponentialBackOff" value="true" />
+			    <property name="backOffMultiplier" value="2" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="activeMQTransactionManager"
+		class="org.springframework.jms.connection.JmsTransactionManager">
+		<property name="connectionFactory" ref="activeMQConnectionFactory" />
+	</bean>
+	
+	<bean id="cachingActiveMQConnectionFactory"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		
+		<constructor-arg><ref bean="activeMQConnectionFactory" /></constructor-arg>
+		
+		<property name="sessionCacheSize" value="10" />
+	</bean>
+	
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="cachingActiveMQConnectionFactory" />
+		<property name="sessionTransacted" value="true" />
+	</bean>
+		
+	<bean id="loggerQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="QUEUE.LOGGER" />
+	</bean>
+
+	<bean id="loggerSender" class="pl.idedyk.japanese.dictionary.web.logger.LoggerSender">
+		<property name="jmsTemplate" ref="jmsTemplate" />
+		<property name="destination" ref="loggerQueue" />
+	</bean>
+
+	<bean id="loggerMessageListener" class="pl.idedyk.japanese.dictionary.web.logger.LoggerListener" />
+
+	<jms:listener-container cache="consumer"
+		concurrency="2" container-type="default" connection-factory="cachingActiveMQConnectionFactory" 
+		acknowledge="transacted" transaction-manager="activeMQTransactionManager"
+		error-handler="loggerErrorHandler">
+		<jms:listener destination="QUEUE.LOGGER" ref="loggerMessageListener"
+			method="onMessage" />
 	</jms:listener-container>
+
+	<bean id="zinniaManager"
+		class="pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager">
+		<property name="zinniaArch" value="${zinnia.arch}" />
+		<property name="libzinnia" value="${zinnia.libzinnia}" />
+		<property name="libzinniajni" value="${zinnia.libzinniajni}" />
+	</bean>
+
+	<bean id="mySqlConnector" class="pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector">
+		<property name="url" value="${mysql.url}" />
+		<property name="user" value="${mysql.user}" />
+		<property name="password" value="${mysql.password}" />
+		<property name="minPool" value="${mysql.minPool}" />
+		<property name="maxPool" value="${mysql.maxPool}" />
+		<property name="maxSize" value="${mysql.maxSize}" />
+		<property name="idleTimeout" value="${mysql.idleTimeout}" />
+	</bean>
+
+	<bean id="mailSender" class="pl.idedyk.japanese.dictionary.web.mail.MailSender">
+		<property name="smtpHost" value="${mail.smtp.host}" />
+		<property name="smtpFrom" value="${mail.smtp.from}" />
+		<property name="smtpTo" value="${mail.smtp.to}" />
+	</bean>
+
+	<bean id="sitemapManager"
+		class="pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager">
+		<property name="baseServer" value="${base.server}" />
+	</bean>
+
 </beans>

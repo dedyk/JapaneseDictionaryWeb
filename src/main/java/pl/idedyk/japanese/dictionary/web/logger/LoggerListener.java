@@ -12,6 +12,7 @@ import javax.jms.ObjectMessage;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.support.JmsUtils;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
@@ -61,23 +62,20 @@ public class LoggerListener implements MessageListener {
 		
 	@Override
 	public void onMessage(Message message) {
-		
+				
 		if (message instanceof ObjectMessage) {
 			
 			ObjectMessage objectMessage = (ObjectMessage)message;
 			
 			Serializable object = null;
-			long jmsTimestamp = 0;
 			
 			try {
 				object = objectMessage.getObject();
-				
-				jmsTimestamp = message.getJMSTimestamp();
-				
+								
 			} catch (JMSException e) {
 				logger.error("Bład pobierania obiektu z ObjectMessage: " + message, e);
 				
-				return;
+				throw JmsUtils.convertJmsAccessException(e);
 			}
 			
 			GenericLogOperationEnum operation = mapClassToGenericLogOperationEnum(object.getClass());
@@ -91,7 +89,7 @@ public class LoggerListener implements MessageListener {
 				// utworzenie wpisu do bazy danych
 				genericLog = new GenericLog();
 				
-				genericLog.setTimestamp(new Timestamp(jmsTimestamp));
+				genericLog.setTimestamp(new Timestamp(loggerModelCommon.getDate().getTime()));
 				genericLog.setSessionId(loggerModelCommon.getSessionId());
 				genericLog.setRemoteIp(loggerModelCommon.getRemoteIp());
 				genericLog.setUserAgent(loggerModelCommon.getUserAgent());
@@ -104,7 +102,7 @@ public class LoggerListener implements MessageListener {
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
-					throw new RuntimeException(e);
+					throw JmsUtils.convertJmsAccessException(new JMSException(e.toString()));
 				}				
 			}
 			
@@ -129,7 +127,7 @@ public class LoggerListener implements MessageListener {
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
-					throw new RuntimeException(e);
+					throw JmsUtils.convertJmsAccessException(new JMSException(e.toString()));
 				}
 				
 			} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_SEARCH) {
@@ -173,7 +171,7 @@ public class LoggerListener implements MessageListener {
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
-					throw new RuntimeException(e);
+					throw JmsUtils.convertJmsAccessException(new JMSException(e.toString()));
 				}
 				
 			} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_DETAILS) {
@@ -210,7 +208,7 @@ public class LoggerListener implements MessageListener {
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
-					throw new RuntimeException(e);
+					throw JmsUtils.convertJmsAccessException(new JMSException(e.toString()));
 				}
 				
 			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE) {
@@ -230,7 +228,7 @@ public class LoggerListener implements MessageListener {
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 
-					throw new RuntimeException(e);
+					throw JmsUtils.convertJmsAccessException(new JMSException(e.toString()));
 				}
 
 			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH) {
@@ -257,7 +255,7 @@ public class LoggerListener implements MessageListener {
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
-					throw new RuntimeException(e);
+					throw JmsUtils.convertJmsAccessException(new JMSException(e.toString()));
 				}
 				
 			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_RADICALS) {
@@ -290,7 +288,7 @@ public class LoggerListener implements MessageListener {
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
-					throw new RuntimeException(e);
+					throw JmsUtils.convertJmsAccessException(new JMSException(e.toString()));
 				}
 				
 			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETECT) {
@@ -327,7 +325,7 @@ public class LoggerListener implements MessageListener {
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
-					throw new RuntimeException(e);
+					throw JmsUtils.convertJmsAccessException(new JMSException(e.toString()));
 				}
 				
 			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS) {
@@ -354,7 +352,7 @@ public class LoggerListener implements MessageListener {
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
 					
-					throw new RuntimeException(e);
+					throw JmsUtils.convertJmsAccessException(new JMSException(e.toString()));
 				}
 				
 			} else if (operation == GenericLogOperationEnum.SUGGESTION_SEND) {
@@ -375,6 +373,8 @@ public class LoggerListener implements MessageListener {
 					mySQLConnector.insertSuggestionSendLoggerModel(suggestionSendLog);
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
+					
+					throw JmsUtils.convertJmsAccessException(new JMSException(e.toString()));
 				}
 				
 				// wysylanie mail'a
@@ -397,6 +397,8 @@ public class LoggerListener implements MessageListener {
 					mySQLConnector.insertDailyReportSendLog(dailyReportSendLog);
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
+					
+					throw JmsUtils.convertJmsAccessException(new JMSException(e.toString()));
 				}
 
 				// wysylanie mail'a
