@@ -38,3 +38,4 @@
 * Brak log4j na starcie aplikacji
 * Slowa kluczowe, tagi
 * Ponawianie bledow z kolejki
+* Filtrowanie tabeli nie dziala, gdy mamy zaznaczenie kolorem czerwonym
