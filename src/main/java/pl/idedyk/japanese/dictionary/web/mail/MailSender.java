@@ -10,7 +10,6 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
@@ -19,8 +18,6 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 
 public class MailSender {
-
-	private static final Logger logger = Logger.getLogger(MailSender.class);
 	
 	@Autowired
 	private MessageSource messageSource;
@@ -31,7 +28,7 @@ public class MailSender {
 
 	private String smtpTo;
 	
-	public void sendSuggestion(GenericLog genericLog, SuggestionSendLog suggestionSendLog) {
+	public void sendSuggestion(GenericLog genericLog, SuggestionSendLog suggestionSendLog) throws MessagingException {
 		
 		String subject = messageSource.getMessage("mailSender.suggestion.template.subject", new Object[] { suggestionSendLog.getTitle() }, Locale.getDefault());
 		
@@ -46,41 +43,36 @@ public class MailSender {
 		sendMail(subject, body);
 	}
 	
-	public void sendDailyReport(DailyReportSendLog dailyReportSendLog) {
+	public void sendDailyReport(DailyReportSendLog dailyReportSendLog) throws MessagingException {
 		
 		sendMail(dailyReportSendLog.getTitle(), dailyReportSendLog.getReport());
 	}
 
-	public void sendMail(String subject, String body) {
+	public void sendMail(String subject, String body) throws MessagingException {
 
-		try {
-			// ustawienie serwera
-			Properties properties = new Properties();
-			
-			properties.put("mail.smtp.host", smtpHost);
-			
-			// utworzenie sesji wysylacza mail'i
-			Session session = Session.getDefaultInstance(properties);
+		// ustawienie serwera
+		Properties properties = new Properties();
+		
+		properties.put("mail.smtp.host", smtpHost);
+		
+		// utworzenie sesji wysylacza mail'i
+		Session session = Session.getDefaultInstance(properties);
 
-			// utworzenie wiadomosci
-			MimeMessage message = new MimeMessage(session);
-			
-			// ustaw odbiorce i nadawce
-			message.setFrom(new InternetAddress(smtpFrom));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(smtpTo));
+		// utworzenie wiadomosci
+		MimeMessage message = new MimeMessage(session);
+		
+		// ustaw odbiorce i nadawce
+		message.setFrom(new InternetAddress(smtpFrom));
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(smtpTo));
 
-			// ustaw temat
-			message.setSubject(subject);
+		// ustaw temat
+		message.setSubject(subject);
 
-			// ustaw tresc wiadomosci
-			message.setText(body);
+		// ustaw tresc wiadomosci
+		message.setText(body);
 
-			// wyslij wiadomosc
-			Transport.send(message);
-
-		} catch (MessagingException e) {
-			logger.error("Błąd wysyłki wiadomości", e);
-		}
+		// wyslij wiadomosc
+		Transport.send(message);		
 	}
 
 	public String getSmtpHost() {

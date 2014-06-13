@@ -115,9 +115,8 @@
 	<bean id="loggerMessageListener" class="pl.idedyk.japanese.dictionary.web.logger.LoggerListener" />
 
 	<jms:listener-container cache="consumer"
-		concurrency="2" container-type="default" connection-factory="cachingActiveMQConnectionFactory" 
-		acknowledge="transacted" transaction-manager="activeMQTransactionManager"
-		error-handler="loggerErrorHandler">
+		concurrency="5" container-type="default" connection-factory="cachingActiveMQConnectionFactory" 
+		acknowledge="transacted" transaction-manager="activeMQTransactionManager">
 		<jms:listener destination="QUEUE.LOGGER" ref="loggerMessageListener"
 			method="onMessage" />
 	</jms:listener-container>
