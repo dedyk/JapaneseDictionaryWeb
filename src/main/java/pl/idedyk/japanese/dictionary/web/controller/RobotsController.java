@@ -18,7 +18,7 @@ import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.RobotsGenerateLoggerModel;
 
 @Controller
-public class RobotsController extends CommonController {
+public class RobotsController {
 
 	private static final Logger logger = Logger.getLogger(RobotsController.class);
 	

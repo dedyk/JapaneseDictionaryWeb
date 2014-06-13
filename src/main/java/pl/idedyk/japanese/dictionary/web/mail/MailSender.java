@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 
@@ -46,6 +47,18 @@ public class MailSender {
 	public void sendDailyReport(DailyReportSendLog dailyReportSendLog) throws MessagingException {
 		
 		sendMail(dailyReportSendLog.getTitle(), dailyReportSendLog.getReport());
+	}
+	
+	public void sendGeneralExceptionLog(GenericLog genericLog, GeneralExceptionLog generalExceptionLog) throws MessagingException {
+		
+		String subject = messageSource.getMessage("mailSender.generalException.template.subject", new Object[] { }, Locale.getDefault());
+		
+		String body = messageSource.getMessage("mailSender.generalException.template.body", new Object[] {
+				generalExceptionLog.getId(), genericLog.getId(), generalExceptionLog.getRequestUri(), generalExceptionLog.getStatusCode(), generalExceptionLog.getException()
+				
+		}, Locale.getDefault());
+		
+		sendMail(subject, body);		
 	}
 
 	public void sendMail(String subject, String body) throws MessagingException {

@@ -17,7 +17,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.InfoLoggerModel;
 import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask;
 
 @Controller
-public class InfoController extends CommonController {
+public class InfoController {
 	
 	private static final Logger logger = Logger.getLogger(InfoController.class);
 	

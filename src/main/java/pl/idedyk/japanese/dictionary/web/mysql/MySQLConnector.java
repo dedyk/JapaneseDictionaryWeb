@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
@@ -591,6 +592,51 @@ public class MySQLConnector {
 			}
 			
 			dailyReportSendLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public void insertGeneralExceptionLog(GeneralExceptionLog generalExceptionLog) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into general_exception_log(generic_log_id, request_uri, status_code, exception) "
+					+ "values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, generalExceptionLog.getGenericLogId());
+			preparedStatement.setString(2, generalExceptionLog.getRequestUri());
+			preparedStatement.setInt(3, generalExceptionLog.getStatusCode());
+			preparedStatement.setString(4, generalExceptionLog.getException());
+			
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			generalExceptionLog.setId(generatedKeys.getLong(1));
 			
 		} finally {
 			

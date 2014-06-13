@@ -17,7 +17,7 @@ import pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager;
 import pl.idedyk.japanese.dictionary.web.sitemap.model.Urlset;
 
 @Controller
-public class SitemapController extends CommonController {
+public class SitemapController {
 
 	private static final Logger logger = Logger.getLogger(KanjiDictionaryController.class);
 	

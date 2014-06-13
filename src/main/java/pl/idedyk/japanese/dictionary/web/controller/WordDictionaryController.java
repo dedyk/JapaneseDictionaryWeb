@@ -42,7 +42,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLogger
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
 
 @Controller
-public class WordDictionaryController extends CommonController {
+public class WordDictionaryController {
 
 	private static final Logger logger = Logger.getLogger(WordDictionaryController.class);
 

@@ -23,5 +23,7 @@ public enum GenericLogOperationEnum {
 	
 	DAILY_REPORT,
 	
-	INFO;
+	INFO,
+	
+	GENERAL_EXCEPTION;
 }

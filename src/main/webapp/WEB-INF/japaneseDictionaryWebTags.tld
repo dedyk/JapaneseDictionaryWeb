@@ -67,5 +67,10 @@
 		<name>startInfo</name>
 		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.StartInfoTag</tagclass>
 		<info>Informacja poczatkowa</info>
-	</tag>	
+	</tag>
+	<tag>
+		<name>handleException</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.HandleException</tagclass>
+		<info>Lapanie bledow z JSP</info>
+	</tag>
 </taglib> 

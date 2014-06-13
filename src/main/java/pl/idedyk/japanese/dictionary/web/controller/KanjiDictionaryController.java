@@ -52,7 +52,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLogge
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 
 @Controller
-public class KanjiDictionaryController extends CommonController {
+public class KanjiDictionaryController {
 
 	private static final Logger logger = Logger.getLogger(KanjiDictionaryController.class);
 

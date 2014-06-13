@@ -10,6 +10,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +18,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.InfoLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
@@ -37,6 +39,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerM
 import pl.idedyk.japanese.dictionary.web.mail.MailSender;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
@@ -414,6 +417,44 @@ public class LoggerListener implements MessageListener {
 					
 					throw new RuntimeException(e);
 				}
+				
+			} else if (operation == GenericLogOperationEnum.GENERAL_EXCEPTION) {
+				
+				GeneralExceptionLoggerModel generalExceptionLoggerModel = (GeneralExceptionLoggerModel)object;
+				
+				// utworzenie wpisu do bazy danych
+				GeneralExceptionLog generalExceptionLog = new GeneralExceptionLog();
+				
+				generalExceptionLog.setGenericLogId(genericLog.getId());
+				
+				generalExceptionLog.setRequestUri(generalExceptionLoggerModel.getRequestURI());
+				generalExceptionLog.setStatusCode(generalExceptionLoggerModel.getStatusCode());				
+				
+				Throwable throwable = generalExceptionLoggerModel.getThrowable();
+								
+				StringBuffer exceptionSb = new StringBuffer();
+				
+				exceptionSb.append(throwable.getClass() + ":").append(ExceptionUtils.getMessage(throwable)).append("\n\n").append(ExceptionUtils.getStackTrace(throwable));
+				
+				generalExceptionLog.setException(exceptionSb.toString());
+				
+				// wstawienie wpisu do bazy danych
+				try {
+					mySQLConnector.insertGeneralExceptionLog(generalExceptionLog);
+				} catch (SQLException e) {
+					logger.error("Błąd podczas zapisu do bazy danych", e);
+					
+					throw new RuntimeException(e);
+				}
+				
+				// wysylanie mail'a
+				try {
+					mailSender.sendGeneralExceptionLog(genericLog, generalExceptionLog);
+				} catch (Exception e) {
+					logger.error("Błąd wysyłki wiadomości", e);
+					
+					throw new RuntimeException(e);
+				}
 			}
 			
 		} else {
@@ -474,6 +515,9 @@ public class LoggerListener implements MessageListener {
 		} else if (InfoLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.INFO;
 					
+		} else if (GeneralExceptionLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.GENERAL_EXCEPTION;
+			
 		} else {
 			throw new RuntimeException("Nieznany klasa: " + clazz);
 		}

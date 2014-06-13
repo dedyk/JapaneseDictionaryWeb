@@ -21,7 +21,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionStartLoggerModel;
 
 @Controller
-public class SuggestionController extends CommonController {
+public class SuggestionController {
 	
 	private static final Logger logger = Logger.getLogger(WordDictionaryController.class);
 	
