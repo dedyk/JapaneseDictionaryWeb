@@ -38,7 +38,7 @@
 	
 	<link href="<c:out value='${staticFilePrefix}' />/css/japanese-dictionary/japanese-dictionary.css" rel="stylesheet" />
 	
-	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-1.11.0.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-1.11.1.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-ui-1.10.4.custom.js"></script>
 	
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery-validate/jquery.validate.js"></script>
