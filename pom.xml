@@ -20,7 +20,7 @@
 		<version.compiler.plugin>3.1</version.compiler.plugin>
 
 		<!-- spring version -->
-		<spring.version>4.0.2.RELEASE</spring.version>
+		<spring.version>4.0.5.RELEASE</spring.version>
 
 		<!-- lucene version -->
 		<lucene.version>4.7.2</lucene.version>
