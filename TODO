@@ -1,14 +1,9 @@
 * Logowanie (log4j) do osobnego pliku
-* Katalog ze słowami
 * Uaktualnic datatables do finalnej wersj
-* Animacja pisania znakow, slow
 * TTS
 * cyferki przy kreskach
-* przy odmianach napisac, ze to odmiana dla typu
 * Uaktualnic biblioteki
 * Ikonka w przegladarce
 * Szybkosc pisania kresek kanji
-* Sprawdzic/poprawic wyglad na telefonie
 * Zamienic JS na wersje min
 * Slowa kluczowe, tagi
-* Filtrowanie tabeli nie dziala, gdy mamy zaznaczenie kolorem czerwonym

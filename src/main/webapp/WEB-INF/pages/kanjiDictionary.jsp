@@ -303,6 +303,7 @@
 								<tfood>
 									<c:forEach items="${findKanjiResult.result}" var="currentResult">
 										<jdwt:findKanjiResultItemTableRow
+											findKanjiRequest="${findKanjiRequest}"
 											resultItem="${currentResult}" />
 									</c:forEach>
 								</tfood>
@@ -562,7 +563,6 @@
 								<tfood>
 									<c:forEach items="${findKanjiDetectResult.result}" var="currentResult">
 										<jdwt:findKanjiResultItemTableRow
-											findKanjiRequest="${findKanjiRequest}"
 											resultItem="${currentResult}" />
 									</c:forEach>
 								</tfood>
