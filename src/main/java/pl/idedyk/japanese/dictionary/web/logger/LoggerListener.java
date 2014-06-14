@@ -64,6 +64,8 @@ public class LoggerListener implements MessageListener {
 		
 	@Override
 	public void onMessage(Message message) {
+		
+		logger.info("Przetwarzam zadanie z kolejki");
 				
 		if (message instanceof ObjectMessage) {
 			

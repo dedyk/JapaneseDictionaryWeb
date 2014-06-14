@@ -414,8 +414,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         
         List<IdAndText> idAndTextList = new ArrayList<IdAndText>();
         
+    	Div readingBodyDiv = new Div("col-md-11");
+    	row2Div.addHtmlElement(readingBodyDiv);
+
         Table readingTable = new Table();
-        row2Div.addHtmlElement(readingTable);
+        readingBodyDiv.addHtmlElement(readingTable);
 
         for (int idx = 0; idx < kanaList.size(); ++idx) {
         	
@@ -506,16 +509,26 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	Div row2Div = new Div("row");
     	translateDiv.addHtmlElement(row2Div);
     	
+    	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    	
+    	Div translateBodyDiv = new Div("col-md-11");
+    	row2Div.addHtmlElement(translateBodyDiv);
+    	
+    	Table row2Table = new Table();
+    	translateBodyDiv.addHtmlElement(row2Table);
+    	
     	for (int idx = 0; idx < translates.size(); ++idx) {
-    		row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
     		
-    		Div currentTranslateDiv = new Div("col-md-11");
-    		row2Div.addHtmlElement(currentTranslateDiv);
-    		
+			Tr row2TableTr = new Tr();
+			row2Table.addHtmlElement(row2TableTr);
+			
+			Td row2TableTrTd1 = new Td();
+			row2TableTr.addHtmlElement(row2TableTrTd1);
+			
     		H currentTranslateH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
-    		currentTranslateH.addHtmlElement(new Text(translates.get(idx)));
+    		row2TableTrTd1.addHtmlElement(currentTranslateH);
     		
-    		currentTranslateDiv.addHtmlElement(currentTranslateH);
+    		currentTranslateH.addHtmlElement(new Text(translates.get(idx)));
     	}
 		
 		return translateDiv;
