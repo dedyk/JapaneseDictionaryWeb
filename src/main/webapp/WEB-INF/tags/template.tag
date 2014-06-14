@@ -28,30 +28,30 @@
       </c:otherwise>
 	</c:choose>
 	
-	<link href="<c:out value='${staticFilePrefix}' />/css/excite-bike/jquery-ui-1.10.4.custom.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/excite-bike/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
 	
-	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap/bootstrap.css" rel="stylesheet" />
-	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap-select/bootstrap-select.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
 	
-	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/jquery.dataTables.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/jquery.dataTables.min.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet" />
 	
 	<link href="<c:out value='${staticFilePrefix}' />/css/japanese-dictionary/japanese-dictionary.css" rel="stylesheet" />
 	
-	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-1.11.1.js"></script>
-	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-ui-1.10.4.custom.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-1.11.1.min.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-ui-1.10.4.custom.min.js"></script>
 	
-	<script src="<c:out value='${staticFilePrefix}' />/js/jquery-validate/jquery.validate.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/jquery-validate/jquery.validate.min.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery-validate/messages_pl.js"></script>
 	
-	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap/bootstrap.js"></script>
-	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap-select/bootstrap-select.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap/bootstrap.min.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap-select/bootstrap-select.min.js"></script>
 	
-	<script src="<c:out value='${staticFilePrefix}' />/js/datatables/jquery.dataTables.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/datatables/jquery.dataTables.min.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/datatables/dataTables.bootstrap.js"></script>
 	
 	<script src="<c:out value='${staticFilePrefix}' />/js/lazy-line-painter/jquery.lazylinepainter-1.4.1-fm.js"></script>
-	<script src="<c:out value='${staticFilePrefix}' />/js/raphael/raphael.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/raphael/raphael-min.js"></script>
 	
 	<script src="<c:out value='${staticFilePrefix}' />/js/easeljs/easeljs-0.7.1.min.js"></script>
 
