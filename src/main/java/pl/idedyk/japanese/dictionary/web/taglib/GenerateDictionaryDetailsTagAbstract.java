@@ -16,7 +16,10 @@ import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Li;
 import pl.idedyk.japanese.dictionary.web.html.Script;
+import pl.idedyk.japanese.dictionary.web.html.Table;
+import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
+import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.html.Ul;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
 
@@ -215,5 +218,58 @@ public abstract class GenerateDictionaryDetailsTagAbstract extends TagSupport {
 		mainDiv.addHtmlElement(suggestionDialogDiv);
 				
 		return mainDiv;
+	}
+	
+	protected Div generateStandardDivWithStringList(String titleId, String title, Menu menu, List<String> list) {
+		
+		Div resultDiv = new Div();
+				
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tytul
+    	Div divTitleDiv = new Div("col-md-10");
+    	
+    	H divTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	divTitleH4.setId(titleId);
+    	
+    	divTitleH4.addHtmlElement(new Text(title));
+    	menu.getChildMenu().add(new Menu(divTitleH4.getId(), title));    	
+    	
+    	divTitleDiv.addHtmlElement(divTitleH4);
+    	
+    	row1Div.addHtmlElement(divTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	resultDiv.addHtmlElement(row1Div);
+
+		// wiersz z lista
+    	Div row2Div = new Div("row");
+    	resultDiv.addHtmlElement(row2Div);
+    	
+    	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    	
+    	Div divBodyDiv = new Div("col-md-11");
+    	row2Div.addHtmlElement(divBodyDiv);
+    	
+    	Table row2Table = new Table();
+    	divBodyDiv.addHtmlElement(row2Table);
+    	
+    	for (int idx = 0; idx < list.size(); ++idx) {
+    		
+			Tr row2TableTr = new Tr();
+			row2Table.addHtmlElement(row2TableTr);
+			
+			Td row2TableTrTd1 = new Td();
+			row2TableTr.addHtmlElement(row2TableTrTd1);
+			
+    		H currentListH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+    		row2TableTrTd1.addHtmlElement(currentListH);
+    		
+    		currentListH.addHtmlElement(new Text(list.get(idx)));
+    	}
+		
+		return resultDiv;
 	}
 }

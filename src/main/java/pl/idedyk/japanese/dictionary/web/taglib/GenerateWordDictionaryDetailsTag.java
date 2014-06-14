@@ -481,57 +481,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	private Div generateTranslateSection(Menu menu) throws IOException {
 		
-		Div translateDiv = new Div();
-		
-		List<String> translates = dictionaryEntry.getTranslates();
-		
-    	// wiersz z tytulem
-    	Div row1Div = new Div("row");
-    	
-    	// tlumaczenie - tytul
-    	Div translateTitleDiv = new Div("col-md-1");
-    	
-    	H translateTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
-    	
-    	translateTitleH4.setId("translateId");
-    	
-    	translateTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title")));
-    	menu.getChildMenu().add(new Menu(translateTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title")));    	
-    	
-    	translateTitleDiv.addHtmlElement(translateTitleH4);
-    	
-    	row1Div.addHtmlElement(translateTitleDiv);
-    	
-    	// dodaj wiersz z tytulem
-    	translateDiv.addHtmlElement(row1Div);
-
-		// wiersz z tlumaczeniem
-    	Div row2Div = new Div("row");
-    	translateDiv.addHtmlElement(row2Div);
-    	
-    	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
-    	
-    	Div translateBodyDiv = new Div("col-md-11");
-    	row2Div.addHtmlElement(translateBodyDiv);
-    	
-    	Table row2Table = new Table();
-    	translateBodyDiv.addHtmlElement(row2Table);
-    	
-    	for (int idx = 0; idx < translates.size(); ++idx) {
-    		
-			Tr row2TableTr = new Tr();
-			row2Table.addHtmlElement(row2TableTr);
-			
-			Td row2TableTrTd1 = new Td();
-			row2TableTr.addHtmlElement(row2TableTrTd1);
-			
-    		H currentTranslateH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
-    		row2TableTrTd1.addHtmlElement(currentTranslateH);
-    		
-    		currentTranslateH.addHtmlElement(new Text(translates.get(idx)));
-    	}
-		
-		return translateDiv;
+		return generateStandardDivWithStringList("translateId", getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title"), menu, dictionaryEntry.getTranslates());
 	}
 	
 	private Div generateAdditionalInfo(Menu menu) throws IOException {
@@ -581,17 +531,26 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Div additionalInfoTextDiv = new Div("col-md-11");
 		row2Div.addHtmlElement(additionalInfoTextDiv);
 
+    	Table row2Table = new Table();
+    	additionalInfoTextDiv.addHtmlElement(row2Table);
+    	
+		Tr row2TableTr = new Tr();
+		row2Table.addHtmlElement(row2TableTr);
+		
+		Td row2TableTrTd1 = new Td();
+		row2TableTr.addHtmlElement(row2TableTrTd1);
+		
 		if (special == false) {
 			
 			H additionalInfoTextH4 = new H(4);
-			additionalInfoTextDiv.addHtmlElement(additionalInfoTextH4);
+			row2TableTrTd1.addHtmlElement(additionalInfoTextH4);
 			
 			additionalInfoTextH4.addHtmlElement(new Text(info));
 						
 		} else {
 			
 			Div specialDiv = new Div(null, "font-family:monospace; font-size: 40%");
-			additionalInfoTextDiv.addHtmlElement(specialDiv);
+			row2TableTrTd1.addHtmlElement(specialDiv);
 			
 			specialDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special")));	
 		}		
