@@ -14,6 +14,8 @@
 <head>
 	<meta charset="utf-8" />
 	
+	<meta name="keywords" content="<spring:message code="template.keywords"/>" />
+	
 	<title>${pageTitle}</title>
 	
 	<spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
@@ -27,6 +29,8 @@
       	<c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
       </c:otherwise>
 	</c:choose>
+	
+	<link rel="icon" type="image/png" href="${staticFilePrefix}/img/favicon.png"/>
 	
 	<link href="<c:out value='${staticFilePrefix}' />/css/excite-bike/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
 	
