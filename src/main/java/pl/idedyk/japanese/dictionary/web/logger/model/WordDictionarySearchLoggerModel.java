@@ -11,9 +11,9 @@ public class WordDictionarySearchLoggerModel extends LoggerModelCommon {
 	
 	private FindWordResult findWordResult;
 	
-	public WordDictionarySearchLoggerModel(String sessionId, String remoteIp, String userAgent, FindWordRequest findWordRequest, FindWordResult findWordResult) {
+	public WordDictionarySearchLoggerModel(LoggerModelCommon loggerModelCommon, FindWordRequest findWordRequest, FindWordResult findWordResult) {
 		
-		super(sessionId, remoteIp, userAgent);
+		super(loggerModelCommon);
 		
 		this.findWordRequest = findWordRequest;
 		this.findWordResult = findWordResult;

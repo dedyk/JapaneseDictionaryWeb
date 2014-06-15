@@ -11,9 +11,9 @@ public class KanjiDictionarySearchLoggerModel extends LoggerModelCommon {
 	
 	private FindKanjiResult findKanjiResult;
 	
-	public KanjiDictionarySearchLoggerModel(String sessionId, String remoteIp, String userAgent, FindKanjiRequest findKanjiRequest, FindKanjiResult findKanjiResult) {
+	public KanjiDictionarySearchLoggerModel(LoggerModelCommon loggerModelCommon, FindKanjiRequest findKanjiRequest, FindKanjiResult findKanjiResult) {
 		
-		super(sessionId, remoteIp, userAgent);
+		super(loggerModelCommon);
 		
 		this.findKanjiRequest = findKanjiRequest;
 		this.findKanjiResult = findKanjiResult;

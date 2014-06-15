@@ -49,7 +49,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	
 	@Override
 	public int doStartTag() throws JspException {
-		
+				
 		ServletContext servletContext = pageContext.getServletContext();
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);

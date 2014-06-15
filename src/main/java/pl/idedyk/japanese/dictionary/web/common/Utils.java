@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 
 public class Utils {
 	
@@ -123,7 +126,7 @@ public class Utils {
 
 		return httpServletRequest.getRemoteAddr();		
 	}
-	
+		
 	public static String getHostname(String ip) {
 		
 		try {
@@ -134,5 +137,31 @@ public class Utils {
 		} catch (Exception e) {
 			return ip;
 		}
+	}
+	
+	public static String getRequestURL(HttpServletRequest request) {
+		
+		String result = request.getRequestURL().toString();
+		
+		String queryString = request.getQueryString();
+		
+		if (queryString != null && queryString.trim().equals("") == false) {
+			result += "?" + queryString;
+		}
+		
+		return result;
+	}
+	
+	public static LoggerModelCommon createLoggerModelCommon(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		
+		LoggerModelCommon loggerModelCommon = LoggerModelCommon.createLoggerModelCommon(
+				session.getId(),
+				getRemoteIp(request),
+				request.getHeader("User-Agent"),
+				getRequestURL(request));
+		
+		return loggerModelCommon;
 	}
 }

@@ -54,7 +54,7 @@ public class MailSender {
 		String subject = messageSource.getMessage("mailSender.generalException.template.subject", new Object[] { }, Locale.getDefault());
 		
 		String body = messageSource.getMessage("mailSender.generalException.template.body", new Object[] {
-				generalExceptionLog.getId(), genericLog.getId(), generalExceptionLog.getRequestUri(), generalExceptionLog.getStatusCode(), generalExceptionLog.getException()
+				generalExceptionLog.getId(), genericLog.getId(), genericLog.getRequestURL(), generalExceptionLog.getStatusCode(), generalExceptionLog.getException()
 				
 		}, Locale.getDefault());
 		

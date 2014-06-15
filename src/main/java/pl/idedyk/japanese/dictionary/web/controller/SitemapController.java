@@ -34,7 +34,7 @@ public class SitemapController {
 		logger.info("Generowanie pliku sitemap");
 		
 		// logowanie
-		loggerSender.sendLog(new SitemapGenerateLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent")));
+		loggerSender.sendLog(new SitemapGenerateLoggerModel(Utils.createLoggerModelCommon(request)));
 
 		return sitemapManager.getSitemap(request.getContextPath());
 	}

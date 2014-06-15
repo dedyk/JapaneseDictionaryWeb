@@ -3,7 +3,7 @@ package pl.idedyk.japanese.dictionary.web.logger.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public abstract class LoggerModelCommon implements Serializable {
+public class LoggerModelCommon implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -13,16 +13,43 @@ public abstract class LoggerModelCommon implements Serializable {
 	
 	private String userAgent;
 	
+	private String requestURL;
+	
 	private Date date;
-
-	public LoggerModelCommon(String sessionId, String remoteIp, String userAgent) {
-		this.sessionId = sessionId;
-		this.remoteIp = remoteIp;
-		this.userAgent = userAgent;
+	
+	private LoggerModelCommon() {
+	}
+	
+	public LoggerModelCommon(LoggerModelCommon loggerModelCommon) {
 		
-		date = new Date();
+		if (loggerModelCommon != null) {
+
+			this.sessionId = loggerModelCommon.sessionId;
+			this.remoteIp = loggerModelCommon.remoteIp;
+			this.userAgent = loggerModelCommon.userAgent;
+			this.requestURL = loggerModelCommon.requestURL;
+			
+			this.date = loggerModelCommon.date;
+			
+		} else {
+			this.date = new Date();
+		}
 	}
 
+	public static LoggerModelCommon createLoggerModelCommon(String sessionId, String remoteIp, String userAgent, String requestURL) {
+		
+		LoggerModelCommon loggerModelCommon = new LoggerModelCommon();
+		
+		loggerModelCommon.sessionId = sessionId;
+		loggerModelCommon.remoteIp = remoteIp;
+		loggerModelCommon.userAgent = userAgent;
+		loggerModelCommon.requestURL = requestURL;
+		
+		loggerModelCommon.date = new Date();
+		
+		return loggerModelCommon;
+	}
+	
 	public String getSessionId() {
 		return sessionId;
 	}
@@ -53,5 +80,13 @@ public abstract class LoggerModelCommon implements Serializable {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public String getRequestURL() {
+		return requestURL;
+	}
+
+	public void setRequestURL(String requestURL) {
+		this.requestURL = requestURL;
 	}
 }

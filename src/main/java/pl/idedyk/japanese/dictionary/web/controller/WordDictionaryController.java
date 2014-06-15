@@ -85,7 +85,7 @@ public class WordDictionaryController {
 		// logowanie
 		logger.info("WordDictionaryController: start");
 		
-		loggerSender.sendLog(new WordDictionaryStartLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent")));
+		loggerSender.sendLog(new WordDictionaryStartLoggerModel(Utils.createLoggerModelCommon(request)));
 
 		model.put("addableDictionaryEntryList", addableDictionaryEntryList);
 		model.put("command", wordDictionarySearchModel);
@@ -118,7 +118,7 @@ public class WordDictionaryController {
 		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
 		
 		// logowanie
-		loggerSender.sendLog(new WordDictionarySearchLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), findWordRequest, findWordResult));
+		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult));
 		
 		// sprawdzanie, czy uruchomic animacje przewijania
 		Integer lastWordDictionarySearchHash = (Integer)session.getAttribute("lastWordDictionarySearchHash");
@@ -227,7 +227,7 @@ public class WordDictionaryController {
 			List<String> wordAutocomplete = dictionaryManager.getWordAutocomplete(term, 5);
 
 			// logowanie
-			loggerSender.sendLog(new WordDictionaryAutocompleteLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), term, wordAutocomplete.size()));
+			loggerSender.sendLog(new WordDictionaryAutocompleteLoggerModel(Utils.createLoggerModelCommon(request), term, wordAutocomplete.size()));
 			
 			JSONArray jsonArray = new JSONArray();
 
@@ -261,7 +261,7 @@ public class WordDictionaryController {
 			logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
 			
 			// logowanie
-			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), dictionaryEntry));
+			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
 			
 			String dictionaryEntryKanji = dictionaryEntry.getKanji();
 			List<String> dictionaryEntryKanaList = dictionaryEntry.getKanaList();

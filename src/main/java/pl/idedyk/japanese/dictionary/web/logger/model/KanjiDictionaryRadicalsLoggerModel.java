@@ -10,9 +10,9 @@ public class KanjiDictionaryRadicalsLoggerModel extends LoggerModelCommon {
 	
 	private int foundElemets;
 		
-	public KanjiDictionaryRadicalsLoggerModel(String sessionId, String remoteIp, String userAgent, String[] radicals, int foundElemets) {
+	public KanjiDictionaryRadicalsLoggerModel(LoggerModelCommon loggerModelCommon, String[] radicals, int foundElemets) {
 		
-		super(sessionId, remoteIp, userAgent);
+		super(loggerModelCommon);
 		
 		this.radicals = radicals;
 		this.foundElemets = foundElemets;

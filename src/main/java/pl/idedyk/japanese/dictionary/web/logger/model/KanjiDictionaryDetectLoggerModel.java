@@ -12,9 +12,9 @@ public class KanjiDictionaryDetectLoggerModel extends LoggerModelCommon {
 	
 	private List<KanjiRecognizerResultItem> detectKanjiResult;
 
-	public KanjiDictionaryDetectLoggerModel(String sessionId, String remoteIp, String userAgent, String strokes, List<KanjiRecognizerResultItem> detectKanjiResult) {
+	public KanjiDictionaryDetectLoggerModel(LoggerModelCommon loggerModelCommon, String strokes, List<KanjiRecognizerResultItem> detectKanjiResult) {
 		
-		super(sessionId, remoteIp, userAgent);
+		super(loggerModelCommon);
 		
 		this.strokes = strokes;
 		this.detectKanjiResult = detectKanjiResult;

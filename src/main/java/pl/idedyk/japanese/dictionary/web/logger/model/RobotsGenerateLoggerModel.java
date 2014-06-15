@@ -5,7 +5,7 @@ public class RobotsGenerateLoggerModel extends LoggerModelCommon {
 	
 	private static final long serialVersionUID = 1L;
 		
-	public RobotsGenerateLoggerModel(String sessionId, String remoteIp, String userAgent) {		
-		super(sessionId, remoteIp, userAgent);
+	public RobotsGenerateLoggerModel(LoggerModelCommon loggerModelCommon) {		
+		super(loggerModelCommon);
 	}
 }

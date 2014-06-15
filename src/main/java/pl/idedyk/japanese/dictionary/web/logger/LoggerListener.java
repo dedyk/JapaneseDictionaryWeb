@@ -97,6 +97,7 @@ public class LoggerListener implements MessageListener {
 				genericLog.setSessionId(loggerModelCommon.getSessionId());
 				genericLog.setRemoteIp(loggerModelCommon.getRemoteIp());
 				genericLog.setUserAgent(loggerModelCommon.getUserAgent());
+				genericLog.setRequestURL(loggerModelCommon.getRequestURL());
 				genericLog.setRemoteHost(Utils.getHostname(loggerModelCommon.getRemoteIp()));
 				genericLog.setOperation(operation);
 				
@@ -429,7 +430,6 @@ public class LoggerListener implements MessageListener {
 				
 				generalExceptionLog.setGenericLogId(genericLog.getId());
 				
-				generalExceptionLog.setRequestUri(generalExceptionLoggerModel.getRequestURI());
 				generalExceptionLog.setStatusCode(generalExceptionLoggerModel.getStatusCode());				
 				
 				Throwable throwable = generalExceptionLoggerModel.getThrowable();

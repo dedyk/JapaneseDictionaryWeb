@@ -9,7 +9,7 @@ public class DailyReportLoggerModel extends LoggerModelCommon {
 	private String report; 
 
 	public DailyReportLoggerModel(String title, String report) {
-		super(null, null, null);
+		super(null);
 		
 		this.title = title;
 		this.report = report;

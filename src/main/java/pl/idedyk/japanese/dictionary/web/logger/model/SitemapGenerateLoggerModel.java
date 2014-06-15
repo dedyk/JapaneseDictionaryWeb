@@ -5,7 +5,7 @@ public class SitemapGenerateLoggerModel extends LoggerModelCommon {
 	
 	private static final long serialVersionUID = 1L;
 		
-	public SitemapGenerateLoggerModel(String sessionId, String remoteIp, String userAgent) {		
-		super(sessionId, remoteIp, userAgent);
+	public SitemapGenerateLoggerModel(LoggerModelCommon loggerModelCommon) {		
+		super(loggerModelCommon);
 	}
 }

@@ -5,8 +5,6 @@ public class GeneralExceptionLog {
 	private Long id;
 	
 	private Long genericLogId;
-
-	private String requestUri;
 	
 	private int statusCode;
 	
@@ -27,15 +25,7 @@ public class GeneralExceptionLog {
 	public void setGenericLogId(Long genericLogId) {
 		this.genericLogId = genericLogId;
 	}
-
-	public String getRequestUri() {
-		return requestUri;
-	}
-
-	public void setRequestUri(String requestUri) {
-		this.requestUri = requestUri;
-	}
-
+	
 	public int getStatusCode() {
 		return statusCode;
 	}

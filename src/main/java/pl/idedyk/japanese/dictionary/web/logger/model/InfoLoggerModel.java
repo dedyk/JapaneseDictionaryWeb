@@ -5,7 +5,7 @@ public class InfoLoggerModel extends LoggerModelCommon {
 	
 	private static final long serialVersionUID = 1L;
 		
-	public InfoLoggerModel(String sessionId, String remoteIp, String userAgent) {		
-		super(sessionId, remoteIp, userAgent);
+	public InfoLoggerModel(LoggerModelCommon loggerModelCommon) {		
+		super(loggerModelCommon);
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 
 public class HandleException extends TagSupport {
 	
@@ -50,7 +51,10 @@ public class HandleException extends TagSupport {
 		int statusCode = errorData.getStatusCode();
 		Throwable throwable = errorData.getThrowable();
 		
-		GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(sessionId, remoteIp, userAgent, requestURI, statusCode, throwable);
+		LoggerModelCommon loggerModelCommon = LoggerModelCommon.createLoggerModelCommon(
+				sessionId, remoteIp, userAgent, requestURI);
+		
+		GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(loggerModelCommon, statusCode, throwable);
 
 		loggerSender.sendLog(generalExceptionLoggerModel);
 		

@@ -31,8 +31,8 @@ public class ErrorController {
 		logger.error("Błąd podczas działania kontrolera", ex);
 
 		// wyslanie do logger'a
-		GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), 
-				request.getRequestURI(), -1, ex);
+		GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(
+				Utils.createLoggerModelCommon(request), -1, ex);
 
 		loggerSender.sendLog(generalExceptionLoggerModel);
 

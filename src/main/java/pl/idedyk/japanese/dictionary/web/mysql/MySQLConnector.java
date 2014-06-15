@@ -93,15 +93,16 @@ public class MySQLConnector {
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "insert into generic_log(timestamp, session_id, user_agent, remote_ip, remote_host, operation) "
-					+ "values(?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			preparedStatement = connection.prepareStatement( "insert into generic_log(timestamp, session_id, user_agent, request_url, remote_ip, remote_host, operation) "
+					+ "values(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			preparedStatement.setTimestamp(1, genericLog.getTimestamp());
 			preparedStatement.setString(2, genericLog.getSessionId());
 			preparedStatement.setString(3, genericLog.getUserAgent());
-			preparedStatement.setString(4, genericLog.getRemoteIp());
-			preparedStatement.setString(5, genericLog.getRemoteHost());
-			preparedStatement.setString(6, genericLog.getOperation().toString());
+			preparedStatement.setString(4, genericLog.getRequestURL());
+			preparedStatement.setString(5, genericLog.getRemoteIp());
+			preparedStatement.setString(6, genericLog.getRemoteHost());
+			preparedStatement.setString(7, genericLog.getOperation().toString());
 			
 			preparedStatement.executeUpdate();
 			
@@ -620,13 +621,12 @@ public class MySQLConnector {
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "insert into general_exception_log(generic_log_id, request_uri, status_code, exception) "
-					+ "values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			preparedStatement = connection.prepareStatement( "insert into general_exception_log(generic_log_id, status_code, exception) "
+					+ "values(?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			preparedStatement.setLong(1, generalExceptionLog.getGenericLogId());
-			preparedStatement.setString(2, generalExceptionLog.getRequestUri());
-			preparedStatement.setInt(3, generalExceptionLog.getStatusCode());
-			preparedStatement.setString(4, generalExceptionLog.getException());
+			preparedStatement.setInt(2, generalExceptionLog.getStatusCode());
+			preparedStatement.setString(3, generalExceptionLog.getException());
 			
 			preparedStatement.executeUpdate();
 			

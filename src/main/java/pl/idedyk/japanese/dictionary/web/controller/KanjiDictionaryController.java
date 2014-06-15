@@ -91,7 +91,7 @@ public class KanjiDictionaryController {
 		// logowanie
 		logger.info("KanjiDictionaryController: start");
 		
-		loggerSender.sendLog(new KanjiDictionaryStartLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent")));
+		loggerSender.sendLog(new KanjiDictionaryStartLoggerModel(Utils.createLoggerModelCommon(request)));
 		
 		model.put("command", kanjiDictionarySearchModel);
 		model.put("radicalList", radicalList);
@@ -155,7 +155,7 @@ public class KanjiDictionaryController {
 		FindKanjiResult findKanjiResult = dictionaryManager.findKanji(findKanjiRequest);
 		
 		// logowanie
-		loggerSender.sendLog(new KanjiDictionarySearchLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), findKanjiRequest, findKanjiResult));
+		loggerSender.sendLog(new KanjiDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findKanjiRequest, findKanjiResult));
 		
 		// sprawdzanie, czy uruchomic animacje przewijania
 		Integer lastKanjiDictionarySearchHash = (Integer)session.getAttribute("lastKanjiDictionarySearchHash");
@@ -231,7 +231,7 @@ public class KanjiDictionaryController {
 			List<String> kanjiAutocomplete = dictionaryManager.getKanjiAutocomplete(term, 5);
 
 			// logowanie
-			loggerSender.sendLog(new KanjiDictionaryAutocompleteLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), term, kanjiAutocomplete.size()));
+			loggerSender.sendLog(new KanjiDictionaryAutocompleteLoggerModel(Utils.createLoggerModelCommon(request), term, kanjiAutocomplete.size()));
 			
 			JSONArray jsonArray = new JSONArray();
 
@@ -268,7 +268,7 @@ public class KanjiDictionaryController {
 		
 		// logowanie
 		if (selectedRadicals.length > 0) {
-			loggerSender.sendLog(new KanjiDictionaryRadicalsLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), selectedRadicals, findKnownKanjiFromRadicalsResult.size()));
+			loggerSender.sendLog(new KanjiDictionaryRadicalsLoggerModel(Utils.createLoggerModelCommon(request), selectedRadicals, findKnownKanjiFromRadicalsResult.size()));
 		}
 		
 		JSONObject jsonObject = new JSONObject();
@@ -330,7 +330,7 @@ public class KanjiDictionaryController {
 			logger.info("Znaleziono kanji dla zapytania o szczegóły kanji: " + kanjiEntry);
 			
 			// logowanie
-			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), kanjiEntry));
+			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
 			
 			String kanjiEntryKanji = kanjiEntry.getKanji();
 									
@@ -390,7 +390,7 @@ public class KanjiDictionaryController {
 		
 		if (detectKanjiResult != null) {
 			// logowanie
-			loggerSender.sendLog(new KanjiDictionaryDetectLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), strokes, detectKanjiResult));
+			loggerSender.sendLog(new KanjiDictionaryDetectLoggerModel(Utils.createLoggerModelCommon(request), strokes, detectKanjiResult));
 			
 			findKanjiDetectResult = new FindKanjiResult();
 			findKanjiDetectResult.setResult(new ArrayList<KanjiEntry>());

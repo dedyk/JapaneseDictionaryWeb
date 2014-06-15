@@ -3,6 +3,7 @@ create table generic_log (
     timestamp timestamp not null, index(timestamp),
     session_id varchar(50) null,
     user_agent text null,
+    request_url text null,
     remote_ip varchar(80) null,
     remote_host varchar(255) null,
     operation varchar(40) not null
@@ -102,7 +103,6 @@ create table daily_report_log (
 create table general_exception_log (
     id int not null auto_increment, primary key(id),
     generic_log_id int not null, index(generic_log_id),
-    request_uri text null,
     status_code int null,
     exception text null
 ) default character set = utf8 collate = utf8_polish_ci;

@@ -31,9 +31,9 @@ public class StartController {
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
 		
 		logger.info("Wyswietlanie glownej strony");
-		
+				
 		// logowanie
-		loggerSender.sendLog(new StartLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent")));
+		loggerSender.sendLog(new StartLoggerModel(Utils.createLoggerModelCommon(request)));
 				
 		return "start";
 	}

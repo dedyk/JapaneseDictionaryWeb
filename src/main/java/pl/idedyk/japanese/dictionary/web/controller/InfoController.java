@@ -33,7 +33,7 @@ public class InfoController {
 		logger.info("Wyswietlanie strony informacyjnej");
 		
 		// logowanie
-		loggerSender.sendLog(new InfoLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent")));
+		loggerSender.sendLog(new InfoLoggerModel(Utils.createLoggerModelCommon(request)));
 		
 		model.put("selectedMenu", "info");
 		

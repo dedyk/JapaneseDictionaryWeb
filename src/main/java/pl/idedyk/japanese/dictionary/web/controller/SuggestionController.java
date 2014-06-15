@@ -37,7 +37,7 @@ public class SuggestionController {
 		// logowanie
 		logger.info("SuggestionController: start");
 		
-		loggerSender.sendLog(new SuggestionStartLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent")));
+		loggerSender.sendLog(new SuggestionStartLoggerModel(Utils.createLoggerModelCommon(request)));
 	
 		model.put("selectedMenu", "suggestion");
 		
@@ -58,7 +58,7 @@ public class SuggestionController {
 		logger.info("Wysyłanie treści sugestii:\n\tTytul: " + title + "\n\tNadawca: " + sender + "\n\tTresc: " + body);
 		
 		// wysylanie do logger'a i wysylacza mail'i
-		loggerSender.sendLog(new SuggestionSendLoggerModel(session.getId(), Utils.getRemoteIp(request), request.getHeader("User-Agent"), title, sender, body));
+		loggerSender.sendLog(new SuggestionSendLoggerModel(Utils.createLoggerModelCommon(request), title, sender, body));
 		
 		return jsonObject.toString();
 	}

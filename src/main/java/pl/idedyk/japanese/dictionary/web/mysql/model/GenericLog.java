@@ -12,6 +12,8 @@ public class GenericLog {
 	
 	private String userAgent;
 	
+	private String requestURL;
+	
 	private String remoteIp;
 	
 	private String remoteHost;
@@ -48,6 +50,14 @@ public class GenericLog {
 
 	public void setUserAgent(String userAgent) {
 		this.userAgent = userAgent;
+	}
+
+	public String getRequestURL() {
+		return requestURL;
+	}
+
+	public void setRequestURL(String requestURL) {
+		this.requestURL = requestURL;
 	}
 
 	public String getRemoteIp() {
