@@ -6,7 +6,7 @@ export CATALINA_HOME=/opt/apache-tomcat-8.0.8/
 export JAVA_HOME=/opt/jdk1.7.0_51/
 export JAVA_OPTS="-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms768m -Xmx768m -XX:NewSize=320m -XX:MaxNewSize=320m -XX:PermSize=320m -XX:MaxPermSize=320m -XX:+DisableExplicitGC"
 
-PROCS=`/bin/ps -C java -o euser=,args= | grep -E "^$USER" | grep -o -F org.apache.catalina.startup.Bootstrap | wc -l` 
+PROCS=`ps eww | grep java | grep -v grep | grep -o -F org.apache.catalina.startup.Bootstrap | wc -l` 
 
 case $PROCS in 0) 
     echo "Tomcat does not appear to be running. Starting Tomcat..."
