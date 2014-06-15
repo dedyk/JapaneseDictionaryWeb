@@ -1,0 +1,23 @@
+=========
+
+export JAVA_OPTS="-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms768m -Xmx768m -XX:NewSize=320m -XX:MaxNewSize=320m -XX:PermSize=320m -XX:MaxPermSize=320m -XX:+DisableExplicitGC"
+
+=========
+
+<Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+
+=========
+
+<Connector
+    port="8080"
+    maxthreads="250"
+    maxhttpheadersize="8192"
+    protocol="HTTP/1.1"
+    enablelookups="false"
+    redirectport="8443"
+    acceptcount="100"
+    connectiontimeout="20000"
+    disableuploadtimeout="true" />
+
+=========
+
