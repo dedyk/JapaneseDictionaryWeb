@@ -15,3 +15,4 @@ src/main/resources/db/kanji_recognizer.model.db
 src/main/resources/db/db-lucene/
 
 profiles/test
+profiles/production
