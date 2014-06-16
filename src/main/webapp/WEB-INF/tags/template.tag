@@ -137,12 +137,15 @@
 			<div class="row footer col-md-12" style="margin-top: 50px; font-size: 90%">
 				<hr style="margin-bottom: 5px" />
 				
+				<spring:eval var="appVersion" expression="@applicationProperties.getProperty('app.version')" />
+				<spring:message code="template.footer.app.version"/>&nbsp;${appVersion} <br/>
+				
 				<spring:eval var="authorEmail" expression="@applicationProperties.getProperty('mail.smtp.to')" />
 				
 				<spring:message code="template.footer.author"/>&nbsp;<a style="color: #777777" href="mailto:${authorEmail}"><spring:message code="template.footer.author.name"/></a> </br>
 								
-				<spring:message code="template.footer.android.version1"/>&nbsp;<a style="color: #777777" href="<spring:message code='template.footer.android.version.link'/>"><spring:message code="template.footer.android.version2"/></a>
-							
+				<spring:message code="template.footer.android.version1"/>&nbsp;<a style="color: #777777" href="<spring:message code='template.footer.android.version.link'/>"><spring:message code="template.footer.android.version2"/></a>				
+								
 			</div>
 		</div>
 	</div>

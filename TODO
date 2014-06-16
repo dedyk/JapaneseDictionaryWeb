@@ -1,6 +1,4 @@
 * TTS
 * Szybkosc pisania kresek kanji
 * Google analytics
-* Wersja
-* Gdy brak wynikow -> napis
-* Brak filtrowania
+* Gdy nie znaleziono wynikow, guziczek do zglaszania

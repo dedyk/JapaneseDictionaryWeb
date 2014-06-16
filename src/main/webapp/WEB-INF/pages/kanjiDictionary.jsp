@@ -18,15 +18,7 @@
 
 <spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
 
-<c:choose>
-     <c:when test="${useExternalStaticFiles == true}">
-     	<spring:eval var="staticFilePrefix" expression="@applicationProperties.getProperty('use.external.static.path')" />
-     </c:when>
-
-     <c:otherwise>
-     	<c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
-     </c:otherwise>
-</c:choose>
+<c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
 
 <t:template pageTitle="${pageTitle}">
 
@@ -253,13 +245,11 @@
 							<tr>
 								<td><form:label path="wordPlace" cssStyle="margin: 0px 10px 0px 0px"><spring:message code="kanjiDictionary.page.label.wordPlace"/></form:label></td>
 								<td>
-									<table>
-										<form:select id="wordPlaceId" path="wordPlace">
-											<form:option value="START_WITH" label="${wordPlaceStartWith}" />
-											<form:option value="ANY_PLACE" label="${wordPlaceAnyPlace}" />
-											<form:option value="EXACT" label="${wordPlaceExact}" />
-										</form:select>
-									</table>
+									<form:select id="wordPlaceId" path="wordPlace">
+										<form:option value="START_WITH" label="${wordPlaceStartWith}" />
+										<form:option value="ANY_PLACE" label="${wordPlaceAnyPlace}" />
+										<form:option value="EXACT" label="${wordPlaceExact}" />
+									</form:select>
 								</td>
 							</tr>
 							
@@ -515,7 +505,9 @@
         				<div class="col-md-2">
         				</div>
         				<div class="col-md-6">
-        					<canvas id="detectCanvas" width="500" height="500" style="border: 1px solid black;"/>
+        					<canvas id="detectCanvas" width="500" height="500" style="border: 1px solid black;">
+        					
+        					</canvas>
         				</div>
         				<div class="col-md-2">
         					<table>

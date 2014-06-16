@@ -25,15 +25,7 @@
 
 <spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
 
-<c:choose>
-     <c:when test="${useExternalStaticFiles == true}">
-     	<spring:eval var="staticFilePrefix" expression="@applicationProperties.getProperty('use.external.static.path')" />
-     </c:when>
-
-     <c:otherwise>
-     	<c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
-     </c:otherwise>
-</c:choose>
+<c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
 
 <t:template pageTitle="${pageTitle}">
 
@@ -52,41 +44,35 @@
 				<tr>
 					<td><form:label path="wordPlace"><spring:message code="wordDictionary.page.label.wordPlace"/></form:label></td>
 					<td>
-						<table>
-							<form:select id="wordPlaceId" path="wordPlace">
-								<form:option value="START_WITH" label="${wordPlaceStartWith}" />
-								<form:option value="ANY_PLACE" label="${wordPlaceAnyPlace}" />
-								<form:option value="EXACT" label="${wordPlaceExact}" />
-							</form:select>
-						</table>
+						<form:select id="wordPlaceId" path="wordPlace">
+							<form:option value="START_WITH" label="${wordPlaceStartWith}" />
+							<form:option value="ANY_PLACE" label="${wordPlaceAnyPlace}" />
+							<form:option value="EXACT" label="${wordPlaceExact}" />
+						</form:select>						
 					</td>
 				</tr>
 				
 				<tr>
 					<td><form:label path=""><spring:message code="wordDictionary.page.label.searchIn"/></form:label></td>
 					<td>
-						<table>
-							<form:select id="searchInId" path="searchIn" multiple="true" data-selected-text-format="count">
-								<form:option value="KANJI" label="${searchInKanji}" />
-								<form:option value="KANA" label="${searchInKana}" />
-								<form:option value="ROMAJI" label="${searchInRomaji}" />
-								<form:option value="TRANSLATE" label="${searchInTranslate}" />
-								<form:option value="INFO" label="${searchInInfo}" />
-							</form:select>
-						</table>
+						<form:select id="searchInId" path="searchIn" multiple="true" data-selected-text-format="count">
+							<form:option value="KANJI" label="${searchInKanji}" />
+							<form:option value="KANA" label="${searchInKana}" />
+							<form:option value="ROMAJI" label="${searchInRomaji}" />
+							<form:option value="TRANSLATE" label="${searchInTranslate}" />
+							<form:option value="INFO" label="${searchInInfo}" />
+						</form:select>
 					</td>				
 				</tr>
 				
 				<tr>
 					<td><form:label path="" cssStyle="margin: 0px 10px 0px 0px"><spring:message code="wordDictionary.page.label.dictionaryType"/></form:label></td>
 					<td>
-						<table>
-							<form:select id="dictionaryTypeListId" path="dictionaryTypeStringList" multiple="true" data-selected-text-format="count">
-								<c:forEach items="${addableDictionaryEntryList}" var="currentAddableDictionaryEntry">
-									<form:option value="${currentAddableDictionaryEntry}" label="${currentAddableDictionaryEntry.name}" />
-								</c:forEach>								
-							</form:select>
-						</table>
+						<form:select id="dictionaryTypeListId" path="dictionaryTypeStringList" multiple="true" data-selected-text-format="count">
+							<c:forEach items="${addableDictionaryEntryList}" var="currentAddableDictionaryEntry">
+								<form:option value="${currentAddableDictionaryEntry}" label="${currentAddableDictionaryEntry.name}" />
+							</c:forEach>								
+						</form:select>
 					</td>				
 				</tr>				
 						
