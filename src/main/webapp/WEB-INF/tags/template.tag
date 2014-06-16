@@ -65,10 +65,6 @@
 	}
 </style>
 
-</head>
-
-<body>
-	
 	<spring:eval var="useGoogleAnalytics" expression="@applicationProperties.getProperty('use.google.analytics')" />
 	
 	<c:if test="${useGoogleAnalytics == true}">
@@ -89,6 +85,10 @@
 
 	</c:if>
 
+</head>
+
+<body>
+	
 	<div class="container">
 
 		<div class="row">
