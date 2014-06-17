@@ -2,6 +2,8 @@ package pl.idedyk.japanese.dictionary.web.mysql.model;
 
 public enum GenericLogOperationEnum {
 	
+	START_APP,
+	
 	START,
 	ROBOTS_GENERATE,
 	SITEMAP_GENERATE,

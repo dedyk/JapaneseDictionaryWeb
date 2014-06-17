@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.mail;
 
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -55,6 +56,20 @@ public class MailSender {
 		
 		String body = messageSource.getMessage("mailSender.generalException.template.body", new Object[] {
 				generalExceptionLog.getId(), genericLog.getId(), genericLog.getRequestURL(), generalExceptionLog.getStatusCode(), generalExceptionLog.getException()
+				
+		}, Locale.getDefault());
+		
+		sendMail(subject, body);		
+	}
+	
+	public void sendStartAppInfo(GenericLog genericLog) throws MessagingException {
+		
+		String subject = messageSource.getMessage("mailSender.start.app.subject", new Object[] { }, Locale.getDefault());
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		String body = messageSource.getMessage("mailSender.start.app.body", new Object[] {
+				genericLog.getId(), simpleDateFormat.format(genericLog.getTimestamp()) 
 				
 		}, Locale.getDefault());
 		

@@ -29,6 +29,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLogger
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.RobotsGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SitemapGenerateLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.StartAppLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.StartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionStartLoggerModel;
@@ -88,7 +89,7 @@ public class LoggerListener implements MessageListener {
 								
 				LoggerModelCommon loggerModelCommon = (LoggerModelCommon)object;
 				
-				logger.info("Przetwarzam zadanie z kolejki od: " + loggerModelCommon.getRemoteIp() + " / " + Utils.getHostname(loggerModelCommon.getRemoteIp()));
+				logger.info("Przetwarzam zadanie " + operation + " z kolejki od: " + loggerModelCommon.getRemoteIp() + " / " + Utils.getHostname(loggerModelCommon.getRemoteIp()));
 				
 				// utworzenie wpisu do bazy danych
 				genericLog = new GenericLog();
@@ -112,7 +113,18 @@ public class LoggerListener implements MessageListener {
 			}
 			
 			// obsluga specyficznych typow
-			if (operation == GenericLogOperationEnum.WORD_DICTIONARY_START) {
+			if (operation == GenericLogOperationEnum.START_APP) {
+				
+				// wysylanie info
+				try {
+					mailSender.sendStartAppInfo(genericLog);
+				} catch (Exception e) {
+					logger.error("Błąd wysyłki wiadomości", e);
+					
+					throw new RuntimeException(e);
+				}
+				
+			} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_START) {
 				// noop
 				
 			} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE) {
@@ -466,7 +478,10 @@ public class LoggerListener implements MessageListener {
 	
 	private GenericLogOperationEnum mapClassToGenericLogOperationEnum(Class<?> clazz) {
 		
-		if (StartLoggerModel.class.isAssignableFrom(clazz) == true) {
+		if (StartAppLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.START_APP;
+			
+		} else if (StartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.START;
 			
 		} else if (RobotsGenerateLoggerModel.class.isAssignableFrom(clazz) == true) {
