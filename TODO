@@ -2,5 +2,4 @@
 * Szybkosc pisania kresek kanji
 * Google analytics
 * Gdy nie znaleziono wynikow, guziczek do zglaszania
-* W logach IP/HOST
-* W wyszukiwarcie kanji, gdy nie znaleziono wynikow proba pobrania znakow kanji ze slowa
+* Gdy start tomcat'a -> info do mnie
