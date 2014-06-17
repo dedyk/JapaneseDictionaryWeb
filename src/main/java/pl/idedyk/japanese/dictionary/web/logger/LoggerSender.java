@@ -24,26 +24,19 @@ public class LoggerSender {
 	}
 
 	private void sendSerializable(final Serializable serializable) { 
-		
-		new Thread(new Runnable() {
+				
+		jmsTemplate.send(destination, new MessageCreator() {
 			
 			@Override
-			public void run() {
+			public Message createMessage(Session session) throws JMSException {
+								
+				ObjectMessage message = session.createObjectMessage();
 				
-				jmsTemplate.send(destination, new MessageCreator() {
-					
-					@Override
-					public Message createMessage(Session session) throws JMSException {
-						
-						ObjectMessage message = session.createObjectMessage();
-						
-						message.setObject(serializable);
-						                
-		                return message;
-					}
-				});				
+				message.setObject(serializable);
+								
+                return message;
 			}
-		}).start();
+		});
 	}
 
 	public JmsTemplate getJmsTemplate() {
