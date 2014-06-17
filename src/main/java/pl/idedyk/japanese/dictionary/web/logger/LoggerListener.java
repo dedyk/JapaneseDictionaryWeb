@@ -64,8 +64,6 @@ public class LoggerListener implements MessageListener {
 		
 	@Override
 	public void onMessage(Message message) {
-		
-		logger.info("Przetwarzam zadanie z kolejki");
 				
 		if (message instanceof ObjectMessage) {
 			
@@ -87,8 +85,10 @@ public class LoggerListener implements MessageListener {
 			GenericLog genericLog = null;
 			
 			if (object instanceof LoggerModelCommon) {
-				
+								
 				LoggerModelCommon loggerModelCommon = (LoggerModelCommon)object;
+				
+				logger.info("Przetwarzam zadanie z kolejki od: " + loggerModelCommon.getRemoteIp() + " / " + Utils.getHostname(loggerModelCommon.getRemoteIp()));
 				
 				// utworzenie wpisu do bazy danych
 				genericLog = new GenericLog();

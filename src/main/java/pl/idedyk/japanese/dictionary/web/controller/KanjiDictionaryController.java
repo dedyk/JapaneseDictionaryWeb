@@ -154,6 +154,47 @@ public class KanjiDictionaryController {
 		// szukanie
 		FindKanjiResult findKanjiResult = dictionaryManager.findKanji(findKanjiRequest);
 		
+		// jesli nic nie znaleziono, proba pobrania znakow z napisu
+		if (findKanjiResult.getResult().size() == 0 && findKanjiRequest.word != null && findKanjiRequest.word.trim().equals("") == false) {
+			
+			List<KanjiEntry> findKnownKanjiResult = dictionaryManager.findKnownKanji(findKanjiRequest.word);
+			
+			if (findKnownKanjiResult.size() > 0) { // gdy cos znajdziemy
+				
+				List<KanjiEntry> filteredFindKnownKanjiResult = new ArrayList<KanjiEntry>();
+				
+				for (KanjiEntry currentKanjiEntry : findKnownKanjiResult) {
+					
+					if (findKanjiRequest.strokeCountFrom == null && findKanjiRequest.strokeCountTo == null) {
+
+						filteredFindKnownKanjiResult.add(currentKanjiEntry);
+						
+						continue;
+					}
+					
+					KanjiDic2Entry currentKanjiDic2Entry = currentKanjiEntry.getKanjiDic2Entry();
+					
+					if (currentKanjiDic2Entry == null) {
+						continue;
+					}
+					
+					int currentKanjiStrokeCount = currentKanjiDic2Entry.getStrokeCount();
+					
+					if (findKanjiRequest.strokeCountFrom != null && currentKanjiStrokeCount < findKanjiRequest.strokeCountFrom) {
+						continue;
+					}
+					
+					if (findKanjiRequest.strokeCountTo != null && currentKanjiStrokeCount > findKanjiRequest.strokeCountTo) {
+						continue;
+					}
+					
+					filteredFindKnownKanjiResult.add(currentKanjiEntry);					
+				}
+				
+				findKanjiResult.setResult(filteredFindKnownKanjiResult);
+			}
+		}
+		
 		// logowanie
 		loggerSender.sendLog(new KanjiDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findKanjiRequest, findKanjiResult));
 		

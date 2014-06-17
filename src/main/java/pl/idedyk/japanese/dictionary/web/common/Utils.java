@@ -129,6 +129,10 @@ public class Utils {
 		
 	public static String getHostname(String ip) {
 		
+		if (ip == null) {
+			return null;
+		}
+		
 		try {
 			InetAddress addr = InetAddress.getByName(ip);
 		
