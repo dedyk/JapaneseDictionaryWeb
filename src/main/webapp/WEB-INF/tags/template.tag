@@ -8,6 +8,7 @@
 <%@attribute name="header" fragment="true"%>
 <%@attribute name="footer" fragment="true"%>
 <%@attribute name="pageTitle"%>
+<%@attribute name="pageDescription" required="false"%>
 
 <!doctype html>
 <html lang="pl">
@@ -15,6 +16,10 @@
 	<meta charset="utf-8" />
 	
 	<meta name="keywords" content="<spring:message code="template.keywords"/>" />
+	
+	<c:if test="${pageDescription != null}">
+	<meta name="description" content="${pageDescription}" />
+	</c:if>
 	
 	<title>${pageTitle}</title>
 	

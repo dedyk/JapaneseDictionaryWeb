@@ -6,9 +6,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-<c:set var="pageTitle">
-	<spring:message code="kanjiDictionary.page.title" />
-</c:set>
+<c:set var="pageTitle"> <spring:message code="kanjiDictionary.page.title" /> </c:set>
+<c:set var="pageDescription"> <spring:message code="kanjiDictionary.page.pageDescription"/> </c:set>
 
 <c:set var="wordPlaceStartWith"> <spring:message code="kanjiDictionary.page.label.wordPlace.startWith"/> </c:set>
 <c:set var="wordPlaceAnyPlace"> <spring:message code="kanjiDictionary.page.label.wordPlace.anyPlace"/> </c:set>
@@ -20,7 +19,7 @@
 
 <c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
 
-<t:template pageTitle="${pageTitle}">
+<t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
 
 	<jsp:body>
 

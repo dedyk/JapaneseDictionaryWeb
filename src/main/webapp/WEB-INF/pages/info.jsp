@@ -6,8 +6,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:set var="pageTitle"> <spring:message code="info.page.title"/> </c:set>
+<c:set var="pageDescription"> <spring:message code="info.page.pageDescription"/> </c:set>
 
-<t:template pageTitle="${pageTitle}">
+<t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
 
 	<jsp:body>
 		

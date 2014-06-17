@@ -7,6 +7,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:set var="pageTitle"> <spring:message code="suggestion.page.title"/> </c:set>
+<c:set var="pageDescription"> <spring:message code="suggestion.page.pageDescription"/> </c:set>
 
 <spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
 
@@ -20,7 +21,7 @@
      </c:otherwise>
 </c:choose>
 
-<t:template pageTitle="${pageTitle}">
+<t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
 	<jsp:body>
 		<jdwt:suggestion />	
 	</jsp:body>
