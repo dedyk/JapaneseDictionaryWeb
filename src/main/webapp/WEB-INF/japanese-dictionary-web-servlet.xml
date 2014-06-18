@@ -116,13 +116,8 @@
 	</bean>
 	-->
 
-	<bean id="loggerSender" class="pl.idedyk.japanese.dictionary.web.logger.LoggerSender">
-		<!--  
-		<property name="jmsTemplate" ref="jmsTemplate" />
-		<property name="destination" ref="loggerQueue" />
-		-->
-		
-		<property name="loggerListener" ref="loggerMessageListener" />
+	<bean id="loggerSender" class="pl.idedyk.japanese.dictionary.web.logger.LoggerSender">		
+		<property name="queueService" ref="queueService" />
 	</bean>
 
 	<bean id="loggerMessageListener" class="pl.idedyk.japanese.dictionary.web.logger.LoggerListener" />

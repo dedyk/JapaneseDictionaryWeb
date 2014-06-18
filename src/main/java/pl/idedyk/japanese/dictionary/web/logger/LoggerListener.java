@@ -47,7 +47,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteL
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 
-public class LoggerListener  {
+public class LoggerListener {
 	
 	private static final Logger logger = Logger.getLogger(LoggerListener.class);
 

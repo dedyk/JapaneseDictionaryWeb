@@ -106,3 +106,14 @@ create table general_exception_log (
     status_code int null,
     exception text null
 ) default character set = utf8 collate = utf8_polish_ci;
+
+create table queue (
+	id int not null auto_increment, primary key(id),
+	name varchar(30) not null, 
+	status varchar(20) not null,
+	send_timestamp timestamp not null,
+	delivery_count int not null,
+	next_attempt timestamp not null,
+	object longblob not null,
+	index(name, status)
+) default character set = utf8 collate = utf8_polish_ci;

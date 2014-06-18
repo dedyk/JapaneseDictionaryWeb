@@ -1,18 +1,22 @@
 package pl.idedyk.japanese.dictionary.web.logger;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+
+import org.apache.log4j.Logger;
+
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
+import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 
 public class LoggerSender {
+
+	private static final Logger logger = Logger.getLogger(LoggerSender.class);
 	
-	private LoggerListener loggerListener;
+	private QueueService queueService;
 	
-	/*
-	private JmsTemplate jmsTemplate;
-	
-	private Destination destination;
-	*/
-	
-	public void sendLog(LoggerModelCommon log) {
+	public void sendLog(LoggerModelCommon loggerModelCommon) {
 		
 		/*
 		jmsTemplate.send(destination, new MessageCreator() {
@@ -31,37 +35,60 @@ public class LoggerSender {
 		
 		int fixme = 1;
 		
+		/*
 		try {
 			loggerListener.onMessage(log);
 			
 		} catch (Exception e) {
 			// noop
 		}
+		*/
+				
+		ByteArrayOutputStream bos = null;
+		ObjectOutput objectOutput = null;
+		
+		try {
+			// serializacja obiektu
+			bos = new ByteArrayOutputStream();
+			objectOutput = new ObjectOutputStream(bos);
+			
+			objectOutput.writeObject(loggerModelCommon);
+			
+			objectOutput.close();
+			bos.close();
+			
+			byte[] loggerModelCommonByteArray = bos.toByteArray();
+			
+			// wstawienie do kolejki
+			queueService.sendToQueue("log", loggerModelCommonByteArray);
+			
+		} catch (Exception e) {
+			
+			logger.error("Blad zapisu log'a do kolejki", e);
+			
+		} finally {
+			
+			if (objectOutput != null) {
+				try {
+					objectOutput.close();
+				} catch (IOException e) {
+				}
+			}
+			
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (IOException e) {
+				}
+			}
+		}		
 	}
 
-	public LoggerListener getLoggerListener() {
-		return loggerListener;
+	public QueueService getQueueService() {
+		return queueService;
 	}
 
-	public void setLoggerListener(LoggerListener loggerListener) {
-		this.loggerListener = loggerListener;
+	public void setQueueService(QueueService queueService) {
+		this.queueService = queueService;
 	}
-
-	/*
-	public JmsTemplate getJmsTemplate() {
-		return jmsTemplate;
-	}
-
-	public void setJmsTemplate(JmsTemplate jmsTemplate) {
-		this.jmsTemplate = jmsTemplate;
-	}
-
-	public Destination getDestination() {
-		return destination;
-	}
-
-	public void setDestination(Destination destination) {
-		this.destination = destination;
-	}
-	*/
 }

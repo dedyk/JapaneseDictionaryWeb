@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.mysql;
 
 import java.io.IOException;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -29,6 +30,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
 import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
@@ -847,6 +849,58 @@ public class MySQLConnector {
 				resultSet.close();
 			}
 						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public void insertQueueItem(QueueItem queueItem) throws SQLException {
+				
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into queue(name, status, send_timestamp, delivery_count, next_attempt, object) "
+					+ "values(?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setString(1, queueItem.getName());
+			preparedStatement.setString(2, queueItem.getStatus().toString());
+			preparedStatement.setTimestamp(3, queueItem.getSendTimestamp());
+			preparedStatement.setInt(4, queueItem.getDeliveryCount());
+			preparedStatement.setTimestamp(5, queueItem.getNextAttempt());
+			
+			Blob objectBlob = connection.createBlob();			
+			objectBlob.setBytes(1, queueItem.getObject());
+			
+			preparedStatement.setBlob(6, objectBlob);
+			
+			// wstaw
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			queueItem.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
 			if (preparedStatement != null) {
 				preparedStatement.close();
 			}
