@@ -1,14 +1,8 @@
 package pl.idedyk.japanese.dictionary.web.logger;
 
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
@@ -53,7 +47,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteL
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 
-public class LoggerListener implements MessageListener {
+public class LoggerListener  {
 	
 	private static final Logger logger = Logger.getLogger(LoggerListener.class);
 
@@ -63,417 +57,396 @@ public class LoggerListener implements MessageListener {
 	@Autowired
 	private MailSender mailSender;
 		
-	@Override
-	public void onMessage(Message message) {
-				
-		if (message instanceof ObjectMessage) {
+	public void onMessage(LoggerModelCommon loggerModelCommon) {
+		
+		int fixme = 1;
+					
+		GenericLogOperationEnum operation = mapClassToGenericLogOperationEnum(loggerModelCommon.getClass());
+		
+		GenericLog genericLog = null;
+		
+		// ogolna obsluga			
+		logger.info("Przetwarzam zadanie " + operation + " z kolejki od: " + loggerModelCommon.getRemoteIp() + " / " + Utils.getHostname(loggerModelCommon.getRemoteIp()));
+		
+		// utworzenie wpisu do bazy danych
+		genericLog = new GenericLog();
+		
+		genericLog.setTimestamp(new Timestamp(loggerModelCommon.getDate().getTime()));
+		genericLog.setSessionId(loggerModelCommon.getSessionId());
+		genericLog.setRemoteIp(loggerModelCommon.getRemoteIp());
+		genericLog.setUserAgent(loggerModelCommon.getUserAgent());
+		genericLog.setRequestURL(loggerModelCommon.getRequestURL());
+		genericLog.setRemoteHost(Utils.getHostname(loggerModelCommon.getRemoteIp()));
+		genericLog.setOperation(operation);
+		
+		// wstawienie wpisu do bazy danych
+		try {
+			mySQLConnector.insertGenericLog(genericLog);
+		} catch (SQLException e) {
+			logger.error("Błąd podczas zapisu do bazy danych", e);
 			
-			ObjectMessage objectMessage = (ObjectMessage)message;
+			throw new RuntimeException(e);
+		}				
+		
+		// obsluga specyficznych typow
+		if (operation == GenericLogOperationEnum.START_APP) {
 			
-			Serializable object = null;
-			
+			// wysylanie info
 			try {
-				object = objectMessage.getObject();
-								
-			} catch (JMSException e) {
-				logger.error("Bład pobierania obiektu z ObjectMessage: " + message, e);
+				mailSender.sendStartAppInfo(genericLog);
+			} catch (Exception e) {
+				logger.error("Błąd wysyłki wiadomości", e);
 				
 				throw new RuntimeException(e);
 			}
 			
-			GenericLogOperationEnum operation = mapClassToGenericLogOperationEnum(object.getClass());
+		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_START) {
+			// noop
 			
-			GenericLog genericLog = null;
+		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE) {
 			
-			if (object instanceof LoggerModelCommon) {
-								
-				LoggerModelCommon loggerModelCommon = (LoggerModelCommon)object;
+			WordDictionaryAutocompleteLoggerModel wordDictionaryAutocompleteLoggerModel = (WordDictionaryAutocompleteLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			WordDictionaryAutocompleteLog wordDictionaryAutocompleteLog = new WordDictionaryAutocompleteLog();
+			
+			wordDictionaryAutocompleteLog.setGenericLogId(genericLog.getId());
+			wordDictionaryAutocompleteLog.setTerm(wordDictionaryAutocompleteLoggerModel.getTerm());
+			wordDictionaryAutocompleteLog.setFoundElements(wordDictionaryAutocompleteLoggerModel.getFoundElemets());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertWordDictionaryAutocompleteLog(wordDictionaryAutocompleteLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
-				logger.info("Przetwarzam zadanie " + operation + " z kolejki od: " + loggerModelCommon.getRemoteIp() + " / " + Utils.getHostname(loggerModelCommon.getRemoteIp()));
-				
-				// utworzenie wpisu do bazy danych
-				genericLog = new GenericLog();
-				
-				genericLog.setTimestamp(new Timestamp(loggerModelCommon.getDate().getTime()));
-				genericLog.setSessionId(loggerModelCommon.getSessionId());
-				genericLog.setRemoteIp(loggerModelCommon.getRemoteIp());
-				genericLog.setUserAgent(loggerModelCommon.getUserAgent());
-				genericLog.setRequestURL(loggerModelCommon.getRequestURL());
-				genericLog.setRemoteHost(Utils.getHostname(loggerModelCommon.getRemoteIp()));
-				genericLog.setOperation(operation);
-				
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertGenericLog(genericLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}				
+				throw new RuntimeException(e);
 			}
 			
-			// obsluga specyficznych typow
-			if (operation == GenericLogOperationEnum.START_APP) {
-				
-				// wysylanie info
-				try {
-					mailSender.sendStartAppInfo(genericLog);
-				} catch (Exception e) {
-					logger.error("Błąd wysyłki wiadomości", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-			} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_START) {
-				// noop
-				
-			} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE) {
-				
-				WordDictionaryAutocompleteLoggerModel wordDictionaryAutocompleteLoggerModel = (WordDictionaryAutocompleteLoggerModel)object;
-				
-				// utworzenie wpisu do bazy danych
-				WordDictionaryAutocompleteLog wordDictionaryAutocompleteLog = new WordDictionaryAutocompleteLog();
-				
-				wordDictionaryAutocompleteLog.setGenericLogId(genericLog.getId());
-				wordDictionaryAutocompleteLog.setTerm(wordDictionaryAutocompleteLoggerModel.getTerm());
-				wordDictionaryAutocompleteLog.setFoundElements(wordDictionaryAutocompleteLoggerModel.getFoundElemets());
-				
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertWordDictionaryAutocompleteLog(wordDictionaryAutocompleteLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-			} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_SEARCH) {
-				
-				WordDictionarySearchLoggerModel wordDictionarySearchLoggerModel = (WordDictionarySearchLoggerModel)object;
-				
-				// utworzenie wpisu do bazy danych
-				WordDictionarySearchLog wordDictionarySearchLog = new WordDictionarySearchLog();
-				
-				wordDictionarySearchLog.setGenericLogId(genericLog.getId());
-				
-				wordDictionarySearchLog.setFindWordRequestWord(wordDictionarySearchLoggerModel.getFindWordRequest().word);
-				
-				wordDictionarySearchLog.setFindWordRequestKanji(wordDictionarySearchLoggerModel.getFindWordRequest().searchKanji);
-				wordDictionarySearchLog.setFindWordRequestKana(wordDictionarySearchLoggerModel.getFindWordRequest().searchKana);
-				wordDictionarySearchLog.setFindWordRequestRomaji(wordDictionarySearchLoggerModel.getFindWordRequest().searchRomaji);
-				wordDictionarySearchLog.setFindWordRequestTranslate(wordDictionarySearchLoggerModel.getFindWordRequest().searchTranslate);
-				wordDictionarySearchLog.setFindWordRequestInfo(wordDictionarySearchLoggerModel.getFindWordRequest().searchInfo);
-				
-				wordDictionarySearchLog.setFindWordRequestWordPlace(wordDictionarySearchLoggerModel.getFindWordRequest().wordPlaceSearch.toString());
-				
-				List<DictionaryEntryType> dictionaryEntryTypeList = wordDictionarySearchLoggerModel.getFindWordRequest().dictionaryEntryTypeList;
-				
-				StringBuffer dictionaryEntryTypeListSb = new StringBuffer();
-				
-				for (int dictionaryEntryTypeListIdx = 0; dictionaryEntryTypeList != null && dictionaryEntryTypeListIdx < dictionaryEntryTypeList.size(); ++dictionaryEntryTypeListIdx) {
-					dictionaryEntryTypeListSb.append(dictionaryEntryTypeList.get(dictionaryEntryTypeListIdx).toString());
-					
-					if (dictionaryEntryTypeListIdx != dictionaryEntryTypeList.size() - 1) {
-						dictionaryEntryTypeListSb.append("\n");
-					}
-				}
-				
-				wordDictionarySearchLog.setFindWordRequestDictionaryEntryTypeList(dictionaryEntryTypeListSb.toString());
-				
-				wordDictionarySearchLog.setFindWordResultResultSize(wordDictionarySearchLoggerModel.getFindWordResult().result.size());
-				
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertWordDictionarySearchLog(wordDictionarySearchLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-			} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_DETAILS) {
-				
-				WordDictionaryDetailsLoggerModel wordDictionaryDetailsLoggerModel = (WordDictionaryDetailsLoggerModel)object;
-				
-				// utworzenie wpisu do bazy danych
-				WordDictionaryDetailsLog wordDictionaryDetailsLog = new WordDictionaryDetailsLog();
-				
-				wordDictionaryDetailsLog.setGenericLogId(genericLog.getId());
-
-				wordDictionaryDetailsLog.setDictionaryEntryId(wordDictionaryDetailsLoggerModel.getDictionaryEntry().getId());
-				
-				wordDictionaryDetailsLog.setDictionaryEntryKanji(wordDictionaryDetailsLoggerModel.getDictionaryEntry().getKanji());
-				
-				wordDictionaryDetailsLog.setDictionaryEntryKanaList(
-						pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
-								wordDictionaryDetailsLoggerModel.getDictionaryEntry().getKanaList()));
-
-				wordDictionaryDetailsLog.setDictionaryEntryRomajiList(
-						pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
-								wordDictionaryDetailsLoggerModel.getDictionaryEntry().getRomajiList()));
-
-				wordDictionaryDetailsLog.setDictionaryEntryTranslateList(
-						pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
-								wordDictionaryDetailsLoggerModel.getDictionaryEntry().getTranslates()));
-
-				wordDictionaryDetailsLog.setDictionaryEntryInfo(
-						wordDictionaryDetailsLoggerModel.getDictionaryEntry().getInfo());
-				
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertWordDictionaryDetailsLog(wordDictionaryDetailsLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE) {
-					
-				KanjiDictionaryAutocompleteLoggerModel kanjiDictionaryAutocompleteLoggerModel = (KanjiDictionaryAutocompleteLoggerModel)object;
-
-				// utworzenie wpisu do bazy danych
-				KanjiDictionaryAutocompleteLog kanjiDictionaryAutocompleteLog = new KanjiDictionaryAutocompleteLog();
-
-				kanjiDictionaryAutocompleteLog.setGenericLogId(genericLog.getId());
-				kanjiDictionaryAutocompleteLog.setTerm(kanjiDictionaryAutocompleteLoggerModel.getTerm());
-				kanjiDictionaryAutocompleteLog.setFoundElements(kanjiDictionaryAutocompleteLoggerModel.getFoundElemets());
-
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertKanjiDictionaryAutocompleteLog(kanjiDictionaryAutocompleteLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-
-					throw new RuntimeException(e);
-				}
-
-			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH) {
-				
-				KanjiDictionarySearchLoggerModel kanjiDictionarySearchLoggerModel = (KanjiDictionarySearchLoggerModel)object;
-				
-				// utworzenie wpisu do bazy danych
-				KanjiDictionarySearchLog kanjiDictionarySearchLog = new KanjiDictionarySearchLog();
-				
-				kanjiDictionarySearchLog.setGenericLogId(genericLog.getId());
-				
-				kanjiDictionarySearchLog.setFindKanjiRequestWord(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().word);
-				
-				kanjiDictionarySearchLog.setFindKanjiRequestWordPlace(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().wordPlaceSearch.toString());
-				
-				kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountFrom(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().strokeCountFrom);
-				kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountTo(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().strokeCountTo);
-				
-				kanjiDictionarySearchLog.setFindKanjiResultResultSize(kanjiDictionarySearchLoggerModel.getFindKanjiResult().result.size());
-								
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertKanjiDictionarySearchLog(kanjiDictionarySearchLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_RADICALS) {
-				
-				KanjiDictionaryRadicalsLoggerModel kanjiDictionaryRadicalsLoggerModel = (KanjiDictionaryRadicalsLoggerModel)object;
-				
-				// utworzenie wpisu do bazy danych
-				KanjiDictionaryRadicalsLog kanjiDictionaryRadicalsLog = new KanjiDictionaryRadicalsLog();
-				
-				kanjiDictionaryRadicalsLog.setGenericLogId(genericLog.getId());
-				
-				String[] radicals = kanjiDictionaryRadicalsLoggerModel.getRadicals();
-				
-				if (radicals != null && radicals.length > 0) {
-					
-					StringBuffer radicalsJoined = new StringBuffer();
-					
-					for (String currentRadical : radicals) {
-						radicalsJoined.append(currentRadical);
-					}
-					
-					kanjiDictionaryRadicalsLog.setRadicals(radicalsJoined.toString());					
-				}
-				
-				kanjiDictionaryRadicalsLog.setFoundElements(kanjiDictionaryRadicalsLoggerModel.getFoundElemets());
-				
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertKanjiDictionaryRadicalsLog(kanjiDictionaryRadicalsLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETECT) {
-				
-				KanjiDictionaryDetectLoggerModel kanjiDictionaryDetectLoggerModel = (KanjiDictionaryDetectLoggerModel)object;
-				
-				// utworzenie wpisu do bazy danych
-				KanjiDictionaryDetectLog kanjiDictionaryDetectLog = new KanjiDictionaryDetectLog();
-				
-				kanjiDictionaryDetectLog.setGenericLogId(genericLog.getId());
-				
-				kanjiDictionaryDetectLog.setStrokes(kanjiDictionaryDetectLoggerModel.getStrokes());
-				
-				List<KanjiRecognizerResultItem> detectKanjiResultList = kanjiDictionaryDetectLoggerModel.getDetectKanjiResult();
-				
-				StringBuffer detectKanjiResultSb = new StringBuffer();
-				
-				for (int idx = 0; idx < 5 && idx < detectKanjiResultList.size(); ++idx) {
-					
-					KanjiRecognizerResultItem currentKanjiRecognizerResultItem = detectKanjiResultList.get(idx);
-					
-					detectKanjiResultSb.append(currentKanjiRecognizerResultItem.getKanji() + " " + currentKanjiRecognizerResultItem.getScore());
-					
-					if (idx != 5 - 1) {
-						detectKanjiResultSb.append("\n");
-					}
-				}
-				
-				kanjiDictionaryDetectLog.setDetectKanjiResult(detectKanjiResultSb.toString());
-				
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertKanjiDictionaryDetectLog(kanjiDictionaryDetectLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-			} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS) {
-				
-				KanjiDictionaryDetailsLoggerModel kanjiDictionaryDetailsLoggerModel = (KanjiDictionaryDetailsLoggerModel)object;
-				
-				// utworzenie wpisu do bazy danych
-				KanjiDictionaryDetailsLog kanjiDictionaryDetailsLog = new KanjiDictionaryDetailsLog();
-				
-				kanjiDictionaryDetailsLog.setGenericLogId(genericLog.getId());
-				
-				kanjiDictionaryDetailsLog.setKanjiEntryId(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getId());
-
-				kanjiDictionaryDetailsLog.setKanjiEntryKanji(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getKanji());
-				
-				kanjiDictionaryDetailsLog.setKanjiEntryTranslateList(
-						pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getPolishTranslates()));
-				
-				kanjiDictionaryDetailsLog.setKanjiEntryInfo(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getInfo());
-				
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertKanjiDictionaryDetailsLog(kanjiDictionaryDetailsLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-			} else if (operation == GenericLogOperationEnum.SUGGESTION_SEND) {
-				
-				SuggestionSendLoggerModel suggestionSendLoggerModel = (SuggestionSendLoggerModel)object;
-				
-				// utworzenie wpisu do bazy danych
-				SuggestionSendLog suggestionSendLog = new SuggestionSendLog();
-				
-				suggestionSendLog.setGenericLogId(genericLog.getId());
-
-				suggestionSendLog.setTitle(suggestionSendLoggerModel.getTitle());
-				suggestionSendLog.setSender(suggestionSendLoggerModel.getSender());
-				suggestionSendLog.setBody(suggestionSendLoggerModel.getBody());
-				
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertSuggestionSendLoggerModel(suggestionSendLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-				// wysylanie mail'a
-				try {
-					mailSender.sendSuggestion(genericLog, suggestionSendLog);
-				} catch (Exception e) {
-					logger.error("Błąd wysyłki wiadomości", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-			} else if (operation == GenericLogOperationEnum.DAILY_REPORT) {
-				
-				DailyReportLoggerModel dailyReportLoggerModel = (DailyReportLoggerModel)object;
-				
-				// utworzenie wpisu do bazy danych
-				DailyReportSendLog dailyReportSendLog = new DailyReportSendLog();
-				
-				dailyReportSendLog.setGenericLogId(genericLog.getId());
-
-				dailyReportSendLog.setTitle(dailyReportLoggerModel.getTitle());
-				dailyReportSendLog.setReport(dailyReportLoggerModel.getReport());
-				
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertDailyReportSendLog(dailyReportSendLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-
-				// wysylanie mail'a
-				try {
-					mailSender.sendDailyReport(dailyReportSendLog);
-				} catch (Exception e) {
-					logger.error("Błąd wysyłki wiadomości", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-			} else if (operation == GenericLogOperationEnum.GENERAL_EXCEPTION) {
-				
-				GeneralExceptionLoggerModel generalExceptionLoggerModel = (GeneralExceptionLoggerModel)object;
-				
-				// utworzenie wpisu do bazy danych
-				GeneralExceptionLog generalExceptionLog = new GeneralExceptionLog();
-				
-				generalExceptionLog.setGenericLogId(genericLog.getId());
-				
-				generalExceptionLog.setStatusCode(generalExceptionLoggerModel.getStatusCode());				
-				
-				Throwable throwable = generalExceptionLoggerModel.getThrowable();
-								
-				StringBuffer exceptionSb = new StringBuffer();
-				
-				exceptionSb.append(throwable.getClass() + ":").append(ExceptionUtils.getMessage(throwable)).append("\n\n").append(ExceptionUtils.getStackTrace(throwable));
-				
-				generalExceptionLog.setException(exceptionSb.toString());
-				
-				// wstawienie wpisu do bazy danych
-				try {
-					mySQLConnector.insertGeneralExceptionLog(generalExceptionLog);
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-				// wysylanie mail'a
-				try {
-					mailSender.sendGeneralExceptionLog(genericLog, generalExceptionLog);
-				} catch (Exception e) {
-					logger.error("Błąd wysyłki wiadomości", e);
-					
-					throw new RuntimeException(e);
+		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_SEARCH) {
+			
+			WordDictionarySearchLoggerModel wordDictionarySearchLoggerModel = (WordDictionarySearchLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			WordDictionarySearchLog wordDictionarySearchLog = new WordDictionarySearchLog();
+			
+			wordDictionarySearchLog.setGenericLogId(genericLog.getId());
+			
+			wordDictionarySearchLog.setFindWordRequestWord(wordDictionarySearchLoggerModel.getFindWordRequest().word);
+			
+			wordDictionarySearchLog.setFindWordRequestKanji(wordDictionarySearchLoggerModel.getFindWordRequest().searchKanji);
+			wordDictionarySearchLog.setFindWordRequestKana(wordDictionarySearchLoggerModel.getFindWordRequest().searchKana);
+			wordDictionarySearchLog.setFindWordRequestRomaji(wordDictionarySearchLoggerModel.getFindWordRequest().searchRomaji);
+			wordDictionarySearchLog.setFindWordRequestTranslate(wordDictionarySearchLoggerModel.getFindWordRequest().searchTranslate);
+			wordDictionarySearchLog.setFindWordRequestInfo(wordDictionarySearchLoggerModel.getFindWordRequest().searchInfo);
+			
+			wordDictionarySearchLog.setFindWordRequestWordPlace(wordDictionarySearchLoggerModel.getFindWordRequest().wordPlaceSearch.toString());
+			
+			List<DictionaryEntryType> dictionaryEntryTypeList = wordDictionarySearchLoggerModel.getFindWordRequest().dictionaryEntryTypeList;
+			
+			StringBuffer dictionaryEntryTypeListSb = new StringBuffer();
+			
+			for (int dictionaryEntryTypeListIdx = 0; dictionaryEntryTypeList != null && dictionaryEntryTypeListIdx < dictionaryEntryTypeList.size(); ++dictionaryEntryTypeListIdx) {
+				dictionaryEntryTypeListSb.append(dictionaryEntryTypeList.get(dictionaryEntryTypeListIdx).toString());
+				
+				if (dictionaryEntryTypeListIdx != dictionaryEntryTypeList.size() - 1) {
+					dictionaryEntryTypeListSb.append("\n");
 				}
 			}
 			
-		} else {
-			logger.error("Odebrano nieznany typ komunikatu: " + message);
+			wordDictionarySearchLog.setFindWordRequestDictionaryEntryTypeList(dictionaryEntryTypeListSb.toString());
+			
+			wordDictionarySearchLog.setFindWordResultResultSize(wordDictionarySearchLoggerModel.getFindWordResult().result.size());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertWordDictionarySearchLog(wordDictionarySearchLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+			
+		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_DETAILS) {
+			
+			WordDictionaryDetailsLoggerModel wordDictionaryDetailsLoggerModel = (WordDictionaryDetailsLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			WordDictionaryDetailsLog wordDictionaryDetailsLog = new WordDictionaryDetailsLog();
+			
+			wordDictionaryDetailsLog.setGenericLogId(genericLog.getId());
+
+			wordDictionaryDetailsLog.setDictionaryEntryId(wordDictionaryDetailsLoggerModel.getDictionaryEntry().getId());
+			
+			wordDictionaryDetailsLog.setDictionaryEntryKanji(wordDictionaryDetailsLoggerModel.getDictionaryEntry().getKanji());
+			
+			wordDictionaryDetailsLog.setDictionaryEntryKanaList(
+					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
+							wordDictionaryDetailsLoggerModel.getDictionaryEntry().getKanaList()));
+
+			wordDictionaryDetailsLog.setDictionaryEntryRomajiList(
+					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
+							wordDictionaryDetailsLoggerModel.getDictionaryEntry().getRomajiList()));
+
+			wordDictionaryDetailsLog.setDictionaryEntryTranslateList(
+					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
+							wordDictionaryDetailsLoggerModel.getDictionaryEntry().getTranslates()));
+
+			wordDictionaryDetailsLog.setDictionaryEntryInfo(
+					wordDictionaryDetailsLoggerModel.getDictionaryEntry().getInfo());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertWordDictionaryDetailsLog(wordDictionaryDetailsLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+			
+		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE) {
+				
+			KanjiDictionaryAutocompleteLoggerModel kanjiDictionaryAutocompleteLoggerModel = (KanjiDictionaryAutocompleteLoggerModel)loggerModelCommon;
+
+			// utworzenie wpisu do bazy danych
+			KanjiDictionaryAutocompleteLog kanjiDictionaryAutocompleteLog = new KanjiDictionaryAutocompleteLog();
+
+			kanjiDictionaryAutocompleteLog.setGenericLogId(genericLog.getId());
+			kanjiDictionaryAutocompleteLog.setTerm(kanjiDictionaryAutocompleteLoggerModel.getTerm());
+			kanjiDictionaryAutocompleteLog.setFoundElements(kanjiDictionaryAutocompleteLoggerModel.getFoundElemets());
+
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertKanjiDictionaryAutocompleteLog(kanjiDictionaryAutocompleteLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+
+				throw new RuntimeException(e);
+			}
+
+		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH) {
+			
+			KanjiDictionarySearchLoggerModel kanjiDictionarySearchLoggerModel = (KanjiDictionarySearchLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			KanjiDictionarySearchLog kanjiDictionarySearchLog = new KanjiDictionarySearchLog();
+			
+			kanjiDictionarySearchLog.setGenericLogId(genericLog.getId());
+			
+			kanjiDictionarySearchLog.setFindKanjiRequestWord(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().word);
+			
+			kanjiDictionarySearchLog.setFindKanjiRequestWordPlace(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().wordPlaceSearch.toString());
+			
+			kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountFrom(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().strokeCountFrom);
+			kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountTo(kanjiDictionarySearchLoggerModel.getFindKanjiRequest().strokeCountTo);
+			
+			kanjiDictionarySearchLog.setFindKanjiResultResultSize(kanjiDictionarySearchLoggerModel.getFindKanjiResult().result.size());
+							
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertKanjiDictionarySearchLog(kanjiDictionarySearchLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+			
+		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_RADICALS) {
+			
+			KanjiDictionaryRadicalsLoggerModel kanjiDictionaryRadicalsLoggerModel = (KanjiDictionaryRadicalsLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			KanjiDictionaryRadicalsLog kanjiDictionaryRadicalsLog = new KanjiDictionaryRadicalsLog();
+			
+			kanjiDictionaryRadicalsLog.setGenericLogId(genericLog.getId());
+			
+			String[] radicals = kanjiDictionaryRadicalsLoggerModel.getRadicals();
+			
+			if (radicals != null && radicals.length > 0) {
+				
+				StringBuffer radicalsJoined = new StringBuffer();
+				
+				for (String currentRadical : radicals) {
+					radicalsJoined.append(currentRadical);
+				}
+				
+				kanjiDictionaryRadicalsLog.setRadicals(radicalsJoined.toString());					
+			}
+			
+			kanjiDictionaryRadicalsLog.setFoundElements(kanjiDictionaryRadicalsLoggerModel.getFoundElemets());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertKanjiDictionaryRadicalsLog(kanjiDictionaryRadicalsLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+			
+		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETECT) {
+			
+			KanjiDictionaryDetectLoggerModel kanjiDictionaryDetectLoggerModel = (KanjiDictionaryDetectLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			KanjiDictionaryDetectLog kanjiDictionaryDetectLog = new KanjiDictionaryDetectLog();
+			
+			kanjiDictionaryDetectLog.setGenericLogId(genericLog.getId());
+			
+			kanjiDictionaryDetectLog.setStrokes(kanjiDictionaryDetectLoggerModel.getStrokes());
+			
+			List<KanjiRecognizerResultItem> detectKanjiResultList = kanjiDictionaryDetectLoggerModel.getDetectKanjiResult();
+			
+			StringBuffer detectKanjiResultSb = new StringBuffer();
+			
+			for (int idx = 0; idx < 5 && idx < detectKanjiResultList.size(); ++idx) {
+				
+				KanjiRecognizerResultItem currentKanjiRecognizerResultItem = detectKanjiResultList.get(idx);
+				
+				detectKanjiResultSb.append(currentKanjiRecognizerResultItem.getKanji() + " " + currentKanjiRecognizerResultItem.getScore());
+				
+				if (idx != 5 - 1) {
+					detectKanjiResultSb.append("\n");
+				}
+			}
+			
+			kanjiDictionaryDetectLog.setDetectKanjiResult(detectKanjiResultSb.toString());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertKanjiDictionaryDetectLog(kanjiDictionaryDetectLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+			
+		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS) {
+			
+			KanjiDictionaryDetailsLoggerModel kanjiDictionaryDetailsLoggerModel = (KanjiDictionaryDetailsLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			KanjiDictionaryDetailsLog kanjiDictionaryDetailsLog = new KanjiDictionaryDetailsLog();
+			
+			kanjiDictionaryDetailsLog.setGenericLogId(genericLog.getId());
+			
+			kanjiDictionaryDetailsLog.setKanjiEntryId(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getId());
+
+			kanjiDictionaryDetailsLog.setKanjiEntryKanji(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getKanji());
+			
+			kanjiDictionaryDetailsLog.setKanjiEntryTranslateList(
+					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getPolishTranslates()));
+			
+			kanjiDictionaryDetailsLog.setKanjiEntryInfo(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getInfo());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertKanjiDictionaryDetailsLog(kanjiDictionaryDetailsLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+			
+		} else if (operation == GenericLogOperationEnum.SUGGESTION_SEND) {
+			
+			SuggestionSendLoggerModel suggestionSendLoggerModel = (SuggestionSendLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			SuggestionSendLog suggestionSendLog = new SuggestionSendLog();
+			
+			suggestionSendLog.setGenericLogId(genericLog.getId());
+
+			suggestionSendLog.setTitle(suggestionSendLoggerModel.getTitle());
+			suggestionSendLog.setSender(suggestionSendLoggerModel.getSender());
+			suggestionSendLog.setBody(suggestionSendLoggerModel.getBody());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertSuggestionSendLoggerModel(suggestionSendLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+			
+			// wysylanie mail'a
+			try {
+				mailSender.sendSuggestion(genericLog, suggestionSendLog);
+			} catch (Exception e) {
+				logger.error("Błąd wysyłki wiadomości", e);
+				
+				throw new RuntimeException(e);
+			}
+			
+		} else if (operation == GenericLogOperationEnum.DAILY_REPORT) {
+			
+			DailyReportLoggerModel dailyReportLoggerModel = (DailyReportLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			DailyReportSendLog dailyReportSendLog = new DailyReportSendLog();
+			
+			dailyReportSendLog.setGenericLogId(genericLog.getId());
+
+			dailyReportSendLog.setTitle(dailyReportLoggerModel.getTitle());
+			dailyReportSendLog.setReport(dailyReportLoggerModel.getReport());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertDailyReportSendLog(dailyReportSendLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+
+			// wysylanie mail'a
+			try {
+				mailSender.sendDailyReport(dailyReportSendLog);
+			} catch (Exception e) {
+				logger.error("Błąd wysyłki wiadomości", e);
+				
+				throw new RuntimeException(e);
+			}
+			
+		} else if (operation == GenericLogOperationEnum.GENERAL_EXCEPTION) {
+			
+			GeneralExceptionLoggerModel generalExceptionLoggerModel = (GeneralExceptionLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			GeneralExceptionLog generalExceptionLog = new GeneralExceptionLog();
+			
+			generalExceptionLog.setGenericLogId(genericLog.getId());
+			
+			generalExceptionLog.setStatusCode(generalExceptionLoggerModel.getStatusCode());				
+			
+			Throwable throwable = generalExceptionLoggerModel.getThrowable();
+							
+			StringBuffer exceptionSb = new StringBuffer();
+			
+			exceptionSb.append(throwable.getClass() + ":").append(ExceptionUtils.getMessage(throwable)).append("\n\n").append(ExceptionUtils.getStackTrace(throwable));
+			
+			generalExceptionLog.setException(exceptionSb.toString());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertGeneralExceptionLog(generalExceptionLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+			
+			// wysylanie mail'a
+			try {
+				mailSender.sendGeneralExceptionLog(genericLog, generalExceptionLog);
+			} catch (Exception e) {
+				logger.error("Błąd wysyłki wiadomości", e);
+				
+				throw new RuntimeException(e);
+			}
 		}
+
 	}
 	
 	private GenericLogOperationEnum mapClassToGenericLogOperationEnum(Class<?> clazz) {

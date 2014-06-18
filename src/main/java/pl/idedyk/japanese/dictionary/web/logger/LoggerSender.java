@@ -1,30 +1,20 @@
 package pl.idedyk.japanese.dictionary.web.logger;
 
-import java.io.Serializable;
-
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
-import javax.jms.Session;
-
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
-
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 
 public class LoggerSender {
-
+	
+	private LoggerListener loggerListener;
+	
+	/*
 	private JmsTemplate jmsTemplate;
 	
 	private Destination destination;
+	*/
 	
 	public void sendLog(LoggerModelCommon log) {
-		sendSerializable(log);
-	}
-
-	private void sendSerializable(final Serializable serializable) { 
-				
+		
+		/*
 		jmsTemplate.send(destination, new MessageCreator() {
 			
 			@Override
@@ -37,8 +27,27 @@ public class LoggerSender {
                 return message;
 			}
 		});
+		*/
+		
+		int fixme = 1;
+		
+		try {
+			loggerListener.onMessage(log);
+			
+		} catch (Exception e) {
+			// noop
+		}
 	}
 
+	public LoggerListener getLoggerListener() {
+		return loggerListener;
+	}
+
+	public void setLoggerListener(LoggerListener loggerListener) {
+		this.loggerListener = loggerListener;
+	}
+
+	/*
 	public JmsTemplate getJmsTemplate() {
 		return jmsTemplate;
 	}
@@ -54,4 +63,5 @@ public class LoggerSender {
 	public void setDestination(Destination destination) {
 		this.destination = destination;
 	}
+	*/
 }
