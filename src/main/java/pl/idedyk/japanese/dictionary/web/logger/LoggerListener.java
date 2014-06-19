@@ -58,9 +58,7 @@ public class LoggerListener {
 	private MailSender mailSender;
 		
 	public void onMessage(LoggerModelCommon loggerModelCommon) {
-		
-		int fixme = 1;
-					
+							
 		GenericLogOperationEnum operation = mapClassToGenericLogOperationEnum(loggerModelCommon.getClass());
 		
 		GenericLog genericLog = null;

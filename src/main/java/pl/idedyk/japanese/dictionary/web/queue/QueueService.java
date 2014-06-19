@@ -2,6 +2,7 @@ package pl.idedyk.japanese.dictionary.web.queue;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,38 @@ public class QueueService {
 		queueItem.setObject(object);
 		
 		// wstawienie do kolejki
-		mySQLConnector.insertQueueItem(queueItem);		
+		mySQLConnector.insertQueueItem(queueItem);
+	}
+	
+	public QueueItem getNextItemQueueItem(String queueName) throws SQLException {
+		return mySQLConnector.getNextQueueItem(queueName);
+	}
+	
+	public void setQueueItemDone(QueueItem queueItem) throws SQLException {
+		
+		queueItem.setStatus(QueueItemStatus.DONE);
+		
+		// uaktualnie wpisu
+		mySQLConnector.updateQueueItem(queueItem);	
+	}
+	
+	public void delayQueueItem(QueueItem queueItem) throws SQLException {
+		
+		int deliveryCount = queueItem.getDeliveryCount() + 1;
+		Timestamp nextAttempt = queueItem.getNextAttempt();
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		calendar.setTime(nextAttempt);
+		
+		calendar.add(Calendar.SECOND, 10 * deliveryCount);
+		
+		nextAttempt = new Timestamp(calendar.getTime().getTime());
+		
+		queueItem.setDeliveryCount(deliveryCount);
+		queueItem.setNextAttempt(nextAttempt);
+		
+		// uaktualnie wpisu
+		mySQLConnector.updateQueueItem(queueItem);		
 	}
 }

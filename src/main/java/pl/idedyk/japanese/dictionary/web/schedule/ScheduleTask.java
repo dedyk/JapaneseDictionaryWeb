@@ -1,5 +1,8 @@
 package pl.idedyk.japanese.dictionary.web.schedule;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -11,12 +14,16 @@ import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import pl.idedyk.japanese.dictionary.web.logger.LoggerListener;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
+import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordKanjiSearchNoFoundStat;
+import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 
 @Service
 public class ScheduleTask {
@@ -30,11 +37,17 @@ public class ScheduleTask {
 	private MessageSource messageSource;
 	
 	@Autowired
+	private QueueService queueService;
+	
+	@Autowired
 	private LoggerSender loggerSender;
+	
+	@Autowired
+	private LoggerListener loggerListener;
 	
 	//@Scheduled(cron="0 * * * * ?") // co minute
 	@Scheduled(cron="0 0 0 * * ?") // o polnocy
-	public synchronized void generateDailyReport() {
+	public void generateDailyReport() {
 				
 		logger.info("Generowanie dziennego raportu");
 								
@@ -149,5 +162,48 @@ public class ScheduleTask {
 		}
 		
 		report.append("\n\n");
+	}
+	
+	@Scheduled(cron="* * * * * ?")
+	public void processLogQueueItem() {
+		
+		QueueItem queueItem = null;
+		
+		try {
+			// pobranie elementu do przetworzenie
+			queueItem = queueService.getNextItemQueueItem("log");
+			
+			if (queueItem == null) {
+				return;
+			}
+			
+			byte[] objectBytes = queueItem.getObject();
+			
+			ByteArrayInputStream byteArrayItemStream = new ByteArrayInputStream(objectBytes);
+			ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayItemStream);
+			
+			LoggerModelCommon loggerModelCommon = (LoggerModelCommon)objectInputStream.readObject();
+			
+			// przetworz wpis
+			loggerListener.onMessage(loggerModelCommon);
+			
+			// ustaw wpis jako przetworzony
+			queueService.setQueueItemDone(queueItem);
+			
+		} catch (Exception e) {
+			
+			logger.error("Blad podczas przetwarzania log'ow z kolejki", e);
+			
+			// opoznij zadanie
+			if (queueItem != null) {
+				try {
+					queueService.delayQueueItem(queueItem);
+					
+				} catch (SQLException e1) {					
+					logger.error("Blad podcza opozniania zadania z kolejki", e);
+				}
+			}
+			
+		}
 	}
 }

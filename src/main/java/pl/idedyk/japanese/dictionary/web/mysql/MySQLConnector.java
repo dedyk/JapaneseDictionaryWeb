@@ -31,6 +31,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
+import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItemStatus;
 import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
@@ -867,6 +868,8 @@ public class MySQLConnector {
 		
 		ResultSet generatedKeys = null;
 		
+		Blob objectBlob = null;
+		
 		try {
 			connection = connectionPool.getConnection();
 			
@@ -879,7 +882,7 @@ public class MySQLConnector {
 			preparedStatement.setInt(4, queueItem.getDeliveryCount());
 			preparedStatement.setTimestamp(5, queueItem.getNextAttempt());
 			
-			Blob objectBlob = connection.createBlob();			
+			objectBlob = connection.createBlob();			
 			objectBlob.setBytes(1, queueItem.getObject());
 			
 			preparedStatement.setBlob(6, objectBlob);
@@ -897,6 +900,104 @@ public class MySQLConnector {
 			
 		} finally {
 			
+			if (objectBlob != null) {
+				objectBlob.free();
+			}
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public QueueItem getNextQueueItem(String queueName) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		try {			
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement("select id, name, status, send_timestamp, delivery_count, next_attempt, object from queue where "
+					+ "name = ? and status = ? and next_attempt < current_timestamp order by next_attempt, send_timestamp, delivery_count desc limit 1"); 
+			
+			preparedStatement.setString(1, queueName);
+			preparedStatement.setString(2, QueueItemStatus.WAITING.toString());
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			QueueItem queueItem = null;
+			
+			if (resultSet.next() == true) {				
+				queueItem = new QueueItem();
+				
+				queueItem.setId(resultSet.getLong("id"));
+				queueItem.setStatus(QueueItemStatus.valueOf(resultSet.getString("status")));
+				queueItem.setSendTimestamp(resultSet.getTimestamp("send_timestamp"));
+				queueItem.setDeliveryCount(resultSet.getInt("delivery_count"));
+				queueItem.setNextAttempt(resultSet.getTimestamp("next_attempt"));
+				
+				Blob objectBlob = resultSet.getBlob("object");
+				
+				byte[] object = objectBlob.getBytes(1, (int)objectBlob.length());
+				
+				objectBlob.free();
+				
+				queueItem.setObject(object);
+			}
+			
+			return queueItem;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public void updateQueueItem(QueueItem queueItem) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+				
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "update queue set status = ?, delivery_count = ?, next_attempt = ? where id = ?");
+			
+			preparedStatement.setString(1, queueItem.getStatus().toString());
+			preparedStatement.setInt(2, queueItem.getDeliveryCount());
+			preparedStatement.setTimestamp(3, queueItem.getNextAttempt());
+			preparedStatement.setLong(4, queueItem.getId());
+						
+			// uaktualnij
+			preparedStatement.executeUpdate();
+			
+		} finally {
+						
 			if (generatedKeys != null) {
 				generatedKeys.close();
 			}

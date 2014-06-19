@@ -17,33 +17,7 @@ public class LoggerSender {
 	private QueueService queueService;
 	
 	public void sendLog(LoggerModelCommon loggerModelCommon) {
-		
-		/*
-		jmsTemplate.send(destination, new MessageCreator() {
-			
-			@Override
-			public Message createMessage(Session session) throws JMSException {
-								
-				ObjectMessage message = session.createObjectMessage();
-				
-				message.setObject(serializable);
-								
-                return message;
-			}
-		});
-		*/
-		
-		int fixme = 1;
-		
-		/*
-		try {
-			loggerListener.onMessage(log);
-			
-		} catch (Exception e) {
-			// noop
-		}
-		*/
-				
+						
 		ByteArrayOutputStream bos = null;
 		ObjectOutput objectOutput = null;
 		
