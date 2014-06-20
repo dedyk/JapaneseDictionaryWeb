@@ -1,5 +1,5 @@
 {
-    "emptyTable":     "Nie znaleziono wyników",
+    "emptyTable":     "Nie znaleziono wyników. <br/> Proszę zmienić kryteria wyszukiwania, bądź zgłosić sugestię o braku pozycji w słowniku.",
     "info":           "Elementy od _START_ do _END_ _TOTAL_ elementów",
     "infoEmpty":      "Wyświetlenie 0 z 0 z 0 elementów",
     "infoFiltered":   "(przefiltrowano z _MAX_ wpisów)",
