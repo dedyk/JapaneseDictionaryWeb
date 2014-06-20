@@ -6,8 +6,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<c:set var="pageDescription"> <spring:message code="wordDictionaryDetails.page.pageDescription"/> </c:set>
-
 <t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
 
 	<jsp:body>

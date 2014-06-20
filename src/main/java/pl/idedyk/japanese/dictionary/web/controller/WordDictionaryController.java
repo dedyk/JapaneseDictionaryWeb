@@ -273,7 +273,14 @@ public class WordDictionaryController {
 							dictionaryEntryRomajiList != null && dictionaryEntryRomajiList.size() > 0 ? dictionaryEntryRomajiList.get(0) : "-",
 					}, Locale.getDefault());
 			
+			String pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription", 
+					new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
+							dictionaryEntryKanaList != null && dictionaryEntryKanaList.size() > 0 ? dictionaryEntryKanaList.get(0) : "-",
+							dictionaryEntryRomajiList != null && dictionaryEntryRomajiList.size() > 0 ? dictionaryEntryRomajiList.get(0) : "-",
+					}, Locale.getDefault());
+			
 			model.put("pageTitle", pageTitle);
+			model.put("pageDescription", pageDescription);
 			
 		} else {
 			

@@ -6,7 +6,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<c:set var="pageDescription"> <spring:message code="kanjiDictionaryDetails.page.pageDescription"/> </c:set>
+<c:set var="pageDescription"> <spring:message code="kanjiDictionaryDetails.page.pageDescription" arguments="${kanjiEntry.kanji}"/> </c:set>
 
 <t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
 
