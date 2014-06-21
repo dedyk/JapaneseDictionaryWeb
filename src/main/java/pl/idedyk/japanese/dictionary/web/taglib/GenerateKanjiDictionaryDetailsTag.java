@@ -23,6 +23,7 @@ import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.html.B;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Div;
@@ -105,6 +106,12 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		H pageHeader = new H(4);
 		
 		pageHeader.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.title")));
+		
+		B kanjiBold = new B();
+		
+		kanjiBold.addHtmlElement(new Text(kanjiEntry.getKanji()));
+		
+		pageHeader.addHtmlElement(kanjiBold);
 		
 		return pageHeader;
 	}

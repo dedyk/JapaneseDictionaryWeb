@@ -30,6 +30,7 @@ import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResult;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResultType;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.html.B;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Div;
@@ -127,8 +128,32 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	private H generateTitle() throws IOException {
 			
 		H pageHeader = new H(4);
-		
+				
 		pageHeader.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.title")));
+		
+		if (dictionaryEntry.isKanjiExists() == true) {
+			
+			B kanjiBold = new B();
+			
+			kanjiBold.addHtmlElement(new Text(dictionaryEntry.getKanji()));
+			
+			pageHeader.addHtmlElement(kanjiBold);
+			pageHeader.addHtmlElement(new Text(" | "));
+		}
+		
+		List<String> kanaList = dictionaryEntry.getKanaList();
+		
+		for (int kanaIdx = 0; kanaIdx < kanaList.size(); ++kanaIdx) {
+			
+			B kanaBold = new B();
+			
+			kanaBold.addHtmlElement(new Text(kanaList.get(kanaIdx)));
+			pageHeader.addHtmlElement(kanaBold);
+			
+			if (kanaIdx != kanaList.size() - 1) {
+				pageHeader.addHtmlElement(new Text(" | "));
+			}
+		}		
 		
 		return pageHeader;
 	}
