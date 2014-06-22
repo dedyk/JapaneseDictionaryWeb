@@ -23,9 +23,9 @@ import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.B;
 import pl.idedyk.japanese.dictionary.web.html.Button;
-import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
@@ -284,7 +284,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		Td kanjiKanjiAppearanceButtonTd = new Td();
 		kanjiKanjiTr.addHtmlElement(kanjiKanjiAppearanceButtonTd);
 		
-		Button kanjiKanjiAppearanceButton = new Button("btn btn-default");
+		A kanjiKanjiAppearanceButton = new A("btn btn-default");
 		kanjiKanjiAppearanceButtonTd.addHtmlElement(kanjiKanjiAppearanceButton);
 		
 		WordDictionarySearchModel searchModel = new WordDictionarySearchModel();
@@ -305,8 +305,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		String link = LinkGenerator.generateWordSearchLink(pageContext.getServletContext().getContextPath(), searchModel);
 		
-		kanjiKanjiAppearanceButton.setButtonType(ButtonType.BUTTON);
-		kanjiKanjiAppearanceButton.setOnClick("window.location = '" + link + "'");
+		kanjiKanjiAppearanceButton.setHref(link);
 		
 		kanjiKanjiAppearanceButton.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.kanji.showKanjiAppearanceInWordDictionary")));
 		

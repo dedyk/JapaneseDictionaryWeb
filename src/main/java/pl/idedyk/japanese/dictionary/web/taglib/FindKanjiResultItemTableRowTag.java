@@ -17,8 +17,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
-import pl.idedyk.japanese.dictionary.web.html.Button;
-import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
+import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
@@ -110,12 +109,11 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
             
             String link = LinkGenerator.generateKanjiDetailsLink(pageContext.getServletContext().getContextPath(), resultItem);
             
-            Button linkButton = new Button();
+            A linkButton = new A();
             detailsLinkTd.addHtmlElement(linkButton);
             
-            linkButton.setButtonType(ButtonType.BUTTON);
             linkButton.setClazz("btn btn-default");
-            linkButton.setOnClick("window.location = '" + link + "'");
+            linkButton.setHref(link);
             
             linkButton.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.details.value", null, Locale.getDefault())));
             

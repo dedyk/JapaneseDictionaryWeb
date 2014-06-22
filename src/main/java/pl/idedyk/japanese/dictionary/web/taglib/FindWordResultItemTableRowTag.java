@@ -16,8 +16,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
-import pl.idedyk.japanese.dictionary.web.html.Button;
-import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
+import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
@@ -111,12 +110,11 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	    	tr.addHtmlElement(detailsLinkTd);
             
             String link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), resultItem.getDictionaryEntry(), null);
-            Button linkButton = new Button();
+            A linkButton = new A();
             detailsLinkTd.addHtmlElement(linkButton);
             
-            linkButton.setButtonType(ButtonType.BUTTON);
             linkButton.setClazz("btn btn-default");
-            linkButton.setOnClick("window.location = '" + link + "'");
+            linkButton.setHref(link);
             
             linkButton.addHtmlElement(new Text(messageSource.getMessage(
             		"wordDictionary.page.search.table.column.details.value", null, Locale.getDefault())));

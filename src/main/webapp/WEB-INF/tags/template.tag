@@ -111,43 +111,43 @@
 
  			<nav class="navbar navbar-default">
 				<div class="navbar-header">
-					<a href="#" class="navbar-brand" onclick="goTo('')"><spring:message code="template.title.short.polish"/></a>
+					<a href="<c:out value='${pageContext.request.contextPath}' />/" class="navbar-brand"><spring:message code="template.title.short.polish"/></a>
 				</div>
 				<div id="navbarCollapse" class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
 						<c:choose>
 							<c:when test="${selectedMenu == 'wordDictionary'}">
-								<li class="active"><a href="#" onclick="goTo('wordDictionary')"><spring:message code="template.menu.dictionary"/></a></li>
+								<li class="active"><a href="<c:out value='${pageContext.request.contextPath}' />/wordDictionary"><spring:message code="template.menu.dictionary"/></a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="#" onclick="goTo('wordDictionary')"><spring:message code="template.menu.dictionary"/></a></li>
+								<li><a href="<c:out value='${pageContext.request.contextPath}' />/wordDictionary"><spring:message code="template.menu.dictionary"/></a></li>
 							</c:otherwise>
 						</c:choose>
 
 						<c:choose>
 							<c:when test="${selectedMenu == 'kanjiDictionary'}">
-								<li class="active"><a href="#" onclick="goTo('kanjiDictionary')"><spring:message code="template.menu.kanji"/></a></li>
+								<li class="active"><a href="<c:out value='${pageContext.request.contextPath}' />/kanjiDictionary"><spring:message code="template.menu.kanji"/></a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="#" onclick="goTo('kanjiDictionary')"><spring:message code="template.menu.kanji"/></a></li>
+								<li><a href="<c:out value='${pageContext.request.contextPath}' />/kanjiDictionary"><spring:message code="template.menu.kanji"/></a></li>
 							</c:otherwise>
 						</c:choose>
 
 						<c:choose>
 							<c:when test="${selectedMenu == 'suggestion'}">
-								<li class="active"><a href="#" onclick="goTo('suggestion')"><spring:message code="template.menu.suggestion"/></a></li>
+								<li class="active"><a href="<c:out value='${pageContext.request.contextPath}' />/suggestion"><spring:message code="template.menu.suggestion"/></a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="#" onclick="goTo('suggestion')"><spring:message code="template.menu.suggestion"/></a></li>
+								<li><a href="<c:out value='${pageContext.request.contextPath}' />/suggestion"><spring:message code="template.menu.suggestion"/></a></li>
 							</c:otherwise>
 						</c:choose>
 
 						<c:choose>
 							<c:when test="${selectedMenu == 'info'}">
-								<li class="active"><a href="#" onclick="goTo('info')"><spring:message code="template.menu.information"/></a></li>
+								<li class="active"><a href="<c:out value='${pageContext.request.contextPath}' />/info"><spring:message code="template.menu.information"/></a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="#" onclick="goTo('info')"><spring:message code="template.menu.information"/></a></li>
+								<li><a href="<c:out value='${pageContext.request.contextPath}' />/info"><spring:message code="template.menu.information"/></a></li>
 							</c:otherwise>
 						</c:choose>
 					</ul>
@@ -168,7 +168,7 @@
 				
 				<spring:eval var="authorEmail" expression="@applicationProperties.getProperty('mail.smtp.to')" />
 				
-				<spring:message code="template.footer.author"/>&nbsp;<a style="color: #777777" href="mailto:${authorEmail}"><spring:message code="template.footer.author.name"/></a> </br>
+				<spring:message code="template.footer.author"/>&nbsp;<a style="color: #777777" href="mailto:${authorEmail}"><spring:message code="template.footer.author.name"/></a> <br/>
 								
 				<spring:message code="template.footer.android.version1"/>&nbsp;<a style="color: #777777" href="<spring:message code='template.footer.android.version.link'/>"><spring:message code="template.footer.android.version2"/></a>				
 								
@@ -177,12 +177,7 @@
 	</div>
 
 	<script>
-		$( "#nav" ).menu( {position: {at: "left bottom"}});
-
-		function goTo(component) {
-			window.location = "<c:out value='${pageContext.request.contextPath}' />" + "/" + component;
-		}
-		
+		$( "#nav" ).menu( {position: {at: "left bottom"}});		
 	</script>
 </body>
 </html>

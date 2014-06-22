@@ -30,9 +30,9 @@ import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResult;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResultType;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.B;
 import pl.idedyk.japanese.dictionary.web.html.Button;
-import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
@@ -693,14 +693,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					Div row3TableTrTd2Div = new Div(null, "margin: 0 0 5px 50px");
 					row3TableTrTd2.addHtmlElement(row3TableTrTd2Div);
 					
-					Button linkButton = new Button("btn btn-default");
+					A linkButton = new A("btn btn-default");
 					row3TableTrTd2Div.addHtmlElement(linkButton);
 					
 		            String link = LinkGenerator.generateDictionaryEntryDetailsLink(
 		            		pageContext.getServletContext().getContextPath(), dictionaryEntry, currentDictionaryEntryType);
 
-					linkButton.setButtonType(ButtonType.BUTTON);
-					linkButton.setOnClick("window.location = '" + link + "'");
+					linkButton.setHref(link);
 					
 					linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.show")));	    			
 	    		}
@@ -825,11 +824,10 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		            String link = LinkGenerator.generateDictionaryEntryDetailsLink(
 		            		pageContext.getServletContext().getContextPath(), transitivityIntransitivityPairDictionaryEntry, null);
 		            
-					Button linkButton = new Button("btn btn-default");
+					A linkButton = new A("btn btn-default");
 					row2TableTrTd3Div.addHtmlElement(linkButton);
 
-					linkButton.setButtonType(ButtonType.BUTTON);
-					linkButton.setOnClick("window.location = '" + link + "'");
+					linkButton.setHref(link);
 					
 					linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.transitivityIntransitivityPairDictionaryEntry.show")));			
 				}				
@@ -924,11 +922,10 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			
 			String link = LinkGenerator.generateKanjiDetailsLink(pageContext.getServletContext().getContextPath(), currentKnownKanjiEntry);
 			
-			Button linkButton = new Button("btn btn-default");
+			A linkButton = new A("btn btn-default");
 			row2TableTrButtonTd.addHtmlElement(linkButton);
 
-			linkButton.setButtonType(ButtonType.BUTTON);
-			linkButton.setOnClick("window.location = '" + link + "'");
+			linkButton.setHref(link);
 			
 			linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.knownKanji.kanji.show")));
 		}
