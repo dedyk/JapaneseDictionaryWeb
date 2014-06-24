@@ -11,6 +11,7 @@ import javax.xml.bind.helpers.DefaultValidationEventHandler;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
@@ -34,6 +35,9 @@ public class SitemapManager {
 	
 	@Autowired
 	private DictionaryManager dictionaryManager;
+	
+	@Value("${sitemap.lastmod}")
+	private String lastMod;
 	
 	public SitemapManager() throws Exception {
 		
@@ -128,8 +132,9 @@ public class SitemapManager {
 		TUrl url = objectFactory.createTUrl();
 		
 		url.setLoc(link);
+		url.setLastmod(lastMod);
 		url.setChangefreq(changeFreq);
-
+		
 		return url;
 	}
 	
