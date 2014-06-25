@@ -22,6 +22,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
+import pl.idedyk.japanese.dictionary.web.mysql.model.RemoteClientStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordKanjiSearchNoFoundStat;
 import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 
@@ -46,9 +47,9 @@ public class ScheduleTask {
 	private LoggerListener loggerListener;
 	
 	//@Scheduled(cron="0 * * * * ?") // co minute
-	@Scheduled(cron="0 0 0 * * ?") // o polnocy
+	@Scheduled(cron="0 0 23 * * ?") // o 23
 	public void generateDailyReport() {
-				
+						
 		logger.info("Generowanie dziennego raportu");
 								
 		// pobranie przedzialu wpisow
@@ -126,6 +127,11 @@ public class ScheduleTask {
 				
 				appendWordKanjiSearchNoFoundStat(report, "schedule.task.generate.daily.report.kanji.dictionary.autocomplete.no.found", kanjiDictionaryAutocompleteNoFoundStat);
 				
+				// statystyki ilosci wywolan
+				List<RemoteClientStat> remoteClientStat = mySQLConnector.getRemoteClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				
+				appendRemoteClientStat(report, "schedule.task.generate.daily.report.remote.client", remoteClientStat);
+				
 				logger.info("Wygenerowano dzienny raport: \n\n" + report.toString());
 				
 				// zablokuj wpisy
@@ -159,6 +165,43 @@ public class ScheduleTask {
 			}
 			
 			report.append(" ").append(wordKanjiSearchNoFoundStat.getStat()).append("\n");
+		}
+		
+		report.append("\n\n");
+	}
+
+	private void appendRemoteClientStat(StringBuffer report, String titleCode, List<RemoteClientStat> remoteClientStatList) {
+		
+		report.append(messageSource.getMessage(titleCode, new Object[] { }, Locale.getDefault()));
+		
+		report.append("\n\n");
+		
+		for (RemoteClientStat remoteClientStat : remoteClientStatList) {
+			
+			String remoteIp = remoteClientStat.getRemoteIp();
+			String remoteHost = remoteClientStat.getRemoteHost();
+			
+			if (remoteIp == null) {
+				remoteIp = "NULL";
+			}
+
+			if (remoteHost == null) {
+				remoteHost = "NULL";
+			}
+			
+			report.append(remoteIp);
+			
+			for (int idx = remoteIp != null ? remoteIp.length() : 0; idx < 30; ++idx) {
+				report.append(" ");
+			}
+			
+			report.append(remoteHost);
+
+			for (int idx = remoteHost != null ? remoteHost.length() : 0; idx < 30; ++idx) {
+				report.append(" ");
+			}
+			
+			report.append(" ").append(remoteClientStat.getStat()).append("\n");
 		}
 		
 		report.append("\n\n");

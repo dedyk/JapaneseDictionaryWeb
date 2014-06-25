@@ -32,6 +32,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItemStatus;
+import pl.idedyk.japanese.dictionary.web.mysql.model.RemoteClientStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
@@ -782,6 +783,55 @@ public class MySQLConnector {
 		
 		return getGenericSearchNoFoundStat("select term, count(*) from kanji_dictionary_autocomplete_log where found_elements = 0 "
 				+ "and generic_log_id >= ? and generic_log_id <= ? group by term order by 2 desc, 1 desc", startId, endId);
+	}
+	
+	public List<RemoteClientStat> getRemoteClientStat(long startId, long endId) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		try {
+			List<RemoteClientStat> result = new ArrayList<RemoteClientStat>();
+			
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement("select remote_ip, remote_host, count(*) from generic_log where id >= ? and id <= ? group by remote_ip, remote_host order by 3 desc;");
+			
+			preparedStatement.setLong(1, startId);
+			preparedStatement.setLong(2, endId);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {
+				
+				RemoteClientStat remoteClientStat = new RemoteClientStat();
+				
+				remoteClientStat.setRemoteIp(resultSet.getString(1));
+				remoteClientStat.setRemoteHost(resultSet.getString(2));
+				remoteClientStat.setStat(resultSet.getLong(3));
+				
+				result.add(remoteClientStat);
+			}
+			
+			return result;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
 	}
 	
 	public void blockDailyLogProcessedIds(long startId, long endId) throws SQLException {
