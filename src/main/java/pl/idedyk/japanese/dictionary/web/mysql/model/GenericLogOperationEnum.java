@@ -5,6 +5,7 @@ public enum GenericLogOperationEnum {
 	START_APP,
 	
 	START,
+	FAVICON_ICON,
 	ROBOTS_GENERATE,
 	SITEMAP_GENERATE,
 	

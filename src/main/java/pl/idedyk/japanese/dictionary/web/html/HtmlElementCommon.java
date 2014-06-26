@@ -1,11 +1,10 @@
 package pl.idedyk.japanese.dictionary.web.html;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.jsp.JspWriter;
-
 
 public abstract class HtmlElementCommon implements IHtmlElement {
 
@@ -88,28 +87,37 @@ public abstract class HtmlElementCommon implements IHtmlElement {
 	protected abstract List<String[]> getAdditionalTagAttributes();
 	
 	@Override
-	public void render(JspWriter out) throws IOException {
+	public void render(Writer out) throws IOException {
 		
-		out.print("<" + getTagName() + " ");
+		PrintWriter printWriter = null;
+		
+		if (out instanceof PrintWriter == false) {
+			printWriter = new PrintWriter(out);
+			
+		} else {
+			printWriter = (PrintWriter)out;
+		}
+		
+		printWriter.print("<" + getTagName() + " ");
 		
 		if (id != null) {
-			out.print("id=\"" + id + "\" ");
+			printWriter.print("id=\"" + id + "\" ");
 		}
 		
 		if (width != null) {
-			out.print("width=\"" + width + "\" ");
+			printWriter.print("width=\"" + width + "\" ");
 		}
 
 		if (height != null) {
-			out.print("height=\"" + height + "\" ");
+			printWriter.print("height=\"" + height + "\" ");
 		}
 		
 		if (clazz != null) {
-			out.print("class=\"" + clazz + "\" ");
+			printWriter.print("class=\"" + clazz + "\" ");
 		}
 
 		if (style != null) {
-			out.print("style=\"" + style + "\" ");
+			printWriter.print("style=\"" + style + "\" ");
 		}
 		
 		List<String[]> additionalTagAttributes = getAdditionalTagAttributes();
@@ -117,11 +125,11 @@ public abstract class HtmlElementCommon implements IHtmlElement {
 		if (additionalTagAttributes != null) {
 			
 			for (String[] currentAdditionalTagAttribute : additionalTagAttributes) {
-				out.print(currentAdditionalTagAttribute[0] + "=\"" + currentAdditionalTagAttribute[1] + "\" ");
+				printWriter.print(currentAdditionalTagAttribute[0] + "=\"" + currentAdditionalTagAttribute[1] + "\" ");
 			}
 		}
 		
-		out.println(">");
+		printWriter.println(">");
 		
 		if (isSupportHtmlElementList() == true) {
 			
@@ -130,6 +138,6 @@ public abstract class HtmlElementCommon implements IHtmlElement {
 			}
 		}
 		
-		out.println("</" + getTagName() + ">");
+		printWriter.println("</" + getTagName() + ">");
 	}
 }

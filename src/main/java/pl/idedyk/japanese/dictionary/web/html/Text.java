@@ -1,8 +1,8 @@
 package pl.idedyk.japanese.dictionary.web.html;
 
 import java.io.IOException;
-
-import javax.servlet.jsp.JspWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 
 public class Text implements IHtmlElement {
 	
@@ -14,7 +14,17 @@ public class Text implements IHtmlElement {
 	}
 
 	@Override
-	public void render(JspWriter out) throws IOException {		
-		out.println(text);		
+	public void render(Writer out) throws IOException {		
+		
+		PrintWriter printWriter = null;
+		
+		if (out instanceof PrintWriter == false) {
+			printWriter = new PrintWriter(out);
+			
+		} else {
+			printWriter = (PrintWriter)out;
+		}
+		
+		printWriter.println(text);		
 	}
 }

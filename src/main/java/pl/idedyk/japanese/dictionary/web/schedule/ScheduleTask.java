@@ -2,6 +2,7 @@ package pl.idedyk.japanese.dictionary.web.schedule;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
+import java.io.StringWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,6 +15,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import pl.idedyk.japanese.dictionary.web.html.B;
+import pl.idedyk.japanese.dictionary.web.html.Div;
+import pl.idedyk.japanese.dictionary.web.html.Hr;
+import pl.idedyk.japanese.dictionary.web.html.P;
+import pl.idedyk.japanese.dictionary.web.html.Table;
+import pl.idedyk.japanese.dictionary.web.html.Td;
+import pl.idedyk.japanese.dictionary.web.html.Text;
+import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerListener;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
@@ -49,7 +58,7 @@ public class ScheduleTask {
 	//@Scheduled(cron="0 * * * * ?") // co minute
 	@Scheduled(cron="0 0 23 * * ?") // o 23
 	public void generateDailyReport() {
-						
+								
 		logger.info("Generowanie dziennego raportu");
 								
 		// pobranie przedzialu wpisow
@@ -64,81 +73,104 @@ public class ScheduleTask {
 				
 				logger.info("Przetwarzam wpisy od " + dailyLogProcessedMinMaxIds.getMinId() + " do " + dailyLogProcessedMinMaxIds.getMaxId() + 
 						" (" + simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMinDate()) + " - " + simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMaxDate()));
-				
-				StringBuffer report = new StringBuffer();
+
+				Div reportDiv = new Div();
 				
 				// tytul
 				String title = messageSource.getMessage("schedule.task.generate.daily.title", 
 						new Object[] { dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId(), simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMinDate()),
 						simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMaxDate())}, Locale.getDefault());
+
+				P titleP = new P();
+				reportDiv.addHtmlElement(titleP);
 				
-				report.append(title);
+				B titlePB = new B();
+				titleP.addHtmlElement(titlePB);
 				
-				report.append("\n\n");
-				
+				titlePB.addHtmlElement(new Text(title));
+
 				// data raportu
 				String currentDateString = simpleDateFormat.format(new Date());
 				
-				report.append(messageSource.getMessage("schedule.task.generate.daily.report.date",
-						new Object[] { currentDateString }, Locale.getDefault()));
-				
-				report.append("\n\n");
+				P dateP = new P();
+				reportDiv.addHtmlElement(dateP);
+
+				dateP.addHtmlElement(new Text(messageSource.getMessage("schedule.task.generate.daily.report.date",
+						new Object[] { currentDateString }, Locale.getDefault())));
+
+				reportDiv.addHtmlElement(new Hr());
 				
 				// statystyki operacji
-				report.append(messageSource.getMessage("schedule.task.generate.daily.report.operation.stat",
-						new Object[] { }, Locale.getDefault()));
+				Div operationStatDiv = new Div();
+				reportDiv.addHtmlElement(operationStatDiv);
 				
-				report.append("\n\n");
+				P operationStatDivP = new P();
+				operationStatDiv.addHtmlElement(operationStatDivP);
+				
+				operationStatDivP.addHtmlElement(new Text(messageSource.getMessage("schedule.task.generate.daily.report.operation.stat",
+						new Object[] { }, Locale.getDefault())));
+				
+				Table operationStatDivTable = new Table(null, "border: 1px solid black");
+				operationStatDiv.addHtmlElement(operationStatDivTable);
 				
 				List<GenericLogOperationStat> genericLogOperationStatList = mySQLConnector.getGenericLogOperationStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				for (GenericLogOperationStat genericLogOperationStat : genericLogOperationStatList) {
 					
+					Tr operationStatDivTableTr = new Tr();
+					operationStatDivTable.addHtmlElement(operationStatDivTableTr);
+					
 					String operationString = genericLogOperationStat.getOperation().toString();
 					
-					report.append(operationString);
+					Td operationStatDivTableTrTd1 = new Td(null, "padding: 5px;");
+					operationStatDivTableTr.addHtmlElement(operationStatDivTableTrTd1);
 					
-					for (int idx = operationString.length(); idx < 40; ++idx) {
-						report.append(" ");
-					}
+					operationStatDivTableTrTd1.addHtmlElement(new Text(operationString));
 					
-					report.append(" ").append(genericLogOperationStat.getStat()).append("\n");
+					Td operationStatDivTableTrTd2 = new Td(null, "padding: 5px;");
+					operationStatDivTableTr.addHtmlElement(operationStatDivTableTrTd2);
+
+					operationStatDivTableTrTd2.addHtmlElement(new Text("" + genericLogOperationStat.getStat()));
 				}
 				
-				report.append("\n\n");
+				reportDiv.addHtmlElement(new Hr());
 
 				// wyszukiwanie slowek bez wynikow				
 				List<WordKanjiSearchNoFoundStat> wordDictionarySearchNoFoundStatList = mySQLConnector.getWordDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				appendWordKanjiSearchNoFoundStat(report, "schedule.task.generate.daily.report.word.dictionary.no.found", wordDictionarySearchNoFoundStatList);
+				appendWordKanjiSearchNoFoundStat(reportDiv, "schedule.task.generate.daily.report.word.dictionary.no.found", wordDictionarySearchNoFoundStatList);
 				
 				// wyszukiwanie automatycznego uzupelniania slowek bez wynikow
 				List<WordKanjiSearchNoFoundStat> wordDictionaryAutocompleteNoFoundStat = mySQLConnector.getWordDictionaryAutocompleteNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				appendWordKanjiSearchNoFoundStat(report, "schedule.task.generate.daily.report.word.dictionary.autocomplete.no.found", wordDictionaryAutocompleteNoFoundStat);
+				appendWordKanjiSearchNoFoundStat(reportDiv, "schedule.task.generate.daily.report.word.dictionary.autocomplete.no.found", wordDictionaryAutocompleteNoFoundStat);
 				
 				// wyszukiwanie kanji bez wynikow				
 				List<WordKanjiSearchNoFoundStat> kanjiDictionarySearchNoFoundStatList = mySQLConnector.getKanjiDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				appendWordKanjiSearchNoFoundStat(report, "schedule.task.generate.daily.report.kanji.dictionary.no.found", kanjiDictionarySearchNoFoundStatList);
+				appendWordKanjiSearchNoFoundStat(reportDiv, "schedule.task.generate.daily.report.kanji.dictionary.no.found", kanjiDictionarySearchNoFoundStatList);
 				
 				// wyszukiwanie automatycznego uzupelniania kanji bez wynikow
 				List<WordKanjiSearchNoFoundStat> kanjiDictionaryAutocompleteNoFoundStat = mySQLConnector.getKanjiDictionaryAutocompleteNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				appendWordKanjiSearchNoFoundStat(report, "schedule.task.generate.daily.report.kanji.dictionary.autocomplete.no.found", kanjiDictionaryAutocompleteNoFoundStat);
-				
+				appendWordKanjiSearchNoFoundStat(reportDiv, "schedule.task.generate.daily.report.kanji.dictionary.autocomplete.no.found", kanjiDictionaryAutocompleteNoFoundStat);
+
 				// statystyki ilosci wywolan
 				List<RemoteClientStat> remoteClientStat = mySQLConnector.getRemoteClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				appendRemoteClientStat(report, "schedule.task.generate.daily.report.remote.client", remoteClientStat);
+				appendRemoteClientStat(reportDiv, "schedule.task.generate.daily.report.remote.client", remoteClientStat);
+
+				StringWriter stringWriter = new StringWriter();
 				
-				logger.info("Wygenerowano dzienny raport: \n\n" + report.toString());
+				reportDiv.render(stringWriter);
+				
+				logger.info("Wygenerowano dzienny raport: \n\n" + stringWriter.toString());
 				
 				// zablokuj wpisy
 				mySQLConnector.blockDailyLogProcessedIds(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				// publikacja do kolejki i do wyslania
-				loggerSender.sendLog(new DailyReportLoggerModel(title, report.toString()));
+				loggerSender.sendLog(new DailyReportLoggerModel(title, stringWriter.toString()));
 			}
 			
 		} catch (Exception e) {
@@ -148,33 +180,51 @@ public class ScheduleTask {
 		logger.info("Generowanie raportu zakonczone");
 	}
 	
-	private void appendWordKanjiSearchNoFoundStat(StringBuffer report, String titleCode, List<WordKanjiSearchNoFoundStat> wordKanjiSearchNoFoundStatList) {
+	private void appendWordKanjiSearchNoFoundStat(Div reportDiv, String titleCode, List<WordKanjiSearchNoFoundStat> wordKanjiSearchNoFoundStatList) {
 		
-		report.append(messageSource.getMessage(titleCode, new Object[] { }, Locale.getDefault()));
+		Div div = new Div();
 		
-		report.append("\n\n");
+		P titleP = new P();
+		reportDiv.addHtmlElement(titleP);
+				
+		titleP.addHtmlElement(new Text(messageSource.getMessage(titleCode, new Object[] { }, Locale.getDefault())));
+		
+		Table table = new Table(null, "border: 1px solid black");
+		div.addHtmlElement(table);
 		
 		for (WordKanjiSearchNoFoundStat wordKanjiSearchNoFoundStat : wordKanjiSearchNoFoundStatList) {
 			
+			Tr tr = new Tr();
+			table.addHtmlElement(tr);
+			
 			String word = wordKanjiSearchNoFoundStat.getWord();
 			
-			report.append(word);
+			Td td1 = new Td(null, "padding: 5px;");
+			tr.addHtmlElement(td1);
 			
-			for (int idx = word.length(); idx < 40; ++idx) {
-				report.append(" ");
-			}
+			td1.addHtmlElement(new Text(word));
+
+			Td td2 = new Td(null, "padding: 5px;");
+			tr.addHtmlElement(td2);
 			
-			report.append(" ").append(wordKanjiSearchNoFoundStat.getStat()).append("\n");
+			td2.addHtmlElement(new Text("" + wordKanjiSearchNoFoundStat.getStat()));			
 		}
 		
-		report.append("\n\n");
+		reportDiv.addHtmlElement(div);		
+		reportDiv.addHtmlElement(new Hr());
 	}
 
-	private void appendRemoteClientStat(StringBuffer report, String titleCode, List<RemoteClientStat> remoteClientStatList) {
+	private void appendRemoteClientStat(Div reportDiv, String titleCode, List<RemoteClientStat> remoteClientStatList) {
 		
-		report.append(messageSource.getMessage(titleCode, new Object[] { }, Locale.getDefault()));
+		Div div = new Div();
 		
-		report.append("\n\n");
+		P titleP = new P();
+		reportDiv.addHtmlElement(titleP);
+				
+		titleP.addHtmlElement(new Text(messageSource.getMessage(titleCode, new Object[] { }, Locale.getDefault())));
+		
+		Table table = new Table(null, "border: 1px solid black");
+		div.addHtmlElement(table);
 		
 		for (RemoteClientStat remoteClientStat : remoteClientStatList) {
 			
@@ -182,29 +232,34 @@ public class ScheduleTask {
 			String remoteHost = remoteClientStat.getRemoteHost();
 			
 			if (remoteIp == null) {
-				remoteIp = "NULL";
+				remoteIp = "-";
 			}
 
 			if (remoteHost == null) {
-				remoteHost = "NULL";
+				remoteHost = "-";
 			}
 			
-			report.append(remoteIp);
+			Tr tr = new Tr();
+			table.addHtmlElement(tr);
 			
-			for (int idx = remoteIp != null ? remoteIp.length() : 0; idx < 30; ++idx) {
-				report.append(" ");
-			}
+			Td td1 = new Td(null, "padding: 5px;");
+			tr.addHtmlElement(td1);
 			
-			report.append(remoteHost);
+			td1.addHtmlElement(new Text(remoteIp));
 
-			for (int idx = remoteHost != null ? remoteHost.length() : 0; idx < 30; ++idx) {
-				report.append(" ");
-			}
+			Td td2 = new Td(null, "padding: 5px;");
+			tr.addHtmlElement(td2);
 			
-			report.append(" ").append(remoteClientStat.getStat()).append("\n");
+			td2.addHtmlElement(new Text(remoteHost));
+			
+			Td td3 = new Td(null, "padding: 5px;");
+			tr.addHtmlElement(td3);
+			
+			td3.addHtmlElement(new Text("" + remoteClientStat.getStat()));			
 		}
 		
-		report.append("\n\n");
+		reportDiv.addHtmlElement(div);		
+		reportDiv.addHtmlElement(new Hr());
 	}
 	
 	@Scheduled(cron="* * * * * ?")

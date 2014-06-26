@@ -42,12 +42,12 @@ public class MailSender {
 				suggestionSendLog.getTitle(),
 				suggestionSendLog.getBody() }, Locale.getDefault());
 		
-		sendMail(subject, body);
+		sendMail(subject, body, false);
 	}
 	
 	public void sendDailyReport(DailyReportSendLog dailyReportSendLog) throws MessagingException {
 		
-		sendMail(dailyReportSendLog.getTitle(), dailyReportSendLog.getReport());
+		sendMail(dailyReportSendLog.getTitle(), dailyReportSendLog.getReport(), true);
 	}
 	
 	public void sendGeneralExceptionLog(GenericLog genericLog, GeneralExceptionLog generalExceptionLog) throws MessagingException {
@@ -59,7 +59,7 @@ public class MailSender {
 				
 		}, Locale.getDefault());
 		
-		sendMail(subject, body);		
+		sendMail(subject, body, false);		
 	}
 	
 	public void sendStartAppInfo(GenericLog genericLog) throws MessagingException {
@@ -73,10 +73,10 @@ public class MailSender {
 				
 		}, Locale.getDefault());
 		
-		sendMail(subject, body);		
+		sendMail(subject, body, false);		
 	}
 
-	public void sendMail(String subject, String body) throws MessagingException {
+	public void sendMail(String subject, String body, boolean html) throws MessagingException {
 
 		// ustawienie serwera
 		Properties properties = new Properties();
@@ -95,9 +95,16 @@ public class MailSender {
 
 		// ustaw temat
 		message.setSubject(subject);
+		
+		if (html == false) {
 
-		// ustaw tresc wiadomosci
-		message.setText(body);
+			// ustaw tresc wiadomosci
+			message.setText(body);			
+		} else {
+			
+			// ustaw tresc wiadomosci
+			message.setText(body, "utf-8", "html");
+		}
 
 		// wyslij wiadomosc
 		Transport.send(message);		

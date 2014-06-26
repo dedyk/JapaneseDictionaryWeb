@@ -167,5 +167,5 @@ public class Utils {
 				getRequestURL(request));
 		
 		return loggerModelCommon;
-	}
+	}	
 }

@@ -1,10 +1,9 @@
 package pl.idedyk.japanese.dictionary.web.html;
 
 import java.io.IOException;
-
-import javax.servlet.jsp.JspWriter;
+import java.io.Writer;
 
 public interface IHtmlElement {
 
-	public void render(JspWriter out) throws IOException;
+	public void render(Writer out) throws IOException;
 }

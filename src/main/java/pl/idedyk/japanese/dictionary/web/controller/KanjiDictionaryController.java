@@ -430,6 +430,21 @@ public class KanjiDictionaryController {
 		FindKanjiResult findKanjiDetectResult = null;
 		
 		if (detectKanjiResult != null) {
+			StringBuffer detectKanjiResultSb = new StringBuffer();
+			
+			for (int idx = 0; idx < 10 && idx < detectKanjiResult.size(); ++idx) {
+				
+				KanjiRecognizerResultItem currentKanjiRecognizerResultItem = detectKanjiResult.get(idx);
+				
+				detectKanjiResultSb.append(currentKanjiRecognizerResultItem.getKanji() + " " + currentKanjiRecognizerResultItem.getScore());
+				
+				if (idx != 10 - 1) {
+					detectKanjiResultSb.append("\n");
+				}
+			}
+			
+			logger.info("Rozpoznano znaki kanji:\n\n" + detectKanjiResultSb.toString());
+			
 			// logowanie
 			loggerSender.sendLog(new KanjiDictionaryDetectLoggerModel(Utils.createLoggerModelCommon(request), strokes, detectKanjiResult));
 			
@@ -441,6 +456,8 @@ public class KanjiDictionaryController {
 			}	
 			
 		} else {
+			logger.info("Nie rozpoznano żadnych znaków kanji");
+			
 			kanjiDictionaryDrawStroke = null;
 		}
 		

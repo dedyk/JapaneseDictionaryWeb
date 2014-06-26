@@ -12,6 +12,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.FaviconIconSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.InfoLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
@@ -454,6 +455,9 @@ public class LoggerListener {
 			
 		} else if (StartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.START;
+
+		} else if (FaviconIconSendLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.FAVICON_ICON;
 			
 		} else if (RobotsGenerateLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.ROBOTS_GENERATE;
