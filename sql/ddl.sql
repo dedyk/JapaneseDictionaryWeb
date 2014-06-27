@@ -117,3 +117,15 @@ create table queue (
 	object longblob not null,
 	index(name, status)
 ) default character set = utf8 collate = utf8_polish_ci;
+
+create table word_dictionary_catalog_log (
+    id int not null auto_increment, primary key(id),
+    generic_log_id int not null, index(generic_log_id),
+    page_no int not null
+) default character set = utf8 collate = utf8_polish_ci;
+
+create table kanji_dictionary_catalog_log (
+    id int not null auto_increment, primary key(id),
+    generic_log_id int not null, index(generic_log_id),
+    page_no int not null
+) default character set = utf8 collate = utf8_polish_ci;

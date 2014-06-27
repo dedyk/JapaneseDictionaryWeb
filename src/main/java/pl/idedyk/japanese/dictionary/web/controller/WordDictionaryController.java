@@ -37,6 +37,7 @@ import pl.idedyk.japanese.dictionary.web.controller.validator.WordDictionarySear
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
@@ -309,5 +310,54 @@ public class WordDictionaryController {
 		model.put("selectedMenu", "wordDictionary");
 		
 		return "wordDictionaryDetails";
+	}
+	
+	@RequestMapping(value = "/wordDictionaryCatalog", method = RequestMethod.GET)
+	public String wordDictionaryCatalog(HttpServletRequest request, HttpSession session, 
+			@RequestParam(value = "page", required = false) Integer pageNo,
+			Map<String, Object> model) {
+		
+		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
+		
+		if (pageNo == null || pageNo < 0) {
+			pageNo = 0;
+		}
+				
+		logger.info("Wyświetlanie katalogu słów dla strony: " + pageNo);
+		
+		// szukanie		
+		List<DictionaryEntry> dictionaryEntryList = dictionaryManager.getWordsGroup(pageSize, pageNo);
+		
+		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo));
+
+		// stworzenie zaslepkowego findWordRequest i findWordResult
+		FindWordRequest findWordRequest = new FindWordRequest();
+		
+		FindWordResult findWordResult = new FindWordResult();
+		
+		List<FindWordResult.ResultItem> resultItemList = new ArrayList<FindWordResult.ResultItem>();
+		
+		for (DictionaryEntry dictionaryEntry : dictionaryEntryList) {
+			resultItemList.add(new FindWordResult.ResultItem(dictionaryEntry));
+		}
+
+		findWordResult.setResult(resultItemList);
+		
+		if (dictionaryEntriesSize > (pageNo + 1) * pageSize) {
+			findWordResult.setMoreElemetsExists(true);
+			
+		} else {
+			findWordResult.setMoreElemetsExists(false);
+		}
+				
+		model.put("selectedMenu", "wordDictionary");
+		model.put("findWordRequest", findWordRequest);
+		model.put("findWordResult", findWordResult);
+		model.put("pageNo", pageNo);
+		
+		return "wordDictionaryCatalog";
 	}
 }

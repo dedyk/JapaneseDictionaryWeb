@@ -29,6 +29,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.StartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
@@ -45,6 +46,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 
@@ -197,6 +199,25 @@ public class LoggerListener {
 			// wstawienie wpisu do bazy danych
 			try {
 				mySQLConnector.insertWordDictionaryDetailsLog(wordDictionaryDetailsLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+			
+		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_CATALOG) {
+			
+			WordDictionaryCatalogLoggerModel wordDictionaryCatalogLoggerModel = (WordDictionaryCatalogLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			WordDictionaryCatalogLog wordDictionaryCatalogLog = new WordDictionaryCatalogLog();
+			
+			wordDictionaryCatalogLog.setGenericLogId(genericLog.getId());
+			wordDictionaryCatalogLog.setPageNo(wordDictionaryCatalogLoggerModel.getPageNo());
+						
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertWordDictionaryCatalogLog(wordDictionaryCatalogLog);
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
@@ -477,6 +498,9 @@ public class LoggerListener {
 		} else if (WordDictionaryDetailsLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.WORD_DICTIONARY_DETAILS;
 
+		} else if (WordDictionaryCatalogLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.WORD_DICTIONARY_CATALOG;
+			
 		} else if (KanjiDictionaryStartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.KANJI_DICTIONARY_START;
 

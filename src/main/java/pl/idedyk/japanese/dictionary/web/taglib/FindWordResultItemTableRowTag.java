@@ -130,7 +130,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	
     private String getStringWithMark(String text, String findWord, boolean mark) {
     	
-    	if (mark == false) {
+    	if (mark == false || findWord == null) {
     		return text;
     	}
     	

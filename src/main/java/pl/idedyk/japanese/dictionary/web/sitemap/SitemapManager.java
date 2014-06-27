@@ -112,6 +112,19 @@ public class SitemapManager {
 			urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY));
 		}
 		
+		final int pageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
+		
+		for (int pageNo = 0; pageNo <= dictionaryEntriesSize / pageSize; ++pageNo) {
+			
+			String url = "/wordDictionaryCatalog";
+			
+			if (pageNo != 0) {
+				url += "?page=" + pageNo;
+			}
+			
+			urlList.add(createUrl(objectFactory, url, TChangeFreq.MONTHLY));
+		}
+		
 		// pobranie znakow kanji
 		List<KanjiEntry> allKanjis = dictionaryManager.getAllKanjis(false, true);
 		

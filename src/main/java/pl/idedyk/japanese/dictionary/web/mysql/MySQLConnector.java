@@ -35,6 +35,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItemStatus;
 import pl.idedyk.japanese.dictionary.web.mysql.model.RemoteClientStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordKanjiSearchNoFoundStat;
@@ -271,6 +272,49 @@ public class MySQLConnector {
 			}
 			
 			wordDictionaryDetailsLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public void insertWordDictionaryCatalogLog(WordDictionaryCatalogLog wordDictionaryCatalogLog) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into word_dictionary_catalog_log(generic_log_id, page_no) "
+					+ "values(?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, wordDictionaryCatalogLog.getGenericLogId());
+			preparedStatement.setInt(2, wordDictionaryCatalogLog.getPageNo());
+						
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			wordDictionaryCatalogLog.setId(generatedKeys.getLong(1));
 			
 		} finally {
 			
