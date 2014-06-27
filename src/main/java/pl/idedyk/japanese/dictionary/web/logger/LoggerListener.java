@@ -16,6 +16,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.FaviconIconSendLoggerModel
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.InfoLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
@@ -40,6 +41,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
@@ -368,6 +370,25 @@ public class LoggerListener {
 				throw new RuntimeException(e);
 			}
 			
+		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_CATALOG) {
+			
+			KanjiDictionaryCatalogLoggerModel kanjiDictionaryCatalogLoggerModel = (KanjiDictionaryCatalogLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			KanjiDictionaryCatalogLog kanjiDictionaryCatalogLog = new KanjiDictionaryCatalogLog();
+			
+			kanjiDictionaryCatalogLog.setGenericLogId(genericLog.getId());
+			kanjiDictionaryCatalogLog.setPageNo(kanjiDictionaryCatalogLoggerModel.getPageNo());
+						
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertKanjiDictionaryCatalogLog(kanjiDictionaryCatalogLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+		
 		} else if (operation == GenericLogOperationEnum.SUGGESTION_SEND) {
 			
 			SuggestionSendLoggerModel suggestionSendLoggerModel = (SuggestionSendLoggerModel)loggerModelCommon;
@@ -519,6 +540,9 @@ public class LoggerListener {
 		} else if (KanjiDictionaryDetailsLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS;
 
+		} else if (KanjiDictionaryCatalogLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.KANJI_DICTIONARY_CATALOG;
+		
 		} else if (SuggestionStartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.SUGGESTION_START;
 			

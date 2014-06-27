@@ -112,9 +112,10 @@ public class SitemapManager {
 			urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY));
 		}
 		
-		final int pageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
+		// katalog slow
+		final int wordPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
 		
-		for (int pageNo = 0; pageNo <= dictionaryEntriesSize / pageSize; ++pageNo) {
+		for (int pageNo = 0; pageNo <= dictionaryEntriesSize / wordPageSize; ++pageNo) {
 			
 			String url = "/wordDictionaryCatalog";
 			
@@ -135,6 +136,20 @@ public class SitemapManager {
 			
 			// dodanie linku			
 			urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY));			
+		}
+		
+		// katalog znakow kanji
+		final int kanjiPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w KanjiDictionaryController
+		
+		for (int pageNo = 0; pageNo <= allKanjis.size() / kanjiPageSize; ++pageNo) {
+			
+			String url = "/kanjiDictionaryCatalog";
+			
+			if (pageNo != 0) {
+				url += "?page=" + pageNo;
+			}
+			
+			urlList.add(createUrl(objectFactory, url, TChangeFreq.MONTHLY));
 		}
 		
 		logger.info("Generowanie pliku sitemap zakonczone");

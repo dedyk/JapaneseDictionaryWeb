@@ -45,6 +45,7 @@ import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
@@ -589,5 +590,52 @@ public class KanjiDictionaryController {
 				character.destroy();
 			}
 		}		
+	}
+	
+	@RequestMapping(value = "/kanjiDictionaryCatalog", method = RequestMethod.GET)
+	public String wordDictionaryCatalog(HttpServletRequest request, HttpSession session, 
+			@RequestParam(value = "page", required = false) Integer pageNo,
+			Map<String, Object> model) {
+		
+		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
+		
+		if (pageNo == null || pageNo < 0) {
+			pageNo = 0;
+		}
+				
+		logger.info("Wyświetlanie katalogu znakow kanji dla strony: " + pageNo);
+		
+		// szukanie	
+		List<KanjiEntry> allKanjis = dictionaryManager.getAllKanjis(false, true);
+		
+		List<KanjiEntry> resultList = new ArrayList<KanjiEntry>(); 
+		
+		for (int kanjiIdx = pageNo * pageSize; kanjiIdx < allKanjis.size() && kanjiIdx < ((pageNo + 1) * pageSize); ++kanjiIdx) {
+			resultList.add(allKanjis.get(kanjiIdx));
+		}
+				
+		// logowanie
+		loggerSender.sendLog(new KanjiDictionaryCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo));
+
+		// stworzenie zaslepkowego findWordRequest i findWordResult
+		FindKanjiRequest findKanjiRequest = new FindKanjiRequest();
+		
+		FindKanjiResult findKanjiResult = new FindKanjiResult();
+		
+		findKanjiResult.setResult(resultList);
+		
+		if (allKanjis.size() > (pageNo + 1) * pageSize) {
+			findKanjiResult.setMoreElemetsExists(true);
+			
+		} else {
+			findKanjiResult.setMoreElemetsExists(false);
+		}
+				
+		model.put("selectedMenu", "kanjiDictionary");		
+		model.put("findKanjiRequest", findKanjiRequest);
+		model.put("findKanjiResult", findKanjiResult);
+		model.put("pageNo", pageNo);
+				
+		return "kanjiDictionaryCatalog";
 	}
 }
