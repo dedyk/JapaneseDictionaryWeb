@@ -117,11 +117,7 @@ public class SitemapManager {
 		
 		for (int pageNo = 0; pageNo <= dictionaryEntriesSize / wordPageSize; ++pageNo) {
 			
-			String url = "/wordDictionaryCatalog";
-			
-			if (pageNo != 0) {
-				url += "?page=" + pageNo;
-			}
+			String url = "/wordDictionaryCatalog/" + (pageNo + 1);
 			
 			urlList.add(createUrl(objectFactory, url, TChangeFreq.MONTHLY));
 		}
@@ -143,12 +139,8 @@ public class SitemapManager {
 		
 		for (int pageNo = 0; pageNo <= allKanjis.size() / kanjiPageSize; ++pageNo) {
 			
-			String url = "/kanjiDictionaryCatalog";
-			
-			if (pageNo != 0) {
-				url += "?page=" + pageNo;
-			}
-			
+			String url = "/kanjiDictionaryCatalog/" + (pageNo + 1);
+						
 			urlList.add(createUrl(objectFactory, url, TChangeFreq.MONTHLY));
 		}
 		

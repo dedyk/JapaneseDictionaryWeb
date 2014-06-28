@@ -312,21 +312,21 @@ public class WordDictionaryController {
 		return "wordDictionaryDetails";
 	}
 	
-	@RequestMapping(value = "/wordDictionaryCatalog", method = RequestMethod.GET)
+	@RequestMapping(value = "/wordDictionaryCatalog/{page}", method = RequestMethod.GET)
 	public String wordDictionaryCatalog(HttpServletRequest request, HttpSession session, 
-			@RequestParam(value = "page", required = false) Integer pageNo,
+			@PathVariable("page") int pageNo,
 			Map<String, Object> model) {
 		
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
-		if (pageNo == null || pageNo < 0) {
-			pageNo = 0;
+		if (pageNo < 1) {
+			pageNo = 1;
 		}
 				
 		logger.info("Wyświetlanie katalogu słów dla strony: " + pageNo);
 		
 		// szukanie		
-		List<DictionaryEntry> dictionaryEntryList = dictionaryManager.getWordsGroup(pageSize, pageNo);
+		List<DictionaryEntry> dictionaryEntryList = dictionaryManager.getWordsGroup(pageSize, pageNo - 1);
 		
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
 		
@@ -346,17 +346,20 @@ public class WordDictionaryController {
 
 		findWordResult.setResult(resultItemList);
 		
-		if (dictionaryEntriesSize > (pageNo + 1) * pageSize) {
+		if (dictionaryEntriesSize > (pageNo) * pageSize) {
 			findWordResult.setMoreElemetsExists(true);
 			
 		} else {
 			findWordResult.setMoreElemetsExists(false);
 		}
+		
+		int lastPageNo = (dictionaryEntriesSize / pageSize) + 1;
 				
 		model.put("selectedMenu", "wordDictionary");
 		model.put("findWordRequest", findWordRequest);
 		model.put("findWordResult", findWordResult);
 		model.put("pageNo", pageNo);
+		model.put("lastPageNo", lastPageNo);
 		
 		return "wordDictionaryCatalog";
 	}

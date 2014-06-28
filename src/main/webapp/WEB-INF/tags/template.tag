@@ -172,8 +172,8 @@
 								
 				<spring:message code="template.footer.android.version1"/>&nbsp;<a style="color: #777777" href="<spring:message code='template.footer.android.version.link'/>"><spring:message code="template.footer.android.version2"/></a> <br/> <br/>				
 				
-				<c:set var="wordDictionaryUrl"><c:out value='${pageContext.request.contextPath}' />/wordDictionaryCatalog</c:set>
-				<c:set var="kanjiDictionaryUrl"><c:out value='${pageContext.request.contextPath}' />/kanjiDictionaryCatalog</c:set>
+				<c:set var="wordDictionaryUrl"><c:out value='${pageContext.request.contextPath}' />/wordDictionaryCatalog/1</c:set>
+				<c:set var="kanjiDictionaryUrl"><c:out value='${pageContext.request.contextPath}' />/kanjiDictionaryCatalog/1</c:set>
 				
 				<a style="color: #777777" href="${wordDictionaryUrl}"><spring:message code="template.footer.catalog.word"/></a> -
 				<a style="color: #777777" href="${kanjiDictionaryUrl}"><spring:message code="template.footer.catalog.kanji"/></a>

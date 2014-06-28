@@ -9,8 +9,10 @@
 <c:set var="pageTitle"> <spring:message code="wordDictionary.catalog.page.title"/> </c:set>
 <c:set var="pageDescription"> <spring:message code="wordDictionary.catalog.page.pageDescription"/> </c:set>
 
+<c:set var="firstPageButton"> <spring:message code="wordDictionary.catalog.page.firstPage"/> </c:set>
 <c:set var="previousPageButton"> <spring:message code="wordDictionary.catalog.page.previousPage"/> </c:set>
 <c:set var="nextPageButton"> <spring:message code="wordDictionary.catalog.page.nextPage"/> </c:set>
+<c:set var="lastPageButton"> <spring:message code="wordDictionary.catalog.page.lastPage"/> </c:set>
 
 <spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
 
@@ -49,14 +51,16 @@
 			
 			<div class="col-md-12" style="text-align: right">
 			
-				<c:if test="${pageNo != 0}">
-					<a href="/wordDictionaryCatalog?page=${pageNo - 1}" class="btn btn-default">${previousPageButton}</a>
+				<c:if test="${pageNo != 1}">
+					<a href="/wordDictionaryCatalog/1" class="btn btn-default">${firstPageButton}</a>
+					<a href="/wordDictionaryCatalog/${pageNo - 1}" class="btn btn-default">${previousPageButton}</a>
 				</c:if>
 			
 				<c:if test="${findWordResult.moreElemetsExists == true}">
-					<a href="/wordDictionaryCatalog?page=${pageNo + 1}" class="btn btn-default">${nextPageButton}</a>
-				</c:if>			
-			
+					<a href="/wordDictionaryCatalog/${pageNo + 1}" class="btn btn-default">${nextPageButton}</a>
+					<a href="/wordDictionaryCatalog/${lastPageNo}" class="btn btn-default">${lastPageButton}</a>
+				</c:if>	
+				
 			</div>
 			
 			<script>

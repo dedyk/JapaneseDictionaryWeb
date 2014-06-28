@@ -592,15 +592,15 @@ public class KanjiDictionaryController {
 		}		
 	}
 	
-	@RequestMapping(value = "/kanjiDictionaryCatalog", method = RequestMethod.GET)
-	public String wordDictionaryCatalog(HttpServletRequest request, HttpSession session, 
-			@RequestParam(value = "page", required = false) Integer pageNo,
+	@RequestMapping(value = "/kanjiDictionaryCatalog/{page}", method = RequestMethod.GET)
+	public String kanjiDictionaryCatalog(HttpServletRequest request, HttpSession session, 
+			@PathVariable("page") int pageNo,
 			Map<String, Object> model) {
 		
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
-		if (pageNo == null || pageNo < 0) {
-			pageNo = 0;
+		if (pageNo < 1) {
+			pageNo = 1;
 		}
 				
 		logger.info("Wyświetlanie katalogu znakow kanji dla strony: " + pageNo);
@@ -610,7 +610,7 @@ public class KanjiDictionaryController {
 		
 		List<KanjiEntry> resultList = new ArrayList<KanjiEntry>(); 
 		
-		for (int kanjiIdx = pageNo * pageSize; kanjiIdx < allKanjis.size() && kanjiIdx < ((pageNo + 1) * pageSize); ++kanjiIdx) {
+		for (int kanjiIdx = (pageNo - 1) * pageSize; kanjiIdx < allKanjis.size() && kanjiIdx < ((pageNo) * pageSize); ++kanjiIdx) {
 			resultList.add(allKanjis.get(kanjiIdx));
 		}
 				
@@ -624,17 +624,20 @@ public class KanjiDictionaryController {
 		
 		findKanjiResult.setResult(resultList);
 		
-		if (allKanjis.size() > (pageNo + 1) * pageSize) {
+		if (allKanjis.size() > pageNo * pageSize) {
 			findKanjiResult.setMoreElemetsExists(true);
 			
 		} else {
 			findKanjiResult.setMoreElemetsExists(false);
 		}
+		
+		int lastPageNo = (allKanjis.size() / pageSize) + 1;
 				
 		model.put("selectedMenu", "kanjiDictionary");		
 		model.put("findKanjiRequest", findKanjiRequest);
 		model.put("findKanjiResult", findKanjiResult);
 		model.put("pageNo", pageNo);
+		model.put("lastPageNo", lastPageNo);
 				
 		return "kanjiDictionaryCatalog";
 	}

@@ -9,8 +9,10 @@
 <c:set var="pageTitle"> <spring:message code="kanjiDictionary.catalog.page.title"/> </c:set>
 <c:set var="pageDescription"> <spring:message code="kanjiDictionary.catalog.page.pageDescription"/> </c:set>
 
+<c:set var="firstPageButton"> <spring:message code="kanjiDictionary.catalog.page.firstPage"/> </c:set>
 <c:set var="previousPageButton"> <spring:message code="kanjiDictionary.catalog.page.previousPage"/> </c:set>
 <c:set var="nextPageButton"> <spring:message code="kanjiDictionary.catalog.page.nextPage"/> </c:set>
+<c:set var="lastPageButton"> <spring:message code="kanjiDictionary.catalog.page.lastPage"/> </c:set>
 
 <spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
 
@@ -47,14 +49,16 @@
 
 			<div class="col-md-12" style="text-align: right">
 			
-				<c:if test="${pageNo != 0}">
-					<a href="/kanjiDictionaryCatalog?page=${pageNo - 1}" class="btn btn-default">${previousPageButton}</a>
+				<c:if test="${pageNo != 1}">
+					<a href="/kanjiDictionaryCatalog/1" class="btn btn-default">${firstPageButton}</a>
+					<a href="/kanjiDictionaryCatalog/${pageNo - 1}" class="btn btn-default">${previousPageButton}</a>
 				</c:if>
 			
 				<c:if test="${findKanjiResult.moreElemetsExists == true}">
-					<a href="/kanjiDictionaryCatalog?page=${pageNo + 1}" class="btn btn-default">${nextPageButton}</a>
-				</c:if>			
-			
+					<a href="/kanjiDictionaryCatalog/${pageNo + 1}" class="btn btn-default">${nextPageButton}</a>
+					<a href="/kanjiDictionaryCatalog/${lastPageNo}" class="btn btn-default">${lastPageButton}</a>
+				</c:if>	
+				
 			</div>
 			
 			<script>
