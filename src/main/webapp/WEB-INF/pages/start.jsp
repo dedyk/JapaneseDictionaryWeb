@@ -12,7 +12,11 @@
 
 	<jsp:body>
 		
-		<spring:message code="start.page.welcome1"/>&nbsp;<b><spring:message code="start.page.welcome2"/></b><spring:message code="start.page.welcome3"/>
+		<p style="margin-bottom: 20px"><spring:message code="start.page.welcome1"/>&nbsp;<b><spring:message code="start.page.welcome2"/></b><spring:message code="start.page.welcome3"/></p>
+		<p style="margin-bottom: 20px"><spring:message code="start.page.welcome4"/></p>
+		<p style="margin-bottom: 20px"><spring:message code="start.page.welcome5"/></p>
+		<p style="margin-bottom: 20px"><spring:message code="start.page.welcome6"/></p>
+		<p><spring:message code="start.page.welcome7"/></p>
 			
 	</jsp:body>
 </t:template>
