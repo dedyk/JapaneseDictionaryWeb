@@ -101,8 +101,6 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	    					
 	    					currentRadicalImg.setSrc(staticPrefix + "/" + webRadicalInfoImage);
 	    					currentRadicalImg.setAlt(currentRadical);
-	    					currentRadicalImg.setWidthImg("9%");
-	    					currentRadicalImg.setHeightImg("9%");
 	    					
 	    					radicalsTd.addHtmlElement(currentRadicalImg);
 	    				}
