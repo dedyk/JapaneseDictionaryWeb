@@ -35,7 +35,6 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
-import pl.idedyk.japanese.dictionary.api.dto.RadicalInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
@@ -43,6 +42,7 @@ import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryTab;
 import pl.idedyk.japanese.dictionary.web.controller.validator.KanjiDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryCatalogLoggerModel;
@@ -87,7 +87,7 @@ public class KanjiDictionaryController {
 		kanjiDictionarySearchModel.setWordPlace(WordPlaceSearch.START_WITH.toString());
 		
 		// pobierz elementy podstawowe
-		List<RadicalInfo> radicalList = dictionaryManager.getRadicalList();
+		List<WebRadicalInfo> radicalList = dictionaryManager.getWebRadicalList();
 
 		// logowanie
 		logger.info("KanjiDictionaryController: start");
@@ -134,7 +134,7 @@ public class KanjiDictionaryController {
 			BindingResult result, Map<String, Object> model) {
 
 		// pobierz elementy podstawowe
-		List<RadicalInfo> radicalList = dictionaryManager.getRadicalList();
+		List<WebRadicalInfo> radicalList = dictionaryManager.getWebRadicalList();
 		
 		if (result.hasErrors() == true) {
 						
@@ -425,7 +425,7 @@ public class KanjiDictionaryController {
 		kanjiDictionarySearchModel.setWordPlace(WordPlaceSearch.START_WITH.toString());
 		
 		// pobierz elementy podstawowe
-		List<RadicalInfo> radicalList = dictionaryManager.getRadicalList();
+		List<WebRadicalInfo> radicalList = dictionaryManager.getWebRadicalList();
 
 		// uzupelnienie wynikowej listy
 		FindKanjiResult findKanjiDetectResult = null;

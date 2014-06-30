@@ -7,6 +7,7 @@ import javax.servlet.jsp.ErrorData;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -18,6 +19,8 @@ import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 public class HandleException extends TagSupport {
 	
 	private static final long serialVersionUID = 1L;
+	
+	private static final Logger logger = Logger.getLogger(HandleException.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -50,6 +53,8 @@ public class HandleException extends TagSupport {
 		String requestURI = errorData.getRequestURI();
 		int statusCode = errorData.getStatusCode();
 		Throwable throwable = errorData.getThrowable();
+		
+		logger.error("Bład podczas wyświetlania strony", throwable);
 		
 		LoggerModelCommon loggerModelCommon = LoggerModelCommon.createLoggerModelCommon(
 				sessionId, remoteIp, userAgent, requestURI);

@@ -3,6 +3,7 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
@@ -17,7 +18,10 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
+import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary.web.html.A;
+import pl.idedyk.japanese.dictionary.web.html.Img;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
@@ -32,6 +36,10 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 
 	private MessageSource messageSource;
 	
+	private DictionaryManager dictionaryManager;
+	
+	private Properties applicationProperties;
+	
 	@Override
 	public int doStartTag() throws JspException {
 		
@@ -40,6 +48,10 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
 		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
+		
+		this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
+		
+		this.applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
 		
 		try {
             JspWriter out = pageContext.getOut();
@@ -72,7 +84,29 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	    		List<String> radicals = kanjiDic2Entry.getRadicals();
 	    		
 	    		if (radicals != null) {
-	    			radicalsTd.addHtmlElement(new Text(getStringWithMark(toString(radicals, null, " "), findWord, true)));	    			
+	    			
+	    			for (String currentRadical : radicals) {
+	    				
+	    				WebRadicalInfo webRadicalInfo = dictionaryManager.getWebRadicalInfo(currentRadical);
+	    				
+	    				String webRadicalInfoImage = webRadicalInfo.getImage();
+	    				
+	    				if (webRadicalInfoImage == null) {
+	    					radicalsTd.addHtmlElement(new Text(currentRadical + " "));
+	    					
+	    				} else {	    					
+	    					String staticPrefix = LinkGenerator.getStaticPrefix(pageContext.getServletContext().getContextPath(), applicationProperties);
+	    					
+	    					Img currentRadicalImg = new Img();
+	    					
+	    					currentRadicalImg.setSrc(staticPrefix + "/" + webRadicalInfoImage);
+	    					currentRadicalImg.setAlt(currentRadical);
+	    					currentRadicalImg.setWidthImg("9%");
+	    					currentRadicalImg.setHeightImg("9%");
+	    					
+	    					radicalsTd.addHtmlElement(currentRadicalImg);
+	    				}
+					}
 	    		}
 	    	}
 	    	

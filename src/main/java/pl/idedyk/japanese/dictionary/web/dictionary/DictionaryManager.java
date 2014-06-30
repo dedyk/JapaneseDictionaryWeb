@@ -23,6 +23,7 @@ import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.api.keigo.KeigoHelper;
 import pl.idedyk.japanese.dictionary.api.tools.KanaHelper;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabase;
+import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 
 import com.csvreader.CsvReader;
 
@@ -212,6 +213,67 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	@Override
 	public List<RadicalInfo> getRadicalList() {
 		return radicalList;
+	}
+	
+	public List<WebRadicalInfo> getWebRadicalList() {
+		
+		List<RadicalInfo> radicalList = getRadicalList();
+		
+		List<WebRadicalInfo> result = new ArrayList<WebRadicalInfo>();
+		
+		for (RadicalInfo radicalInfo : radicalList) {
+			
+			WebRadicalInfo webRadicalInfo = new WebRadicalInfo();
+			
+			String radical = radicalInfo.getRadical();
+			
+			webRadicalInfo.setId(radicalInfo.getId());
+			webRadicalInfo.setRadical(radical);
+			webRadicalInfo.setStrokeCount(radicalInfo.getStrokeCount());			
+			webRadicalInfo.setImage(getRadicalImage(radical));
+		
+			result.add(webRadicalInfo);			
+		}
+		
+		return result;
+	}
+	
+	private String getRadicalImage(String radical) {
+		
+		if (radical.equals("𠆢") == true) { // znak U+201A2 (daszek)
+			return "img/radical/dash.png";
+			
+		} else if (radical.equals("⺌") == true) { // trzy kreski
+			return "img/radical/small.png";
+			
+		} else {
+			
+			return null;
+		}
+	}
+	
+	public WebRadicalInfo getWebRadicalInfo(String radicalToSearch) {
+		
+		List<RadicalInfo> radicalList = getRadicalList();
+		
+		for (RadicalInfo currentRadicalInfo : radicalList) {
+			
+			String currentRadicalInfoRadical = currentRadicalInfo.getRadical();
+			
+			if (currentRadicalInfoRadical.equals(radicalToSearch) == true) {
+				
+				WebRadicalInfo webRadicalInfo = new WebRadicalInfo();
+				
+				webRadicalInfo.setId(currentRadicalInfo.getId());
+				webRadicalInfo.setRadical(currentRadicalInfoRadical);
+				webRadicalInfo.setStrokeCount(currentRadicalInfo.getStrokeCount());			
+				webRadicalInfo.setImage(getRadicalImage(currentRadicalInfoRadical));
+				
+				return webRadicalInfo;
+			}
+		}
+		
+		return null;
 	}
 
 	@Override

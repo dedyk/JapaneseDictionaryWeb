@@ -289,6 +289,11 @@ public class LoggerListener {
 				StringBuffer radicalsJoined = new StringBuffer();
 				
 				for (String currentRadical : radicals) {
+					
+					if (currentRadical.equals("𠆢") == true) { // maly problem z mysql, znak U+201A2 (daszek)						
+						currentRadical = "个";
+					}
+					
 					radicalsJoined.append(currentRadical);
 				}
 				

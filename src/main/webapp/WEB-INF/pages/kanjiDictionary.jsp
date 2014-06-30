@@ -17,7 +17,15 @@
 
 <spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
 
-<c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
+<c:choose>
+  <c:when test="${useExternalStaticFiles == true}">
+  	<spring:eval var="staticFilePrefix" expression="@applicationProperties.getProperty('use.external.static.path')" />
+  </c:when>
+
+  <c:otherwise>
+  	<c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
+  </c:otherwise>
+</c:choose>
 
 <t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
 
@@ -68,7 +76,7 @@
 	            // tabelki
 				$('#kanjiDictionaryFindKanjiResult').dataTable({
 					language: {
-						url: '${staticFilePrefix}/js/datatables/polish.json'
+						url: '${pageContext.request.contextPath}/js/datatables/polish.json'
 					},
 					"bStateSave": true,
 					"aaSorting": [],
@@ -79,7 +87,7 @@
 
 				$('#kanjiDictionaryFindKanjiDetectResult').dataTable({
 					language: {
-						url: '${staticFilePrefix}/js/datatables/polish.json'
+						url: '${pageContext.request.contextPath}/js/datatables/polish.json'
 					},
 					"bStateSave": true,
 					"aaSorting": [],
@@ -95,7 +103,7 @@
 					<c:forEach items="${sessionScope.selectedRadicals}" var="currentRadical">
 					selectedRadicals.push('<c:out value="${currentRadical}" />');
 
-					$('#radicalTableId td').filter(function() { return $.text([this]) == '<c:out value="${currentRadical}" />'; }).css("background-color", "yellow");
+					$('#radicalTableId td').filter(function() { return getRadicalCellKanji($(this)) == '<c:out value="${currentRadical}" />'; }).css("background-color", "yellow");
 										
 					</c:forEach>			
 				</c:if>
@@ -308,6 +316,24 @@
             		<script>
 						var selectedRadicals = [];
 
+						function getRadicalCellKanji(cell) {
+
+							var cellKanji = cell.text().trim();
+
+							if (cellKanji != '') {
+								return cellKanji;	
+							}
+
+							var imgTag = cell.find("img");
+
+							if (imgTag != null) {
+								return imgTag.attr("alt");
+
+							}
+							
+							return "";
+						}
+
 						function updateRadicalsTableState(json) {
 
 							var allAvailableRadicals = json.allAvailableRadicals;
@@ -320,13 +346,13 @@
 									return;
 								}
 
-								var thisIdKanji = $(this).text();
+								var thisIdKanji = getRadicalCellKanji($(this));
 
 								if (allAvailableRadicals.indexOf(thisIdKanji) == -1) {
-									$(this).css("color", "silver");
+									$(this).css("opacity", "0.4");
 									
 								} else {
-									$(this).css("color", "black");
+									$(this).css("opacity", "1.0");
 								}
 							});
 
@@ -382,7 +408,7 @@
 							if (radicalTd != null) {
 
 								var selectedRadicalTd = $(radicalTd);
-								var selectedRadicalKanji = selectedRadicalTd.text();
+								var selectedRadicalKanji = getRadicalCellKanji(selectedRadicalTd);
 
 								var selectedRadicalIndexOf = selectedRadicals.indexOf(selectedRadicalKanji);
 								
@@ -455,9 +481,19 @@
 	            					<c:set var="strokeCountCounter" value="0" />
 	            					</tr>
 	            					<tr>
-	            				</c:if>             				
-	
-	            				<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">${currentRadical.radical}</td>
+	            				</c:if>   
+	            				
+								<c:choose>
+							      <c:when test="${currentRadical.image == null}">
+							      	<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">${currentRadical.radical}</td>
+							      </c:when>
+							
+							      <c:otherwise>
+							      	<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">
+							      	<img src="${staticFilePrefix}/${currentRadical.image}" alt="${currentRadical.radical}" /></td>
+							      </c:otherwise>
+								</c:choose>
+	            				
 	            				<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />
 	            				
 	            				 <c:if test="${strokeCountCounter == 30}">

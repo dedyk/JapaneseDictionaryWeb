@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
@@ -23,6 +24,7 @@ import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.B;
 import pl.idedyk.japanese.dictionary.web.html.Button;
@@ -30,6 +32,7 @@ import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
+import pl.idedyk.japanese.dictionary.web.html.Img;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
@@ -48,6 +51,8 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	
 	private DictionaryManager dictionaryManager;
 	
+	private Properties applicationProperties;
+	
 	@Override
 	public int doStartTag() throws JspException {
 				
@@ -57,7 +62,8 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
 		this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
-
+		this.applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
+		
 		try {
             JspWriter out = pageContext.getOut();
 
@@ -362,8 +368,77 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		if (radicals == null || radicals.size() == 0) {
 			return null;
 		}
+		
+		String titleId = "radicalsId";
+		String title = getMessage("kanjiDictionaryDetails.page.kanjiEntry.radicals.title");
+		
+		Div resultDiv = new Div();
+		
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// tytul
+    	Div divTitleDiv = new Div("col-md-10");
+    	
+    	H divTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	divTitleH4.setId(titleId);
+    	
+    	divTitleH4.addHtmlElement(new Text(title));
+    	menu.getChildMenu().add(new Menu(divTitleH4.getId(), title));    	
+    	
+    	divTitleDiv.addHtmlElement(divTitleH4);
+    	
+    	row1Div.addHtmlElement(divTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	resultDiv.addHtmlElement(row1Div);
 
-		return generateStandardDivWithStringList("radicalsId", getMessage("kanjiDictionaryDetails.page.kanjiEntry.radicals.title"), menu, radicals);
+		// wiersz z lista
+    	Div row2Div = new Div("row");
+    	resultDiv.addHtmlElement(row2Div);
+    	
+    	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+    	
+    	Div divBodyDiv = new Div("col-md-11");
+    	row2Div.addHtmlElement(divBodyDiv);
+    	
+    	Table row2Table = new Table();
+    	divBodyDiv.addHtmlElement(row2Table);
+    	
+		for (String currentRadical : radicals) {
+			
+			Tr row2TableTr = new Tr();
+			row2Table.addHtmlElement(row2TableTr);
+			
+			Td row2TableTrTd1 = new Td();
+			row2TableTr.addHtmlElement(row2TableTrTd1);
+			
+    		H currentListH = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+    		row2TableTrTd1.addHtmlElement(currentListH);
+			
+			WebRadicalInfo webRadicalInfo = dictionaryManager.getWebRadicalInfo(currentRadical);
+			
+			String webRadicalInfoImage = webRadicalInfo.getImage();
+			
+			if (webRadicalInfoImage == null) {
+				currentListH.addHtmlElement(new Text(currentRadical));
+				
+			} else {	    					
+				String staticPrefix = LinkGenerator.getStaticPrefix(pageContext.getServletContext().getContextPath(), applicationProperties);
+				
+				Img currentRadicalImg = new Img();
+				
+				currentRadicalImg.setSrc(staticPrefix + "/" + webRadicalInfoImage);
+				currentRadicalImg.setAlt(currentRadical);
+				currentRadicalImg.setWidthImg("80%");
+				currentRadicalImg.setHeightImg("80%");
+				
+				currentListH.addHtmlElement(currentRadicalImg);
+			}
+		}
+		
+		return resultDiv;
 	}
 	
 	private Div generateKunYomiSection(Menu menu) {

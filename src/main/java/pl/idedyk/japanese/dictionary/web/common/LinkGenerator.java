@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.common;
 
 import java.util.List;
+import java.util.Properties;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
@@ -95,5 +96,17 @@ public class LinkGenerator {
 		
 		return contextPath + "/suggestion/sendSuggestion";
 	}
-
+	
+	public static String getStaticPrefix(String contextPath, Properties applicationProperties) {
+		
+		boolean useExternalStaticFiles = Boolean.valueOf((String)applicationProperties.get("use.external.static.files"));
+		
+		if (useExternalStaticFiles == true) {			
+			return (String)applicationProperties.getProperty("use.external.static.path");
+			
+		} else {
+			
+			return contextPath;
+		}
+	}
 }
