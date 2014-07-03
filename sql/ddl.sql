@@ -4,6 +4,7 @@ create table generic_log (
     session_id varchar(50) null,
     user_agent text null,
     request_url text null,
+    referer_url text null,
     remote_ip varchar(80) null,
     remote_host varchar(255) null,
     operation varchar(40) not null

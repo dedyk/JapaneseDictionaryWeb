@@ -56,7 +56,7 @@ public class QueueService {
 		
 		calendar.setTime(nextAttempt);
 		
-		calendar.add(Calendar.SECOND, 10 * deliveryCount);
+		calendar.add(Calendar.SECOND, 10 * deliveryCount * 2);
 		
 		nextAttempt = new Timestamp(calendar.getTime().getTime());
 		

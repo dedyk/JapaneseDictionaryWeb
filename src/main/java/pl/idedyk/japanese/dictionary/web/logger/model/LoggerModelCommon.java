@@ -15,6 +15,8 @@ public class LoggerModelCommon implements Serializable {
 	
 	private String requestURL;
 	
+	private String refererURL;
+	
 	private Date date;
 	
 	private LoggerModelCommon() {
@@ -28,6 +30,7 @@ public class LoggerModelCommon implements Serializable {
 			this.remoteIp = loggerModelCommon.remoteIp;
 			this.userAgent = loggerModelCommon.userAgent;
 			this.requestURL = loggerModelCommon.requestURL;
+			this.refererURL = loggerModelCommon.refererURL;
 			
 			this.date = loggerModelCommon.date;
 			
@@ -36,7 +39,7 @@ public class LoggerModelCommon implements Serializable {
 		}
 	}
 
-	public static LoggerModelCommon createLoggerModelCommon(String sessionId, String remoteIp, String userAgent, String requestURL) {
+	public static LoggerModelCommon createLoggerModelCommon(String sessionId, String remoteIp, String userAgent, String requestURL, String refererURL) {
 		
 		LoggerModelCommon loggerModelCommon = new LoggerModelCommon();
 		
@@ -44,6 +47,7 @@ public class LoggerModelCommon implements Serializable {
 		loggerModelCommon.remoteIp = remoteIp;
 		loggerModelCommon.userAgent = userAgent;
 		loggerModelCommon.requestURL = requestURL;
+		loggerModelCommon.refererURL = refererURL;
 		
 		loggerModelCommon.date = new Date();
 		
@@ -88,5 +92,13 @@ public class LoggerModelCommon implements Serializable {
 
 	public void setRequestURL(String requestURL) {
 		this.requestURL = requestURL;
+	}
+
+	public String getRefererURL() {
+		return refererURL;
+	}
+
+	public void setRefererURL(String refererURL) {
+		this.refererURL = refererURL;
 	}
 }

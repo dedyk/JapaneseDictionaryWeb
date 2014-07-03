@@ -1,17 +1,17 @@
 package pl.idedyk.japanese.dictionary.web.mysql.model;
 
-public class WordKanjiSearchNoFoundStat {
+public class GenericTextStat {
 
-	private String word;
+	private String text;
 	
 	private long stat;
 
-	public String getWord() {
-		return word;
+	public String getText() {
+		return text;
 	}
 
-	public void setWord(String word) {
-		this.word = word;
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	public long getStat() {

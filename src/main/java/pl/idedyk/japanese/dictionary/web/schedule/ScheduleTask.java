@@ -30,9 +30,9 @@ import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericTextStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
 import pl.idedyk.japanese.dictionary.web.mysql.model.RemoteClientStat;
-import pl.idedyk.japanese.dictionary.web.mysql.model.WordKanjiSearchNoFoundStat;
 import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 
 @Service
@@ -56,7 +56,7 @@ public class ScheduleTask {
 	private LoggerListener loggerListener;
 	
 	//@Scheduled(cron="0 * * * * ?") // co minute
-	@Scheduled(cron="0 0 23 * * ?") // o 23
+	@Scheduled(cron="0 0 20 * * ?") // o 20
 	public void generateDailyReport() {
 								
 		logger.info("Generowanie dziennego raportu");
@@ -136,29 +136,34 @@ public class ScheduleTask {
 				reportDiv.addHtmlElement(new Hr());
 
 				// wyszukiwanie slowek bez wynikow				
-				List<WordKanjiSearchNoFoundStat> wordDictionarySearchNoFoundStatList = mySQLConnector.getWordDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				List<GenericTextStat> wordDictionarySearchNoFoundStatList = mySQLConnector.getWordDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				appendWordKanjiSearchNoFoundStat(reportDiv, "schedule.task.generate.daily.report.word.dictionary.no.found", wordDictionarySearchNoFoundStatList);
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.word.dictionary.no.found", wordDictionarySearchNoFoundStatList);
 				
 				// wyszukiwanie automatycznego uzupelniania slowek bez wynikow
-				List<WordKanjiSearchNoFoundStat> wordDictionaryAutocompleteNoFoundStat = mySQLConnector.getWordDictionaryAutocompleteNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				List<GenericTextStat> wordDictionaryAutocompleteNoFoundStat = mySQLConnector.getWordDictionaryAutocompleteNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				appendWordKanjiSearchNoFoundStat(reportDiv, "schedule.task.generate.daily.report.word.dictionary.autocomplete.no.found", wordDictionaryAutocompleteNoFoundStat);
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.word.dictionary.autocomplete.no.found", wordDictionaryAutocompleteNoFoundStat);
 				
 				// wyszukiwanie kanji bez wynikow				
-				List<WordKanjiSearchNoFoundStat> kanjiDictionarySearchNoFoundStatList = mySQLConnector.getKanjiDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				List<GenericTextStat> kanjiDictionarySearchNoFoundStatList = mySQLConnector.getKanjiDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				appendWordKanjiSearchNoFoundStat(reportDiv, "schedule.task.generate.daily.report.kanji.dictionary.no.found", kanjiDictionarySearchNoFoundStatList);
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.kanji.dictionary.no.found", kanjiDictionarySearchNoFoundStatList);
 				
 				// wyszukiwanie automatycznego uzupelniania kanji bez wynikow
-				List<WordKanjiSearchNoFoundStat> kanjiDictionaryAutocompleteNoFoundStat = mySQLConnector.getKanjiDictionaryAutocompleteNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				List<GenericTextStat> kanjiDictionaryAutocompleteNoFoundStat = mySQLConnector.getKanjiDictionaryAutocompleteNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				appendWordKanjiSearchNoFoundStat(reportDiv, "schedule.task.generate.daily.report.kanji.dictionary.autocomplete.no.found", kanjiDictionaryAutocompleteNoFoundStat);
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.kanji.dictionary.autocomplete.no.found", kanjiDictionaryAutocompleteNoFoundStat);
 
 				// statystyki ilosci wywolan
 				List<RemoteClientStat> remoteClientStat = mySQLConnector.getRemoteClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				appendRemoteClientStat(reportDiv, "schedule.task.generate.daily.report.remote.client", remoteClientStat);
+				
+				// statystyki odnosnikow
+				List<GenericTextStat> refererStat = mySQLConnector.getRefererStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.referer.stat", refererStat);				
 
 				StringWriter stringWriter = new StringWriter();
 				
@@ -180,7 +185,7 @@ public class ScheduleTask {
 		logger.info("Generowanie raportu zakonczone");
 	}
 	
-	private void appendWordKanjiSearchNoFoundStat(Div reportDiv, String titleCode, List<WordKanjiSearchNoFoundStat> wordKanjiSearchNoFoundStatList) {
+	private void appendGenericTextStat(Div reportDiv, String titleCode, List<GenericTextStat> genericTextStatList) {
 		
 		Div div = new Div();
 		
@@ -192,22 +197,26 @@ public class ScheduleTask {
 		Table table = new Table(null, "border: 1px solid black");
 		div.addHtmlElement(table);
 		
-		for (WordKanjiSearchNoFoundStat wordKanjiSearchNoFoundStat : wordKanjiSearchNoFoundStatList) {
+		for (GenericTextStat genericTextStat : genericTextStatList) {
 			
 			Tr tr = new Tr();
 			table.addHtmlElement(tr);
 			
-			String word = wordKanjiSearchNoFoundStat.getWord();
+			String text = genericTextStat.getText();
+			
+			if (text == null) {
+				text = "-";
+			}
 			
 			Td td1 = new Td(null, "padding: 5px;");
 			tr.addHtmlElement(td1);
 			
-			td1.addHtmlElement(new Text(word));
+			td1.addHtmlElement(new Text(text));
 
 			Td td2 = new Td(null, "padding: 5px;");
 			tr.addHtmlElement(td2);
 			
-			td2.addHtmlElement(new Text("" + wordKanjiSearchNoFoundStat.getStat()));			
+			td2.addHtmlElement(new Text("" + genericTextStat.getStat()));			
 		}
 		
 		reportDiv.addHtmlElement(div);		

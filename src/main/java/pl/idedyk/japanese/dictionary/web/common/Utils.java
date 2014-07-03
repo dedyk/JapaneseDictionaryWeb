@@ -164,7 +164,8 @@ public class Utils {
 				session.getId(),
 				getRemoteIp(request),
 				request.getHeader("User-Agent"),
-				getRequestURL(request));
+				getRequestURL(request),
+				request.getHeader("Referer"));
 		
 		return loggerModelCommon;
 	}	

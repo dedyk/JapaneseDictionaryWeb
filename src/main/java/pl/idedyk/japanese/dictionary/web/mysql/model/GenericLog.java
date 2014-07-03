@@ -14,6 +14,8 @@ public class GenericLog {
 	
 	private String requestURL;
 	
+	private String refererURL;
+	
 	private String remoteIp;
 	
 	private String remoteHost;
@@ -58,6 +60,14 @@ public class GenericLog {
 
 	public void setRequestURL(String requestURL) {
 		this.requestURL = requestURL;
+	}
+
+	public String getRefererURL() {
+		return refererURL;
+	}
+
+	public void setRefererURL(String refererURL) {
+		this.refererURL = refererURL;
 	}
 
 	public String getRemoteIp() {

@@ -79,6 +79,7 @@ public class LoggerListener {
 		genericLog.setRemoteIp(loggerModelCommon.getRemoteIp());
 		genericLog.setUserAgent(loggerModelCommon.getUserAgent());
 		genericLog.setRequestURL(loggerModelCommon.getRequestURL());
+		genericLog.setRefererURL(loggerModelCommon.getRefererURL());
 		genericLog.setRemoteHost(Utils.getHostname(loggerModelCommon.getRemoteIp()));
 		genericLog.setOperation(operation);
 		

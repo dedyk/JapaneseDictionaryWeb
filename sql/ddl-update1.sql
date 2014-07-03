@@ -1,0 +1,1 @@
+alter table generic_log add referer_url text null after request_url;

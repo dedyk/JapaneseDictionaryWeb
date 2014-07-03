@@ -25,6 +25,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericTextStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
@@ -39,7 +40,6 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteL
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
-import pl.idedyk.japanese.dictionary.web.mysql.model.WordKanjiSearchNoFoundStat;
 import snaq.db.ConnectionPool;
 
 public class MySQLConnector {
@@ -99,16 +99,17 @@ public class MySQLConnector {
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "insert into generic_log(timestamp, session_id, user_agent, request_url, remote_ip, remote_host, operation) "
-					+ "values(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			preparedStatement = connection.prepareStatement( "insert into generic_log(timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation) "
+					+ "values(?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			preparedStatement.setTimestamp(1, genericLog.getTimestamp());
 			preparedStatement.setString(2, genericLog.getSessionId());
 			preparedStatement.setString(3, genericLog.getUserAgent());
 			preparedStatement.setString(4, genericLog.getRequestURL());
-			preparedStatement.setString(5, genericLog.getRemoteIp());
-			preparedStatement.setString(6, genericLog.getRemoteHost());
-			preparedStatement.setString(7, genericLog.getOperation().toString());
+			preparedStatement.setString(5, genericLog.getRefererURL());
+			preparedStatement.setString(6, genericLog.getRemoteIp());
+			preparedStatement.setString(7, genericLog.getRemoteHost());
+			preparedStatement.setString(8, genericLog.getOperation().toString());
 			
 			preparedStatement.executeUpdate();
 			
@@ -849,28 +850,34 @@ public class MySQLConnector {
 		}		
 	}
 
-	public List<WordKanjiSearchNoFoundStat> getWordDictionarySearchNoFoundStat(long startId, long endId) throws SQLException {
+	public List<GenericTextStat> getWordDictionarySearchNoFoundStat(long startId, long endId) throws SQLException {
 	
-		return getGenericSearchNoFoundStat("select find_word_request_word, count(*) from word_dictionary_search_log "
+		return getGenericTextStat("select find_word_request_word, count(*) from word_dictionary_search_log "
 				+ "where find_word_result_result_size = 0 and generic_log_id >= ? and generic_log_id <= ? group by find_word_request_word order by 2 desc, 1", startId, endId);		
 	}
 	
-	public List<WordKanjiSearchNoFoundStat> getWordDictionaryAutocompleteNoFoundStat(long startId, long endId) throws SQLException {
+	public List<GenericTextStat> getWordDictionaryAutocompleteNoFoundStat(long startId, long endId) throws SQLException {
 		
-		return getGenericSearchNoFoundStat("select term, count(*) from word_dictionary_autocomplete_log where found_elements = 0 "
+		return getGenericTextStat("select term, count(*) from word_dictionary_autocomplete_log where found_elements = 0 "
 				+ "and generic_log_id >= ? and generic_log_id <= ? group by term order by 2 desc, 1 desc", startId, endId);
 	}
 
-	public List<WordKanjiSearchNoFoundStat> getKanjiDictionarySearchNoFoundStat(long startId, long endId) throws SQLException {
+	public List<GenericTextStat> getKanjiDictionarySearchNoFoundStat(long startId, long endId) throws SQLException {
 		
-		return getGenericSearchNoFoundStat("select find_kanji_request_word, count(*) from kanji_dictionary_search_log "
+		return getGenericTextStat("select find_kanji_request_word, count(*) from kanji_dictionary_search_log "
 				+ "where find_kanji_result_result_size = 0 and generic_log_id >= ? and generic_log_id <= ? group by find_kanji_request_word order by 2 desc, 1", startId, endId);		
 	}
 	
-	public List<WordKanjiSearchNoFoundStat> getKanjiDictionaryAutocompleteNoFoundStat(long startId, long endId) throws SQLException {
+	public List<GenericTextStat> getKanjiDictionaryAutocompleteNoFoundStat(long startId, long endId) throws SQLException {
 		
-		return getGenericSearchNoFoundStat("select term, count(*) from kanji_dictionary_autocomplete_log where found_elements = 0 "
+		return getGenericTextStat("select term, count(*) from kanji_dictionary_autocomplete_log where found_elements = 0 "
 				+ "and generic_log_id >= ? and generic_log_id <= ? group by term order by 2 desc, 1 desc", startId, endId);
+	}
+
+	public List<GenericTextStat> getRefererStat(long startId, long endId) throws SQLException {
+		
+		return getGenericTextStat("select substring(referer_url, 1, 150), count(*) from generic_log where "
+				+ "id >= ? and id <= ? group by substring(referer_url, 1, 150) order by 2 desc, 1 desc", startId, endId);
 	}
 	
 	public List<RemoteClientStat> getRemoteClientStat(long startId, long endId) throws SQLException {
@@ -950,7 +957,7 @@ public class MySQLConnector {
 		}		
 	}
 
-	private List<WordKanjiSearchNoFoundStat> getGenericSearchNoFoundStat(String sql, long startId, long endId) throws SQLException {
+	private List<GenericTextStat> getGenericTextStat(String sql, long startId, long endId) throws SQLException {
 		
 		Connection connection = null;
 		
@@ -959,7 +966,7 @@ public class MySQLConnector {
 		ResultSet resultSet = null;
 		
 		try {
-			List<WordKanjiSearchNoFoundStat> result = new ArrayList<WordKanjiSearchNoFoundStat>();
+			List<GenericTextStat> result = new ArrayList<GenericTextStat>();
 			
 			connection = connectionPool.getConnection();
 			
@@ -972,12 +979,12 @@ public class MySQLConnector {
 			
 			while (resultSet.next() == true) {
 				
-				WordKanjiSearchNoFoundStat wordKanjiSearchNoFoundStat = new WordKanjiSearchNoFoundStat();
+				GenericTextStat genericTextStat = new GenericTextStat();
 				
-				wordKanjiSearchNoFoundStat.setWord(resultSet.getString(1));
-				wordKanjiSearchNoFoundStat.setStat(resultSet.getLong(2));
+				genericTextStat.setText(resultSet.getString(1));
+				genericTextStat.setStat(resultSet.getLong(2));
 				
-				result.add(wordKanjiSearchNoFoundStat);
+				result.add(genericTextStat);
 			}
 			
 			return result;

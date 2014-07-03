@@ -41,6 +41,7 @@ public class HandleException extends TagSupport {
 		
 		String remoteIp = null;
 		String userAgent = null;
+		String refererURL = null;
 		
 		if (request instanceof HttpServletRequest) {
 			
@@ -48,6 +49,7 @@ public class HandleException extends TagSupport {
 			
 			remoteIp = Utils.getRemoteIp(httpServletRequest);
 			userAgent = httpServletRequest.getHeader("User-Agent");
+			refererURL = httpServletRequest.getHeader("Referer");
 		}
 		
 		String requestURI = errorData.getRequestURI();
@@ -57,7 +59,7 @@ public class HandleException extends TagSupport {
 		logger.error("Bład podczas wyświetlania strony", throwable);
 		
 		LoggerModelCommon loggerModelCommon = LoggerModelCommon.createLoggerModelCommon(
-				sessionId, remoteIp, userAgent, requestURI);
+				sessionId, remoteIp, userAgent, requestURI, refererURL);
 		
 		GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(loggerModelCommon, statusCode, throwable);
 
