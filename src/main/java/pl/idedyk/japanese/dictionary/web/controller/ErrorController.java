@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
 
 @ControllerAdvice
 public class ErrorController {
@@ -40,5 +42,18 @@ public class ErrorController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		
 		return new ModelAndView("applicationError", model);
+	}
+	
+	@ExceptionHandler(NoHandlerFoundException.class)
+	public String handle(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
+
+		logger.error("Nie znaleziono strony: " + Utils.getRequestURL(request));
+		
+		// wysylanie do logger'a
+		PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+		
+		loggerSender.sendLog(pageNoFoundExceptionLoggerModel);
+
+		return "page404";
 	}
 }

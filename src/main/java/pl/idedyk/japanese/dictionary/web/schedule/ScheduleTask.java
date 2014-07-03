@@ -165,6 +165,11 @@ public class ScheduleTask {
 				
 				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.referer.stat", refererStat);				
 
+				// statystyki nieznalezionych stron
+				List<GenericTextStat> pageNotFoundStat = mySQLConnector.getPageNotFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.page.not.found.stat", pageNotFoundStat);				
+				
 				StringWriter stringWriter = new StringWriter();
 				
 				reportDiv.render(stringWriter);

@@ -879,7 +879,13 @@ public class MySQLConnector {
 		return getGenericTextStat("select substring(referer_url, 1, 150), count(*) from generic_log where "
 				+ "id >= ? and id <= ? group by substring(referer_url, 1, 150) order by 2 desc, 1 desc", startId, endId);
 	}
-	
+
+	public List<GenericTextStat> getPageNotFoundStat(long startId, long endId) throws SQLException {
+		
+		return getGenericTextStat("select request_url, count(*) from generic_log where operation = 'PAGE_NO_FOUND_EXCEPTION' and "
+				+ "id >= ? and id <= ? group by request_url order by 2 desc, 1 desc", startId, endId);
+	}
+
 	public List<RemoteClientStat> getRemoteClientStat(long startId, long endId) throws SQLException {
 		
 		Connection connection = null;

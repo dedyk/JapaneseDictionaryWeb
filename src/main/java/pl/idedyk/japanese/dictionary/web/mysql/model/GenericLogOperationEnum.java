@@ -32,5 +32,6 @@ public enum GenericLogOperationEnum {
 	
 	INFO,
 	
-	GENERAL_EXCEPTION;
+	GENERAL_EXCEPTION,
+	PAGE_NO_FOUND_EXCEPTION;
 }
