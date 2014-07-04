@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,9 @@ public class ScheduleTask {
 	
 	@Autowired
 	private LoggerListener loggerListener;
+	
+	@Value("${base.server}")
+	private String baseServer;
 	
 	//@Scheduled(cron="0 * * * * ?") // co minute
 	@Scheduled(cron="0 0 20 * * ?") // o 20
@@ -161,7 +165,7 @@ public class ScheduleTask {
 				appendRemoteClientStat(reportDiv, "schedule.task.generate.daily.report.remote.client", remoteClientStat);
 				
 				// statystyki odnosnikow
-				List<GenericTextStat> refererStat = mySQLConnector.getRefererStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				List<GenericTextStat> refererStat = mySQLConnector.getRefererStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId(), baseServer);
 				
 				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.referer.stat", refererStat);				
 
@@ -316,6 +320,20 @@ public class ScheduleTask {
 				}
 			}
 			
+		}
+	}
+	
+	@Scheduled(cron="0 0 0 * * ?") // o polnocy
+	public void deleteOldQueueItems() {
+		
+		logger.info("Kasuje stare przetworzone wpisy z kolejki");
+		
+		try {			
+			mySQLConnector.deleteOldQueueItems(7);
+			
+		} catch (Exception e) {
+			
+			logger.error("Blad podczas kasowania starych wpisow z kolejki", e);
 		}
 	}
 }

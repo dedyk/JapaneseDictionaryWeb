@@ -874,10 +874,12 @@ public class MySQLConnector {
 				+ "and generic_log_id >= ? and generic_log_id <= ? group by term order by 2 desc, 1 desc", startId, endId);
 	}
 
-	public List<GenericTextStat> getRefererStat(long startId, long endId) throws SQLException {
+	public List<GenericTextStat> getRefererStat(long startId, long endId, String baseServer) throws SQLException {
 		
 		return getGenericTextStat("select substring(referer_url, 1, 150), count(*) from generic_log where "
-				+ "id >= ? and id <= ? group by substring(referer_url, 1, 150) order by 2 desc, 1 desc", startId, endId);
+				+ "id >= ? and id <= ? "
+				+ "and referer_url not like '%" + baseServer + "%' "
+				+ "group by substring(referer_url, 1, 150) order by 2 desc, 1 desc", startId, endId);
 	}
 
 	public List<GenericTextStat> getPageNotFoundStat(long startId, long endId) throws SQLException {
@@ -1145,6 +1147,41 @@ public class MySQLConnector {
 			preparedStatement.setLong(4, queueItem.getId());
 						
 			// uaktualnij
+			preparedStatement.executeUpdate();
+			
+		} finally {
+						
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public void deleteOldQueueItems(int ndays) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+				
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement("delete from queue where status = ? and datediff(curdate(), next_attempt) > ?");
+			
+			preparedStatement.setString(1, QueueItemStatus.DONE.toString());
+			preparedStatement.setInt(2, ndays);
+						
+			// skasuj
 			preparedStatement.executeUpdate();
 			
 		} finally {
