@@ -49,6 +49,8 @@
 				<prop key="use.external.static.files">${use.external.static.files}</prop>
 				<prop key="use.external.static.path">${use.external.static.path}</prop>
 				
+				<prop key="google.plus.id">${google.plus.id}</prop>
+				
 				<prop key="mail.smtp.to">${mail.smtp.to}</prop>
 			</props>
 		</property>
