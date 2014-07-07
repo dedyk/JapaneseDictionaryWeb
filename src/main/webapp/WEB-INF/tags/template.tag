@@ -100,13 +100,37 @@
 
 			<div class="row header" style="margin-bottom: 30px;">
 
-				<table>
+				<table style="width: 100%">
 					<tr>
-						<td><img src="${staticFilePrefix}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px" /></td>
+						<td style="width: 5%"><img src="${staticFilePrefix}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px" /></td>
 
-						<td style="font-size: 150%;"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>
-					</tr>
+						<td style="font-size: 150%; width: 80%"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>
+
+						<td>
+							<!-- Google Plus -->
+							<div class="g-plusone"></div>
+							
+							<!-- Umieść ten tag po ostatnim tagu widżetu przycisk +1. -->
+							<script type="text/javascript">
+							  window.___gcfg = {lang: 'pl'};
+							
+							  (function() {
+							    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+							    po.src = 'https://apis.google.com/js/platform.js';
+							    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+							  })();
+							</script>						
+						</td>
+						
+						<td>						
+							<!-- Twitter -->
+						    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
+			
+			 				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>																
+						</td>					
+					</tr>				
 				</table>
+
 			</div>
 
  			<nav class="navbar navbar-default">
@@ -156,7 +180,7 @@
 			
 			<jdwt:startInfo />
 
-			<div id="content" class="col-md-12">
+			<div id="content" class="col-md-12">			
 				<jsp:doBody />
 			</div>
 
