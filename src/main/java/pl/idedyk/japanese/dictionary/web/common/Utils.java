@@ -132,15 +132,38 @@ public class Utils {
 		if (ip == null) {
 			return null;
 		}
+				
+		String[] ipSplited = ip.split(",");
 		
-		try {
-			InetAddress addr = InetAddress.getByName(ip);
-		
-			return addr.getHostName();
-		
-		} catch (Exception e) {
+		if (ipSplited == null || ipSplited.length == 0) {
 			return ip;
 		}
+		
+		StringBuffer result = new StringBuffer();
+		
+		for (String currentIp : ipSplited) {
+			
+			currentIp = currentIp.trim();
+			
+			String currentAddr = null;
+			
+			try {
+				InetAddress addr = InetAddress.getByName(currentIp);
+			
+				currentAddr = addr.getHostName();
+			
+			} catch (Exception e) {
+				currentAddr = currentIp;
+			}
+			
+			if (result.length() > 0) {
+				result.append(", ");
+			}
+			
+			result.append(currentAddr);			
+		}
+		
+		return result.toString();
 	}
 	
 	public static String getRequestURL(HttpServletRequest request) {
