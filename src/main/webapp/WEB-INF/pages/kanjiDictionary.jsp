@@ -227,7 +227,7 @@
 		    }
 
 		</script>
-	
+			
 		<div>		
     		<ul class="nav nav-tabs">
         		<li class="active"><a data-toggle="tab" href="#meaning" id='<c:out value="${tabs[0].id}" />'> <spring:message code="kanjiDictionary.page.tab.meaning" /> </a></li>
@@ -240,6 +240,10 @@
         		<div id="meaning" class="tab-pane fade in active col-md-12" style="padding-top: 20px; padding-bottom: 20px">
             		
             		<form:form method="get" action="${pageContext.request.contextPath}/kanjiDictionarySearch">
+
+						<fieldset>
+							<legend><spring:message code="kanjiDictionary.page.tab.meaning.title" /></legend>			
+						</fieldset>
             		
             			<form:errors cssClass="alert alert-danger" path="*" element="div" />
             		
@@ -312,6 +316,12 @@
         		</div>
         
         		<div id="radicals" class="tab-pane fade col-md-12" style="padding-top: 20px; padding-bottom: 20px">
+        			
+        			<form>
+						<fieldset>
+							<legend><spring:message code="kanjiDictionary.page.tab.radicals.title" /></legend>			
+						</fieldset>        			
+        			</form>
             		
             		<script>
 						var selectedRadicals = [];

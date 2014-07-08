@@ -33,6 +33,10 @@
 	<jsp:body>
 			
 		<form:form method="get" action="${pageContext.request.contextPath}/wordDictionarySearch">
+		
+			<fieldset>
+				<legend><spring:message code="wordDictionary.page.title2" /></legend>			
+			</fieldset>
 			
 			<form:errors cssClass="alert alert-danger" path="*" element="div" />		
 			
