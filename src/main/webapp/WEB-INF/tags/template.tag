@@ -106,6 +106,21 @@
 
 						<td style="font-size: 150%; width: 80%"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>
 
+						<td style="padding-right: 40px">
+							<!-- Facebook -->
+							<div id="fb-root"></div>
+							
+							<script>(function(d, s, id) {
+							  var js, fjs = d.getElementsByTagName(s)[0];
+							  if (d.getElementById(id)) return;
+							  js = d.createElement(s); js.id = id;
+							  js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.0";
+							  fjs.parentNode.insertBefore(js, fjs);
+							}(document, 'script', 'facebook-jssdk'));</script>
+							
+							<div class="fb-share-button" data-type="button_count"></div>						
+						</td>
+
 						<td>
 							<!-- Google Plus -->
 							<div class="g-plusone"></div>
@@ -121,7 +136,7 @@
 							  })();
 							</script>						
 						</td>
-						
+												
 						<td>						
 							<!-- Twitter -->
 						    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
