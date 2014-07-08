@@ -106,7 +106,22 @@
 
 						<td style="font-size: 150%; width: 80%"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>
 
-						<td style="padding-right: 40px">
+						<td style="padding-right: 10px">
+							<!-- Google Plus -->
+							<div class="g-plusone" data-align="right" data-size="medium"></div>
+							
+							<!-- Umieść ten tag po ostatnim tagu widżetu przycisk +1. -->
+							<script type="text/javascript">
+							  window.___gcfg = {lang: 'pl'};
+							
+							  (function() {
+							    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+							    po.src = 'https://apis.google.com/js/platform.js';
+							    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+							  })();
+							</script>						
+						</td>
+						<td style="padding-right: 10px">
 							<!-- Facebook -->
 							<div id="fb-root"></div>
 							
@@ -120,24 +135,7 @@
 							
 							<div class="fb-share-button" data-type="button_count"></div>						
 						</td>
-
 						<td>
-							<!-- Google Plus -->
-							<div class="g-plusone"></div>
-							
-							<!-- Umieść ten tag po ostatnim tagu widżetu przycisk +1. -->
-							<script type="text/javascript">
-							  window.___gcfg = {lang: 'pl'};
-							
-							  (function() {
-							    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-							    po.src = 'https://apis.google.com/js/platform.js';
-							    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-							  })();
-							</script>						
-						</td>
-												
-						<td>						
 							<!-- Twitter -->
 						    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
 			
