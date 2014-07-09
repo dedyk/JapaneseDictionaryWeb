@@ -21,6 +21,10 @@
 	<meta name="description" content="${pageDescription}" />
 	</c:if>
 	
+	<c:if test="${metaRobots != null}">
+	<meta name="robots" content="${metaRobots}" />
+	</c:if>	
+	
 	<title>${pageTitle}</title>
 	
 	<spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
