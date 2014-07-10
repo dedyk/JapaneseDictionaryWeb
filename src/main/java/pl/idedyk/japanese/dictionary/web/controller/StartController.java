@@ -7,10 +7,12 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import pl.idedyk.japanese.dictionary.web.common.BreadcrumbGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.StartLoggerModel;
@@ -22,6 +24,9 @@ public class StartController {
 	
 	@Autowired
 	private LoggerSender loggerSender;
+	
+	@Autowired
+	private MessageSource messageSource;
 		
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
@@ -30,7 +35,10 @@ public class StartController {
 				
 		// logowanie
 		loggerSender.sendLog(new StartLoggerModel(Utils.createLoggerModelCommon(request)));
-				
+		
+		model.put("breadcrumb", BreadcrumbGenerator.createBreadcrumbList(messageSource, request.getContextPath(), StartController.class,
+				null, null));
+		
 		return "start";
 	}
 }

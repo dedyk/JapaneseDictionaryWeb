@@ -31,6 +31,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest.WordPlac
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+import pl.idedyk.japanese.dictionary.web.common.BreadcrumbGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.WordDictionarySearchModelValidator;
@@ -91,6 +92,8 @@ public class WordDictionaryController {
 		model.put("addableDictionaryEntryList", addableDictionaryEntryList);
 		model.put("command", wordDictionarySearchModel);
 		model.put("selectedMenu", "wordDictionary");
+		model.put("breadcrumb", BreadcrumbGenerator.createBreadcrumbList(messageSource, request.getContextPath(), WordDictionaryController.class,
+				null, null));
 		
 		return "wordDictionary";
 	}
@@ -140,6 +143,8 @@ public class WordDictionaryController {
 		model.put("selectedMenu", "wordDictionary");
 		model.put("findWordRequest", findWordRequest);
 		model.put("findWordResult", findWordResult);
+		model.put("breadcrumb", BreadcrumbGenerator.createBreadcrumbList(messageSource, request.getContextPath(), WordDictionaryController.class,
+				null, null));
 		
 		return "wordDictionary";
 	}

@@ -197,7 +197,18 @@
 			
 			<jdwt:startInfo />
 
-			<div id="content" class="col-md-12">			
+			<div id="content" class="col-md-12">
+			
+				<c:if test="${breadcrumb != null}">
+					<div style="margin-bottom: 20px">
+						<c:forEach items="${breadcrumb}" var="currentBreadcrumb" varStatus="varStatus">							
+							<a href="${currentBreadcrumb.url}">${currentBreadcrumb.text}</a>
+														
+							<c:if test="${varStatus.index != fn:length(breadcrumb) - 1}"> > </c:if>				
+						</c:forEach>
+					</div>
+				</c:if>
+						
 				<jsp:doBody />
 			</div>
 

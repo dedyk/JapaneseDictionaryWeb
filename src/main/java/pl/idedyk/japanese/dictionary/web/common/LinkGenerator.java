@@ -10,6 +10,13 @@ import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchMo
 
 public class LinkGenerator {
 
+	public static String generateWordDictionaryLink(String contextPath) {
+		
+		String linkTemplate = contextPath + "/wordDictionary";
+		
+		return linkTemplate;		
+	}
+	
 	public static String generateDictionaryEntryDetailsLink(String contextPath, DictionaryEntry dictionaryEntry, 
 			DictionaryEntryType forceDictionaryEntryType) {
 		
