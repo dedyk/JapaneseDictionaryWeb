@@ -300,7 +300,11 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		List<String> searchIn = new ArrayList<String>();
 		searchIn.add("KANJI");
-		
+		searchIn.add("KANA");
+		searchIn.add("ROMAJI");
+		searchIn.add("TRANSLATE");
+		searchIn.add("INFO");
+				
 		searchModel.setSearchIn(searchIn);
 		
 		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
