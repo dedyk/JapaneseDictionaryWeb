@@ -63,7 +63,7 @@ public class LinkGenerator {
 		//word place
 		String wordPlace = searchModel.getWordPlace();
 		
-		link.append("&wordPlace=");
+		link.append("&amp;wordPlace=");
 		
 		if (wordPlace != null) {
 			link.append(wordPlace);
@@ -74,7 +74,7 @@ public class LinkGenerator {
 		
 		if (searchIn != null && searchIn.size() > 0) {			
 			for (String currentSearchIn : searchIn) {
-				link.append("&searchIn=").append(currentSearchIn);
+				link.append("&amp;searchIn=").append(currentSearchIn);
 			}
 		}
 
@@ -83,7 +83,7 @@ public class LinkGenerator {
 		
 		if (dictionaryTypeStringList != null && dictionaryTypeStringList.size() > 0) {			
 			for (String currentDictionaryTypeString : dictionaryTypeStringList) {
-				link.append("&dictionaryTypeStringList=").append(currentDictionaryTypeString);
+				link.append("&amp;dictionaryTypeStringList=").append(currentDictionaryTypeString);
 			}
 		}		
 		
