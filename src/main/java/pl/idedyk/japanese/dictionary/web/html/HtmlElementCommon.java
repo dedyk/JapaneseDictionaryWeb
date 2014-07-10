@@ -128,16 +128,19 @@ public abstract class HtmlElementCommon implements IHtmlElement {
 				printWriter.print(currentAdditionalTagAttribute[0] + "=\"" + currentAdditionalTagAttribute[1] + "\" ");
 			}
 		}
-		
-		printWriter.println(">");
-		
+				
 		if (isSupportHtmlElementList() == true) {
+			
+			printWriter.println(">");
 			
 			for (IHtmlElement currentHtmlElement : htmlElementList) {
 				currentHtmlElement.render(out);
 			}
-		}
-		
-		printWriter.println("</" + getTagName() + ">");
+			
+			printWriter.println("</" + getTagName() + ">");
+			
+		} else {
+			printWriter.println("/>");
+		}		
 	}
 }

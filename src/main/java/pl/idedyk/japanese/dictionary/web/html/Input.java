@@ -34,7 +34,7 @@ public class Input extends HtmlElementCommon {
 
 	@Override
 	protected boolean isSupportHtmlElementList() {
-		return true;
+		return false;
 	}
 
 	@Override
