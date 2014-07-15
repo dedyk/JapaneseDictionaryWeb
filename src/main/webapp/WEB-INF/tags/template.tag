@@ -68,11 +68,12 @@
 	
 	<script src="<c:out value='${staticFilePrefix}' />/js/easeljs/easeljs-0.7.1.min.js"></script>
 
-<style>
-	body {
-		margin: 50px;
-	}
-</style>
+	<style>
+		body {
+			margin-top: 50px;
+			margin-bottom: 50px;
+		}
+	</style>
 
 	<spring:eval var="useGoogleAnalytics" expression="@applicationProperties.getProperty('use.google.analytics')" />
 	
@@ -195,8 +196,6 @@
 				</div>
 			</nav>
 			
-			<jdwt:startInfo />
-
 			<div id="content" class="col-md-12">			
 				<jsp:doBody />
 			</div>
@@ -222,9 +221,31 @@
 			</div>
 		</div>
 	</div>
-
+	
+	<section id="cookie-warn">
+		<strong><spring:message code="start.info.dialog.warning"/></strong>
+		<spring:message code="start.info.dialog.body"/>
+		<a href="javascript:void(0);" id="close-cookie-warn"><spring:message code="start.info.dialog.ok"/></a></p>
+	</section>
+	
 	<script>
 		$( "#nav" ).menu( {position: {at: "left bottom"}});		
+
+		$().ready(function() {
+			var sName = "testcookie";
+			$("#close-cookie-warn").click(function(){
+				var oExpire = new Date();
+				oExpire.setTime((new Date()).getTime() + 3600000*24*365);
+				document.cookie = sName + "=1;expires=" + oExpire;
+				$("#cookie-warn").hide("slow");
+			});
+		 
+			var sStr = '; '+ document.cookie +';';
+			var nIndex = sStr.indexOf('; '+ escape(sName) +'=');
+			if (nIndex === -1) {
+				$("#cookie-warn").show();
+			}
+		});			
 	</script>
 </body>
 </html>
