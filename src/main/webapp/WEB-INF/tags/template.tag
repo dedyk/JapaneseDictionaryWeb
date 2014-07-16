@@ -1,8 +1,7 @@
-<%@tag description="Overall Page template" pageEncoding="UTF-8"
-	trimDirectiveWhitespaces="true"%>
+<%@tag description="Overall Page template" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib prefix="jdwt" uri="/WEB-INF/japaneseDictionaryWebTags.tld" %>
+<%@taglib prefix="jdwt" uri="/WEB-INF/japaneseDictionaryWebTags.tld" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <%@attribute name="header" fragment="true"%>
@@ -225,26 +224,25 @@
 	<section id="cookie-warn">
 		<strong><spring:message code="start.info.dialog.warning"/></strong>
 		<spring:message code="start.info.dialog.body"/>
-		<a href="javascript:void(0);" id="close-cookie-warn"><spring:message code="start.info.dialog.ok"/></a></p>
+		<a href="javascript:void(0);" id="close-cookie-warn"> &nbsp; <spring:message code="start.info.dialog.ok"/></a></p>
 	</section>
 	
 	<script>
 		$( "#nav" ).menu( {position: {at: "left bottom"}});		
 
 		$().ready(function() {
-			var sName = "testcookie";
+			
 			$("#close-cookie-warn").click(function(){
-				var oExpire = new Date();
-				oExpire.setTime((new Date()).getTime() + 3600000*24*365);
-				document.cookie = sName + "=1;expires=" + oExpire;
 				$("#cookie-warn").hide("slow");
 			});
-		 
-			var sStr = '; '+ document.cookie +';';
-			var nIndex = sStr.indexOf('; '+ escape(sName) +'=');
-			if (nIndex === -1) {
+			
+			<c:if test="${sessionScope.showStartInfo == null}">
 				$("#cookie-warn").show();
-			}
+			</c:if>
+						
+			<%
+			session.setAttribute("showStartInfo", false);
+			%>			
 		});			
 	</script>
 </body>
