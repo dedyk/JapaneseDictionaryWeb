@@ -887,6 +887,12 @@ public class MySQLConnector {
 		return getGenericTextStat("select request_url, count(*) from generic_log where operation = 'PAGE_NO_FOUND_EXCEPTION' and "
 				+ "id >= ? and id <= ? group by request_url order by 2 desc, 1 desc", startId, endId);
 	}
+	
+	public List<GenericTextStat> getUserAgentClientStat(long startId, long endId) throws SQLException {
+		
+		return getGenericTextStat("select user_agent, count(*) from generic_log where "
+				+ "id >= ? and id <= ? group by user_agent order by 2 desc, 1 desc", startId, endId);
+	}
 
 	public List<RemoteClientStat> getRemoteClientStat(long startId, long endId) throws SQLException {
 		

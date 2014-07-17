@@ -223,6 +223,8 @@ public class WordDictionaryController {
 	public @ResponseBody String autocomplete(HttpServletRequest request, HttpSession session, @RequestParam(value="term", required=true) String term) {
 
 		logger.info("Podpowiadacz słówkowy dla wyrażenia: " + term);
+
+		term = term.trim();
 		
 		try {
 			List<String> wordAutocomplete = dictionaryManager.getWordAutocomplete(term, 5);

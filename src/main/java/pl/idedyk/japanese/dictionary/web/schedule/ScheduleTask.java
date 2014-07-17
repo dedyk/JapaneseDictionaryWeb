@@ -164,6 +164,11 @@ public class ScheduleTask {
 				
 				appendRemoteClientStat(reportDiv, "schedule.task.generate.daily.report.remote.client", remoteClientStat);
 				
+				// statystyki user agentow
+				List<GenericTextStat> userAgentClientStat = mySQLConnector.getUserAgentClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.user.agent.client", userAgentClientStat);
+				
 				// statystyki odnosnikow
 				List<GenericTextStat> refererStat = mySQLConnector.getRefererStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId(), baseServer);
 				

@@ -268,6 +268,8 @@ public class KanjiDictionaryController {
 	public @ResponseBody String autocomplete(HttpServletRequest request, HttpSession session, @RequestParam(value="term", required=true) String term) {
 
 		logger.info("Podpowiadacz słówkowy kanji dla wyrażenia: " + term);
+		
+		term = term.trim();
 
 		try {
 			List<String> kanjiAutocomplete = dictionaryManager.getKanjiAutocomplete(term, 5);
