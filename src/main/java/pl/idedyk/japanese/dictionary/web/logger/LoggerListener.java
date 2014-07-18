@@ -23,6 +23,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLog
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
+import pl.idedyk.japanese.dictionary.web.logger.model.MethodNotAllowedExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RobotsGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SitemapGenerateLoggerModel;
@@ -567,6 +568,9 @@ public class LoggerListener {
 		
 		} else if (PageNoFoundExceptionLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.PAGE_NO_FOUND_EXCEPTION;
+			
+		} else if (MethodNotAllowedExceptionLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.METHOD_NOT_ALLOWED_EXCEPTION;
 			
 		} else {
 			throw new RuntimeException("Nieznany klasa: " + clazz);
