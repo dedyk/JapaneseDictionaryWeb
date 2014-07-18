@@ -7,6 +7,10 @@
 
 <c:set var="pageTitle"> <spring:message code="error.page.title"/> </c:set>
 
+<%
+response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+%>
+
 <t:template pageTitle="${pageTitle}">
 
 	<jsp:body>
