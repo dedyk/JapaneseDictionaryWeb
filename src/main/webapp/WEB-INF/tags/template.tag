@@ -182,6 +182,9 @@
 								<li><a href="<c:out value='${pageContext.request.contextPath}' />/suggestion"><spring:message code="template.menu.suggestion"/></a></li>
 							</c:otherwise>
 						</c:choose>
+						
+						<spring:eval var="googlePlusPageId" expression="@applicationProperties.getProperty('google.plus.page.id')" />
+						<li><a href="https://plus.google.com/${googlePlusPageId}" target="_blank"><spring:message code="template.menu.blog"/></a></li>
 
 						<c:choose>
 							<c:when test="${selectedMenu == 'info'}">
@@ -205,9 +208,9 @@
 				<spring:eval var="appVersion" expression="@applicationProperties.getProperty('app.version')" />
 				<spring:message code="template.footer.app.version"/>&nbsp;${appVersion} <br/>
 				
-				<spring:eval var="googlePlusId" expression="@applicationProperties.getProperty('google.plus.id')" />
+				<spring:eval var="googlePlusAuthorId" expression="@applicationProperties.getProperty('google.plus.author.id')" />
 				
-				<spring:message code="template.footer.author"/>&nbsp;<a style="color: #777777" href="https://plus.google.com/${googlePlusId}?rel=author"><spring:message code="template.footer.author.name"/></a> <br/>
+				<spring:message code="template.footer.author"/>&nbsp;<a style="color: #777777" href="https://plus.google.com/${googlePlusAuthorId}?rel=author"><spring:message code="template.footer.author.name"/></a> <br/>
 								
 				<spring:message code="template.footer.android.version1"/>&nbsp;<a style="color: #777777" href="<spring:message code='template.footer.android.version.link'/>"><spring:message code="template.footer.android.version2"/></a> <br/> <br/>				
 				
