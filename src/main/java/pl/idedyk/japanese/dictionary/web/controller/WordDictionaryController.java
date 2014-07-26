@@ -265,22 +265,11 @@ public class WordDictionaryController {
 			
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
-			
-			String dictionaryEntryKanji = dictionaryEntry.getKanji();
-			List<String> dictionaryEntryKanaList = dictionaryEntry.getKanaList();
-			List<String> dictionaryEntryRomajiList = dictionaryEntry.getRomajiList();
+
+			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry);
 						
-			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title", 
-					new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
-							dictionaryEntryKanaList != null && dictionaryEntryKanaList.size() > 0 ? dictionaryEntryKanaList.get(0) : "-",
-							dictionaryEntryRomajiList != null && dictionaryEntryRomajiList.size() > 0 ? dictionaryEntryRomajiList.get(0) : "-",
-					}, Locale.getDefault());
-			
-			String pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription", 
-					new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
-							dictionaryEntryKanaList != null && dictionaryEntryKanaList.size() > 0 ? dictionaryEntryKanaList.get(0) : "-",
-							dictionaryEntryRomajiList != null && dictionaryEntryRomajiList.size() > 0 ? dictionaryEntryRomajiList.get(0) : "-",
-					}, Locale.getDefault());
+			String pageTitle = wordDictionaryDetailsTitleAndDescription[0];
+			String pageDescription = wordDictionaryDetailsTitleAndDescription[1];
 			
 			model.put("pageTitle", pageTitle);
 			model.put("pageDescription", pageDescription);
@@ -289,7 +278,7 @@ public class WordDictionaryController {
 			
 			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa: " + id + " / " + kanji + " / " + kana);
 			
-			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title", 
+			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji", 
 					new Object[] { "-", "-", "-" }, Locale.getDefault());
 			
 			model.put("pageTitle", pageTitle);
@@ -312,6 +301,49 @@ public class WordDictionaryController {
 		model.put("selectedMenu", "wordDictionary");
 		
 		return "wordDictionaryDetails";
+	}
+	
+	private String[] getWordDictionaryDetailsTitleAndDescription(DictionaryEntry dictionaryEntry) {
+		
+		String dictionaryEntryKanji = dictionaryEntry.getKanji();
+		List<String> dictionaryEntryKanaList = dictionaryEntry.getKanaList();
+		List<String> dictionaryEntryRomajiList = dictionaryEntry.getRomajiList();
+
+		boolean withKanji = dictionaryEntryKanji != null ? true : false;
+		
+		String pageTitle = null;
+		String pageDescription = null;
+		
+		if (withKanji == true) {
+			
+			pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji", 
+					new Object[] { dictionaryEntryKanji,
+							dictionaryEntryKanaList != null && dictionaryEntryKanaList.size() > 0 ? dictionaryEntryKanaList.get(0) : "-",
+							dictionaryEntryRomajiList != null && dictionaryEntryRomajiList.size() > 0 ? dictionaryEntryRomajiList.get(0) : "-",
+					}, Locale.getDefault());
+			
+			pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.with.kanji", 
+					new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
+							dictionaryEntryKanaList != null && dictionaryEntryKanaList.size() > 0 ? dictionaryEntryKanaList.get(0) : "-",
+							dictionaryEntryRomajiList != null && dictionaryEntryRomajiList.size() > 0 ? dictionaryEntryRomajiList.get(0) : "-",
+					}, Locale.getDefault());
+			
+		} else {
+			
+			pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.without.kanji", 
+					new Object[] { 
+							dictionaryEntryKanaList != null && dictionaryEntryKanaList.size() > 0 ? dictionaryEntryKanaList.get(0) : "-",
+							dictionaryEntryRomajiList != null && dictionaryEntryRomajiList.size() > 0 ? dictionaryEntryRomajiList.get(0) : "-",
+					}, Locale.getDefault());
+			
+			pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.without.kanji", 
+					new Object[] {
+							dictionaryEntryKanaList != null && dictionaryEntryKanaList.size() > 0 ? dictionaryEntryKanaList.get(0) : "-",
+							dictionaryEntryRomajiList != null && dictionaryEntryRomajiList.size() > 0 ? dictionaryEntryRomajiList.get(0) : "-",
+					}, Locale.getDefault());			
+		}
+		
+		return new String[] { pageTitle, pageDescription };		
 	}
 	
 	@RequestMapping(value = "/wordDictionaryCatalog/{page}", method = RequestMethod.GET)
