@@ -140,6 +140,7 @@ public class WordDictionaryController {
 		model.put("selectedMenu", "wordDictionary");
 		model.put("findWordRequest", findWordRequest);
 		model.put("findWordResult", findWordResult);
+		model.put("doNotShowSocialButtons", Boolean.TRUE);
 		
 		return "wordDictionary";
 	}

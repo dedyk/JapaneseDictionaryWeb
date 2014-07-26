@@ -109,42 +109,44 @@
 						<td style="width: 5%"><img src="${staticFilePrefix}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px" /></td>
 
 						<td style="font-size: 150%; width: 80%"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>
-
-						<td style="padding-right: 10px">
-							<!-- Google Plus -->
-							<div class="g-plusone" data-align="right" data-size="medium"></div>
-							
-							<!-- Umieść ten tag po ostatnim tagu widżetu przycisk +1. -->
-							<script type="text/javascript">
-							  window.___gcfg = {lang: 'pl'};
-							
-							  (function() {
-							    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-							    po.src = 'https://apis.google.com/js/platform.js';
-							    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-							  })();
-							</script>						
-						</td>
-						<td style="padding-right: 10px">
-							<!-- Facebook -->
-							<div id="fb-root"></div>
-							
-							<script>(function(d, s, id) {
-							  var js, fjs = d.getElementsByTagName(s)[0];
-							  if (d.getElementById(id)) return;
-							  js = d.createElement(s); js.id = id;
-							  js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.0";
-							  fjs.parentNode.insertBefore(js, fjs);
-							}(document, 'script', 'facebook-jssdk'));</script>
-							
-							<div class="fb-share-button" data-type="button_count"></div>						
-						</td>
-						<td>
-							<!-- Twitter -->
-						    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
-			
-			 				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>																
-						</td>					
+						
+						<c:if test="${doNotShowSocialButtons == null || doNotShowSocialButtons == false}">						
+							<td style="padding-right: 10px">
+								<!-- Google Plus -->
+								<div class="g-plusone" data-align="right" data-size="medium"></div>
+								
+								<!-- Umieść ten tag po ostatnim tagu widżetu przycisk +1. -->
+								<script type="text/javascript">
+								  window.___gcfg = {lang: 'pl'};
+								
+								  (function() {
+								    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+								    po.src = 'https://apis.google.com/js/platform.js';
+								    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+								  })();
+								</script>						
+							</td>
+							<td style="padding-right: 10px">
+								<!-- Facebook -->
+								<div id="fb-root"></div>
+								
+								<script>(function(d, s, id) {
+								  var js, fjs = d.getElementsByTagName(s)[0];
+								  if (d.getElementById(id)) return;
+								  js = d.createElement(s); js.id = id;
+								  js.src = "//connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v2.0";
+								  fjs.parentNode.insertBefore(js, fjs);
+								}(document, 'script', 'facebook-jssdk'));</script>
+								
+								<div class="fb-share-button" data-type="button_count"></div>						
+							</td>
+							<td>
+								<!-- Twitter -->
+							    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
+				
+				 				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>																
+							</td>	
+						</c:if>				
 					</tr>				
 				</table>
 

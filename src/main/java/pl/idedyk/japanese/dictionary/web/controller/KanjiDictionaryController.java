@@ -219,6 +219,7 @@ public class KanjiDictionaryController {
 		
 		model.put("findKanjiRequest", findKanjiRequest);
 		model.put("findKanjiResult", findKanjiResult);
+		model.put("doNotShowSocialButtons", Boolean.TRUE);
 		
 		return "kanjiDictionary";
 	}
@@ -485,6 +486,8 @@ public class KanjiDictionaryController {
 		model.put("kanjiDictionaryDetectErrorMessage", errorMessage);
 		model.put("findKanjiDetectResult", findKanjiDetectResult);
 		model.put("kanjiDictionaryDrawStroke", kanjiDictionaryDrawStroke);
+		
+		model.put("doNotShowSocialButtons", Boolean.TRUE);
 				
 		return "kanjiDictionary";
 	}
