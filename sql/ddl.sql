@@ -87,7 +87,7 @@ create table suggestion_send_log (
     generic_log_id int not null, index(generic_log_id),
     title text null,
     sender text null,
-    body text null
+    body mediumtext null
 ) default character set = utf8 collate = utf8_polish_ci;
 
 create table daily_log_processed_ids (
@@ -98,14 +98,14 @@ create table daily_report_log (
     id int not null auto_increment, primary key(id),
     generic_log_id int not null, index(generic_log_id),
     title text not null,
-    report text not null
+    report mediumtext not null
 ) default character set = utf8 collate = utf8_polish_ci;
 
 create table general_exception_log (
     id int not null auto_increment, primary key(id),
     generic_log_id int not null, index(generic_log_id),
     status_code int null,
-    exception text null
+    exception mediumtext null
 ) default character set = utf8 collate = utf8_polish_ci;
 
 create table queue (
