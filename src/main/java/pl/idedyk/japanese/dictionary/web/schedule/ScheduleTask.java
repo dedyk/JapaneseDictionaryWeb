@@ -62,7 +62,7 @@ public class ScheduleTask {
 	//@Scheduled(cron="0 * * * * ?") // co minute
 	@Scheduled(cron="0 0 20 * * ?") // o 20
 	public void generateDailyReport() {
-								
+										
 		logger.info("Generowanie dziennego raportu");
 								
 		// pobranie przedzialu wpisow
@@ -144,21 +144,41 @@ public class ScheduleTask {
 				
 				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.word.dictionary.no.found", wordDictionarySearchNoFoundStatList);
 				
+				// statystyki wyszukiwania slowek
+				List<GenericTextStat> wordDictionarySearchStat = mySQLConnector.getWordDictionarySearchStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.word.dictionary.search", wordDictionarySearchStat);
+				
 				// wyszukiwanie automatycznego uzupelniania slowek bez wynikow
 				List<GenericTextStat> wordDictionaryAutocompleteNoFoundStat = mySQLConnector.getWordDictionaryAutocompleteNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.word.dictionary.autocomplete.no.found", wordDictionaryAutocompleteNoFoundStat);
+								
+				// statystyki wyszukiwanie automatycznego uzupelniania slowek
+				List<GenericTextStat> wordDictionaryAutocompleteStat = mySQLConnector.getWordDictionaryAutocompleteStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.word.dictionary.autocomplete.search", wordDictionaryAutocompleteStat);
 				
 				// wyszukiwanie kanji bez wynikow				
 				List<GenericTextStat> kanjiDictionarySearchNoFoundStatList = mySQLConnector.getKanjiDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.kanji.dictionary.no.found", kanjiDictionarySearchNoFoundStatList);
 				
+				// statystyki wyszukiwania kanji
+				List<GenericTextStat> kanjiDictionarySearchStat = mySQLConnector.getKanjiDictionarySearchStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.kanji.dictionary.search", kanjiDictionarySearchStat);				
+				
 				// wyszukiwanie automatycznego uzupelniania kanji bez wynikow
 				List<GenericTextStat> kanjiDictionaryAutocompleteNoFoundStat = mySQLConnector.getKanjiDictionaryAutocompleteNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.kanji.dictionary.autocomplete.no.found", kanjiDictionaryAutocompleteNoFoundStat);
 
+				// statystyki wyszukiwanie automatycznego uzupelniania kanji
+				List<GenericTextStat> kanjiDictionaryAutocompleteStat = mySQLConnector.getKanjiDictionaryAutocompleteStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.kanji.dictionary.autocomplete.search", kanjiDictionaryAutocompleteStat);				
+				
 				// statystyki ilosci wywolan
 				List<RemoteClientStat> remoteClientStat = mySQLConnector.getRemoteClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				

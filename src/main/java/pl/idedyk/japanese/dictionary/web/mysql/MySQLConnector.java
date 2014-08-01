@@ -856,10 +856,22 @@ public class MySQLConnector {
 				+ "where find_word_result_result_size = 0 and generic_log_id >= ? and generic_log_id <= ? group by find_word_request_word order by 2 desc, 1", startId, endId);		
 	}
 	
+	public List<GenericTextStat> getWordDictionarySearchStat(long startId, long endId) throws SQLException {
+		
+		return getGenericTextStat("select find_word_request_word, count(*) from word_dictionary_search_log "
+				+ "where generic_log_id >= ? and generic_log_id <= ? group by find_word_request_word order by 2 desc, 1", startId, endId);		
+	}
+	
 	public List<GenericTextStat> getWordDictionaryAutocompleteNoFoundStat(long startId, long endId) throws SQLException {
 		
 		return getGenericTextStat("select term, count(*) from word_dictionary_autocomplete_log where found_elements = 0 "
 				+ "and generic_log_id >= ? and generic_log_id <= ? group by term order by 2 desc, 1 desc", startId, endId);
+	}
+	
+	public List<GenericTextStat> getWordDictionaryAutocompleteStat(long startId, long endId) throws SQLException {
+		
+		return getGenericTextStat("select term, count(*) from word_dictionary_autocomplete_log where "
+				+ "generic_log_id >= ? and generic_log_id <= ? group by term order by 2 desc, 1 desc", startId, endId);
 	}
 
 	public List<GenericTextStat> getKanjiDictionarySearchNoFoundStat(long startId, long endId) throws SQLException {
@@ -868,10 +880,22 @@ public class MySQLConnector {
 				+ "where find_kanji_result_result_size = 0 and generic_log_id >= ? and generic_log_id <= ? group by find_kanji_request_word order by 2 desc, 1", startId, endId);		
 	}
 	
+	public List<GenericTextStat> getKanjiDictionarySearchStat(long startId, long endId) throws SQLException {
+		
+		return getGenericTextStat("select find_kanji_request_word, count(*) from kanji_dictionary_search_log "
+				+ "where generic_log_id >= ? and generic_log_id <= ? group by find_kanji_request_word order by 2 desc, 1", startId, endId);		
+	}
+	
 	public List<GenericTextStat> getKanjiDictionaryAutocompleteNoFoundStat(long startId, long endId) throws SQLException {
 		
 		return getGenericTextStat("select term, count(*) from kanji_dictionary_autocomplete_log where found_elements = 0 "
 				+ "and generic_log_id >= ? and generic_log_id <= ? group by term order by 2 desc, 1 desc", startId, endId);
+	}
+	
+	public List<GenericTextStat> getKanjiDictionaryAutocompleteStat(long startId, long endId) throws SQLException {
+		
+		return getGenericTextStat("select term, count(*) from kanji_dictionary_autocomplete_log where "
+				+ "generic_log_id >= ? and generic_log_id <= ? group by term order by 2 desc, 1 desc", startId, endId);
 	}
 
 	public List<GenericTextStat> getRefererStat(long startId, long endId, String baseServer) throws SQLException {
