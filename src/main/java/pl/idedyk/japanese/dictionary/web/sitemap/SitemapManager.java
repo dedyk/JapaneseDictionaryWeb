@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.sitemap;
 
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -91,11 +92,11 @@ public class SitemapManager {
 		
 		// dodanie statycznych linkow
 		
-		urlList.add(createUrl(objectFactory, "", TChangeFreq.WEEKLY));
-		urlList.add(createUrl(objectFactory, "/wordDictionary", TChangeFreq.WEEKLY));
-		urlList.add(createUrl(objectFactory, "/kanjiDictionary", TChangeFreq.WEEKLY));
-		urlList.add(createUrl(objectFactory, "/suggestion", TChangeFreq.WEEKLY));
-		urlList.add(createUrl(objectFactory, "/info", TChangeFreq.WEEKLY));
+		urlList.add(createUrl(objectFactory, "", TChangeFreq.WEEKLY, BigDecimal.valueOf(1.0)));
+		urlList.add(createUrl(objectFactory, "/wordDictionary", TChangeFreq.WEEKLY, BigDecimal.valueOf(1.0)));
+		urlList.add(createUrl(objectFactory, "/kanjiDictionary", TChangeFreq.WEEKLY, BigDecimal.valueOf(1.0)));
+		urlList.add(createUrl(objectFactory, "/suggestion", TChangeFreq.WEEKLY, BigDecimal.valueOf(0.4)));
+		urlList.add(createUrl(objectFactory, "/info", TChangeFreq.WEEKLY, BigDecimal.valueOf(0.4)));
 				
 		// pobranie ilosci slow
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
@@ -109,7 +110,7 @@ public class SitemapManager {
 			String link = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, null);
 			
 			// dodanie linku			
-			urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY));
+			urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY, BigDecimal.valueOf(0.8)));
 		}
 		
 		// katalog slow
@@ -119,7 +120,7 @@ public class SitemapManager {
 			
 			String url = "/wordDictionaryCatalog/" + (pageNo + 1);
 			
-			urlList.add(createUrl(objectFactory, url, TChangeFreq.MONTHLY));
+			urlList.add(createUrl(objectFactory, url, TChangeFreq.MONTHLY, BigDecimal.valueOf(0.1)));
 		}
 		
 		// pobranie znakow kanji
@@ -131,7 +132,7 @@ public class SitemapManager {
 			String link = LinkGenerator.generateKanjiDetailsLink("", kanjiEntry);
 			
 			// dodanie linku			
-			urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY));			
+			urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY, BigDecimal.valueOf(0.6)));		
 		}
 		
 		// katalog znakow kanji
@@ -141,19 +142,20 @@ public class SitemapManager {
 			
 			String url = "/kanjiDictionaryCatalog/" + (pageNo + 1);
 						
-			urlList.add(createUrl(objectFactory, url, TChangeFreq.MONTHLY));
+			urlList.add(createUrl(objectFactory, url, TChangeFreq.MONTHLY, BigDecimal.valueOf(0.1)));
 		}
 		
 		logger.info("Generowanie pliku sitemap zakonczone");
 	}
 	
-	private TUrl createUrl(ObjectFactory objectFactory, String link, TChangeFreq changeFreq) {
+	private TUrl createUrl(ObjectFactory objectFactory, String link, TChangeFreq changeFreq, BigDecimal priority) {
 		
 		TUrl url = objectFactory.createTUrl();
 		
 		url.setLoc(link);
 		url.setLastmod(lastMod);
 		url.setChangefreq(changeFreq);
+		url.setPriority(priority);
 		
 		return url;
 	}
