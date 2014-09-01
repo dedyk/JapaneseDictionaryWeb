@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.FaviconIconSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
@@ -38,6 +39,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLogger
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.mail.MailSender;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
@@ -458,6 +460,28 @@ public class LoggerListener {
 				throw new RuntimeException(e);
 			}
 			
+		} else if (operation == GenericLogOperationEnum.ADMIN_REQUEST) { 
+			
+			AdminLoggerModel adminLoggerModel = (AdminLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			AdminRequestLog adminRequestLog = new AdminRequestLog();
+			
+			adminRequestLog.setGenericLogId(genericLog.getId());
+
+			adminRequestLog.setType(adminLoggerModel.getType().toString());
+			adminRequestLog.setResult(adminLoggerModel.getResult().toString());
+			adminRequestLog.setParams(adminLoggerModel.getParams().toString());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertAdminRequestLog(adminRequestLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+		
 		} else if (operation == GenericLogOperationEnum.GENERAL_EXCEPTION) {
 			
 			GeneralExceptionLoggerModel generalExceptionLoggerModel = (GeneralExceptionLoggerModel)loggerModelCommon;
@@ -571,6 +595,9 @@ public class LoggerListener {
 			
 		} else if (MethodNotAllowedExceptionLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.METHOD_NOT_ALLOWED_EXCEPTION;
+		
+		} else if (AdminLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.ADMIN_REQUEST;
 			
 		} else {
 			throw new RuntimeException("Nieznany klasa: " + clazz);

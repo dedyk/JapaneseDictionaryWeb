@@ -19,6 +19,7 @@ import javax.annotation.PreDestroy;
 
 import org.apache.log4j.Logger;
 
+import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
@@ -613,7 +614,7 @@ public class MySQLConnector {
 			}			
 		}		
 	}
-	
+		
 	public void insertSuggestionSendLoggerModel(SuggestionSendLog suggestionSendLog) throws SQLException {
 		
 		Connection connection = null;
@@ -1033,6 +1034,51 @@ public class MySQLConnector {
 				resultSet.close();
 			}
 						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public void insertAdminRequestLog(AdminRequestLog adminRequestLog) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into admin_request_log(generic_log_id, type, result, params) "
+					+ "values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, adminRequestLog.getGenericLogId());
+			preparedStatement.setString(2, adminRequestLog.getType());
+			preparedStatement.setString(3, adminRequestLog.getResult());
+			preparedStatement.setString(4, adminRequestLog.getParams());
+						
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			adminRequestLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
 			if (preparedStatement != null) {
 				preparedStatement.close();
 			}
