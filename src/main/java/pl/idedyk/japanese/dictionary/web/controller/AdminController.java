@@ -62,6 +62,8 @@ public class AdminController {
     		adminLoggerModel.setResult(AdminLoggerModel.Result.INCORRECT_PASSWORD);    		
     		adminLoggerModel.addParam("incorrect_password", password);
     		
+    		logger.error("Niepoprawne haslo");
+    		
     		// logowanie
     		loggerSender.sendLog(adminLoggerModel);
     	}    	
