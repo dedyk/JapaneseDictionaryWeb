@@ -63,6 +63,10 @@ public class WordDictionarySearchModelValidator implements Validator {
 			if (searchIn.size() == 0) {
 				errors.rejectValue("searchIn", "wordDictionary.validation.wordDictionarySearchModel.searchIn.null");
 				
+			} else if (searchIn.size() == 1 && Utils.isOnlyCommonWordsSearchIn(searchIn.get(0)) == true) { 
+				
+				errors.rejectValue("searchIn", "wordDictionary.validation.wordDictionarySearchModel.searchIn.onlyCommonWords");
+			
 			} else {
 				
 				for (String currentSearchIn : searchIn) {
@@ -77,7 +81,8 @@ public class WordDictionarySearchModelValidator implements Validator {
 							Utils.isKanaSearchIn(currentSearchIn) == false &&
 							Utils.isRomajiSearchIn(currentSearchIn) == false &&
 							Utils.isTranslateSearchIn(currentSearchIn) == false &&
-							Utils.isInfoSearchIn(currentSearchIn) == false) {
+							Utils.isInfoSearchIn(currentSearchIn) == false &&
+							Utils.isOnlyCommonWordsSearchIn(currentSearchIn) == false) {
 						
 						errors.rejectValue("searchIn", "wordDictionary.validation.wordDictionarySearchModel.searchIn.illegalArgument");
 						

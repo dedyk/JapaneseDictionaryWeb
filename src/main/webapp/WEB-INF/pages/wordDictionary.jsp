@@ -13,6 +13,7 @@
 <c:set var="wordPlaceAnyPlace"> <spring:message code="wordDictionary.page.label.wordPlace.anyPlace"/> </c:set>
 <c:set var="wordPlaceExact"> <spring:message code="wordDictionary.page.label.wordPlace.exact"/> </c:set>
 
+<c:set var="searchInOnlyCommonWords"> <spring:message code="wordDictionary.page.label.searchIn.onlyCommonWords"/> </c:set>
 <c:set var="searchInKanji"> <spring:message code="wordDictionary.page.label.searchIn.kanji"/> </c:set>
 <c:set var="searchInKana"> <spring:message code="wordDictionary.page.label.searchIn.kana"/> </c:set>
 <c:set var="searchInRomaji"> <spring:message code="wordDictionary.page.label.searchIn.romaji"/> </c:set>
@@ -61,6 +62,7 @@
 					<td><form:label path=""><spring:message code="wordDictionary.page.label.searchIn"/></form:label></td>
 					<td>
 						<form:select id="searchInId" path="searchIn" multiple="true" data-selected-text-format="count">
+							<form:option value="COMMON_WORDS" label="${searchInOnlyCommonWords}" />
 							<form:option value="KANJI" label="${searchInKanji}" />
 							<form:option value="KANA" label="${searchInKana}" />
 							<form:option value="ROMAJI" label="${searchInRomaji}" />
@@ -80,13 +82,6 @@
 						</form:select>
 					</td>				
 				</tr>				
-
-				<tr>
-					<td><form:label path="" cssStyle="margin: 0px 10px 20px 0px"><spring:message code="wordDictionary.page.label.searchOnlyCommonWords"/></form:label></td>
-					<td>
-						<form:checkbox cssStyle="margin: 0px 10px 20px 0px" id="searchOnlyCommonWord" path="searchOnlyCommonWords" />								
-					</td>				
-				</tr>
 						
 				<tr>
 					<td></td>

@@ -14,9 +14,7 @@ public class WordDictionarySearchModel {
 	private List<String> searchIn;
 		
 	private List<String> dictionaryTypeStringList;
-	
-	private boolean searchOnlyCommonWords;
-	
+		
 	public String getWord() {
 		return word;
 	}
@@ -39,14 +37,6 @@ public class WordDictionarySearchModel {
 
 	public void setSearchIn(List<String> searchIn) {
 		this.searchIn = searchIn;
-	}
-
-	public boolean isSearchOnlyCommonWords() {
-		return searchOnlyCommonWords;
-	}
-
-	public void setSearchOnlyCommonWords(boolean searchOnlyCommonWords) {
-		this.searchOnlyCommonWords = searchOnlyCommonWords;
 	}
 
 	public List<String> getDictionaryTypeStringList() {

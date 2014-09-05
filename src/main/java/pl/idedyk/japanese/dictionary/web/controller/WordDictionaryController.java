@@ -198,11 +198,12 @@ public class WordDictionaryController {
 			if (Utils.isInfoSearchIn(currentSearch) == true) {
 				findWordRequest.searchInfo = true;
 			}
+			
+			if (Utils.isOnlyCommonWordsSearchIn(currentSearch) == true) {
+				findWordRequest.searchOnlyCommonWord = true;
+			}
 		}
-		
-		// search only common word
-		findWordRequest.searchOnlyCommonWord = searchModel.isSearchOnlyCommonWords();
-				
+						
 		// dictionaryEntryList
 		List<String> dictionaryTypeStringList = searchModel.getDictionaryTypeStringList();
 				

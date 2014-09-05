@@ -94,6 +94,19 @@ public class Utils {
 		return false;
 	}
 	
+	public static boolean isOnlyCommonWordsSearchIn(String searchIn) {
+		
+		if (searchIn == null) {
+			return false;
+		}
+		
+		if (searchIn.equals("COMMON_WORDS") == true) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public static Integer parseInteger(String text) {
 		
 		if (text == null) {
