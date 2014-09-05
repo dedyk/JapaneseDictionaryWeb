@@ -148,6 +148,8 @@ public class LoggerListener {
 			wordDictionarySearchLog.setFindWordRequestTranslate(wordDictionarySearchLoggerModel.getFindWordRequest().searchTranslate);
 			wordDictionarySearchLog.setFindWordRequestInfo(wordDictionarySearchLoggerModel.getFindWordRequest().searchInfo);
 			
+			wordDictionarySearchLog.setFindWordRequestOnlyCommonWords(wordDictionarySearchLoggerModel.getFindWordRequest().searchOnlyCommonWord);
+			
 			wordDictionarySearchLog.setFindWordRequestWordPlace(wordDictionarySearchLoggerModel.getFindWordRequest().wordPlaceSearch.toString());
 			
 			List<DictionaryEntryType> dictionaryEntryTypeList = wordDictionarySearchLoggerModel.getFindWordRequest().dictionaryEntryTypeList;

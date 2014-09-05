@@ -69,7 +69,7 @@
 						</form:select>
 					</td>				
 				</tr>
-				
+								
 				<tr>
 					<td><form:label path="" cssStyle="margin: 0px 10px 0px 0px"><spring:message code="wordDictionary.page.label.dictionaryType"/></form:label></td>
 					<td>
@@ -80,6 +80,13 @@
 						</form:select>
 					</td>				
 				</tr>				
+
+				<tr>
+					<td><form:label path="" cssStyle="margin: 0px 10px 20px 0px"><spring:message code="wordDictionary.page.label.searchOnlyCommonWords"/></form:label></td>
+					<td>
+						<form:checkbox cssStyle="margin: 0px 10px 20px 0px" id="searchOnlyCommonWord" path="searchOnlyCommonWords" />								
+					</td>				
+				</tr>
 						
 				<tr>
 					<td></td>

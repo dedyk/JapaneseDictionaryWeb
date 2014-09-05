@@ -85,7 +85,11 @@ public class LinkGenerator {
 			for (String currentDictionaryTypeString : dictionaryTypeStringList) {
 				link.append("&amp;dictionaryTypeStringList=").append(currentDictionaryTypeString);
 			}
-		}		
+		}	
+		
+		if (searchModel.isSearchOnlyCommonWords() == true) {
+			link.append("&amp;searchOnlyCommonWords=").append(true);
+		}
 		
 		return link.toString();
 	}

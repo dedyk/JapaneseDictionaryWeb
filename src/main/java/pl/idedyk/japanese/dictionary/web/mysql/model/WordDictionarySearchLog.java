@@ -14,6 +14,8 @@ public class WordDictionarySearchLog {
 	private Boolean findWordRequestTranslate;
 	private Boolean findWordRequestInfo;
 	
+	private Boolean findWordRequestOnlyCommonWords;
+	
 	private String findWordRequestWordPlace;
 
 	private String findWordRequestDictionaryEntryTypeList;
@@ -82,6 +84,14 @@ public class WordDictionarySearchLog {
 
 	public void setFindWordRequestInfo(Boolean findWordRequestInfo) {
 		this.findWordRequestInfo = findWordRequestInfo;
+	}
+
+	public Boolean getFindWordRequestOnlyCommonWords() {
+		return findWordRequestOnlyCommonWords;
+	}
+
+	public void setFindWordRequestOnlyCommonWords(Boolean findWordRequestOnlyCommonWords) {
+		this.findWordRequestOnlyCommonWords = findWordRequestOnlyCommonWords;
 	}
 
 	public String getFindWordRequestWordPlace() {

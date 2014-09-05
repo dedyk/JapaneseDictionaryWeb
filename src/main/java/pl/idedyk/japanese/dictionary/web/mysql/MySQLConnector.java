@@ -194,9 +194,9 @@ public class MySQLConnector {
 			connection = connectionPool.getConnection();
 			
 			preparedStatement = connection.prepareStatement( "insert into word_dictionary_search_log(generic_log_id, find_word_request_word, find_word_request_search_kanji, "
-					+ "find_word_request_search_kana, find_word_request_search_romaji, find_word_request_search_translate, find_word_request_search_info, find_word_request_word_place, "
-					+ "find_word_request_dictionary_entry_type_list, find_word_result_result_size) "
-					+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					+ "find_word_request_search_kana, find_word_request_search_romaji, find_word_request_search_translate, find_word_request_search_info, find_word_request_search_only_common_words, "
+					+ "find_word_request_word_place, find_word_request_dictionary_entry_type_list, find_word_result_result_size) "
+					+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			preparedStatement.setLong(1, wordDictionarySearchLog.getGenericLogId());
 			
@@ -208,11 +208,13 @@ public class MySQLConnector {
 			preparedStatement.setBoolean(6, wordDictionarySearchLog.getFindWordRequestTranslate());
 			preparedStatement.setBoolean(7, wordDictionarySearchLog.getFindWordRequestInfo());
 			
-			preparedStatement.setString(8, wordDictionarySearchLog.getFindWordRequestWordPlace());
+			preparedStatement.setBoolean(8, wordDictionarySearchLog.getFindWordRequestOnlyCommonWords());
 			
-			preparedStatement.setString(9, wordDictionarySearchLog.getFindWordRequestDictionaryEntryTypeList());
+			preparedStatement.setString(9, wordDictionarySearchLog.getFindWordRequestWordPlace());
 			
-			preparedStatement.setInt(10, wordDictionarySearchLog.getFindWordResultResultSize());
+			preparedStatement.setString(10, wordDictionarySearchLog.getFindWordRequestDictionaryEntryTypeList());
+			
+			preparedStatement.setInt(11, wordDictionarySearchLog.getFindWordResultResultSize());
 			
 			preparedStatement.executeUpdate();
 			

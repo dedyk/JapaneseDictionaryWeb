@@ -1,0 +1,1 @@
+alter table word_dictionary_search_log add find_word_request_search_only_common_words boolean null after find_word_request_search_info;

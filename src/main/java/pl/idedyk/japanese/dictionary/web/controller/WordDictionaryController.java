@@ -200,6 +200,9 @@ public class WordDictionaryController {
 			}
 		}
 		
+		// search only common word
+		findWordRequest.searchOnlyCommonWord = searchModel.isSearchOnlyCommonWords();
+				
 		// dictionaryEntryList
 		List<String> dictionaryTypeStringList = searchModel.getDictionaryTypeStringList();
 				

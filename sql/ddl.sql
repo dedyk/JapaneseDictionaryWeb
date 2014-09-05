@@ -26,6 +26,7 @@ create table word_dictionary_search_log (
     find_word_request_search_romaji boolean null,
     find_word_request_search_translate boolean null,
     find_word_request_search_info boolean null,
+    find_word_request_search_only_common_words boolean null,
     find_word_request_word_place varchar(20) null,
     find_word_request_dictionary_entry_type_list text null,
     find_word_result_result_size int null
