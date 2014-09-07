@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
@@ -106,11 +107,45 @@ public class SitemapManager {
 			// pobranie slowka
 			DictionaryEntry currentDictionaryEntry = dictionaryManager.getDictionaryEntryById(currentDictionaryEntryIdx);
 			
-			// wygenerowanie linku
+			// wygenerowanie linku standardowego
 			String link = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, null);
 			
 			// dodanie linku			
 			urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY, BigDecimal.valueOf(0.8)));
+			
+			// pobranie listy typow
+			List<DictionaryEntryType> dictionaryEntryTypeList = currentDictionaryEntry.getDictionaryEntryTypeList();
+			
+			if (dictionaryEntryTypeList != null) {
+				
+				int addableDictionaryEntryTypeInfoCounter = 0;
+
+				for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
+
+					boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
+
+					if (addableDictionaryEntryTypeInfo == true) {
+						addableDictionaryEntryTypeInfoCounter++;
+					}
+				}
+				
+				if (addableDictionaryEntryTypeInfoCounter > 1) { // jesli wiecej niz jeden
+					
+					for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
+
+						boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
+
+						if (addableDictionaryEntryTypeInfo == true) {
+							
+							// wygenerowanie linku z typem
+							String linkWithType = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, currentDictionaryEntryType);
+							
+							// dodanie linku z typem
+							urlList.add(createUrl(objectFactory, linkWithType, TChangeFreq.WEEKLY, BigDecimal.valueOf(0.7)));							
+						}
+					}					
+				}				
+			}
 		}
 		
 		// katalog slow
