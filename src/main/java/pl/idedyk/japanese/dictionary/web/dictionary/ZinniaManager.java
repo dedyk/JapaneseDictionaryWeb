@@ -13,7 +13,7 @@ import org.xdump.android.zinnia.Zinnia;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 
 // INFO: FreeBSD: obejscie problemu (jesli wystepuje) z libzinniajni.so: Undefined symbol "zinnia_recognizer_new"
-// export LD_PRELOAD=/[sciezka-do-pliku: libzinnia.so
+// export LD_LIBRARY_PATH=/katalog_do_pliku libzinnia.so
 
 @Service
 public class ZinniaManager {
