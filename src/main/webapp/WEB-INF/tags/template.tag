@@ -102,6 +102,8 @@
 
 		<div class="row">
 
+			<div class="alert alert-info" id="command.errors"><spring:message code="template.general.info"/></div>
+
 			<div class="row header" style="margin-bottom: 30px;">
 
 				<table style="width: 100%">
@@ -151,7 +153,7 @@
 				</table>
 
 			</div>
-
+			
  			<nav class="navbar navbar-default">
 				<div class="navbar-header">
 					<a href="<c:out value='${pageContext.request.contextPath}' />/" class="navbar-brand"><spring:message code="template.title.short.polish"/></a>
