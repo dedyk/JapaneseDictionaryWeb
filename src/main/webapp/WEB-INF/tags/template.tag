@@ -101,8 +101,8 @@
 	<div class="container">
 
 		<div class="row">
-
-			<div class="alert alert-info" id="command.errors"><spring:message code="template.general.info"/></div>
+			
+<%-- 		<div class="alert alert-info" id="command.errors"><spring:message code="template.general.info"/></div> --%>
 
 			<div class="row header" style="margin-bottom: 30px;">
 

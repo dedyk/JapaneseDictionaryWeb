@@ -48,7 +48,8 @@ public class RobotsController {
 		robotsBody.append("Disallow: /kanjiDictionaryDetectSearch\n");
 		
 		robotsBody.append("Disallow: /suggestion/sendSuggestion\n\n");
-
+		
+		/*
 		robotsBody.append("User-agent: Googlebot\n");
 		
 		robotsBody.append("Disallow: /wordDictionary/autocomplete\n");
@@ -62,6 +63,7 @@ public class RobotsController {
 		
 		robotsBody.append("Disallow: /wordDictionaryCatalog\n");
 		robotsBody.append("Disallow: /kanjiDictionaryCatalog\n\n");
+		*/
 		
 		robotsBody.append("Sitemap: " + baseServer + request.getContextPath() + "/sitemap.xml\n");
 		
