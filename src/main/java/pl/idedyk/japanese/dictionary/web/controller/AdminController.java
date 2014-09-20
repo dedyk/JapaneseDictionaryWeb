@@ -2,17 +2,23 @@ package pl.idedyk.japanese.dictionary.web.controller;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
@@ -31,8 +37,45 @@ public class AdminController {
 	private ScheduleTask scheduleTask;
 	
 	@Autowired
+	private MessageSource messageSource;
+	
+	@Autowired
 	private LoggerSender loggerSender;
 
+	@RequestMapping(value = "/admlogin", method = RequestMethod.GET)
+	public String login(
+		@RequestParam(value = "error", required = false) String error,
+		HttpServletRequest request, HttpSession session, Map<String, Object> model) {
+ 
+		int fixme = 1;
+		// logowanie, start, poprawne logowanie, niepoprawne logowanie
+		// strona 403: Access is denied
+				
+		if (error != null) {			
+			String errorMessage = messageSource.getMessage("admin.login.page.login.error", new Object[] { }, Locale.getDefault());
+						
+			model.put("errorMessage", errorMessage);
+		}
+		
+		return "admlogin";
+	}
+	
+	@RequestMapping(value = "/admAccessDenied", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.FORBIDDEN)
+	public String handleForbidden(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
+
+		logger.error("Brak dostępu do strony: " + Utils.getRequestURL(request));
+		
+		// wysylanie do logger'a
+		int fixme = 1;
+		
+		//PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+		
+		//loggerSender.sendLog(pageNoFoundExceptionLoggerModel);
+
+		return "page403";
+	}
+	
     @RequestMapping(value = "/adm/generateDailyReport", method = RequestMethod.GET)
     public void generateDailyReport(HttpServletRequest request, HttpSession session, Writer writer,
     		@RequestParam(value="p", required = false) String password /* haslo */) throws IOException {

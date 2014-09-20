@@ -6,20 +6,20 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-<!--  	    login-page="/login" 
-		    default-target-url="/welcome" 
-			authentication-failure-url="/login?error" 
--->
-
- 
 	<http auto-config="true">        	
 		<intercept-url pattern="/adm/**" access="ROLE_ADMIN" />
 		
 		<form-login 
+			login-page="/admlogin" 
+		    default-target-url="/adm" 
+			authentication-failure-url="/admlogin?error" 
+		
 			username-parameter="username"
 			password-parameter="password" />
 			
-		<logout logout-success-url="/login?logout" />
+		<logout logout-success-url="/" />
+		
+		<access-denied-handler error-page="/admAccessDenied"/>
 	</http> 
  
 	<authentication-manager>
