@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
 import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask;
 
 @Controller
@@ -46,15 +47,20 @@ public class AdminController {
 	public String login(
 		@RequestParam(value = "error", required = false) String error,
 		HttpServletRequest request, HttpSession session, Map<String, Object> model) {
- 
-		int fixme = 1;
-		// logowanie, start, poprawne logowanie, niepoprawne logowanie
-		// strona 403: Access is denied
-				
+ 				
 		if (error != null) {			
 			String errorMessage = messageSource.getMessage("admin.login.page.login.error", new Object[] { }, Locale.getDefault());
 						
 			model.put("errorMessage", errorMessage);
+			
+		} else {
+	    	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
+	    	
+	    	adminLoggerModel.setType(AdminLoggerModel.Type.ADMIN_LOGIN_START);
+	    	adminLoggerModel.setResult(Result.OK);
+			
+    		// logowanie
+    		loggerSender.sendLog(adminLoggerModel);
 		}
 		
 		return "admlogin";
@@ -63,18 +69,22 @@ public class AdminController {
 	@RequestMapping(value = "/admAccessDenied", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.FORBIDDEN)
 	public String handleForbidden(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
-
-		logger.error("Brak dostępu do strony: " + Utils.getRequestURL(request));
-		
-		// wysylanie do logger'a
-		int fixme = 1;
-		
-		//PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
-		
-		//loggerSender.sendLog(pageNoFoundExceptionLoggerModel);
-
 		return "page403";
 	}
+	
+    @RequestMapping(value = "/adm/panel", method = RequestMethod.GET)
+    public String generateDailyReport(HttpServletRequest request, HttpSession session, Writer writer) throws IOException {
+    	    	
+    	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
+    	
+    	adminLoggerModel.setType(AdminLoggerModel.Type.ADMIN_PANEL);
+    	adminLoggerModel.setResult(Result.OK);
+		
+		// logowanie
+		loggerSender.sendLog(adminLoggerModel);
+    	
+    	return "admpanel";
+    }
 	
     @RequestMapping(value = "/adm/generateDailyReport", method = RequestMethod.GET)
     public void generateDailyReport(HttpServletRequest request, HttpSession session, Writer writer,
@@ -102,10 +112,10 @@ public class AdminController {
     		
     	} else { // niepoprawne haslo
     		
-    		adminLoggerModel.setResult(AdminLoggerModel.Result.INCORRECT_PASSWORD);    		
+    		adminLoggerModel.setResult(AdminLoggerModel.Result.ERROR);    		
     		adminLoggerModel.addParam("incorrect_password", password);
     		
-    		logger.error("Niepoprawne haslo");
+    		logger.error("Niepoprawne hasło");
     		
     		// logowanie
     		loggerSender.sendLog(adminLoggerModel);

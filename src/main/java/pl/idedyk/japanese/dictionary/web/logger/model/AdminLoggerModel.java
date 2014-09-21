@@ -51,6 +51,16 @@ public class AdminLoggerModel extends LoggerModelCommon {
 	
 	public static enum Type {
 		
+		ADMIN_LOGIN_START,
+		
+		ADMIN_LOGIN_FAILURE,
+		
+		ADMIN_LOGIN_SUCCESS,
+		
+		ADMIN_ACCESS_ERROR,
+		
+		ADMIN_PANEL,
+		
 		GENERATE_DAILY_REPORT;
 		
 	}
@@ -59,6 +69,6 @@ public class AdminLoggerModel extends LoggerModelCommon {
 		
 		OK,
 		
-		INCORRECT_PASSWORD;		
+		ERROR;		
 	}	
 }

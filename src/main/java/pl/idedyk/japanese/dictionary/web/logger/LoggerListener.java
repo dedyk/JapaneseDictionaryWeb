@@ -466,6 +466,8 @@ public class LoggerListener {
 			
 			AdminLoggerModel adminLoggerModel = (AdminLoggerModel)loggerModelCommon;
 			
+			logger.info("Typ operacji: " + adminLoggerModel.getType() + ", resultat: " + adminLoggerModel.getResult() + ", parametry: " + adminLoggerModel.getParams());
+			
 			// utworzenie wpisu do bazy danych
 			AdminRequestLog adminRequestLog = new AdminRequestLog();
 			

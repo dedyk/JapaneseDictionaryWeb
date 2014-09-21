@@ -11,23 +11,21 @@
 		
 		<form-login 
 			login-page="/admlogin" 
-		    default-target-url="/adm" 
-			authentication-failure-url="/admlogin?error" 
+		    default-target-url="/adm/panel" 
 		
 			username-parameter="username"
-			password-parameter="password" />
+			password-parameter="password"
+			
+			authentication-failure-handler-ref="authenticationService"
+			authentication-success-handler-ref="authenticationService" />
 			
 		<logout logout-success-url="/" />
 		
-		<access-denied-handler error-page="/admAccessDenied"/>
+		<access-denied-handler ref="authenticationService"/>
 	</http> 
  
 	<authentication-manager>
-		<authentication-provider>
-		  <user-service>
-			<user name="test" password="test" authorities="ROLE_ADMIN2" />
-		  </user-service>
-		</authentication-provider>
+		<authentication-provider ref="authenticationService" />
 	</authentication-manager>
  
 </beans:beans>
