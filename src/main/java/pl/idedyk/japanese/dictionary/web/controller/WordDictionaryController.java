@@ -399,7 +399,7 @@ public class WordDictionaryController {
 		model.put("findWordResult", findWordResult);
 		model.put("pageNo", pageNo);
 		model.put("lastPageNo", lastPageNo);
-		model.put("metaRobots", "noindex, follow");
+		//model.put("metaRobots", "noindex, follow");
 		
 		return "wordDictionaryCatalog";
 	}
