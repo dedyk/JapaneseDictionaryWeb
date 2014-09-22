@@ -30,7 +30,7 @@ public class GenericLogItemTableRowTag extends TagSupport {
 	private GenericLog genericLog;
 	
 	private MessageSource messageSource;
-		
+	
 	@Override
 	public int doStartTag() throws JspException {
 		

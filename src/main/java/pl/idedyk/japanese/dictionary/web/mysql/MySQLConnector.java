@@ -197,7 +197,7 @@ public class MySQLConnector {
 			preparedStatement = connection.prepareStatement( "select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
 					+ "from generic_log order by id desc limit ?,?");
 			
-			preparedStatement.setLong(1, startPos);
+			preparedStatement.setLong(1, startPos * size);
 			preparedStatement.setLong(2, size);
 			
 			resultSet = preparedStatement.executeQuery();

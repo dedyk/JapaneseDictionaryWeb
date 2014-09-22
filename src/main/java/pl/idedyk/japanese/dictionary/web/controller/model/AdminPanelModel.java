@@ -2,13 +2,13 @@ package pl.idedyk.japanese.dictionary.web.controller.model;
 
 public class AdminPanelModel {
 	
-	private long pageNo = 1;
+	private String pageNo = "1";
 
-	public long getPageNo() {
+	public String getPageNo() {
 		return pageNo;
 	}
 
-	public void setPageNo(long pageNo) {
+	public void setPageNo(String pageNo) {
 		this.pageNo = pageNo;
 	}	
 }

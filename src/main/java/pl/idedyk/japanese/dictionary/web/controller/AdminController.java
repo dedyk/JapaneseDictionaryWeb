@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.AdminPanelModel;
+import pl.idedyk.japanese.dictionary.web.controller.validator.AdminPanelModelValidator;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
@@ -52,6 +58,14 @@ public class AdminController {
 	
 	@Autowired
 	private LoggerSender loggerSender;
+	
+	@Autowired  
+	private AdminPanelModelValidator adminPanelModelValidator;
+	
+	@InitBinder(value = { "command" })
+	private void initBinder(WebDataBinder binder) {  
+		binder.setValidator(adminPanelModelValidator);  
+	}
 
 	@RequestMapping(value = "/admlogin", method = RequestMethod.GET)
 	public String login(
@@ -83,32 +97,49 @@ public class AdminController {
 	}
 	
     @RequestMapping(value = "/adm/panel", method = RequestMethod.GET)
-    public String generateDailyReport(HttpServletRequest request, HttpSession session, Writer writer, Map<String, Object> model) throws IOException, SQLException {
-    	    	
-    	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
-    	
-    	adminLoggerModel.setType(AdminLoggerModel.Type.ADMIN_PANEL);
-    	adminLoggerModel.setResult(Result.OK);
-		
-		// logowanie
-		loggerSender.sendLog(adminLoggerModel);
-		
+    public String showPanel(HttpServletRequest request, HttpSession session, Writer writer, Map<String, Object> model) throws IOException, SQLException {
+    			
 		// stworzenie modelu
 		AdminPanelModel adminPanelModel = new AdminPanelModel();
 		
-		// pobranie ilosci operacji
-		long genericLogSize = mySQLConnector.getGenericLogSize();
-		
-		// pobranie listy operacji
-		List<GenericLog> genericLogList = mySQLConnector.getGenericLogList(adminPanelModel.getPageNo() - 1, GENERIC_LOG_SIZE);
-		
-		model.put("command", adminPanelModel);
-		model.put("maxPageSize", (genericLogSize / GENERIC_LOG_SIZE) + (genericLogSize % GENERIC_LOG_SIZE > 1 ? 1 : 0));
-		model.put("genericLogList", genericLogList);
+		fillModelForPanel(adminPanelModel, model, true);
     	
     	return "admpanel";
     }
-	
+    
+    private void fillModelForPanel(AdminPanelModel adminPanelModel, Map<String, Object> model, boolean validationResult) throws SQLException {
+
+		// pobranie ilosci operacji
+		long genericLogSize = mySQLConnector.getGenericLogSize();
+    	
+    	model.put("command", adminPanelModel);
+    	model.put("maxPageSize", (genericLogSize / GENERIC_LOG_SIZE) + (genericLogSize % GENERIC_LOG_SIZE > 1 ? 1 : 0));
+    	
+    	if (validationResult == true) {
+    		
+    		// pobranie listy operacji
+    		List<GenericLog> genericLogList = mySQLConnector.getGenericLogList(Long.parseLong(adminPanelModel.getPageNo()) - 1, GENERIC_LOG_SIZE);    		
+    		
+    		model.put("genericLogList", genericLogList);    		
+    	}		
+    }
+
+    @RequestMapping(value = "/adm/panelSearch", method = RequestMethod.GET)
+    public String searchPanel(HttpServletRequest request, HttpSession session, Writer writer, @ModelAttribute("command") @Valid AdminPanelModel adminPanelModel,
+			BindingResult result, Map<String, Object> model) throws IOException, SQLException {
+    	
+    	if (result.hasErrors() == true) {
+    		    		
+    		fillModelForPanel(adminPanelModel, model, false);
+    		
+    		return "admpanel";
+    	}
+    	
+    	fillModelForPanel(adminPanelModel, model, true);
+    	    	
+    	return "admpanel";
+    }
+    
     @RequestMapping(value = "/adm/generateDailyReport", method = RequestMethod.GET)
     public void generateDailyReport(HttpServletRequest request, HttpSession session, Writer writer,
     		@RequestParam(value="p", required = false) String password /* haslo */) throws IOException {
