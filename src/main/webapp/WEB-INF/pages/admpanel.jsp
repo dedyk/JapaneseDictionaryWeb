@@ -16,7 +16,7 @@
 
 	<jsp:body>
 
-		<form:form method="get" action="${pageContext.request.contextPath}/adm/panelSearch">
+		<form:form method="get" id="panelSearchId" action="${pageContext.request.contextPath}/adm/panelSearch">
 		
 			<fieldset>
 				<legend><spring:message code="admin.panel.search.title" /></legend>			
@@ -27,7 +27,7 @@
 			<table>				
 				<tr>
 					<td><form:label path="pageNo" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="admin.panel.search.pageNo"/></form:label></td>
-					<td><form:input cssClass="form-control" cssStyle="margin: 0px 10px 10px 0px" id="word" path="pageNo"/></td>
+					<td><form:input cssClass="form-control" cssStyle="margin: 0px 10px 10px 0px" id="pageNoId" path="pageNo"/></td>
 					<td><label style="margin: 0px 0px 10px 10px"><spring:message code="admin.panel.search.pageNoFrom" arguments="${maxPageSize}"/></label>					
 				</tr>
 
@@ -83,6 +83,23 @@
 			<hr id="genericLogListHrId" style="margin-bottom: 10px" />
 		
 			<p class="text-left"><h4><spring:message code="admin.panel.genericlog.title" /></h4></p>
+
+			<div class="col-md-12" style="text-align: right; margin: 0px 0px 20px 0px ">			
+				<c:if test="${currentPage != null}">				
+					<c:if test="${currentPage != 1}">
+						<a href="#" class="btn btn-default" onclick="setPageNo(1)"><spring:message code="admin.panel.search.button.first" /></a>
+					</c:if>
+
+					<c:if test="${currentPage > 1}">
+						<a href="#" class="btn btn-default" onclick="setPageNo(${currentPage - 1})"><spring:message code="admin.panel.search.button.previous" /></a>
+					</c:if>
+					
+					<c:if test="${currentPage < maxPageSize}">
+						<a href="#" class="btn btn-default" onclick="setPageNo(${currentPage + 1})"><spring:message code="admin.panel.search.button.next" /></a>
+						<a href="#" class="btn btn-default" onclick="setPageNo(${maxPageSize})"><spring:message code="admin.panel.search.button.last" /></a>
+					</c:if>										
+				</c:if>							
+			</div>
 		
 			<table id="genericLogListResult" class="table table-striped" style="font-size: 120%;">
 				<thead>
@@ -102,9 +119,25 @@
  						<jdwt:genericLogItemTableRowTag
 							genericLog="${currentResult}" />
 					</c:forEach>
-				</tfood>
-				
+				</tfood>				
 			</table>
+			
+			<div class="col-md-12" style="text-align: right">			
+				<c:if test="${currentPage != null}">				
+					<c:if test="${currentPage != 1}">
+						<a href="#" class="btn btn-default" onclick="setPageNo(1)"><spring:message code="admin.panel.search.button.first" /></a>
+					</c:if>
+
+					<c:if test="${currentPage > 1}">
+						<a href="#" class="btn btn-default" onclick="setPageNo(${currentPage - 1})"><spring:message code="admin.panel.search.button.previous" /></a>
+					</c:if>
+					
+					<c:if test="${currentPage < maxPageSize}">
+						<a href="#" class="btn btn-default" onclick="setPageNo(${currentPage + 1})"><spring:message code="admin.panel.search.button.next" /></a>
+						<a href="#" class="btn btn-default" onclick="setPageNo(${maxPageSize})"><spring:message code="admin.panel.search.button.last" /></a>
+					</c:if>										
+				</c:if>							
+			</div>
 			
 			<script>
 				$(document).ready(function() {
@@ -119,6 +152,12 @@
 						"bPaginate": false
 					});
 				});
+
+				function setPageNo(pageNo) {
+					$( "#pageNoId" ).val(pageNo);
+
+					$( "#panelSearchId").submit();				
+				}
 			</script>
 		</c:if>
 		

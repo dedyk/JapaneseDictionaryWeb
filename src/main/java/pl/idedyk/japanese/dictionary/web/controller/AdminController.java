@@ -113,14 +113,16 @@ public class AdminController {
 		long genericLogSize = mySQLConnector.getGenericLogSize();
     	
     	model.put("command", adminPanelModel);
-    	model.put("maxPageSize", (genericLogSize / GENERIC_LOG_SIZE) + (genericLogSize % GENERIC_LOG_SIZE > 1 ? 1 : 0));
+    	model.put("maxPageSize", (genericLogSize / GENERIC_LOG_SIZE) + (genericLogSize % GENERIC_LOG_SIZE > 0 ? 1 : 0));
     	
     	if (validationResult == true) {
     		
     		// pobranie listy operacji
     		List<GenericLog> genericLogList = mySQLConnector.getGenericLogList(Long.parseLong(adminPanelModel.getPageNo()) - 1, GENERIC_LOG_SIZE);    		
     		
-    		model.put("genericLogList", genericLogList);    		
+    		model.put("genericLogList", genericLogList);
+    		
+    		model.put("currentPage", adminPanelModel.getPageNo());
     	}		
     }
 
