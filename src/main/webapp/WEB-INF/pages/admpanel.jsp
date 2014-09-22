@@ -8,11 +8,75 @@
 
 <c:set var="pageTitle"> <spring:message code="admin.panel" /> </c:set>
 
+<c:set var="search"> <spring:message code="admin.panel.search.button"/> </c:set>
+
 <c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
 
 <t:admTemplate pageTitle="${pageTitle}">
 
 	<jsp:body>
+
+		<form:form method="get" action="${pageContext.request.contextPath}/adm/panelSearch">
+		
+			<fieldset>
+				<legend><spring:message code="admin.panel.search.title" /></legend>			
+			</fieldset>
+			
+			<form:errors cssClass="alert alert-danger" path="*" element="div" />		
+			
+			<table>				
+				<tr>
+					<td><form:label path="pageNo" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="admin.panel.search.pageNo"/></form:label></td>
+					<td><form:input cssClass="form-control" cssStyle="margin: 0px 10px 10px 0px" id="word" path="pageNo"/></td>
+					<td><label style="margin: 0px 0px 10px 10px"><spring:message code="admin.panel.search.pageNoFrom" arguments="${maxPageSize}"/></label>					
+				</tr>
+
+				<tr>
+					<td></td>
+					<td>
+						<input class="btn btn-default btn-lg" id="searchButton" type="submit" value="${search}" />					
+					</td>				
+				</tr>
+				
+<%-- 				<tr>
+					<td><form:label path="wordPlace"><spring:message code="wordDictionary.page.label.wordPlace"/></form:label></td>
+					<td>
+						<form:select id="wordPlaceId" path="wordPlace">
+							<form:option value="START_WITH" label="${wordPlaceStartWith}" />
+							<form:option value="ANY_PLACE" label="${wordPlaceAnyPlace}" />
+							<form:option value="EXACT" label="${wordPlaceExact}" />
+						</form:select>						
+					</td>
+				</tr>
+				
+				<tr>
+					<td><form:label path=""><spring:message code="wordDictionary.page.label.searchIn"/></form:label></td>
+					<td>
+						<form:select id="searchInId" path="searchIn" multiple="true" data-selected-text-format="count">
+							<form:option value="COMMON_WORDS" label="${searchInOnlyCommonWords}" />
+							<form:option value="KANJI" label="${searchInKanji}" />
+							<form:option value="KANA" label="${searchInKana}" />
+							<form:option value="ROMAJI" label="${searchInRomaji}" />
+							<form:option value="TRANSLATE" label="${searchInTranslate}" />
+							<form:option value="INFO" label="${searchInInfo}" />
+						</form:select>
+					</td>				
+				</tr>
+								
+				<tr>
+					<td><form:label path="" cssStyle="margin: 0px 10px 0px 0px"><spring:message code="wordDictionary.page.label.dictionaryType"/></form:label></td>
+					<td>
+						<form:select id="dictionaryTypeListId" path="dictionaryTypeStringList" multiple="true" data-selected-text-format="count">
+							<c:forEach items="${addableDictionaryEntryList}" var="currentAddableDictionaryEntry">
+								<form:option value="${currentAddableDictionaryEntry}" label="${currentAddableDictionaryEntry.name}" />
+							</c:forEach>								
+						</form:select>
+					</td>				
+				</tr>				
+						
+				--%>			
+			</table>
+		</form:form>	
 	
 		<c:if test="${genericLogList != null}">
 			
