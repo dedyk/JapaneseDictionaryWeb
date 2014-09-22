@@ -73,4 +73,14 @@
 		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.HandleException</tagclass>
 		<info>Lapanie bledow z JSP</info>
 	</tag>
+	<tag>
+		<name>genericLogItemTableRowTag</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.GenericLogItemTableRowTag</tagclass>
+		<info>Generuje wiersz tabeli z wynikiem logow</info>
+		<attribute>
+			<name>genericLog</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>	
 </taglib> 

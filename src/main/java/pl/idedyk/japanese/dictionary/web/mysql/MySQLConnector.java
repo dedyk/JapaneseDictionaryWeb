@@ -138,6 +138,112 @@ public class MySQLConnector {
 		}		
 	}
 	
+	public long getGenericLogSize() throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "select count(*) from generic_log");
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.next() == false) {
+				throw new RuntimeException();
+			}
+			
+			Long result = resultSet.getLong(1);
+			
+			if (result == null) {
+				throw new RuntimeException();
+			}
+						
+			return result;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public List<GenericLog> getGenericLogList(long startPos, int size) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		try {
+			List<GenericLog> result = new ArrayList<GenericLog>();
+			
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
+					+ "from generic_log order by id desc limit ?,?");
+			
+			preparedStatement.setLong(1, startPos);
+			preparedStatement.setLong(2, size);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {
+				
+				GenericLog genericLog = createGenericLogFromResultSet(resultSet);
+								
+				result.add(genericLog);
+			}
+			
+			return result;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	private GenericLog createGenericLogFromResultSet(ResultSet resultSet) throws SQLException {
+		
+		GenericLog genericLog = new GenericLog();
+		
+		genericLog.setId(resultSet.getLong("id"));
+		genericLog.setTimestamp(resultSet.getTimestamp("timestamp"));
+		genericLog.setSessionId(resultSet.getString("session_id"));
+		genericLog.setUserAgent(resultSet.getString("user_agent"));
+		genericLog.setRequestURL(resultSet.getString("request_url"));
+		genericLog.setRefererURL(resultSet.getString("referer_url"));
+		genericLog.setRemoteIp(resultSet.getString("remote_ip"));
+		genericLog.setRemoteHost(resultSet.getString("remote_host"));
+		genericLog.setOperation(GenericLogOperationEnum.valueOf(resultSet.getString("operation")));
+		
+		return genericLog;
+	}
+	
 	public void insertWordDictionaryAutocompleteLog(WordDictionaryAutocompleteLog wordDictionaryAutocompleteLog) throws SQLException {
 
 		Connection connection = null;

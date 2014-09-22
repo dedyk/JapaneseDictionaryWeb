@@ -2,6 +2,8 @@ package pl.idedyk.japanese.dictionary.web.controller;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -21,21 +23,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.controller.model.AdminPanelModel;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
+import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask;
 
 @Controller
 public class AdminController {
 	
 	private static final Logger logger = Logger.getLogger(AdminController.class);
+	
+	private static final int GENERIC_LOG_SIZE = 50;
 
 	@Value("${admin.password}")
 	private String adminPassword;
 	
 	@Autowired
 	private ScheduleTask scheduleTask;
+	
+	@Autowired
+	private MySQLConnector mySQLConnector;
 	
 	@Autowired
 	private MessageSource messageSource;
@@ -73,7 +83,7 @@ public class AdminController {
 	}
 	
     @RequestMapping(value = "/adm/panel", method = RequestMethod.GET)
-    public String generateDailyReport(HttpServletRequest request, HttpSession session, Writer writer) throws IOException {
+    public String generateDailyReport(HttpServletRequest request, HttpSession session, Writer writer, Map<String, Object> model) throws IOException, SQLException {
     	    	
     	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
     	
@@ -82,6 +92,19 @@ public class AdminController {
 		
 		// logowanie
 		loggerSender.sendLog(adminLoggerModel);
+		
+		// stworzenie modelu
+		AdminPanelModel adminPanelModel = new AdminPanelModel();
+		
+		// pobranie ilosci operacji
+		long genericLogSize = mySQLConnector.getGenericLogSize();
+		
+		// pobranie listy operacji
+		List<GenericLog> genericLogList = mySQLConnector.getGenericLogList(adminPanelModel.getPageNo() - 1, GENERIC_LOG_SIZE);
+		
+		model.put("command", adminPanelModel);
+		model.put("maxPageSize", (genericLogSize / GENERIC_LOG_SIZE) + (genericLogSize % GENERIC_LOG_SIZE > 1 ? 1 : 0));
+		model.put("genericLogList", genericLogList);
     	
     	return "admpanel";
     }
