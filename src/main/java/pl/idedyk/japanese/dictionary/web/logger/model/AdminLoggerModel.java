@@ -59,6 +59,8 @@ public class AdminLoggerModel extends LoggerModelCommon {
 		
 		ADMIN_ACCESS_ERROR,
 		
+		ADMIN_LOGOUT_SUCCESS,
+		
 		ADMIN_PANEL,
 		
 		GENERATE_DAILY_REPORT;

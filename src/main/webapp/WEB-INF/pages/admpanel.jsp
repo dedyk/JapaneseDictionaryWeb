@@ -7,11 +7,11 @@
 
 <c:set var="pageTitle"> <spring:message code="admin.panel" /> </c:set>
 
-<t:template pageTitle="${pageTitle}">
+<t:admTemplate pageTitle="${pageTitle}">
 
 	<jsp:body>
 	
 		ADMIN PANEL
 			
 	</jsp:body>
-</t:template>
+</t:admTemplate>

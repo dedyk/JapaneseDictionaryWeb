@@ -19,7 +19,7 @@
 			authentication-failure-handler-ref="authenticationService"
 			authentication-success-handler-ref="authenticationService" />
 			
-		<logout logout-success-url="/" />
+		<logout success-handler-ref="authenticationService" />
 		
 		<access-denied-handler ref="authenticationService"/>
 	</http> 

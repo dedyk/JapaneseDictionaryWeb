@@ -22,6 +22,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import pl.idedyk.japanese.dictionary.web.common.Utils;
@@ -30,7 +31,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
 
 @Component
-public class AuthenticationService implements AuthenticationProvider, AuthenticationSuccessHandler, AuthenticationFailureHandler, AccessDeniedHandler {
+public class AuthenticationService implements AuthenticationProvider, AuthenticationSuccessHandler, AuthenticationFailureHandler, AccessDeniedHandler, LogoutSuccessHandler {
 
 	private static final Logger logger = Logger.getLogger(AuthenticationService.class);
 	
@@ -104,6 +105,24 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
 			
 			throw badCredentialsException;			
 		}		
+	}
+	
+	@Override
+	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+			throws IOException, ServletException {
+		
+		logger.info("Wylogowano z panelu administratora");
+	
+    	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
+    	
+    	adminLoggerModel.setType(AdminLoggerModel.Type.ADMIN_LOGOUT_SUCCESS);
+    	adminLoggerModel.setResult(Result.OK);
+		    	
+		// logowanie
+		loggerSender.sendLog(adminLoggerModel);
+
+		// przekierowanie na strone glowna
+		response.sendRedirect(request.getContextPath() + "/");
 	}
 	
 	@Override
