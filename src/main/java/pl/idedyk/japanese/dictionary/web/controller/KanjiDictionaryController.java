@@ -643,7 +643,7 @@ public class KanjiDictionaryController {
 		model.put("findKanjiResult", findKanjiResult);
 		model.put("pageNo", pageNo);
 		model.put("lastPageNo", lastPageNo);
-		model.put("metaRobots", "noindex, follow");
+		//model.put("metaRobots", "noindex, follow");
 				
 		return "kanjiDictionaryCatalog";
 	}
