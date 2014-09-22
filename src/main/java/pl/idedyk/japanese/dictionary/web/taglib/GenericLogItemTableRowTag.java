@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -18,6 +19,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.html.A;
+import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
@@ -55,7 +57,25 @@ public class GenericLogItemTableRowTag extends TagSupport {
 
             // operation
             addColumn(tr, genericLog.getOperation().toString());
-
+            
+            // request url
+            String requestUrl = genericLog.getRequestURL();
+            
+            if (requestUrl == null) {
+            	addColumn(tr, requestUrl);
+            	
+            } else {
+            	requestUrl = URLDecoder.decode(requestUrl, "UTF8");            	
+            	
+            	String shortRequestUrl = requestUrl.substring(0, requestUrl.length() > 150 ? 150 : requestUrl.length());
+            	
+            	A link = new A();
+            	
+            	link.setHref(requestUrl);
+            	link.addHtmlElement(new Text(shortRequestUrl));            	
+            	
+            	addColumn(tr, link);
+            }
             
             // remote ip
             addColumn(tr, genericLog.getRemoteIp());
@@ -158,6 +178,14 @@ public class GenericLogItemTableRowTag extends TagSupport {
         tr.addHtmlElement(td);
         
         td.addHtmlElement(new Text(value));		
+	}
+	
+	private void addColumn(Tr tr, IHtmlElement htmlElementValue) {
+				
+        Td td = new Td();
+        tr.addHtmlElement(td);
+        
+        td.addHtmlElement(htmlElementValue);		
 	}
 
 	public GenericLog getGenericLog() {
