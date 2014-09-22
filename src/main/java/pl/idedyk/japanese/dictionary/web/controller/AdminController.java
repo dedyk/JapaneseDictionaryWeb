@@ -98,11 +98,21 @@ public class AdminController {
 	
     @RequestMapping(value = "/adm/panel", method = RequestMethod.GET)
     public String showPanel(HttpServletRequest request, HttpSession session, Writer writer, Map<String, Object> model) throws IOException, SQLException {
-    			
+    	    	
 		// stworzenie modelu
 		AdminPanelModel adminPanelModel = new AdminPanelModel();
 		
 		fillModelForPanel(adminPanelModel, model, true);
+		
+    	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
+    	
+    	adminLoggerModel.setType(AdminLoggerModel.Type.ADMIN_PANEL);
+    	adminLoggerModel.setResult(Result.OK);
+    	
+    	adminLoggerModel.addParam("pageNo", adminPanelModel.getPageNo());
+		
+		// logowanie
+		loggerSender.sendLog(adminLoggerModel);
     	
     	return "admpanel";
     }
@@ -130,14 +140,29 @@ public class AdminController {
     public String searchPanel(HttpServletRequest request, HttpSession session, Writer writer, @ModelAttribute("command") @Valid AdminPanelModel adminPanelModel,
 			BindingResult result, Map<String, Object> model) throws IOException, SQLException {
     	
+    	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
+    	
+    	adminLoggerModel.setType(AdminLoggerModel.Type.ADMIN_PANEL_SEARCH);
+		    	
     	if (result.hasErrors() == true) {
     		    		
     		fillModelForPanel(adminPanelModel, model, false);
     		
-    		return "admpanel";
+    		adminLoggerModel.setResult(Result.ERROR);
+    		
+    		adminLoggerModel.addParam("pageNo", adminPanelModel.getPageNo());
+    		
+    	} else {
+    		
+    		fillModelForPanel(adminPanelModel, model, true);
+    		
+    		adminLoggerModel.setResult(Result.OK);
+    		
+    		adminLoggerModel.addParam("pageNo", adminPanelModel.getPageNo());    		
     	}
     	
-    	fillModelForPanel(adminPanelModel, model, true);
+		// logowanie
+		loggerSender.sendLog(adminLoggerModel);    	
     	    	
     	return "admpanel";
     }
