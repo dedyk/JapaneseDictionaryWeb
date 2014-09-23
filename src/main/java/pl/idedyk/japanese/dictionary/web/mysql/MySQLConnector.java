@@ -953,6 +953,59 @@ public class MySQLConnector {
 		}		
 	}
 	
+	public DailyReportSendLog getDailyReportSendLogByGenericId(Long genericId) throws SQLException {
+
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, title, report "
+					+ "from daily_report_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createDailyReportSendLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}	
+
+	private DailyReportSendLog createDailyReportSendLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		DailyReportSendLog dailyReportSendLog = new DailyReportSendLog();
+
+		dailyReportSendLog.setId(resultSet.getLong("id"));
+		dailyReportSendLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		dailyReportSendLog.setTitle(resultSet.getString("title"));
+		dailyReportSendLog.setReport(resultSet.getString("report"));
+
+		return dailyReportSendLog;
+	}
+	
 	public void insertGeneralExceptionLog(GeneralExceptionLog generalExceptionLog) throws SQLException {
 		
 		Connection connection = null;

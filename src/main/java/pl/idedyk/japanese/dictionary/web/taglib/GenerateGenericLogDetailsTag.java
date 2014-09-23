@@ -18,9 +18,11 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke.Point;
 import pl.idedyk.japanese.dictionary.web.html.A;
+import pl.idedyk.japanese.dictionary.web.html.B;
 import pl.idedyk.japanese.dictionary.web.html.Canvas;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
+import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Label;
 import pl.idedyk.japanese.dictionary.web.html.Pre;
@@ -30,6 +32,7 @@ import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
+import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
@@ -211,7 +214,43 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		
 		GenericLogOperationEnum operation = genericLog.getOperation();
 		
-		if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETECT) {
+		/*
+		+-----------------------------------+
+		| admin_request_log                 |
+		| general_exception_log             |
+		| kanji_dictionary_autocomplete_log |
+		| kanji_dictionary_catalog_log      |
+		| kanji_dictionary_details_log      |
+		| kanji_dictionary_detect_log       |
+		| kanji_dictionary_radicals_log     |
+		| kanji_dictionary_search_log       |
+		| suggestion_send_log               |
+		| word_dictionary_autocomplete_log  |
+		| word_dictionary_catalog_log       |
+		| word_dictionary_details_log       |
+		| word_dictionary_search_log        |
+		+-----------------------------------+
+		*/
+		
+		if (operation == GenericLogOperationEnum.DAILY_REPORT) {
+			
+			DailyReportSendLog dailyReportSendLog = mySQLConnector.getDailyReportSendLogByGenericId(genericLog.getId());
+			
+			if (dailyReportSendLog == null) {
+				return null;
+			}
+			
+			B titleB = new B();
+			titleB.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.dailyReportSendLog.title")));
+			panelBody.addHtmlElement(titleB);
+						
+			panelBody.addHtmlElement(new Text(dailyReportSendLog.getTitle()));
+			
+			panelBody.addHtmlElement(new Hr());			
+
+			panelBody.addHtmlElement(new Text(dailyReportSendLog.getReport()));
+			
+		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETECT) {
 			
 			KanjiDictionaryDetectLog kanjiDictionaryDetectLog = mySQLConnector.getKanjiDictionaryDetectLogByGenericId(genericLog.getId());
 			
