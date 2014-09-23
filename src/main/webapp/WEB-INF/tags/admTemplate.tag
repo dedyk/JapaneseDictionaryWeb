@@ -102,8 +102,6 @@
 
 		<div class="row">
 			
-<%-- 		<div class="alert alert-info" id="command.errors"><spring:message code="template.general.info"/></div> --%>
-
 			<div class="row header" style="margin-bottom: 30px;">
 
 				<table style="width: 100%">
@@ -122,15 +120,17 @@
 				</div>
 				<div id="navbarCollapse" class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
-						<%-- 
+
 						<c:choose>
-							<c:when test="${selectedMenu == 'wordDictionary'}">
-								<li class="active"><a href="<c:out value='${pageContext.request.contextPath}' />/wordDictionary"><spring:message code="template.menu.dictionary"/></a></li>
+							<c:when test="${selectedMenu == 'panel'}">
+								<li class="active"><a href="<c:out value='${pageContext.request.contextPath}' />/adm/panel"><spring:message code="admTemplate.menu.panel"/></a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="<c:out value='${pageContext.request.contextPath}' />/wordDictionary"><spring:message code="template.menu.dictionary"/></a></li>
+								<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/panel"><spring:message code="admTemplate.menu.panel"/></a></li>
 							</c:otherwise>
 						</c:choose>
+
+						<%-- 
 
 						<c:choose>
 							<c:when test="${selectedMenu == 'kanjiDictionary'}">

@@ -122,7 +122,7 @@ public class AdminController {
 		
 		// logowanie
 		loggerSender.sendLog(adminLoggerModel);
-    	
+		
     	return "admpanel";
     }
     
@@ -131,6 +131,8 @@ public class AdminController {
 		// pobranie ilosci operacji
 		long genericLogSize = mySQLConnector.getGenericLogSize(adminPanelModel.getGenericLogOperationStringList());
     	
+		model.put("selectedMenu", "panel");
+		
     	model.put("command", adminPanelModel);
     	model.put("maxPageSize", (genericLogSize / GENERIC_LOG_SIZE) + (genericLogSize % GENERIC_LOG_SIZE > 0 ? 1 : 0));
     	
@@ -199,6 +201,8 @@ public class AdminController {
 		
     	// tworzenie modelu
 		model.put("genericLog", genericLog);
+		
+		model.put("selectedMenu", "panel");
 		
 		return "admShowGenericLogDetails";
 	}
