@@ -138,7 +138,7 @@ public class MySQLConnector {
 		}		
 	}
 	
-	public long getGenericLogSize() throws SQLException {
+	public long getGenericLogSize(List<String> genericLogOperationStringList) throws SQLException {
 		
 		Connection connection = null;
 		
@@ -146,10 +146,33 @@ public class MySQLConnector {
 		
 		ResultSet resultSet = null;
 		
+		if (genericLogOperationStringList == null || genericLogOperationStringList.size() == 0) {
+			return 0;
+		}
+		
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "select count(*) from generic_log");
+			StringBuffer sql = new StringBuffer();
+			
+			sql.append("select count(*) from generic_log where operation in (");
+			
+			for (int idxGenericLogOperationStringList = 0; idxGenericLogOperationStringList < genericLogOperationStringList.size(); ++idxGenericLogOperationStringList) {
+				
+				sql.append(" ? ");
+				
+				if (idxGenericLogOperationStringList != genericLogOperationStringList.size() - 1) {
+					sql.append(" , ");
+				}
+			}
+			
+			sql.append(" ) ");
+			
+			preparedStatement = connection.prepareStatement(sql.toString());
+			
+			for (int idxGenericLogOperationStringList = 0; idxGenericLogOperationStringList < genericLogOperationStringList.size(); ++idxGenericLogOperationStringList) {
+				preparedStatement.setString(idxGenericLogOperationStringList + 1, genericLogOperationStringList.get(idxGenericLogOperationStringList));
+			}
 			
 			resultSet = preparedStatement.executeQuery();
 			
@@ -181,7 +204,7 @@ public class MySQLConnector {
 		}		
 	}
 	
-	public List<GenericLog> getGenericLogList(long startPos, int size) throws SQLException {
+	public List<GenericLog> getGenericLogList(long startPos, int size, List<String> genericLogOperationStringList) throws SQLException {
 		
 		Connection connection = null;
 		
@@ -189,16 +212,40 @@ public class MySQLConnector {
 		
 		ResultSet resultSet = null;
 		
-		try {
-			List<GenericLog> result = new ArrayList<GenericLog>();
-			
+		List<GenericLog> result = new ArrayList<GenericLog>();
+		
+		if (genericLogOperationStringList == null || genericLogOperationStringList.size() == 0) {
+			return result;
+		}
+		
+		try {						
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
-					+ "from generic_log order by id desc limit ?,?");
+			StringBuffer sql = new StringBuffer();
 			
-			preparedStatement.setLong(1, startPos * size);
-			preparedStatement.setLong(2, size);
+			sql.append("select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
+					+ "from generic_log where operation in ( ");
+			
+			for (int idxGenericLogOperationStringList = 0; idxGenericLogOperationStringList < genericLogOperationStringList.size(); ++idxGenericLogOperationStringList) {
+				
+				sql.append(" ? ");
+				
+				if (idxGenericLogOperationStringList != genericLogOperationStringList.size() - 1) {
+					sql.append(" , ");
+				}
+			}
+			
+			sql.append(" ) order by id desc limit ?, ?");
+			
+			preparedStatement = connection.prepareStatement(sql.toString());
+						
+			for (int idxGenericLogOperationStringList = 0; idxGenericLogOperationStringList < genericLogOperationStringList.size(); ++idxGenericLogOperationStringList) {
+				preparedStatement.setString(idxGenericLogOperationStringList + 1, genericLogOperationStringList.get(idxGenericLogOperationStringList));
+			}
+			
+			preparedStatement.setLong(genericLogOperationStringList.size() + 1, startPos * size);
+			preparedStatement.setLong(genericLogOperationStringList.size() + 2, size);
+
 			
 			resultSet = preparedStatement.executeQuery();
 			

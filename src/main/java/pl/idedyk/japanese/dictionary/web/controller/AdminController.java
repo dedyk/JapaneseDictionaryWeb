@@ -129,7 +129,7 @@ public class AdminController {
     private void fillModelForPanel(AdminPanelModel adminPanelModel, Map<String, Object> model, boolean validationResult) throws SQLException {
 
 		// pobranie ilosci operacji
-		long genericLogSize = mySQLConnector.getGenericLogSize();
+		long genericLogSize = mySQLConnector.getGenericLogSize(adminPanelModel.getGenericLogOperationStringList());
     	
     	model.put("command", adminPanelModel);
     	model.put("maxPageSize", (genericLogSize / GENERIC_LOG_SIZE) + (genericLogSize % GENERIC_LOG_SIZE > 0 ? 1 : 0));
@@ -139,7 +139,7 @@ public class AdminController {
     	if (validationResult == true) {
     		
     		// pobranie listy operacji
-    		List<GenericLog> genericLogList = mySQLConnector.getGenericLogList(Long.parseLong(adminPanelModel.getPageNo()) - 1, GENERIC_LOG_SIZE);    		
+    		List<GenericLog> genericLogList = mySQLConnector.getGenericLogList(Long.parseLong(adminPanelModel.getPageNo()) - 1, GENERIC_LOG_SIZE, adminPanelModel.getGenericLogOperationStringList());    		
     		
     		model.put("genericLogList", genericLogList);
     		
