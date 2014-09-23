@@ -274,6 +274,47 @@ public class MySQLConnector {
 		}		
 	}
 	
+	public GenericLog getGenericLog(long id) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+				
+		try {						
+			connection = connectionPool.getConnection();
+						
+			preparedStatement = connection.prepareStatement("select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
+					+ "from generic_log where id = ?");
+						
+			preparedStatement.setLong(1, id);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.next() == true) {				
+				return createGenericLogFromResultSet(resultSet);
+				
+			} else {
+				return null;
+			}
+						
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
 	private GenericLog createGenericLogFromResultSet(ResultSet resultSet) throws SQLException {
 		
 		GenericLog genericLog = new GenericLog();

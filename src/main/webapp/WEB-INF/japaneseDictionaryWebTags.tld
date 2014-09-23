@@ -82,5 +82,15 @@
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-	</tag>	
+	</tag>
+	<tag>
+		<name>generateGenericLogDetails</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.GenerateGenericLogDetailsTag</tagclass>
+		<info>Generuje szczegoly rekordu</info>
+		<attribute>
+			<name>genericLog</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 </taglib> 

@@ -7,6 +7,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 
 public class LinkGenerator {
 
@@ -95,6 +96,13 @@ public class LinkGenerator {
 		// UWAGA: Jesli tu zmieniasz, zmien rowniez w pliku SuggestionController.java
 		
 		return contextPath + "/suggestion/sendSuggestion";
+	}
+	
+	public static String generateShowGenericLog(String contextPath, GenericLog genericLog) {
+
+		// UWAGA: Jesli tu zmieniasz, zmien rowniez w pliku AdminController.java
+		
+		return contextPath + "/adm/showGenericLog/" + genericLog.getId();
 	}
 	
 	public static String getStaticPrefix(String contextPath, Properties applicationProperties) {

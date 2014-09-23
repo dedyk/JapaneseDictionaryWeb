@@ -22,12 +22,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.AdminPanelModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.AdminPanelModelValidator;
@@ -179,6 +179,29 @@ public class AdminController {
     	    	
     	return "admpanel";
     }
+    
+	@RequestMapping(value = "/adm/showGenericLog/{id}", method = RequestMethod.GET)
+	public String showWordDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") long id, Map<String, Object> model) throws SQLException {
+		
+		// UWAGA: Gdy bedziesz zmieniac pamietaj o LinkGenerator
+		
+		GenericLog genericLog = mySQLConnector.getGenericLog(id);
+		
+		// logowanie
+    	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
+    	
+    	adminLoggerModel.setType(AdminLoggerModel.Type.ADMIN_SHOW_GENERIC_LOG);
+    	adminLoggerModel.setResult(genericLog != null ? Result.OK : Result.ERROR);
+		
+    	adminLoggerModel.addParam("id", String.valueOf(id));
+    	
+    	loggerSender.sendLog(adminLoggerModel);
+		
+    	// tworzenie modelu
+		model.put("genericLog", genericLog);
+		
+		return "admShowGenericLogDetails";
+	}
     
     @RequestMapping(value = "/adm/generateDailyReport", method = RequestMethod.GET)
     public void generateDailyReport(HttpServletRequest request, HttpSession session, Writer writer,

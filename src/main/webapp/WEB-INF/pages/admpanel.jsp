@@ -93,8 +93,7 @@
 						<th><spring:message code="admin.panel.genericlog.column.requestUrl" /></th>
 						<th><spring:message code="admin.panel.genericlog.column.remoteIp" /></th>
 						<th><spring:message code="admin.panel.genericlog.column.remoteHost" /></th>						
-						
-<%--						<th></th> --%>
+						<th></th>
 					</tr>
 				</thead>
 				<tfood>
