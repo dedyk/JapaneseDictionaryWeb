@@ -10,6 +10,9 @@
 
 <c:set var="search"> <spring:message code="admin.panel.search.button"/> </c:set>
 
+<c:set var="selectPickerNoneSelectedText"> <spring:message code="common.selectpicker.noneSelectedText"/> </c:set>
+<c:set var="selectPickerCountSelectedText"> <spring:message code="common.selectpicker.countSelectedText"/> </c:set>
+
 <c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
 
 <t:admTemplate pageTitle="${pageTitle}">
@@ -32,49 +35,29 @@
 				</tr>
 
 				<tr>
+					<td><form:label path="" cssStyle="margin: 0px 10px 0px 0px"><spring:message code="admin.panel.search.genericLogOperationStringList"/></form:label></td>
+					<td>
+						<form:select id="genericLogOperationStringListId" path="genericLogOperationStringList" multiple="true" data-selected-text-format="count">
+							<c:forEach items="${genericLogOperationEnumList}" var="currentGenericLogOperationEnum">
+								<form:option value="${currentGenericLogOperationEnum}" label="${currentGenericLogOperationEnum}" />
+							</c:forEach>								
+						</form:select>
+					</td>
+					<td>
+						<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 10px" onclick="selectAllGenericLogOperations(true)"><spring:message code="admin.panel.search.genericLogOperationStringList.selectAll" /></a>
+					</td>
+					<td>
+						<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 0px" onclick="selectAllGenericLogOperations(false)"><spring:message code="admin.panel.search.genericLogOperationStringList.deselectAll" /></a>
+					</td>
+				</tr>
+
+				<tr>
 					<td></td>
 					<td>
 						<input class="btn btn-default btn-lg" id="searchButton" type="submit" value="${search}" />					
 					</td>				
 				</tr>
-				
-<%-- 				<tr>
-					<td><form:label path="wordPlace"><spring:message code="wordDictionary.page.label.wordPlace"/></form:label></td>
-					<td>
-						<form:select id="wordPlaceId" path="wordPlace">
-							<form:option value="START_WITH" label="${wordPlaceStartWith}" />
-							<form:option value="ANY_PLACE" label="${wordPlaceAnyPlace}" />
-							<form:option value="EXACT" label="${wordPlaceExact}" />
-						</form:select>						
-					</td>
-				</tr>
-				
-				<tr>
-					<td><form:label path=""><spring:message code="wordDictionary.page.label.searchIn"/></form:label></td>
-					<td>
-						<form:select id="searchInId" path="searchIn" multiple="true" data-selected-text-format="count">
-							<form:option value="COMMON_WORDS" label="${searchInOnlyCommonWords}" />
-							<form:option value="KANJI" label="${searchInKanji}" />
-							<form:option value="KANA" label="${searchInKana}" />
-							<form:option value="ROMAJI" label="${searchInRomaji}" />
-							<form:option value="TRANSLATE" label="${searchInTranslate}" />
-							<form:option value="INFO" label="${searchInInfo}" />
-						</form:select>
-					</td>				
-				</tr>
 								
-				<tr>
-					<td><form:label path="" cssStyle="margin: 0px 10px 0px 0px"><spring:message code="wordDictionary.page.label.dictionaryType"/></form:label></td>
-					<td>
-						<form:select id="dictionaryTypeListId" path="dictionaryTypeStringList" multiple="true" data-selected-text-format="count">
-							<c:forEach items="${addableDictionaryEntryList}" var="currentAddableDictionaryEntry">
-								<form:option value="${currentAddableDictionaryEntry}" label="${currentAddableDictionaryEntry.name}" />
-							</c:forEach>								
-						</form:select>
-					</td>				
-				</tr>				
-						
-				--%>			
 			</table>
 		</form:form>	
 	
@@ -163,33 +146,22 @@
 		
 		<script>
 			$(document).ready(function() {
-				
-<%--				$( "#word" ).autocomplete({
-				 	source: "${pageContext.request.contextPath}/wordDictionary/autocomplete",
-				 	minLength: 2
-				});
-	
-				$( "#searchButton" ).button();
 
-				$( "#wordPlaceId").selectpicker();
-				
-				$( "#searchInId").selectpicker({
+				$( "#genericLogOperationStringListId").selectpicker({
 					noneSelectedText: '${selectPickerNoneSelectedText}', 
 					countSelectedText: '${selectPickerCountSelectedText}'
 				});
 
-				$( "#dictionaryTypeListId").selectpicker({
-					noneSelectedText: '${selectPickerNoneSelectedText}', 
-					countSelectedText: '${selectPickerCountSelectedText}'
-				});
-
-				<c:if test="${findWordResult != null && runScrollAnim == true}">
-					$('html, body').animate({
-			        	scrollTop: $("#findWordResultHrId").offset().top
-			    	}, 1000);
-				</c:if>		
-				--%>		
+				$( "#searchButton" ).button();				
 			});
+
+			function selectAllGenericLogOperations(status) {
+				if (status == true) {
+					$('#genericLogOperationStringListId').selectpicker('selectAll');
+				} else {
+					$('#genericLogOperationStringListId').selectpicker('deselectAll');
+				}
+			}			
 		</script>		
 		
 			

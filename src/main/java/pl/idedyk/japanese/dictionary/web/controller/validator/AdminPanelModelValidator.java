@@ -1,10 +1,13 @@
 package pl.idedyk.japanese.dictionary.web.controller.validator;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import pl.idedyk.japanese.dictionary.web.controller.model.AdminPanelModel;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 
 @Component
 public class AdminPanelModelValidator implements Validator {
@@ -41,7 +44,24 @@ public class AdminPanelModelValidator implements Validator {
 					errors.rejectValue("pageNo", "admin.panel.validation.adminPanelModel.pageNo.null");
 				}				
 			}
-		}		
+		}
+		
+		List<String> genericLogOperationStringList = adminPanelModel.getGenericLogOperationStringList();
+		
+		if (genericLogOperationStringList == null || genericLogOperationStringList.size() == 0) {
+			errors.rejectValue("genericLogOperationStringList", "admin.panel.validation.adminPanelModel.genericLogOperationStringList.null");
+		
+		} else {
+			
+			for (String currentGenericLogOperationStringList : genericLogOperationStringList) {
+				
+				try {
+					GenericLogOperationEnum.valueOf(currentGenericLogOperationStringList);
+					
+				} catch (IllegalArgumentException e) {
+					errors.rejectValue("genericLogOperationStringList", "admin.panel.validation.adminPanelModel.genericLogOperationStringList.illegalArgument");				
+				}			
+			}
+		}
 	}
-
 }

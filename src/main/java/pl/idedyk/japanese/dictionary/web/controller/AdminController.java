@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.AdminPanelModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.AdminPanelModelValidator;
@@ -35,6 +36,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask;
 
 @Controller
@@ -42,7 +44,7 @@ public class AdminController {
 	
 	private static final Logger logger = Logger.getLogger(AdminController.class);
 	
-	private static final int GENERIC_LOG_SIZE = 50;
+	private static final int GENERIC_LOG_SIZE = 100;
 
 	@Value("${admin.password}")
 	private String adminPassword;
@@ -102,6 +104,12 @@ public class AdminController {
 		// stworzenie modelu
 		AdminPanelModel adminPanelModel = new AdminPanelModel();
 		
+		// ustawienie filtra na operacje
+
+		for (GenericLogOperationEnum genericLogOperationEnum : GenericLogOperationEnum.values()) {
+			adminPanelModel.addGenericLogOperationEnum(genericLogOperationEnum);
+		}
+		
 		fillModelForPanel(adminPanelModel, model, true);
 		
     	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
@@ -110,6 +118,7 @@ public class AdminController {
     	adminLoggerModel.setResult(Result.OK);
     	
     	adminLoggerModel.addParam("pageNo", adminPanelModel.getPageNo());
+    	adminLoggerModel.addParam("genericLogOperationStringList", adminPanelModel.getGenericLogOperationStringList() == null ? "" : adminPanelModel.getGenericLogOperationStringList().toString());
 		
 		// logowanie
 		loggerSender.sendLog(adminLoggerModel);
@@ -124,6 +133,8 @@ public class AdminController {
     	
     	model.put("command", adminPanelModel);
     	model.put("maxPageSize", (genericLogSize / GENERIC_LOG_SIZE) + (genericLogSize % GENERIC_LOG_SIZE > 0 ? 1 : 0));
+    	
+    	model.put("genericLogOperationEnumList", GenericLogOperationEnum.values());
     	
     	if (validationResult == true) {
     		
@@ -151,6 +162,7 @@ public class AdminController {
     		adminLoggerModel.setResult(Result.ERROR);
     		
     		adminLoggerModel.addParam("pageNo", adminPanelModel.getPageNo());
+    		adminLoggerModel.addParam("genericLogOperationStringList", adminPanelModel.getGenericLogOperationStringList() == null ? "" : adminPanelModel.getGenericLogOperationStringList().toString());
     		
     	} else {
     		
@@ -158,7 +170,8 @@ public class AdminController {
     		
     		adminLoggerModel.setResult(Result.OK);
     		
-    		adminLoggerModel.addParam("pageNo", adminPanelModel.getPageNo());    		
+    		adminLoggerModel.addParam("pageNo", adminPanelModel.getPageNo());
+    		adminLoggerModel.addParam("genericLogOperationStringList", adminPanelModel.getGenericLogOperationStringList() == null ? "" : adminPanelModel.getGenericLogOperationStringList().toString());
     	}
     	
 		// logowanie
