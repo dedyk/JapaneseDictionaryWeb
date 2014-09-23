@@ -331,7 +331,7 @@ public class MySQLConnector {
 		
 		return genericLog;
 	}
-	
+		
 	public void insertWordDictionaryAutocompleteLog(WordDictionaryAutocompleteLog wordDictionaryAutocompleteLog) throws SQLException {
 
 		Connection connection = null;
@@ -720,6 +720,59 @@ public class MySQLConnector {
 				connection.close();
 			}			
 		}		
+	}
+	
+	public KanjiDictionaryDetectLog getKanjiDictionaryDetectLogByGenericId(long genericId) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+				
+		try {						
+			connection = connectionPool.getConnection();
+						
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, strokes, detect_kanji_result "
+					+ "from kanji_dictionary_detect_log where generic_log_id = ?");
+						
+			preparedStatement.setLong(1, genericId);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			if (resultSet.next() == true) {				
+				return createKanjiDictionaryDetectLogFromResultSet(resultSet);
+				
+			} else {
+				return null;
+			}
+						
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}	
+
+	private KanjiDictionaryDetectLog createKanjiDictionaryDetectLogFromResultSet(ResultSet resultSet) throws SQLException {
+		
+		KanjiDictionaryDetectLog kanjiDictionaryDetectLog = new KanjiDictionaryDetectLog();
+		
+		kanjiDictionaryDetectLog.setId(resultSet.getLong("id"));
+		kanjiDictionaryDetectLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		kanjiDictionaryDetectLog.setStrokes(resultSet.getString("strokes"));
+		kanjiDictionaryDetectLog.setDetectKanjiResult(resultSet.getString("detect_kanji_result"));
+		
+		return kanjiDictionaryDetectLog;
 	}
 
 	public void insertKanjiDictionaryDetailsLog(KanjiDictionaryDetailsLog kanjiDictionaryDetailsLog) throws SQLException {

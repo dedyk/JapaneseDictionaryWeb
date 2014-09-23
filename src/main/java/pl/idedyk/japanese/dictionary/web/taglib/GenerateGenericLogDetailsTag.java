@@ -2,6 +2,7 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +28,8 @@ import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
 
 public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAbstract {
@@ -74,12 +77,19 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
             // generowanie informacji podstawowych
             contentDiv.addHtmlElement(generateMainInfo());
             
+            // generowanie informacji dodatkowych
+            IHtmlElement generateAdditionalInfo = generateAdditionalInfo();
+            
+            if (generateAdditionalInfo != null) {
+            	contentDiv.addHtmlElement(generateAdditionalInfo);
+            }            
+            
             // renderowanie
             mainContentDiv.render(out);
             
             return SKIP_BODY;
             
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 	}
@@ -170,61 +180,51 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
         
         // remote host
         addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteHost"), genericLog.getRemoteHost());
-		
-		/*
-		// kanji
-		Div kanjiDiv = generateKanjiSection(mainInfoMenu);
-		
-		if (kanjiDiv != null) {
-			panelBody.addHtmlElement(kanjiDiv);	
-			
-			panelBody.addHtmlElement(new Hr());
-		}
-		
-		// znaczenie znakow kanji
-        Div knownKanjiDiv = generateKnownKanjiDiv(mainInfoMenu);
-        
-        if (knownKanjiDiv != null) {
-        	panelBody.addHtmlElement(knownKanjiDiv);
-        	panelBody.addHtmlElement(new Hr());
-        }
-		
-		// czytanie
-		Div readingDiv = generateReadingSection(mainInfoMenu);
-		panelBody.addHtmlElement(readingDiv);
-		panelBody.addHtmlElement(new Hr());
-		
-        // tlumaczenie
-        Div translate = generateTranslateSection(mainInfoMenu);
-        panelBody.addHtmlElement(translate);
-        
-        // generuj informacje dodatkowe
-        Div additionalInfo = generateAdditionalInfo(mainInfoMenu);
-
-        if (additionalInfo != null) {
-        	panelBody.addHtmlElement(new Hr());
-        	panelBody.addHtmlElement(additionalInfo);
-        }
-        
-        // czesc mowy
-        Div wordTypeDiv = generateWordType(mainInfoMenu);
-        
-        if (wordTypeDiv != null) {
-        	panelBody.addHtmlElement(new Hr());
-        	panelBody.addHtmlElement(wordTypeDiv);
-        }
-        
-        // dodatkowe atrybuty
-		Div additionalAttributeDiv = generateAttribute(mainInfoMenu);
-
-        if (additionalAttributeDiv != null) {
-        	panelBody.addHtmlElement(new Hr());
-        	panelBody.addHtmlElement(additionalAttributeDiv);
-        }
-        */
-		
+				
 		panelBody.addHtmlElement(table);
         		
+		panelDiv.addHtmlElement(panelBody);
+		
+		return panelDiv;
+	}
+	
+	private IHtmlElement generateAdditionalInfo() throws SQLException {
+		
+		Div panelDiv = new Div("panel panel-default");
+		
+		Div panelHeading = new Div("panel-heading");
+		
+		// tytul sekcji
+		H h3Title = new H(3, "panel-title");
+		h3Title.setId("additionalInfoId");
+		
+		h3Title.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo")));
+				
+		panelHeading.addHtmlElement(h3Title);
+		
+		panelDiv.addHtmlElement(panelHeading);
+		
+		// zawartosc sekcji
+		Div panelBody = new Div("panel-body");
+		
+		GenericLogOperationEnum operation = genericLog.getOperation();
+		
+		if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETECT) {
+			
+			KanjiDictionaryDetectLog kanjiDictionaryDetectLog = mySQLConnector.getKanjiDictionaryDetectLogByGenericId(genericLog.getId());
+			
+			if (kanjiDictionaryDetectLog == null) {
+				return null;
+			}
+			
+			panelBody.addHtmlElement(new Text(kanjiDictionaryDetectLog.getDetectKanjiResult()));
+			
+		} else {
+			return null;
+		}		
+		
+		//panelBody.addHtmlElement(table);
+		
 		panelDiv.addHtmlElement(panelBody);
 		
 		return panelDiv;
