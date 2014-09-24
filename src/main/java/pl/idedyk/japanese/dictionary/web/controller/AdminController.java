@@ -110,7 +110,7 @@ public class AdminController {
 			adminPanelModel.addGenericLogOperationEnum(genericLogOperationEnum);
 		}
 		
-		fillModelForPanel(session, adminPanelModel, model, true);
+		fillModelForPanel(session, true, adminPanelModel, model, true);
 		
     	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
     	
@@ -126,8 +126,18 @@ public class AdminController {
     	return "admpanel";
     }
     
-    private void fillModelForPanel(HttpSession session, AdminPanelModel adminPanelModel, Map<String, Object> model, boolean validationResult) throws SQLException {
+    private void fillModelForPanel(HttpSession session, boolean restoreFromSession, AdminPanelModel adminPanelModel, Map<String, Object> model, boolean validationResult) throws SQLException {
 
+    	// przywrocenie danych z sesji (jesli sa)
+    	AdminPanelModel adminPanelModelFromSession = (AdminPanelModel)session.getAttribute("adminPanelModel");
+    	
+    	if (restoreFromSession == true && adminPanelModelFromSession != null) {
+    		adminPanelModel.setPageNo(adminPanelModelFromSession.getPageNo());
+    		adminPanelModel.setGenericLogOperationStringList(adminPanelModelFromSession.getGenericLogOperationStringList());
+    	}
+
+    	session.setAttribute("adminPanelModel", adminPanelModel);
+    	
 		// pobranie ilosci operacji
 		long genericLogSize = mySQLConnector.getGenericLogSize(adminPanelModel.getGenericLogOperationStringList());
     	
@@ -160,7 +170,7 @@ public class AdminController {
 		    	
     	if (result.hasErrors() == true) {
     		    		
-    		fillModelForPanel(session, adminPanelModel, model, false);
+    		fillModelForPanel(session, false, adminPanelModel, model, false);
     		
     		adminLoggerModel.setResult(Result.ERROR);
     		
@@ -169,7 +179,7 @@ public class AdminController {
     		
     	} else {
     		
-    		fillModelForPanel(session, adminPanelModel, model, true);
+    		fillModelForPanel(session, false, adminPanelModel, model, true);
     		
     		adminLoggerModel.setResult(Result.OK);
     		

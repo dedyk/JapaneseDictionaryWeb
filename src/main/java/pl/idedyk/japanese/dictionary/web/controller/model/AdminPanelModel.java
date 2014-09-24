@@ -1,15 +1,18 @@
 package pl.idedyk.japanese.dictionary.web.controller.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 
-public class AdminPanelModel {
+public class AdminPanelModel implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	private String pageNo = "1";
 	
-	private List<String> genericLogOperationStringList;;
+	private List<String> genericLogOperationStringList;
 
 	public String getPageNo() {
 		return pageNo;
