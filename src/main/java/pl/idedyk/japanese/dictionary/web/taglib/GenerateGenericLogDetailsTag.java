@@ -14,6 +14,7 @@ import javax.servlet.jsp.JspWriter;
 import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.util.HtmlUtils;
 
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke.Point;
@@ -43,6 +44,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
@@ -639,6 +641,22 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 
 			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordResultResultSize"), String.valueOf(wordDictionarySearchLog.getFindWordResultResultSize()));
 									
+			panelBody.addHtmlElement(table);
+			
+		} else if (operation == GenericLogOperationEnum.SUGGESTION_SEND) {
+			
+			SuggestionSendLog suggestionSendLog = mySQLConnector.getSuggestionSendLogByGenericId(genericLog.getId());
+			
+			if (suggestionSendLog == null) {
+				return null;
+			}
+			
+			Table table = new Table();
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.suggestionSendLog.title"), HtmlUtils.htmlEscape(suggestionSendLog.getTitle()));
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.suggestionSendLog.sender"), HtmlUtils.htmlEscape(suggestionSendLog.getSender()));			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.suggestionSendLog.body"), HtmlUtils.htmlEscape(suggestionSendLog.getBody()));			
+			
 			panelBody.addHtmlElement(table);
 			
 		} else {
