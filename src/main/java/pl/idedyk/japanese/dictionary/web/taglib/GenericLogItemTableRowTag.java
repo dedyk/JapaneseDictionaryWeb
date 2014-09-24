@@ -1,7 +1,5 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
-import java.io.IOException;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -16,7 +14,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.html.A;
-import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
@@ -139,6 +136,7 @@ public class GenericLogItemTableRowTag extends TagSupport {
         td.addHtmlElement(new Text(value));		
 	}
 	
+	/*
 	private void addColumn(Tr tr, IHtmlElement htmlElementValue) {
 				
         Td td = new Td();
@@ -146,6 +144,7 @@ public class GenericLogItemTableRowTag extends TagSupport {
         
         td.addHtmlElement(htmlElementValue);		
 	}
+	*/
 
 	public GenericLog getGenericLog() {
 		return genericLog;

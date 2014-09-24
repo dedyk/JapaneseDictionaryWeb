@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
@@ -16,6 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.util.HtmlUtils;
 
+import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke.Point;
 import pl.idedyk.japanese.dictionary.web.html.A;
@@ -84,7 +86,47 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
             	return SKIP_BODY;
             }
             
+            // pobranie listy rekordow (jesli wystepuja)
+            HttpSession session = pageContext.getSession();
+            
             Div mainContentDiv = new Div();
+            
+            @SuppressWarnings("unchecked")
+			List<GenericLog> genericLogList = (List<GenericLog>)session.getAttribute("genericLogList");
+            
+            if (genericLogList != null) {
+            	Integer pos = null;
+            	
+            	for (int idx = 0; idx < genericLogList.size(); ++idx) {
+					if (genericLogList.get(idx).getId().equals(genericLog.getId()) == true) {
+						pos = idx;
+					}
+				}
+            	
+            	if (pos != null && genericLogList.size() > 1) {            		
+            		Div buttonDiv = new Div("col-md-12", "text-align: right; margin: 0px 0px 20px 0px");
+            		
+            		if (pos != 0 && pos <= genericLogList.size() - 1) {
+            			A previousButton = new A("btn btn-default");
+            			
+            			previousButton.setHref(LinkGenerator.generateShowGenericLog(pageContext.getServletContext().getContextPath(), genericLogList.get(pos - 1)));
+            			previousButton.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.previousRecord")));
+            			
+            			buttonDiv.addHtmlElement(previousButton);
+            		}
+            		
+            		if (pos != genericLogList.size() - 1) {
+                		A nextButton = new A("btn btn-default");
+                		
+                		nextButton.setHref(LinkGenerator.generateShowGenericLog(pageContext.getServletContext().getContextPath(), genericLogList.get(pos + 1)));
+                		nextButton.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.nextRecord")));
+                		
+                		buttonDiv.addHtmlElement(nextButton);
+            		}
+            		
+            		mainContentDiv.addHtmlElement(buttonDiv);
+            	}
+            }            
             
             // tytul strony
             mainContentDiv.addHtmlElement(generateTitle());
@@ -226,13 +268,7 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		Div panelBody = new Div("panel-body");
 		
 		GenericLogOperationEnum operation = genericLog.getOperation();
-		
-		/*
-		+-------------------------------------+
-		| * suggestion_send_log               |
-		+-------------------------------------+
-		*/
-		
+				
 		if (operation == GenericLogOperationEnum.ADMIN_REQUEST) {
 			
 			AdminRequestLog adminRequestLog = mySQLConnector.getAdminRequestLogByGenericId(genericLog.getId());

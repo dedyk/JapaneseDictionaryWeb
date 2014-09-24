@@ -110,7 +110,7 @@ public class AdminController {
 			adminPanelModel.addGenericLogOperationEnum(genericLogOperationEnum);
 		}
 		
-		fillModelForPanel(adminPanelModel, model, true);
+		fillModelForPanel(session, adminPanelModel, model, true);
 		
     	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
     	
@@ -126,7 +126,7 @@ public class AdminController {
     	return "admpanel";
     }
     
-    private void fillModelForPanel(AdminPanelModel adminPanelModel, Map<String, Object> model, boolean validationResult) throws SQLException {
+    private void fillModelForPanel(HttpSession session, AdminPanelModel adminPanelModel, Map<String, Object> model, boolean validationResult) throws SQLException {
 
 		// pobranie ilosci operacji
 		long genericLogSize = mySQLConnector.getGenericLogSize(adminPanelModel.getGenericLogOperationStringList());
@@ -144,6 +144,7 @@ public class AdminController {
     		List<GenericLog> genericLogList = mySQLConnector.getGenericLogList(Long.parseLong(adminPanelModel.getPageNo()) - 1, GENERIC_LOG_SIZE, adminPanelModel.getGenericLogOperationStringList());    		
     		
     		model.put("genericLogList", genericLogList);
+    		session.setAttribute("genericLogList", genericLogList);
     		
     		model.put("currentPage", adminPanelModel.getPageNo());
     	}		
@@ -159,7 +160,7 @@ public class AdminController {
 		    	
     	if (result.hasErrors() == true) {
     		    		
-    		fillModelForPanel(adminPanelModel, model, false);
+    		fillModelForPanel(session, adminPanelModel, model, false);
     		
     		adminLoggerModel.setResult(Result.ERROR);
     		
@@ -168,7 +169,7 @@ public class AdminController {
     		
     	} else {
     		
-    		fillModelForPanel(adminPanelModel, model, true);
+    		fillModelForPanel(session, adminPanelModel, model, true);
     		
     		adminLoggerModel.setResult(Result.OK);
     		

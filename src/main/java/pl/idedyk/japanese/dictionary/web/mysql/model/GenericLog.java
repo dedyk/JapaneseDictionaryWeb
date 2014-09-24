@@ -1,9 +1,12 @@
 package pl.idedyk.japanese.dictionary.web.mysql.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class GenericLog {
+public class GenericLog implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	private Long id;
 	
 	private Timestamp timestamp;
