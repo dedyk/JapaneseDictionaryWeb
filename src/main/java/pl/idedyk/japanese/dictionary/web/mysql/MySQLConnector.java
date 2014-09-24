@@ -1391,6 +1391,59 @@ public class MySQLConnector {
 		}		
 	}
 	
+	public AdminRequestLog getAdminRequestLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, type, result, params "
+					+ "from admin_request_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createAdminRequestLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private AdminRequestLog createAdminRequestLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		AdminRequestLog adminRequestLog = new AdminRequestLog();
+
+		adminRequestLog.setId(resultSet.getLong("id"));
+		adminRequestLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		adminRequestLog.setType(resultSet.getString("type"));
+		adminRequestLog.setResult(resultSet.getString("result"));
+		adminRequestLog.setParams(resultSet.getString("params"));
+
+		return adminRequestLog;
+	}
+	
 	public void insertQueueItem(QueueItem queueItem) throws SQLException {
 				
 		Connection connection = null;

@@ -32,6 +32,7 @@ import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
@@ -232,7 +233,23 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		+-----------------------------------+
 		*/
 		
-		if (operation == GenericLogOperationEnum.DAILY_REPORT) {
+		if (operation == GenericLogOperationEnum.ADMIN_REQUEST) {
+			
+			AdminRequestLog adminRequestLog = mySQLConnector.getAdminRequestLogByGenericId(genericLog.getId());
+			
+			if (adminRequestLog == null) {
+				return null;
+			}
+			
+			Table table = new Table();
+
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.adminRequestLog.type"), String.valueOf(adminRequestLog.getType()));
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.adminRequestLog.result"), String.valueOf(adminRequestLog.getResult()));
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.adminRequestLog.params"), String.valueOf(adminRequestLog.getParams()));			
+			
+			panelBody.addHtmlElement(table);
+			
+		} else if (operation == GenericLogOperationEnum.DAILY_REPORT) {
 			
 			DailyReportSendLog dailyReportSendLog = mySQLConnector.getDailyReportSendLogByGenericId(genericLog.getId());
 			
