@@ -41,6 +41,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocomplete
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
@@ -224,7 +225,6 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		
 		/*
 		+-------------------------------------+
-		| * kanji_dictionary_radicals_log     |
 		| * kanji_dictionary_search_log       |
 		| * suggestion_send_log               |
 		| * word_dictionary_search_log        |
@@ -516,6 +516,22 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 			detectResultDiv.addHtmlElement(detectResultPre);
 			
 			panelBody.addHtmlElement(detectResultDiv);
+			
+		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_RADICALS) {
+			
+			KanjiDictionaryRadicalsLog kanjiDictionaryRadicalsLog = mySQLConnector.getKanjiDictionaryRadicalsLogByGenericId(genericLog.getId());
+			
+			if (kanjiDictionaryRadicalsLog == null) {
+				return null;
+			}
+			
+			Table table = new Table();
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.kanjiDictionaryRadicalsLog.radicals"), kanjiDictionaryRadicalsLog.getRadicals());
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.kanjiDictionaryRadicalsLog.foundElements"), String.valueOf(kanjiDictionaryRadicalsLog.getFoundElements()));			
+
+			panelBody.addHtmlElement(table);
 			
 		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE) {
 			
