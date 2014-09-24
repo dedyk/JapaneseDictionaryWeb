@@ -20,13 +20,18 @@ import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
+import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 
 public class GenericLogItemTableRowTag extends TagSupport {
 
 	private static final long serialVersionUID = 1L;
 
 	private GenericLog genericLog;
+	
+	private MySQLConnector mySQLConnector;
 	
 	private MessageSource messageSource;
 	
@@ -38,6 +43,7 @@ public class GenericLogItemTableRowTag extends TagSupport {
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
 		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
+		this.mySQLConnector = webApplicationContext.getBean(MySQLConnector.class);
 		
 		try {
             JspWriter out = pageContext.getOut();
@@ -55,7 +61,24 @@ public class GenericLogItemTableRowTag extends TagSupport {
             // operation
             addColumn(tr, genericLog.getOperation().toString());
             
+            // sub operation
+            if (genericLog.getOperation() == GenericLogOperationEnum.ADMIN_REQUEST) {
+            	
+            	AdminRequestLog adminRequestLog = mySQLConnector.getAdminRequestLogByGenericId(genericLog.getId());
+            	
+            	if (adminRequestLog != null) {
+            		addColumn(tr, adminRequestLog.getType());
+            		
+            	} else {
+            		addColumn(tr, (String)null);
+            	}
+            	
+            } else {
+            	addColumn(tr, (String)null);
+            }            
+            
             // request url
+            /*
             String requestUrl = genericLog.getRequestURL();
             
             if (requestUrl == null) {
@@ -73,6 +96,7 @@ public class GenericLogItemTableRowTag extends TagSupport {
             	
             	addColumn(tr, link);
             }
+            */
             
             // remote ip
             addColumn(tr, genericLog.getRemoteIp());
@@ -98,7 +122,7 @@ public class GenericLogItemTableRowTag extends TagSupport {
             
             return SKIP_BODY;
  
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 	}
