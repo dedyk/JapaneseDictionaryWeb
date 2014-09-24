@@ -46,6 +46,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 
 public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAbstract {
 	
@@ -227,7 +228,6 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		/*
 		+-------------------------------------+
 		| * suggestion_send_log               |
-		| * word_dictionary_search_log        |
 		+-------------------------------------+
 		*/
 		
@@ -601,6 +601,44 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryDetailsLog.dictionaryEntryTranslateList"), wordDictionaryDetailsLog.getDictionaryEntryTranslateList());
 			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryDetailsLog.dictionaryEntryInfo"), wordDictionaryDetailsLog.getDictionaryEntryInfo());
 			
+			panelBody.addHtmlElement(table);
+			
+		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_SEARCH) {
+			
+			WordDictionarySearchLog wordDictionarySearchLog = mySQLConnector.getWordDictionarySearchLogByGenericId(genericLog.getId());
+			
+			if (wordDictionarySearchLog == null) {
+				return null;
+			}
+			
+			Table table = new Table();
+
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestWord"), wordDictionarySearchLog.getFindWordRequestWord());
+
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestKanji"), wordDictionarySearchLog.getFindWordRequestKanji() != null ? 
+					String.valueOf(wordDictionarySearchLog.getFindWordRequestKanji()) : null);
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestKana"), wordDictionarySearchLog.getFindWordRequestKana() != null ? 
+					String.valueOf(wordDictionarySearchLog.getFindWordRequestKana()) : null);
+
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestRomaji"), wordDictionarySearchLog.getFindWordRequestRomaji() != null ? 
+					String.valueOf(wordDictionarySearchLog.getFindWordRequestRomaji()) : null);
+
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestTranslate"), wordDictionarySearchLog.getFindWordRequestTranslate() != null ? 
+					String.valueOf(wordDictionarySearchLog.getFindWordRequestTranslate()) : null);
+
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestInfo"), wordDictionarySearchLog.getFindWordRequestInfo() != null ? 
+					String.valueOf(wordDictionarySearchLog.getFindWordRequestInfo()) : null);
+
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestOnlyCommonWords"), wordDictionarySearchLog.getFindWordRequestOnlyCommonWords() != null ? 
+					String.valueOf(wordDictionarySearchLog.getFindWordRequestOnlyCommonWords()) : null);
+
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestWordPlace"), wordDictionarySearchLog.getFindWordRequestWordPlace());
+
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestDictionaryEntryTypeList"), wordDictionarySearchLog.getFindWordRequestDictionaryEntryTypeList());
+
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordResultResultSize"), String.valueOf(wordDictionarySearchLog.getFindWordResultResultSize()));
+									
 			panelBody.addHtmlElement(table);
 			
 		} else {
