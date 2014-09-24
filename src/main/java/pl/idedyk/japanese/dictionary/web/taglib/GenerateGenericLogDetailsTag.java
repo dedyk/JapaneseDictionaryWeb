@@ -39,9 +39,11 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryCatalogLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 
 public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAbstract {
 	
@@ -222,13 +224,9 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		
 		/*
 		+-------------------------------------+
-		| * kanji_dictionary_catalog_log      |
-		| * kanji_dictionary_details_log      |
 		| * kanji_dictionary_radicals_log     |
 		| * kanji_dictionary_search_log       |
 		| * suggestion_send_log               |
-		| * word_dictionary_catalog_log       |
-		| * word_dictionary_details_log       |
 		| * word_dictionary_search_log        |
 		+-------------------------------------+
 		*/
@@ -316,6 +314,23 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 			
 			panelBody.addHtmlElement(table);			
 			
+		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS) {
+			
+			KanjiDictionaryDetailsLog kanjiDictionaryDetailsLog = mySQLConnector.getKanjiDictionaryDetailsLogByGenericId(genericLog.getId());
+			
+			if (kanjiDictionaryDetailsLog == null) {
+				return null;
+			}
+			
+			Table table = new Table();
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.kanjiDictionaryDetailsLog.kanjiEntryId"), String.valueOf(kanjiDictionaryDetailsLog.getKanjiEntryId()));
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.kanjiDictionaryDetailsLog.kanjiEntryKanji"), kanjiDictionaryDetailsLog.getKanjiEntryKanji());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.kanjiDictionaryDetailsLog.kanjiEntryTranslateList"), kanjiDictionaryDetailsLog.getKanjiEntryTranslateList());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.kanjiDictionaryDetailsLog.kanjiEntryInfo"), kanjiDictionaryDetailsLog.getKanjiEntryInfo());
+			
+			panelBody.addHtmlElement(table);			
+		
 		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETECT) {
 			
 			KanjiDictionaryDetectLog kanjiDictionaryDetectLog = mySQLConnector.getKanjiDictionaryDetectLogByGenericId(genericLog.getId());
@@ -531,6 +546,25 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryCatalogLog.pageNo"), String.valueOf(wordDictionaryCatalogLog.getPageNo()));			
 			
 			panelBody.addHtmlElement(table);			
+			
+		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_DETAILS) {
+			
+			WordDictionaryDetailsLog wordDictionaryDetailsLog = mySQLConnector.getWordDictionaryDetailsLogByGenericId(genericLog.getId());
+			
+			if (wordDictionaryDetailsLog == null) {
+				return null;
+			}
+			
+			Table table = new Table();
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryDetailsLog.dictionaryEntryId"), String.valueOf(wordDictionaryDetailsLog.getDictionaryEntryId()));
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryDetailsLog.dictionaryEntryKanji"), wordDictionaryDetailsLog.getDictionaryEntryKanji());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryDetailsLog.dictionaryEntryKanaList"), wordDictionaryDetailsLog.getDictionaryEntryKanaList());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryDetailsLog.dictionaryEntryRomajiList"), wordDictionaryDetailsLog.getDictionaryEntryRomajiList());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryDetailsLog.dictionaryEntryTranslateList"), wordDictionaryDetailsLog.getDictionaryEntryTranslateList());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryDetailsLog.dictionaryEntryInfo"), wordDictionaryDetailsLog.getDictionaryEntryInfo());
+			
+			panelBody.addHtmlElement(table);
 			
 		} else {
 			return null;
