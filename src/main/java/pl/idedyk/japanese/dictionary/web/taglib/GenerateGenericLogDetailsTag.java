@@ -34,6 +34,7 @@ import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
@@ -265,6 +266,25 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 
 			panelBody.addHtmlElement(new Text(dailyReportSendLog.getReport()));
 			
+		} else if (operation == GenericLogOperationEnum.GENERAL_EXCEPTION) {
+			
+			GeneralExceptionLog generalExceptionLog = mySQLConnector.getGeneralExceptionLogByGenericId(genericLog.getId());
+			
+			if (generalExceptionLog == null) {
+				return null;
+			}
+			
+			Table table = new Table();
+
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.generalExceptionLog.statusCode"), String.valueOf(generalExceptionLog.getStatusCode()));
+			
+			Pre exceptionPre = new Pre();
+			exceptionPre.addHtmlElement(new Text(generalExceptionLog.getException()));
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.generalExceptionLog.exception"), exceptionPre);			
+			
+			panelBody.addHtmlElement(table);
+			
 		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETECT) {
 			
 			KanjiDictionaryDetectLog kanjiDictionaryDetectLog = mySQLConnector.getKanjiDictionaryDetectLogByGenericId(genericLog.getId());
@@ -483,7 +503,11 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		tr.addHtmlElement(td1);
 		
 		Td td2 = new Td();		
-		td2.addHtmlElement(valueHtmlElement);
+		
+		Div td2Div = new Div(null, "margin-bottom: 5px");
+		td2Div.addHtmlElement(valueHtmlElement);
+		
+		td2.addHtmlElement(td2Div);
 		
 		tr.addHtmlElement(td2);
 		
