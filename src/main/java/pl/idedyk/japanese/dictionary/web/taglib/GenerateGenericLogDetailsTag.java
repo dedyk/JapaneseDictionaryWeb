@@ -216,21 +216,19 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		GenericLogOperationEnum operation = genericLog.getOperation();
 		
 		/*
-		+-----------------------------------+
-		| admin_request_log                 |
-		| general_exception_log             |
-		| kanji_dictionary_autocomplete_log |
-		| kanji_dictionary_catalog_log      |
-		| kanji_dictionary_details_log      |
-		| kanji_dictionary_detect_log       |
-		| kanji_dictionary_radicals_log     |
-		| kanji_dictionary_search_log       |
+		+-------------------------------------+
+		| * general_exception_log             |
+		| * kanji_dictionary_autocomplete_log |
+		| * kanji_dictionary_catalog_log      |
+		| * kanji_dictionary_details_log      |
+		| * kanji_dictionary_radicals_log     |
+		| * kanji_dictionary_search_log       |
 		| suggestion_send_log               |
 		| word_dictionary_autocomplete_log  |
 		| word_dictionary_catalog_log       |
 		| word_dictionary_details_log       |
 		| word_dictionary_search_log        |
-		+-----------------------------------+
+		+-------------------------------------+
 		*/
 		
 		if (operation == GenericLogOperationEnum.ADMIN_REQUEST) {

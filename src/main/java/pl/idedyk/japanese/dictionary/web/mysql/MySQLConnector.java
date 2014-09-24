@@ -574,6 +574,58 @@ public class MySQLConnector {
 			}			
 		}		
 	}
+	
+	public KanjiDictionaryAutocompleteLog getKanjiDictionaryAutocompleteLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, term, found_elements "
+					+ "from kanji_dictionary_autocomplete_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createKanjiDictionaryAutocompleteLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private KanjiDictionaryAutocompleteLog createKanjiDictionaryAutocompleteLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		KanjiDictionaryAutocompleteLog kanjiDictionaryAutocompleteLog = new KanjiDictionaryAutocompleteLog();
+
+		kanjiDictionaryAutocompleteLog.setId(resultSet.getLong("id"));
+		kanjiDictionaryAutocompleteLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		kanjiDictionaryAutocompleteLog.setTerm(resultSet.getString("term"));
+		kanjiDictionaryAutocompleteLog.setFoundElements(resultSet.getInt("found_elements"));
+		
+		return kanjiDictionaryAutocompleteLog;
+	}
 
 	public void insertKanjiDictionarySearchLog(KanjiDictionarySearchLog kanjiDictionarySearchLog) throws SQLException {
 
@@ -634,6 +686,62 @@ public class MySQLConnector {
 		}		
 	}
 	
+	public KanjiDictionarySearchLog getKanjiDictionarySearchLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, find_kanji_request_word, find_kanji_request_word_place, "
+					+ "find_kanji_request_stroke_count_from, find_kanji_request_stroke_count_to, find_kanji_result_result_size "
+					+ "from kanji_dictionary_search_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createKanjiDictionarySearchLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private KanjiDictionarySearchLog createKanjiDictionarySearchLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		KanjiDictionarySearchLog kanjiDictionarySearchLog = new KanjiDictionarySearchLog();
+
+		kanjiDictionarySearchLog.setId(resultSet.getLong("id"));
+		kanjiDictionarySearchLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		kanjiDictionarySearchLog.setFindKanjiRequestWord(resultSet.getString("find_kanji_request_word"));
+		kanjiDictionarySearchLog.setFindKanjiRequestWordPlace(resultSet.getString("find_kanji_request_word_place"));
+		kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountFrom(resultSet.getInt("find_kanji_request_stroke_count_from"));
+		kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountTo(resultSet.getInt("find_kanji_request_stroke_count_to"));
+		kanjiDictionarySearchLog.setFindKanjiResultResultSize(resultSet.getInt("find_kanji_result_result_size"));
+
+		return kanjiDictionarySearchLog;
+	}
+	
 	public void insertKanjiDictionaryRadicalsLog(KanjiDictionaryRadicalsLog kanjiDictionaryRadicalsLog) throws SQLException {
 
 		Connection connection = null;
@@ -676,6 +784,58 @@ public class MySQLConnector {
 				connection.close();
 			}			
 		}		
+	}
+	
+	public KanjiDictionaryRadicalsLog getKanjiDictionaryRadicalsLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, radicals, found_elements "
+					+ "from kanji_dictionary_radicals_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createKanjiDictionaryRadicalsLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private KanjiDictionaryRadicalsLog createKanjiDictionaryRadicalsLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		KanjiDictionaryRadicalsLog kanjiDictionaryRadicalsLog = new KanjiDictionaryRadicalsLog();
+
+		kanjiDictionaryRadicalsLog.setId(resultSet.getLong("id"));
+		kanjiDictionaryRadicalsLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		kanjiDictionaryRadicalsLog.setRadicals(resultSet.getString("radicals"));
+		kanjiDictionaryRadicalsLog.setFoundElements(resultSet.getInt("found_elements"));
+
+		return kanjiDictionaryRadicalsLog;
 	}
 
 	public void insertKanjiDictionaryDetectLog(KanjiDictionaryDetectLog kanjiDictionaryDetectLog) throws SQLException {
@@ -821,6 +981,60 @@ public class MySQLConnector {
 		}		
 	}
 	
+	public KanjiDictionaryDetailsLog getKanjiDictionaryDetailsLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, kanji_entry_id, kanji_entry_kanji, kanji_entry_translateList, kanji_entry_info "
+					+ "from kanji_dictionary_details_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createKanjiDictionaryDetailsLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private KanjiDictionaryDetailsLog createKanjiDictionaryDetailsLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		KanjiDictionaryDetailsLog kanjiDictionaryDetailsLog = new KanjiDictionaryDetailsLog();
+
+		kanjiDictionaryDetailsLog.setId(resultSet.getLong("id"));
+		kanjiDictionaryDetailsLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		kanjiDictionaryDetailsLog.setKanjiEntryId(resultSet.getInt("kanji_entry_id"));
+		kanjiDictionaryDetailsLog.setKanjiEntryKanji(resultSet.getString("kanji_entry_kanji"));
+		kanjiDictionaryDetailsLog.setKanjiEntryTranslateList(resultSet.getString("kanji_entry_translateList"));
+		kanjiDictionaryDetailsLog.setKanjiEntryInfo(resultSet.getString("kanji_entry_info"));
+
+		return kanjiDictionaryDetailsLog;
+	}
+	
 	public void insertKanjiDictionaryCatalogLog(KanjiDictionaryCatalogLog kanjiDictionaryCatalogLog) throws SQLException {
 		
 		Connection connection = null;
@@ -862,6 +1076,57 @@ public class MySQLConnector {
 				connection.close();
 			}			
 		}		
+	}
+	
+	public KanjiDictionaryCatalogLog getKanjiDictionaryCatalogLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, page_no "
+					+ "from kanji_dictionary_catalog_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createKanjiDictionaryCatalogLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private KanjiDictionaryCatalogLog createKanjiDictionaryCatalogLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		KanjiDictionaryCatalogLog kanjiDictionaryCatalogLog = new KanjiDictionaryCatalogLog();
+
+		kanjiDictionaryCatalogLog.setId(resultSet.getLong("id"));
+		kanjiDictionaryCatalogLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		kanjiDictionaryCatalogLog.setPageNo(resultSet.getInt("page_no"));
+
+		return kanjiDictionaryCatalogLog;
 	}
 		
 	public void insertSuggestionSendLoggerModel(SuggestionSendLog suggestionSendLog) throws SQLException {
@@ -1048,6 +1313,58 @@ public class MySQLConnector {
 				connection.close();
 			}			
 		}		
+	}
+	
+	public GeneralExceptionLog getGeneralExceptionLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, status_code, exception "
+					+ "from general_exception_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createGeneralExceptionLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private GeneralExceptionLog createGeneralExceptionLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		GeneralExceptionLog generalExceptionLog = new GeneralExceptionLog();
+
+		generalExceptionLog.setId(resultSet.getLong("id"));
+		generalExceptionLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		generalExceptionLog.setStatusCode(resultSet.getInt("status_code"));
+		generalExceptionLog.setException(resultSet.getString("exception"));
+
+		return generalExceptionLog;
 	}
 	
 	public DailyLogProcessedMinMaxIds getCurrentDailyLogProcessedMinMaxIds() throws SQLException {
