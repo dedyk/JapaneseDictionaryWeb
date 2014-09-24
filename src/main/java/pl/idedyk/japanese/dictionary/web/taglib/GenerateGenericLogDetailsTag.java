@@ -42,6 +42,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
@@ -225,7 +226,6 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		
 		/*
 		+-------------------------------------+
-		| * kanji_dictionary_search_log       |
 		| * suggestion_send_log               |
 		| * word_dictionary_search_log        |
 		+-------------------------------------+
@@ -533,6 +533,27 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 
 			panelBody.addHtmlElement(table);
 			
+		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH) {
+			
+			KanjiDictionarySearchLog kanjiDictionarySearchLog = mySQLConnector.getKanjiDictionarySearchLogByGenericId(genericLog.getId());
+			
+			if (kanjiDictionarySearchLog == null) {
+				return null;
+			}
+
+			Table table = new Table();
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.kanjiDictionarySearchLog.findKanjiRequestWord"), kanjiDictionarySearchLog.getFindKanjiRequestWord());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.kanjiDictionarySearchLog.findKanjiRequestWordPlace"), kanjiDictionarySearchLog.getFindKanjiRequestWordPlace());
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.kanjiDictionarySearchLog.findKanjiRequestStrokeCountFrom"), kanjiDictionarySearchLog.getFindKanjiRequestStrokeCountFrom() != null ? 
+					String.valueOf(kanjiDictionarySearchLog.getFindKanjiRequestStrokeCountFrom()) : null);
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.kanjiDictionarySearchLog.findKanjiRequestStrokeCountTo"), kanjiDictionarySearchLog.getFindKanjiRequestStrokeCountTo() != null ? 
+					String.valueOf(kanjiDictionarySearchLog.getFindKanjiRequestStrokeCountTo()) : null);
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.kanjiDictionarySearchLog.findKanjiResultResultSize"), String.valueOf(kanjiDictionarySearchLog.getFindKanjiResultResultSize()));
+
+			panelBody.addHtmlElement(table);
+						
 		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE) {
 			
 			WordDictionaryAutocompleteLog wordDictionaryAutocompleteLog = mySQLConnector.getWordDictionaryAutocompleteLogByGenericId(genericLog.getId());

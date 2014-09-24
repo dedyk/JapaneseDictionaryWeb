@@ -423,7 +423,7 @@ public class MySQLConnector {
 		wordDictionaryAutocompleteLog.setId(resultSet.getLong("id"));
 		wordDictionaryAutocompleteLog.setGenericLogId(resultSet.getLong("generic_log_id"));
 		wordDictionaryAutocompleteLog.setTerm(resultSet.getString("term"));
-		wordDictionaryAutocompleteLog.setFoundElements(resultSet.getInt("found_elements"));
+		wordDictionaryAutocompleteLog.setFoundElements((Integer)resultSet.getObject("found_elements"));
 		
 		return wordDictionaryAutocompleteLog;
 	}
@@ -546,7 +546,7 @@ public class MySQLConnector {
 		wordDictionarySearchLog.setFindWordRequestOnlyCommonWords(resultSet.getBoolean("find_word_request_search_only_common_words"));
 		wordDictionarySearchLog.setFindWordRequestWordPlace(resultSet.getString("find_word_request_word_place"));
 		wordDictionarySearchLog.setFindWordRequestDictionaryEntryTypeList(resultSet.getString("find_word_request_dictionary_entry_type_list"));
-		wordDictionarySearchLog.setFindWordResultResultSize(resultSet.getInt("find_word_result_result_size"));
+		wordDictionarySearchLog.setFindWordResultResultSize((Integer)resultSet.getObject("find_word_result_result_size"));
 
 		return wordDictionarySearchLog;
 	}
@@ -651,7 +651,7 @@ public class MySQLConnector {
 
 		wordDictionaryDetailsLog.setId(resultSet.getLong("id"));
 		wordDictionaryDetailsLog.setGenericLogId(resultSet.getLong("generic_log_id"));
-		wordDictionaryDetailsLog.setDictionaryEntryId(resultSet.getInt("dictionary_entry_id"));
+		wordDictionaryDetailsLog.setDictionaryEntryId((Integer)resultSet.getObject("dictionary_entry_id"));
 		wordDictionaryDetailsLog.setDictionaryEntryKanji(resultSet.getString("dictionary_entry_kanji"));
 		wordDictionaryDetailsLog.setDictionaryEntryKanaList(resultSet.getString("dictionary_entry_kanaList"));
 		wordDictionaryDetailsLog.setDictionaryEntryRomajiList(resultSet.getString("dictionary_entry_romajiList"));
@@ -750,7 +750,7 @@ public class MySQLConnector {
 
 		wordDictionaryCatalogLog.setId(resultSet.getLong("id"));
 		wordDictionaryCatalogLog.setGenericLogId(resultSet.getLong("generic_log_id"));
-		wordDictionaryCatalogLog.setPageNo(resultSet.getInt("page_no"));
+		wordDictionaryCatalogLog.setPageNo((Integer)resultSet.getObject("page_no"));
 
 		return wordDictionaryCatalogLog;
 	}
@@ -846,7 +846,7 @@ public class MySQLConnector {
 		kanjiDictionaryAutocompleteLog.setId(resultSet.getLong("id"));
 		kanjiDictionaryAutocompleteLog.setGenericLogId(resultSet.getLong("generic_log_id"));
 		kanjiDictionaryAutocompleteLog.setTerm(resultSet.getString("term"));
-		kanjiDictionaryAutocompleteLog.setFoundElements(resultSet.getInt("found_elements"));
+		kanjiDictionaryAutocompleteLog.setFoundElements((Integer)resultSet.getObject("found_elements"));
 		
 		return kanjiDictionaryAutocompleteLog;
 	}
@@ -959,9 +959,9 @@ public class MySQLConnector {
 		kanjiDictionarySearchLog.setGenericLogId(resultSet.getLong("generic_log_id"));
 		kanjiDictionarySearchLog.setFindKanjiRequestWord(resultSet.getString("find_kanji_request_word"));
 		kanjiDictionarySearchLog.setFindKanjiRequestWordPlace(resultSet.getString("find_kanji_request_word_place"));
-		kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountFrom(resultSet.getInt("find_kanji_request_stroke_count_from"));
-		kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountTo(resultSet.getInt("find_kanji_request_stroke_count_to"));
-		kanjiDictionarySearchLog.setFindKanjiResultResultSize(resultSet.getInt("find_kanji_result_result_size"));
+		kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountFrom((Integer)resultSet.getObject("find_kanji_request_stroke_count_from"));
+		kanjiDictionarySearchLog.setFindKanjiRequestStrokeCountTo((Integer)resultSet.getObject("find_kanji_request_stroke_count_to"));
+		kanjiDictionarySearchLog.setFindKanjiResultResultSize((Integer)resultSet.getObject("find_kanji_result_result_size"));
 
 		return kanjiDictionarySearchLog;
 	}
@@ -1057,7 +1057,7 @@ public class MySQLConnector {
 		kanjiDictionaryRadicalsLog.setId(resultSet.getLong("id"));
 		kanjiDictionaryRadicalsLog.setGenericLogId(resultSet.getLong("generic_log_id"));
 		kanjiDictionaryRadicalsLog.setRadicals(resultSet.getString("radicals"));
-		kanjiDictionaryRadicalsLog.setFoundElements(resultSet.getInt("found_elements"));
+		kanjiDictionaryRadicalsLog.setFoundElements((Integer)resultSet.getObject("found_elements"));
 
 		return kanjiDictionaryRadicalsLog;
 	}
@@ -1251,7 +1251,7 @@ public class MySQLConnector {
 
 		kanjiDictionaryDetailsLog.setId(resultSet.getLong("id"));
 		kanjiDictionaryDetailsLog.setGenericLogId(resultSet.getLong("generic_log_id"));
-		kanjiDictionaryDetailsLog.setKanjiEntryId(resultSet.getInt("kanji_entry_id"));
+		kanjiDictionaryDetailsLog.setKanjiEntryId((Integer)resultSet.getObject("kanji_entry_id"));
 		kanjiDictionaryDetailsLog.setKanjiEntryKanji(resultSet.getString("kanji_entry_kanji"));
 		kanjiDictionaryDetailsLog.setKanjiEntryTranslateList(resultSet.getString("kanji_entry_translateList"));
 		kanjiDictionaryDetailsLog.setKanjiEntryInfo(resultSet.getString("kanji_entry_info"));
@@ -1348,7 +1348,7 @@ public class MySQLConnector {
 
 		kanjiDictionaryCatalogLog.setId(resultSet.getLong("id"));
 		kanjiDictionaryCatalogLog.setGenericLogId(resultSet.getLong("generic_log_id"));
-		kanjiDictionaryCatalogLog.setPageNo(resultSet.getInt("page_no"));
+		kanjiDictionaryCatalogLog.setPageNo((Integer)resultSet.getObject("page_no"));
 
 		return kanjiDictionaryCatalogLog;
 	}
@@ -1638,7 +1638,7 @@ public class MySQLConnector {
 
 		generalExceptionLog.setId(resultSet.getLong("id"));
 		generalExceptionLog.setGenericLogId(resultSet.getLong("generic_log_id"));
-		generalExceptionLog.setStatusCode(resultSet.getInt("status_code"));
+		generalExceptionLog.setStatusCode((Integer)resultSet.getObject("status_code"));
 		generalExceptionLog.setException(resultSet.getString("exception"));
 
 		return generalExceptionLog;
