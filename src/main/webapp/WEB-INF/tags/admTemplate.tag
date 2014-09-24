@@ -73,27 +73,6 @@
 			margin-bottom: 50px;
 		}
 	</style>
-
-	<spring:eval var="useGoogleAnalytics" expression="@applicationProperties.getProperty('use.google.analytics')" />
-	
-	<c:if test="${useGoogleAnalytics == true}">
-	
-		<spring:eval var="useGoogleAnalyticsCode" expression="@applicationProperties.getProperty('use.google.analytics.code')" />
-		<spring:eval var="useGoogleAnalyticsDomain" expression="@applicationProperties.getProperty('use.google.analytics.domain')" />
-
-		<script>
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-		
-		  ga('create', '${useGoogleAnalyticsCode}', '${useGoogleAnalyticsDomain}');
-		  ga('send', 'pageview');
-		
-		</script>
-
-	</c:if>
-
 </head>
 
 <body>
@@ -130,38 +109,7 @@
 							</c:otherwise>
 						</c:choose>
 
-						<%-- 
-
-						<c:choose>
-							<c:when test="${selectedMenu == 'kanjiDictionary'}">
-								<li class="active"><a href="<c:out value='${pageContext.request.contextPath}' />/kanjiDictionary"><spring:message code="template.menu.kanji"/></a></li>
-							</c:when>
-							<c:otherwise>
-								<li><a href="<c:out value='${pageContext.request.contextPath}' />/kanjiDictionary"><spring:message code="template.menu.kanji"/></a></li>
-							</c:otherwise>
-						</c:choose>
-
-						<c:choose>
-							<c:when test="${selectedMenu == 'suggestion'}">
-								<li class="active"><a href="<c:out value='${pageContext.request.contextPath}' />/suggestion"><spring:message code="template.menu.suggestion"/></a></li>
-							</c:when>
-							<c:otherwise>
-								<li><a href="<c:out value='${pageContext.request.contextPath}' />/suggestion"><spring:message code="template.menu.suggestion"/></a></li>
-							</c:otherwise>
-						</c:choose>
-						
-						<spring:eval var="googlePlusPageId" expression="@applicationProperties.getProperty('google.plus.page.id')" />
-						<li><a href="https://plus.google.com/${googlePlusPageId}" target="_blank"><spring:message code="template.menu.blog"/></a></li>
-
-						<c:choose>
-							<c:when test="${selectedMenu == 'info'}">
-								<li class="active"><a href="<c:out value='${pageContext.request.contextPath}' />/info"><spring:message code="template.menu.information"/></a></li>
-							</c:when>
-							<c:otherwise>
-								<li><a href="<c:out value='${pageContext.request.contextPath}' />/info"><spring:message code="template.menu.information"/></a></li>
-							</c:otherwise>
-						</c:choose>
-						--%>
+						<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/generateDailyReport"><spring:message code="admTemplate.menu.generateDailyReport"/></a></li>
 						
 						<li><a href="<c:url value="j_spring_security_logout" />"><spring:message code="admTemplate.menu.logout"/></a></li>
 					</ul>

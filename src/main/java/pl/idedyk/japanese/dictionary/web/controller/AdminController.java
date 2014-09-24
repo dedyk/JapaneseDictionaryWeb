@@ -219,54 +219,22 @@ public class AdminController {
 	}
     
     @RequestMapping(value = "/adm/generateDailyReport", method = RequestMethod.GET)
-    public void generateDailyReport(HttpServletRequest request, HttpSession session, Writer writer,
-    		@RequestParam(value="p", required = false) String password /* haslo */) throws IOException {
+    public String generateDailyReport(HttpServletRequest request, HttpSession session) throws IOException {
 
     	logger.info("Generowanie dziennego raportu na żądanie");
     	
     	// model do logowania
     	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
     	
-    	adminLoggerModel.setType(AdminLoggerModel.Type.GENERATE_DAILY_REPORT);
-    	
-    	// sprawdzenie hasla
-    	boolean checkPasswordResult = checkPassword(password);
-    	
-    	if (checkPasswordResult == true) {    		
-    		
-    		adminLoggerModel.setResult(AdminLoggerModel.Result.OK);
-    		
-    		// logowanie
-    		loggerSender.sendLog(adminLoggerModel);    	
-    		
-    		// generowanie raportu
-    		scheduleTask.generateDailyReport();    		
-    		
-    	} else { // niepoprawne haslo
-    		
-    		adminLoggerModel.setResult(AdminLoggerModel.Result.ERROR);    		
-    		adminLoggerModel.addParam("incorrect_password", password);
-    		
-    		logger.error("Niepoprawne hasło");
-    		
-    		// logowanie
-    		loggerSender.sendLog(adminLoggerModel);
-    	}    	
+    	adminLoggerModel.setType(AdminLoggerModel.Type.GENERATE_DAILY_REPORT);    		
+		adminLoggerModel.setResult(AdminLoggerModel.Result.OK);
 		
-		writer.append(adminLoggerModel.getResult().toString());
-    }
-    
-    private boolean checkPassword(String password) {
-    	
-    	if (password == null) {
-    		return false;
-    	}
-    	
-    	if (adminPassword.equals(password) == true) {
-    		return true;
-    		
-    	} else {
-    		return false;
-    	}
+		// logowanie
+		loggerSender.sendLog(adminLoggerModel);    	
+		
+		// generowanie raportu
+		scheduleTask.generateDailyReport();    		
+		
+		return "redirect:/adm/panel";
     }
 }
