@@ -223,11 +223,11 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		| * kanji_dictionary_details_log      |
 		| * kanji_dictionary_radicals_log     |
 		| * kanji_dictionary_search_log       |
-		| suggestion_send_log               |
-		| word_dictionary_autocomplete_log  |
-		| word_dictionary_catalog_log       |
-		| word_dictionary_details_log       |
-		| word_dictionary_search_log        |
+		| * suggestion_send_log               |
+		| * word_dictionary_autocomplete_log  |
+		| * word_dictionary_catalog_log       |
+		| * word_dictionary_details_log       |
+		| * word_dictionary_search_log        |
 		+-------------------------------------+
 		*/
 		
