@@ -58,13 +58,13 @@
 					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention5"/>					
 						<ul>
 	 						<li><a style="color: #777777" href="<spring:message code='info.page.body.attention5.link1'/>"><spring:message code="info.page.body.attention5.link1"/></a></li>
+							<li><a style="color: #777777" href="<spring:message code='info.page.body.attention5.link2'/>"><spring:message code="info.page.body.attention5.link2"/></a></li>
 						</ul>
 					</p>
 
 					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention6"/>					
 						<ul>
 	 						<li><a style="color: #777777" href="<spring:message code='info.page.body.attention6.link1'/>"><spring:message code="info.page.body.attention6.link1"/></a></li>
-							<li><a style="color: #777777" href="<spring:message code='info.page.body.attention6.link2'/>"><spring:message code="info.page.body.attention6.link2"/></a></li>
 						</ul>
 					</p>
 
@@ -77,17 +77,24 @@
 
 					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention8"/>					
 						<ul>
-	 						<li><spring:message code='info.page.body.attention8.source1'/></li>
-	 						<li><spring:message code='info.page.body.attention8.source2'/></li>
-	 						<li><spring:message code='info.page.body.attention8.source3'/></li>
-	 						<li><spring:message code='info.page.body.attention8.source4'/></li>
-	 						<li><spring:message code='info.page.body.attention8.source5'/></li>
+	 						<li><a style="color: #777777" href="<spring:message code='info.page.body.attention8.link1'/>"><spring:message code="info.page.body.attention8.link1"/></a></li>
+							<li><a style="color: #777777" href="<spring:message code='info.page.body.attention8.link2'/>"><spring:message code="info.page.body.attention8.link2"/></a></li>
 						</ul>
 					</p>
 
 					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention9"/>					
 						<ul>
-	 						<li><a style="color: #777777" href="<spring:message code='info.page.body.attention9.link1'/>"><spring:message code="info.page.body.attention9.link1"/></a></li>
+	 						<li><spring:message code='info.page.body.attention9.source1'/></li>
+	 						<li><spring:message code='info.page.body.attention9.source2'/></li>
+	 						<li><spring:message code='info.page.body.attention9.source3'/></li>
+	 						<li><spring:message code='info.page.body.attention9.source4'/></li>
+	 						<li><spring:message code='info.page.body.attention9.source5'/></li>
+						</ul>
+					</p>
+
+					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention10"/>					
+						<ul>
+	 						<li><a style="color: #777777" href="<spring:message code='info.page.body.attention10.link1'/>"><spring:message code="info.page.body.attention10.link1"/></a></li>
 						</ul>
 					</p>
 				

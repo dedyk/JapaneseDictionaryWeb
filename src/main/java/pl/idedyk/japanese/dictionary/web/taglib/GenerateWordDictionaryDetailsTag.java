@@ -20,7 +20,9 @@ import pl.idedyk.japanese.dictionary.api.dto.AttributeType;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
+import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
+import pl.idedyk.japanese.dictionary.api.dto.TatoebaSentence;
 import pl.idedyk.japanese.dictionary.api.example.ExampleManager;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupTypeElements;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleResult;
@@ -79,7 +81,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             	
             	return SKIP_BODY;
             }
-            
+                        
             Div mainContentDiv = new Div();
             
             Menu mainMenu = new Menu(null, null);
@@ -93,6 +95,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             // generowanie informacji podstawowych
             contentDiv.addHtmlElement(generateMainInfo(mainMenu));
             
+            // generowanie przykladowych zdan
+            Div exampleSentenceDiv = generateExampleSentence(mainMenu);
+            
+            if (exampleSentenceDiv != null) {
+            	contentDiv.addHtmlElement(exampleSentenceDiv);
+            }
+            
             // odmiany gramatyczne
     		Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache = new HashMap<GrammaFormConjugateResultType, GrammaFormConjugateResult>();
             
@@ -102,7 +111,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             	contentDiv.addHtmlElement(grammaFormConjugateDiv);
             }
             
-            // przyklady
+            // przyklady gramatyczne
             Div exampleDiv = generateExample(mainMenu, grammaFormCache);
             
             if (exampleDiv != null) {
@@ -931,6 +940,114 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 		
 		return knownKanjiDiv;
+	}
+	
+	private Div generateExampleSentence(Menu mainMenu) {
+
+		List<String> exampleSentenceGroupIdsList = dictionaryEntry.getExampleSentenceGroupIdsList();
+		
+		if (exampleSentenceGroupIdsList == null || exampleSentenceGroupIdsList.size() == 0) {
+			return null;
+		}
+		
+		List<GroupWithTatoebaSentenceList> tatoebaSentenceGroupList = new ArrayList<GroupWithTatoebaSentenceList>();
+		
+    	for (String currentExampleSentenceGroupId : exampleSentenceGroupIdsList) {
+			
+    		GroupWithTatoebaSentenceList tatoebaSentenceGroup = dictionaryManager.getTatoebaSentenceGroup(currentExampleSentenceGroupId);
+    		
+    		if (tatoebaSentenceGroup != null) {    			
+    			tatoebaSentenceGroupList.add(tatoebaSentenceGroup);
+    		}
+		}
+    	
+    	if (tatoebaSentenceGroupList.size() == 0) {
+    		return null;
+    	}
+		
+		Div panelDiv = new Div("panel panel-default");
+		
+		Div panelHeading = new Div("panel-heading");
+		
+		// tytul sekcji
+		H h3Title = new H(3, "panel-title");
+		
+		h3Title.setId("exampleSentenceId");
+		
+		h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleSentences")));		
+		Menu grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.exampleSentences"));
+				
+		mainMenu.getChildMenu().add(grammaFormConjugateMenu);
+		
+		panelHeading.addHtmlElement(h3Title);
+		
+		panelDiv.addHtmlElement(panelHeading);
+		
+		// zawartosc sekcji
+		Div panelBody = new Div("panel-body");
+		
+		panelDiv.addHtmlElement(panelBody);
+		
+		for (int tatoebaSentenceGroupListIdx = 0; tatoebaSentenceGroupListIdx < tatoebaSentenceGroupList.size(); ++tatoebaSentenceGroupListIdx) {
+			
+			GroupWithTatoebaSentenceList currentTatoebeSentenceGroup = tatoebaSentenceGroupList.get(tatoebaSentenceGroupListIdx);
+			
+			List<TatoebaSentence> tatoebaSentenceList = currentTatoebeSentenceGroup.getTatoebaSentenceList();
+						
+			List<TatoebaSentence> polishTatoebaSentenceList = new ArrayList<TatoebaSentence>();
+			List<TatoebaSentence> japaneseTatoebaSentenceList = new ArrayList<TatoebaSentence>();
+			
+			for (TatoebaSentence currentTatoebaSentence : tatoebaSentenceList) {
+				
+				if (currentTatoebaSentence.getLang().equals("pol") == true) {
+					polishTatoebaSentenceList.add(currentTatoebaSentence);
+					
+				} else if (currentTatoebaSentence.getLang().equals("jpn") == true) {
+					japaneseTatoebaSentenceList.add(currentTatoebaSentence);
+				}				
+			}
+			
+			if (polishTatoebaSentenceList.size() > 0 && japaneseTatoebaSentenceList.size() > 0) {
+								
+				for (TatoebaSentence currentPolishTatoebaSentence : polishTatoebaSentenceList) {
+					
+					Div sentenceDiv = new Div("col-md-12");
+					panelBody.addHtmlElement(sentenceDiv);
+					
+					H sentenceH4 = new H(4);
+					
+					sentenceH4.setStyle("margin-bottom: 0px");
+					
+					sentenceH4.addHtmlElement(new Text(currentPolishTatoebaSentence.getSentence()));
+					
+					sentenceDiv.addHtmlElement(sentenceH4);
+				}
+				
+				for (TatoebaSentence currentJapaneseTatoebaSentence : japaneseTatoebaSentenceList) {
+					
+					Div sentenceDiv = new Div("col-md-12");
+					panelBody.addHtmlElement(sentenceDiv);
+					
+					H sentenceH4 = new H(4);
+					
+					sentenceH4.setStyle("margin-bottom: 0px");
+					
+					sentenceH4.addHtmlElement(new Text(currentJapaneseTatoebaSentence.getSentence()));
+					
+					sentenceDiv.addHtmlElement(sentenceH4);
+				}				
+			
+				if (tatoebaSentenceGroupListIdx != tatoebaSentenceGroupList.size() - 1) {
+					
+					Div div = new Div("col-md-12");
+					panelBody.addHtmlElement(div);
+					
+					div.addHtmlElement(new Hr());
+				}
+			}
+		}
+		
+		return panelDiv;
 	}
 	
 	private Div generateGrammaFormConjugate(Menu mainMenu, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) throws IOException {
