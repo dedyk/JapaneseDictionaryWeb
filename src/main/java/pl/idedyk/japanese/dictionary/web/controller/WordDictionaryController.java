@@ -142,6 +142,11 @@ public class WordDictionaryController {
 		model.put("findWordResult", findWordResult);
 		model.put("doNotShowSocialButtons", Boolean.TRUE);
 		
+		if (findWordResult.foundGrammaAndExamples == true) {
+			model.put("searchResultInfo", messageSource.getMessage("wordDictionary.page.search.info.foundGrammaAndExamples", 
+					new Object[] { }, Locale.getDefault()));
+		}
+		
 		return "wordDictionary";
 	}
 	
@@ -219,6 +224,9 @@ public class WordDictionaryController {
 				findWordRequest.dictionaryEntryTypeList.add(DictionaryEntryType.valueOf(currentDictionaryTypeString));
 			}			
 		}		
+		
+		// searchGrammaFormAndExamples
+		findWordRequest.searchGrammaFormAndExamples = true;
 		
 		return findWordRequest;
 	}

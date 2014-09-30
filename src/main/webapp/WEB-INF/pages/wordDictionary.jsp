@@ -97,7 +97,11 @@
 			<hr id="findWordResultHrId" style="margin-bottom: 10px" />
 		
 			<p class="text-left"><h4><spring:message code="wordDictionary.page.search.table.caption" /></h4></p>
-		
+
+			<c:if test="${searchResultInfo != null}">
+				<div class="alert alert-info" id="searchResultInfoId"> ${searchResultInfo} </div>
+			</c:if>
+
 			<table id="wordDictionaryFindWordResult" class="table table-striped" style="font-size: 120%;">
 				<thead>
 					<tr>
