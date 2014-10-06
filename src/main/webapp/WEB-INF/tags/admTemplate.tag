@@ -111,6 +111,8 @@
 
 						<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/generateDailyReport"><spring:message code="admTemplate.menu.generateDailyReport"/></a></li>
 						
+						<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/showCurrentDailyReport"><spring:message code="admTemplate.menu.showCurrentDailyReport"/></a></li>
+						
 						<li><a href="<c:url value="j_spring_security_logout" />"><spring:message code="admTemplate.menu.logout"/></a></li>
 					</ul>
 				</div>

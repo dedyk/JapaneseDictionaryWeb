@@ -67,7 +67,9 @@ public class AdminLoggerModel extends LoggerModelCommon {
 		
 		ADMIN_SHOW_GENERIC_LOG,
 		
-		GENERATE_DAILY_REPORT;
+		GENERATE_DAILY_REPORT,
+		
+		SHOW_CURRENT_DAILY_REPORT;
 		
 	}
 

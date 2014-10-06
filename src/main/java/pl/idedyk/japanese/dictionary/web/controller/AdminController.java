@@ -38,6 +38,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask;
+import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask.DailyReport;
 
 @Controller
 public class AdminController {
@@ -215,6 +216,9 @@ public class AdminController {
 		
 		model.put("selectedMenu", "panel");
 		
+		model.put("pageTitle", messageSource.getMessage("admin.panel.genericLogDetails.page.genericLog.title", new Object[] { }, Locale.getDefault()));
+		model.put("pageDescription", "");
+		
 		return "admShowGenericLogDetails";
 	}
     
@@ -236,5 +240,31 @@ public class AdminController {
 		scheduleTask.generateDailyReport();    		
 		
 		return "redirect:/adm/panel";
+    }
+    
+    @RequestMapping(value = "/adm/showCurrentDailyReport", method = RequestMethod.GET)
+    public String showCurrentDailyReport(HttpServletRequest request, HttpSession session, Map<String, Object> model) throws Exception {
+
+    	logger.info("Pokazywanie obecnej postaci dziennego raportu");
+
+    	// model do logowania
+    	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
+    	
+    	adminLoggerModel.setType(AdminLoggerModel.Type.SHOW_CURRENT_DAILY_REPORT);    		
+		adminLoggerModel.setResult(AdminLoggerModel.Result.OK);
+		
+		// logowanie
+		loggerSender.sendLog(adminLoggerModel);
+		
+		DailyReport generateDailyReportBody = scheduleTask.generateDailyReportBody();
+
+		model.put("selectedMenu", "panel");
+		
+		model.put("dailyReportBody", generateDailyReportBody != null ? generateDailyReportBody.body : "");
+    	
+		model.put("pageTitle", messageSource.getMessage("admin.panel.showCurrentDailyReport.title", new Object[] { }, Locale.getDefault()));
+		model.put("pageDescription", "");
+		
+    	return "admShowCurrentDailyReport";
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 import pl.idedyk.japanese.dictionary.web.html.B;
 import pl.idedyk.japanese.dictionary.web.html.Div;
@@ -59,18 +60,18 @@ public class ScheduleTask {
 	@Value("${base.server}")
 	private String baseServer;
 	
-	//@Scheduled(cron="0 * * * * ?") // co minute
-	@Scheduled(cron="0 0 20 * * ?") // o 20
-	public void generateDailyReport() {
-										
+	public DailyReport generateDailyReportBody() throws Exception {
+		
 		logger.info("Generowanie dziennego raportu");
-								
+		
 		// pobranie przedzialu wpisow
 		try {
 			DailyLogProcessedMinMaxIds dailyLogProcessedMinMaxIds = mySQLConnector.getCurrentDailyLogProcessedMinMaxIds();
 			
 			if (dailyLogProcessedMinMaxIds == null) {
 				logger.info("Brak wpisow do przetworzenia");
+				
+				return null;
 				
 			} else {
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -202,15 +203,43 @@ public class ScheduleTask {
 				StringWriter stringWriter = new StringWriter();
 				
 				reportDiv.render(stringWriter);
+								
+				DailyReport dailyReport = new DailyReport();
 				
-				logger.info("Wygenerowano dzienny raport: \n\n" + stringWriter.toString());
+				dailyReport.body = stringWriter.toString();
+				dailyReport.title = title;
+				dailyReport.minId = dailyLogProcessedMinMaxIds.getMinId();
+				dailyReport.maxId = dailyLogProcessedMinMaxIds.getMaxId();
 				
-				// zablokuj wpisy
-				mySQLConnector.blockDailyLogProcessedIds(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
-				
-				// publikacja do kolejki i do wyslania
-				loggerSender.sendLog(new DailyReportLoggerModel(title, stringWriter.toString()));
+				return dailyReport;
 			}
+			
+		} catch (Exception e) {
+			throw new Exception("Blad generowania dziennego raportu", e);
+		}
+	}
+	
+	//@Scheduled(cron="0 * * * * ?") // co minute
+	@Scheduled(cron="0 0 20 * * ?") // o 20
+	public void generateDailyReport() {
+										
+		// pobranie przedzialu wpisow
+		try {
+			DailyReport dailyReport = generateDailyReportBody();
+			
+			if (dailyReport == null) {
+				logger.info("Brak elementow do generowania dziennego raportu");
+				
+				return;
+			}
+			
+			logger.info("Wygenerowano dzienny raport: \n\n" + dailyReport.body);
+			
+			// zablokuj wpisy
+			mySQLConnector.blockDailyLogProcessedIds(dailyReport.minId, dailyReport.maxId);
+			
+			// publikacja do kolejki i do wyslania
+			loggerSender.sendLog(new DailyReportLoggerModel(dailyReport.title, dailyReport.body));			
 			
 		} catch (Exception e) {
 			logger.error("Blad generowania dziennego raportu", e);
@@ -245,7 +274,7 @@ public class ScheduleTask {
 			Td td1 = new Td(null, "padding: 5px;");
 			tr.addHtmlElement(td1);
 			
-			td1.addHtmlElement(new Text(text));
+			td1.addHtmlElement(new Text(HtmlUtils.htmlEscape(text)));
 
 			Td td2 = new Td(null, "padding: 5px;");
 			tr.addHtmlElement(td2);
@@ -360,5 +389,16 @@ public class ScheduleTask {
 			
 			logger.error("Blad podczas kasowania starych wpisow z kolejki", e);
 		}
+	}
+	
+	public static class DailyReport {
+		
+		public String body;
+		
+		public String title;
+		
+		public Long minId;
+		
+		public Long maxId;		
 	}
 }
