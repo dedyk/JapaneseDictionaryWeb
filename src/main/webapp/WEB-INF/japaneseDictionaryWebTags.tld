@@ -93,4 +93,9 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	<tag>
+		<name>isRobot</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.IsRobotTag</tagclass>
+		<info>Generuje zawartosc tylko dla robotow</info>
+	</tag>
 </taglib> 

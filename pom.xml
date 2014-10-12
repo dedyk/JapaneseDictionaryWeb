@@ -265,6 +265,12 @@
 			<version>3.3.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>net.sf.uadetector</groupId>
+			<artifactId>uadetector-resources</artifactId>
+			<version>2014.09</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
