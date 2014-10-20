@@ -1,12 +1,11 @@
 package pl.idedyk.japanese.dictionary.web.sitemap;
 
-import java.io.StringWriter;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.helpers.DefaultValidationEventHandler;
 
@@ -33,8 +32,8 @@ public class SitemapManager {
 	
 	private String baseServer;
 	
-	private Urlset templateSitemap;
-	
+	private File sitemapFile;
+		
 	@Autowired
 	private DictionaryManager dictionaryManager;
 	
@@ -74,9 +73,9 @@ public class SitemapManager {
 		}).start();
 	}	
 	
-	private synchronized void generateSitemap() {
+	private synchronized void generateSitemap() throws Exception {
 		
-		if (templateSitemap != null) {
+		if (sitemapFile != null && sitemapFile.canRead() == true) {
 			return;
 		}
 		
@@ -86,10 +85,10 @@ public class SitemapManager {
 		ObjectFactory objectFactory = new ObjectFactory();
 		
 		// utworzenie glownego elementu szablonu
-		templateSitemap = objectFactory.createUrlset();
+		Urlset sitemapUrlset = objectFactory.createUrlset();
 		
 		// pobranie listy url'i
-		List<TUrl> urlList = templateSitemap.getUrl();
+		List<TUrl> urlList = sitemapUrlset.getUrl();
 		
 		// dodanie statycznych linkow
 		
@@ -180,6 +179,11 @@ public class SitemapManager {
 			urlList.add(createUrl(objectFactory, url, TChangeFreq.MONTHLY, BigDecimal.valueOf(0.1)));
 		}
 		
+		sitemapFile = File.createTempFile("japaneseDictionaryWeb_sitemap", "");		
+		sitemapFile.deleteOnExit();
+		
+		marshaller.marshal(sitemapUrlset, sitemapFile);
+		
 		logger.info("Generowanie pliku sitemap zakonczone");
 	}
 	
@@ -187,7 +191,7 @@ public class SitemapManager {
 		
 		TUrl url = objectFactory.createTUrl();
 		
-		url.setLoc(link);
+		url.setLoc(baseServer + link);
 		url.setLastmod(lastMod);
 		url.setChangefreq(changeFreq);
 		url.setPriority(priority);
@@ -195,46 +199,12 @@ public class SitemapManager {
 		return url;
 	}
 	
-	public Urlset getSitemap(String contextPath) {
+	public File getSitemap() throws Exception {
 		
 		// wygenerowanie pliku sitemap jesli nie zostal wygenerowany wczesniej
 		generateSitemap();
-		
-		// utworzenie fabryczki
-		ObjectFactory objectFactory = new ObjectFactory();
-		
-		// utworzenie glownego elementu
-		Urlset urlSet = objectFactory.createUrlset();
-		
-		for (TUrl templateUrl : templateSitemap.getUrl()) {
-			
-			TUrl newUrl = objectFactory.createTUrl();
-			
-			newUrl.setLoc(baseServer + contextPath + templateUrl.getLoc());
-			newUrl.setChangefreq(templateUrl.getChangefreq());
-			newUrl.setLastmod(templateUrl.getLastmod());
-			newUrl.setPriority(templateUrl.getPriority());
-			
-			urlSet.getUrl().add(newUrl);			
-		}
-		
-		return urlSet;
-	}
-	
-	public String getSitemapAsString(String contextPath) {
-		
-		Urlset urlSet = getSitemap(contextPath);
-		
-		StringWriter stringWriter = new StringWriter();
-		
-		try {
-			marshaller.marshal(urlSet, stringWriter);
-			
-			return stringWriter.toString();
-			
-		} catch (JAXBException e) {
-			throw new RuntimeException("Błąd wygenerowanie pliku sitemap", e);
-		}		
+
+		return sitemapFile;		
 	}
 
 	public String getBaseServer() {
