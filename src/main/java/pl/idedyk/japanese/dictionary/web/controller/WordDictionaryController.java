@@ -228,6 +228,9 @@ public class WordDictionaryController {
 		// searchGrammaFormAndExamples
 		findWordRequest.searchGrammaFormAndExamples = true;
 		
+		// searchName
+		findWordRequest.searchName = true;
+		
 		return findWordRequest;
 	}
 	
