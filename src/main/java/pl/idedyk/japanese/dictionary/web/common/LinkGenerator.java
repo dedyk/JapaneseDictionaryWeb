@@ -14,12 +14,23 @@ public class LinkGenerator {
 	public static String generateDictionaryEntryDetailsLink(String contextPath, DictionaryEntry dictionaryEntry, 
 			DictionaryEntryType forceDictionaryEntryType) {
 		
+		boolean name = dictionaryEntry.isName();
+		
+		String pathPrefix = null;
+		
+		if (name == false) {
+			pathPrefix = "wordDictionaryDetails";
+			
+		} else {
+			pathPrefix = "wordDictionaryNameDetails";
+		}
+		
 		String kanji = dictionaryEntry.getKanji();
 		List<String> kanaList = dictionaryEntry.getKanaList();
 		
 		if (forceDictionaryEntryType == null) {
 			
-			String linkTemplate = contextPath + "/wordDictionaryDetails/%ID%/%KANJI%/%KANA%";
+			String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%";
 			
             return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
             		replaceAll("%KANJI%", kanji != null ? kanji : "-").
@@ -27,7 +38,7 @@ public class LinkGenerator {
 			
 		} else {
 			
-			String linkTemplate = contextPath + "/wordDictionaryDetails/%ID%/%KANJI%/%KANA%?forceDictionaryEntryType=%FORCEDICTIONARYENTRYTYPE%";
+			String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%?forceDictionaryEntryType=%FORCEDICTIONARYENTRYTYPE%";
 			
             return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
             		replaceAll("%KANJI%", kanji != null ? kanji : "-").
