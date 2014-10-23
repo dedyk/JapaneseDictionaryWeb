@@ -220,9 +220,11 @@
 								
 				<jdwt:isRobot>
 					<c:set var="wordDictionaryUrl"><c:out value='${pageContext.request.contextPath}' />/wordDictionaryCatalog/1</c:set>
+					<c:set var="wordDictionaryNameUrl"><c:out value='${pageContext.request.contextPath}' />/wordDictionaryNameCatalog/1</c:set>
 					<c:set var="kanjiDictionaryUrl"><c:out value='${pageContext.request.contextPath}' />/kanjiDictionaryCatalog/1</c:set>
 					
 					<a style="color: #777777" href="${wordDictionaryUrl}"><spring:message code="template.footer.catalog.word"/></a> -
+					<a style="color: #777777" href="${wordDictionaryNameUrl}"><spring:message code="template.footer.catalog.wordname"/></a> -
 					<a style="color: #777777" href="${kanjiDictionaryUrl}"><spring:message code="template.footer.catalog.kanji"/></a>				
 				</jdwt:isRobot>				
 			</div>
