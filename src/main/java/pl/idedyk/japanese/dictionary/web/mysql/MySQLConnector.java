@@ -40,6 +40,8 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import snaq.db.ConnectionPool;
 
@@ -755,6 +757,210 @@ public class MySQLConnector {
 		return wordDictionaryCatalogLog;
 	}
 	
+	public void insertWordDictionaryNameDetailsLog(WordDictionaryNameDetailsLog wordDictionaryNameDetailsLog) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into word_dictionary_name_details_log(generic_log_id, dictionary_entry_id, "
+					+ "dictionary_entry_kanji, dictionary_entry_kanaList, dictionary_entry_romajiList, "
+					+ "dictionary_entry_translateList, dictionary_entry_info) "
+					+ "values(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, wordDictionaryNameDetailsLog.getGenericLogId());
+			
+			preparedStatement.setInt(2, wordDictionaryNameDetailsLog.getDictionaryEntryId());
+			
+			preparedStatement.setString(3, wordDictionaryNameDetailsLog.getDictionaryEntryKanji());
+			preparedStatement.setString(4, wordDictionaryNameDetailsLog.getDictionaryEntryKanaList());
+			preparedStatement.setString(5, wordDictionaryNameDetailsLog.getDictionaryEntryRomajiList());
+			preparedStatement.setString(6, wordDictionaryNameDetailsLog.getDictionaryEntryTranslateList());
+			preparedStatement.setString(7, wordDictionaryNameDetailsLog.getDictionaryEntryInfo());
+			
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			wordDictionaryNameDetailsLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public WordDictionaryNameDetailsLog getWordDictionaryNameDetailsLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, dictionary_entry_id, "
+					+ "dictionary_entry_kanji, dictionary_entry_kanaList, dictionary_entry_romajiList, "
+					+ "dictionary_entry_translateList, dictionary_entry_info "
+					+ "from word_dictionary_name_details_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createWordDictionaryNameDetailsLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private WordDictionaryNameDetailsLog createWordDictionaryNameDetailsLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		WordDictionaryNameDetailsLog wordDictionaryNameDetailsLog = new WordDictionaryNameDetailsLog();
+
+		wordDictionaryNameDetailsLog.setId(resultSet.getLong("id"));
+		wordDictionaryNameDetailsLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		wordDictionaryNameDetailsLog.setDictionaryEntryId((Integer)resultSet.getObject("dictionary_entry_id"));
+		wordDictionaryNameDetailsLog.setDictionaryEntryKanji(resultSet.getString("dictionary_entry_kanji"));
+		wordDictionaryNameDetailsLog.setDictionaryEntryKanaList(resultSet.getString("dictionary_entry_kanaList"));
+		wordDictionaryNameDetailsLog.setDictionaryEntryRomajiList(resultSet.getString("dictionary_entry_romajiList"));
+		wordDictionaryNameDetailsLog.setDictionaryEntryTranslateList(resultSet.getString("dictionary_entry_translateList"));
+		wordDictionaryNameDetailsLog.setDictionaryEntryInfo(resultSet.getString("dictionary_entry_info"));
+
+		return wordDictionaryNameDetailsLog;
+	}
+	
+	public void insertWordDictionaryNameCatalogLog(WordDictionaryNameCatalogLog wordDictionaryNameCatalogLog) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into word_dictionary_name_catalog_log(generic_log_id, page_no) "
+					+ "values(?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, wordDictionaryNameCatalogLog.getGenericLogId());
+			preparedStatement.setInt(2, wordDictionaryNameCatalogLog.getPageNo());
+						
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			wordDictionaryNameCatalogLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public WordDictionaryNameCatalogLog getWordDictionaryNameCatalogLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, page_no "
+					+ "from word_dictionary_name_catalog_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createWordDictionaryNameCatalogLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private WordDictionaryNameCatalogLog createWordDictionaryNameCatalogLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		WordDictionaryNameCatalogLog wordDictionaryNameCatalogLog = new WordDictionaryNameCatalogLog();
+
+		wordDictionaryNameCatalogLog.setId(resultSet.getLong("id"));
+		wordDictionaryNameCatalogLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		wordDictionaryNameCatalogLog.setPageNo((Integer)resultSet.getObject("page_no"));
+
+		return wordDictionaryNameCatalogLog;
+	}
+
 	public void insertKanjiDictionaryAutocompleteLog(KanjiDictionaryAutocompleteLog kanjiDictionaryAutocompleteLog) throws SQLException {
 
 		Connection connection = null;

@@ -39,6 +39,7 @@ import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
 
@@ -293,6 +294,58 @@ public class WordDictionaryController {
 		} else {
 			
 			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa: " + id + " / " + kanji + " / " + kana);
+			
+			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji", 
+					new Object[] { "-", "-", "-" }, Locale.getDefault());
+			
+			model.put("pageTitle", pageTitle);
+		}
+		
+		if (forceDictionaryEntryType != null) {
+			
+			try {
+				DictionaryEntryType forceDictionaryEntryTypeType = DictionaryEntryType.valueOf(forceDictionaryEntryType);
+				
+				model.put("forceDictionaryEntryType", forceDictionaryEntryTypeType);
+				
+			} catch (Exception e) {
+				
+				logger.info("Niepoprawna wartość parametru 'forceDictionaryEntryType' = " + forceDictionaryEntryType);				
+			}
+		}		
+				
+		model.put("dictionaryEntry", dictionaryEntry);
+		model.put("selectedMenu", "wordDictionary");
+		
+		return "wordDictionaryDetails";
+	}
+	
+	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
+	public String showWordDictionaryNameDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
+			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) {
+		
+		// pobranie slowa
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameById(id);
+						
+		// tytul strony
+		if (dictionaryEntry != null) {
+			
+			logger.info("Znaleziono słówko dla zapytania o szczegóły słowa (nazwa): " + dictionaryEntry);
+			
+			// logowanie
+			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
+
+			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry);
+						
+			String pageTitle = wordDictionaryDetailsTitleAndDescription[0];
+			String pageDescription = wordDictionaryDetailsTitleAndDescription[1];
+			
+			model.put("pageTitle", pageTitle);
+			model.put("pageDescription", pageDescription);
+			
+		} else {
+			
+			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa (nazwa): " + id + " / " + kanji + " / " + kana);
 			
 			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji", 
 					new Object[] { "-", "-", "-" }, Locale.getDefault());

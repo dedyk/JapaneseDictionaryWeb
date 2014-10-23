@@ -50,6 +50,8 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 
 public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAbstract {
@@ -677,6 +679,39 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 
 			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordResultResultSize"), String.valueOf(wordDictionarySearchLog.getFindWordResultResultSize()));
 									
+			panelBody.addHtmlElement(table);
+			
+		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_NAME_CATALOG) {
+			
+			WordDictionaryNameCatalogLog wordDictionaryNameCatalogLog = mySQLConnector.getWordDictionaryNameCatalogLogByGenericId(genericLog.getId());
+			
+			if (wordDictionaryNameCatalogLog == null) {
+				return null;
+			}
+			
+			Table table = new Table();
+						
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryNameCatalogLog.pageNo"), String.valueOf(wordDictionaryNameCatalogLog.getPageNo()));			
+			
+			panelBody.addHtmlElement(table);			
+			
+		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_NAME_DETAILS) {
+			
+			WordDictionaryNameDetailsLog wordDictionaryNameDetailsLog = mySQLConnector.getWordDictionaryNameDetailsLogByGenericId(genericLog.getId());
+			
+			if (wordDictionaryNameDetailsLog == null) {
+				return null;
+			}
+			
+			Table table = new Table();
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryNameDetailsLog.dictionaryEntryId"), String.valueOf(wordDictionaryNameDetailsLog.getDictionaryEntryId()));
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryNameDetailsLog.dictionaryEntryKanji"), wordDictionaryNameDetailsLog.getDictionaryEntryKanji());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryNameDetailsLog.dictionaryEntryKanaList"), wordDictionaryNameDetailsLog.getDictionaryEntryKanaList());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryNameDetailsLog.dictionaryEntryRomajiList"), wordDictionaryNameDetailsLog.getDictionaryEntryRomajiList());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryNameDetailsLog.dictionaryEntryTranslateList"), wordDictionaryNameDetailsLog.getDictionaryEntryTranslateList());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionaryNameDetailsLog.dictionaryEntryInfo"), wordDictionaryNameDetailsLog.getDictionaryEntryInfo());
+			
 			panelBody.addHtmlElement(table);
 			
 		} else if (operation == GenericLogOperationEnum.SUGGESTION_SEND) {
