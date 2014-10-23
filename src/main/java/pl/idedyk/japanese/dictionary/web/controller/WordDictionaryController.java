@@ -39,6 +39,7 @@ import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
@@ -466,5 +467,58 @@ public class WordDictionaryController {
 		//model.put("metaRobots", "noindex, follow");
 		
 		return "wordDictionaryCatalog";
+	}
+
+	@RequestMapping(value = "/wordDictionaryNameCatalog/{page}", method = RequestMethod.GET)
+	public String wordDictionaryNameCatalog(HttpServletRequest request, HttpSession session, 
+			@PathVariable("page") int pageNo,
+			Map<String, Object> model) {
+		
+		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
+		
+		if (pageNo < 1) {
+			pageNo = 1;
+		}
+				
+		logger.info("Wyświetlanie katalogu słów(nazwa) dla strony: " + pageNo);
+		
+		// szukanie		
+		List<DictionaryEntry> dictionaryEntryList = dictionaryManager.getWordsNameGroup(pageSize, pageNo - 1);
+		
+		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesNameSize();
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryNameCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo));
+
+		// stworzenie zaslepkowego findWordRequest i findWordResult
+		FindWordRequest findWordRequest = new FindWordRequest();
+		
+		FindWordResult findWordResult = new FindWordResult();
+		
+		List<FindWordResult.ResultItem> resultItemList = new ArrayList<FindWordResult.ResultItem>();
+		
+		for (DictionaryEntry dictionaryEntry : dictionaryEntryList) {
+			resultItemList.add(new FindWordResult.ResultItem(dictionaryEntry));
+		}
+
+		findWordResult.setResult(resultItemList);
+		
+		if (dictionaryEntriesSize > (pageNo) * pageSize) {
+			findWordResult.setMoreElemetsExists(true);
+			
+		} else {
+			findWordResult.setMoreElemetsExists(false);
+		}
+		
+		int lastPageNo = (dictionaryEntriesSize / pageSize) + 1;
+				
+		model.put("selectedMenu", "wordDictionary");
+		model.put("findWordRequest", findWordRequest);
+		model.put("findWordResult", findWordResult);
+		model.put("pageNo", pageNo);
+		model.put("lastPageNo", lastPageNo);
+		//model.put("metaRobots", "noindex, follow");
+		
+		return "wordDictionaryNameCatalog";
 	}
 }

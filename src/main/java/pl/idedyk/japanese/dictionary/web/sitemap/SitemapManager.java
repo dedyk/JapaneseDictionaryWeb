@@ -112,6 +112,16 @@ public class SitemapManager {
 			
 			sitemapHelper.createUrl(url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
+
+		// katalog slow(nazwa
+		final int wordNamePageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
+		
+		for (int pageNo = 0; pageNo <= dictionaryEntriesNameSize / wordNamePageSize; ++pageNo) {
+			
+			String url = "/wordDictionaryNameCatalog/" + (pageNo + 1);
+			
+			sitemapHelper.createUrl(url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
+		}
 		
 		// pobranie znakow kanji
 		List<KanjiEntry> allKanjis = dictionaryManager.getAllKanjis(false, true, false);
