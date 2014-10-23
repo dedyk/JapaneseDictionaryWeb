@@ -323,7 +323,7 @@ public class WordDictionaryController {
 	
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
 	public String showWordDictionaryNameDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
-			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) {
+			@PathVariable("kana") String kana, Map<String, Object> model) {
 		
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameById(id);
@@ -353,20 +353,7 @@ public class WordDictionaryController {
 			
 			model.put("pageTitle", pageTitle);
 		}
-		
-		if (forceDictionaryEntryType != null) {
-			
-			try {
-				DictionaryEntryType forceDictionaryEntryTypeType = DictionaryEntryType.valueOf(forceDictionaryEntryType);
-				
-				model.put("forceDictionaryEntryType", forceDictionaryEntryTypeType);
-				
-			} catch (Exception e) {
-				
-				logger.info("Niepoprawna wartość parametru 'forceDictionaryEntryType' = " + forceDictionaryEntryType);				
-			}
-		}		
-				
+						
 		model.put("dictionaryEntry", dictionaryEntry);
 		model.put("selectedMenu", "wordDictionary");
 		

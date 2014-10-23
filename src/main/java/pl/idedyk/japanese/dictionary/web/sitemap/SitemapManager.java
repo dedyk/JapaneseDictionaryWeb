@@ -203,7 +203,7 @@ public class SitemapManager {
 		// pobranie listy typow
 		List<DictionaryEntryType> dictionaryEntryTypeList = currentDictionaryEntry.getDictionaryEntryTypeList();
 		
-		if (dictionaryEntryTypeList != null) {
+		if (dictionaryEntryTypeList != null && currentDictionaryEntry.isName() == false) {
 			
 			int addableDictionaryEntryTypeInfoCounter = 0;
 

@@ -651,7 +651,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	// dodaj wiersz z tytulem
     	wordTypeDiv.addHtmlElement(row1Div);
     	
-    	if (addableDictionaryEntryTypeInfoCounter > 1) { // info o odmianach
+    	if (addableDictionaryEntryTypeInfoCounter > 1 && dictionaryEntry.isName() == false) { // info o odmianach
     		
         	Div row2Div = new Div("row");
         	wordTypeDiv.addHtmlElement(row2Div);
@@ -694,7 +694,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    		
 	    		row3TableTrTd1.addHtmlElement(currentWordTypeH);
 	    		
-	    		if (addableDictionaryEntryTypeInfoCounter > 1) {
+	    		if (addableDictionaryEntryTypeInfoCounter > 1 && dictionaryEntry.isName() == false) {
 	    			
 		            Td row3TableTrTd2 = new Td();
 					row3TableTr.addHtmlElement(row3TableTrTd2);
