@@ -106,46 +106,19 @@ public class SitemapManager {
 			// pobranie slowka
 			DictionaryEntry currentDictionaryEntry = dictionaryManager.getDictionaryEntryById(currentDictionaryEntryIdx);
 			
-			// wygenerowanie linku standardowego
-			String link = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, null);
-			
-			// dodanie linku			
-			urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY, BigDecimal.valueOf(0.8)));
-			
-			// pobranie listy typow
-			List<DictionaryEntryType> dictionaryEntryTypeList = currentDictionaryEntry.getDictionaryEntryTypeList();
-			
-			if (dictionaryEntryTypeList != null) {
-				
-				int addableDictionaryEntryTypeInfoCounter = 0;
-
-				for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
-
-					boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
-
-					if (addableDictionaryEntryTypeInfo == true) {
-						addableDictionaryEntryTypeInfoCounter++;
-					}
-				}
-				
-				if (addableDictionaryEntryTypeInfoCounter > 1) { // jesli wiecej niz jeden
-					
-					for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
-
-						boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
-
-						if (addableDictionaryEntryTypeInfo == true) {
-							
-							// wygenerowanie linku z typem
-							String linkWithType = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, currentDictionaryEntryType);
-							
-							// dodanie linku z typem
-							urlList.add(createUrl(objectFactory, linkWithType, TChangeFreq.WEEKLY, BigDecimal.valueOf(0.7)));							
-						}
-					}					
-				}				
-			}
+			createWordDictionaryLink(urlList, objectFactory, currentDictionaryEntry);
 		}
+		
+		// pobranie ilosci slow (nazwa)
+		int dictionaryEntriesNameSize = dictionaryManager.getDictionaryEntriesNameSize();
+		
+		for (int currentDictionaryEntryNameIdx = 1; currentDictionaryEntryNameIdx <= dictionaryEntriesNameSize; ++currentDictionaryEntryNameIdx) {
+			
+			// pobranie slowka
+			DictionaryEntry currentDictionaryEntry = dictionaryManager.getDictionaryEntryNameById(currentDictionaryEntryNameIdx);
+			
+			createWordDictionaryLink(urlList, objectFactory, currentDictionaryEntry);
+		}		
 		
 		// katalog slow
 		final int wordPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
@@ -185,6 +158,49 @@ public class SitemapManager {
 		marshaller.marshal(sitemapUrlset, sitemapFile);
 		
 		logger.info("Generowanie pliku sitemap zakonczone");
+	}
+	
+	private void createWordDictionaryLink(List<TUrl> urlList, ObjectFactory objectFactory, DictionaryEntry currentDictionaryEntry) {
+		
+		// wygenerowanie linku standardowego
+		String link = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, null);
+		
+		// dodanie linku			
+		urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.8 : 0.6)));
+		
+		// pobranie listy typow
+		List<DictionaryEntryType> dictionaryEntryTypeList = currentDictionaryEntry.getDictionaryEntryTypeList();
+		
+		if (dictionaryEntryTypeList != null) {
+			
+			int addableDictionaryEntryTypeInfoCounter = 0;
+
+			for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
+
+				boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
+
+				if (addableDictionaryEntryTypeInfo == true) {
+					addableDictionaryEntryTypeInfoCounter++;
+				}
+			}
+			
+			if (addableDictionaryEntryTypeInfoCounter > 1) { // jesli wiecej niz jeden
+				
+				for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
+
+					boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
+
+					if (addableDictionaryEntryTypeInfo == true) {
+						
+						// wygenerowanie linku z typem
+						String linkWithType = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, currentDictionaryEntryType);
+						
+						// dodanie linku z typem
+						urlList.add(createUrl(objectFactory, linkWithType, TChangeFreq.WEEKLY, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.7 : 0.5)));							
+					}
+				}					
+			}				
+		}		
 	}
 	
 	private TUrl createUrl(ObjectFactory objectFactory, String link, TChangeFreq changeFreq, BigDecimal priority) {
