@@ -13,11 +13,13 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SitemapGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager;
 
@@ -42,22 +44,69 @@ public class SitemapController {
 
 		response.setContentType("application/xml");
 		
-		File sitemapFile = sitemapManager.getSitemap();
+		File sitemapFile = sitemapManager.getIndexSitemap();
 		
-		FileInputStream sitemapFileInputStream = null;
-		
-		try {
-			sitemapFileInputStream = new FileInputStream(sitemapFile);
+		if (sitemapFile != null) {
 			
-			copyStream(sitemapFileInputStream, outputStream);
+			FileInputStream sitemapFileInputStream = null;
 			
-		} finally {
+			try {
+				sitemapFileInputStream = new FileInputStream(sitemapFile);
+				
+				copyStream(sitemapFileInputStream, outputStream);
+				
+			} finally {
+				
+				if (sitemapFileInputStream != null) {
+					sitemapFileInputStream.close();
+				}			
+			}
 			
-			if (sitemapFileInputStream != null) {
-				sitemapFileInputStream.close();
-			}			
+		} else {
+			response.sendError(404);
+			
+			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);
 		}
 	}
+
+    @RequestMapping(value = "/sitemap/{id}", method = RequestMethod.GET)
+	public void sitemap(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, OutputStream outputStream) throws Exception {
+	
+		logger.info("Generowanie pliku sitemap(index): " + id);
+		
+		// logowanie
+		loggerSender.sendLog(new SitemapGenerateLoggerModel(Utils.createLoggerModelCommon(request)));		
+		
+		File sitemapFile = sitemapManager.getSitemap(id);
+		
+		if (sitemapFile != null) {
+			
+			response.setContentType("application/xml");
+			
+			FileInputStream sitemapFileInputStream = null;
+			
+			try {
+				sitemapFileInputStream = new FileInputStream(sitemapFile);
+				
+				copyStream(sitemapFileInputStream, outputStream);
+				
+			} finally {
+				
+				if (sitemapFileInputStream != null) {
+					sitemapFileInputStream.close();
+				}			
+			}
+			
+		} else {			
+			response.sendError(404);
+			
+			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);
+		}
+	}    
     
 	private void copyStream(InputStream input, OutputStream output) throws IOException {
 		

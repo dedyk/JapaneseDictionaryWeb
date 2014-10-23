@@ -1,13 +1,14 @@
 package pl.idedyk.japanese.dictionary.web.sitemap;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.helpers.DefaultValidationEventHandler;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +19,14 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
-import pl.idedyk.japanese.dictionary.web.sitemap.model.ObjectFactory;
-import pl.idedyk.japanese.dictionary.web.sitemap.model.TChangeFreq;
-import pl.idedyk.japanese.dictionary.web.sitemap.model.TUrl;
-import pl.idedyk.japanese.dictionary.web.sitemap.model.Urlset;
 
 public class SitemapManager {
 	
 	private static final Logger logger = Logger.getLogger(SitemapManager.class);
-	
-	private JAXBContext jaxbContext;
-	private Marshaller marshaller;
-	
+		
 	private String baseServer;
 	
-	private File sitemapFile;
+	private List<File> sitemapFiles;
 		
 	@Autowired
 	private DictionaryManager dictionaryManager;
@@ -42,13 +36,7 @@ public class SitemapManager {
 	
 	public SitemapManager() throws Exception {
 		
-		logger.info("Inicjalizacja manadzera sitemap");
-		
-		jaxbContext = JAXBContext.newInstance(ObjectFactory.class);
-		
-		marshaller = jaxbContext.createMarshaller();
-		marshaller.setEventHandler(new DefaultValidationEventHandler());
-		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		logger.info("Inicjalizacja manadzera sitemap");		
 	}
 	
 	@PostConstruct
@@ -62,7 +50,7 @@ public class SitemapManager {
 			public void run() {
 				
 				try {				
-					generateSitemap();
+					generateSitemaps();
 				
 				} catch (Exception e) {					
 					logger.error("Bład generowania pliku sitemap", e);
@@ -73,30 +61,25 @@ public class SitemapManager {
 		}).start();
 	}	
 	
-	private synchronized void generateSitemap() throws Exception {
+	private synchronized void generateSitemaps() throws Exception {
 		
-		if (sitemapFile != null && sitemapFile.canRead() == true) {
+		if (sitemapFiles != null) {
 			return;
 		}
 		
 		logger.info("Generowanie pliku sitemap");
 		
-		// utworzenie fabryczki
-		ObjectFactory objectFactory = new ObjectFactory();
+		sitemapFiles = new ArrayList<File>();
 		
-		// utworzenie glownego elementu szablonu
-		Urlset sitemapUrlset = objectFactory.createUrlset();
-		
-		// pobranie listy url'i
-		List<TUrl> urlList = sitemapUrlset.getUrl();
+		SitemapHelper sitemapHelper = new SitemapHelper();
 		
 		// dodanie statycznych linkow
 		
-		urlList.add(createUrl(objectFactory, "", TChangeFreq.WEEKLY, BigDecimal.valueOf(1.0)));
-		urlList.add(createUrl(objectFactory, "/wordDictionary", TChangeFreq.WEEKLY, BigDecimal.valueOf(1.0)));
-		urlList.add(createUrl(objectFactory, "/kanjiDictionary", TChangeFreq.WEEKLY, BigDecimal.valueOf(1.0)));
-		urlList.add(createUrl(objectFactory, "/suggestion", TChangeFreq.WEEKLY, BigDecimal.valueOf(0.4)));
-		urlList.add(createUrl(objectFactory, "/info", TChangeFreq.WEEKLY, BigDecimal.valueOf(0.4)));
+		sitemapHelper.createUrl("", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
+		sitemapHelper.createUrl("/wordDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
+		sitemapHelper.createUrl("/kanjiDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
+		sitemapHelper.createUrl("/suggestion", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
+		sitemapHelper.createUrl("/info", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
 				
 		// pobranie ilosci slow
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
@@ -106,7 +89,7 @@ public class SitemapManager {
 			// pobranie slowka
 			DictionaryEntry currentDictionaryEntry = dictionaryManager.getDictionaryEntryById(currentDictionaryEntryIdx);
 			
-			createWordDictionaryLink(urlList, objectFactory, currentDictionaryEntry);
+			createWordDictionaryLink(sitemapHelper, currentDictionaryEntry);
 		}
 		
 		// pobranie ilosci slow (nazwa)
@@ -117,8 +100,8 @@ public class SitemapManager {
 			// pobranie slowka
 			DictionaryEntry currentDictionaryEntry = dictionaryManager.getDictionaryEntryNameById(currentDictionaryEntryNameIdx);
 			
-			createWordDictionaryLink(urlList, objectFactory, currentDictionaryEntry);
-		}		
+			createWordDictionaryLink(sitemapHelper, currentDictionaryEntry);
+		}
 		
 		// katalog slow
 		final int wordPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
@@ -127,7 +110,7 @@ public class SitemapManager {
 			
 			String url = "/wordDictionaryCatalog/" + (pageNo + 1);
 			
-			urlList.add(createUrl(objectFactory, url, TChangeFreq.MONTHLY, BigDecimal.valueOf(0.1)));
+			sitemapHelper.createUrl(url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
 		
 		// pobranie znakow kanji
@@ -139,7 +122,7 @@ public class SitemapManager {
 			String link = LinkGenerator.generateKanjiDetailsLink("", kanjiEntry);
 			
 			// dodanie linku			
-			urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY, BigDecimal.valueOf(0.6)));		
+			sitemapHelper.createUrl(link, ChangeFreqEnum.weekly, BigDecimal.valueOf(0.6));
 		}
 		
 		// katalog znakow kanji
@@ -149,24 +132,63 @@ public class SitemapManager {
 			
 			String url = "/kanjiDictionaryCatalog/" + (pageNo + 1);
 						
-			urlList.add(createUrl(objectFactory, url, TChangeFreq.MONTHLY, BigDecimal.valueOf(0.1)));
+			sitemapHelper.createUrl(url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
 		
-		sitemapFile = File.createTempFile("japaneseDictionaryWeb_sitemap", "");		
-		sitemapFile.deleteOnExit();
+		// zakonczenie generowania
+		sitemapHelper.end();
 		
-		marshaller.marshal(sitemapUrlset, sitemapFile);
+		// generowanie indeksu
+		File indexSitemap = File.createTempFile("japaneseDictionaryWeb_sitemap", "");		
+		indexSitemap.deleteOnExit();
 		
+		sitemapFiles.add(0, indexSitemap);
+		
+		// utworzenie zapisywacza
+		FileWriter sitemapFileWriter = new FileWriter(indexSitemap);
+		
+		// utworzenie zapisywacza xml'i
+		XMLStreamWriter xmlStreamWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(sitemapFileWriter);
+		
+		// zapis naglowka
+		xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
+
+		// utworzenie glownego elementu
+		xmlStreamWriter.writeStartElement("sitemapindex");
+		xmlStreamWriter.writeDefaultNamespace("http://www.sitemaps.org/schemas/sitemap/0.9");				
+
+		for (int idx = 1; idx < sitemapFiles.size(); ++idx) {
+			
+			xmlStreamWriter.writeStartElement("sitemap"); // sitemap
+			
+			xmlStreamWriter.writeStartElement("loc");		
+			xmlStreamWriter.writeCharacters(baseServer + "/sitemap/" + idx);			
+			xmlStreamWriter.writeEndElement(); // loc			
+			
+			xmlStreamWriter.writeEndElement(); // sitemap			
+		}		
+		
+		xmlStreamWriter.writeEndElement(); // sitemapindex		
+		xmlStreamWriter.writeEndDocument();
+		
+		// zamkniecie
+		xmlStreamWriter.flush();
+		xmlStreamWriter.close();
+		
+		sitemapFileWriter.close();
+		
+		// koniec generowania indeksu
+				
 		logger.info("Generowanie pliku sitemap zakonczone");
 	}
 	
-	private void createWordDictionaryLink(List<TUrl> urlList, ObjectFactory objectFactory, DictionaryEntry currentDictionaryEntry) {
+	private void createWordDictionaryLink(SitemapHelper sitemapHelper, DictionaryEntry currentDictionaryEntry) throws Exception {
 		
 		// wygenerowanie linku standardowego
 		String link = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, null);
 		
 		// dodanie linku			
-		urlList.add(createUrl(objectFactory, link, TChangeFreq.WEEKLY, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.8 : 0.6)));
+		sitemapHelper.createUrl(link, ChangeFreqEnum.weekly, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.8 : 0.6));
 		
 		// pobranie listy typow
 		List<DictionaryEntryType> dictionaryEntryTypeList = currentDictionaryEntry.getDictionaryEntryTypeList();
@@ -196,32 +218,32 @@ public class SitemapManager {
 						String linkWithType = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, currentDictionaryEntryType);
 						
 						// dodanie linku z typem
-						urlList.add(createUrl(objectFactory, linkWithType, TChangeFreq.WEEKLY, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.7 : 0.5)));							
+						sitemapHelper.createUrl(linkWithType, ChangeFreqEnum.weekly, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.7 : 0.5));							
 					}
 				}					
 			}				
 		}		
 	}
 	
-	private TUrl createUrl(ObjectFactory objectFactory, String link, TChangeFreq changeFreq, BigDecimal priority) {
-		
-		TUrl url = objectFactory.createTUrl();
-		
-		url.setLoc(baseServer + link);
-		url.setLastmod(lastMod);
-		url.setChangefreq(changeFreq);
-		url.setPriority(priority);
-		
-		return url;
-	}
-	
-	public File getSitemap() throws Exception {
+	public File getIndexSitemap() throws Exception {
 		
 		// wygenerowanie pliku sitemap jesli nie zostal wygenerowany wczesniej
-		generateSitemap();
+		generateSitemaps();
 
-		return sitemapFile;		
+		return sitemapFiles.get(0);
 	}
+	
+	public File getSitemap(int id) throws Exception {
+		
+		// wygenerowanie pliku sitemap jesli nie zostal wygenerowany wczesniej
+		generateSitemaps();
+
+		if (id < 1 || id >= sitemapFiles.size()) {
+			return null;
+		}
+		
+		return sitemapFiles.get(id);
+	}	
 
 	public String getBaseServer() {
 		return baseServer;
@@ -229,5 +251,97 @@ public class SitemapManager {
 
 	public void setBaseServer(String baseServer) {
 		this.baseServer = baseServer;
+	}
+	
+	public class SitemapHelper {
+		
+		private File currentSitemapFile = null;
+
+		private FileWriter sitemapFileWriter = null;
+		private XMLStreamWriter xmlStreamWriter = null;
+		
+		private XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+		
+		private int counter = 0;
+		
+		public void createUrl(String link, ChangeFreqEnum changeFreq, BigDecimal priority) throws Exception {
+			
+			if (currentSitemapFile == null) {
+				
+				// utworzenie pliku z sitemap
+				currentSitemapFile = File.createTempFile("japaneseDictionaryWeb_sitemap", "");		
+				currentSitemapFile.deleteOnExit();
+				
+				// utworzenie zapisywacza
+				sitemapFileWriter = new FileWriter(currentSitemapFile);
+				
+				// utworzenie zapisywacza xml'i
+				xmlStreamWriter = xmlOutputFactory.createXMLStreamWriter(sitemapFileWriter);
+				
+				// zapis naglowka
+				xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
+				
+				// utworzenie glownego elementu
+				xmlStreamWriter.writeStartElement("urlset");
+				xmlStreamWriter.writeDefaultNamespace("http://www.sitemaps.org/schemas/sitemap/0.9");				
+			}
+			
+			xmlStreamWriter.writeStartElement("url"); // url
+			
+			addElement("loc", baseServer + link);
+			addElement("lastmod", lastMod);
+			addElement("changefreq", changeFreq.toString());
+			addElement("priority", priority.toPlainString());			
+			
+			xmlStreamWriter.writeEndElement(); // url
+			
+			counter++;
+			
+			if (counter >= 20000) {
+				end();
+			}
+		}
+		
+		private void addElement(String name, String value) throws Exception {
+			
+			xmlStreamWriter.writeStartElement(name);			
+			xmlStreamWriter.writeCharacters(value);			
+			xmlStreamWriter.writeEndElement();
+		}
+		
+		public void end() throws Exception {
+			
+			if (currentSitemapFile != null) {
+				
+				xmlStreamWriter.writeEndElement(); // urlset
+				
+				xmlStreamWriter.writeEndDocument();
+				
+				// zamkniecie
+				xmlStreamWriter.flush();
+				xmlStreamWriter.close();
+				
+				sitemapFileWriter.close();
+				
+				sitemapFiles.add(currentSitemapFile);
+
+				// czyszczenie
+				currentSitemapFile = null;
+				sitemapFileWriter = null;
+				xmlStreamWriter = null;
+				
+				counter = 0;				
+			}			
+		}		
+	}
+	
+	public static enum ChangeFreqEnum {
+		always,		
+		hourly,
+		daily,
+		weekly,
+		monthly,
+		yearly,
+		never;
 	}
 }
