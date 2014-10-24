@@ -296,7 +296,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		WordDictionarySearchModel searchModel = new WordDictionarySearchModel();
 		
 		searchModel.setWord(kanjiEntry.getKanji());
-		searchModel.setWordPlace(FindWordRequest.WordPlaceSearch.ANY_PLACE.toString());
+		searchModel.setWordPlace(FindWordRequest.WordPlaceSearch.START_WITH.toString());
 		
 		List<String> searchIn = new ArrayList<String>();
 		searchIn.add("KANJI");

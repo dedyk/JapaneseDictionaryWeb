@@ -258,7 +258,7 @@
 								<td>
 									<form:select id="wordPlaceId" path="wordPlace">
 										<form:option value="START_WITH" label="${wordPlaceStartWith}" />
-										<form:option value="ANY_PLACE" label="${wordPlaceAnyPlace}" />
+										<%-- <form:option value="ANY_PLACE" label="${wordPlaceAnyPlace}" /> --%>
 										<form:option value="EXACT" label="${wordPlaceExact}" />
 									</form:select>
 								</td>
