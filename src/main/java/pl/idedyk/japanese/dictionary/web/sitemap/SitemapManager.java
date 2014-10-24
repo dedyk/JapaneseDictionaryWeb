@@ -173,7 +173,11 @@ public class SitemapManager {
 			
 			xmlStreamWriter.writeStartElement("loc");		
 			xmlStreamWriter.writeCharacters(baseServer + "/sitemap/" + idx);			
-			xmlStreamWriter.writeEndElement(); // loc			
+			xmlStreamWriter.writeEndElement(); // loc
+
+			xmlStreamWriter.writeStartElement("lastmod");		
+			xmlStreamWriter.writeCharacters(lastMod);			
+			xmlStreamWriter.writeEndElement(); // lastmod			
 			
 			xmlStreamWriter.writeEndElement(); // sitemap			
 		}		
