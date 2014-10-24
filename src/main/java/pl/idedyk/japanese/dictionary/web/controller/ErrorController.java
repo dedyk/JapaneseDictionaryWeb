@@ -33,13 +33,22 @@ public class ErrorController {
 	
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handleAllException(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
- 
-		logger.error("Błąd podczas działania kontrolera", ex);
-
-		// wyslanie do logger'a
+		
+		// przygotowanie info do logger'a
 		GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(
 				Utils.createLoggerModelCommon(request), -1, ex);
 
+		String requestURL = generalExceptionLoggerModel.getRequestURL();
+		
+		if (requestURL != null && requestURL.contains("/autocomple") == true) { // bledy autocomplete sa ignorowane, klient zrezygnowal z polaczenia
+			logger.error("Błędy 'autocomplete' są ignorowane!");
+			
+			return new ModelAndView();
+		}
+		
+		logger.error("Błąd podczas działania kontrolera", ex);
+		
+		// wyslanie do logger'a
 		loggerSender.sendLog(generalExceptionLoggerModel);
 
 		// przygotowanie odpowiedzi

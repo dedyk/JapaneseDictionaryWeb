@@ -56,6 +56,12 @@ public class HandleException extends TagSupport {
 		int statusCode = errorData.getStatusCode();
 		Throwable throwable = errorData.getThrowable();
 		
+		if (requestURI != null && requestURI.contains("/autocomple") == true) { // bledy autocomplete sa ignorowane, klient zrezygnowal z polaczenia
+			logger.error("Błędy 'autocomplete' są ignorowane!");
+			
+			return SKIP_BODY;
+		}
+		
 		logger.error("Bład podczas wyświetlania strony", throwable);
 		
 		LoggerModelCommon loggerModelCommon = LoggerModelCommon.createLoggerModelCommon(
