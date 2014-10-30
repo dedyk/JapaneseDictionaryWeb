@@ -273,30 +273,7 @@ public class WordDictionaryController {
 			throw new RuntimeException(e);
 		}
 	}
-	
-	@RequestMapping(value = "/wordDictionaryDetails/{id}", method = RequestMethod.GET)
-	public void showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, Map<String, Object> model) throws IOException {
-
-		// pobranie slowa
-		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
-
-		if (dictionaryEntry != null) {
-			
-			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request));
-			
-			loggerSender.sendLog(redirectLoggerModel);	
-			
-			response.sendRedirect(LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null));
-			
-		} else {			
-			response.sendError(404);
-			
-			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
-			
-			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
-		}		
-	}
-	
+		
 	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
 	public String showWordDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
 			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) {
@@ -349,6 +326,42 @@ public class WordDictionaryController {
 		return "wordDictionaryDetails";
 	}
 	
+	@RequestMapping(value = "/wordDictionaryDetails/{id}", method = RequestMethod.GET)
+	public void showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
+			@PathVariable("id") int id) throws IOException {
+		
+		processWordDictionaryDetailsRedirect(request, response, id);
+	}
+
+	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}", method = RequestMethod.GET)
+	public void showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
+			@PathVariable("id") int id, @PathVariable("kanji") String kanji) throws IOException {
+		
+		processWordDictionaryDetailsRedirect(request, response, id);
+	}
+
+	private void processWordDictionaryDetailsRedirect(HttpServletRequest request, HttpServletResponse response, int id) throws IOException {
+				
+		// pobranie slowa
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
+
+		if (dictionaryEntry != null) {
+			
+			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(redirectLoggerModel);	
+			
+			response.sendRedirect(LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null));
+			
+		} else {			
+			response.sendError(404);
+			
+			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
+		}		
+	}
+	
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
 	public String showWordDictionaryNameDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
 			@PathVariable("kana") String kana, Map<String, Object> model) {
@@ -389,8 +402,21 @@ public class WordDictionaryController {
 	}
 	
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}", method = RequestMethod.GET)
-	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, Map<String, Object> model) throws IOException {
+	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
+			@PathVariable("id") int id) throws IOException {
+		
+		processWordDictionaryNameDetailsRedirect(request, response, id);
+	}
 
+	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}", method = RequestMethod.GET)
+	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
+			@PathVariable("id") int id, @PathVariable("kanji") String kanji) throws IOException {
+		
+		processWordDictionaryNameDetailsRedirect(request, response, id);
+	}
+	
+	private void processWordDictionaryNameDetailsRedirect(HttpServletRequest request, HttpServletResponse response, int id) throws IOException {
+		
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameById(id);
 
@@ -408,7 +434,7 @@ public class WordDictionaryController {
 			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
 			
 			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
-		}		
+		}
 	}
 	
 	private String[] getWordDictionaryDetailsTitleAndDescription(DictionaryEntry dictionaryEntry) {
