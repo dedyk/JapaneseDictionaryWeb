@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -31,11 +33,14 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest.WordPlac
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.WordDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
@@ -269,6 +274,29 @@ public class WordDictionaryController {
 		}
 	}
 	
+	@RequestMapping(value = "/wordDictionaryDetails/{id}", method = RequestMethod.GET)
+	public void showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, Map<String, Object> model) throws IOException {
+
+		// pobranie slowa
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
+
+		if (dictionaryEntry != null) {
+			
+			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(redirectLoggerModel);	
+			
+			response.sendRedirect(LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null));
+			
+		} else {			
+			response.sendError(404);
+			
+			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
+		}		
+	}
+	
 	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
 	public String showWordDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
 			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) {
@@ -358,6 +386,29 @@ public class WordDictionaryController {
 		model.put("selectedMenu", "wordDictionary");
 		
 		return "wordDictionaryDetails";
+	}
+	
+	@RequestMapping(value = "/wordDictionaryNameDetails/{id}", method = RequestMethod.GET)
+	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, Map<String, Object> model) throws IOException {
+
+		// pobranie slowa
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameById(id);
+
+		if (dictionaryEntry != null) {
+			
+			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(redirectLoggerModel);	
+			
+			response.sendRedirect(LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null));
+			
+		} else {			
+			response.sendError(404);
+			
+			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
+		}		
 	}
 	
 	private String[] getWordDictionaryDetailsTitleAndDescription(DictionaryEntry dictionaryEntry) {

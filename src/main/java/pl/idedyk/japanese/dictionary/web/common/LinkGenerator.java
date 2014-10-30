@@ -1,5 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.common;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Properties;
 
@@ -14,49 +16,59 @@ public class LinkGenerator {
 	public static String generateDictionaryEntryDetailsLink(String contextPath, DictionaryEntry dictionaryEntry, 
 			DictionaryEntryType forceDictionaryEntryType) {
 		
-		boolean name = dictionaryEntry.isName();
-		
-		String pathPrefix = null;
-		
-		if (name == false) {
-			pathPrefix = "wordDictionaryDetails";
+		try {
+			boolean name = dictionaryEntry.isName();
 			
-		} else {
-			pathPrefix = "wordDictionaryNameDetails";
-		}
-		
-		String kanji = dictionaryEntry.getKanji();
-		List<String> kanaList = dictionaryEntry.getKanaList();
-		
-		if (forceDictionaryEntryType == null) {
+			String pathPrefix = null;
 			
-			String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%";
+			if (name == false) {
+				pathPrefix = "wordDictionaryDetails";
+				
+			} else {
+				pathPrefix = "wordDictionaryNameDetails";
+			}
 			
-            return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
-            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
-            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-");
+			String kanji = dictionaryEntry.getKanji();
+			List<String> kanaList = dictionaryEntry.getKanaList();
 			
-		} else {
+			if (forceDictionaryEntryType == null) {
+				
+				String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%";
+				
+	            return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
+	            		replaceAll("%KANJI%", kanji != null ? URLEncoder.encode(kanji, "UTF-8") : "-").
+	            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? URLEncoder.encode(kanaList.get(0), "UTF-8") : "-");
+				
+			} else {
+				
+				String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%?forceDictionaryEntryType=%FORCEDICTIONARYENTRYTYPE%";
+				
+	            return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
+	            		replaceAll("%KANJI%", kanji != null ? URLEncoder.encode(kanji, "UTF-8") : "-").
+	            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? URLEncoder.encode(kanaList.get(0), "UTF-8") : "-").
+	            		replaceAll("%FORCEDICTIONARYENTRYTYPE%", forceDictionaryEntryType.toString());			
+			}
 			
-			String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%?forceDictionaryEntryType=%FORCEDICTIONARYENTRYTYPE%";
-			
-            return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
-            		replaceAll("%KANJI%", kanji != null ? kanji : "-").
-            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? kanaList.get(0) : "-").
-            		replaceAll("%FORCEDICTIONARYENTRYTYPE%", forceDictionaryEntryType.toString());			
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
 		}
 	}
 	
 	public static String generateKanjiDetailsLink(String contextPath, KanjiEntry kanjiEntry) {
 		
-		// UWAGA: Jesli tu zmieniasz, zmien rowniez w pliku kanjiDictionary.jsp
-		
-		String linkTemplate = contextPath + "/kanjiDictionaryDetails/%ID%/%KANJI%";
-
-		String kanji = kanjiEntry.getKanji();
-		
-		return linkTemplate.replaceAll("%ID%", String.valueOf(kanjiEntry.getId())).
-        		replaceAll("%KANJI%", kanji != null ? kanji : "-");
+		try {
+			// UWAGA: Jesli tu zmieniasz, zmien rowniez w pliku kanjiDictionary.jsp
+			
+			String linkTemplate = contextPath + "/kanjiDictionaryDetails/%ID%/%KANJI%";
+	
+			String kanji = kanjiEntry.getKanji();
+			
+			return linkTemplate.replaceAll("%ID%", String.valueOf(kanjiEntry.getId())).
+	        		replaceAll("%KANJI%", kanji != null ? URLEncoder.encode(kanji, "UTF-8") : "-");
+			
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	public static String generateWordSearchLink(String contextPath, WordDictionarySearchModel searchModel) {

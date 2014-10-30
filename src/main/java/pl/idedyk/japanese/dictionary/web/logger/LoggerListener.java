@@ -26,6 +26,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLogger
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.MethodNotAllowedExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RobotsGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SitemapGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.StartAppLoggerModel;
@@ -666,6 +667,9 @@ public class LoggerListener {
 		} else if (MethodNotAllowedExceptionLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.METHOD_NOT_ALLOWED_EXCEPTION;
 		
+		} else if (RedirectLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.REDIRECT;
+			
 		} else if (AdminLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.ADMIN_REQUEST;
 			

@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -35,6 +37,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
+import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
@@ -51,6 +54,8 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLogge
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
 
 @Controller
 public class KanjiDictionaryController {
@@ -400,6 +405,29 @@ public class KanjiDictionaryController {
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 		
 		return "kanjiDictionaryDetails";
+	}
+	
+	@RequestMapping(value = "/kanjiDictionaryDetails/{id}", method = RequestMethod.GET)
+	public void showKanjiDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id) throws IOException {
+
+		// pobranie znaku
+		KanjiEntry kanjiEntry = dictionaryManager.getKanjiEntryById(id);
+
+		if (kanjiEntry != null) {
+			
+			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(redirectLoggerModel);	
+			
+			response.sendRedirect(LinkGenerator.generateKanjiDetailsLink(request.getContextPath(), kanjiEntry));
+			
+		} else {			
+			response.sendError(404);
+			
+			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
+		}		
 	}
 		
 	@RequestMapping(value = "/kanjiDictionaryDetectSearch", method = RequestMethod.POST)
