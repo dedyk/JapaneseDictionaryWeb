@@ -58,7 +58,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		logger.info("Otwieranie bazy danych");
 		
 		try {
-			databaseConnector = luceneDatabase = new LuceneDatabase(DictionaryManager.class.getResource("/db/" + LUCENE_DB_DIR + "/").getPath(), true); 
+			databaseConnector = luceneDatabase = new LuceneDatabase(DictionaryManager.class.getResource("/db/" + LUCENE_DB_DIR + "/").getPath()); 
 			
 			luceneDatabase.open();
 			
@@ -68,6 +68,25 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 
 			throw new RuntimeException(e);
 		}
+		
+		logger.info("Inicjalizacja podpowiadacza");
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				try {
+					luceneDatabase.openSuggester();
+				
+					logger.info("Zakończono inicjalizację podpowiadacza");
+					
+				} catch (Exception e) {
+					
+					logger.error("Błąd inicjalizacji podpowiadacza", e);
+				}
+			}
+		}).start();		
 		
 		logger.info("Inicjalizuje Keigo Helper");
 		keigoHelper = new KeigoHelper();
