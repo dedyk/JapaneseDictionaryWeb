@@ -337,37 +337,44 @@ public class ScheduleTask {
 	@Scheduled(cron="* * * * * ?")
 	public void processLogQueueItem() {
 		
-		QueueItem queueItem = null;
-		
+		QueueItem currentQueueItem = null;
+				
 		try {
-			// pobranie elementu do przetworzenie
-			queueItem = queueService.getNextItemQueueItem("log");
-			
-			if (queueItem == null) {
+			// pobranie elementow do przetworzenia
+			List<QueueItem> queueItemList = queueService.getNextItemQueueItem("log");
+						
+			if (queueItemList.size() == 0) {
 				return;
 			}
 			
-			byte[] objectBytes = queueItem.getObject();
-			
-			ByteArrayInputStream byteArrayItemStream = new ByteArrayInputStream(objectBytes);
-			ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayItemStream);
-			
-			LoggerModelCommon loggerModelCommon = (LoggerModelCommon)objectInputStream.readObject();
-			
-			// przetworz wpis
-			loggerListener.onMessage(loggerModelCommon);
-			
-			// ustaw wpis jako przetworzony
-			queueService.setQueueItemDone(queueItem);
+			for (QueueItem queueItem : queueItemList) { // dla kazdego wpisu
+				
+				currentQueueItem = queueItem;
+				
+				byte[] objectBytes = queueItem.getObject();
+				
+				ByteArrayInputStream byteArrayItemStream = new ByteArrayInputStream(objectBytes);
+				ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayItemStream);
+				
+				LoggerModelCommon loggerModelCommon = (LoggerModelCommon)objectInputStream.readObject();
+				
+				// przetworz wpis
+				loggerListener.onMessage(loggerModelCommon);
+				
+				// ustaw wpis jako przetworzony
+				queueService.setQueueItemDone(queueItem);
+				
+				currentQueueItem = null;
+			}
 			
 		} catch (Exception e) {
 			
 			logger.error("Blad podczas przetwarzania log'ow z kolejki", e);
 			
 			// opoznij zadanie
-			if (queueItem != null) {
+			if (currentQueueItem != null) {
 				try {
-					queueService.delayQueueItem(queueItem);
+					queueService.delayQueueItem(currentQueueItem);
 					
 				} catch (SQLException e1) {					
 					logger.error("Blad podcza opozniania zadania z kolejki", e);

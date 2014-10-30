@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class QueueService {
 		mySQLConnector.insertQueueItem(queueItem);
 	}
 	
-	public QueueItem getNextItemQueueItem(String queueName) throws SQLException {
+	public List<QueueItem> getNextItemQueueItem(String queueName) throws SQLException {
 		return mySQLConnector.getNextQueueItem(queueName);
 	}
 	

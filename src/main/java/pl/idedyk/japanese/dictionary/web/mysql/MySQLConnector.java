@@ -2302,7 +2302,7 @@ public class MySQLConnector {
 		}		
 	}
 	
-	public QueueItem getNextQueueItem(String queueName) throws SQLException {
+	public List<QueueItem> getNextQueueItem(String queueName) throws SQLException {
 		
 		Connection connection = null;
 		
@@ -2310,11 +2310,13 @@ public class MySQLConnector {
 		
 		ResultSet resultSet = null;
 		
+		List<QueueItem> result = new ArrayList<QueueItem>();
+		
 		try {			
 			connection = connectionPool.getConnection();
 			
 			preparedStatement = connection.prepareStatement("select id, name, status, send_timestamp, delivery_count, next_attempt, object from queue where "
-					+ "name = ? and status = ? and next_attempt < current_timestamp order by next_attempt, send_timestamp, delivery_count desc limit 1"); 
+					+ "name = ? and status = ? and next_attempt < current_timestamp order by next_attempt, send_timestamp, delivery_count desc limit 5"); 
 			
 			preparedStatement.setString(1, queueName);
 			preparedStatement.setString(2, QueueItemStatus.WAITING.toString());
@@ -2323,7 +2325,8 @@ public class MySQLConnector {
 			
 			QueueItem queueItem = null;
 			
-			if (resultSet.next() == true) {				
+			while (resultSet.next() == true) {
+				
 				queueItem = new QueueItem();
 				
 				queueItem.setId(resultSet.getLong("id"));
@@ -2339,9 +2342,11 @@ public class MySQLConnector {
 				objectBlob.free();
 				
 				queueItem.setObject(object);
+				
+				result.add(queueItem);
 			}
 			
-			return queueItem;
+			return result;
 			
 		} finally {
 			
