@@ -25,6 +25,30 @@
 	<mvc:resources mapping="/img/**" location="/img/" />
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/js/**" location="/js/" />
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/img/**" />
+			<mvc:mapping path="/css/**" />
+			<mvc:mapping path="/js/**" />
+			
+			<bean id="responseCachingFilter"
+				class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+				<property name="cacheSeconds" value="604801" /> <!-- tydzien i jedna sekunda -->
+				<property name="useExpiresHeader" value="true" />
+				<property name="useCacheControlHeader" value="true" />
+				<property name="useCacheControlNoStore" value="false" />
+				<property name="alwaysMustRevalidate" value="true" />
+<!--  				<property name="cacheMappings">
+					<props>
+						< ! - - cache for one month - - >
+						<prop key="/js/**">2592000</prop>
+					</props>
+				</property>
+-->
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
 	
 	<bean id="propertyConfigurer"
 		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
