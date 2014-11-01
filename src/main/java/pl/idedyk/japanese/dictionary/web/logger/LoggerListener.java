@@ -523,6 +523,12 @@ public class LoggerListener {
 				throw new RuntimeException(e);
 			}
 			
+		} else if (operation == GenericLogOperationEnum.REDIRECT) {
+			
+			RedirectLoggerModel redirectLoggerModel = (RedirectLoggerModel)loggerModelCommon;
+			
+			logger.info("Przekierowanie: " + redirectLoggerModel.getRequestURL() + " -> " + redirectLoggerModel.getDestinationUrl());			
+			
 		} else if (operation == GenericLogOperationEnum.ADMIN_REQUEST) { 
 			
 			AdminLoggerModel adminLoggerModel = (AdminLoggerModel)loggerModelCommon;

@@ -415,11 +415,13 @@ public class KanjiDictionaryController {
 
 		if (kanjiEntry != null) {
 			
-			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request));
+			String destinationUrl = LinkGenerator.generateKanjiDetailsLink(request.getContextPath(), kanjiEntry);
+			
+			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
 			
 			loggerSender.sendLog(redirectLoggerModel);	
 			
-			response.sendRedirect(LinkGenerator.generateKanjiDetailsLink(request.getContextPath(), kanjiEntry));
+			response.sendRedirect(destinationUrl);
 			
 		} else {			
 			response.sendError(404);

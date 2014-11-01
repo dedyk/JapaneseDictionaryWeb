@@ -347,11 +347,13 @@ public class WordDictionaryController {
 
 		if (dictionaryEntry != null) {
 			
-			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request));
+			String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null);
+			
+			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
 			
 			loggerSender.sendLog(redirectLoggerModel);	
 			
-			response.sendRedirect(LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null));
+			response.sendRedirect(destinationUrl);
 			
 		} else {			
 			response.sendError(404);
@@ -371,6 +373,26 @@ public class WordDictionaryController {
 						
 		// tytul strony
 		if (dictionaryEntry != null) {
+			
+			// sprawdzenie, czy nie odwolujemy sie do innej strony
+			String dictionaryEntryKanji = "-";
+			
+			if (dictionaryEntry.isKanjiExists() == true) {
+				dictionaryEntryKanji = dictionaryEntry.getKanji();
+			}
+			
+			String dictionaryEntryKana = dictionaryEntry.getKanaList().get(0);
+			
+			if (dictionaryEntryKanji.equals(kanji) == false || dictionaryEntryKana.equals(kana) == false) { // przekierowanie na wlasciwa strone o id
+				
+				String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null);
+				
+				RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
+				
+				loggerSender.sendLog(redirectLoggerModel);	
+				
+				return "redirect:" + destinationUrl;			
+			}			
 			
 			logger.info("Znaleziono słówko dla zapytania o szczegóły słowa (nazwa): " + dictionaryEntry);
 			
@@ -422,11 +444,13 @@ public class WordDictionaryController {
 
 		if (dictionaryEntry != null) {
 			
-			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request));
+			String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null);
+			
+			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
 			
 			loggerSender.sendLog(redirectLoggerModel);	
 			
-			response.sendRedirect(LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null));
+			response.sendRedirect(destinationUrl);
 			
 		} else {			
 			response.sendError(404);
