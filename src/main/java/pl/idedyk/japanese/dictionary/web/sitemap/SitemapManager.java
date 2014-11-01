@@ -149,7 +149,7 @@ public class SitemapManager {
 		sitemapHelper.end();
 		
 		// generowanie indeksu
-		File indexSitemap = File.createTempFile("japaneseDictionaryWeb_sitemap", "");		
+		File indexSitemap = new File(System.getProperty("java.io.tmpdir"), "japaneseDictionaryWeb_sitemap_index.xml");
 		indexSitemap.deleteOnExit();
 		
 		sitemapFiles.add(0, indexSitemap);
@@ -283,7 +283,7 @@ public class SitemapManager {
 			if (currentSitemapFile == null) {
 				
 				// utworzenie pliku z sitemap
-				currentSitemapFile = File.createTempFile("japaneseDictionaryWeb_sitemap", "");		
+				currentSitemapFile = new File(System.getProperty("java.io.tmpdir"), "japaneseDictionaryWeb_sitemap_" + (sitemapFiles.size() + 1) + ".xml");		
 				currentSitemapFile.deleteOnExit();
 				
 				// utworzenie zapisywacza
