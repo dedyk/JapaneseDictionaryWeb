@@ -71,15 +71,15 @@ public class SitemapController {
 		}
 	}
 
-    @RequestMapping(value = "/sitemap/{id}", method = RequestMethod.GET)
-	public void sitemap(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, OutputStream outputStream) throws Exception {
+    @RequestMapping(value = "/sitemap/{name}/{id}", method = RequestMethod.GET)
+	public void sitemap(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("name") String name, @PathVariable("id") int id, OutputStream outputStream) throws Exception {
 	
-		logger.info("Generowanie pliku sitemap(index): " + id);
+		logger.info("Generowanie pliku sitemap(index) dla: " + name + "/" + id);
 		
 		// logowanie
 		loggerSender.sendLog(new SitemapGenerateLoggerModel(Utils.createLoggerModelCommon(request)));		
 		
-		File sitemapFile = sitemapManager.getSitemap(id);
+		File sitemapFile = sitemapManager.getSitemap(name, id);
 		
 		if (sitemapFile != null) {
 			
