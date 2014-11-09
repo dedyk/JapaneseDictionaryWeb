@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="pl">
+<head>
+	<meta charset="utf-8" />
+	
+	<meta name="keywords" content="japoński słownik polsko japoński polski pomocnik znaki japońskie kanji" />
+	
+	<title>Przerwa techniczna</title>
+	
+	<link rel="icon" type="image/png" href="http://japonski-pomocnik-static.idedyk.pl/img/favicon.png"/>
+	
+	<link href="http://japonski-pomocnik-static.idedyk.pl/css/excite-bike/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+	
+	<link href="http://japonski-pomocnik-static.idedyk.pl/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+	<link href="http://japonski-pomocnik-static.idedyk.pl/css/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
+	
+	<link href="http://japonski-pomocnik-static.idedyk.pl/css/datatables/jquery.dataTables.min.css" rel="stylesheet" />
+	<link href="http://japonski-pomocnik-static.idedyk.pl/css/datatables/dataTables.bootstrap.css" rel="stylesheet" />
+	
+	<link href="http://japonski-pomocnik-static.idedyk.pl/css/japanese-dictionary/japanese-dictionary.css" rel="stylesheet" />
+	
+	<script src="http://japonski-pomocnik-static.idedyk.pl/js/jquery/jquery-1.11.1.min.js"></script>
+	<script src="http://japonski-pomocnik-static.idedyk.pl/js/jquery/jquery-ui-1.10.4.custom.min.js"></script>
+	
+	<script src="http://japonski-pomocnik-static.idedyk.pl/js/jquery-validate/jquery.validate.min.js"></script>
+	<script src="http://japonski-pomocnik-static.idedyk.pl/js/jquery-validate/messages_pl.js"></script>
+	
+	<script src="http://japonski-pomocnik-static.idedyk.pl/js/bootstrap/bootstrap.min.js"></script>
+	<script src="http://japonski-pomocnik-static.idedyk.pl/js/bootstrap-select/bootstrap-select.min.js"></script>
+	
+	<script src="http://japonski-pomocnik-static.idedyk.pl/js/datatables/jquery.dataTables.min.js"></script>
+	<script src="http://japonski-pomocnik-static.idedyk.pl/js/datatables/dataTables.bootstrap.js"></script>
+	
+	<script src="http://japonski-pomocnik-static.idedyk.pl/js/lazy-line-painter/jquery.lazylinepainter-1.4.1-fm.js"></script>
+	<script src="http://japonski-pomocnik-static.idedyk.pl/js/raphael/raphael-min.js"></script>
+	
+	<script src="http://japonski-pomocnik-static.idedyk.pl/js/easeljs/easeljs-0.7.1.min.js"></script>
+
+	<style>
+		body {
+			margin-top: 50px;
+			margin-bottom: 50px;
+		}
+	</style>
+
+    </head>
+
+<body>
+	
+	<div class="container">
+
+		<div class="row">
+
+			<div class="row header" style="margin-bottom: 30px;">
+
+				<table style="width: 100%">
+					<tr>
+						<td style="width: 5%"><img src="http://japonski-pomocnik-static.idedyk.pl/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px" /></td>
+
+						<td style="font-size: 150%; width: 80%">小さくて奥ゆかしい日本語ヘルパー<br /> Mały, skromny japoński pomocnik</td>
+						
+					</tr>				
+				</table>
+
+			</div>
+
+ 			<nav class="navbar navbar-default">
+				<div class="navbar-header">
+					<a href="/" class="navbar-brand">Japoński pomocnik</a>
+				</div>
+				<div id="navbarCollapse" class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="/wordDictionary">Słownik japoński</a></li>
+							<li><a href="/kanjiDictionary">Słownik kanji</a></li>
+							<li><a href="/suggestion">Zgłoś sugestię</a></li>
+							<li><a href="https://plus.google.com/116607849678024205946" target="_blank">Blog</a></li>
+
+						<li><a href="/info">Informacje</a></li>
+							</ul>
+				</div>
+			</nav>
+			
+			<div id="content" class="col-md-12">			
+
+ <h3>1. Informacje ogólne.</h3>
+<ol>
+<li>Operatorem Serwisu <b>Japoński pomocnik</b> jest Fryderyk Mazurek.</li>
+<li>Serwis realizuje funkcje pozyskiwania informacji o użytkownikach i ich zachowaniu w następujący sposób:
+<ul>
+<li>Poprzez dobrowolnie wprowadzone w formularzach informacje.</li>
+<li>Poprzez zapisywanie w urządzeniach końcowych pliki cookie (tzw. “ciasteczka”).</li>
+<li>Poprzez gromadzenie logów serwera www przez operatora hostingowego.</li>
+</ul>
+</li>
+</ol>
+<h3>2. Informacje w formularzach.</h3>
+<ol>
+<li>Serwis zbiera informacje podane dobrowolnie przez użytkownika.</li>
+<li>Serwis może zapisać ponadto informacje o parametrach połączenia (oznaczenie czasu, adres IP)</li>
+<li>Dane w formularzu nie są udostępniane podmiotom trzecim.</li>
+<li>Dane podane w formularzu są przetwarzane w celu wynikającym z funkcji konkretnego formularza, np w celu dokonania procesu obsługi zgłoszenia serwisowego lub kontaktu.</li>
+<li>Dane podane w formularzach mogą być przekazane podmiotom technicznie realizującym niektóre usługi – w szczególności dotyczy to przekazywania informacji o posiadaczu rejestrowanej domeny do podmiotów będących operatorami domen internetowych, serwisów obsługujących płatności lub też innych podmiotów, z którymi Operator Serwisu w tym zakresie współpracuje.</li>
+</ol>
+<h3>3. Informacja o plikach cookies.</h3>
+<ol>
+<li>Serwis korzysta z plików cookies.</li>
+<li>Pliki cookies (tzw. „ciasteczka”) stanowią dane informatyczne, w szczególności pliki tekstowe, które przechowywane są w urządzeniu końcowym Użytkownika Serwisu i przeznaczone są do korzystania ze stron internetowych Serwisu. Cookies zazwyczaj zawierają nazwę strony internetowej, z której pochodzą, czas przechowywania ich na urządzeniu końcowym oraz unikalny numer.</li>
+<li>Podmiotem zamieszczającym na urządzeniu końcowym Użytkownika Serwisu pliki cookies oraz uzyskującym do nich dostęp jest operator Serwisu.</li>
+<li>Pliki cookies wykorzystywane są w następujących celach:
+<ul>
+<li>tworzenia statystyk, które pomagają zrozumieć, w jaki sposób Użytkownicy Serwisu korzystają ze stron internetowych, co umożliwia ulepszanie ich struktury i zawartości;</li>
+<li>utrzymanie sesji Użytkownika Serwisu (po zalogowaniu), dzięki której Użytkownik nie musi na każdej podstronie Serwisu ponownie wpisywać loginu i hasła;</li>
+<li>określania profilu użytkownika w celu wyświetlania mu dopasowanych materiałów w sieciach reklamowych, w szczególności sieci Google.</li>
+</ul>
+</li>
+<li>W ramach Serwisu stosowane są dwa zasadnicze rodzaje plików cookies: „sesyjne” (session cookies) oraz „stałe” (persistent cookies). Cookies „sesyjne” są plikami tymczasowymi, które przechowywane są w urządzeniu końcowym Użytkownika do czasu wylogowania, opuszczenia strony internetowej lub wyłączenia oprogramowania (przeglądarki internetowej). „Stałe” pliki cookies przechowywane są w urządzeniu końcowym Użytkownika przez czas określony w parametrach plików cookies lub do czasu ich usunięcia przez Użytkownika.</li>
+<li>Oprogramowanie do przeglądania stron internetowych (przeglądarka internetowa) zazwyczaj domyślnie dopuszcza przechowywanie plików cookies w urządzeniu końcowym Użytkownika. Użytkownicy Serwisu mogą dokonać zmiany ustawień w tym zakresie. Przeglądarka internetowa umożliwia usunięcie plików cookies. Możliwe jest także automatyczne blokowanie plików cookies Szczegółowe informacje na ten temat zawiera pomoc lub dokumentacja przeglądarki internetowej.</li>
+<li>Ograniczenia stosowania plików cookies mogą wpłynąć na niektóre funkcjonalności dostępne na stronach internetowych Serwisu.</li>
+<li>Pliki cookies zamieszczane w urządzeniu końcowym Użytkownika Serwisu i wykorzystywane mogą być również przez współpracujących z operatorem Serwisu reklamodawców oraz partnerów.</li>
+<li>Zalecamy przeczytanie polityki ochrony prywatności tych firm, aby poznać zasady korzystania z plików cookie wykorzystywane w statystykach: <a style="color: #0782c1;" href="http://www.google.pl/intl/pl/analytics/privacyoverview.html" data-cke-saved-href="http://www.google.pl/intl/pl/analytics/privacyoverview.html">Polityka ochrony prywatności Google Analytics</a></li>
+<li>Pliki cookie mogą być wykorzystane przez sieci reklamowe, w szczególności sieć Google, do wyświetlenia reklam dopasowanych do sposobu, w jaki użytkownik korzysta z Serwisu. W tym celu mogą zachować informację o ścieżce nawigacji użytkownika lub czasie pozostawania na danej stronie.</li>
+<li>W zakresie informacji o preferencjach użytkownika gromadzonych przez sieć reklamową Google użytkownik może przeglądać i edytować informacje wynikające z plików cookies przy pomocy narzędzia: <a style="color: #0782c1;" href="https://www.google.com/ads/preferences/" data-cke-saved-href="https://www.google.com/ads/preferences/">https://www.google.com/ads/preferences/</a></li>
+</ol>
+<h3>4. Logi serwera.</h3>
+<ol>
+<li>Informacje o niektórych zachowaniach użytkowników podlegają logowaniu w warstwie serwerowej. Dane te są wykorzystywane wyłącznie w celu administrowania serwisem oraz w celu zapewnienia jak najbardziej sprawnej obsługi świadczonych usług hostingowych.</li>
+<li>Przeglądane zasoby identyfikowane są poprzez adresy URL. Ponadto zapisowi mogą podlegać:
+<ul>
+<li>czas nadejścia zapytania,</li>
+<li>czas wysłania odpowiedzi,</li>
+<li>nazwę stacji klienta – identyfikacja realizowana przez protokół HTTP,</li>
+<li>informacje o błędach jakie nastąpiły przy realizacji transakcji HTTP,</li>
+<li>adres URL strony poprzednio odwiedzanej przez użytkownika (referer link) – w przypadku gdy przejście do Serwisu nastąpiło przez odnośnik,</li>
+<li>informacje o przeglądarce użytkownika,</li>
+<li>Informacje o adresie IP.</li>
+</ul>
+</li>
+<li>Dane powyższe nie są kojarzone z konkretnymi osobami przeglądającymi strony.</li>
+<li>Dane powyższe są wykorzystywane jedynie dla celów administrowania serwerem.</li>
+</ol>
+<h3>5. Udostępnienie danych.</h3>
+<ol>
+<li>Dane podlegają udostępnieniu podmiotom zewnętrznym wyłącznie w granicach prawnie dozwolonych.</li>
+<li>Dane umożliwiające identyfikację osoby fizycznej są udostępniane wyłączenie za zgodą tej osoby.</li>
+<li>Operator może mieć obowiązek udzielania informacji zebranych przez Serwis upoważnionym organom na podstawie zgodnych z prawem żądań w zakresie wynikającym z żądania.</li>
+</ol>
+<h3>6. Zarządzanie plikami cookies – jak w praktyce wyrażać i cofać zgodę?</h3>
+<ol>
+<li>Jeśli użytkownik nie chce otrzymywać plików cookies, może zmienić ustawienia przeglądarki. Zastrzegamy, że wyłączenie obsługi plików cookies niezbędnych dla procesów uwierzytelniania, bezpieczeństwa, utrzymania preferencji użytkownika może utrudnić, a w skrajnych przypadkach może uniemożliwić korzystanie ze stron www.</li>
+</ol>
+<BR>
+
+			</div>
+
+			<div class="row footer col-md-12" style="margin-top: 50px; font-size: 90%">
+				<hr style="margin-bottom: 5px" />
+								
+				Autor strony:&nbsp;<a style="color: #777777" href="https://plus.google.com/111134833909320404217?rel=author">Fryderyk Mazurek</a> <br/>
+								
+				Wersja na telefony z systemem Android -&nbsp;<a style="color: #777777" href="https://play.google.com/store/apps/details?id=pl.idedyk.android.japaneselearnhelper">Japoński pomocnik</a> <br/> <br/>				
+				
+			</div>
+		</div>
+	</div>
+		
+	<script>
+		$( "#nav" ).menu( {position: {at: "left bottom"}});
+	</script>
+</body>
+</html>
