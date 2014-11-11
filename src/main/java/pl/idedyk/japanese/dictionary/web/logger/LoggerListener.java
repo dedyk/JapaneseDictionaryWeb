@@ -12,6 +12,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.FaviconIconSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
@@ -43,6 +44,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerM
 import pl.idedyk.japanese.dictionary.web.mail.MailSender;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidSendMissingWordLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
@@ -462,6 +464,26 @@ public class LoggerListener {
 				throw new RuntimeException(e);
 			}
 		
+		} else if (operation == GenericLogOperationEnum.ANDROID_SEND_MISSING_WORD) {
+			
+			AndroidSendMissingWordLoggerModel androidSendMissingWordLoggerModel = (AndroidSendMissingWordLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			AndroidSendMissingWordLog androidSendMissingWordLog = new AndroidSendMissingWordLog();
+			
+			androidSendMissingWordLog.setGenericLogId(genericLog.getId());
+			androidSendMissingWordLog.setWord(androidSendMissingWordLoggerModel.getWord());
+			androidSendMissingWordLog.setWordPlaceSearch(androidSendMissingWordLoggerModel.getWordPlaceSearch().toString());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertAndroidSendMissingWordLog(androidSendMissingWordLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}			
+			
 		} else if (operation == GenericLogOperationEnum.SUGGESTION_SEND) {
 			
 			SuggestionSendLoggerModel suggestionSendLoggerModel = (SuggestionSendLoggerModel)loggerModelCommon;
@@ -652,6 +674,9 @@ public class LoggerListener {
 		} else if (KanjiDictionaryCatalogLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.KANJI_DICTIONARY_CATALOG;
 		
+		} else if (AndroidSendMissingWordLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.ANDROID_SEND_MISSING_WORD;
+			
 		} else if (SuggestionStartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.SUGGESTION_START;
 			

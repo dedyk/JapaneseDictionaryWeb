@@ -31,6 +31,8 @@ public enum GenericLogOperationEnum {
 	SUGGESTION_START,
 	SUGGESTION_SEND,
 	
+	ANDROID_SEND_MISSING_WORD,
+	
 	DAILY_REPORT,
 	
 	INFO,

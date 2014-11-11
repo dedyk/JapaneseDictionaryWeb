@@ -22,6 +22,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 
 @Controller
@@ -77,6 +78,7 @@ public class AndroidController {
 		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
 		
 		// logowanie
+		loggerSender.sendLog(new AndroidSendMissingWordLoggerModel(Utils.createLoggerModelCommon(request), word, wordPlaceSearch));
 		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult));
 				
 		// brak odpowiedzi
