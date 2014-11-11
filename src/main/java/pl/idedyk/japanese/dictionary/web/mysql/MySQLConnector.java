@@ -1603,6 +1603,58 @@ public class MySQLConnector {
 			}			
 		}		
 	}
+	
+	public AndroidSendMissingWordLog getAndroidSendMissingWordLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, word, word_place_search "
+					+ "from android_send_missing_word_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createAndroidSendMissingWordLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private AndroidSendMissingWordLog createAndroidSendMissingWordLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		AndroidSendMissingWordLog androidSendMissingWordLog = new AndroidSendMissingWordLog();
+
+		androidSendMissingWordLog.setId(resultSet.getLong("id"));
+		androidSendMissingWordLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		androidSendMissingWordLog.setWord(resultSet.getString("word"));
+		androidSendMissingWordLog.setWordPlaceSearch(resultSet.getString("word_place_search"));
+
+		return androidSendMissingWordLog;
+	}
 		
 	public void insertSuggestionSendLoggerModel(SuggestionSendLog suggestionSendLog) throws SQLException {
 		
@@ -2064,6 +2116,12 @@ public class MySQLConnector {
 		
 		return getGenericTextStat("select user_agent, count(*) from generic_log where "
 				+ "id >= ? and id <= ? group by user_agent order by 2 desc, 1 desc", startId, endId);
+	}
+	
+	public List<GenericTextStat> getAndroidSendMissingWordStat(long startId, long endId) throws SQLException {
+		
+		return getGenericTextStat("select word, count(*) from android_send_missing_word_log where "
+				+ "generic_log_id >= ? and generic_log_id <= ? group by word order by 2 desc, 1 desc", startId, endId);
 	}
 
 	public List<RemoteClientStat> getRemoteClientStat(long startId, long endId) throws SQLException {

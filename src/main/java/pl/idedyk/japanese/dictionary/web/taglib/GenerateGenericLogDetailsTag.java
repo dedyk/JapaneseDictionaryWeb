@@ -36,6 +36,7 @@ import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidSendMissingWordLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
@@ -286,6 +287,21 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.adminRequestLog.params"), String.valueOf(adminRequestLog.getParams()));			
 			
 			panelBody.addHtmlElement(table);
+			
+		} else if (operation == GenericLogOperationEnum.ANDROID_SEND_MISSING_WORD) {
+			
+			AndroidSendMissingWordLog androidSendMissingWordLog = mySQLConnector.getAndroidSendMissingWordLogByGenericId(genericLog.getId());
+			
+			if (androidSendMissingWordLog == null) {
+				return null;
+			}
+			
+			Table table = new Table();
+						
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.androidSendMissingWordLog.word"), androidSendMissingWordLog.getWord());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.androidSendMissingWordLog.wordPlaceSearch"), androidSendMissingWordLog.getWordPlaceSearch());
+			
+			panelBody.addHtmlElement(table);			
 			
 		} else if (operation == GenericLogOperationEnum.DAILY_REPORT) {
 			

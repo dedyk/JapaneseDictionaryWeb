@@ -160,6 +160,11 @@ public class ScheduleTask {
 				
 				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.word.dictionary.autocomplete.search", wordDictionaryAutocompleteStat);
 				
+				// statystyki zglaszania slow od androida
+				List<GenericTextStat> androidSendMissingWordStat = mySQLConnector.getAndroidSendMissingWordStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				
+				appendGenericTextStat(reportDiv, "schedule.task.generate.daily.report.android.send.missing.word", androidSendMissingWordStat);
+				
 				// wyszukiwanie kanji bez wynikow				
 				List<GenericTextStat> kanjiDictionarySearchNoFoundStatList = mySQLConnector.getKanjiDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				

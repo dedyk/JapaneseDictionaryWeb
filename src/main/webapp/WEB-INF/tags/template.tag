@@ -239,7 +239,7 @@
 		<spring:eval var="privatePolicyUrl" expression="@applicationProperties.getProperty('private.policy.url')" />
 		
 		<a style="color: #777777" href="${privatePolicyUrl}"><spring:message code="template.footer.private.policy.info"/></a>		
-		<a href="javascript:void(0);" id="close-cookie-warn"> &nbsp; <spring:message code="start.info.dialog.ok"/></a>		
+		<a href="javascript:void(0);" id="close-cookie-warn"><spring:message code="start.info.dialog.ok"/></a>		
 	</section>
 	
 	<script>

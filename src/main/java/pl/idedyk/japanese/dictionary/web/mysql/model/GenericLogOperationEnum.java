@@ -1,5 +1,8 @@
 package pl.idedyk.japanese.dictionary.web.mysql.model;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 public enum GenericLogOperationEnum {
 	
 	START_APP,
@@ -44,4 +47,19 @@ public enum GenericLogOperationEnum {
 	GENERAL_EXCEPTION,
 	PAGE_NO_FOUND_EXCEPTION,
 	METHOD_NOT_ALLOWED_EXCEPTION;
+	
+	public static GenericLogOperationEnum[] getSortedValues() {
+		
+		GenericLogOperationEnum[] values = values();
+		
+		Arrays.sort(values, new Comparator<GenericLogOperationEnum>() {
+
+			@Override
+			public int compare(GenericLogOperationEnum o1, GenericLogOperationEnum o2) {
+				return o1.toString().compareTo(o2.toString());
+			}
+		});
+		
+		return values;
+	}
 }

@@ -147,7 +147,8 @@ public class AdminController {
     	model.put("command", adminPanelModel);
     	model.put("maxPageSize", (genericLogSize / GENERIC_LOG_SIZE) + (genericLogSize % GENERIC_LOG_SIZE > 0 ? 1 : 0));
     	
-    	model.put("genericLogOperationEnumList", GenericLogOperationEnum.values());
+    	
+    	model.put("genericLogOperationEnumList", GenericLogOperationEnum.getSortedValues());
     	
     	if (validationResult == true) {
     		
