@@ -232,6 +232,9 @@ public class WordDictionaryController {
 			}			
 		}		
 		
+		// searchMainDictionary
+		findWordRequest.searchMainDictionary = true;
+		
 		// searchGrammaFormAndExamples
 		findWordRequest.searchGrammaFormAndExamples = true;
 		

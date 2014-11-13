@@ -3,6 +3,8 @@ package pl.idedyk.japanese.dictionary.web.controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult.ResultItem;
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
@@ -114,7 +119,13 @@ public class AndroidController {
 		findWordRequest.searchRomaji = true;
 		findWordRequest.searchTranslate = true;
 		findWordRequest.searchInfo = true;
-						
+		
+		// searchOnlyCommonWord
+		findWordRequest.searchOnlyCommonWord = false;
+		
+		// searchMainDictionary
+		findWordRequest.searchMainDictionary = true;
+		
 		// dictionaryEntryList
 		findWordRequest.dictionaryEntryTypeList = null;
 				
@@ -125,5 +136,124 @@ public class AndroidController {
 		findWordRequest.searchName = true;
 		
 		return findWordRequest;
+	}
+	
+	@RequestMapping(value = "/android/search", method = RequestMethod.POST)
+	public void search(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException {
+		
+		BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+		
+		String readLine = null;
+		
+		StringBuffer jsonRequestSb = new StringBuffer();
+		
+		while (true) {		
+			readLine = inputStreamReader.readLine();
+			
+			if (readLine == null) {
+				break;
+			}
+			
+			jsonRequestSb.append(readLine);			
+		}
+		
+		logger.info("[AndroidSearch] Parsuję żądanie: " + jsonRequestSb.toString());
+		
+		JSONObject jsonObject = new JSONObject(jsonRequestSb.toString());
+
+		FindWordRequest findWordRequest = createFindWordRequest(jsonObject);
+
+		logger.info("[AndroidSendMissingWord] Wyszukiwanie słowek dla zapytania: " + findWordRequest);
+		
+		// szukanie		
+		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult));
+		
+		// przygotowanie odpowiedzi
+		JSONObject jsonObjectFromFindWordResult = createJSONObjectFromFindWordResult(findWordResult);
+		
+		// zwrocenie wyniku
+		writer.append(jsonObjectFromFindWordResult.toString());		
+	}
+	
+	private FindWordRequest createFindWordRequest(JSONObject searchJSONObject) {
+		
+		FindWordRequest findWordRequest = new FindWordRequest();
+		
+		List<String> tokenWord = Utils.tokenWord(searchJSONObject.getString("word"));
+		
+		StringBuffer wordJoined = new StringBuffer();
+		
+		for (int idx = 0; idx < tokenWord.size(); ++idx) {
+			
+			wordJoined.append(tokenWord.get(idx));
+			
+			if (idx != tokenWord.size() - 1) {
+				wordJoined.append(" ");
+			}
+		}
+		
+		// word
+		findWordRequest.word = wordJoined.toString();
+		
+		// wordPlace
+		findWordRequest.wordPlaceSearch = FindWordRequest.WordPlaceSearch.valueOf((String)searchJSONObject.get("wordPlaceSearch"));;
+		
+		// searchIn
+		findWordRequest.searchKanji = searchJSONObject.getBoolean("searchKanji");
+		findWordRequest.searchKana = searchJSONObject.getBoolean("searchKana");
+		findWordRequest.searchRomaji = searchJSONObject.getBoolean("searchRomaji");
+		findWordRequest.searchTranslate = searchJSONObject.getBoolean("searchTranslate");
+		findWordRequest.searchInfo = searchJSONObject.getBoolean("searchInfo");
+		
+		// searchOnlyCommonWord
+		findWordRequest.searchOnlyCommonWord = searchJSONObject.getBoolean("searchOnlyCommonWord");
+		
+		// searchMainDictionary
+		findWordRequest.searchMainDictionary = searchJSONObject.getBoolean("searchMainDictionary");
+		
+		// dictionaryEntryList
+		List<DictionaryEntryType> dictionaryEntryTypeList = null;		
+		
+		if (searchJSONObject.has("dictionaryEntryTypeList") == true) {
+			
+			JSONArray dictionaryEntryListJsonArray = searchJSONObject.getJSONArray("dictionaryEntryTypeList");
+			
+			dictionaryEntryTypeList = new ArrayList<DictionaryEntryType>();
+			
+			for (int idx = 0; idx < dictionaryEntryListJsonArray.length(); ++idx) {				
+				dictionaryEntryTypeList.add(DictionaryEntryType.valueOf(dictionaryEntryListJsonArray.getString(idx)));				
+			}			
+		}
+				
+		findWordRequest.dictionaryEntryTypeList = dictionaryEntryTypeList;
+				
+		// searchGrammaFormAndExamples
+		findWordRequest.searchGrammaFormAndExamples = searchJSONObject.getBoolean("searchGrammaFormAndExamples");
+		
+		// searchName
+		findWordRequest.searchName = searchJSONObject.getBoolean("searchName");
+		
+		return findWordRequest;
+	}
+	
+	private JSONObject createJSONObjectFromFindWordResult(FindWordResult findWordResult) {
+		
+		JSONObject jsonObject = new JSONObject();
+				
+		jsonObject.put("moreElemetsExists", findWordResult.moreElemetsExists);
+		jsonObject.put("foundGrammaAndExamples", findWordResult.foundGrammaAndExamples);
+		jsonObject.put("foundNames", findWordResult.foundNames);
+		
+		List<ResultItem> result = findWordResult.result;
+		
+		ResultItem a = null;
+		
+		
+		
+		return jsonObject;
 	}
 }
