@@ -23,7 +23,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult.ResultItem;
+import pl.idedyk.japanese.dictionary.api.dto.Attribute;
+import pl.idedyk.japanese.dictionary.api.dto.AttributeList;
+import pl.idedyk.japanese.dictionary.api.dto.AttributeType;
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
@@ -248,12 +253,89 @@ public class AndroidController {
 		jsonObject.put("foundGrammaAndExamples", findWordResult.foundGrammaAndExamples);
 		jsonObject.put("foundNames", findWordResult.foundNames);
 		
+		JSONArray resultJsonObject = new JSONArray();
+		
 		List<ResultItem> result = findWordResult.result;
 		
-		ResultItem a = null;
+		for (ResultItem resultItem : result) {
+			
+			DictionaryEntry resultItemDictionaryEntry = resultItem.getDictionaryEntry();
+			
+			JSONObject resultItemDictionaryEntryJSONObject = new JSONObject();
+									
+			resultItemDictionaryEntryJSONObject.put("id", resultItemDictionaryEntry.getId());
+			
+			resultItemDictionaryEntryJSONObject.put("dictionaryEntryTypeList", convertListEnumToJSONArray(resultItemDictionaryEntry.getDictionaryEntryTypeList()));
+			
+			AttributeList attributeList = resultItemDictionaryEntry.getAttributeList();
+			
+			if (attributeList != null) {
+				
+				JSONArray attributeListJSONArray = new JSONArray();
+				
+				List<Attribute> attributeListList = attributeList.getAttributeList();
+				
+				if (attributeListList != null) {
+					
+					for (Attribute currentAttribute : attributeListList) {
+						
+						JSONObject currentAttributeJSONObject = new JSONObject();
+						
+						AttributeType currentAttributeAttributeType = currentAttribute.getAttributeType();
+						List<String> currentAttributeAttributeValue = currentAttribute.getAttributeValue();
+						
+						currentAttributeJSONObject.put("attributeType", currentAttributeAttributeType.toString());
+						currentAttributeJSONObject.put("attributeValue", new JSONArray(currentAttributeAttributeValue));
+						
+						attributeListJSONArray.put(currentAttributeJSONObject);						
+					}					
+				}				
+				
+				resultItemDictionaryEntryJSONObject.put("attributeList", attributeListJSONArray);
+			}
+			
+			resultItemDictionaryEntryJSONObject.put("wordType", resultItemDictionaryEntry.getWordType());
+			
+			List<GroupEnum> groups = resultItemDictionaryEntry.getGroups();
+			
+			if (groups != null) {
+				resultItemDictionaryEntryJSONObject.put("groups", convertListEnumToJSONArray(groups));
+			}			
+			
+			resultItemDictionaryEntryJSONObject.put("kanji", resultItemDictionaryEntry.getKanji());
+			
+			resultItemDictionaryEntryJSONObject.put("prefixKana", resultItemDictionaryEntry.getPrefixKana());
+			resultItemDictionaryEntryJSONObject.put("kanaList", new JSONArray(resultItemDictionaryEntry.getKanaList()));
+
+			resultItemDictionaryEntryJSONObject.put("prefixRomaji", resultItemDictionaryEntry.getPrefixRomaji());
+			resultItemDictionaryEntryJSONObject.put("romajiList", new JSONArray(resultItemDictionaryEntry.getRomajiList()));
+			
+			resultItemDictionaryEntryJSONObject.put("translates", new JSONArray(resultItemDictionaryEntry.getTranslates()));
+			
+			resultItemDictionaryEntryJSONObject.put("info", resultItemDictionaryEntry.getInfo());
+			
+			resultItemDictionaryEntryJSONObject.put("name", resultItemDictionaryEntry.isName());
+			
+			resultJsonObject.put(resultItemDictionaryEntryJSONObject);
+		}
 		
-		
+		jsonObject.put("result", resultJsonObject);
 		
 		return jsonObject;
+	}
+	
+	private JSONArray convertListEnumToJSONArray(List<? extends Enum<?>> listEnum) {
+		
+		JSONArray result = new JSONArray();
+		
+		if (listEnum == null) {
+			return result;
+		}
+		
+		for (Enum<?> currentEnum : listEnum) {
+			result.put(currentEnum.toString());
+		}
+		
+		return result;
 	}
 }
