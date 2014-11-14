@@ -293,9 +293,7 @@ public class AndroidController {
 				
 				resultItemDictionaryEntryJSONObject.put("attributeList", attributeListJSONArray);
 			}
-			
-			resultItemDictionaryEntryJSONObject.put("wordType", resultItemDictionaryEntry.getWordType());
-			
+						
 			List<GroupEnum> groups = resultItemDictionaryEntry.getGroups();
 			
 			if (groups != null) {
