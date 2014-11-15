@@ -89,7 +89,7 @@ public class AndroidController {
 		
 		// logowanie
 		loggerSender.sendLog(new AndroidSendMissingWordLoggerModel(Utils.createLoggerModelCommon(request), word, wordPlaceSearch));
-		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult));
+		loggerSender.sendLog(new WordDictionarySearchLoggerModel(null, findWordRequest, findWordResult));
 				
 		// brak odpowiedzi
 		response.sendError(204); // No content
