@@ -138,7 +138,7 @@ public class AndroidController {
 		findWordRequest.searchGrammaFormAndExamples = true;
 		
 		// searchName
-		findWordRequest.searchName = true;
+		findWordRequest.searchName = false;
 		
 		return findWordRequest;
 	}
