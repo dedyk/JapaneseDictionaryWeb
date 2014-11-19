@@ -82,7 +82,9 @@ public class WordDictionarySearchModelValidator implements Validator {
 							Utils.isRomajiSearchIn(currentSearchIn) == false &&
 							Utils.isTranslateSearchIn(currentSearchIn) == false &&
 							Utils.isInfoSearchIn(currentSearchIn) == false &&
-							Utils.isOnlyCommonWordsSearchIn(currentSearchIn) == false) {
+							Utils.isOnlyCommonWordsSearchIn(currentSearchIn) == false &&
+							Utils.isGrammaFormAndExamples(currentSearchIn) == false &&
+							Utils.isNames(currentSearchIn) == false) {
 						
 						errors.rejectValue("searchIn", "wordDictionary.validation.wordDictionarySearchModel.searchIn.illegalArgument");
 						

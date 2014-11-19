@@ -106,6 +106,32 @@ public class Utils {
 		
 		return false;
 	}
+
+	public static boolean isGrammaFormAndExamples(String searchIn) {
+		
+		if (searchIn == null) {
+			return false;
+		}
+		
+		if (searchIn.equals("GRAMMA_FORM_AND_EXAMPLES") == true) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	public static boolean isNames(String searchIn) {
+		
+		if (searchIn == null) {
+			return false;
+		}
+		
+		if (searchIn.equals("NAMES") == true) {
+			return true;
+		}
+		
+		return false;
+	}
 	
 	public static Integer parseInteger(String text) {
 		

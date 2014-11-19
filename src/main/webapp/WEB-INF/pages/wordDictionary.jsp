@@ -13,7 +13,11 @@
 <c:set var="wordPlaceAnyPlace"> <spring:message code="wordDictionary.page.label.wordPlace.anyPlace"/> </c:set>
 <c:set var="wordPlaceExact"> <spring:message code="wordDictionary.page.label.wordPlace.exact"/> </c:set>
 
+<c:set var="searchInGrammaFormAndExamples"> <spring:message code="wordDictionary.page.label.searchIn.searchInGrammaFormAndExamples"/> </c:set>
+<c:set var="searchInNames"> <spring:message code="wordDictionary.page.label.searchIn.searchInNames"/> </c:set>
+
 <c:set var="searchInOnlyCommonWords"> <spring:message code="wordDictionary.page.label.searchIn.onlyCommonWords"/> </c:set>
+
 <c:set var="searchInKanji"> <spring:message code="wordDictionary.page.label.searchIn.kanji"/> </c:set>
 <c:set var="searchInKana"> <spring:message code="wordDictionary.page.label.searchIn.kana"/> </c:set>
 <c:set var="searchInRomaji"> <spring:message code="wordDictionary.page.label.searchIn.romaji"/> </c:set>
@@ -62,6 +66,8 @@
 					<td><form:label path=""><spring:message code="wordDictionary.page.label.searchIn"/></form:label></td>
 					<td>
 						<form:select id="searchInId" path="searchIn" multiple="true" data-selected-text-format="count">
+							<form:option value="GRAMMA_FORM_AND_EXAMPLES" label="${searchInGrammaFormAndExamples}" />
+							<form:option value="NAMES" label="${searchInNames}" />							
 							<form:option value="COMMON_WORDS" label="${searchInOnlyCommonWords}" />
 							<form:option value="KANJI" label="${searchInKanji}" />
 							<form:option value="KANA" label="${searchInKana}" />

@@ -81,7 +81,7 @@ public class WordDictionaryController {
 		wordDictionarySearchModel.setWordPlace(WordPlaceSearch.START_WITH.toString());
 
 		// ustawienie miejsca szukania		
-		wordDictionarySearchModel.setSearchIn(Arrays.asList("KANJI", "KANA", "ROMAJI", "TRANSLATE", "INFO"));
+		wordDictionarySearchModel.setSearchIn(Arrays.asList("GRAMMA_FORM_AND_EXAMPLES", "KANJI", "KANA", "ROMAJI", "TRANSLATE", "INFO"));
 
 		// pobranie wyswietlanych typow
 		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
@@ -214,6 +214,14 @@ public class WordDictionaryController {
 			if (Utils.isOnlyCommonWordsSearchIn(currentSearch) == true) {
 				findWordRequest.searchOnlyCommonWord = true;
 			}
+			
+			if (Utils.isGrammaFormAndExamples(currentSearch) == true) {
+				findWordRequest.searchGrammaFormAndExamples = true;
+			}
+
+			if (Utils.isNames(currentSearch) == true) {
+				findWordRequest.searchName = true;
+			}
 		}
 						
 		// dictionaryEntryList
@@ -234,13 +242,7 @@ public class WordDictionaryController {
 		
 		// searchMainDictionary
 		findWordRequest.searchMainDictionary = true;
-		
-		// searchGrammaFormAndExamples
-		findWordRequest.searchGrammaFormAndExamples = true;
-		
-		// searchName
-		findWordRequest.searchName = true;
-		
+				
 		return findWordRequest;
 	}
 	
