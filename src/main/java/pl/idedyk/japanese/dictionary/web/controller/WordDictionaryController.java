@@ -81,7 +81,7 @@ public class WordDictionaryController {
 		wordDictionarySearchModel.setWordPlace(WordPlaceSearch.START_WITH.toString());
 
 		// ustawienie miejsca szukania		
-		wordDictionarySearchModel.setSearchIn(Arrays.asList("GRAMMA_FORM_AND_EXAMPLES", "KANJI", "KANA", "ROMAJI", "TRANSLATE", "INFO"));
+		wordDictionarySearchModel.setSearchIn(Arrays.asList("GRAMMA_FORM_AND_EXAMPLES", "NAMES", "KANJI", "KANA", "ROMAJI", "TRANSLATE", "INFO"));
 
 		// pobranie wyswietlanych typow
 		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
@@ -103,7 +103,7 @@ public class WordDictionaryController {
 	}
 
 	@RequestMapping(value = "/wordDictionarySearch", method = RequestMethod.GET)
-	public String search(HttpServletRequest request, HttpSession session, @ModelAttribute("command") @Valid WordDictionarySearchModel searchModel,
+	public String search(HttpServletRequest request, HttpSession session, @ModelAttribute("command") @Valid final WordDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) {
 		
 		// gdy cos bedzie zmieniane trzeba rowniez zmienic w link generatorze
@@ -127,6 +127,20 @@ public class WordDictionaryController {
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult));
+
+		// logowanie wyszukiwania, dodatkowe sprawdzenie przez system, aby zalogowac ewentualne brakujace slowa
+		// uruchom w osobnym watku
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {				
+				FindWordRequest findWordRequestForSystemLog = Utils.createFindWordRequestForSystemLog(searchModel.getWord(), FindWordRequest.WordPlaceSearch.valueOf(searchModel.getWordPlace()));
+				
+				FindWordResult findWordResultForSystemLog = dictionaryManager.findWord(findWordRequestForSystemLog);
+			
+				loggerSender.sendLog(new WordDictionarySearchLoggerModel(null, findWordRequestForSystemLog, findWordResultForSystemLog));				
+			}
+		}).start();
 		
 		// sprawdzanie, czy uruchomic animacje przewijania
 		Integer lastWordDictionarySearchHash = (Integer)session.getAttribute("lastWordDictionarySearchHash");

@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 
 public class Utils {
@@ -231,4 +232,52 @@ public class Utils {
 		
 		return loggerModelCommon;
 	}	
+	
+	public static FindWordRequest createFindWordRequestForSystemLog(String word, FindWordRequest.WordPlaceSearch wordPlaceSearch) {
+		
+		FindWordRequest findWordRequest = new FindWordRequest();
+		
+		List<String> tokenWord = Utils.tokenWord(word);
+		
+		StringBuffer wordJoined = new StringBuffer();
+		
+		for (int idx = 0; idx < tokenWord.size(); ++idx) {
+			
+			wordJoined.append(tokenWord.get(idx));
+			
+			if (idx != tokenWord.size() - 1) {
+				wordJoined.append(" ");
+			}
+		}
+		
+		// word
+		findWordRequest.word = wordJoined.toString();
+		
+		// wordPlace
+		findWordRequest.wordPlaceSearch = wordPlaceSearch;
+		
+		// searchIn
+		findWordRequest.searchKanji = true;
+		findWordRequest.searchKana = true;
+		findWordRequest.searchRomaji = true;
+		findWordRequest.searchTranslate = true;
+		findWordRequest.searchInfo = true;
+		
+		// searchOnlyCommonWord
+		findWordRequest.searchOnlyCommonWord = false;
+		
+		// searchMainDictionary
+		findWordRequest.searchMainDictionary = true;
+		
+		// dictionaryEntryList
+		findWordRequest.dictionaryEntryTypeList = null;
+				
+		// searchGrammaFormAndExamples
+		findWordRequest.searchGrammaFormAndExamples = true;
+		
+		// searchName
+		findWordRequest.searchName = false;
+		
+		return findWordRequest;
+	}
 }

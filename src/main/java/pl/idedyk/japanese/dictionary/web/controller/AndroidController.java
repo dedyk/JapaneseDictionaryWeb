@@ -80,7 +80,7 @@ public class AndroidController {
 		}
 		
 		// stworzenie obiektu FindWordRequest
-		FindWordRequest findWordRequest = createFindWordRequest(word, wordPlaceSearch);
+		FindWordRequest findWordRequest = Utils.createFindWordRequestForSystemLog(word, wordPlaceSearch);
 		
 		logger.info("[AndroidSendMissingWord] Wyszukiwanie słowek dla zapytania: " + findWordRequest);
 		
@@ -94,55 +94,7 @@ public class AndroidController {
 		// brak odpowiedzi
 		response.sendError(204); // No content
 	}
-	
-	private FindWordRequest createFindWordRequest(String word, FindWordRequest.WordPlaceSearch wordPlaceSearch) {
 		
-		FindWordRequest findWordRequest = new FindWordRequest();
-		
-		List<String> tokenWord = Utils.tokenWord(word);
-		
-		StringBuffer wordJoined = new StringBuffer();
-		
-		for (int idx = 0; idx < tokenWord.size(); ++idx) {
-			
-			wordJoined.append(tokenWord.get(idx));
-			
-			if (idx != tokenWord.size() - 1) {
-				wordJoined.append(" ");
-			}
-		}
-		
-		// word
-		findWordRequest.word = wordJoined.toString();
-		
-		// wordPlace
-		findWordRequest.wordPlaceSearch = wordPlaceSearch;
-		
-		// searchIn
-		findWordRequest.searchKanji = true;
-		findWordRequest.searchKana = true;
-		findWordRequest.searchRomaji = true;
-		findWordRequest.searchTranslate = true;
-		findWordRequest.searchInfo = true;
-		
-		// searchOnlyCommonWord
-		findWordRequest.searchOnlyCommonWord = false;
-		
-		// searchMainDictionary
-		findWordRequest.searchMainDictionary = true;
-		
-		// dictionaryEntryList
-		findWordRequest.dictionaryEntryTypeList = null;
-				
-		// searchGrammaFormAndExamples
-		findWordRequest.searchGrammaFormAndExamples = true;
-		
-		// searchName
-		findWordRequest.searchName = false;
-		
-		return findWordRequest;
-	}
-	
 	@RequestMapping(value = "/android/search", method = RequestMethod.POST)
 	public void search(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException {
