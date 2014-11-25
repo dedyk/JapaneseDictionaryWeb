@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.dictionary;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.xdump.android.zinnia.Zinnia;
 
@@ -29,6 +31,9 @@ public class ZinniaManager {
 	
 	private long zinniaHandler = 0;
 
+	@Value("${db.dir}")
+	private String dbDir;
+	
 	@PostConstruct
 	public void init() {
 
@@ -40,7 +45,7 @@ public class ZinniaManager {
 		System.load(libZinniaPath);
 		System.load(libZinniaJniPath);
 		
-		String kanjiRecognizeModelDbPath = DictionaryManager.class.getResource("/db/kanji_recognizer.model.db").getPath();
+		String kanjiRecognizeModelDbPath = new File(dbDir, "kanji_recognizer.model.db").getPath();
 		
 		zinniaHandler = zinnia.zinnia_recognizer_new();
 		

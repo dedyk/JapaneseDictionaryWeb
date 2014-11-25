@@ -1,5 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.dictionary;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,6 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.DictionaryManagerAbstract;
@@ -45,6 +48,9 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	
 	private List<RadicalInfo> radicalList = null;
 	private List<TransitiveIntransitivePair> transitiveIntransitivePairsList = null;
+
+	@Value("${db.dir}")
+	private String dbDir;
 	
 	public DictionaryManager() {
 		super();
@@ -55,10 +61,10 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		
 		logger.info("Inicjalizacja Dictionary Manager");
 		
-		logger.info("Otwieranie bazy danych");
+		logger.info("Otwieranie bazy danych: " + dbDir);
 		
 		try {
-			databaseConnector = luceneDatabase = new LuceneDatabase(DictionaryManager.class.getResource("/db/" + LUCENE_DB_DIR + "/").getPath()); 
+			databaseConnector = luceneDatabase = new LuceneDatabase(new File(dbDir, LUCENE_DB_DIR).getPath()); 
 			
 			luceneDatabase.open();
 			
@@ -94,7 +100,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		logger.info("Wczytywanie informacji o pisaniu znakow kana");
 		
 		try {
-			InputStream kanaFileInputStream = DictionaryManager.class.getResourceAsStream("/db/" + KANA_FILE);
+			InputStream kanaFileInputStream = new FileInputStream(new File(dbDir, KANA_FILE));
 
 			readKanaFile(kanaFileInputStream);
 
@@ -107,7 +113,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		logger.info("Wczytywanie informacji o znakach podstawowych");
 		
 		try {
-			InputStream radicalInputStream = DictionaryManager.class.getResourceAsStream("/db/" + RADICAL_FILE);
+			InputStream radicalInputStream = new FileInputStream(new File(dbDir, RADICAL_FILE));
 			
 			readRadicalEntriesFromCsv(radicalInputStream);
 
@@ -120,7 +126,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		logger.info("Wczytywanie informacji o parach czasownikow przechodnich i nieprzechodnich");
 		
 		try {
-			InputStream transitiveIntransitivePairsInputStream = DictionaryManager.class.getResourceAsStream("/db/" + TRANSITIVE_INTRANSTIVE_PAIRS_FILE);
+			InputStream transitiveIntransitivePairsInputStream = new FileInputStream(new File(dbDir, TRANSITIVE_INTRANSTIVE_PAIRS_FILE));
 			
 			readTransitiveIntransitivePairsFromCsv(transitiveIntransitivePairsInputStream);
 

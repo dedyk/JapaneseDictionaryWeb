@@ -76,6 +76,9 @@
 									<target>
 										<zip destfile="${project.build.directory}/static-package.zip"
 											basedir="src/main/webapp" includes="css/** img/** js/**" />
+										
+										<zip destfile="${project.build.directory}/lucene-package.zip"
+											basedir="." includes="lucene-package/**" />
 									</target>
 								</configuration>
 								<goals>
