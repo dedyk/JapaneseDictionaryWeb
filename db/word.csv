@@ -86534,3 +86534,187 @@ muzyka popularna",,,
 24124,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,史跡,しせき,,shiseki,"historyczne miejsce
 historyczne ruiny
 historyczne pozostałości",,,
+24125,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,コーン,,koon,"stożek
+pachołek
+kukurydza","ang: cone, corn",,
+24126,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ルノー,,runoo,Renault,,,
+24127,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,レジスター,,rejisutaa,"dziennik
+rejestr
+kasa fiskalna
+rezystor
+opornik","ang: register, resistor",,
+24128,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,法曹界,ほうそうかい,,housoukai,krąg prawniczy,,,
+24129,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,胸襟,きょうきん,,kyoukin,własne serce,,,
+24130,"WORD_VERB_U
+WORD_EXPRESSION",,HIRAGANA,Inne,,胸襟を開く,きょうきんをひらく,,kyoukin o hiraku,"być szczery
+być otwarty
+mówić o własnych emocjach
+mówić o tym, co się myśli
+otwierać własne serce",,,
+24131,"WORD_ADVERB
+WORD_INTERJECTION
+WORD_NOUN","COMMON_WORD
+SURU_VERB
+ONAMATOPOEIC_OR_MIMETIC_WORD",HIRAGANA,Inne,,-,よちよち,,yochiyochi,"chwiejnie
+na chwiejnych nogach",np. gdy małe dziecko uczy się chodzić,,
+24132,WORD_NOUN,NOUN_ADJECTIVE_NO,HIRAGANA,Inne,,よちよち歩き,よちよちあるき,,yochiyochi aruki,"dreptanie niepewnym krokiem
+chodzenie niepewnym krokiem",np. gdy małe dziecko uczy się chodzić,,
+24133,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,テーマ,,teema,"temat
+wątek",niem: thema,,351776
+24134,WORD_NOUN,"COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,忘却,ぼうきゃく,,boukyaku,"zanik pamięci
+niepamięć
+słaba pamięć
+zapomnienie
+amnestia",,,
+24135,WORD_NOUN,"COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,減免,げんめん,,genmen,"obniżka i uwolnienie (np. podatków)
+złagodzenie i darowanie (np. w prawie karnym)",,,
+24136,WORD_NOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,美学,びがく,,bigaku,estetyka,,,
+24137,WORD_ADJECTIVE_NA,,HIRAGANA,Inne,,美学的,びがくてき,,bigakuteki,estetyczny,,,
+24138,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,美女,びじょ,,bijo,piękna kobieta,,,
+24139,WORD_NOUN,,HIRAGANA,Inne,,美女桜,びじょざくら,,bijozakura,werbena,,,
+24140,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,フロント,,furonto,"front
+przód
+recepcja (np. w hotelu)",,,
+24141,"WORD_ADJECTIVE_NA
+WORD_NOUN","COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,乱暴,らんぼう,,ranbou,"hałaśliwy
+awanturniczy
+chuligański
+rozwydrzony
+agresywny
+brutalny
+ostry
+nierozważny
+nieostrożny",,,41465
+24142,WORD_NOUN,,HIRAGANA,Inne,,乱暴者,らんぼうもの,,ranboumono,"chuligan
+łobuz
+opryszek
+bandyta
+zbir",,,
+24143,WORD_NOUN,,HIRAGANA,Inne,,乱暴狼藉,らんぼうろうぜき,,ranbou rouzeki,"szał
+gwałtowne zachowanie",,,
+24144,WORD_NOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,徒歩,とほ,,toho,"chodzenie
+spacerowanie
+chodzenie na nogach",,,"29032
+62115"
+24145,WORD_NOUN,,HIRAGANA,Inne,,徒歩,かち,,kachi,"piechur
+pieszy samuraj (w okresie Edo)
+chodzenie (archaizm)
+spacerowanie (archaizm)
+chodzenie na nogach (archaizm)",,,"29032
+62115"
+24146,WORD_NOUN,,HIRAGANA,Inne,,徒歩競走,とほきょうそう,,tohokyousou,"bieg
+bieganie",,,
+24147,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,産地,さんち,,sanchi,"obszar produkcji
+strefa produkcyjna",,,
+24148,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,贈収賄,ぞうしゅうわい,,zoushuuwai,"przekupstwo
+łapownictwo
+korupcja",,,
+24149,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,スタートライン,,sutaato rain,linia startowa,ang: start line,,
+24150,"WORD_ADJECTIVE_NA
+WORD_NOUN",COMMON_WORD,HIRAGANA,Inne,,余分,よぶん,,yobun,"nadwyżkowy
+nadprogramowy
+nadliczbowy
+nadmierny
+dodatkowy
+nadwyżka
+nadmiar",,,"249461
+324775
+66064"
+24151,WORD_NOUN,"COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,自覚,じかく,,jikaku,"samoświadomość
+samouświadomienie",,,298997
+24152,WORD_NOUN,,HIRAGANA,Inne,,自覚症状,じかくしょうじょう,,jikaku shoujou,"subiektywne objawy
+subiektywne symptomy",,,
+24153,WORD_NOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,苗字,みょうじ,,myouji,nazwisko,,,
+24154,WORD_VERB_U,"COMMON_WORD
+VERB_INTRANSITIVITY",HIRAGANA,Inne,,駆け回る,かけまわる,,kakemawaru,"krzątać się
+uwijać się
+kręcić się w kółko",,,
+24155,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,カネロニー,,kaneronii,cannelloni,włoski makaron wyglądem przypominający rurki o średnicy około 3 cm,,
+24156,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ママ,,mama,"mama
+żeńska właścicielka (np. baru)",,,"10837
+237074
+255676
+3280737
+351795
+64833"
+24157,WORD_VERB_RU,"COMMON_WORD
+VERB_INTRANSITIVITY",HIRAGANA,Inne,,疲れ果てる,つかれはてる,,tsukarehateru,"być wyczerpany
+być zmęczony
+być wycieńczony",,,
+24158,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,軒先,のきさき,,nokisaki,"brzeg okapu na dachu
+krawędź okapu",,,
+24159,WORD_NOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,鬼神,きしん,,kishin,"agresywny bóg
+dziki bóg
+surowy bóg",,,
+24160,WORD_NOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,鬼神,きじん,,kijin,"agresywny bóg
+dziki bóg
+surowy bóg",,,
+24161,WORD_NOUN,NOUN_ADJECTIVE_NO,HIRAGANA,Inne,,鬼神,おにがみ,,onigami,"agresywny bóg
+dziki bóg
+surowy bóg",,,
+24162,WORD_NOUN,KANA_ALONE,KATAKANA,Inne,,-,イケメン,,ikemen,"super facet
+przystojny mężczyzna
+energiczny mężczyzna
+przystojniak",,,
+24163,WORD_NOUN,,HIRAGANA,Inne,,日本学,にほんがく,,nihongaku,"japonistyka
+filologia japońska",,,
+24164,WORD_NOUN,,HIRAGANA,Inne,,日本学者,にほんがくしゃ,,nihongakusha,japonista,,,
+24165,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アリシア,,arishia,Alicja,,,
+24166,WORD_NOUN,,HIRAGANA,Inne,,半時間,はんじかん,,hanjikan,pół godziny,okres czasu,,
+24167,WORD_TEMPORAL_NOUN,,HIRAGANA,Inne,,半時,はんじ,,hanji,"godzina (archaizm)
+pół godziny",,,
+24168,WORD_NOUN,,HIRAGANA,Inne,,孵化器,ふかき,,fukaki,"inkubator
+wylęgarnia",,,
+24169,WORD_NOUN,NOUN_ADJECTIVE_NO,HIRAGANA,Inne,,字余り,じあまり,,jiamari,hipermetryczny,,,
+24170,WORD_EXPRESSION,,HIRAGANA,Inne,,気をつけて,きをつけて,,ki o tsukete,"trzymaj się
+uważaj
+bądź ostrożny",,,"20362
+20373
+274491
+324861
+343733
+51404
+61965"
+24171,WORD_EXPRESSION,,HIRAGANA,Inne,,気を付けて,きをつけて,,ki o tsukete,"trzymaj się
+uważaj
+bądź ostrożny",,,"20362
+274491
+324861"
+24172,WORD_NOUN,,HIRAGANA,Inne,,山側,やまがわ,,yamagawa,górska strona,,,
+24173,WORD_NOUN,,HIRAGANA,Inne,,山川,やまがわ,,yamagawa,górska rzeka,,,
+24174,"WORD_ADVERB
+WORD_ADVERB_TO",ONAMATOPOEIC_OR_MIMETIC_WORD,HIRAGANA,Inne,,-,ふつり,,futsuri,"przerwanie
+urwanie
+odłamanie
+nagłe zatrzymanie",,,
+24175,WORD_VERB_U,VERB_TRANSITIVITY,HIRAGANA,Inne,,羽織る,はおる,,haoru,"założyć
+nałożyć
+zakładać",,,
+24176,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,将軍,しょうぐん,,shougun,"shogun
+generał",,,267469
+24177,WORD_NOUN,,HIRAGANA,Inne,,将軍職,しょうぐんしょく,,shougunshoku,shogun,,,
+24178,WORD_EXPRESSION,,HIRAGANA,Inne,,-,どうしますか,,doushimasu ka,co robić?,,,"30579
+31092
+73481"
+24179,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,酒店,さかだな,,sakadana,"sklep alkoholowy
+sklep z alkoholami
+sklep sprzedający alkohole",,,
+24180,WORD_NOUN,,HIRAGANA,Inne,,酒店,さかみせ,,sakamise,"sklep alkoholowy
+sklep z alkoholami
+sklep sprzedający alkohole",,,
+24181,WORD_NOUN,,HIRAGANA,Inne,,酒店,さけてん,,saketen,"sklep alkoholowy
+sklep z alkoholami
+sklep sprzedający alkohole",,,
+24182,WORD_NOUN,,HIRAGANA,Inne,,酒店,しゅてん,,shuten,"sklep alkoholowy
+sklep z alkoholami
+sklep sprzedający alkohole",,,
+24183,WORD_NOUN,,HIRAGANA,Inne,,山川,やまかわ,,yamakawa,góry i rzeki,,,
