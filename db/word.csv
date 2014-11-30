@@ -65301,7 +65301,8 @@ segregacja",,,
 WORD_NOUN",COMMON_WORD,HIRAGANA,Inne,,頑固,がんこ,,ganko,"upór
 uporczywość
 nieustępliwość
-uparty",,,
+uparty
+upartość",,,
 17923,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,原動力,げんどうりょく,,gendouryoku,"siła sprawcza
 siła napędowa
 siła motywująca",,,
@@ -72123,7 +72124,8 @@ puste niebo",,,
 medium
 środki masowego przekazu
 nośnik",,,39192
-19853,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,法制局,ほうせいきょく,,houseikyoku,gabinet urzędu do spraw legislacyjnych,ang: Cabinet Legislation Bureau,,
+19853,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,法制局,ほうせいきょく,,houseikyoku,"urząd ds. legislacji
+urząd ds. ustawodawstwa",ang: Cabinet Legislation Bureau,,
 19854,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,狭心症,きょうしんしょう,,kyoushinshou,"atak serca
 angina pectoris
 zawał
@@ -86718,3 +86720,108 @@ sklep sprzedający alkohole",,,
 sklep z alkoholami
 sklep sprzedający alkohole",,,
 24183,WORD_NOUN,,HIRAGANA,Inne,,山川,やまかわ,,yamakawa,góry i rzeki,,,
+24184,WORD_EXPRESSION,COMMON_WORD,HIRAGANA,Inne,,-,こうすれば,,kousureba,"jeśli zrobisz to
+w takim przypadku",,,
+24185,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,バロック,,barokku,barok,,,
+24186,WORD_NOUN,,HIRAGANA_KATAKANA,Inne,,バロック音楽,バロックおんがく,,barokku ongaku,muzyka barokowa,,,
+24187,WORD_NOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,有線,ゆうせん,,yuusen,"komunikacja przewodowa
+transmisja przewodowa",,,
+24188,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,火器,かき,,kaki,broń palna,,,
+24189,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,焦り,あせり,,aseri,niecierpliwość,,,
+24190,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,キャンパー,,kyanpaa,"samochód kempingowy
+obozowicz
+biwakowicz",ang: camper,,
+24191,"WORD_ADJECTIVE_NA
+WORD_NOUN","COMMON_WORD
+KANA_ALONE
+NOUN_ADJECTIVE_NO",KATAKANA,Inne,,-,ダントツ,,dantotsu,"najlepszy
+zdecydowanie najlepszy
+decydujące prowadzenie",skrót,,
+24192,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,内閣法制局,ないかくほうせいきょく,,naikaku houseikyoku,"urząd ds. legislacji
+urząd ds. ustawodawstwa",ang: Cabinet Legislation Bureau,,
+24193,WORD_ADVERB,COMMON_WORD,HIRAGANA,Inne,,即座に,そくざに,,sokuza ni,"natychmiast
+od razu",,,
+24194,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,抜群,ばつぐん,,batsugun,"przewaga
+wyższość
+wyróżnienie
+niezwykłość
+nadzwyczajność
+wybitność
+znakomitość
+wyjątkowość",,,
+24195,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,原人,げんじん,,genjin,człowiek pierwotny,,,
+24196,WORD_NOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,合弁,ごうべん,,gouben,"wspólne przedsięwzięcie
+wspólne zarządzanie",,,
+24197,WORD_VERB_RU,"COMMON_WORD
+VERB_TRANSITIVITY",HIRAGANA,Inne,,読み上げる,よみあげる,,yomiageru,"odczytać na głos (i wyraźnie)
+wyczytywanie listy obecności",,,
+24198,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,陽,よう,,you,"yang (dodatni, pozytywny)
+otwarty (np. widoczne miejsce)",,,
+24199,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,集中豪雨,しゅうちゅうごうう,,shuuchuu gouu,"lokalna ulewa
+masowe opady deszczu",,,
+24200,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,マグマ,,maguma,magma,,,
+24201,WORD_ADJECTIVE_NA,COMMON_WORD,HIRAGANA,Inne,,反射的,はんしゃてき,,hanshateki,"odbijający
+odzwierciedlający
+refleksyjny",,,
+24202,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,折り合い,おりあい,,oriai,"wzajemne stosunki (np. pomiędzy rodzicami, a dzieckiem lub współpracownikami)
+kompromis
+ugoda (np. podczas sporu)
+umowa (np. biznesowa)",,,
+24203,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,狂言,きょうげん,,kyougen,kyougen,"dosł. szalone słowa, jedna z form klasycznego teatru japońskiego. Przedstawienia kyougen mają charakter realistycznej farsy, której akcja rozgrywa się pomiędzy dwiema postaciami (główną i tzw. poboczną), którym tylko czasem towarzyszą inne postacie drugoplanowe",,
+24204,WORD_NOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,美辞麗句,びじれいく,,bijireiku,"kwieciste słowa
+rozkwitające oratorstwo",,,
+24205,"WORD_VERB_RU
+WORD_EXPRESSION",,HIRAGANA,Inne,,美辞麗句を連ねる,びじれいくをつらねる,,bijireiku o tsuraneru,"wygłaszać
+przemawiać
+recytować
+wygłosić",kwiecistymi słowami,,
+24206,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,冠婚葬祭,かんこんそうさい,,kankon sousai,doniosła uroczysta okazja w relacjach międzyrodzinnych,,,
+24207,WORD_NOUN,"COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,加工,かこう,,kakou,"produkcja
+wytwarzanie
+przetwarzanie
+obróbka
+obrabianie",,,
+24208,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,機種,きしゅ,,kishu,"rodzaj sprzętu
+rodzaj wyposażenia
+model",,,58365
+24209,WORD_NOUN,"COMMON_WORD
+KANA_ALONE",HIRAGANA,Inne,,欠伸,あくび,,akubi,ziewanie,,,68024
+24210,WORD_NOUN,KANA_ALONE,HIRAGANA,Inne,,欠伸,けんしん,,kenshin,ziewanie,,,68024
+24211,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,銘々,めいめい,,meimei,"każdy
+jednostka
+indywidualny",,,"21383
+379033
+72674"
+24212,WORD_NOUN,,HIRAGANA,Inne,,蔦紅葉,つたもみじ,,tsutamomiji,"klon
+szkarłatnie zabarwiony bluszcz",,,
+24213,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,パイ,,pai,placek,"ang: pie, tart",,51302
+24214,WORD_NOUN,KANA_ALONE,KATAKANA,Inne,,-,センボンヤリ,,senbon'yari,Leibnitzia anandria,roślina,,
+24215,WORD_NOUN,KANA_ALONE,HIRAGANA,Inne,,千本槍,せんぼんやり,,senbon'yari,Leibnitzia anandria,roślina,,
+24216,WORD_NOUN,,HIRAGANA,Inne,,千本鳥居,せんぼんどりい,,senbon dorii,"wiele torii (bram)
+korytarz z torii",,,
+24217,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,定員,ていいん,,teiin,"ustalona stała liczba regularnego personelu
+pojemność (np. łodzi, statku, samolotu i etc)",,,61310
+24218,"WORD_ADVERBIAL_NOUN
+WORD_NOUN",,HIRAGANA,Inne,,津々浦々,つつうらうら,,tsutsuu raura,"po całym kraju
+w każdym miejscu
+w każdej zakątku i szczelinie kraju",,,
+24219,"WORD_ADVERBIAL_NOUN
+WORD_NOUN",,HIRAGANA,Inne,,津津浦浦,つつうらうら,,tsutsuu raura,"po całym kraju
+w każdym miejscu
+w każdej zakątku i szczelinie kraju",,,
+24220,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ポール,,pooru,"słup
+tyczka
+biegun
+ankieta
+sondaż
+głosowanie
+wybory","ang: pole, poll",,
+24221,WORD_NOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,戦法,せんぽう,,senpou,"taktyka
+strategia",,,
+24222,WORD_NOUN,,HIRAGANA,Inne,,虚名,きょめい,,kyomei,"fałszywa reputacja
+fałszywa opinia",,,
