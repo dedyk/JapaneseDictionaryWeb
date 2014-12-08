@@ -21881,7 +21881,8 @@ niesprawiedliwość
 zło
 nie-
 anty-",,,
-4167,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,非常口,ひじょうぐち,,hijouguchi,"wyjście bezpieczeństwa
+4167,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,非常口,ひじょうぐち,,hijouguchi,"wyjście ewakuacyjne
+wyjście bezpieczeństwa
 wyjście awaryjne",,,317955
 4168,WORD_ADJECTIVE_NA,,HIRAGANA,Inne,,非人間的,ひにんげんてき,,hiningenteki,nieludzki,,,
 4169,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,非常識,ひじょうしき,,hijoushiki,"sprzeczny ze zdrowym rozsądkiem
@@ -43151,7 +43152,8 @@ przeżywać
 doznawać
 obserwacja
 spostrzeżenie
-informacja",,,
+informacja
+wzrok i słuch",,,
 10603,WORD_NOUN,NOUN_ADJECTIVE_NO,HIRAGANA,Inne,,乳糖,にゅうとう,,nyuutou,"laktoza
 cukier mlekowy",,,
 10604,WORD_NOUN,,HIRAGANA,Inne,,囚人,めしうど,,meshiudo,więzień,,,"244222
@@ -56469,6 +56471,7 @@ wzmaganie się",,,
 odprowadzacz ciepła",,,
 15276,"WORD_ADJECTIVE_NA
 WORD_NOUN",COMMON_WORD,KATAKANA,Inne,,-,ロマンチック,,romanchikku,"romantyczny
+romantycznie
 romantyk
 romantyczka",,,
 15277,"WORD_ADJECTIVE_NA
@@ -88264,3 +88267,103 @@ gwarantowanie zasobów finansowych",,,
 24649,WORD_EXPRESSION,,HIRAGANA,Inne,,-,ふざけんなよ,,fuzakennayo,"przestań pierdolić
 żartujesz sobie kurwa
 gadasz bzdury",wulgarnie,,
+24650,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,フォア,,foa,"cztery
+przód
+forhend","ang: four, fore, forehand",,
+24651,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,儒学,じゅがく,,jugaku,konfucjanizm,,,
+24652,WORD_NOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,儒教,じゅきょう,,jukyou,konfucjanizm,,,
+24653,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,嫌疑,けんぎ,,kengi,podejrzenie,,,252964
+24654,WORD_NOUN,,HIRAGANA,Inne,,嫌疑者,けんぎしゃ,,kengisha,podejrzany,,,
+24655,WORD_NOUN,"COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,漁獲,ぎょかく,,gyokaku,"rybołówstwo
+łapanie ryb",,,
+24656,WORD_NOUN,,HIRAGANA,Inne,,漁獲高,ぎょかくだか,,gyokakudaka,łapanie ryb,,,
+24657,WORD_NOUN,,HIRAGANA,Inne,,漁獲物,ぎょかくぶつ,,gyokakubutsu,łapanie ryb,,,
+24658,WORD_NOUN,,HIRAGANA,Inne,,漁獲量,ぎょかくりょう,,gyokakuryou,ilość złowionych ryb,,,
+24659,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,親善,しんぜん,,shinzen,przyjaźń,,,
+24660,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,リート,,riito,lied,niemiecka piosenka,,
+24661,WORD_PRONOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,あの方,あのかた,,ano kata,"ten dżentelmen
+ta pani
+on
+ona",honoryfikatywnie,,
+24662,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,当落,とうらく,,touraku,wyniki wyborów,,,
+24663,"WORD_ADVERB
+WORD_ADVERB_TO",COMMON_WORD,HIRAGANA,Inne,,細々,ほそぼそ,,hosoboso,???,,,
+24664,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,総意,そうい,,soui,"jednomyślna opinia
+konsensus opinii",,,
+24665,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,コンセント,,konsento,gniazdo elektryczne,,,
+24666,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,シンク,,shinku,"zlew
+zlewozmywak
+synchronizowanie
+synchronizacja
+myśl","ang: sink, sync, think",,
+24667,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,囲み,かこみ,,kakomi,"ogrodzenie
+ramka
+oblężenie
+okrążenie",,,
+24668,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,社会性,しゃかいせい,,shakaisei,społeczność,,,
+24669,WORD_NOUN,,HIRAGANA,Inne,,社会性昆虫,しゃかいせいこんちゅう,,shakaisei konchuu,społeczny owad,"rodzaje owadów, które żyją w koloniach",,
+24670,WORD_NOUN,"COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,見聞,けんぶん,,kenbun,"informacja
+obserwacja",,,
+24671,WORD_NOUN,SURU_VERB,HIRAGANA,Inne,,見聞,けんもん,,kenmon,"informacja
+obserwacja",,,
+24672,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ユニバース,,yunibaasu,wszechświat,ang: universe,,
+24673,WORD_NOUN,,HIRAGANA,Inne,,見聞覚知,けんもんかくち,,kenmon kakuchi,percepcja łącząca sześć zmysłów,"wzrok, słuch, zamach, smak, dotyk i zmysł",,
+24674,WORD_ADVERB,"COMMON_WORD
+ONAMATOPOEIC_OR_MIMETIC_WORD",HIRAGANA,Inne,,-,ぐるっと,,gurutto,"kręcenie się w kółko
+krążenie
+obracanie się",,,"246181
+246182"
+24675,WORD_NOUN,"COMMON_WORD
+NOUN_ADJECTIVE_NO",HIRAGANA,Inne,,主力,しゅりょく,,shuryoku,"główne siły
+główny obiekt",,,
+24676,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,基調,きちょう,,kichou,"myśli przewodnia
+podstawa",,,
+24677,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,政経,せいけい,,seikei,polityka i ekonomia,,,
+24678,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,長女,ちょうじょ,,choujo,"starsza córka
+pierworodna córka",,,
+24679,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,オフサイド,,ofu saido,spalony,np. w piłce nożnej. ang: off-side,,
+24680,WORD_NOUN,,KATAKANA,Inne,,-,オフサイドトラップ,,ofu saido torappu,pułapka ofsajdowa,ang: offside trap,,
+24681,WORD_NOUN,"COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,具象,ぐしょう,,gushou,"ucieleśnienie
+specyficzne wyrażanie",np. w malarstwie,,
+24682,WORD_TEMPORAL_NOUN,COMMON_WORD,HIRAGANA,Inne,,各各,おのおの,,ono ono,"każdy
+pojedynczy
+oddzielny
+indywidualny
+odrębny
+różny",,,
+24683,WORD_ADVERB,"COMMON_WORD
+KANA_ALONE",HIRAGANA,Inne,,疾っくに,とっくに,,tokku ni,dawno temu,,,"13576
+16408"
+24684,WORD_VERB_U,"COMMON_WORD
+VERB_TRANSITIVITY",HIRAGANA,Inne,,組み込む,くみこむ,,kumikomu,"wkładać
+włączać",,,360364
+24685,WORD_NOUN,,HIRAGANA,Inne,,無月,むげつ,,mugetsu,bezksiężycowe niebo,,,
+24686,WORD_VERB_U,"COMMON_WORD
+VERB_INTRANSITIVITY
+KANA_ALONE",HIRAGANA,Inne,,集る,たかる,,takaru,"tłoczyć się wokół
+gromadzić się
+zbierać się
+wymuszać
+wyciągać
+pasożytować",,,356684
+24687,WORD_VERB_U,VERB_INTRANSITIVITY,HIRAGANA,Inne,,集る,あつまる,,atsumaru,"zbierać
+kolekcjonować
+gromadzić",,,356684
+24688,WORD_NOUN,,HIRAGANA,Inne,,鎮魂祭,ちんこんさい,,chinkonsai,msza lub ceremonia za spokój dusz,,,
+24689,WORD_ADVERB,COMMON_WORD,HIRAGANA,Inne,,今にも,いまにも,,imanimo,"kiedykolwiek
+o każdej porze
+wkrótce
+niebawem",,,32468
+24690,WORD_NOUN,,HIRAGANA,Inne,,高鳴り,たかなり,,takanari,"bicie
+uderzanie
+rozbrzmiewanie
+brzęczenie
+gwałtowne pulsowanie",,,
+24691,WORD_VERB_U,VERB_INTRANSITIVITY,HIRAGANA,Inne,,高鳴る,たかなる,,takanaru,"bicie (np. serca)
+uderzanie (np. pulsu)
+bić szybko",,,
