@@ -1192,6 +1192,7 @@
 88503,jpn,彼女は親切にも私に切符を買ってくれた。
 88532,jpn,彼女は神を信仰していたので、何も心配ごとがなかった。
 88551,jpn,彼女は新車を見せてくれた。
+88578,jpn,彼女は新しいことを学びたがっている。
 88580,jpn,彼女は振り向いてほほえんだ。
 88626,jpn,彼女は情報だけでなく助言も私にくれた。
 88642,jpn,彼女は乗客がバスを降りるのを見つめていました。
@@ -1373,6 +1374,7 @@
 91198,jpn,彼女は椅子に座って雑誌を読んでいた。
 91207,jpn,彼女は偉大な画家になった。
 91239,jpn,彼女は挨拶もせずに立ち去った。
+91250,jpn,彼女はわたしのすることをいつも知りたがる。
 91274,jpn,彼女はロシア語が話せる。
 91283,jpn,彼女はレポートをタイプするのにたくさんの間違いをした。
 91288,jpn,彼女はリンゴを半分にきった。
@@ -2488,6 +2490,7 @@
 106315,jpn,彼は私たちに悲しい知らせをもたらした。
 106329,jpn,彼は私たちに英語を教えてくれるイギリス人の先生です。
 106332,jpn,彼は私たちに一言も言わなかった。
+106334,jpn,彼は私たちにまだ会いたがっている。
 106346,jpn,彼は私たちにおもしろい話をしてくれた。
 106347,jpn,彼は私たちにおもしろい話をした。
 106375,jpn,彼は私が約束を守るか疑っている。
@@ -3093,6 +3096,7 @@
 114916,jpn,彼はあなたの成功を喜んでいます。
 114918,jpn,彼はあなたの親切に感謝している。
 114927,jpn,彼はあなたに結婚を申し込んだのですか。
+114929,jpn,彼はあなたに会いたがっていますよ。
 114955,jpn,彼はあたりを見回したが誰もみえなかった。
 114968,jpn,彼はあすシカゴをたちます。
 114977,jpn,彼はあくまでも沈黙を守ろうとした。
@@ -11829,6 +11833,7 @@
 232146,jpn,あなたは間違えました。
 232168,jpn,あなたは会社での地位に満足していますか。
 232196,jpn,あなたは何人兄弟がいますか。
+232199,jpn,あなたは何者ですか。
 232200,jpn,あなたは何処から来ましたか。
 232233,jpn,あなたは何に関心が有るのですか。
 232251,jpn,あなたは何か雑誌を購読していますか。
@@ -13644,6 +13649,7 @@
 359153,pol,Nasz telewizor nie chodzi od przeszło tygodnia.
 359156,pol,Muszę zająć się wyłącznie nauką do egzaminów wstępnych.
 359158,pol,Wysokie czoło znamionuje znaczną inteligencję.
+359159,pol,Ona zawsze lubi się uczyć nowych rzeczy.
 359163,pol,Przepraszam za tamtą niezapowiedzianą wizytę.
 359164,pol,Witam wszystkich.
 359165,pol,Spotkałem ją przypadkiem.
@@ -14199,6 +14205,7 @@
 362995,pol,Żona urodziła mu dwie córki i syna.
 363001,pol,Liście zaczynały się robić czerwone i żółte.
 363005,pol,"Mężczyzna zrobił krok w bok, by mogła wejść do pokoju."
+363006,pol,Kim jesteś?
 363008,pol,"To, kim dziś jestem, zawdzięczam wykształceniu."
 363009,pol,On ma inne zdanie niż ona.
 363011,pol,Zapaliłem światła.
@@ -14759,6 +14766,7 @@
 366132,pol,"Jeśli chcesz odnieść sukces, musisz ciężko pracować."
 366135,pol,W ogrodzie są piękne kwiaty.
 366138,pol,Nigdy nie podardzaj człowiekiem tylko z powodu jego ubóstwa.
+366139,pol,On znów chce nas widzieć.
 366141,pol,Ludność Japonii jest większa niż Nowej Zelandii.
 366147,pol,Nagrasz mi ten program na wideo?
 366150,pol,Naprawdę musisz zobaczyć ten film.
@@ -15973,6 +15981,7 @@
 525576,pol,"Nigdy nie widziałem pandy, dopóki nie pojechałem do Chin."
 525580,pol,Muzyka to wspólny język ludzkości.
 525581,pol,Jak minęły Ci wakacje?
+525583,pol,On pragnie Cię poznać.
 525584,pol,"Proszę, zamów tej pani taksówkę."
 525585,pol,Odpalili fajerwerki z wielkim hukiem.
 525588,pol,Mocno trzymała się swojej wiary.
@@ -16643,6 +16652,7 @@
 545818,pol,Chodzę spać o jedenastej.
 545821,pol,Nie możemy łamać konstytucji.
 545822,pol,Nie mam braci.
+545910,jpn,君はなんだ？
 546115,pol,Ten garnitur jest za dobry jak dla mnie.
 546276,pol,Głowa go boli.
 546279,pol,Wtedy przyszedł mi do głowy świetny pomysł.
@@ -20639,6 +20649,7 @@
 1350239,pol,Chciałbym wódkę i tonik.
 1350240,pol,"Przyjemnie się z tobą rozmawia, lecz naprawdę muszę już iść."
 1350246,pol,"Tamta gitara tak droga, że nie mogę jej kupić."
+1350249,pol,"Zawsze jest ciekawa tego, co robię."
 1350250,pol,Myślę inaczej.
 1350253,pol,Swe życie poświęcił medycynie.
 1350254,pol,"Spotkanie rozpoczęło się o dziewiątej, co do minuty."
@@ -24331,6 +24342,7 @@
 3495386,pol,"Wcześniej czy później, jego szczęście się skończy."
 3495403,pol,Czy macie jakieś tańsze pokoje?
 3495409,pol,Jest pewna subtelna różnica w znaczeniu tych dwóch słów.
+3495414,pol,Chciałby cię poznać.
 3495448,pol,Ile wart jest ten pierścionek?
 3495450,pol,Na dziś wystarczy.
 3496505,pol,Czemu wstałeś tak wcześnie?
