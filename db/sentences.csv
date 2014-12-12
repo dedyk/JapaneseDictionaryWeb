@@ -2967,6 +2967,9 @@
 113291,jpn,彼はせいぜい１０ドルしか持っていない。
 113292,jpn,彼はせいぜい１００ドル足らずしか持っていない。
 113293,jpn,彼はせいぜい１００ドルだけしか持っていない。
+113309,jpn,彼はスポーツが好きではない。僕も好きではない。
+113310,jpn,彼はスポーツが好きではない。わたしはどちらでもない。
+113311,jpn,彼はスポーツが好きじゃない。ぼくもすきじゃないな。
 113335,jpn,彼はすべての希望を失った。
 113338,jpn,彼はすべての科目で、とりわけ数学で、良い成績を修めた。
 113353,jpn,彼はスピーチを注意深く準備した。
@@ -4140,6 +4143,7 @@
 137673,jpn,大雨のためにダムが決壊した。
 137693,jpn,大したことじゃないんだから。
 137715,jpn,大きな声で話して下さい。
+137742,jpn,大きな渦巻きと急流があります。
 137747,jpn,大きなカヌーが水をきって進んでいた。
 137748,jpn,大きなお世話だ。
 137750,jpn,大きなイベントがない限り、私はお酒を飲まない。
@@ -4210,6 +4214,7 @@
 138254,jpn,多分君が正しいのだろう。
 138298,jpn,多くの本を読むことが大切です。
 138304,jpn,多くの病気が貧困から生じる。
+138314,jpn,多くの聴衆がいた。
 138328,jpn,多くの人々が日光を誉める。
 138330,jpn,多くの人々が楽しむ冬のスポーツといえばスケートだ。
 138340,jpn,多くの人が爆発で死んだ。
@@ -10017,6 +10022,7 @@
 206006,jpn,その腕利きの医者は総理大臣の病気を治すことができた。
 206030,jpn,その話は変に聞こえるかもしれないが、本当だ。
 206033,jpn,その話は彼自身の体験に基づいている。
+206046,jpn,その話はめでたしめでたしで終わった。
 206062,jpn,その話が漏れると私は困ったことになる。
 206082,jpn,その老婦人はやっとの事で階段を上った。
 206106,jpn,その老人は大きな魚を捕まえた。
@@ -13343,6 +13349,7 @@
 357411,pol,Staw czoła faktom.
 357412,pol,Ten zwyczaj ma większość rodzin.
 357413,pol,Zużyliśmy cały węgiel.
+357414,pol,Mieliśmy sporą publiczność.
 357416,pol,Ile będzie kosztować wysłanie tego pocztą lotniczą?
 357420,pol,Powinniśmy schować trochę pieniędzy na czarną godzinę.
 357422,pol,Promyk światła z okna obudził profesora z głębokiego snu.
@@ -14969,6 +14976,7 @@
 367299,pol,Jest ślepy na jedno oko.
 367300,pol,Nie bądź głupi.
 367301,pol,Został wybrany do senatu w ostatnich wyborach.
+367303,pol,"On nie lubi sportu, ja też nie."
 367308,pol,Mam lekką gorączkę.
 367311,pol,"To, co powiedział, to świetny pomysł."
 367313,pol,Czy muszę mu wyjaśniać powody?
@@ -15201,6 +15209,7 @@
 372486,pol,Ken ma białego psa.
 372493,pol,Urodziła swoje pierwsze dziecko w wieku dwudziestu lat.
 372734,pol,Następnego roku wybuchła I wojna światowa.
+373640,pol,Ma duży wir wodny i silny prąd.
 374104,jpn,この学校は１６５０年に設立された。
 382540,pol,Gdzie jest wejście do muzeum?
 382585,pol,"Nie. Przepraszam, ale muszę wcześnie wrócić."
@@ -19202,6 +19211,7 @@
 880900,pol,Jego nowa książka ukaże się w przyszłym miesiącu.
 880944,pol,"Nie doszliśmy zbyt daleko, gdy zaczęło padać."
 880947,pol,Wczoraj weszliśmy do ogromnego labiryntu.
+880949,pol,Ta historia miała szczęśliwe zakończenie.
 880953,pol,Te dzieci zbiegły ze wzgórza.
 880960,pol,"To nieuprzejme, gapić się na kogoś."
 880975,pol,Musisz uczyć się pilniej.
