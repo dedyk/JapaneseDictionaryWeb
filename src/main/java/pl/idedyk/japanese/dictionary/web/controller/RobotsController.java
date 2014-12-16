@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.BingSiteAuthGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RobotsGenerateLoggerModel;
 
 @Controller
@@ -24,6 +25,9 @@ public class RobotsController {
 	
 	@Value("${base.server}")
 	private String baseServer;
+
+	@Value("${bing.site.auth}")
+	private String bingSiteAuth;
 	
 	@Autowired
 	private LoggerSender loggerSender;
@@ -77,4 +81,23 @@ public class RobotsController {
 		
 		writer.append(robotsBody.toString());
     }
+
+    @RequestMapping(value = "/BingSiteAuth.xml", method = RequestMethod.GET)
+    public void getBingSiteAuth(HttpServletRequest request, HttpSession session, Writer writer) throws IOException {
+    	        
+		logger.info("Generowanie pliku BingSiteAuth.xml");
+		
+		// logowanie
+		loggerSender.sendLog(new BingSiteAuthGenerateLoggerModel(Utils.createLoggerModelCommon(request)));
+
+		StringBuffer robotsBody = new StringBuffer();
+    	
+		robotsBody.append("<?xml version=\"1.0\"?>\n");
+		
+		robotsBody.append("<users>\n");
+		robotsBody.append("\t<user>" + bingSiteAuth + "</user>\n");
+		robotsBody.append("</users>\n");
+				
+		writer.append(robotsBody.toString());
+    }    
 }

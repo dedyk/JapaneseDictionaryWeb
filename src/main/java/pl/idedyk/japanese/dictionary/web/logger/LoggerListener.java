@@ -13,6 +13,7 @@ import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.BingSiteAuthGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.FaviconIconSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
@@ -620,6 +621,9 @@ public class LoggerListener {
 			
 		} else if (RobotsGenerateLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.ROBOTS_GENERATE;
+			
+		} else if (BingSiteAuthGenerateLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.BING_SITE_AUTH;
 			
 		} else if (SitemapGenerateLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.SITEMAP_GENERATE;
