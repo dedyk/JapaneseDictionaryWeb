@@ -197,6 +197,7 @@ public class AndroidController {
 		return findWordRequest;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private JSONObject createJSONObjectFromFindWordResult(FindWordResult findWordResult) {
 		
 		JSONObject jsonObject = new JSONObject();
@@ -256,9 +257,11 @@ public class AndroidController {
 			
 			resultItemDictionaryEntryJSONObject.put("prefixKana", resultItemDictionaryEntry.getPrefixKana());
 			resultItemDictionaryEntryJSONObject.put("kanaList", new JSONArray(resultItemDictionaryEntry.getKanaList()));
+			resultItemDictionaryEntryJSONObject.put("kana", new JSONArray(resultItemDictionaryEntry.getKana()));
 
 			resultItemDictionaryEntryJSONObject.put("prefixRomaji", resultItemDictionaryEntry.getPrefixRomaji());
 			resultItemDictionaryEntryJSONObject.put("romajiList", new JSONArray(resultItemDictionaryEntry.getRomajiList()));
+			resultItemDictionaryEntryJSONObject.put("romaji", new JSONArray(resultItemDictionaryEntry.getRomaji()));
 			
 			resultItemDictionaryEntryJSONObject.put("translates", new JSONArray(resultItemDictionaryEntry.getTranslates()));
 			

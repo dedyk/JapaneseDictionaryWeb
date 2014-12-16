@@ -197,13 +197,9 @@ public class LoggerListener {
 			
 			wordDictionaryDetailsLog.setDictionaryEntryKanji(wordDictionaryDetailsLoggerModel.getDictionaryEntry().getKanji());
 			
-			wordDictionaryDetailsLog.setDictionaryEntryKanaList(
-					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
-							wordDictionaryDetailsLoggerModel.getDictionaryEntry().getKanaList()));
+			wordDictionaryDetailsLog.setDictionaryEntryKanaList(wordDictionaryDetailsLoggerModel.getDictionaryEntry().getKana());
 
-			wordDictionaryDetailsLog.setDictionaryEntryRomajiList(
-					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
-							wordDictionaryDetailsLoggerModel.getDictionaryEntry().getRomajiList()));
+			wordDictionaryDetailsLog.setDictionaryEntryRomajiList(wordDictionaryDetailsLoggerModel.getDictionaryEntry().getRomaji());
 
 			wordDictionaryDetailsLog.setDictionaryEntryTranslateList(
 					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
@@ -253,13 +249,9 @@ public class LoggerListener {
 			
 			wordDictionaryNameDetailsLog.setDictionaryEntryKanji(wordDictionaryNameDetailsLoggerModel.getDictionaryEntry().getKanji());
 			
-			wordDictionaryNameDetailsLog.setDictionaryEntryKanaList(
-					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
-							wordDictionaryNameDetailsLoggerModel.getDictionaryEntry().getKanaList()));
+			wordDictionaryNameDetailsLog.setDictionaryEntryKanaList(wordDictionaryNameDetailsLoggerModel.getDictionaryEntry().getKana());
 
-			wordDictionaryNameDetailsLog.setDictionaryEntryRomajiList(
-					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(
-							wordDictionaryNameDetailsLoggerModel.getDictionaryEntry().getRomajiList()));
+			wordDictionaryNameDetailsLog.setDictionaryEntryRomajiList(wordDictionaryNameDetailsLoggerModel.getDictionaryEntry().getRomaji());
 
 			wordDictionaryNameDetailsLog.setDictionaryEntryTranslateList(
 					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(

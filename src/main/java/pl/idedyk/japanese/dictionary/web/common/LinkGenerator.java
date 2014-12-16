@@ -29,7 +29,7 @@ public class LinkGenerator {
 			}
 			
 			String kanji = dictionaryEntry.getKanji();
-			List<String> kanaList = dictionaryEntry.getKanaList();
+			String kana = dictionaryEntry.getKana();
 			
 			if (forceDictionaryEntryType == null) {
 				
@@ -37,7 +37,7 @@ public class LinkGenerator {
 				
 	            return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
 	            		replaceAll("%KANJI%", kanji != null ? URLEncoder.encode(kanji, "UTF-8") : "-").
-	            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? URLEncoder.encode(kanaList.get(0), "UTF-8") : "-");
+	            		replaceAll("%KANA%", URLEncoder.encode(kana, "UTF-8"));
 				
 			} else {
 				
@@ -45,7 +45,7 @@ public class LinkGenerator {
 				
 	            return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
 	            		replaceAll("%KANJI%", kanji != null ? URLEncoder.encode(kanji, "UTF-8") : "-").
-	            		replaceAll("%KANA%", kanaList != null && kanaList.size() > 0 ? URLEncoder.encode(kanaList.get(0), "UTF-8") : "-").
+	            		replaceAll("%KANA%", URLEncoder.encode(kana, "UTF-8")).
 	            		replaceAll("%FORCEDICTIONARYENTRYTYPE%", forceDictionaryEntryType.toString());			
 			}
 			

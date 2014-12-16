@@ -150,19 +150,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			pageHeader.addHtmlElement(new Text(" | "));
 		}
 		
-		List<String> kanaList = dictionaryEntry.getKanaList();
+		String kana = dictionaryEntry.getKana();
+			
+		B kanaBold = new B();
 		
-		for (int kanaIdx = 0; kanaIdx < kanaList.size(); ++kanaIdx) {
-			
-			B kanaBold = new B();
-			
-			kanaBold.addHtmlElement(new Text(kanaList.get(kanaIdx)));
-			pageHeader.addHtmlElement(kanaBold);
-			
-			if (kanaIdx != kanaList.size() - 1) {
-				pageHeader.addHtmlElement(new Text(" | "));
-			}
-		}		
+		kanaBold.addHtmlElement(new Text(kana));
+		pageHeader.addHtmlElement(kanaBold);
 		
 		return pageHeader;
 	}
@@ -405,8 +398,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		String prefixKana = dictionaryEntry.getPrefixKana();
 		String prefixRomaji = dictionaryEntry.getPrefixRomaji();
 		
-		List<String> kanaList = dictionaryEntry.getKanaList();
-		List<String> romajiList = dictionaryEntry.getRomajiList();
+		String kana = dictionaryEntry.getKana();
+		String romaji = dictionaryEntry.getRomaji();
 		
     	// wiersz z tytulem
     	Div row1Div = new Div("row");
@@ -453,53 +446,50 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
         Table readingTable = new Table();
         readingBodyDiv.addHtmlElement(readingTable);
-
-        for (int idx = 0; idx < kanaList.size(); ++idx) {
         	
-        	final String kanaDrawId = "kanaDrawId" + idx;
-        	
-    		StringBuffer fullKana = new StringBuffer();
-    		StringBuffer fullRomaji = new StringBuffer();
-    		
-			if (prefixKana != null && prefixKana.equals("") == false) {
-				fullKana.append("(").append(prefixKana).append(") ");
-			}
+    	final String kanaDrawId = "kanaDrawId";
+    	
+		StringBuffer fullKana = new StringBuffer();
+		StringBuffer fullRomaji = new StringBuffer();
+		
+		if (prefixKana != null && prefixKana.equals("") == false) {
+			fullKana.append("(").append(prefixKana).append(") ");
+		}
 
-			fullKana.append(kanaList.get(idx));
+		fullKana.append(kana);
 
-			if (prefixRomaji != null && prefixRomaji.equals("") == false) {
-				fullRomaji.append("(").append(prefixRomaji).append(") ");
-			}
+		if (prefixRomaji != null && prefixRomaji.equals("") == false) {
+			fullRomaji.append("(").append(prefixRomaji).append(") ");
+		}
 
-			fullRomaji.append(romajiList.get(idx));
-			
-			Tr readingTableTr = new Tr();
-			readingTable.addHtmlElement(readingTableTr);
-			
-			Td readingTableKanaTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
-			readingTableTr.addHtmlElement(readingTableKanaTd);
-						
-			readingTableKanaTd.addHtmlElement(new Text(fullKana.toString()));
-						
-			idAndTextList.add(new IdAndText(kanaDrawId, fullKana.toString()));
-			
-			Td readingTableRomajiTd = new Td(null, "margin-top: 0px; margin-bottom: 5px; padding: 5px 50px 5px 0;");
-			readingTableTr.addHtmlElement(readingTableRomajiTd);
-			
-			H readingTableRomajiTdH4 = new H(4);
-			readingTableRomajiTd.addHtmlElement(readingTableRomajiTdH4);
-			
-			readingTableRomajiTdH4.addHtmlElement(new Text(fullRomaji.toString()));
-			
-			Td readingTableButtonTd = new Td(null, "padding: 0 50px 5px 0;");
-			readingTableTr.addHtmlElement(readingTableButtonTd);
-			
-			// guzik rysowania
-			Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
-					getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
+		fullRomaji.append(romaji);
+		
+		Tr readingTableTr = new Tr();
+		readingTable.addHtmlElement(readingTableTr);
+		
+		Td readingTableKanaTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
+		readingTableTr.addHtmlElement(readingTableKanaTd);
+					
+		readingTableKanaTd.addHtmlElement(new Text(fullKana.toString()));
+					
+		idAndTextList.add(new IdAndText(kanaDrawId, fullKana.toString()));
+		
+		Td readingTableRomajiTd = new Td(null, "margin-top: 0px; margin-bottom: 5px; padding: 5px 50px 5px 0;");
+		readingTableTr.addHtmlElement(readingTableRomajiTd);
+		
+		H readingTableRomajiTdH4 = new H(4);
+		readingTableRomajiTd.addHtmlElement(readingTableRomajiTdH4);
+		
+		readingTableRomajiTdH4.addHtmlElement(new Text(fullRomaji.toString()));
+		
+		Td readingTableButtonTd = new Td(null, "padding: 0 50px 5px 0;");
+		readingTableTr.addHtmlElement(readingTableButtonTd);
+		
+		// guzik rysowania
+		Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
+				getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
 
-			readingTableButtonTd.addHtmlElement(kanaDrawButton);
-        }
+		readingTableButtonTd.addHtmlElement(kanaDrawButton);
 
         for (IdAndText idAndText : idAndTextList) {
         	        	
@@ -798,31 +788,27 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		    		currentAttributeH.addHtmlElement(new Text(attributeType.getName()));
 
 		    		// czasownik przechodni / nieprzechodni
-					List<String> transitivityIntransitivityPairDictionaryEntryKanaList = transitivityIntransitivityPairDictionaryEntry.getKanaList();
-					List<String> transitivityIntransitivityPairDictionaryEntryRomajiList = transitivityIntransitivityPairDictionaryEntry.getRomajiList();
+					String transitivityIntransitivityPairDictionaryEntryKana = transitivityIntransitivityPairDictionaryEntry.getKana();
+					String transitivityIntransitivityPairDictionaryEntryRomaji = transitivityIntransitivityPairDictionaryEntry.getRomaji();
 
-					for (int transitivityIntransitivityPairDictionaryEntryKanaListIdx = 0; transitivityIntransitivityPairDictionaryEntryKanaListIdx < transitivityIntransitivityPairDictionaryEntryKanaList
-							.size(); transitivityIntransitivityPairDictionaryEntryKanaListIdx++) {
+					StringBuffer transitivityIntrasitivitySb = new StringBuffer();
 
-						StringBuffer transitivityIntrasitivitySb = new StringBuffer();
+					if (transitivityIntransitivityPairDictionaryEntry.isKanjiExists() == true) {
+						transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntry.getKanji()).append(", ");
+					}
 
-						if (transitivityIntransitivityPairDictionaryEntry.isKanjiExists() == true) {
-							transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntry.getKanji()).append(", ");
-						}
+					transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryKana).append(", ");
+					
+					transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryRomaji);
+					
+					Td row2TableTrTd2 = new Td();
+					row2TableTr.addHtmlElement(row2TableTrTd2);
 
-						transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryKanaList.get(transitivityIntransitivityPairDictionaryEntryKanaListIdx)).append(", ");
-						
-						transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryRomajiList.get(transitivityIntransitivityPairDictionaryEntryKanaListIdx));
-						
-						Td row2TableTrTd2 = new Td();
-						row2TableTr.addHtmlElement(row2TableTrTd2);
-
-			    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px");
-			    		row2TableTrTd2.addHtmlElement(currentTransitivityIntrasitivityH);
-			    		
-			    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(transitivityIntrasitivitySb.toString()));
-					}		    		
+		    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px");
+		    		row2TableTrTd2.addHtmlElement(currentTransitivityIntrasitivityH);
 		    		
+		    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(transitivityIntrasitivitySb.toString()));
+						    		
 		    		// przycisk
 					Td row2TableTrTd3 = new Td();
 					row2TableTr.addHtmlElement(row2TableTrTd3);
@@ -1560,14 +1546,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         
         int id = dictionaryEntry.getId();
 		String dictionaryEntryKanji = dictionaryEntry.getKanji();
-		List<String> dictionaryEntryKanaList = dictionaryEntry.getKanaList();
-		List<String> dictionaryEntryRomajiList = dictionaryEntry.getRomajiList();        
+		String dictionaryEntryKana = dictionaryEntry.getKana();
+		String dictionaryEntryRomaji = dictionaryEntry.getRomaji();        
 
 		String defaultSuggestion = messageSource.getMessage("wordDictionaryDetails.page.suggestion.default", 
 				new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
-						dictionaryEntryKanaList != null && dictionaryEntryKanaList.size() > 0 ? dictionaryEntryKanaList.get(0) : "-",
-						dictionaryEntryRomajiList != null && dictionaryEntryRomajiList.size() > 0 ? dictionaryEntryRomajiList.get(0) : "-",
-						String.valueOf(id)
+						dictionaryEntryKana, dictionaryEntryRomaji, String.valueOf(id)
 				}, Locale.getDefault());
 		
         
