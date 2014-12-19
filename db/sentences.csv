@@ -3084,7 +3084,6 @@
 114726,jpn,彼はいい給料をもらっている。
 114740,jpn,彼はあんな金持ちにもかかわらず、幸福ではなかった。
 114744,jpn,彼はあんなに無作法にふるまったことを恥じている。
-114751,jpn,彼はあれでも絵書きだってさ。
 114766,jpn,彼はある意味で彼の会社の代表である。
 114768,jpn,彼はある意味で会社の代表である。
 114774,jpn,彼はアルコールを一切飲まない。
@@ -5027,6 +5026,7 @@
 150327,jpn,次のボストン行きは何時ですか。
 150336,jpn,次のバスはいつ来ますか。
 150341,jpn,次のドライブインで休憩していこう。
+150342,jpn,次のスタンドまでどのくらいありますか。
 150369,jpn,次に何をやるべきか教えてくれませんか。
 150378,jpn,次に何をしたらよいのですか。
 150381,jpn,次に何をしたらよいのか、さっぱりわからない。
@@ -7840,6 +7840,7 @@
 180046,jpn,驚いたことにドアの錠がはずされていた。
 180051,jpn,驚いたことに、彼は大変美しい女優と結婚しました。
 180055,jpn,驚いたことに、彼は歌が上手かった。
+180061,jpn,驚いたことに、その人類学者は殺人罪で告訴された。
 180064,jpn,鏡は光を反射する。
 180066,jpn,鏡の汚れをおとしてきれいにしなさい。
 180070,jpn,興味という現象はそれ自体、きわめて興味深い問題である。
@@ -9650,8 +9651,6 @@
 200613,jpn,とても寒かったのでだれも外にでたがらなかった。
 200662,jpn,とてもおいしいですね。
 200665,jpn,とてもいい匂いがした。
-200690,jpn,どっちでも同じことだ。
-200693,jpn,どっちが勝っても嬉しい。
 200699,jpn,どっか行け。
 200716,jpn,どちらも好きでない。
 200771,jpn,どちらのご出身ですか。
@@ -9761,6 +9760,7 @@
 201803,jpn,ドアを開けっ放しにしておくな。
 201804,jpn,ドアを開けっぱなしにするな。
 201805,jpn,ドアを開けたままにしておくな。
+201819,jpn,ドアをそのままにしておいてはいけません。
 201840,jpn,ドアは開けるか閉めるかしなければならない。
 201845,jpn,ドアはどうしてもしまらない。
 201875,jpn,ドアに鍵をかけ忘れるなんて不注意でした。
@@ -10913,7 +10913,6 @@
 219099,jpn,こぼれたミルクを嘆いても無駄だ。
 219100,jpn,コペルニクスは地球が太陽の周りを回ると教えた。
 219108,jpn,コピー機ほど便利なものはない。
-219167,jpn,この列車はどのぐらい速く走りますか。
 219169,jpn,この列車の座席を予約したいのですが。
 219190,jpn,この料理は塩がききすぎている。
 219196,jpn,この旅行はいい思い出になるでしょう。
@@ -11135,6 +11134,7 @@
 222861,jpn,この夏は雨が多かった。
 222872,jpn,この夏アメリカへ行きます。
 222890,jpn,この黄色いセーターを着てみませんか。
+222892,jpn,この応募の中から一人を選ばなくてはなりません。
 222896,jpn,この猿は、きちんと仕込めばいろいろな芸ができるようになるだろう。
 222900,jpn,この円の現金を、ドルに両替してください。
 222921,jpn,この映画はとてもおもしろいということが分かった。
@@ -11691,7 +11691,6 @@
 229682,jpn,あれは塔です。
 229686,jpn,あれは大した詩だ。
 229692,jpn,あれは私達の学校です。
-229714,jpn,あれは空涙さ。
 229715,jpn,あれは空の旅に利用するにはいい航空会社だ。
 229736,jpn,あれはテーブルです。
 229738,jpn,あれはちょうど僕が欲しかったものだ。
@@ -12139,6 +12138,7 @@
 235882,jpn,１９９２年には、大学志願者の数は１９８２年の２倍となった。
 235885,jpn,１９９０年代に科学技術はおおいに進歩するだろう。
 235902,jpn,１９５８年、その記念碑は広島平和公園に建てられた。
+235915,jpn,１９００年に彼はイギリスを去り、そのまま二度と戻らなかった。
 235917,jpn,１８世紀の後半には、アメリカ人のパスポートは通常、合衆国大統領によって署名されていた。
 235926,jpn,１８６０年にリンカーンは合衆国の大統領に選ばれた。
 235949,jpn,１３は不吉な数であるという人がいる。
@@ -12471,6 +12471,7 @@
 351301,pol,Mój synek umie już liczyć do stu.
 351302,pol,Ile razy dziennie jeździ ten autobus?
 351321,pol,Te nożyczki są tępe.
+351329,pol,W roku 1900 opuścił Anglię i nigdy już tam nie powrócił.
 351334,pol,Nie chcę nigdzie chodzić.
 351345,pol,Tym autobusem dojedzie pan do śródmieścia.
 351397,pol,On mnie kopie!
@@ -13089,7 +13090,6 @@
 356050,pol,"Uwaga, dziura w jezdni!"
 356052,pol,Bez trudu znalazł miejsce.
 356059,pol,Woda odbija światło.
-356062,pol,Te łzy są sztuczne.
 356063,pol,"Od dawna się ze mną nie kontaktował, pod pretekstem, że jest zajęty."
 356064,pol,"To restauracja, w której często jadam."
 356326,pol,Jestem wypełniony smutkiem.
@@ -13496,6 +13496,7 @@
 358031,pol,Lola tańczyła z wdziękiem.
 358032,pol,Na stole jest pomarańcza.
 358034,pol,Czy nie mógłbyś przedstawić mnie p. Harrisonowi z PC Interactive?
+358035,pol,Nie wolno zostawiać otwartych drzwi.
 358036,pol,To przedsiębiorstwo zostało założone w roku 1974.
 358038,pol,"Bill wygrał mecz nie dzięki szczęściu, ale dzięki umiejętnościom."
 358039,pol,Jestem członkiem klubu tenisowego.
@@ -13590,7 +13591,6 @@
 358832,pol,Mike zdołał przenieść sam swoją walizkę.
 358836,pol,Dźwięk dzwonka mnie zbudził.
 358837,pol,On zawsze narzeka na szefa.
-358838,pol,To jedno i to samo.
 358839,pol,Przeprowadził się tu niedaleko.
 358841,pol,Zrób coś z krwotokiem z rany.
 358842,pol,Twój pokój to tylko połowa wielkości mojego.
@@ -14198,7 +14198,6 @@
 362890,pol,To wcielona uprzejmość.
 362891,pol,Chciałbym się upewnić co do tego.
 362893,pol,Czyjś łokieć dotknął moich pleców.
-362899,pol,"Ktokolwiek wygra, będzie dobrze."
 362900,pol,"Problem w tym, że tego dnia nie będziemy mieć samochodu."
 362901,pol,Oddam ci twoją płytę w ciągu tygodnia.
 362907,pol,Odwiedziła męża w więzieniu.
@@ -15142,7 +15141,6 @@
 368426,pol,Ojciec pojechał na ryby.
 368429,pol,Dzięki brandy wróciła mu przytomność.
 368430,pol,Graliśmy w golfa mimo deszczu.
-368432,pol,Jak szybko jedzie ten pociąg?
 368433,pol,"Pan pochodzi z Hokkaido, prawda?"
 368450,pol,"Jesteśmy pewni, że nadajecie się na to trudne stanowisko."
 368452,pol,"Lekarz nalegał, by leżał w łóżku."
@@ -19896,6 +19894,7 @@
 1080897,jpn,目を開けて。
 1084381,jpn,６時半に戻ります。
 1084383,jpn,６時半に帰ってくるよ。
+1085461,pol,Jak daleko do najbliższej stacji benzynowej?
 1085478,pol,Nie wiesz co się wczoraj stało?
 1085562,pol,W uszach slyszę jeszcze jej głos.
 1086530,pol,Ozdobiliśmy choinkę lampkami.
@@ -21637,7 +21636,6 @@
 1608749,jpn,彼はイギリス人だ。
 1609530,pol,Czy zrobiłeś swoją pracę domową sam?
 1609531,pol,Czy zrobiłeś to sam?
-1613954,pol,"Twierdzi, że jest malarzem."
 1614224,jpn,これが愛なのか？
 1614291,pol,Czy to jest miłość?
 1614515,jpn,レモンは苦い。
@@ -22881,6 +22879,7 @@
 2499638,pol,On martwi się o swoją przyszłość.
 2500333,pol,Kompozytorzy tworzą muzykę.
 2514939,pol,Dlaczego nie przymierzysz tego żółtego swetra?
+2514945,pol,Musimy wybrać jedną spośród tych aplikacji.
 2515003,pol,"Małpa, prawidłowo trenowana, będzie zdolna to robienia wielu sztuczek."
 2515009,pol,Chciałbym wymienić jeny na dolary.
 2515145,pol,Miałem szczęście być tam na czas.
@@ -23016,6 +23015,7 @@
 2680464,pol,Niemowlę zaczęło płakać na mój widok.
 2680476,pol,Widzieć rzeczy takimi jakimi są.
 2680481,pol,Nie potrafię obsłużyć tej maszyny.
+2680537,pol,Ku mojemu zaskoczeniu antropolog został oskarżony o zabójstwo.
 2680538,pol,Nie ma znaczenia czy się zgadzasz czy nie.
 2680539,pol,"Nie miałem zbyt wiele czasu, więc tylko przejrzałem artykuł."
 2680540,pol,Wszystkie garnitury mam szyte na miarę.
