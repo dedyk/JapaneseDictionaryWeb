@@ -12972,8 +12972,7 @@ gruszka",,,
 truskawki",,,507862
 1864,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,葡萄,ぶどう,,budou,winogrono,,,"309931
 34325"
-1865,WORD_NOUN,"COMMON_WORD
-KANA_ALONE",HIRAGANA,Inne,,李,すもも,,sumomo,śliwka,,,
+1865,WORD_NOUN,KANA_ALONE,HIRAGANA,Inne,,李,すもも,,sumomo,śliwka,,,
 1866,WORD_NOUN,COMMON_WORD,HIRAGANA,Genki dodatkowe 2-17,,俳句,はいく,,haiku,haiku,japońska forma literacka,,
 1867,WORD_NOUN,COMMON_WORD,KATAKANA,Genki 2-17,,-,ストーブ,,sutoobu,"ogrzewanie
 kuchenka
@@ -16770,7 +16769,7 @@ zużywać",,,
 2713,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,経費,けいひ,,keihi,"koszt
 wydatek",,,325540
 2714,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,モスク,,mosuku,meczet,,,
-2715,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,モスクワ,,mosukuwa,Moskwa,,,
+2715,WORD_NOUN,,KATAKANA,Inne,,-,モスクワ,,mosukuwa,Moskwa,,,
 2716,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,様式,ようしき,,youshiki,"styl
 forma
 tryb",,,
@@ -19032,8 +19031,7 @@ prywatny interes",,,
 3271,WORD_NOUN,"COMMON_WORD
 NOUN_SUFFIX",HIRAGANA,Inne,,神宮,じんぐう,,jinguu,sintoistyczna świątynia,,,
 3272,WORD_NOUN,SURU_VERB,HIRAGANA,Inne,,宮参り,みやまいり,,miyamairi,nawiedzenie świątyni,,,
-3273,WORD_NOUN,"COMMON_WORD
-OBSOLETE",HIRAGANA,Inne,,宮城,きゅうじょう,,kyuujou,pałac cesarski,,,
+3273,WORD_NOUN,OBSOLETE,HIRAGANA,Inne,,宮城,きゅうじょう,,kyuujou,pałac cesarski,,,
 3274,"WORD_NOUN
 WORD_ADJECTIVE_NO",COMMON_WORD,HIRAGANA,Inne,,子宮,しきゅう,,shikyuu,"łono
 macica",,,
@@ -20864,8 +20862,7 @@ mieć odrębne zdanie",,,"15044
 zmienić
 mylić",,,
 3701,"WORD_TEMPORAL_NOUN
-WORD_ADVERBIAL_NOUN","COMMON_WORD
-KANA_ALONE",HIRAGANA,Inne,,一昨日,いっさくじつ,,issakujitsu,przedwczoraj,,,289425
+WORD_ADVERBIAL_NOUN",KANA_ALONE,HIRAGANA,Inne,,一昨日,いっさくじつ,,issakujitsu,przedwczoraj,,,289425
 3702,"WORD_TEMPORAL_NOUN
 WORD_ADVERBIAL_NOUN",COMMON_WORD,HIRAGANA,Inne,,昨年,さくねん,,sakunen,"ubiegły rok
 w zeszłym roku",,,"244569
@@ -21381,8 +21378,7 @@ WORD_ADJECTIVE_NO","COMMON_WORD
 SURU_VERB",HIRAGANA,Inne,,専売,せんばい,,senbai,monopol,,,
 3828,WORD_NOUN,,HIRAGANA,Inne,,専制主義,せんせいしゅぎ,,senseishugi,"despotyzm
 absolutyzm",,,
-3829,WORD_NOUN,"COMMON_WORD
-NOUN_SUFFIX",HIRAGANA,Inne,,門,かど,,kado,"brama
+3829,WORD_NOUN,NOUN_SUFFIX,HIRAGANA,Inne,,門,かど,,kado,"brama
 wrota
 furtka
 drzwi
@@ -21595,7 +21591,9 @@ wywieszka",,,
 3891,WORD_NOUN,,HIRAGANA,Inne,,床板,ゆかいた,,yukaita,podłoga z desek,,,
 3892,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,甲板,かんぱん,,kanpan,pokład,statku,,
 3893,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,甲板,こうはん,,kouhan,pokład,statku,,
-3894,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,合板,ごうはん,,gouhan,sklejka,,,
+3894,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,合板,ごうはん,,gouhan,"sklejka
+dykta
+wspólna publikacja",,,
 3895,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,寿,ことぶき,,kotobuki,"długie życie
 gratulacje",,,
 3896,WORD_VERB_RU,"COMMON_WORD
@@ -24999,7 +24997,8 @@ SURU_VERB",HIRAGANA,Inne,,墓参り,はかまいり,,hakamairi,odwiedzanie grobu
 817005"
 4764,"WORD_NOUN
 WORD_ADJECTIVE_NO
-WORD_ADVERBIAL_NOUN",KANA_ALONE,HIRAGANA,Inne,,他,ほか,,hoka,"inny
+WORD_ADVERBIAL_NOUN","COMMON_WORD
+KANA_ALONE",HIRAGANA,Inne,,他,ほか,,hoka,"inny
 inne (szczególnie miejsca i rzeczy)
 pozostały",,,"1048695
 1088496
@@ -37160,9 +37159,8 @@ warstwa",,,356716
 7899,WORD_NOUN,,HIRAGANA,Inne,,爵,しゃく,,shaku,"baron
 godność para",,,
 7900,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,窯,かま,,kama,piec,"do wypalania cegły, porcelany itp.",,
-7901,WORD_NOUN,"COMMON_WORD
-OBSOLETE",HIRAGANA,Inne,,畝,せ,,se,se,"jednostka miary ok. 99,3 m2",,
-7902,WORD_NOUN,,HIRAGANA,Inne,,畝,うね,,une,"grządka
+7901,WORD_NOUN,OBSOLETE,HIRAGANA,Inne,,畝,せ,,se,se,"jednostka miary ok. 99,3 m2",,
+7902,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,畝,うね,,une,"grządka
 rowek
 fałda",,,
 7903,WORD_VERB_U,"COMMON_WORD
@@ -38024,7 +38022,8 @@ SUFFIX",HIRAGANA,Inne,,岳,たけ,,take,"szczyt
 góra",,,
 8104,WORD_NOUN,,HIRAGANA,Inne,,倹,けん,,ken,"ekonomiczny
 oszczędny",,,
-8105,WORD_EMPTY,PREFIX,HIRAGANA,Inne,,准,じゅん,,jun,"jakby-
+8105,WORD_EMPTY,"COMMON_WORD
+PREFIX",HIRAGANA,Inne,,准,じゅん,,jun,"jakby-
 niemal-
 pół-
 wpół-
@@ -38583,7 +38582,8 @@ czuć ból",,,"1060837
 362344
 364987
 37512"
-8232,WORD_VERB_RU,"VERB_TRANSITIVITY
+8232,WORD_VERB_RU,"COMMON_WORD
+VERB_TRANSITIVITY
 VERB_INTRANSITIVITY_PAIR 8231",HIRAGANA,Inne,,痛める,いためる,,itameru,"ranić
 kaleczyć
 zadawać ból
@@ -40171,7 +40171,7 @@ Genki kanji 1-10",,雪,ゆき,,Yuki,Yuki,,NO_TYPE_CHECK,"134816
 8863,WORD_MALE_NAME,,HIRAGANA,Inne,,統,おさむ,,Osamu,Osamu,,,
 8864,WORD_MALE_NAME,,HIRAGANA,Inne,,雷電,らいでん,,Raiden,Raiden,,NO_TYPE_CHECK,
 8865,WORD_MALE_NAME,,HIRAGANA,Inne,,六朗,ろくろう,,Rokurou,Rokuro,,,
-8866,WORD_MALE_NAME,,HIRAGANA,Inne,,-,りょう,,Ryou,Ryo,,,"1199362
+8866,WORD_MALE_NAME,,HIRAGANA,Inne,,-,りょう,,Ryou,Ryo,,NO_TYPE_CHECK,"1199362
 1300205
 325751"
 8867,WORD_MALE_NAME,,HIRAGANA,Inne,,亮太,りょうた,,Ryouta,Ryota,,,
@@ -48231,7 +48231,8 @@ KANA_ALONE",HIRAGANA,Inne,,無闇に,むやみに,,muyami ni,"bezmyślnie
 nadmiernie",,,
 11468,WORD_ADVERB,KANA_ALONE,HIRAGANA,Inne,,無暗に,むやみに,,muyami ni,"bezmyślnie
 nadmiernie",,,
-11469,WORD_EMPTY,SUFFIX,HIRAGANA,Inne,,内,ない,,nai,"wewnątrz
+11469,WORD_EMPTY,"COMMON_WORD
+SUFFIX",HIRAGANA,Inne,,内,ない,,nai,"wewnątrz
 w czasie",,,"1056470
 1277295
 129655
@@ -55477,8 +55478,7 @@ stanowienie",ang: make up,,
 siła armii",,,
 14129,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,兵員,へいいん,,heiin,"siła wojskowa
 kadra wojskowa",,,
-14130,WORD_NOUN,"COMMON_WORD
-KANA_ALONE",HIRAGANA,Inne,,兵,つわもの,,tsuwamono,"żołnierz
+14130,WORD_NOUN,KANA_ALONE,HIRAGANA,Inne,,兵,つわもの,,tsuwamono,"żołnierz
 wojownik
 silny człowiek
 niezwykły człowiek
@@ -57285,8 +57285,7 @@ doczepiać",,,
 14685,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,一女,いちじょ,,ichijo,"pierwsza córka
 najstarsza córka",,,
 14686,"WORD_ADJECTIVE_NA
-WORD_ADVERB","COMMON_WORD
-KANA_ALONE",HIRAGANA,Inne,,全う,まっとう,,mattou,"właściwy
+WORD_ADVERB",KANA_ALONE,HIRAGANA,Inne,,全う,まっとう,,mattou,"właściwy
 odpowiedni
 porządny
 szanowny
@@ -63211,7 +63210,7 @@ serce i dusza",,,"258776
 524954
 54396
 68788"
-16485,WORD_ADVERB,COMMON_WORD,HIRAGANA,Inne,,心から,しんから,,shin kara,"z głębi swojego serca
+16485,WORD_ADVERB,,HIRAGANA,Inne,,心から,しんから,,shin kara,"z głębi swojego serca
 naturalnie
 serce i dusza",,,"258776
 524954
@@ -64070,8 +64069,7 @@ sprzeciw
 zastrzeżenie
 protestowanie",,,38275
 16731,"WORD_VERB_U
-WORD_PRE_NOUN_ADJECTIVAL","COMMON_WORD
-VERB_INTRANSITIVITY",HIRAGANA,Inne,,来る,きたる,,kitaru,"przybyć
+WORD_PRE_NOUN_ADJECTIVAL",VERB_INTRANSITIVITY,HIRAGANA,Inne,,来る,きたる,,kitaru,"przybyć
 przychodzić
 przyjeżdżać
 nadchodzić",,,"10095
@@ -68575,8 +68573,7 @@ pouczający
 instruktywny
 dydaktyczny",,,
 18023,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,リスナー,,risunaa,słuchacz,ang: listener,,
-18024,WORD_VERB_RU,"COMMON_WORD
-VERB_TRANSITIVITY",HIRAGANA,Inne,,引締める,ひきしめる,,hikishimeru,"napiąć
+18024,WORD_VERB_RU,VERB_TRANSITIVITY,HIRAGANA,Inne,,引締める,ひきしめる,,hikishimeru,"napiąć
 napinać
 naprężyć
 naciągać
@@ -68633,7 +68630,7 @@ brak dojścia do zgody",,,
 18042,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,門外漢,もんがいかん,,mongaikan,"niefachowiec
 amator
 laik",,,
-18043,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ワシントン,,washinton,Waszyngton,,,251176
+18043,WORD_NOUN,,KATAKANA,Inne,,-,ワシントン,,washinton,Waszyngton,,,251176
 18044,WORD_VERB_U,COMMON_WORD,HIRAGANA,Inne,,寝過ごす,ねすごす,,nesugosu,"zaspać
 zasypiać
 przespać coś",,,418873
@@ -71304,7 +71301,7 @@ chociaż",,,
 18802,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,グレゴリオ,,guregorio,gregoriański,kalendarz,,
 18803,WORD_NOUN,,HIRAGANA_KATAKANA,Inne,,グレゴリオ暦,グレゴリオれき,,guregorio reki,kalendarz gregoriański,,,
 18804,WORD_NOUN,,HIRAGANA_KATAKANA,Inne,,グレゴリオ聖歌,グレゴリオせいか,,guregorio seika,chorał gregoriański,"tradycyjny, jednogłosowy śpiew liturgiczny Kościoła łacińskiego",,
-18805,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,コイタス,,koitasu,"kopulacja
+18805,WORD_NOUN,,KATAKANA,Inne,,-,コイタス,,koitasu,"kopulacja
 stosunek płciowy
 akt płciowy",ang: coitus,,
 18806,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,トリガー,,torigaa,"spust
@@ -79467,206 +79464,206 @@ nabytek",,,
 20959,WORD_NOUN,SURU_VERB,HIRAGANA,Inne,,買取り,かいとり,,kaitori,"zakup
 kupno
 nabytek",,,
-20960,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アダ,,ada,Ada,polskie imię,,
-20961,WORD_MALE_NAME,,KATAKANA,Inne,,-,アダム,,adamu,Adam,polskie imię,,
-20962,WORD_MALE_NAME,,KATAKANA,Inne,,-,アドリャヌ,,adoryanu,Adrian,polskie imię,,
-20963,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アガタ,,agata,Agata,polskie imię,,
-20964,WORD_FEMALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,アグニェシカ,,agunieshika,Agnieszka,polskie imię,,
+20960,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アダ,,ada,Ada,polskie imię,NO_TYPE_CHECK,
+20961,WORD_MALE_NAME,,KATAKANA,Inne,,-,アダム,,adamu,Adam,polskie imię,NO_TYPE_CHECK,
+20962,WORD_MALE_NAME,,KATAKANA,Inne,,-,アドリャヌ,,adoryanu,Adrian,polskie imię,NO_TYPE_CHECK,
+20963,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アガタ,,agata,Agata,polskie imię,NO_TYPE_CHECK,
+20964,WORD_FEMALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,アグニェシカ,,agunieshika,Agnieszka,polskie imię,NO_TYPE_CHECK,
 20965,WORD_FEMALE_NAME,KANA_ALONE,KATAKANA,Inne,,-,アラ,,ara,Ala,polskie imię,NO_TYPE_CHECK,
-20966,WORD_MALE_NAME,,KATAKANA,Inne,,-,アレクサンデル,,arekusanderu,Aleksander,polskie imię,,
-20967,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アレクサンドラ,,arekusandora,Aleksandra,polskie imię,,
+20966,WORD_MALE_NAME,,KATAKANA,Inne,,-,アレクサンデル,,arekusanderu,Aleksander,polskie imię,NO_TYPE_CHECK,
+20967,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アレクサンドラ,,arekusandora,Aleksandra,polskie imię,NO_TYPE_CHECK,
 20968,WORD_FEMALE_NAME,COMMON_WORD,KATAKANA,Inne,,-,アリーナ,,ariina,Alina,polskie imię,NO_TYPE_CHECK,
-20969,WORD_MALE_NAME,,KATAKANA,Inne,,-,アマデウシュ,,amadeushu,Amadeusz,polskie imię,,
-20970,WORD_MALE_NAME,,KATAKANA,Inne,,-,アンジェイ,,anjei,Andrzej,polskie imię,,
+20969,WORD_MALE_NAME,,KATAKANA,Inne,,-,アマデウシュ,,amadeushu,Amadeusz,polskie imię,NO_TYPE_CHECK,
+20970,WORD_MALE_NAME,,KATAKANA,Inne,,-,アンジェイ,,anjei,Andrzej,polskie imię,NO_TYPE_CHECK,
 20971,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アンゲリカ,,angerika,Angelika,polskie imię,NO_TYPE_CHECK,
-20972,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アニタ,,anita,Anita,polskie imię,,
+20972,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アニタ,,anita,Anita,polskie imię,NO_TYPE_CHECK,
 20973,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アンナ,,anna,"Anna
-Ania",polskie imię,,
-20974,WORD_MALE_NAME,,KATAKANA,Inne,,-,アントニ,,antoni,Antoni,polskie imię,,
-20975,WORD_MALE_NAME,,KATAKANA,Inne,,-,アレク,,areku,Arek,polskie imię,,
-20976,WORD_MALE_NAME,,KATAKANA,Inne,,-,アルトゥル,,aruturu,Artur,polskie imię,,
-20977,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,バルバラ,,barubara,Barbara,polskie imię,,
-20978,WORD_MALE_NAME,,KATAKANA,Inne,,-,バルテク,,baruteku,Bartek,polskie imię,,
-20979,WORD_MALE_NAME,,KATAKANA,Inne,,-,バルトッシュ,,barutosshu,Bartosz,polskie imię,,
-20980,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ベアタ,,beata,Beata,polskie imię,,
-20981,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ベレニカ,,berenika,Berenika,polskie imię,,
-20982,WORD_MALE_NAME,,KATAKANA,Inne,,-,ボグスワフ,,bogusuwafu,Bogusław,polskie imię,,
-20983,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ボジェナ,,bojena,Bożena,polskie imię,,
-20984,WORD_MALE_NAME,,KATAKANA,Inne,,-,ブワジェイ,,buwajei,Błażej,polskie imię,,
-20985,WORD_MALE_NAME,,KATAKANA,Inne,,-,ツィピッス,,tsipissu,Cypis,polskie imię,,
-20986,WORD_MALE_NAME,,KATAKANA,Inne,,-,ツィプリャヌ,,tsipuryanu,Cyprian,polskie imię,,
-20987,WORD_MALE_NAME,,KATAKANA,Inne,,-,チャレック,,charekku,Czarek,polskie imię,,
-20988,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ダグマラ,,dagumara,Dagmara,polskie imię,,
-20989,WORD_MALE_NAME,,KATAKANA,Inne,,-,ダーミアン,,daamian,Damian,polskie imię,,
-20990,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,ダニェル,,danieru,Daniel,polskie imię,,
-20991,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ダヌタ,,danuta,Danuta,polskie imię,,
-20992,WORD_MALE_NAME,,KATAKANA,Inne,,-,ダレック,,darekku,Darek,polskie imię,,
-20993,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ダリャ,,darya,Daria,polskie imię,,
-20994,WORD_MALE_NAME,,KATAKANA,Inne,,-,ダヴィッドゥ,,daviddu,Dawid,polskie imię,,
-20995,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ディアナ,,diana,Diana,polskie imię,,
-20996,WORD_MALE_NAME,,KATAKANA,Inne,,-,ドミニック,,dominikku,Dominik,polskie imię,,
+Ania",polskie imię,NO_TYPE_CHECK,
+20974,WORD_MALE_NAME,,KATAKANA,Inne,,-,アントニ,,antoni,Antoni,polskie imię,NO_TYPE_CHECK,
+20975,WORD_MALE_NAME,,KATAKANA,Inne,,-,アレク,,areku,Arek,polskie imię,NO_TYPE_CHECK,
+20976,WORD_MALE_NAME,,KATAKANA,Inne,,-,アルトゥル,,aruturu,Artur,polskie imię,NO_TYPE_CHECK,
+20977,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,バルバラ,,barubara,Barbara,polskie imię,NO_TYPE_CHECK,
+20978,WORD_MALE_NAME,,KATAKANA,Inne,,-,バルテク,,baruteku,Bartek,polskie imię,NO_TYPE_CHECK,
+20979,WORD_MALE_NAME,,KATAKANA,Inne,,-,バルトッシュ,,barutosshu,Bartosz,polskie imię,NO_TYPE_CHECK,
+20980,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ベアタ,,beata,Beata,polskie imię,NO_TYPE_CHECK,
+20981,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ベレニカ,,berenika,Berenika,polskie imię,NO_TYPE_CHECK,
+20982,WORD_MALE_NAME,,KATAKANA,Inne,,-,ボグスワフ,,bogusuwafu,Bogusław,polskie imię,NO_TYPE_CHECK,
+20983,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ボジェナ,,bojena,Bożena,polskie imię,NO_TYPE_CHECK,
+20984,WORD_MALE_NAME,,KATAKANA,Inne,,-,ブワジェイ,,buwajei,Błażej,polskie imię,NO_TYPE_CHECK,
+20985,WORD_MALE_NAME,,KATAKANA,Inne,,-,ツィピッス,,tsipissu,Cypis,polskie imię,NO_TYPE_CHECK,
+20986,WORD_MALE_NAME,,KATAKANA,Inne,,-,ツィプリャヌ,,tsipuryanu,Cyprian,polskie imię,NO_TYPE_CHECK,
+20987,WORD_MALE_NAME,,KATAKANA,Inne,,-,チャレック,,charekku,Czarek,polskie imię,NO_TYPE_CHECK,
+20988,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ダグマラ,,dagumara,Dagmara,polskie imię,NO_TYPE_CHECK,
+20989,WORD_MALE_NAME,,KATAKANA,Inne,,-,ダーミアン,,daamian,Damian,polskie imię,NO_TYPE_CHECK,
+20990,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,ダニェル,,danieru,Daniel,polskie imię,NO_TYPE_CHECK,
+20991,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ダヌタ,,danuta,Danuta,polskie imię,NO_TYPE_CHECK,
+20992,WORD_MALE_NAME,,KATAKANA,Inne,,-,ダレック,,darekku,Darek,polskie imię,NO_TYPE_CHECK,
+20993,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ダリャ,,darya,Daria,polskie imię,NO_TYPE_CHECK,
+20994,WORD_MALE_NAME,,KATAKANA,Inne,,-,ダヴィッドゥ,,daviddu,Dawid,polskie imię,NO_TYPE_CHECK,
+20995,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ディアナ,,diana,Diana,polskie imię,NO_TYPE_CHECK,
+20996,WORD_MALE_NAME,,KATAKANA,Inne,,-,ドミニック,,dominikku,Dominik,polskie imię,NO_TYPE_CHECK,
 20997,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ドミニカ,,dominika,Dominika,polskie imię,NO_TYPE_CHECK,
-20998,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ドナタ,,donata,Donata,polskie imię,,
-20999,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ドロタ,,dorota,Dorota,polskie imię,,
+20998,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ドナタ,,donata,Donata,polskie imię,NO_TYPE_CHECK,
+20999,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ドロタ,,dorota,Dorota,polskie imię,NO_TYPE_CHECK,
 21000,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エディタ,,edita,Edyta,polskie imię,NO_TYPE_CHECK,
-21001,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エラ,,era,Ela,polskie imię,,
-21002,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エリーザ,,eriiza,Eliza,polskie imię,,
-21003,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エルヴィラ,,eruvira,Elwira,polskie imię,,
-21004,WORD_MALE_NAME,,KATAKANA,Inne,,-,エミル,,emiru,Emil,polskie imię,,
-21005,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エミリア,,emiria,Emilia,polskie imię,,
-21006,WORD_MALE_NAME,,KATAKANA,Inne,,-,エルネスト,,erunesuto,Ernest,polskie imię,,
-21007,WORD_MALE_NAME,,KATAKANA,Inne,,-,エリック,,erikku,Eryk,polskie imię,,
-21008,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エヴァ,,eva,Ewa,polskie imię,,
-21009,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エヴェリナ,,everina,Ewelina,polskie imię,,
+21001,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エラ,,era,Ela,polskie imię,NO_TYPE_CHECK,
+21002,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エリーザ,,eriiza,Eliza,polskie imię,NO_TYPE_CHECK,
+21003,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エルヴィラ,,eruvira,Elwira,polskie imię,NO_TYPE_CHECK,
+21004,WORD_MALE_NAME,,KATAKANA,Inne,,-,エミル,,emiru,Emil,polskie imię,NO_TYPE_CHECK,
+21005,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エミリア,,emiria,Emilia,polskie imię,NO_TYPE_CHECK,
+21006,WORD_MALE_NAME,,KATAKANA,Inne,,-,エルネスト,,erunesuto,Ernest,polskie imię,NO_TYPE_CHECK,
+21007,WORD_MALE_NAME,,KATAKANA,Inne,,-,エリック,,erikku,Eryk,polskie imię,NO_TYPE_CHECK,
+21008,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エヴァ,,eva,Ewa,polskie imię,NO_TYPE_CHECK,
+21009,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,エヴェリナ,,everina,Ewelina,polskie imię,NO_TYPE_CHECK,
 21010,WORD_MALE_NAME,,KATAKANA,Inne,,-,フィリップ,,firippu,Filip,polskie imię,NO_TYPE_CHECK,
-21011,WORD_MALE_NAME,,KATAKANA,Inne,,-,フランチシェック,,furanchishekku,Franciszek,polskie imię,,
-21012,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,フランチシカ,,furanchishika,Franciszka,polskie imię,,
-21013,WORD_MALE_NAME,,KATAKANA,Inne,,-,フリデリック,,furiderikku,Fryderyk,polskie imię,,
-21014,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,ガブリェル,,gaburieru,Gabriel,polskie imię,,
-21015,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ガブリーシャ,,gaburiisha,Gabrysia,polskie imię,,
-21016,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ゴシャ,,gosha,Gosia,polskie imię,,
-21017,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,グラジーナ,,gurajiina,Grażyna,polskie imię,,
-21018,WORD_MALE_NAME,,KATAKANA,Inne,,-,グジェーゴジ,,gujeegoji,Grzegorz,polskie imię,,
-21019,WORD_MALE_NAME,,KATAKANA,Inne,,-,グスタヴ,,gusutavu,Gustaw,polskie imię,,
-21020,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ハリーナ,,hariina,Halina,polskie imię,,
-21021,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ハンナ,,hanna,Hanna,polskie imię,,
-21022,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヘンリック,,henrikku,Henryk,polskie imię,,
-21023,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ホノラタ,,honorata,Honorata,polskie imię,,
-21024,WORD_MALE_NAME,,KATAKANA,Inne,,-,フベルト,,fuberuto,Hubert,polskie imię,,
-21025,WORD_MALE_NAME,,KATAKANA,Inne,,-,イグナチ,,igunachi,Ignacy,polskie imię,,
-21026,WORD_MALE_NAME,,KATAKANA,Inne,,-,イゴル,,igoru,Igor,polskie imię,,
-21027,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,イレナ,,irena,Irena,polskie imię,,
-21028,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,イルミナ,,irumina,Irmina,polskie imię,,
-21029,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,イウォナ,,iwona,Iwona,polskie imię,,
-21030,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,イザベーラ,,izabeera,Izabela,polskie imię,,
-21031,WORD_MALE_NAME,,KATAKANA,Inne,,-,ジャツェック,,jatsekku,Jacek,polskie imię,,
-21032,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヤドゥヴィーガ,,yaduviiga,Jadwiga,polskie imię,,
-21033,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヤゴダ,,yagoda,Jagoda,polskie imię,,
-21034,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヤクッブ,,yakubbu,Jakub,polskie imię,,
-21035,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヤン,,yan,Jan,polskie imię,,
-21036,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヤレマ,,yarema,Jarema,polskie imię,,
-21037,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,ヤロスウァフ,,yarosuuafu,Jarosław,polskie imię,,
-21038,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,イェージ,,yeeji,Jerzy,polskie imię,,
-21039,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヨアンナ,,yoanna,Joanna,polskie imię,,
-21040,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヨランタ,,yoranta,Jolanta,polskie imię,,
-21041,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヨナタン,,yonatan,Jonatan,polskie imię,,
-21042,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ユディータ,,yudiita,Judyta,polskie imię,,
+21011,WORD_MALE_NAME,,KATAKANA,Inne,,-,フランチシェック,,furanchishekku,Franciszek,polskie imię,NO_TYPE_CHECK,
+21012,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,フランチシカ,,furanchishika,Franciszka,polskie imię,NO_TYPE_CHECK,
+21013,WORD_MALE_NAME,,KATAKANA,Inne,,-,フリデリック,,furiderikku,Fryderyk,polskie imię,NO_TYPE_CHECK,
+21014,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,ガブリェル,,gaburieru,Gabriel,polskie imię,NO_TYPE_CHECK,
+21015,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ガブリーシャ,,gaburiisha,Gabrysia,polskie imię,NO_TYPE_CHECK,
+21016,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ゴシャ,,gosha,Gosia,polskie imię,NO_TYPE_CHECK,
+21017,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,グラジーナ,,gurajiina,Grażyna,polskie imię,NO_TYPE_CHECK,
+21018,WORD_MALE_NAME,,KATAKANA,Inne,,-,グジェーゴジ,,gujeegoji,Grzegorz,polskie imię,NO_TYPE_CHECK,
+21019,WORD_MALE_NAME,,KATAKANA,Inne,,-,グスタヴ,,gusutavu,Gustaw,polskie imię,NO_TYPE_CHECK,
+21020,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ハリーナ,,hariina,Halina,polskie imię,NO_TYPE_CHECK,
+21021,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ハンナ,,hanna,Hanna,polskie imię,NO_TYPE_CHECK,
+21022,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヘンリック,,henrikku,Henryk,polskie imię,NO_TYPE_CHECK,
+21023,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ホノラタ,,honorata,Honorata,polskie imię,NO_TYPE_CHECK,
+21024,WORD_MALE_NAME,,KATAKANA,Inne,,-,フベルト,,fuberuto,Hubert,polskie imię,NO_TYPE_CHECK,
+21025,WORD_MALE_NAME,,KATAKANA,Inne,,-,イグナチ,,igunachi,Ignacy,polskie imię,NO_TYPE_CHECK,
+21026,WORD_MALE_NAME,,KATAKANA,Inne,,-,イゴル,,igoru,Igor,polskie imię,NO_TYPE_CHECK,
+21027,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,イレナ,,irena,Irena,polskie imię,NO_TYPE_CHECK,
+21028,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,イルミナ,,irumina,Irmina,polskie imię,NO_TYPE_CHECK,
+21029,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,イウォナ,,iwona,Iwona,polskie imię,NO_TYPE_CHECK,
+21030,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,イザベーラ,,izabeera,Izabela,polskie imię,NO_TYPE_CHECK,
+21031,WORD_MALE_NAME,,KATAKANA,Inne,,-,ジャツェック,,jatsekku,Jacek,polskie imię,NO_TYPE_CHECK,
+21032,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヤドゥヴィーガ,,yaduviiga,Jadwiga,polskie imię,NO_TYPE_CHECK,
+21033,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヤゴダ,,yagoda,Jagoda,polskie imię,NO_TYPE_CHECK,
+21034,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヤクッブ,,yakubbu,Jakub,polskie imię,NO_TYPE_CHECK,
+21035,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヤン,,yan,Jan,polskie imię,NO_TYPE_CHECK,
+21036,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヤレマ,,yarema,Jarema,polskie imię,NO_TYPE_CHECK,
+21037,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,ヤロスウァフ,,yarosuuafu,Jarosław,polskie imię,NO_TYPE_CHECK,
+21038,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,イェージ,,yeeji,Jerzy,polskie imię,NO_TYPE_CHECK,
+21039,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヨアンナ,,yoanna,Joanna,polskie imię,NO_TYPE_CHECK,
+21040,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヨランタ,,yoranta,Jolanta,polskie imię,NO_TYPE_CHECK,
+21041,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヨナタン,,yonatan,Jonatan,polskie imię,NO_TYPE_CHECK,
+21042,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ユディータ,,yudiita,Judyta,polskie imię,NO_TYPE_CHECK,
 21043,WORD_FEMALE_NAME,COMMON_WORD,KATAKANA,Inne,,-,ユリア,,yuria,Julia,polskie imię,NO_TYPE_CHECK,
-21044,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ユリータ,,yuriita,Julita,polskie imię,,
-21045,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ユスティーナ,,yusutiina,Justyna,polskie imię,,
-21046,WORD_MALE_NAME,,KATAKANA,Inne,,-,カツペル,,katsuperu,Kacper,polskie imię,,
+21044,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ユリータ,,yuriita,Julita,polskie imię,NO_TYPE_CHECK,
+21045,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ユスティーナ,,yusutiina,Justyna,polskie imię,NO_TYPE_CHECK,
+21046,WORD_MALE_NAME,,KATAKANA,Inne,,-,カツペル,,katsuperu,Kacper,polskie imię,NO_TYPE_CHECK,
 21047,WORD_FEMALE_NAME,KANA_ALONE,KATAKANA,Inne,,-,カヤ,,kaya,Kaja,polskie imię,NO_TYPE_CHECK,
-21048,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,カイェタン,,kayetan,Kajetan,polskie imię,,
-21049,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,カリーナ,,kariina,Kalina,polskie imię,,
-21050,WORD_MALE_NAME,,KATAKANA,Inne,,-,カミール,,kamiiru,Kamil,polskie imię,,
-21051,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,カミーラ,,kamiira,Kamila,polskie imię,,
-21052,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,カリナ,,karina,Karina,polskie imię,,
+21048,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,カイェタン,,kayetan,Kajetan,polskie imię,NO_TYPE_CHECK,
+21049,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,カリーナ,,kariina,Kalina,polskie imię,NO_TYPE_CHECK,
+21050,WORD_MALE_NAME,,KATAKANA,Inne,,-,カミール,,kamiiru,Kamil,polskie imię,NO_TYPE_CHECK,
+21051,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,カミーラ,,kamiira,Kamila,polskie imię,NO_TYPE_CHECK,
+21052,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,カリナ,,karina,Karina,polskie imię,NO_TYPE_CHECK,
 21053,WORD_MALE_NAME,,KATAKANA,Inne,,-,カロル,,karoru,Karol,polskie imię,"NO_TYPE_CHECK
 EDICT_TRANSLATE_INFO_GROUP_DIFF",
-21054,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,カロリーナ,,karoriina,Karolina,polskie imię,,
+21054,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,カロリーナ,,karoriina,Karolina,polskie imię,NO_TYPE_CHECK,
 21055,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,カタジーナ,,katajiina,"Katarzyna
-Kasia",polskie imię,,
-21056,WORD_MALE_NAME,,KATAKANA,Inne,,-,カジミエル,,kajimieru,Kazimierz,polskie imię,,
-21057,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,キンガ,,kinga,Kinga,polskie imię,,
-21058,WORD_FEMALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,クラウヂア,,kuraudia,Klaudia,polskie imię,,
-21059,WORD_MALE_NAME,,KATAKANA,Inne,,-,コンラッド,,konraddo,Konrad,polskie imię,,
-21060,WORD_MALE_NAME,,KATAKANA,Inne,,-,コルネル,,koruneru,Kornel,polskie imię,,
-21061,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,コスマ,,kosuma,Kosma,polskie imię,,
-21062,WORD_MALE_NAME,,KATAKANA,Inne,,-,クリスティアン,,kurisutian,Krystian,polskie imię,,
-21063,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,クリスチナ,,kurisuchina,Krystyna,polskie imię,,
-21064,WORD_MALE_NAME,,KATAKANA,Inne,,-,クシシュトフ,,kushishutofu,Krzysztof,polskie imię,,
-21065,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,クセニャ,,kusenya,Ksenia,polskie imię,,
-21066,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ラリサ,,rarisa,Larysa,polskie imię,,
-21067,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,レナ,,rena,Lena,polskie imię,,
-21068,WORD_MALE_NAME,,KATAKANA,Inne,,-,レオナルド,,reonarudo,Leonard,polskie imię,,
-21069,WORD_MALE_NAME,,KATAKANA,Inne,,-,レシェク,,resheku,Leszek,polskie imię,,
-21070,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,リディア,,ridia,Lidia,polskie imię,,
-21071,WORD_MALE_NAME,,KATAKANA,Inne,,-,ルツヤン,,rutsuyan,Lucjan,polskie imię,,
-21072,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ルチナ,,ruchina,Lucyna,polskie imię,,
-21073,WORD_MALE_NAME,,KATAKANA,Inne,,-,マチェイ,,machei,Maciej,polskie imię,,
-21074,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マグダ,,maguda,Magda,polskie imię,,
+Kasia",polskie imię,NO_TYPE_CHECK,
+21056,WORD_MALE_NAME,,KATAKANA,Inne,,-,カジミエル,,kajimieru,Kazimierz,polskie imię,NO_TYPE_CHECK,
+21057,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,キンガ,,kinga,Kinga,polskie imię,NO_TYPE_CHECK,
+21058,WORD_FEMALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,クラウヂア,,kuraudia,Klaudia,polskie imię,NO_TYPE_CHECK,
+21059,WORD_MALE_NAME,,KATAKANA,Inne,,-,コンラッド,,konraddo,Konrad,polskie imię,NO_TYPE_CHECK,
+21060,WORD_MALE_NAME,,KATAKANA,Inne,,-,コルネル,,koruneru,Kornel,polskie imię,NO_TYPE_CHECK,
+21061,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,コスマ,,kosuma,Kosma,polskie imię,NO_TYPE_CHECK,
+21062,WORD_MALE_NAME,,KATAKANA,Inne,,-,クリスティアン,,kurisutian,Krystian,polskie imię,NO_TYPE_CHECK,
+21063,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,クリスチナ,,kurisuchina,Krystyna,polskie imię,NO_TYPE_CHECK,
+21064,WORD_MALE_NAME,,KATAKANA,Inne,,-,クシシュトフ,,kushishutofu,Krzysztof,polskie imię,NO_TYPE_CHECK,
+21065,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,クセニャ,,kusenya,Ksenia,polskie imię,NO_TYPE_CHECK,
+21066,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ラリサ,,rarisa,Larysa,polskie imię,NO_TYPE_CHECK,
+21067,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,レナ,,rena,Lena,polskie imię,NO_TYPE_CHECK,
+21068,WORD_MALE_NAME,,KATAKANA,Inne,,-,レオナルド,,reonarudo,Leonard,polskie imię,NO_TYPE_CHECK,
+21069,WORD_MALE_NAME,,KATAKANA,Inne,,-,レシェク,,resheku,Leszek,polskie imię,NO_TYPE_CHECK,
+21070,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,リディア,,ridia,Lidia,polskie imię,NO_TYPE_CHECK,
+21071,WORD_MALE_NAME,,KATAKANA,Inne,,-,ルツヤン,,rutsuyan,Lucjan,polskie imię,NO_TYPE_CHECK,
+21072,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ルチナ,,ruchina,Lucyna,polskie imię,NO_TYPE_CHECK,
+21073,WORD_MALE_NAME,,KATAKANA,Inne,,-,マチェイ,,machei,Maciej,polskie imię,NO_TYPE_CHECK,
+21074,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マグダ,,maguda,Magda,polskie imię,NO_TYPE_CHECK,
 21075,WORD_FEMALE_NAME,COMMON_WORD,KATAKANA,Inne,,-,マヤ,,maya,Maja,polskie imię,NO_TYPE_CHECK,
-21076,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マルヴィナ,,maruvina,Malwina,polskie imię,,
-21077,WORD_MALE_NAME,,KATAKANA,Inne,,-,マルツェル,,marutseru,Marcel,polskie imię,,
-21078,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マルツェリーナ,,marutseriina,Marcelina,polskie imię,,
-21079,WORD_MALE_NAME,,KATAKANA,Inne,,-,マルチン,,maruchin,Marcin,polskie imię,,
-21080,WORD_MALE_NAME,,KATAKANA,Inne,,-,マレック,,marekku,Marek,polskie imię,,
+21076,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マルヴィナ,,maruvina,Malwina,polskie imię,NO_TYPE_CHECK,
+21077,WORD_MALE_NAME,,KATAKANA,Inne,,-,マルツェル,,marutseru,Marcel,polskie imię,NO_TYPE_CHECK,
+21078,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マルツェリーナ,,marutseriina,Marcelina,polskie imię,NO_TYPE_CHECK,
+21079,WORD_MALE_NAME,,KATAKANA,Inne,,-,マルチン,,maruchin,Marcin,polskie imię,NO_TYPE_CHECK,
+21080,WORD_MALE_NAME,,KATAKANA,Inne,,-,マレック,,marekku,Marek,polskie imię,NO_TYPE_CHECK,
 21081,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マリア,,maria,Maria,polskie imię,NO_TYPE_CHECK,
-21082,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マリエッタ,,marietta,Marietta,polskie imię,,
-21083,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マリカ,,marika,Marika,polskie imię,,
-21084,WORD_MALE_NAME,,KATAKANA,Inne,,-,マリウッシュ,,mariusshu,Mariusz,polskie imię,,
-21085,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マレーナ,,mareena,Marlena,polskie imię,,
+21082,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マリエッタ,,marietta,Marietta,polskie imię,NO_TYPE_CHECK,
+21083,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マリカ,,marika,Marika,polskie imię,NO_TYPE_CHECK,
+21084,WORD_MALE_NAME,,KATAKANA,Inne,,-,マリウッシュ,,mariusshu,Mariusz,polskie imię,NO_TYPE_CHECK,
+21085,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マレーナ,,mareena,Marlena,polskie imię,NO_TYPE_CHECK,
 21086,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マルタ,,maruta,Marta,polskie imię,NO_TYPE_CHECK,
-21087,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マルチーナ,,maruchiina,Martyna,polskie imię,,
-21088,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マリナ,,marina,Maryna,polskie imię,,
-21089,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マジェーナ,,majeena,Marzena,polskie imię,,
-21090,WORD_MALE_NAME,,KATAKANA,Inne,,-,マテウシュ,,mateushu,Mateusz,polskie imię,,
-21091,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マウゴジャータ,,maugojaata,Małgorzata,polskie imię,,
-21092,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ミハリーナ,,mihariina,Michalina,polskie imię,,
-21093,WORD_MALE_NAME,,KATAKANA,Inne,,-,ミハウ,,mihau,Michał,polskie imię,,
-21094,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,ミコウァイ,,mikouai,Mikołaj,polskie imię,,
-21095,WORD_FEMALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,ミロスウァヴァ,,mirosuuava,Mirosława,polskie imię,,
-21096,WORD_MALE_NAME,,KATAKANA,Inne,,-,ミウォシュ,,miwoshu,Miłosz,polskie imię,,
-21097,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,モニカ,,monika,Monika,polskie imię,,
-21098,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ナタリャ,,natarya,Natalia,polskie imię,,
-21099,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ニナ,,nina,Nina,polskie imię,,
-21100,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ノエミ,,noemi,Noemi,polskie imię,,
-21101,WORD_MALE_NAME,,KATAKANA,Inne,,-,ノルベルト,,noruberuto,Norbert,polskie imię,,
-21102,WORD_MALE_NAME,,KATAKANA,Inne,,-,オラッフ,,oraffu,Olaf,polskie imię,,
-21103,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,オルガ,,oruga,Olga,polskie imię,,
-21104,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,オリンピャ,,orinpya,Olimpia,polskie imię,,
-21105,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,オリャナ,,oryana,Oriana,polskie imię,,
-21106,WORD_MALE_NAME,,KATAKANA,Inne,,-,オスカル,,osukaru,Oskar,polskie imię,,
-21107,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,パトリツヤ,,patoritsuya,Patrycja,polskie imię,,
-21108,WORD_MALE_NAME,,KATAKANA,Inne,,-,パトリック,,patorikku,Patryk,polskie imię,,
-21109,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,パウリーナ,,pauriina,Paulina,polskie imię,,
-21110,WORD_MALE_NAME,,KATAKANA,Inne,,-,パウェウ,,paweu,Paweł,polskie imię,,
-21111,WORD_MALE_NAME,,KATAKANA,Inne,,-,ピョトル,,pyotoru,Piotr,polskie imię,,
-21112,WORD_MALE_NAME,,KATAKANA,Inne,,-,プシェメック,,pushemekku,Przemek,polskie imię,,
-21113,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,プジェミスウァフ,,pujemisuuafu,Przemysław,polskie imię,,
-21114,WORD_MALE_NAME,,KATAKANA,Inne,,-,ラデック,,radekku,Radek,polskie imię,,
-21115,WORD_MALE_NAME,,KATAKANA,Inne,,-,ラファウ,,rafau,Rafał,polskie imię,,
-21116,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,レギナ,,regina,Regina,polskie imię,,
-21117,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,レナタ,,renata,Renata,polskie imię,,
-21118,WORD_MALE_NAME,,KATAKANA,Inne,,-,ロベルト,,roberuto,Robert,polskie imię,,
+21087,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マルチーナ,,maruchiina,Martyna,polskie imię,NO_TYPE_CHECK,
+21088,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マリナ,,marina,Maryna,polskie imię,NO_TYPE_CHECK,
+21089,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マジェーナ,,majeena,Marzena,polskie imię,NO_TYPE_CHECK,
+21090,WORD_MALE_NAME,,KATAKANA,Inne,,-,マテウシュ,,mateushu,Mateusz,polskie imię,NO_TYPE_CHECK,
+21091,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,マウゴジャータ,,maugojaata,Małgorzata,polskie imię,NO_TYPE_CHECK,
+21092,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ミハリーナ,,mihariina,Michalina,polskie imię,NO_TYPE_CHECK,
+21093,WORD_MALE_NAME,,KATAKANA,Inne,,-,ミハウ,,mihau,Michał,polskie imię,NO_TYPE_CHECK,
+21094,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,ミコウァイ,,mikouai,Mikołaj,polskie imię,NO_TYPE_CHECK,
+21095,WORD_FEMALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,ミロスウァヴァ,,mirosuuava,Mirosława,polskie imię,NO_TYPE_CHECK,
+21096,WORD_MALE_NAME,,KATAKANA,Inne,,-,ミウォシュ,,miwoshu,Miłosz,polskie imię,NO_TYPE_CHECK,
+21097,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,モニカ,,monika,Monika,polskie imię,NO_TYPE_CHECK,
+21098,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ナタリャ,,natarya,Natalia,polskie imię,NO_TYPE_CHECK,
+21099,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ニナ,,nina,Nina,polskie imię,NO_TYPE_CHECK,
+21100,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ノエミ,,noemi,Noemi,polskie imię,NO_TYPE_CHECK,
+21101,WORD_MALE_NAME,,KATAKANA,Inne,,-,ノルベルト,,noruberuto,Norbert,polskie imię,NO_TYPE_CHECK,
+21102,WORD_MALE_NAME,,KATAKANA,Inne,,-,オラッフ,,oraffu,Olaf,polskie imię,NO_TYPE_CHECK,
+21103,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,オルガ,,oruga,Olga,polskie imię,NO_TYPE_CHECK,
+21104,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,オリンピャ,,orinpya,Olimpia,polskie imię,NO_TYPE_CHECK,
+21105,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,オリャナ,,oryana,Oriana,polskie imię,NO_TYPE_CHECK,
+21106,WORD_MALE_NAME,,KATAKANA,Inne,,-,オスカル,,osukaru,Oskar,polskie imię,NO_TYPE_CHECK,
+21107,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,パトリツヤ,,patoritsuya,Patrycja,polskie imię,NO_TYPE_CHECK,
+21108,WORD_MALE_NAME,,KATAKANA,Inne,,-,パトリック,,patorikku,Patryk,polskie imię,NO_TYPE_CHECK,
+21109,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,パウリーナ,,pauriina,Paulina,polskie imię,NO_TYPE_CHECK,
+21110,WORD_MALE_NAME,,KATAKANA,Inne,,-,パウェウ,,paweu,Paweł,polskie imię,NO_TYPE_CHECK,
+21111,WORD_MALE_NAME,,KATAKANA,Inne,,-,ピョトル,,pyotoru,Piotr,polskie imię,NO_TYPE_CHECK,
+21112,WORD_MALE_NAME,,KATAKANA,Inne,,-,プシェメック,,pushemekku,Przemek,polskie imię,NO_TYPE_CHECK,
+21113,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,プジェミスウァフ,,pujemisuuafu,Przemysław,polskie imię,NO_TYPE_CHECK,
+21114,WORD_MALE_NAME,,KATAKANA,Inne,,-,ラデック,,radekku,Radek,polskie imię,NO_TYPE_CHECK,
+21115,WORD_MALE_NAME,,KATAKANA,Inne,,-,ラファウ,,rafau,Rafał,polskie imię,NO_TYPE_CHECK,
+21116,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,レギナ,,regina,Regina,polskie imię,NO_TYPE_CHECK,
+21117,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,レナタ,,renata,Renata,polskie imię,NO_TYPE_CHECK,
+21118,WORD_MALE_NAME,,KATAKANA,Inne,,-,ロベルト,,roberuto,Robert,polskie imię,NO_TYPE_CHECK,
 21119,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ロマ,,roma,Roma,polskie imię,NO_TYPE_CHECK,
 21120,WORD_MALE_NAME,COMMON_WORD,KATAKANA,Inne,,-,ロマン,,roman,Roman,polskie imię,NO_TYPE_CHECK,
-21121,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ルージャ,,ruuja,Róża,polskie imię,,
-21122,WORD_MALE_NAME,,KATAKANA,Inne,,-,フードルフ,,fuudorufu,Rudolf,polskie imię,,
-21123,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,サビナ,,sabina,Sabina,polskie imię,,
-21124,WORD_MALE_NAME,,KATAKANA,Inne,,-,サムエル,,samueru,Samuel,polskie imię,,
-21125,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,サンドラ,,sandora,Sandra,polskie imię,,
+21121,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ルージャ,,ruuja,Róża,polskie imię,NO_TYPE_CHECK,
+21122,WORD_MALE_NAME,,KATAKANA,Inne,,-,フードルフ,,fuudorufu,Rudolf,polskie imię,NO_TYPE_CHECK,
+21123,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,サビナ,,sabina,Sabina,polskie imię,NO_TYPE_CHECK,
+21124,WORD_MALE_NAME,,KATAKANA,Inne,,-,サムエル,,samueru,Samuel,polskie imię,NO_TYPE_CHECK,
+21125,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,サンドラ,,sandora,Sandra,polskie imię,NO_TYPE_CHECK,
 21126,WORD_FEMALE_NAME,"SUFFIX
 PREFIX",KATAKANA,Inne,,-,サラ,,sara,Sara,polskie imię,NO_TYPE_CHECK,
-21127,WORD_MALE_NAME,,KATAKANA,Inne,,-,セバスティアン,,sebasutian,Sebastian,polskie imię,,
-21128,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ソンヤ,,son'ya,Sonja,polskie imię,,
-21129,WORD_MALE_NAME,,KATAKANA,Inne,,-,スタニスアッヴ,,sutanisuavvu,Stanisław,polskie imię,,
+21127,WORD_MALE_NAME,,KATAKANA,Inne,,-,セバスティアン,,sebasutian,Sebastian,polskie imię,NO_TYPE_CHECK,
+21128,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ソンヤ,,son'ya,Sonja,polskie imię,NO_TYPE_CHECK,
+21129,WORD_MALE_NAME,,KATAKANA,Inne,,-,スタニスアッヴ,,sutanisuavvu,Stanisław,polskie imię,NO_TYPE_CHECK,
 21130,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,シルヴィア,,shiruvia,Sylwia,polskie imię,NO_TYPE_CHECK,
-21131,WORD_MALE_NAME,,KATAKANA,Inne,,-,シモン,,shimon,Szymon,polskie imię,,
-21132,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,スウァヴォミル,,suuavomiru,Sławomir,polskie imię,,
-21133,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,タマラ,,tamara,Tamara,polskie imię,,
-21134,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,タティアナ,,tatiana,Tatiana,polskie imię,,
-21135,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,テレサ,,teresa,Teresa,polskie imię,,
-21136,WORD_MALE_NAME,,KATAKANA,Inne,,-,トメック,,tomekku,Tomek,polskie imię,,
-21137,WORD_MALE_NAME,,KATAKANA,Inne,,-,ティーモン,,tiimon,Tymon,polskie imię,,
-21138,WORD_MALE_NAME,,KATAKANA,Inne,,-,ウニミル,,unimiru,Unimir,polskie imię,,
-21139,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ウルシューラ,,urushuura,Urszula,polskie imię,,
-21140,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヴァツアッヴ,,vatsuavvu,Wacław,polskie imię,,
-21141,WORD_MALE_NAME,,KATAKANA,Inne,,-,ウォルター,,worutaa,Walter,polskie imię,,
-21142,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヴァンダ,,vanda,Wanda,polskie imię,,
-21143,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヴェラ,,vera,Wera,polskie imię,,
-21144,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヴェロニカ,,veronika,Weronika,polskie imię,,
-21145,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヴィクトル,,vikutoru,Wiktor,polskie imię,,
-21146,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヴィクトリャ,,vikutorya,Wiktoria,polskie imię,,
-21147,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヴィトルド,,vitorudo,Witold,polskie imię,,
-21148,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヴォイテック,,voitekku,Wojtek,polskie imię,,
-21149,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ジャネタ,,janeta,Żaneta,polskie imię,,
-21150,WORD_MALE_NAME,,KATAKANA,Inne,,-,ズビシェック,,zubishekku,Zbyszek,polskie imię,,
-21151,WORD_MALE_NAME,,KATAKANA,Inne,,-,ゼノン,,zenon,Zenon,polskie imię,,
-21152,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ゾフィア,,zofia,Zofia,polskie imię,,
-21153,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ズザンナ,,zuzanna,Zuzanna,polskie imię,,
-21154,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ウーツヤ,,uutsuya,Łucja,polskie imię,,
-21155,WORD_MALE_NAME,,KATAKANA,Inne,,-,ウーカッシュ,,uukasshu,Łukasz,polskie imię,,
+21131,WORD_MALE_NAME,,KATAKANA,Inne,,-,シモン,,shimon,Szymon,polskie imię,NO_TYPE_CHECK,
+21132,WORD_MALE_NAME,,KATAKANA_EXCEPTION,Inne,,-,スウァヴォミル,,suuavomiru,Sławomir,polskie imię,NO_TYPE_CHECK,
+21133,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,タマラ,,tamara,Tamara,polskie imię,NO_TYPE_CHECK,
+21134,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,タティアナ,,tatiana,Tatiana,polskie imię,NO_TYPE_CHECK,
+21135,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,テレサ,,teresa,Teresa,polskie imię,NO_TYPE_CHECK,
+21136,WORD_MALE_NAME,,KATAKANA,Inne,,-,トメック,,tomekku,Tomek,polskie imię,NO_TYPE_CHECK,
+21137,WORD_MALE_NAME,,KATAKANA,Inne,,-,ティーモン,,tiimon,Tymon,polskie imię,NO_TYPE_CHECK,
+21138,WORD_MALE_NAME,,KATAKANA,Inne,,-,ウニミル,,unimiru,Unimir,polskie imię,NO_TYPE_CHECK,
+21139,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ウルシューラ,,urushuura,Urszula,polskie imię,NO_TYPE_CHECK,
+21140,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヴァツアッヴ,,vatsuavvu,Wacław,polskie imię,NO_TYPE_CHECK,
+21141,WORD_MALE_NAME,,KATAKANA,Inne,,-,ウォルター,,worutaa,Walter,polskie imię,NO_TYPE_CHECK,
+21142,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヴァンダ,,vanda,Wanda,polskie imię,NO_TYPE_CHECK,
+21143,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヴェラ,,vera,Wera,polskie imię,NO_TYPE_CHECK,
+21144,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヴェロニカ,,veronika,Weronika,polskie imię,NO_TYPE_CHECK,
+21145,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヴィクトル,,vikutoru,Wiktor,polskie imię,NO_TYPE_CHECK,
+21146,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ヴィクトリャ,,vikutorya,Wiktoria,polskie imię,NO_TYPE_CHECK,
+21147,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヴィトルド,,vitorudo,Witold,polskie imię,NO_TYPE_CHECK,
+21148,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヴォイテック,,voitekku,Wojtek,polskie imię,NO_TYPE_CHECK,
+21149,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ジャネタ,,janeta,Żaneta,polskie imię,NO_TYPE_CHECK,
+21150,WORD_MALE_NAME,,KATAKANA,Inne,,-,ズビシェック,,zubishekku,Zbyszek,polskie imię,NO_TYPE_CHECK,
+21151,WORD_MALE_NAME,,KATAKANA,Inne,,-,ゼノン,,zenon,Zenon,polskie imię,NO_TYPE_CHECK,
+21152,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ゾフィア,,zofia,Zofia,polskie imię,NO_TYPE_CHECK,
+21153,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ズザンナ,,zuzanna,Zuzanna,polskie imię,NO_TYPE_CHECK,
+21154,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ウーツヤ,,uutsuya,Łucja,polskie imię,NO_TYPE_CHECK,
+21155,WORD_MALE_NAME,,KATAKANA,Inne,,-,ウーカッシュ,,uukasshu,Łukasz,polskie imię,NO_TYPE_CHECK,
 21156,WORD_NOUN,KANA_ALONE,HIRAGANA,Inne,,鬮,くじ,,kuji,"loteria
 los",,,
 21157,WORD_EXPRESSION,KANA_ALONE,HIRAGANA,Inne,,お掛け下さい,おかけください,,okake kudasai,"proszę usiąść
@@ -81526,8 +81523,7 @@ stosunek
 powiązanie
 połączenie
 koneksja",,,484759
-21604,WORD_NOUN,"COMMON_WORD
-OBSCURE",KATAKANA,Inne,,-,フーズヒー,,fuu zu hii,kto jest on,ang: who's he,,
+21604,WORD_NOUN,OBSCURE,KATAKANA,Inne,,-,フーズヒー,,fuu zu hii,kto jest on,ang: who's he,,
 21605,"WORD_ADJECTIVE_NA
 WORD_NOUN
 WORD_ADJECTIVE_NO",COMMON_WORD,HIRAGANA,Inne,,自明,じめい,,jimei,"oczywisty
@@ -82412,7 +82408,7 @@ awans
 wyniesienie",,,
 21812,WORD_NOUN,"COMMON_WORD
 SURU_VERB",HIRAGANA,Inne,,１１０番,ひゃくとおばん,,hyakutoo ban,policyjny numer alarmowy,w Japonii,,
-21813,WORD_MALE_NAME,,KATAKANA,Inne,,-,ルートヴィヒ,,ruutovihi,Ludwik,,,
+21813,WORD_MALE_NAME,,KATAKANA,Inne,,-,ルートヴィヒ,,ruutovihi,Ludwik,,NO_TYPE_CHECK,
 21814,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,アメリア,,ameria,Amelia,,,
 21815,WORD_NOUN,,HIRAGANA,Inne,,極真,きょくしん,,kyokushin,kyokushin,"pełnokontaktowa sztuka walki, rodzaj karate, stworzona przez Masutatsu Ōyamę",,
 21816,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,キャンデー,,kyandee,"cukierek
@@ -84319,7 +84315,7 @@ wyrażanie pomysłów",,,
 22386,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ジャム,,jamu,dżem,,,311145
 22387,WORD_MALE_NAME,,KATAKANA,Inne,,-,ザビエル,,zabieru,"Ksawery
 Xsawery",,,
-22388,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,オリビア,,oribia,Oliwia,,,
+22388,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,オリビア,,oribia,Oliwia,,NO_TYPE_CHECK,
 22389,"WORD_ADVERB
 WORD_ADJECTIVE_NO
 WORD_INTERJECTION",KANA_ALONE,HIRAGANA,Inne,,須臾,すゆ,,suyu,"niedługo
@@ -85886,7 +85882,7 @@ być niecierpliwy",,,129297
 wydmuchiwać nos",,,
 22844,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,コリア,,koria,Korea,,,
 22845,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ショルダーバッグ,,shorudaa baggu,torba na ramię,ang: shoulder bag,,
-22846,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ジュネーブ,,juneebu,Genewa,,,325611
+22846,WORD_NOUN,,KATAKANA,Inne,,-,ジュネーブ,,juneebu,Genewa,,,325611
 22847,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ネルソン,,neruson,Nelson,,,
 22848,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ハイム,,haimu,dom,ang: home,,
 22849,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,フェアプレー,,fea puree,fair play,,,
@@ -87763,8 +87759,7 @@ odstawać",,,
 23413,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,スカーレット,,sukaaretto,"szkarłat
 purpura
 czerwień",ang: scarlet,,
-23414,WORD_NOUN,"COMMON_WORD
-KANA_ALONE",KATAKANA,Inne,,-,バカガイ,,bakagai,Mactra chinensis,rodzaj muszli (?),,
+23414,WORD_NOUN,KANA_ALONE,KATAKANA,Inne,,-,バカガイ,,bakagai,Mactra chinensis,rodzaj muszli (?),,
 23415,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,不文律,ふぶんりつ,,fubunritsu,"niepisane prawo
 niepisane reguły
 prawo zwyczajowe",,,
@@ -89501,7 +89496,7 @@ zaliczka
 przedpłata
 kaucja",,,
 23975,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,白米,はくまい,,hakumai,biały ryż,,,
-23976,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ガブリエラ,,gaburiera,Gabriela,imię,,
+23976,WORD_FEMALE_NAME,,KATAKANA,Inne,,-,ガブリエラ,,gaburiera,Gabriela,imię,NO_TYPE_CHECK,
 23977,WORD_NOUN,,HIRAGANA,Inne,,一か月,いっかげつ,,ikkagetsu,jeden miesiąc,,,
 23978,WORD_NOUN,,HIRAGANA,Inne,,一ケ月,いっかげつ,,ikkagetsu,jeden miesiąc,,,
 23979,WORD_NOUN,,HIRAGANA,Inne,,一ヶ月,いっかげつ,,ikkagetsu,jeden miesiąc,,,"2738
@@ -89854,8 +89849,7 @@ wszystkie rodzaje drzew",,,"327495
 72523"
 24097,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ウイング,,uingu,skrzydło,ang: wing,,
 24098,"WORD_NOUN
-WORD_ADJECTIVE_NO","COMMON_WORD
-KANA_ALONE",KATAKANA,Inne,,-,キリスト,,kirisuto,Chrystus,por: Cristo,,"38979
+WORD_ADJECTIVE_NO",KANA_ALONE,KATAKANA,Inne,,-,キリスト,,kirisuto,Chrystus,por: Cristo,,"38979
 63098"
 24099,WORD_INTERJECTION,COMMON_WORD,KATAKANA,Inne,,-,チェ,,che,"cholera
 psiakrew
@@ -91246,7 +91240,7 @@ zaburzenie
 niepokój",,,
 24514,WORD_NOUN,,KATAKANA,Inne,,-,アナテマ,,anatema,"anatema
 klątwa",,,
-24515,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヤヌス,,yanusu,Janusz,,,
+24515,WORD_MALE_NAME,,KATAKANA,Inne,,-,ヤヌス,,yanusu,Janusz,,NO_TYPE_CHECK,
 24516,WORD_VERB_RU,"COMMON_WORD
 VERB_TRANSITIVITY",HIRAGANA,Inne,,見受ける,みうける,,miukeru,"spostrzegać
 zobaczyć
@@ -94698,3 +94692,401 @@ dom rodziców
 rodzice (swoje)
 dom (swój)",,,
 25577,WORD_NOUN,,HIRAGANA,Inne,,樅の木,もみのき,,mominoki,jodła,,,
+25578,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,コンデンサー,,kondensaa,kondensator,,,
+25579,"WORD_NOUN
+WORD_ADJECTIVE_NO",COMMON_WORD,KATAKANA,Inne,,-,ニッケル,,nikkeru,nikiel,pierwiastek chemiczny,,
+25580,"WORD_ADJECTIVE_NA
+WORD_NOUN",COMMON_WORD,HIRAGANA,Inne,,不十分,ふじゅうぶん,,fujuubun,"niewystarczający
+nieodpowiedni
+niedostateczny
+niedoskonały
+brak
+niedobór",,,
+25581,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,合板,ごうばん,,gouban,"sklejka
+dykta
+wspólna publikacja",,,
+25582,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,短め,みじかめ,,mijikame,"niewysoki
+nieduży
+trochę niski",,,
+25583,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ナチズム,,nachizumu,nazizm,,,
+25584,WORD_NOUN,"COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,実施,じっし,,jisshi,"wprowadzenie w życie
+wcielenie w życie
+wdrożenie
+realizacja
+zastosowanie w praktyce",,,
+25585,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,持ち物,もちもの,,mochimono,rzeczy osobiste,,,"263837
+263839"
+25586,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,湿度,しつど,,shitsudo,"poziom wilgoci
+stopień wilgoci
+wilgotność",,,
+25587,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,相互銀行,そうごぎんこう,,sougo ginkou,wzajemny bank oszczędnościowy,ang: mutual savings bank,,
+25588,WORD_NOUN,,HIRAGANA,Inne,,湿度計,しつどけい,,shitsudokei,"higrometr
+wilgociomierz
+higrograf",,,
+25589,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,テナント,,tenanto,"lokator
+najemca",ang: tenant,,
+25590,"WORD_NOUN
+WORD_ADJECTIVE_NO",COMMON_WORD,HIRAGANA,Inne,,懸案,けんあん,,ken'an,"nierozstrzygnięty problem
+nierozstrzygnięta kwestia",,,
+25591,WORD_NOUN,"COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,立証,りっしょう,,risshou,"ustalenie dowodu
+poparcie dowodami (czegoś)
+wykazanie (czegoś)",,,"238328
+48379"
+25592,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,蛮勇,ばんゆう,,ban'yuu,"wariactwo
+ryzykanctwo
+lekkomyślność
+brawura
+nierozwaga",,,
+25593,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,障害者,しょうがいしゃ,,shougaisha,"osoba niepełnosprawna
+inwalida
+osoba upośledzona fizycznie",,,
+25594,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,-,かまくら,,kamakura,kamakura,"festiwal w połowie stycznia, w czasie którego dzieci bawią się w dom wykonany ze śniegu",,
+25595,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,サド,,sado,"sadysta (skrót)
+sadyzm (skrót)",,,
+25596,"WORD_NOUN
+WORD_ADJECTIVE_NO",COMMON_WORD,HIRAGANA,Inne,,代償,だいしょう,,daishou,"odszkodowanie
+rekompensata
+reparacja",,,
+25597,"WORD_NOUN
+WORD_ADJECTIVE_NO",COMMON_WORD,HIRAGANA,Inne,,時価,じか,,jika,"aktualna wartość
+wartość rynkowa
+cena rynkowa
+cena handlowa",,,
+25598,"WORD_NOUN
+WORD_ADJECTIVE_NO",COMMON_WORD,HIRAGANA,Inne,,産科,さんか,,sanka,"położnictwo
+położniczy",,,
+25599,WORD_NOUN,"COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,出国,しゅっこく,,shukkoku,"wyjazd z kraju
+wyjeżdżanie z kraju
+odlot z kraju",,,
+25600,WORD_NOUN,"COMMON_WORD
+SURU_VERB",HIRAGANA,Inne,,専念,せんねん,,sennen,"przyswajanie
+pochłanianie
+skupienie
+koncentracja",,,258483
+25601,WORD_VERB_U,"COMMON_WORD
+VERB_TRANSITIVITY",HIRAGANA,Inne,,持直す,もちなおす,,mochinaosu,"wyzdrowieć
+odzyskać (siły)
+poprawiać
+polepszać
+ulepszać",,,
+25602,WORD_NOUN,"COMMON_WORD
+SUFFIX",HIRAGANA,Inne,,時半,じはん,,jihan,"około godziny
+krótko
+pół godziny (sufiks)",,,"1369387
+21549
+266224
+266228
+3456710
+419251"
+25603,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,演目,えんもく,,enmoku,program,"np. muzyczny, teatralny, koncertu i etc",,
+25604,WORD_NOUN,SURU_VERB,HIRAGANA,Inne,,学修,がくしゅう,,gakushuu,"uczenie się
+studia
+studiowanie",,,
+25605,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,準急,じゅんきゅう,,junkyuu,"lokalny pociąg ekspresowy
+pociąg pół-ekspresowy",,,
+25606,WORD_NOUN,SURU_VERB,HIRAGANA,Inne,,朝立ち,あさだち,,asadachi,"poranna erekcja
+nocne erekcje członka (NPT)",,,
+25607,"WORD_NOUN
+WORD_INTERJECTION",KANA_ALONE,HIRAGANA,Inne,,馬鹿野郎,ばかやろう,,bakayarou,idiota,,,
+25608,WORD_NOUN,,HIRAGANA,Inne,,順境,じゅんきょう,,junkyou,"korzystne przesłanki
+korzystne okoliczności
+sprzyjające okoliczności",,,
+25609,WORD_NOUN,SURU_VERB,HIRAGANA,Inne,,殉教,じゅんきょう,,junkyou,"męczeństwo
+martyrologia",,,
+25610,WORD_EXPRESSION,KANA_ALONE,HIRAGANA,Inne,,に拠れば,によれば,,ni yoreba,"według
+wedle",przytoczenia,,
+25611,WORD_NOUN,,KATAKANA,Inne,,-,オーツ,,ootsu,owies,,,
+25612,WORD_NOUN,,HIRAGANA,Inne,,新快速,しんかいそく,,shinkaisoku,szybszy ekspres,pociąg szybszy od ekspresu,,
+25613,WORD_NOUN,,HIRAGANA,Inne,,湯立ち,ゆだち,,yudachi,shintoistyczny rytuał w którym kapłan moczy bambusową trawę w gotowanej wodzie i kropi nią na wiernych,"początkowo była to forma przepowiadania przyszłości, później ceremonia oczyszczenia, a obecnie używane jako modlitwa o dobre zdrowie",,
+25614,WORD_NOUN,COMMON_WORD,HIRAGANA,Inne,,夕立,ゆうだち,,yuudachi,niespodziewany wieczorny deszczyk,,,
+25615,WORD_NOUN,,KATAKANA,Inne,,-,シグナル・レッド,,shigunaru reddo,sygnał czerwony,ang: signal red,,
+25616,WORD_NOUN,,KATAKANA,Inne,,-,シグナル・ハンドラ,,shigunaru handora,obsługa sygnały,"ang: signal handler, informatyka",,
+25617,WORD_NOUN,KANA_ALONE,HIRAGANA_KATAKANA,Inne,,バカ貝,バカがい,,bakagai,Mactra chinensis,rodzaj muszli (?),,
+25618,WORD_NOUN,KANA_ALONE,HIRAGANA,Inne,,馬鹿貝,ばかがい,,bakagai,Mactra chinensis,rodzaj muszli (?),,
+25619,WORD_NOUN,KANA_ALONE,HIRAGANA,Inne,,馬珂貝,ばかがい,,bakagai,Mactra chinensis,rodzaj muszli (?),,
+25620,WORD_NOUN,,KATAKANA,Inne,,-,コレクタ,,korekuta,"kolekcjoner
+zbieracz
+poprawiacz","ang: collector, corrector",,
+25621,WORD_NOUN,,KATAKANA,Inne,,-,ノー・サイド,,noo saido,koniec gry (w rugby),ang: no side,,
+25622,WORD_NOUN,,KATAKANA,Inne,,-,ダイオド,,daiodo,dioda,,,
+25623,WORD_NOUN,,KATAKANA,Inne,,-,エリヤ,,eriya,"obszar
+rejon
+miejsce
+strefa",ang: area,,
+25624,"WORD_NOUN
+WORD_ADJECTIVE_NO",SURU_VERB,KATAKANA,Inne,,-,ヴォーカル,,vookaru,"wokal
+śpiew
+śpiewanie",,,
+25625,"WORD_NOUN
+WORD_ADJECTIVE_NO",SURU_VERB,KATAKANA,Inne,,-,ボウカル,,boukaru,"wokal
+śpiew
+śpiewanie",,,
+25626,WORD_NOUN,,KATAKANA,Inne,,-,サファリ・ラリー,,safari rarii,rajd safari,ang: safari rally,,
+25627,WORD_NOUN,,KATAKANA,Inne,,-,ハーフ・タイム,,haafu taimu,przerwa w połowie meczu,ang: half time,,
+25628,WORD_NOUN,,KATAKANA,Inne,,-,ルクス・メーター,,rukusu meetaa,światłomierz,ang: lux meter,,
+25629,WORD_NOUN,,KATAKANA,Inne,,-,コーン・スターチ,,koon sutaachi,mąka kukurydziana,ang: corn starch,,
+25630,WORD_NOUN,,KATAKANA,Inne,,-,ティケット,,tiketto,bilet,ang: ticket,,
+25631,WORD_NOUN,,KATAKANA,Inne,,-,テケツ,,teketsu,bilet,ang: ticket,,
+25632,WORD_NOUN,,KATAKANA,Inne,,-,ハングリー・マーケット,,hangurii maaketto,sklep dla zgłodniałych (?),ang: hungry market,,
+25633,WORD_NOUN,,KATAKANA_EXCEPTION,Inne,,-,パラボラ・アンテナ,,parabora antena,antena paraboliczna,,,
+25634,WORD_NOUN,,KATAKANA,Inne,,-,データ・バンク,,deeta banku,bank danych,"ang: data bank, informatyka",,
+25635,WORD_NOUN,,KATAKANA,Inne,,-,メタリック・カラー,,metarikku karaa,"metaliczny kolor
+metalowy kolor",ang: metallic color,,
+25636,WORD_NOUN,,KATAKANA,Inne,,-,ポテト・チップス,,poteto chippusu,"chipsy
+czipsy
+chipsy ziemniaczane","ang: potato chips, potato crisps",,
+25637,WORD_NOUN,,KATAKANA,Inne,,-,シンセサイザ,,shinsesaiza,syntezator,,,
+25638,WORD_NOUN,,KATAKANA,Inne,,-,ニュー・フェース,,nyuu feesu,nowa twarz,ang: new face,,
+25639,WORD_NOUN,,KATAKANA,Inne,,-,トルコ・ブルー,,toruko buruu,turkusowy niebieski,,,
+25640,WORD_NOUN,,KATAKANA,Inne,,-,ターコイズ・ブルー,,taakoizu buruu,turkusowy niebieski,,,
+25641,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,シャドー,,shadoo,cień,ang: cień,,
+25642,WORD_NOUN,,KATAKANA,Inne,,-,キュロット・スカート,,kyurotto sukaato,krótka spódnica,"ang: culotte skirt, fra: culottes",,
+25643,WORD_NOUN,,KATAKANA,Inne,,-,ドッキング・ステーション,,dokkingu suteeshon,stacja dokująca,ang: docking station,,
+25644,WORD_NOUN,,KATAKANA,Inne,,-,フロアー,,furoaa,"podłoga
+parkiet
+piętro
+zwolennik
+stronnik
+wyznawca","ang: floor, follower",,
+25645,WORD_EXPRESSION,,HIRAGANA,Inne,,-,はずです,,hazudesu,"miało być
+powinien (coś zrobić)",inna forma to: hazu desu,,
+25646,WORD_NOUN,,KATAKANA,Inne,,-,ヴァルキューレ,,varukyuure,"Walkirie
+Walkiria","w mitologii nordyckiej pomniejsze boginie, córki Odyna, zwykle przedstawiane jako piękne dziewice-wojowniczki ujeżdżające skrzydlate konie (czasem wilki), uzbrojone we włócznie i tarcze",,
+25647,WORD_NOUN,,KATAKANA,Inne,,-,ヴァルキュリヤ,,varukyuriya,"Walkirie
+Walkiria","w mitologii nordyckiej pomniejsze boginie, córki Odyna, zwykle przedstawiane jako piękne dziewice-wojowniczki ujeżdżające skrzydlate konie (czasem wilki), uzbrojone we włócznie i tarcze",,
+25648,WORD_NOUN,,KATAKANA,Inne,,-,ワルキュリエ,,warukyurie,"Walkirie
+Walkiria","w mitologii nordyckiej pomniejsze boginie, córki Odyna, zwykle przedstawiane jako piękne dziewice-wojowniczki ujeżdżające skrzydlate konie (czasem wilki), uzbrojone we włócznie i tarcze",,
+25649,WORD_INTERJECTION,,KATAKANA,Inne,,-,サヨナラ,,sayonara,do widzenia,,,
+25650,WORD_NOUN,,KATAKANA_EXCEPTION,Inne,,-,ジバンシイ,,jibanshii,Givenchy,francuskie przedsiębiorstwo kosmetyczne i dom mody założony w roku 1952 przez projektanta Huberta de Givenchy,,
+25651,WORD_NOUN,,KATAKANA,Inne,,-,ラジアル・タイヤ,,rajiaru taiya,opona radialna,ang: radial tire,,
+25652,WORD_ADJECTIVE_NA,,KATAKANA,Inne,,-,ドラマティック,,doramatikku,dramatyczny,,,
+25653,WORD_NOUN,,KATAKANA,Inne,,-,エア・メール,,ea meeru,poczta lotnicza,ang: air mail,,
+25654,WORD_NOUN,,KATAKANA,Inne,,-,タイマ,,taima,"czasomierz
+minutnik
+timer",,,
+25655,WORD_NOUN,,KATAKANA,Inne,,-,プレハブ・コンクリート,,purehabu konkuriito,betonowy prefabrykat,,,
+25656,"WORD_ADVERB
+WORD_ADVERB_TO
+WORD_NOUN","SURU_VERB
+ONAMATOPOEIC_OR_MIMETIC_WORD",HIRAGANA,Inne,,-,ずしり,,zushiri,"silnie
+mocno
+intensywnie
+dogłębnie
+gruntownie",,,
+25657,"WORD_ADVERB
+WORD_ADVERB_TO
+WORD_NOUN","SURU_VERB
+ONAMATOPOEIC_OR_MIMETIC_WORD",HIRAGANA_EXCEPTION,Inne,,-,ずしっ,,zushi,"silnie
+mocno
+intensywnie
+dogłębnie
+gruntownie",,,
+25658,"WORD_ADVERB
+WORD_ADVERB_TO
+WORD_NOUN","SURU_VERB
+ONAMATOPOEIC_OR_MIMETIC_WORD",KATAKANA_HIRAGANA,Inne,,-,ズシッと,,zushitto,"silnie
+mocno
+intensywnie
+dogłębnie
+gruntownie",,,
+25659,WORD_NOUN,,KATAKANA,Inne,,-,コントローラ,,kontoroora,kontroler,,,
+25660,WORD_NOUN,COMMON_WORD,KATAKANA,Inne,,-,ショー,,shoo,"show
+pokaz
+wystawa",,,320988
+25661,WORD_NOUN,KANA_ALONE,HIRAGANA,Inne,,偽瓢虫,てんとうむしだまし,,tentou mushidamashi,"biedronka z 28 kropkami (Epilachna vigintioctopunctata)
+rodzaj chrząszcza",,,
+25662,WORD_NOUN,,KATAKANA,Inne,,-,デビス・カップ,,debisukappu,Puchar Davisa,ang: Davis Cup,,
+25663,WORD_NOUN,,KATAKANA,Inne,,-,テレフォン,,terefon,telefon,ang: telephone,,
+25664,WORD_NOUN,,KATAKANA,Inne,,-,ウィング,,wingu,skrzydło,ang: wing,,
+25665,"WORD_NOUN
+WORD_ADJECTIVE_NO",KANA_ALONE,HIRAGANA,Inne,,基督,きりすと,,kirisuto,Chrystus,por: Cristo,,"38979
+63098"
+25666,WORD_INTERJECTION,,KATAKANA_EXCEPTION,Inne,,-,チェッ,,che,"cholera
+psiakrew
+kurde
+gówno
+a niech to
+do licha",,,
+25667,WORD_INTERJECTION,,KATAKANA_EXCEPTION,Inne,,-,ちぇ,,chi,"cholera
+psiakrew
+kurde
+gówno
+a niech to
+do licha",,,
+25668,WORD_INTERJECTION,,KATAKANA_EXCEPTION,Inne,,-,ちぇっ,,chi,"cholera
+psiakrew
+kurde
+gówno
+a niech to
+do licha",,,
+25669,WORD_INTERJECTION,,KATAKANA_EXCEPTION,Inne,,-,ちっ,,chi,"cholera
+psiakrew
+kurde
+gówno
+a niech to
+do licha",,,
+25670,WORD_INTERJECTION,,KATAKANA_EXCEPTION,Inne,,-,チッ,,chi,"cholera
+psiakrew
+kurde
+gówno
+a niech to
+do licha",,,
+25671,WORD_NOUN,,KATAKANA,Inne,,-,ポップ・ミュージック,,poppu myuujikku,"muzyka pop
+muzyka popularna",,,
+25672,WORD_NOUN,,KATAKANA,Inne,,-,レジスタ,,rejisuta,"dziennik
+rejestr
+kasa fiskalna
+rezystor
+opornik","ang: register, resistor",,
+25673,WORD_NOUN,,KATAKANA,Inne,,-,スタート・ライン,,sutaato rain,linia startowa,ang: start line,,
+25674,WORD_NOUN,,KATAKANA,Inne,,-,カネローニ,,kanerooni,cannelloni,włoski makaron wyglądem przypominający rurki o średnicy około 3 cm,,
+25675,WORD_NOUN,,KATAKANA,Inne,,-,カネロニ,,kaneroni,cannelloni,włoski makaron wyglądem przypominający rurki o średnicy około 3 cm,,
+25676,WORD_NOUN,KANA_ALONE,KATAKANA_HIRAGANA,Inne,,イケ面,イケめん,,ikemen,"super facet
+przystojny mężczyzna
+energiczny mężczyzna
+przystojniak",,,
+25677,WORD_NOUN,KANA_ALONE,HIRAGANA,Inne,,いけ面,いけめん,,ikemen,"super facet
+przystojny mężczyzna
+energiczny mężczyzna
+przystojniak",,,
+25678,"WORD_ADVERB
+WORD_ADVERB_TO",ONAMATOPOEIC_OR_MIMETIC_WORD,HIRAGANA,Inne,,-,ふっつり,,futtsuri,"przerwanie
+urwanie
+odłamanie
+nagłe zatrzymanie",,,
+25679,"WORD_ADVERB
+WORD_ADVERB_TO",ONAMATOPOEIC_OR_MIMETIC_WORD,HIRAGANA,Inne,,-,ぷっつり,,puttsuri,"przerwanie
+urwanie
+odłamanie
+nagłe zatrzymanie",,,
+25680,WORD_EXPRESSION,,HIRAGANA,Inne,,-,どうするか,,dousuruka,co robić?,,,"30579
+31092
+73481"
+25681,"WORD_NOUN
+WORD_ADJECTIVE_NO",KANA_ALONE,HIRAGANA_KATAKANA,Inne,,断トツ,だんトツ,,dantotsu,"najlepszy
+zdecydowanie najlepszy
+decydujące prowadzenie",skrót,,
+25682,WORD_NOUN,,KATAKANA,Inne,,-,ポル,,poru,"słup
+tyczka
+biegun
+ankieta
+sondaż
+głosowanie
+wybory","ang: pole, poll",,
+25683,"WORD_NOUN
+WORD_ADVERB_TO
+WORD_ADVERB",SURU_VERB,HIRAGANA,Inne,,-,こくり,,kokuri,"kiwanie
+drzemanie
+przysypianie
+nagle
+znienacka
+niespodziewanie",,,
+25684,WORD_NOUN,,KATAKANA,Inne,,-,バースディ,,baasudi,urodziny,ang: birthday,,
+25685,WORD_NOUN,,KATAKANA,Inne,,-,バースデイ,,baasudei,urodziny,ang: birthday,,
+25686,WORD_NOUN,,KATAKANA,Inne,,-,バースデイカード,,baasudei kaado,kartka urodzinowa,ang: birthday card,,
+25687,WORD_NOUN,,KATAKANA,Inne,,-,バースデー・カード,,baasudee kaado,kartka urodzinowa,ang: birthday card,,
+25688,WORD_NOUN,,KATAKANA,Inne,,-,バースデイ・カード,,baasudei kaado,kartka urodzinowa,ang: birthday card,,
+25689,WORD_NOUN,,KATAKANA,Inne,,-,バースデー・ケーキ,,baasudee keeki,ciasto urodzinowe,ang: birthday cake,,
+25690,WORD_NOUN,,KATAKANA,Inne,,-,クライシス・マネージメント,,kuraishisu maneejimento,"zarządzanie kryzysem
+zarządzanie kryzysowe",,,
+25691,WORD_NOUN,,KATAKANA_HIRAGANA,Inne,,-,ワレメちゃん,,waremechan,"srom
+szpara
+pizda
+cipa
+cipka
+pochwa
+wagina",,,
+25692,WORD_NOUN,SURU_VERB,HIRAGANA,Inne,,-,まんこ,,manko,"pizda
+cipa
+cipka
+pochwa
+wagina",,,
+25693,WORD_NOUN,,KATAKANA,Inne,,-,ペット・フード,,petto fuudo,"pokarm dla zwierząt
+jedzenie dla zwierząt",ang: pet food,,
+25694,WORD_NOUN,,KATAKANA,Inne,,-,バウ・サイド,,bau saido,???,ang: bow side,,
+25695,WORD_NOUN,,KATAKANA,Inne,,-,レーザー・ディスク,,reezaa disuku,"laser disk
+LD",,,
+25696,WORD_NOUN,,KATAKANA,Inne,,-,コンシューマ,,konshuuma,konsument,ang: consumer,,
+25697,WORD_NOUN,,KATAKANA,Inne,,-,ファッション・ショー,,fasshon shoo,"pokaz mody
+rewia mody",ang: fashion show,,
+25698,"WORD_ADJECTIVE_NA
+WORD_NOUN",,KATAKANA,Inne,,-,タイムリ,,taimuri,"terminowy
+na czas
+punktualny
+run batted in (RBI) (w baseballu i softballu statystyka dla pałkarzy, dzięki którym po odbiciu piłki, inny zawodnik (po uprzednim zajęciu bazy) zaliczył run (statystyka nieliczona w przypadku popełnienia błędu lub po rozegraniu podwójnego autu przez drużynę broniącą)",,,
+25699,WORD_NOUN,,KATAKANA,Inne,,-,トップ・スター,,toppu sutaa,topowa gwiazda,ang: top star,,
+25700,WORD_NOUN,,KATAKANA,Inne,,-,スキン・ケア,,sukin kea,pielęgnacja skóry,ang: skin care,,
+25701,WORD_NOUN,,KATAKANA,Inne,,-,フライド・チキン,,furaido chikin,smażony kurczak,ang: fried chicken,,
+25702,WORD_NOUN,,KATAKANA,Inne,,-,キャディ,,kyadi,caddy (golf),osoba pomagająca nosić torbę z kijami zawodnika podczas gry w golfa,,
+25703,WORD_NOUN,,KATAKANA,Inne,,-,コンデンサ,,kondensa,kondensator,,,
+25704,"WORD_ADJECTIVE_NA
+WORD_NOUN",COMMON_WORD,HIRAGANA,Inne,,不充分,ふじゅうぶん,,fujuubun,"niewystarczający
+nieodpowiedni
+niedostateczny
+niedoskonały
+brak
+niedobór",,,
+25705,WORD_NOUN,,HIRAGANA,Inne,,短目,みじかめ,,mijikame,"niewysoki
+nieduży
+trochę niski",,,
+25706,WORD_NOUN,,HIRAGANA,Inne,,短かめ,みじかめ,,mijikame,"niewysoki
+nieduży
+trochę niski",,,
+25707,WORD_NOUN,,HIRAGANA,Inne,,短か目,みじかめ,,mijikame,"niewysoki
+nieduży
+trochę niski",,,
+25708,WORD_NOUN,,HIRAGANA,Inne,,持物,もちもの,,mochimono,rzeczy osobiste,,,
+25709,WORD_NOUN,,HIRAGANA,Inne,,持ちもの,もちもの,,mochimono,rzeczy osobiste,,,
+25710,WORD_NOUN,,HIRAGANA,Inne,,障がい者,しょうがいしゃ,,shougaisha,"osoba niepełnosprawna
+inwalida
+osoba upośledzona fizycznie",,,
+25711,WORD_NOUN,,HIRAGANA,Inne,,障碍者,しょうがいしゃ,,shougaisha,"osoba niepełnosprawna
+inwalida
+osoba upośledzona fizycznie",,,
+25712,WORD_NOUN,,HIRAGANA,Inne,,障礙者,しょうがいしゃ,,shougaisha,"osoba niepełnosprawna
+inwalida
+osoba upośledzona fizycznie",,,
+25713,WORD_NOUN,SURU_VERB,HIRAGANA,Inne,,出国,しゅつごく,,shutsugoku,"wyjazd z kraju
+wyjeżdżanie z kraju
+odlot z kraju",,,
+25714,WORD_VERB_U,"COMMON_WORD
+VERB_TRANSITIVITY",HIRAGANA,Inne,,持ち直す,もちなおす,,mochinaosu,"wyzdrowieć
+odzyskać (siły)
+poprawiać
+polepszać
+ulepszać",,,
+25715,WORD_VERB_U,VERB_TRANSITIVITY,HIRAGANA,Inne,,持ちなおす,もちなおす,,mochinaosu,"wyzdrowieć
+odzyskać (siły)
+poprawiać
+polepszać
+ulepszać",,,
+25716,"WORD_NOUN
+WORD_INTERJECTION",KANA_ALONE,HIRAGANA_KATAKANA,Inne,,バカ野郎,バカやろう,,bakayarou,idiota,,,
+25717,"WORD_NOUN
+WORD_INTERJECTION",KANA_ALONE,HIRAGANA,Inne,,馬鹿やろう,ばかやろう,,bakayarou,idiota,,,
+25718,"WORD_NOUN
+WORD_INTERJECTION",KANA_ALONE,HIRAGANA,Inne,,ばか野郎,ばかやろう,,bakayarou,idiota,,,
+25719,"WORD_NOUN
+WORD_INTERJECTION",KANA_ALONE,KATAKANA,Inne,,-,バカヤロウ,,bakayarou,idiota,,,
+25720,"WORD_NOUN
+WORD_INTERJECTION",KANA_ALONE,KATAKANA,Inne,,-,バカヤロー,,bakayaroo,idiota,,,
+25721,WORD_EXPRESSION,KANA_ALONE,HIRAGANA,Inne,,に依れば,によれば,,niyoreba,"według
+wedle",przytoczenia,,"237919
+242589
+243787
+251274
+269460
+271919
+278909
+280077
+30000
+326921"
+25722,WORD_EXPRESSION,KANA_ALONE,HIRAGANA,Inne,,に因れば,によれば,,niyoreba,"według
+wedle",przytoczenia,,
+25723,WORD_NOUN,,HIRAGANA,Inne,,湯立て,ゆだて,,yudate,shintoistyczny rytuał w którym kapłan moczy bambusową trawę w gotowanej wodzie i kropi nią na wiernych,"początkowo była to forma przepowiadania przyszłości, później ceremonia oczyszczenia, a obecnie używane jako modlitwa o dobre zdrowie",,
+25724,WORD_NOUN,,HIRAGANA,Inne,,湯立,ゆだて,,yudate,shintoistyczny rytuał w którym kapłan moczy bambusową trawę w gotowanej wodzie i kropi nią na wiernych,"początkowo była to forma przepowiadania przyszłości, później ceremonia oczyszczenia, a obecnie używane jako modlitwa o dobre zdrowie",,
+25725,WORD_NOUN,,HIRAGANA,Inne,,湯立,ゆだち,,yudachi,shintoistyczny rytuał w którym kapłan moczy bambusową trawę w gotowanej wodzie i kropi nią na wiernych,"początkowo była to forma przepowiadania przyszłości, później ceremonia oczyszczenia, a obecnie używane jako modlitwa o dobre zdrowie",,
+25726,WORD_NOUN,,HIRAGANA,Inne,,夕立ち,ゆうだち,,yuudachi,niespodziewany wieczorny deszczyk,,,
