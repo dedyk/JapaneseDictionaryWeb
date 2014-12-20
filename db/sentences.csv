@@ -79,6 +79,7 @@
 5074,jpn,彼はとてもセクシーだ。
 5075,jpn,ひとりにさせて！
 5076,jpn,「塩を取って下さい。」「はい、どうぞ。」
+5078,jpn,おいくつですか？
 5092,jpn,今日はとても暑い。
 5095,jpn,彼は約束を破った。
 5097,jpn,心配しないで、楽しくいこう！
@@ -3980,6 +3981,7 @@
 126609,jpn,着てみていいかしら。
 126623,jpn,茶はインドで広く栽培されている。
 126671,jpn,遅刻してすみません。
+126707,jpn,遅れて申し訳ありません。
 126710,jpn,遅れてすみません。
 126711,jpn,遅れてすいません。
 126712,jpn,遅れてごめんなさい。
@@ -11915,6 +11917,7 @@
 232974,jpn,あなたの友達はいつアメリカへ出発しましたか。
 232981,jpn,あなたの訳を彼の訳と比べてみなさい。
 232986,jpn,あなたの名前は何ですか。
+233058,jpn,あなたの年齢は何歳ですか。
 233060,jpn,あなたの年ごろではもっと分別があって当然だ。
 233071,jpn,あなたの答えとトムの答えと比較しなさい。
 233076,jpn,あなたの努力が成功につながった。
@@ -11928,6 +11931,7 @@
 233156,jpn,あなたの親切はいつまでも忘れません。
 233166,jpn,あなたの申し出に同意します。
 233177,jpn,あなたの職業は何ですか。
+233183,jpn,あなたの上の息子さんは何歳か。
 233190,jpn,あなたの助言が是非とも必要だ。
 233200,jpn,あなたの叔父さんと話し合いたい。
 233204,jpn,あなたの周りの人々の普通の行いに悪意があると考えてはいけない。
@@ -11951,10 +11955,13 @@
 233561,jpn,あなたのクラスには何人の生徒がいますか。
 233570,jpn,あなたのお名前は？
 233578,jpn,あなたのお母さんは、今御在宅ですか。
+233588,jpn,あなたのお父さんは何歳ですか。
+233594,jpn,あなたのお父さんはおいくつですか。
 233598,jpn,あなたのお父さんが何処に行ったか知っていますか。
 233603,jpn,あなたのお姉さんはどこの学校へ行っているのですか。
 233618,jpn,あなたのおっしゃる事に賛成です。
 233623,jpn,あなたのおっしゃることが、どうもよく分かりません。
+233624,jpn,あなたのおじさんは何歳ですか。
 233627,jpn,あなたのおじいさんは何歳ですか。
 233634,jpn,あなたのおうちの皆様によろしく。
 233661,jpn,あなたに同感です。
@@ -12360,6 +12367,7 @@
 349091,pol,Wczoraj było trzęsienie ziemi.
 349104,pol,Zawołajcie policję!
 349107,pol,"Właśnie miałem wychodzić, kiedy zadzwonił telefon."
+349120,pol,Ile masz lat?
 349141,pol,Pogodę przewiduje się naukowo.
 349142,pol,Wlał do herbaty mleka i zamieszał.
 349205,pol,To za małe.
@@ -15485,6 +15493,7 @@
 418091,jpn,「ハナ出てる」「ご、ごめん」
 418299,pol,On jest pisarzem.
 418335,pol,Podpalił własny dom.
+418640,jpn,「何歳？」「１６歳です」
 419381,jpn,痘痕も靨。
 421690,jpn,自分も何度か駐車違反で罰金を払った。
 422020,jpn,今日は雲行きが怪しいです。お花見が中止にならないか心配です。
@@ -17247,6 +17256,7 @@
 575410,pol,Nie miałem dzisiaj gości.
 575417,pol,Ten sen się spełni.
 575443,pol,Zdecydował się rzucić palenie.
+575444,pol,Proszę mi wybaczyć spóźnienie.
 575447,pol,Najgorsze już minęło.
 575473,pol,Zrobił się blady ze strachu.
 575556,pol,Prawię cię nie słyszę.
@@ -18790,6 +18800,7 @@
 748338,pol,Ona nigdy nie marzyła o spotkaniu go za granicą.
 748340,pol,On przyniósł nam złe wieści.
 749149,pol,Nie wszyscy lekarze dużo zarabiają.
+749486,pol,Ile lat ma twój ojciec?
 749510,pol,Kiedy zacznie się spektakl?
 749821,jpn,昼ごはんを持ってこなくてもいいです。
 750373,pol,Broń nuklearna jest zagrożeniem dla całej ludzkości.
@@ -19901,6 +19912,7 @@
 1086543,pol,Może masz rację.
 1087689,jpn,彼を除いて、他の誰もパーティーには来なかった。
 1090098,jpn,あなたは幸せですか？
+1090100,jpn,きみのお父さんて何歳？
 1090692,pol,Napisałem tę piosenkę dla niej.
 1090696,pol,Szef rozdzielił zadania pomiędzy swoich ludzi.
 1090698,pol,Mój awans zależy od jego decyzji.
@@ -21383,6 +21395,7 @@
 1474347,pol,Idziesz na piechotę czy pojedziesz autobusem?
 1474359,pol,"Bez względu na to, jak długo będziesz siedział w nocy, wstań o siódmej rano."
 1474366,pol,"Na początku wiele rzeczy wydawało mi się obce, ale szybko przyzwyczaiłem się do nowego stylu życia."
+1474563,pol,Ile lat ma twój najstarszy syn?
 1474565,pol,"Po godzinnym marszu, zatrzymaliśmy się aby odpocząć."
 1474566,pol,Zbiera się na deszcz.
 1474581,pol,"Bogaci się bogacą, a biedni biednieją jeszcze bardziej."
@@ -21785,6 +21798,7 @@
 1700308,jpn,社長は地に足のついた人物だ。
 1702125,pol,To jest najpiękniejsza noc jaką widziałem od kiedy pamiętam.
 1717297,pol,Koniecznie muszę ją przeprosić.
+1722874,pol,Ile masz lat?
 1723580,pol,Materiały budowlane są teraz drogie.
 1728718,pol,Przełożył swój wyjazd o dwa dni.
 1728731,pol,Latem mieszkam u ciotki.
@@ -22059,6 +22073,7 @@
 2008517,pol,Kot upolował mysz.
 2008521,pol,Moja córka ma ledwo piętnaście lat.
 2008523,pol,Ten garnitur wygląda na naprawdę drogi.
+2008881,pol,Ile lat ma Twój wujek?
 2009883,pol,Chciałbym schłodzone.
 2010911,pol,Coś jest nie tak (złego) z moim samochodem.
 2011208,pol,Jak długo ta zimna pogoda będzie się jeszcze utrzymywać?
@@ -24329,6 +24344,7 @@
 3452381,pol,Zadzwoń do mnie później.
 3453236,jpn,もう一回やってみて。
 3453295,pol,Nie obrażaj mnie w obecności innych ludzi.
+3455855,jpn,歳はいくつですか。
 3457106,pol,Niektóre węże są jadowite.
 3457107,pol,Wstaję o szóstej trzydzieści.
 3457619,pol,Najadłem się.
