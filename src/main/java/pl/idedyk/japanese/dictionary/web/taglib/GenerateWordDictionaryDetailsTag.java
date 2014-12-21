@@ -768,13 +768,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    		currentAttributeH.addHtmlElement(new Text(attributeType.getName()));
 			}
 			
-			if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR || attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR) {
+			if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR || attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR || attributeType == AttributeType.ALTERNATIVE) {
 				
-				Integer transitivityIntransitivityPairWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
+				Integer referenceWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
 
-				final DictionaryEntry transitivityIntransitivityPairDictionaryEntry = dictionaryManager.getDictionaryEntryById(transitivityIntransitivityPairWordId);
+				final DictionaryEntry referenceDictionaryEntry = dictionaryManager.getDictionaryEntryById(referenceWordId);
 
-				if (transitivityIntransitivityPairDictionaryEntry != null) {
+				if (referenceDictionaryEntry != null) {
 					
 					Tr row2TableTr = new Tr();
 					row2Table.addHtmlElement(row2TableTr);
@@ -787,19 +787,19 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		    		
 		    		currentAttributeH.addHtmlElement(new Text(attributeType.getName()));
 
-		    		// czasownik przechodni / nieprzechodni
-					String transitivityIntransitivityPairDictionaryEntryKana = transitivityIntransitivityPairDictionaryEntry.getKana();
-					String transitivityIntransitivityPairDictionaryEntryRomaji = transitivityIntransitivityPairDictionaryEntry.getRomaji();
+		    		// czasownik przechodni / nieprzechodni / alternatywa
+					String referenceDictionaryEntryKana = referenceDictionaryEntry.getKana();
+					String referenceDictionaryEntryRomaji = referenceDictionaryEntry.getRomaji();
 
-					StringBuffer transitivityIntrasitivitySb = new StringBuffer();
+					StringBuffer referenceDictionaryEntrySb = new StringBuffer();
 
-					if (transitivityIntransitivityPairDictionaryEntry.isKanjiExists() == true) {
-						transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntry.getKanji()).append(", ");
+					if (referenceDictionaryEntry.isKanjiExists() == true) {
+						referenceDictionaryEntrySb.append(referenceDictionaryEntry.getKanji()).append(", ");
 					}
 
-					transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryKana).append(", ");
+					referenceDictionaryEntrySb.append(referenceDictionaryEntryKana).append(", ");
 					
-					transitivityIntrasitivitySb.append(transitivityIntransitivityPairDictionaryEntryRomaji);
+					referenceDictionaryEntrySb.append(referenceDictionaryEntryRomaji);
 					
 					Td row2TableTrTd2 = new Td();
 					row2TableTr.addHtmlElement(row2TableTrTd2);
@@ -807,7 +807,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px");
 		    		row2TableTrTd2.addHtmlElement(currentTransitivityIntrasitivityH);
 		    		
-		    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(transitivityIntrasitivitySb.toString()));
+		    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(referenceDictionaryEntrySb.toString()));
 						    		
 		    		// przycisk
 					Td row2TableTrTd3 = new Td();
@@ -817,16 +817,16 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					row2TableTrTd3.addHtmlElement(row2TableTrTd3Div);
 										
 		            String link = LinkGenerator.generateDictionaryEntryDetailsLink(
-		            		pageContext.getServletContext().getContextPath(), transitivityIntransitivityPairDictionaryEntry, null);
+		            		pageContext.getServletContext().getContextPath(), referenceDictionaryEntry, null);
 		            
 					A linkButton = new A("btn btn-default");
 					row2TableTrTd3Div.addHtmlElement(linkButton);
 
 					linkButton.setHref(link);
 					
-					linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.transitivityIntransitivityPairDictionaryEntry.show")));			
+					linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.referenceDictionaryEntry.show")));			
 				}				
-			}			
+			}
     	}		
 		
 		return attributeDiv;		
