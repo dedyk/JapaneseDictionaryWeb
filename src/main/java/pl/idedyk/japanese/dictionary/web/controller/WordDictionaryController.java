@@ -303,6 +303,26 @@ public class WordDictionaryController {
 		// tytul strony
 		if (dictionaryEntry != null) {
 			
+			// sprawdzenie, czy nie odwolujemy sie do innej strony
+			String dictionaryEntryKanji = "-";
+			
+			if (dictionaryEntry.isKanjiExists() == true) {
+				dictionaryEntryKanji = dictionaryEntry.getKanji();
+			}
+			
+			String dictionaryEntryKana = dictionaryEntry.getKana();
+			
+			if (dictionaryEntryKanji.equals(kanji) == false || dictionaryEntryKana.equals(kana) == false) { // przekierowanie na wlasciwa strone o id
+				
+				String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null);
+				
+				RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
+				
+				loggerSender.sendLog(redirectLoggerModel);	
+				
+				return "redirect:" + destinationUrl;			
+			}			
+			
 			logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
 			
 			// logowanie
