@@ -16,6 +16,8 @@
 	
 	<meta name="keywords" content="<spring:message code="template.keywords"/>" />
 	
+	<meta name="viewport" content="width=device-width, initial-scale=0.6">
+	
 	<c:if test="${pageDescription != null}">
 	<meta name="description" content="${pageDescription}" />
 	</c:if>
@@ -157,6 +159,9 @@
 			
  			<nav class="navbar navbar-default">
 				<div class="navbar-header">
+		            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		                <span class="glyphicon glyphicon-align-justify"></span>
+		            </button>
 					<a href="<c:out value='${pageContext.request.contextPath}' />/" class="navbar-brand"><spring:message code="template.title.short.polish"/></a>
 				</div>
 				<div id="navbarCollapse" class="collapse navbar-collapse">

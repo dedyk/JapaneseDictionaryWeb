@@ -997,8 +997,17 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 								
 				for (TatoebaSentence currentPolishTatoebaSentence : polishTatoebaSentenceList) {
 					
-					Div sentenceDiv = new Div("col-md-12");
+					Div sentenceDiv = new Div("col-md-11");
 					panelBody.addHtmlElement(sentenceDiv);
+					
+					Table sentenceDivTable = new Table();
+					sentenceDiv.addHtmlElement(sentenceDivTable);
+					
+					Tr sentenceDivTableTr = new Tr();
+					sentenceDivTable.addHtmlElement(sentenceDivTableTr);
+					
+					Td sentenceDivTableTd = new Td();
+					sentenceDivTableTr.addHtmlElement(sentenceDivTableTd);
 					
 					H sentenceH4 = new H(4);
 					
@@ -1006,13 +1015,22 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					
 					sentenceH4.addHtmlElement(new Text(currentPolishTatoebaSentence.getSentence()));
 					
-					sentenceDiv.addHtmlElement(sentenceH4);
+					sentenceDivTableTd.addHtmlElement(sentenceH4);
 				}
 				
 				for (TatoebaSentence currentJapaneseTatoebaSentence : japaneseTatoebaSentenceList) {
 					
-					Div sentenceDiv = new Div("col-md-12");
+					Div sentenceDiv = new Div("col-md-11");
 					panelBody.addHtmlElement(sentenceDiv);
+					
+					Table sentenceDivTable = new Table();
+					sentenceDiv.addHtmlElement(sentenceDivTable);
+					
+					Tr sentenceDivTableTr = new Tr();
+					sentenceDivTable.addHtmlElement(sentenceDivTableTr);
+					
+					Td sentenceDivTableTd = new Td();
+					sentenceDivTableTr.addHtmlElement(sentenceDivTableTd);
 					
 					H sentenceH4 = new H(4);
 					
@@ -1020,7 +1038,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					
 					sentenceH4.addHtmlElement(new Text(currentJapaneseTatoebaSentence.getSentence()));
 					
-					sentenceDiv.addHtmlElement(sentenceH4);
+					sentenceDivTableTd.addHtmlElement(sentenceH4);
 				}				
 			
 				if (tatoebaSentenceGroupListIdx != tatoebaSentenceGroupList.size() - 1) {
@@ -1400,11 +1418,21 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			String exampleGroupTypeElementsInfo = exampleGroupTypeElements.getExampleGroupType().getInfo();
 			
 			if (exampleGroupTypeElementsInfo != null) {
-				H currentExampleResultSectionBodyDivInfoH5 = new H(5, "col-md-11", "margin-top: 0px; margin-left: -8%;");
+				
+				Table exampleTable = new Table(null, "width: 100%");
+				sectionBodyDiv.addHtmlElement(exampleTable);
+				
+				Tr sentenceTableTr = new Tr();
+				exampleTable.addHtmlElement(sentenceTableTr);
+				
+				Td sentenceTableTd = new Td();
+				sentenceTableTr.addHtmlElement(sentenceTableTd);
+				
+				H currentExampleResultSectionBodyDivInfoH5 = new H(5, "col-md-11", "margin-top: 0px; margin-left: 0px;");
 				
 				currentExampleResultSectionBodyDivInfoH5.addHtmlElement(new Text(exampleGroupTypeElementsInfo));
 				
-				sectionBodyDiv.addHtmlElement(currentExampleResultSectionBodyDivInfoH5);
+				sentenceTableTd.addHtmlElement(currentExampleResultSectionBodyDivInfoH5);
 			}	    	
 			
 			// sekcja dla grupy przykladow
