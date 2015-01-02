@@ -6,9 +6,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-<c:set var="pageTitle"> <spring:message code="kanjiDictionary.catalog.page.title"/> </c:set>
-<c:set var="pageDescription"> <spring:message code="kanjiDictionary.catalog.page.pageDescription"/> </c:set>
-
 <c:set var="firstPageButton"> <spring:message code="kanjiDictionary.catalog.page.firstPage"/> </c:set>
 <c:set var="previousPageButton"> <spring:message code="kanjiDictionary.catalog.page.previousPage"/> </c:set>
 <c:set var="nextPageButton"> <spring:message code="kanjiDictionary.catalog.page.nextPage"/> </c:set>

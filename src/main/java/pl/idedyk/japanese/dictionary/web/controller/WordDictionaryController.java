@@ -299,7 +299,22 @@ public class WordDictionaryController {
 		
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
-						
+		
+		DictionaryEntryType forceDictionaryEntryTypeType = null;
+		
+		if (forceDictionaryEntryType != null) {
+			
+			try {
+				forceDictionaryEntryTypeType = DictionaryEntryType.valueOf(forceDictionaryEntryType);
+				
+				model.put("forceDictionaryEntryType", forceDictionaryEntryTypeType);
+				
+			} catch (Exception e) {
+				
+				logger.info("Niepoprawna wartość parametru 'forceDictionaryEntryType' = " + forceDictionaryEntryType);				
+			}
+		}
+		
 		// tytul strony
 		if (dictionaryEntry != null) {
 			
@@ -328,7 +343,7 @@ public class WordDictionaryController {
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
 
-			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry);
+			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry, forceDictionaryEntryTypeType);
 						
 			String pageTitle = wordDictionaryDetailsTitleAndDescription[0];
 			String pageDescription = wordDictionaryDetailsTitleAndDescription[1];
@@ -345,20 +360,7 @@ public class WordDictionaryController {
 			
 			model.put("pageTitle", pageTitle);
 		}
-		
-		if (forceDictionaryEntryType != null) {
-			
-			try {
-				DictionaryEntryType forceDictionaryEntryTypeType = DictionaryEntryType.valueOf(forceDictionaryEntryType);
-				
-				model.put("forceDictionaryEntryType", forceDictionaryEntryTypeType);
-				
-			} catch (Exception e) {
-				
-				logger.info("Niepoprawna wartość parametru 'forceDictionaryEntryType' = " + forceDictionaryEntryType);				
-			}
-		}		
-				
+						
 		model.put("dictionaryEntry", dictionaryEntry);
 		model.put("selectedMenu", "wordDictionary");
 		
@@ -438,7 +440,7 @@ public class WordDictionaryController {
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
 
-			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry);
+			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry, null);
 						
 			String pageTitle = wordDictionaryDetailsTitleAndDescription[0];
 			String pageDescription = wordDictionaryDetailsTitleAndDescription[1];
@@ -500,7 +502,7 @@ public class WordDictionaryController {
 		}
 	}
 	
-	private String[] getWordDictionaryDetailsTitleAndDescription(DictionaryEntry dictionaryEntry) {
+	private String[] getWordDictionaryDetailsTitleAndDescription(DictionaryEntry dictionaryEntry, DictionaryEntryType forceDictionaryEntryTypeType) {
 		
 		String dictionaryEntryKanji = dictionaryEntry.getKanji();
 		String dictionaryEntryKana = dictionaryEntry.getKana();
@@ -511,25 +513,51 @@ public class WordDictionaryController {
 		String pageTitle = null;
 		String pageDescription = null;
 		
-		if (withKanji == true) {
+		if (forceDictionaryEntryTypeType == null) {
 			
-			pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji", 
-					new Object[] { dictionaryEntryKanji, dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());
-			
-			pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.with.kanji", 
-					new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
-							dictionaryEntryKana,
-							dictionaryEntryRomaji,
-					}, Locale.getDefault());
+			if (withKanji == true) {
+				
+				pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType", 
+						new Object[] { dictionaryEntryKanji, dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());
+				
+				pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.with.kanji.without.forceDictionaryEntryTypeType", 
+						new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
+								dictionaryEntryKana,
+								dictionaryEntryRomaji,
+						}, Locale.getDefault());
+				
+			} else {
+				
+				pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.without.kanji.without.forceDictionaryEntryTypeType", 
+						new Object[] { dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());
+				
+				pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.without.kanji.without.forceDictionaryEntryTypeType", 
+						new Object[] { dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());			
+			}
 			
 		} else {
-			
-			pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.without.kanji", 
-					new Object[] { dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());
-			
-			pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.without.kanji", 
-					new Object[] { dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());			
+
+			if (withKanji == true) {
+				
+				pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.with.forceDictionaryEntryTypeType", 
+						new Object[] { dictionaryEntryKanji, dictionaryEntryKana, dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName() }, Locale.getDefault());
+				
+				pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.with.kanji.with.forceDictionaryEntryTypeType", 
+						new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
+								dictionaryEntryKana,
+								dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName()
+						}, Locale.getDefault());
+				
+			} else {
+				
+				pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.without.kanji.with.forceDictionaryEntryTypeType", 
+						new Object[] { dictionaryEntryKana, dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName() }, Locale.getDefault());
+				
+				pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.without.kanji.with.forceDictionaryEntryTypeType", 
+						new Object[] { dictionaryEntryKana, dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName() }, Locale.getDefault());			
+			}			
 		}
+		
 		
 		return new String[] { pageTitle, pageDescription };		
 	}
@@ -584,6 +612,15 @@ public class WordDictionaryController {
 		model.put("lastPageNo", lastPageNo);
 		//model.put("metaRobots", "noindex, follow");
 		
+		String pageTitle = messageSource.getMessage("wordDictionary.catalog.page.title", 
+				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + dictionaryEntryList.size() - 1) }, Locale.getDefault());
+		
+		String pageDescription = messageSource.getMessage("wordDictionary.catalog.page.pageDescription", 
+				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + dictionaryEntryList.size() - 1) }, Locale.getDefault());
+		
+		model.put("pageTitle", pageTitle);
+		model.put("pageDescription", pageDescription);
+		
 		return "wordDictionaryCatalog";
 	}
 
@@ -637,6 +674,15 @@ public class WordDictionaryController {
 		model.put("lastPageNo", lastPageNo);
 		//model.put("metaRobots", "noindex, follow");
 		
+		String pageTitle = messageSource.getMessage("wordDictionaryName.catalog.page.title", 
+				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + dictionaryEntryList.size() - 1) }, Locale.getDefault());
+		
+		String pageDescription = messageSource.getMessage("wordDictionaryName.catalog.page.pageDescription", 
+				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + dictionaryEntryList.size() - 1) }, Locale.getDefault());
+		
+		model.put("pageTitle", pageTitle);
+		model.put("pageDescription", pageDescription);
+				
 		return "wordDictionaryNameCatalog";
 	}
 }
