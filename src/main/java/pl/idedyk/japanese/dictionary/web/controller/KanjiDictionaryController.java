@@ -103,6 +103,7 @@ public class KanjiDictionaryController {
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
+		model.put("kanjiAutocompleteInitialized", dictionaryManager.isKanjiAutocompleteInitialized());
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 				
 		return "kanjiDictionary";
@@ -147,6 +148,7 @@ public class KanjiDictionaryController {
 			model.put("radicalList", radicalList);
 			model.put("selectedMenu", "kanjiDictionary");
 			model.put("tabs", KanjiDictionaryTab.values());
+			model.put("kanjiAutocompleteInitialized", dictionaryManager.isKanjiAutocompleteInitialized());
 			model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 			
 			return "kanjiDictionary";
@@ -220,6 +222,7 @@ public class KanjiDictionaryController {
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
+		model.put("kanjiAutocompleteInitialized", dictionaryManager.isKanjiAutocompleteInitialized());
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 		
 		model.put("findKanjiRequest", findKanjiRequest);
@@ -511,6 +514,7 @@ public class KanjiDictionaryController {
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
+		model.put("kanjiAutocompleteInitialized", dictionaryManager.isKanjiAutocompleteInitialized());
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.DETECT));
 		
 		model.put("kanjiDictionaryDetectErrorMessage", errorMessage);

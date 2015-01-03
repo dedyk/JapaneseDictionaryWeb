@@ -97,6 +97,7 @@ public class WordDictionaryController {
 
 		model.put("addableDictionaryEntryList", addableDictionaryEntryList);
 		model.put("command", wordDictionarySearchModel);
+		model.put("wordAutocompleteInitialized", dictionaryManager.isWordAutocompleteInitialized());
 		model.put("selectedMenu", "wordDictionary");
 		
 		return "wordDictionary";
@@ -112,6 +113,7 @@ public class WordDictionaryController {
 						
 			model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 			model.put("command", searchModel);
+			model.put("wordAutocompleteInitialized", dictionaryManager.isWordAutocompleteInitialized());
 			model.put("selectedMenu", "wordDictionary");
 			
 			return "wordDictionary";
@@ -158,6 +160,7 @@ public class WordDictionaryController {
 		
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
+		model.put("wordAutocompleteInitialized", dictionaryManager.isWordAutocompleteInitialized());
 		model.put("selectedMenu", "wordDictionary");
 		model.put("findWordRequest", findWordRequest);
 		model.put("findWordResult", findWordResult);

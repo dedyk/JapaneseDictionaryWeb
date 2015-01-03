@@ -311,8 +311,16 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		return transitiveIntransitivePairsList;
 	}
 
+	public boolean isWordAutocompleteInitialized() {
+		return luceneDatabase.isWordAutocompleteInitialized();
+	}
+	
 	public List<String> getWordAutocomplete(String term, int limit) throws DictionaryException {
 		return luceneDatabase.getWordAutocomplete(term, limit);
+	}
+	
+	public boolean isKanjiAutocompleteInitialized() {
+		return luceneDatabase.isKanjiAutocompleteInitialized();
 	}
 
 	public List<String> getKanjiAutocomplete(String term, int limit) {

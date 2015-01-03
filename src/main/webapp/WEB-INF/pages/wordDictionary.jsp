@@ -43,7 +43,11 @@
 				<legend><spring:message code="wordDictionary.page.title2" /></legend>			
 			</fieldset>
 			
-			<form:errors cssClass="alert alert-danger" path="*" element="div" />		
+			<form:errors cssClass="alert alert-danger" path="*" element="div" />
+			
+			<c:if test="${wordAutocompleteInitialized == false}">
+				<div class="alert alert-info"><spring:message code="wordDictionary.page.wordAutocompleteInitialized.false"/></div>
+			</c:if>		
 			
 			<table>				
 				<tr>

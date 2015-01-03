@@ -246,7 +246,11 @@
 						</fieldset>
             		
             			<form:errors cssClass="alert alert-danger" path="*" element="div" />
-            		
+            			
+						<c:if test="${kanjiAutocompleteInitialized == false}">
+							<div class="alert alert-info"><spring:message code="kanjiDictionary.page.kanjiAutocompleteInitialized.false"/></div>
+						</c:if>		
+            			
 						<table>				
 							<tr>
 								<td><form:label path="word"><spring:message code="kanjiDictionary.page.label.searchWord"/></form:label></td>
