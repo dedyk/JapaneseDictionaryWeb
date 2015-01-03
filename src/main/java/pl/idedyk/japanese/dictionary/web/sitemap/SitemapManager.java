@@ -38,6 +38,8 @@ public class SitemapManager {
 	@Value("${sitemap.lastmod}")
 	private String lastMod;
 	
+	private boolean initialized = false;
+	
 	public SitemapManager() throws Exception {
 		
 		logger.info("Inicjalizacja manadzera sitemap");		
@@ -213,6 +215,8 @@ public class SitemapManager {
 		sitemapFileWriter.close();
 		
 		// koniec generowania indeksu
+		
+		initialized = true;
 				
 		logger.info("Generowanie pliku sitemap zakonczone");
 	}
@@ -290,7 +294,11 @@ public class SitemapManager {
 		}
 		
 		return sitemapFile;
-	}	
+	}
+
+	public boolean isInitialized() {
+		return initialized;
+	}
 
 	public String getBaseServer() {
 		return baseServer;

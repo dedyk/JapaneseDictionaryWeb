@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.ServiceUnavailableExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SitemapGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager;
 
@@ -43,6 +44,17 @@ public class SitemapController {
 		loggerSender.sendLog(new SitemapGenerateLoggerModel(Utils.createLoggerModelCommon(request)));
 
 		response.setContentType("application/xml");
+		
+		if (sitemapManager.isInitialized() == false) {
+			
+			response.sendError(503);
+			
+			ServiceUnavailableExceptionLoggerModel serviceUnavailableExceptionLoggerModel = new ServiceUnavailableExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(serviceUnavailableExceptionLoggerModel);
+			
+			return;
+		}
 		
 		File sitemapFile = sitemapManager.getIndexSitemap();
 		
@@ -77,8 +89,19 @@ public class SitemapController {
 		logger.info("Generowanie pliku sitemap(index) dla: " + name + "/" + id);
 		
 		// logowanie
-		loggerSender.sendLog(new SitemapGenerateLoggerModel(Utils.createLoggerModelCommon(request)));		
+		loggerSender.sendLog(new SitemapGenerateLoggerModel(Utils.createLoggerModelCommon(request)));
 		
+		if (sitemapManager.isInitialized() == false) {
+			
+			response.sendError(503);
+			
+			ServiceUnavailableExceptionLoggerModel serviceUnavailableExceptionLoggerModel = new ServiceUnavailableExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(serviceUnavailableExceptionLoggerModel);
+			
+			return;
+		}
+				
 		File sitemapFile = sitemapManager.getSitemap(name, id);
 		
 		if (sitemapFile != null) {

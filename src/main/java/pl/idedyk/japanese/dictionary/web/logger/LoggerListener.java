@@ -30,6 +30,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.MethodNotAllowedExceptionL
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RobotsGenerateLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.ServiceUnavailableExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SitemapGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.StartAppLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.StartLoggerModel;
@@ -690,6 +691,9 @@ public class LoggerListener {
 		
 		} else if (PageNoFoundExceptionLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.PAGE_NO_FOUND_EXCEPTION;
+			
+		} else if (ServiceUnavailableExceptionLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.SERVICE_UNAVAILABLE_EXCEPTION;
 			
 		} else if (MethodNotAllowedExceptionLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.METHOD_NOT_ALLOWED_EXCEPTION;

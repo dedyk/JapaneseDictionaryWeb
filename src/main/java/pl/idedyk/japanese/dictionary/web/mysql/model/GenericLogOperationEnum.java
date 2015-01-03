@@ -47,6 +47,7 @@ public enum GenericLogOperationEnum {
 	
 	GENERAL_EXCEPTION,
 	PAGE_NO_FOUND_EXCEPTION,
+	SERVICE_UNAVAILABLE_EXCEPTION,
 	METHOD_NOT_ALLOWED_EXCEPTION;
 	
 	public static GenericLogOperationEnum[] getSortedValues() {
