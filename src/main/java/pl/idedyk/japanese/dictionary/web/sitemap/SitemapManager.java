@@ -14,7 +14,6 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
@@ -35,8 +34,8 @@ public class SitemapManager {
 	@Autowired
 	private DictionaryManager dictionaryManager;
 	
-	@Value("${sitemap.lastmod}")
-	private String lastMod;
+	//@Value("${sitemap.lastmod}")
+	//private String lastMod;
 	
 	private boolean initialized = false;
 	
@@ -197,9 +196,11 @@ public class SitemapManager {
 				xmlStreamWriter.writeCharacters(baseServer + "/sitemap/" + currentName + "/" + currentIndex);			
 				xmlStreamWriter.writeEndElement(); // loc
 
+				/*
 				xmlStreamWriter.writeStartElement("lastmod");		
 				xmlStreamWriter.writeCharacters(lastMod);			
 				xmlStreamWriter.writeEndElement(); // lastmod			
+				*/
 				
 				xmlStreamWriter.writeEndElement(); // sitemap				
 			}			
@@ -337,7 +338,7 @@ public class SitemapManager {
 			xmlStreamWriter.writeStartElement("url"); // url
 			
 			addElement("loc", baseServer + link);
-			addElement("lastmod", lastMod);
+			//addElement("lastmod", lastMod);
 			addElement("changefreq", changeFreq.toString());
 			addElement("priority", priority.toPlainString());			
 			
