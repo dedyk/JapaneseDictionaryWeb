@@ -3,9 +3,11 @@ package pl.idedyk.japanese.dictionary.web.sitemap;
 import java.io.File;
 import java.io.FileWriter;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +22,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.sitemap.exception.NotInitializedException;
 
 public class SitemapManager {
 	
@@ -29,8 +32,8 @@ public class SitemapManager {
 	
 	private File sitemapFileIndex = null;
 	
-	private LinkedHashMap<String, LinkedHashMap<Integer, File>> sitemapFilesMap;
-			
+	private Map<String, Map<Integer, File>> sitemapFilesMap = Collections.synchronizedMap(new LinkedHashMap<String, Map<Integer, File>>());
+						
 	@Autowired
 	private DictionaryManager dictionaryManager;
 	
@@ -67,15 +70,13 @@ public class SitemapManager {
 	}	
 	
 	private synchronized void generateSitemaps() throws Exception {
-		
-		if (sitemapFileIndex != null && sitemapFilesMap != null) {
+				
+		if (initialized == true) {
 			return;
 		}
 		
 		logger.info("Generowanie pliku sitemap");
-		
-		sitemapFilesMap = new LinkedHashMap<String, LinkedHashMap<Integer, File>>();
-		
+				
 		SitemapHelper sitemapHelper = new SitemapHelper();
 		
 		// dodanie statycznych linkow
@@ -180,7 +181,7 @@ public class SitemapManager {
 			
 			String currentName = sitemapFilesMapKeySetIterator.next();
 			
-			LinkedHashMap<Integer, File> sitemapNameFileMap = sitemapFilesMap.get(currentName);
+			Map<Integer, File> sitemapNameFileMap = sitemapFilesMap.get(currentName);
 			
 			Set<Integer> sitemapNameFileMapKeySet = sitemapNameFileMap.keySet();
 			
@@ -265,40 +266,47 @@ public class SitemapManager {
 		}		
 	}
 	
-	public File getIndexSitemap() throws Exception {
+	public File getIndexSitemap() throws NotInitializedException {
 		
-		// wygenerowanie pliku sitemap jesli nie zostal wygenerowany wczesniej
-		generateSitemaps();
-
+		if (initialized == false) {
+			throw new NotInitializedException();
+		}
+		
 		return sitemapFileIndex;
 	}
 	
-	public File getSitemap(String name, int id) throws Exception {
-		
-		// wygenerowanie pliku sitemap jesli nie zostal wygenerowany wczesniej
-		generateSitemaps();
-		
+	public File getSitemap(String name, int id) throws NotInitializedException {
+				
 		if (name == null) {
 			return null;
 		}
 		
-		LinkedHashMap<Integer, File> sitemapNameFileMap = sitemapFilesMap.get(name);
+		Map<Integer, File> sitemapNameFileMap = sitemapFilesMap.get(name);
 
 		if (sitemapNameFileMap == null) {
-			return null;
+			
+			if (initialized == false) {
+				throw new NotInitializedException();
+				
+			} else {
+				return null;
+			}			
 		}
 		
 		File sitemapFile = sitemapNameFileMap.get(id);
 		
 		if (sitemapFile == null) {
-			return null;
+			
+			if (initialized == false) {
+				throw new NotInitializedException();
+				
+			} else {
+				return null;
+			}			
+
 		}
 		
 		return sitemapFile;
-	}
-
-	public boolean isInitialized() {
-		return initialized;
 	}
 
 	public String getBaseServer() {
@@ -362,10 +370,10 @@ public class SitemapManager {
 			
 			currentGroupName = groupName;
 			
-			LinkedHashMap<Integer, File> groupNameSitemapFiles = sitemapFilesMap.get(currentGroupName);
+			Map<Integer, File> groupNameSitemapFiles = sitemapFilesMap.get(currentGroupName);
 			
 			if (groupNameSitemapFiles == null) {
-				groupNameSitemapFiles = new LinkedHashMap<Integer, File>();
+				groupNameSitemapFiles = Collections.synchronizedMap(new LinkedHashMap<Integer, File>());
 				
 				sitemapFilesMap.put(currentGroupName, groupNameSitemapFiles);
 			}			
@@ -402,7 +410,7 @@ public class SitemapManager {
 				
 				sitemapFileWriter.close();
 				
-				LinkedHashMap<Integer, File> groupNameSitemapFiles = sitemapFilesMap.get(currentGroupName);
+				Map<Integer, File> groupNameSitemapFiles = sitemapFilesMap.get(currentGroupName);
 				
 				int groupNameSitemapFilesSize = groupNameSitemapFiles.size();
 				

@@ -23,6 +23,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLogger
 import pl.idedyk.japanese.dictionary.web.logger.model.ServiceUnavailableExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SitemapGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager;
+import pl.idedyk.japanese.dictionary.web.sitemap.exception.NotInitializedException;
 
 @Controller
 public class SitemapController {
@@ -36,7 +37,7 @@ public class SitemapController {
 	private LoggerSender loggerSender;
 	
     @RequestMapping(value = "/sitemap.xml", method = RequestMethod.GET)
-	public void sitemap(HttpServletRequest request, HttpServletResponse response, HttpSession session, OutputStream outputStream) throws Exception {
+	public void sitemap(HttpServletRequest request, HttpServletResponse response, HttpSession session, OutputStream outputStream) throws IOException {
 	
 		logger.info("Generowanie pliku sitemap");
 		
@@ -45,7 +46,12 @@ public class SitemapController {
 
 		response.setContentType("application/xml");
 		
-		if (sitemapManager.isInitialized() == false) {
+		File sitemapFile = null;
+		
+		try {
+			sitemapFile = sitemapManager.getIndexSitemap();
+						
+		} catch (NotInitializedException e) {
 			
 			response.sendError(503);
 			
@@ -53,10 +59,8 @@ public class SitemapController {
 			
 			loggerSender.sendLog(serviceUnavailableExceptionLoggerModel);
 			
-			return;
-		}
-		
-		File sitemapFile = sitemapManager.getIndexSitemap();
+			return;			
+		}		
 		
 		if (sitemapFile != null) {
 			
@@ -84,14 +88,19 @@ public class SitemapController {
 	}
 
     @RequestMapping(value = "/sitemap/{name}/{id}", method = RequestMethod.GET)
-	public void sitemap(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("name") String name, @PathVariable("id") int id, OutputStream outputStream) throws Exception {
+	public void sitemap(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("name") String name, @PathVariable("id") int id, OutputStream outputStream) throws IOException {
 	
 		logger.info("Generowanie pliku sitemap(index) dla: " + name + "/" + id);
 		
 		// logowanie
 		loggerSender.sendLog(new SitemapGenerateLoggerModel(Utils.createLoggerModelCommon(request)));
 		
-		if (sitemapManager.isInitialized() == false) {
+		File sitemapFile = null;
+				
+		try {
+			sitemapFile = sitemapManager.getSitemap(name, id);
+			
+		} catch (NotInitializedException e) {
 			
 			response.sendError(503);
 			
@@ -99,10 +108,8 @@ public class SitemapController {
 			
 			loggerSender.sendLog(serviceUnavailableExceptionLoggerModel);
 			
-			return;
+			return;			
 		}
-				
-		File sitemapFile = sitemapManager.getSitemap(name, id);
 		
 		if (sitemapFile != null) {
 			
