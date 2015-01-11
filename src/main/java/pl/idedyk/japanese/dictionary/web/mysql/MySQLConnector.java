@@ -1958,7 +1958,8 @@ public class MySQLConnector {
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "select min(gl.id), min(gl.timestamp), max(gl.id), max(gl.timestamp) from generic_log gl where gl.id not in (select dlpi.id from daily_log_processed_ids dlpi where dlpi.id = gl.id)");
+			preparedStatement = connection.prepareStatement("select (select max(id) + 1 from daily_log_processed_ids) minId, (select timestamp from generic_log gl where id = (select max(id) + 1 from daily_log_processed_ids)) minTimestamp, "
+					+ "(select max(id) from generic_log) maxId, (select timestamp from generic_log where id = (select max(id) from generic_log)) maxTimestamp;");
 			
 			resultSet = preparedStatement.executeQuery();
 			
