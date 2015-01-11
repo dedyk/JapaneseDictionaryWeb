@@ -670,8 +670,8 @@ public class KanjiDictionaryController {
 			findKanjiResult.setMoreElemetsExists(false);
 		}
 		
-		int lastPageNo = (allKanjis.size() / pageSize) + 1;
-				
+		int lastPageNo = (allKanjis.size() / pageSize) + (allKanjis.size() % pageSize > 0 ? 1 : 0);
+						
 		model.put("selectedMenu", "kanjiDictionary");		
 		model.put("findKanjiRequest", findKanjiRequest);
 		model.put("findKanjiResult", findKanjiResult);

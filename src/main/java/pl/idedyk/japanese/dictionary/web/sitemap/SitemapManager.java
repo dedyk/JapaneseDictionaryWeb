@@ -101,9 +101,11 @@ public class SitemapManager {
 		// katalog slow
 		final int wordPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
 		
-		for (int pageNo = 0; pageNo <= dictionaryEntriesSize / wordPageSize; ++pageNo) {
+		int dictionaryEntriesSizeLastPageNo = (dictionaryEntriesSize / wordPageSize) + (dictionaryEntriesSize % wordPageSize > 0 ? 1 : 0);
+		
+		for (int pageNo = 1; pageNo <= dictionaryEntriesSizeLastPageNo; ++pageNo) {
 			
-			String url = "/wordDictionaryCatalog/" + (pageNo + 1);
+			String url = "/wordDictionaryCatalog/" + pageNo;
 			
 			sitemapHelper.createUrl("wordDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
@@ -122,9 +124,11 @@ public class SitemapManager {
 		// katalog slow(nazwa)
 		final int wordNamePageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
 		
-		for (int pageNo = 0; pageNo <= dictionaryEntriesNameSize / wordNamePageSize; ++pageNo) {
+		int dictionaryEntriesNameSizeLastPageNo = (dictionaryEntriesNameSize / wordNamePageSize) + (dictionaryEntriesNameSize % wordNamePageSize > 0 ? 1 : 0);
+		
+		for (int pageNo = 1; pageNo <= dictionaryEntriesNameSizeLastPageNo; ++pageNo) {
 			
-			String url = "/wordDictionaryNameCatalog/" + (pageNo + 1);
+			String url = "/wordDictionaryNameCatalog/" + pageNo;
 			
 			sitemapHelper.createUrl("wordDictionaryNameCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
@@ -144,9 +148,11 @@ public class SitemapManager {
 		// katalog znakow kanji
 		final int kanjiPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w KanjiDictionaryController
 		
-		for (int pageNo = 0; pageNo <= allKanjis.size() / kanjiPageSize; ++pageNo) {
+		int allKanjisSizeLastPageNo = (allKanjis.size() / kanjiPageSize) + (allKanjis.size() % kanjiPageSize > 0 ? 1 : 0);
+		
+		for (int pageNo = 1; pageNo <= allKanjisSizeLastPageNo; ++pageNo) {
 			
-			String url = "/kanjiDictionaryCatalog/" + (pageNo + 1);
+			String url = "/kanjiDictionaryCatalog/" + pageNo;
 						
 			sitemapHelper.createUrl("kanjiDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}

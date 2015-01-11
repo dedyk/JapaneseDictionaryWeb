@@ -606,7 +606,7 @@ public class WordDictionaryController {
 			findWordResult.setMoreElemetsExists(false);
 		}
 		
-		int lastPageNo = (dictionaryEntriesSize / pageSize) + 1;
+		int lastPageNo = (dictionaryEntriesSize / pageSize) + (dictionaryEntriesSize % pageSize > 0 ? 1 : 0);
 				
 		model.put("selectedMenu", "wordDictionary");
 		model.put("findWordRequest", findWordRequest);
@@ -668,7 +668,7 @@ public class WordDictionaryController {
 			findWordResult.setMoreElemetsExists(false);
 		}
 		
-		int lastPageNo = (dictionaryEntriesSize / pageSize) + 1;
+		int lastPageNo = (dictionaryEntriesSize / pageSize) + (dictionaryEntriesSize % pageSize > 0 ? 1 : 0);
 				
 		model.put("selectedMenu", "wordDictionary");
 		model.put("findWordRequest", findWordRequest);
