@@ -49,6 +49,8 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	private List<RadicalInfo> radicalList = null;
 	private List<TransitiveIntransitivePair> transitiveIntransitivePairsList = null;
 
+	private boolean initialized = false;
+	
 	@Value("${db.dir}")
 	private String dbDir;
 	
@@ -58,6 +60,8 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 
 	@PostConstruct
 	public void init() {
+		
+		initialized = false;
 		
 		logger.info("Inicjalizacja Dictionary Manager");
 		
@@ -136,12 +140,36 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 			throw new RuntimeException(e);
 		}
 		
+		initialized = true;
+		
 		logger.info("Inicjalizacja Dictionary Manager zakonczona sukcesem");
 	}
 	
 	@PreDestroy
 	private void close() throws IOException {
 		luceneDatabase.close();
+	}
+	
+	@Override
+	public void waitForDatabaseReady() {
+		
+		if (initialized == true) {
+			return;
+		}
+		
+		while (true) {
+						
+			try {
+				Thread.sleep(300);
+				
+			} catch (InterruptedException e) {
+				// noop
+			}
+			
+			if (initialized == true) {
+				return;
+			}			
+		}		
 	}
 	
 	private void readKanaFile(InputStream kanaFileInputStream) throws IOException {
@@ -232,15 +260,23 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 
 	@Override
 	public KanaHelper getKanaHelper() {
+		
+		waitForDatabaseReady();
+		
 		return kanaHelper;
 	}
 
 	@Override
 	public List<RadicalInfo> getRadicalList() {
+		
+		waitForDatabaseReady();
+		
 		return radicalList;
 	}
 	
 	public List<WebRadicalInfo> getWebRadicalList() {
+		
+		waitForDatabaseReady();
 		
 		List<RadicalInfo> radicalList = getRadicalList();
 		
@@ -279,6 +315,8 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	
 	public WebRadicalInfo getWebRadicalInfo(String radicalToSearch) {
 		
+		waitForDatabaseReady();
+		
 		List<RadicalInfo> radicalList = getRadicalList();
 		
 		for (RadicalInfo currentRadicalInfo : radicalList) {
@@ -303,27 +341,45 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 
 	@Override
 	public KeigoHelper getKeigoHelper() {
+		
+		waitForDatabaseReady();
+		
 		return keigoHelper;
 	}
 
 	@Override
 	public List<TransitiveIntransitivePair> getTransitiveIntransitivePairsList() {
+		
+		waitForDatabaseReady();
+		
 		return transitiveIntransitivePairsList;
 	}
 
 	public boolean isWordAutocompleteInitialized() {
+		
+		waitForDatabaseReady();
+		
 		return luceneDatabase.isWordAutocompleteInitialized();
 	}
 	
 	public List<String> getWordAutocomplete(String term, int limit) throws DictionaryException {
+		
+		waitForDatabaseReady();
+		
 		return luceneDatabase.getWordAutocomplete(term, limit);
 	}
 	
 	public boolean isKanjiAutocompleteInitialized() {
+		
+		waitForDatabaseReady();
+		
 		return luceneDatabase.isKanjiAutocompleteInitialized();
 	}
 
 	public List<String> getKanjiAutocomplete(String term, int limit) {
+		
+		waitForDatabaseReady();
+		
 		return luceneDatabase.getKanjiAutocomplete(term, limit);
 	}
 }
