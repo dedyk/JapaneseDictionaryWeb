@@ -27,9 +27,13 @@ public class ZinniaManager {
 	private String libzinnia;
 	private String libzinniajni;
 	
+	private boolean nativeLibInitialized = false;
+	
 	private Zinnia zinnia = new Zinnia();
 	
 	private long zinniaHandler = 0;
+	
+	private boolean initialized = false;
 
 	@Value("${db.dir}")
 	private String dbDir;
@@ -37,13 +41,20 @@ public class ZinniaManager {
 	@PostConstruct
 	public void init() {
 
+		initialized = false;
+		
 		logger.info("Inicjalizacja Zinnia Manager");
 		
-		String libZinniaPath = ZinniaManager.class.getResource("/zinnia/" + zinniaArch + "/" + libzinnia).getPath();
-		String libZinniaJniPath = ZinniaManager.class.getResource("/zinnia/" + zinniaArch + "/" + libzinniajni).getPath();
-		
-		System.load(libZinniaPath);
-		System.load(libZinniaJniPath);
+		if (nativeLibInitialized == false) {
+
+			String libZinniaPath = ZinniaManager.class.getResource("/zinnia/" + zinniaArch + "/" + libzinnia).getPath();
+			String libZinniaJniPath = ZinniaManager.class.getResource("/zinnia/" + zinniaArch + "/" + libzinniajni).getPath();
+			
+			System.load(libZinniaPath);
+			System.load(libZinniaJniPath);
+
+			nativeLibInitialized = true;			
+		}		
 		
 		String kanjiRecognizeModelDbPath = new File(dbDir, "kanji_recognizer.model.db").getPath();
 		
@@ -55,6 +66,8 @@ public class ZinniaManager {
 			throw new RuntimeException("Nie moge zainicjalizowac Zinnia Manager: " + zinnia.zinnia_recognizer_strerror(zinniaHandler));
 		}
 		
+		initialized = true;
+		
 		logger.info("Zakonczono inicjalizacje Zinnia Manager");		
 	}
 	
@@ -62,8 +75,60 @@ public class ZinniaManager {
 	public void destroy() {
 		zinnia.zinnia_recognizer_destroy(zinniaHandler);
 	}
+	
+	public void waitForDatabaseReady() {
+		
+		if (initialized == true) {
+			return;
+		}
+		
+		while (true) {
+						
+			try {
+				Thread.sleep(300);
+				
+			} catch (InterruptedException e) {
+				// noop
+			}
+			
+			if (initialized == true) {
+				return;
+			}			
+		}		
+	}
+	
+	public void reload() {
+		
+		try {
+			Thread.sleep(2000);
+			
+		} catch (InterruptedException e) {
+			// noop
+		}
+				
+		initialized = false;
+				
+		logger.info("Zablokowano bazę danych zinnia. Czekanie 8 sekund na rozpoczęcie procedury przeładowania bazy");
+		
+		try {
+			Thread.sleep(8000);
+			
+			destroy();
+			
+		} catch (Exception e) {
+			// noop
+		}
+		
+		zinnia = new Zinnia();
+		
+		zinniaHandler = 0;
+		
+		init();		
+	}
 		
 	public Character createNewCharacter() {
+		
+		waitForDatabaseReady();
 				
 		return new Character();		
 	}
@@ -77,22 +142,36 @@ public class ZinniaManager {
 		}
 		
 		public void clear() {
+			
+			waitForDatabaseReady();
+			
 			zinnia.zinnia_character_clear(character);
 		}
 		
 		public void setWidth(int width) {
+			
+			waitForDatabaseReady();
+			
 			zinnia.zinnia_character_set_width(character, width);
 		}
 		
 		public void setHeight(int width) {
+			
+			waitForDatabaseReady();
+			
 			zinnia.zinnia_character_set_height(character, width);
 		}
 		
 		public void add(int strokeNo, int x, int y) {
+			
+			waitForDatabaseReady();
+			
 			zinnia.zinnia_character_add(character, strokeNo, x, y);
 		}
 		
 		public List<KanjiRecognizerResultItem> recognize(int limit) {
+			
+			waitForDatabaseReady();
 			
 			List<KanjiRecognizerResultItem> result = new ArrayList<KanjiRecognizerResultItem>();
 			
@@ -110,6 +189,9 @@ public class ZinniaManager {
 		}
 		
 		public void destroy() {
+			
+			waitForDatabaseReady();
+			
 			zinnia.zinnia_character_destroy(character);
 		}
 	}

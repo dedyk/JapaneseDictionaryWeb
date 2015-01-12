@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.AdminPanelModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.AdminPanelModelValidator;
+import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
@@ -64,6 +66,12 @@ public class AdminController {
 	
 	@Autowired  
 	private AdminPanelModelValidator adminPanelModelValidator;
+	
+	@Autowired
+	private DictionaryManager dictionaryManager;
+	
+	@Autowired
+	private ZinniaManager zinniaManager;
 	
 	@InitBinder(value = { "command" })
 	private void initBinder(WebDataBinder binder) {  
@@ -267,5 +275,40 @@ public class AdminController {
 		model.put("pageDescription", "");
 		
     	return "admShowCurrentDailyReport";
+    }
+    
+    @RequestMapping(value = "/adm/reloadDatabase", method = RequestMethod.GET)
+    public String reloadDatabase(HttpServletRequest request, HttpSession session) throws IOException {
+
+    	logger.info("Przeładowanie bazy danych");
+    	
+    	// model do logowania
+    	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
+    	
+    	adminLoggerModel.setType(AdminLoggerModel.Type.RELOAD_DATABASE);    		
+		adminLoggerModel.setResult(AdminLoggerModel.Result.OK);
+		
+		// logowanie
+		loggerSender.sendLog(adminLoggerModel);    	
+		
+		// przeladowanie bazy danych
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				dictionaryManager.reload();
+			}
+		}).start();
+
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				zinniaManager.reload();
+			}
+		}).start();
+		
+		return "redirect:/adm/panel";
     }
 }

@@ -69,8 +69,9 @@ public class AdminLoggerModel extends LoggerModelCommon {
 		
 		GENERATE_DAILY_REPORT,
 		
-		SHOW_CURRENT_DAILY_REPORT;
+		SHOW_CURRENT_DAILY_REPORT,
 		
+		RELOAD_DATABASE;		
 	}
 
 	public static enum Result {

@@ -172,6 +172,40 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		}		
 	}
 	
+	public void reload() {
+		
+		try {
+			Thread.sleep(2000);
+			
+		} catch (InterruptedException e) {
+			// noop
+		}
+				
+		initialized = false;
+				
+		logger.info("Zablokowano bazę danych. Czekanie 8 sekund na rozpoczęcie procedury przeładowania bazy");
+		
+		try {
+			Thread.sleep(8000);
+			
+			close();
+			
+		} catch (Exception e) {
+			// noop
+		}
+				
+		databaseConnector = null;
+		luceneDatabase = null;
+		
+		kanaHelper = null;
+		keigoHelper = null;
+		
+		radicalList = null;
+		transitiveIntransitivePairsList = null;
+		
+		init();		
+	}
+	
 	private void readKanaFile(InputStream kanaFileInputStream) throws IOException {
 
 		CsvReader csvReader = new CsvReader(new InputStreamReader(kanaFileInputStream), ',');

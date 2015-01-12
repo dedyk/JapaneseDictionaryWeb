@@ -118,6 +118,8 @@
 						
 						<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/showCurrentDailyReport"><spring:message code="admTemplate.menu.showCurrentDailyReport"/></a></li>
 						
+						<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/reloadDatabase"><spring:message code="admTemplate.menu.reloadDatabase"/></a></li>
+						
 						<li><a href="<c:url value="j_spring_security_logout" />"><spring:message code="admTemplate.menu.logout"/></a></li>
 					</ul>
 				</div>
