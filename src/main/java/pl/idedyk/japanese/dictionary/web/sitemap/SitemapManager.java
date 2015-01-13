@@ -69,6 +69,16 @@ public class SitemapManager {
 		}).start();
 	}	
 	
+	public void reload() {
+		
+		initialized = false;
+		
+		sitemapFilesMap.clear();
+		sitemapFileIndex = null;
+		
+		cacheSitemap();
+	}
+	
 	private synchronized void generateSitemaps() throws Exception {
 				
 		if (initialized == true) {

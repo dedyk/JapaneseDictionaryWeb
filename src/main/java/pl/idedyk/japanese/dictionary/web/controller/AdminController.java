@@ -41,6 +41,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask;
 import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask.DailyReport;
+import pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager;
 
 @Controller
 public class AdminController {
@@ -72,6 +73,9 @@ public class AdminController {
 	
 	@Autowired
 	private ZinniaManager zinniaManager;
+	
+	@Autowired
+	private SitemapManager sitemapManager;
 	
 	@InitBinder(value = { "command" })
 	private void initBinder(WebDataBinder binder) {  
@@ -278,7 +282,7 @@ public class AdminController {
     }
     
     @RequestMapping(value = "/adm/reloadDatabase", method = RequestMethod.GET)
-    public String reloadDatabase(HttpServletRequest request, HttpSession session) throws IOException {
+    public String reloadDatabase(HttpServletRequest request, HttpSession session) throws Exception {
 
     	logger.info("Przeładowanie bazy danych");
     	
@@ -293,21 +297,29 @@ public class AdminController {
 		
 		// przeladowanie bazy danych
 		
-		new Thread(new Runnable() {
+		Thread dictionaryManagerThread = new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
 				dictionaryManager.reload();
 			}
-		}).start();
+		});
 
-		new Thread(new Runnable() {
+		Thread zinniaManagerThread = new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
 				zinniaManager.reload();
 			}
-		}).start();
+		});
+		
+		dictionaryManagerThread.start();
+		zinniaManagerThread.start();
+		
+		dictionaryManagerThread.join();
+		zinniaManagerThread.join();
+		
+		sitemapManager.reload();
 		
 		return "redirect:/adm/panel";
     }
