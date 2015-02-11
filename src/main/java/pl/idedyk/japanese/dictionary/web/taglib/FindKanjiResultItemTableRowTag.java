@@ -89,7 +89,12 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	    				
 	    				WebRadicalInfo webRadicalInfo = dictionaryManager.getWebRadicalInfo(currentRadical);
 	    				
-	    				String webRadicalInfoImage = webRadicalInfo.getImage();
+	    				String webRadicalInfoImage = null;
+	    				
+	    				if (webRadicalInfo != null) {
+	    					webRadicalInfoImage = webRadicalInfo.getImage();
+	    					
+	    				}
 	    				
 	    				if (webRadicalInfoImage == null) {
 	    					radicalsTd.addHtmlElement(new Text(currentRadical + " "));

@@ -423,7 +423,11 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			
 			WebRadicalInfo webRadicalInfo = dictionaryManager.getWebRadicalInfo(currentRadical);
 			
-			String webRadicalInfoImage = webRadicalInfo.getImage();
+			String webRadicalInfoImage = null;
+			
+			if (webRadicalInfo != null) {
+				webRadicalInfoImage = webRadicalInfo.getImage();
+			}			
 			
 			if (webRadicalInfoImage == null) {
 				currentListH.addHtmlElement(new Text(currentRadical));
