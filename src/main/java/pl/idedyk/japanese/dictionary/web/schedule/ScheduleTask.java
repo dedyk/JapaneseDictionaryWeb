@@ -225,7 +225,7 @@ public class ScheduleTask {
 	}
 	
 	//@Scheduled(cron="0 * * * * ?") // co minute
-	@Scheduled(cron="0 0 20 * * ?") // o 20
+	@Scheduled(cron="0 0 19 * * ?") // o 19
 	public void generateDailyReport() {
 										
 		// pobranie przedzialu wpisow
