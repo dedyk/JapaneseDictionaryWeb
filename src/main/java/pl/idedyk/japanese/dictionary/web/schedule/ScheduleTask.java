@@ -28,6 +28,7 @@ import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerListener;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
@@ -386,6 +387,15 @@ public class ScheduleTask {
 				}
 			}
 			
+			if (currentQueueItem.getDeliveryCount() <= 1) {
+
+				// przygotowanie info do logger'a
+				GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(
+						LoggerModelCommon.createLoggerModelCommon(null, null, null, null, null), -1, e);
+				
+				// wyslanie do logger'a
+				loggerSender.sendLog(generalExceptionLoggerModel);				
+			}			
 		}
 	}
 	

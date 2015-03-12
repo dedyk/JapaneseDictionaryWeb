@@ -2479,7 +2479,7 @@ public class MySQLConnector {
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "update queue set status = ?, delivery_count = ?, next_attempt = ? where id = ?");
+			preparedStatement = connection.prepareStatement( "update queue set status = ?, delivery_count = ?, next_attempt = ?, send_timestamp = send_timestamp where id = ?");
 			
 			preparedStatement.setString(1, queueItem.getStatus().toString());
 			preparedStatement.setInt(2, queueItem.getDeliveryCount());
