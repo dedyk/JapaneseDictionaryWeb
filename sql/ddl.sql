@@ -81,7 +81,7 @@ create table kanji_dictionary_radicals_log (
 create table kanji_dictionary_detect_log (
     id int not null auto_increment, primary key(id),
     generic_log_id int not null, index(generic_log_id),
-    strokes text null,
+    strokes mediumtext null,
     detect_kanji_result text
 ) default character set = utf8 collate = utf8_polish_ci;
 
