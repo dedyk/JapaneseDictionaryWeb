@@ -1,8 +1,11 @@
 package pl.idedyk.japanese.dictionary.web.mysql.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class QueueItem {
+public class QueueItem implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 	

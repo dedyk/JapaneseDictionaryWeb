@@ -375,7 +375,7 @@ public class ScheduleTask {
 			
 		} catch (Exception e) {
 			
-			logger.error("Blad podczas przetwarzania log'ow z kolejki", e);
+			logger.error("Blad podczas przetwarzania log'ow z kolejki: " + e);
 			
 			// opoznij zadanie
 			if (currentQueueItem != null) {
@@ -387,7 +387,7 @@ public class ScheduleTask {
 				}
 			}
 			
-			if (currentQueueItem.getDeliveryCount() <= 1) {
+			if (currentQueueItem != null && currentQueueItem.getDeliveryCount() <= 1) {
 
 				// przygotowanie info do logger'a
 				GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(
@@ -411,6 +411,12 @@ public class ScheduleTask {
 			
 			logger.error("Blad podczas kasowania starych wpisow z kolejki", e);
 		}
+	}
+	
+	@Scheduled(cron="0 * * * * ?") // co minute
+	public void processLocalDirQueueItems() {
+		
+		queueService.processLocalDirQueueItems();
 	}
 	
 	public static class DailyReport {
