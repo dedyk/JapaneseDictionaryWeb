@@ -44,6 +44,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
 import snaq.db.ConnectionPool;
 
 public class MySQLConnector {
@@ -2522,6 +2523,153 @@ public class MySQLConnector {
 			preparedStatement.setInt(2, ndays);
 						
 			// skasuj
+			preparedStatement.executeUpdate();
+			
+		} finally {
+						
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public WordDictionarySearchMissingWordQueue getWordDictionarySearchMissingWordsQueue(String word) throws SQLException {
+		
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp "
+					+ "from word_dictionary_search_missing_words_queue where missing_word = ?");
+
+			preparedStatement.setString(1, word);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createWordDictionarySearchMissingWordQueueFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private WordDictionarySearchMissingWordQueue createWordDictionarySearchMissingWordQueueFromResultSet(ResultSet resultSet) throws SQLException {
+
+		WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue = new WordDictionarySearchMissingWordQueue();
+
+		wordDictionarySearchMissingWordQueue.setId(resultSet.getLong("id"));
+		wordDictionarySearchMissingWordQueue.setMissingWord(resultSet.getString("missing_word"));
+		wordDictionarySearchMissingWordQueue.setCounter(resultSet.getInt("counter"));
+		wordDictionarySearchMissingWordQueue.setFirstAppearanceTimestamp(resultSet.getTimestamp("first_appearance_timestamp"));
+		wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(resultSet.getTimestamp("last_appearance_timestamp"));
+		wordDictionarySearchMissingWordQueue.setLockTimestamp(resultSet.getTimestamp("lock_timestamp"));
+		
+		return wordDictionarySearchMissingWordQueue;
+	}
+	
+	public void insertWordDictionarySearchMissingWordsQueue(WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		Blob objectBlob = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into word_dictionary_search_missing_words_queue(missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp) "
+					+ "values(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setString(1, wordDictionarySearchMissingWordQueue.getMissingWord());
+			preparedStatement.setInt(2, wordDictionarySearchMissingWordQueue.getCounter());
+			preparedStatement.setTimestamp(3, wordDictionarySearchMissingWordQueue.getFirstAppearanceTimestamp());
+			preparedStatement.setTimestamp(4, wordDictionarySearchMissingWordQueue.getLastAppearanceTimestamp());
+			preparedStatement.setTimestamp(5, wordDictionarySearchMissingWordQueue.getLockTimestamp());
+						
+			// wstaw
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			wordDictionarySearchMissingWordQueue.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (objectBlob != null) {
+				objectBlob.free();
+			}
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public void updateWordDictionarySearchMissingWordQueue(WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordsQueue) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+				
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "update word_dictionary_search_missing_words_queue set counter = ?, first_appearance_timestamp = ?, "
+					+ "last_appearance_timestamp = ?, lock_timestamp = ? where id = ?");
+			
+			preparedStatement.setInt(1, wordDictionarySearchMissingWordsQueue.getCounter());
+			preparedStatement.setTimestamp(2, wordDictionarySearchMissingWordsQueue.getFirstAppearanceTimestamp());
+			preparedStatement.setTimestamp(3, wordDictionarySearchMissingWordsQueue.getLastAppearanceTimestamp());
+			preparedStatement.setTimestamp(4, wordDictionarySearchMissingWordsQueue.getLockTimestamp());
+			preparedStatement.setLong(5, wordDictionarySearchMissingWordsQueue.getId());
+						
+			// uaktualnij
 			preparedStatement.executeUpdate();
 			
 		} finally {

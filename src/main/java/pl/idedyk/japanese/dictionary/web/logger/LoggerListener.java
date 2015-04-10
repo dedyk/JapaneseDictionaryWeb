@@ -2,6 +2,7 @@ package pl.idedyk.japanese.dictionary.web.logger;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -64,6 +65,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
 
 public class LoggerListener {
 	
@@ -185,6 +187,55 @@ public class LoggerListener {
 				
 				throw new RuntimeException(e);
 			}
+			
+			// wstawienie slowka do kolejki brakujacych slow
+			if (wordDictionarySearchLoggerModel.getFindWordResult().result.size() == 0) {
+				
+				WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue = null;
+				
+				try {
+					wordDictionarySearchMissingWordQueue = mySQLConnector.getWordDictionarySearchMissingWordsQueue(wordDictionarySearchLoggerModel.getFindWordRequest().getWord());
+
+				} catch (SQLException e) {
+					logger.error("Błąd podczas dostępu do bazy danych", e);
+
+					throw new RuntimeException(e);
+				}
+				
+				if (wordDictionarySearchMissingWordQueue == null) { // nowe slowko w kolejce
+					
+					wordDictionarySearchMissingWordQueue = new WordDictionarySearchMissingWordQueue();
+					
+					wordDictionarySearchMissingWordQueue.setMissingWord(wordDictionarySearchLoggerModel.getFindWordRequest().getWord());
+					wordDictionarySearchMissingWordQueue.setCounter(1);
+					wordDictionarySearchMissingWordQueue.setFirstAppearanceTimestamp(new Timestamp(new Date().getTime()));
+					wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(new Timestamp(new Date().getTime()));
+					wordDictionarySearchMissingWordQueue.setLockTimestamp(null);
+
+					try {
+						mySQLConnector.insertWordDictionarySearchMissingWordsQueue(wordDictionarySearchMissingWordQueue);
+						
+					} catch (SQLException e) {
+						logger.error("Błąd podczas zapisu do bazy danych", e);
+						
+						throw new RuntimeException(e);
+					}
+					
+				} else { // uaktualnienie istniejacego wpisu
+					
+					wordDictionarySearchMissingWordQueue.setCounter(wordDictionarySearchMissingWordQueue.getCounter() + 1);
+					wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(new Timestamp(new Date().getTime()));
+
+					try {
+						mySQLConnector.updateWordDictionarySearchMissingWordQueue(wordDictionarySearchMissingWordQueue);
+						
+					} catch (SQLException e) {
+						logger.error("Błąd podczas zapisu do bazy danych", e);
+						
+						throw new RuntimeException(e);
+					}
+				}
+			}			
 			
 		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_DETAILS) {
 			
