@@ -41,6 +41,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
 import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask;
 import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask.DailyReport;
 import pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager;
@@ -362,26 +363,43 @@ public class AdminController {
     	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
     	
     	adminLoggerModel.setType(AdminLoggerModel.Type.ADMIN_GET_MISSING_WORDS_QUEUE);
-    			    	
+    	
+    	model.put("selectedMenu", "missingWordsQueuePanel");
+    	model.put("command2", adminPanelMissingWordsQueueModel);
+    	
     	if (result.hasErrors() == true) {
     		    		    		
     		adminLoggerModel.setResult(Result.ERROR);
     		
     		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
     		
+    		// logowanie
+    		loggerSender.sendLog(adminLoggerModel);
+    		
+    		return "admMissingWordsQueuePanel";
+    		
     	} else {
     		
     		adminLoggerModel.setResult(Result.OK);
     		
     		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+    		
+    		// pobieranie brakujacych slow
+    		List<WordDictionarySearchMissingWordQueue> unlockedWordDictionarySearchMissingWordQueue = mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueue(Integer.parseInt(adminPanelMissingWordsQueueModel.getSize()));
+    		
+    		for (WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue : unlockedWordDictionarySearchMissingWordQueue) {
+				
+    			logger.info("TEST: " + wordDictionarySearchMissingWordQueue.getMissingWord());
+    			
+			}
+    		
+    		
+
+    		// logowanie
+    		loggerSender.sendLog(adminLoggerModel);
+    		
+    		// FIXME !!!!!!!!!!!!!1
+    		return "admMissingWordsQueuePanel";
     	}
-    	
-		// logowanie
-		loggerSender.sendLog(adminLoggerModel);
-    	
-    	model.put("selectedMenu", "missingWordsQueuePanel");
-    	model.put("command2", adminPanelMissingWordsQueueModel);
-    	
-    	return "admMissingWordsQueuePanel";
     }
 }
