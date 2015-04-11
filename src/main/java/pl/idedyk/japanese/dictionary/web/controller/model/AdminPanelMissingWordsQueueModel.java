@@ -7,6 +7,8 @@ public class AdminPanelMissingWordsQueueModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String size = "50";
+	
+	private boolean lock = false;
 
 	public String getSize() {
 		return size;
@@ -14,5 +16,13 @@ public class AdminPanelMissingWordsQueueModel implements Serializable {
 
 	public void setSize(String size) {
 		this.size = size;
+	}
+
+	public boolean isLock() {
+		return lock;
+	}
+
+	public void setLock(boolean lock) {
+		this.lock = lock;
 	}
 }

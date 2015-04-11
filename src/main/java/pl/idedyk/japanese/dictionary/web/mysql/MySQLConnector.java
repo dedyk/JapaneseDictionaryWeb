@@ -2702,7 +2702,7 @@ public class MySQLConnector {
 			connection = connectionPool.getConnection();
 									
 			preparedStatement = connection.prepareStatement("select id, missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp "
-					+ "from word_dictionary_search_missing_words_queue where lock_timestamp is null order by first_appearance_timestamp limit ?");
+					+ "from word_dictionary_search_missing_words_queue where lock_timestamp is null order by first_appearance_timestamp, id limit ?");
 						
 			preparedStatement.setInt(1, size);
 			

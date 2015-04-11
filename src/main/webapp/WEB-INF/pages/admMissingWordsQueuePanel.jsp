@@ -32,6 +32,11 @@
 					<td><form:label path="size" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="admin.missing.words.queue.panel.get.size"/></form:label></td>
 					<td><form:input cssClass="form-control" cssStyle="margin: 0px 10px 10px 0px" id="sizeId" path="size"/></td>					
 				</tr>
+				
+				<tr>
+					<td><form:label path="lock" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="admin.missing.words.queue.panel.get.lock"/></form:label></td>
+					<td><form:checkbox cssClass="checkbox" cssStyle="margin: 0px 10px 10px 0px" id="lockId" path="lock"/>
+				</tr>
 
 				<tr>
 					<td></td>

@@ -352,6 +352,7 @@ public class AdminController {
     	adminLoggerModel.setResult(Result.OK);
     	
     	adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+    	adminLoggerModel.addParam("lock", Boolean.valueOf(adminPanelMissingWordsQueueModel.isLock()).toString());
 		
 		model.put("selectedMenu", "missingWordsQueuePanel");		
     	model.put("command2", adminPanelMissingWordsQueueModel);
@@ -378,6 +379,7 @@ public class AdminController {
     		adminLoggerModel.setResult(Result.ERROR);
     		
     		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+    		adminLoggerModel.addParam("lock", Boolean.valueOf(adminPanelMissingWordsQueueModel.isLock()).toString());
     		
     		// logowanie
     		loggerSender.sendLog(adminLoggerModel);
@@ -390,8 +392,14 @@ public class AdminController {
     		
     		adminLoggerModel.setResult(Result.OK);
     		
+    		boolean isLock = adminPanelMissingWordsQueueModel.isLock();
+    		
     		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
-    		adminLoggerModel.addParam("lockTimestamp", lockTimestamp.toString());
+    		adminLoggerModel.addParam("lock", Boolean.valueOf(isLock).toString());
+    		
+    		if (isLock == true) {
+    			adminLoggerModel.addParam("lockTimestamp", lockTimestamp.toString());
+    		}
     		
     		// pobieranie brakujacych slow
     		List<WordDictionarySearchMissingWordQueue> unlockedWordDictionarySearchMissingWordQueue = mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueue(Integer.parseInt(adminPanelMissingWordsQueueModel.getSize()));
@@ -404,13 +412,15 @@ public class AdminController {
     		model.put("pageDescription", "");
     		
     		// zalozenie blokady   		
-
-    		for (WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue : unlockedWordDictionarySearchMissingWordQueue) {
-				
-    			wordDictionarySearchMissingWordQueue.setLockTimestamp(lockTimestamp);
+    		if (isLock == true) {
     			
-    			mySQLConnector.updateWordDictionarySearchMissingWordQueue(wordDictionarySearchMissingWordQueue);
-			}    		
+        		for (WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue : unlockedWordDictionarySearchMissingWordQueue) {
+    				
+        			wordDictionarySearchMissingWordQueue.setLockTimestamp(lockTimestamp);
+        			
+        			mySQLConnector.updateWordDictionarySearchMissingWordQueue(wordDictionarySearchMissingWordQueue);
+    			}    		
+    		}
     		    		
     		// logowanie
     		loggerSender.sendLog(adminLoggerModel);
