@@ -116,8 +116,15 @@
 
 						<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/generateDailyReport"><spring:message code="admTemplate.menu.generateDailyReport"/></a></li>
 						
-						<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/showCurrentDailyReport"><spring:message code="admTemplate.menu.showCurrentDailyReport"/></a></li>
-						
+						<c:choose>
+							<c:when test="${selectedMenu == 'showCurrentDailyReport'}">
+								<li class="active"><a href="<c:out value='${pageContext.request.contextPath}' />/adm/showCurrentDailyReport"><spring:message code="admTemplate.menu.showCurrentDailyReport"/></a></li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/showCurrentDailyReport"><spring:message code="admTemplate.menu.showCurrentDailyReport"/></a></li>
+							</c:otherwise>
+						</c:choose>
+												
 						<c:choose>
 							<c:when test="${selectedMenu == 'missingWordsQueuePanel'}">
 								<li class="active"><a href="<c:out value='${pageContext.request.contextPath}' />/adm/showMissingWordsQueuePanel"><spring:message code="admTemplate.menu.showMissingWordsQueuePanel"/></a></li>

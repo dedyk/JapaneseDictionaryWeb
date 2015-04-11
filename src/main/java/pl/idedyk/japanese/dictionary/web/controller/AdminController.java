@@ -3,6 +3,8 @@ package pl.idedyk.japanese.dictionary.web.controller;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -42,8 +44,9 @@ import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
+import pl.idedyk.japanese.dictionary.web.report.ReportGenerator;
+import pl.idedyk.japanese.dictionary.web.report.ReportGenerator.Report;
 import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask;
-import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask.DailyReport;
 import pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager;
 
 @Controller
@@ -82,6 +85,9 @@ public class AdminController {
 	
 	@Autowired
 	private SitemapManager sitemapManager;
+	
+	@Autowired
+	private ReportGenerator reportGenerator;
 	
 	@InitBinder(value = { "command" })
 	private void initBinder(WebDataBinder binder) {  
@@ -279,9 +285,9 @@ public class AdminController {
 		// logowanie
 		loggerSender.sendLog(adminLoggerModel);
 		
-		DailyReport generateDailyReportBody = scheduleTask.generateDailyReportBody();
+		ReportGenerator.DailyReport generateDailyReportBody = reportGenerator.generateDailyReportBody();
 
-		model.put("selectedMenu", "panel");
+		model.put("selectedMenu", "showCurrentDailyReport");
 		
 		model.put("dailyReportBody", generateDailyReportBody != null ? generateDailyReportBody.body : "");
     	
@@ -380,26 +386,36 @@ public class AdminController {
     		
     	} else {
     		
+    		Timestamp lockTimestamp = new Timestamp(new Date().getTime());
+    		
     		adminLoggerModel.setResult(Result.OK);
     		
     		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+    		adminLoggerModel.addParam("lockTimestamp", lockTimestamp.toString());
     		
     		// pobieranie brakujacych slow
     		List<WordDictionarySearchMissingWordQueue> unlockedWordDictionarySearchMissingWordQueue = mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueue(Integer.parseInt(adminPanelMissingWordsQueueModel.getSize()));
     		
+    		Report generateMissingWordsQueueReportBody = reportGenerator.generateMissingWordsQueueReportBody(unlockedWordDictionarySearchMissingWordQueue);
+    		
+    		model.put("reportBody", generateMissingWordsQueueReportBody.body);
+
+    		model.put("pageTitle", messageSource.getMessage("admin.panel.showMissingWordsQueueReport.title", new Object[] { }, Locale.getDefault()));
+    		model.put("pageDescription", "");
+    		
+    		// zalozenie blokady   		
+
     		for (WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue : unlockedWordDictionarySearchMissingWordQueue) {
 				
-    			logger.info("TEST: " + wordDictionarySearchMissingWordQueue.getMissingWord());
+    			wordDictionarySearchMissingWordQueue.setLockTimestamp(lockTimestamp);
     			
-			}
-    		
-    		
-
+    			mySQLConnector.updateWordDictionarySearchMissingWordQueue(wordDictionarySearchMissingWordQueue);
+			}    		
+    		    		
     		// logowanie
     		loggerSender.sendLog(adminLoggerModel);
     		
-    		// FIXME !!!!!!!!!!!!!1
-    		return "admMissingWordsQueuePanel";
+    		return "admShowMissingWordsQueueReport";
     	}
     }
 }
