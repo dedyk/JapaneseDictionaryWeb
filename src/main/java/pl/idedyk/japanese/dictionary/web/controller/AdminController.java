@@ -29,7 +29,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.controller.model.AdminPanelMissingWordsQueueModel;
 import pl.idedyk.japanese.dictionary.web.controller.model.AdminPanelModel;
+import pl.idedyk.japanese.dictionary.web.controller.validator.AdminPanelMissingWordsQueueModelValidator;
 import pl.idedyk.japanese.dictionary.web.controller.validator.AdminPanelModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager;
@@ -67,6 +69,9 @@ public class AdminController {
 	
 	@Autowired  
 	private AdminPanelModelValidator adminPanelModelValidator;
+
+	@Autowired  
+	private AdminPanelMissingWordsQueueModelValidator adminPanelMissingWordsQueueModelValidator;
 	
 	@Autowired
 	private DictionaryManager dictionaryManager;
@@ -82,6 +87,11 @@ public class AdminController {
 		binder.setValidator(adminPanelModelValidator);  
 	}
 
+	@InitBinder(value = { "command2" })
+	private void initBinder2(WebDataBinder binder) {  
+		binder.setValidator(adminPanelMissingWordsQueueModelValidator);  
+	}
+	
 	@RequestMapping(value = "/admlogin", method = RequestMethod.GET)
 	public String login(
 		@RequestParam(value = "error", required = false) String error,
@@ -158,7 +168,6 @@ public class AdminController {
 		
     	model.put("command", adminPanelModel);
     	model.put("maxPageSize", (genericLogSize / GENERIC_LOG_SIZE) + (genericLogSize % GENERIC_LOG_SIZE > 0 ? 1 : 0));
-    	
     	
     	model.put("genericLogOperationEnumList", GenericLogOperationEnum.getSortedValues());
     	
@@ -322,5 +331,57 @@ public class AdminController {
 		sitemapManager.reload();
 		
 		return "redirect:/adm/panel";
+    }
+    
+    @RequestMapping(value = "/adm/showMissingWordsQueuePanel", method = RequestMethod.GET)
+    public String showMissingWordsQueuePanel(HttpServletRequest request, HttpSession session, Writer writer, Map<String, Object> model) throws IOException {
+    	    	
+		// stworzenie modelu
+    	AdminPanelMissingWordsQueueModel adminPanelMissingWordsQueueModel = new AdminPanelMissingWordsQueueModel();
+				
+    	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
+    	
+    	adminLoggerModel.setType(AdminLoggerModel.Type.ADMIN_SHOW_MISSING_WORDS_QUEUE_PANEL);
+    	adminLoggerModel.setResult(Result.OK);
+    	
+    	adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+		
+		model.put("selectedMenu", "missingWordsQueuePanel");		
+    	model.put("command2", adminPanelMissingWordsQueueModel);
+    	
+		// logowanie
+		loggerSender.sendLog(adminLoggerModel);
+		
+    	return "admMissingWordsQueuePanel";
+    }
+    
+    @RequestMapping(value = "/adm/getMissingWordsQueue", method = RequestMethod.GET)
+    public String searchPanel(HttpServletRequest request, HttpSession session, Writer writer, @ModelAttribute("command2") @Valid AdminPanelMissingWordsQueueModel adminPanelMissingWordsQueueModel,
+			BindingResult result, Map<String, Object> model) throws IOException, SQLException {
+
+    	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
+    	
+    	adminLoggerModel.setType(AdminLoggerModel.Type.ADMIN_GET_MISSING_WORDS_QUEUE);
+    			    	
+    	if (result.hasErrors() == true) {
+    		    		    		
+    		adminLoggerModel.setResult(Result.ERROR);
+    		
+    		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+    		
+    	} else {
+    		
+    		adminLoggerModel.setResult(Result.OK);
+    		
+    		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+    	}
+    	
+		// logowanie
+		loggerSender.sendLog(adminLoggerModel);
+    	
+    	model.put("selectedMenu", "missingWordsQueuePanel");
+    	model.put("command2", adminPanelMissingWordsQueueModel);
+    	
+    	return "admMissingWordsQueuePanel";
     }
 }
