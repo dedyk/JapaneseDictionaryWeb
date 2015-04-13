@@ -1,6 +1,5 @@
 package pl.idedyk.japanese.dictionary.web.report;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -126,7 +125,7 @@ public class ReportGenerator {
 				// kolejka brakujacych slow
 				List<WordDictionarySearchMissingWordQueue> allUnlockedWordDictionarySearchMissingWordQueue = mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueue(Integer.MAX_VALUE);
 				
-				appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.queue", allUnlockedWordDictionarySearchMissingWordQueue);				
+				appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.queue.full", allUnlockedWordDictionarySearchMissingWordQueue, false);				
 
 				// wyszukiwanie slowek bez wynikow				
 				List<GenericTextStat> wordDictionarySearchNoFoundStatList = mySQLConnector.getWordDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
@@ -212,14 +211,26 @@ public class ReportGenerator {
 		}
 	}
 	
-	public Report generateMissingWordsQueueReportBody(List<WordDictionarySearchMissingWordQueue> missingWordsQueueList) throws IOException {
+	public Report generateMissingWordsQueueReportBody(List<WordDictionarySearchMissingWordQueue> missingWordsQueueList) throws Exception {
 		
 		logger.info("Generowanie raportu z brakujacej listy slow");
 		
 		Div reportDiv = new Div();
 				
-		// kolejka brakujacych slow				
-		appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.queue", missingWordsQueueList);				
+		// obecna kolejka brakujacych slow				
+		appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.queue.part", missingWordsQueueList, false);				
+		
+		// calkowita kolejka brakujacych slow
+		List<WordDictionarySearchMissingWordQueue> allUnlockedWordDictionarySearchMissingWordQueue = mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueue(Integer.MAX_VALUE);
+		
+		appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.queue.full", allUnlockedWordDictionarySearchMissingWordQueue, true);
+		
+		// cala zawartosc kolejki
+		List<WordDictionarySearchMissingWordQueue> allWordDictionarySearchMissingWordQueue = mySQLConnector.getAllWordDictionarySearchMissingWordQueue();
+		
+		appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.full", allWordDictionarySearchMissingWordQueue, true);
+
+		///
 		
 		StringWriter stringWriter = new StringWriter();
 		
@@ -228,7 +239,7 @@ public class ReportGenerator {
 		Report report = new Report();
 		
 		report.body = stringWriter.toString();
-		report.title = messageSource.getMessage("report.generate.daily.report.word.dictionary.missing.words.queue", new Object[] { }, Locale.getDefault());
+		report.title = messageSource.getMessage("report.generate.daily.report.word.dictionary.missing.words.queue.part", new Object[] { }, Locale.getDefault());
 		
 		return report;
 	}
@@ -319,14 +330,14 @@ public class ReportGenerator {
 		reportDiv.addHtmlElement(new Hr());
 	}
 	
-	private void appendWordDictionarySearchMissingWordQueueStat(Div reportDiv, String titleCode, List<WordDictionarySearchMissingWordQueue> wordDictionarySearchMissingWordQueueList) {
+	private void appendWordDictionarySearchMissingWordQueueStat(Div reportDiv, String titleCode, List<WordDictionarySearchMissingWordQueue> wordDictionarySearchMissingWordQueueList, boolean full) {
 		
 		Div div = new Div();
 		
 		P titleP = new P();
 		reportDiv.addHtmlElement(titleP);
 				
-		titleP.addHtmlElement(new Text(messageSource.getMessage(titleCode, new Object[] { }, Locale.getDefault())));
+		titleP.addHtmlElement(new Text(messageSource.getMessage(titleCode, new Object[] { }, Locale.getDefault()) + ": " + wordDictionarySearchMissingWordQueueList.size()));
 		
 		Table table = new Table(null, "border: 1px solid black");
 		div.addHtmlElement(table);
@@ -342,15 +353,37 @@ public class ReportGenerator {
 				missingWord = "-";
 			}
 			
-			Td td1 = new Td(null, "padding: 5px;");
+			Td td1 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
 			tr.addHtmlElement(td1);
 			
 			td1.addHtmlElement(new Text(HtmlUtils.htmlEscape(missingWord)));
 
-			Td td2 = new Td(null, "padding: 5px;");
+			Td td2 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
 			tr.addHtmlElement(td2);
 			
-			td2.addHtmlElement(new Text("" + wordDictionarySearchMissingWordQueue.getCounter()));			
+			td2.addHtmlElement(new Text("" + wordDictionarySearchMissingWordQueue.getCounter()));
+			
+			if (full == true) {
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				
+				Td td3 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
+				tr.addHtmlElement(td3);
+				
+				td3.addHtmlElement(new Text(sdf.format(wordDictionarySearchMissingWordQueue.getFirstAppearanceTimestamp())));
+
+				Td td4 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
+				tr.addHtmlElement(td4);
+				
+				td4.addHtmlElement(new Text(sdf.format(wordDictionarySearchMissingWordQueue.getLastAppearanceTimestamp())));
+				
+				Td td5 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
+				tr.addHtmlElement(td5);
+				
+				if (wordDictionarySearchMissingWordQueue.getLockTimestamp() != null) {
+					td5.addHtmlElement(new Text(sdf.format(wordDictionarySearchMissingWordQueue.getLockTimestamp())));
+				}				
+			}			
 		}
 		
 		reportDiv.addHtmlElement(div);		

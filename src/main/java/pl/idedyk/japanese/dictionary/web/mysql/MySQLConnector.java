@@ -2733,6 +2733,49 @@ public class MySQLConnector {
 		}		
 	}
 	
+	public List<WordDictionarySearchMissingWordQueue> getAllWordDictionarySearchMissingWordQueue() throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		List<WordDictionarySearchMissingWordQueue> result = new ArrayList<WordDictionarySearchMissingWordQueue>();
+				
+		try {						
+			connection = connectionPool.getConnection();
+									
+			preparedStatement = connection.prepareStatement("select id, missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp "
+					+ "from word_dictionary_search_missing_words_queue order by id");
+						
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {
+				
+				WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue = createWordDictionarySearchMissingWordQueueFromResultSet(resultSet);
+								
+				result.add(wordDictionarySearchMissingWordQueue);
+			}
+			
+			return result;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
 	public String getUrl() {
 		return url;
 	}

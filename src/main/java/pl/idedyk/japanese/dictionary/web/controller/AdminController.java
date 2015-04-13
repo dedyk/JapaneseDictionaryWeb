@@ -341,7 +341,7 @@ public class AdminController {
     }
     
     @RequestMapping(value = "/adm/showMissingWordsQueuePanel", method = RequestMethod.GET)
-    public String showMissingWordsQueuePanel(HttpServletRequest request, HttpSession session, Writer writer, Map<String, Object> model) throws IOException {
+    public String showMissingWordsQueuePanel(HttpServletRequest request, HttpSession session, Writer writer, Map<String, Object> model) throws Exception {
     	    	
 		// stworzenie modelu
     	AdminPanelMissingWordsQueueModel adminPanelMissingWordsQueueModel = new AdminPanelMissingWordsQueueModel();
@@ -365,7 +365,7 @@ public class AdminController {
     
     @RequestMapping(value = "/adm/getMissingWordsQueue", method = RequestMethod.GET)
     public String searchPanel(HttpServletRequest request, HttpSession session, Writer writer, @ModelAttribute("command2") @Valid AdminPanelMissingWordsQueueModel adminPanelMissingWordsQueueModel,
-			BindingResult result, Map<String, Object> model) throws IOException, SQLException {
+			BindingResult result, Map<String, Object> model) throws Exception {
 
     	AdminLoggerModel adminLoggerModel = new AdminLoggerModel(Utils.createLoggerModelCommon(request));
     	
