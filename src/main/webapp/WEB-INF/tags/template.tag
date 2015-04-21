@@ -115,6 +115,7 @@
 
 						<td style="font-size: 150%; width: 80%"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>
 						
+						<%-- 
 						<c:if test="${doNotShowSocialButtons == null || doNotShowSocialButtons == false}">						
 							<td style="padding-right: 10px">
 								<!-- Google Plus -->
@@ -151,7 +152,8 @@
 				
 				 				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>																
 							</td>	
-						</c:if>				
+						</c:if>	
+						--%>			
 					</tr>				
 				</table>
 
