@@ -18,3 +18,4 @@ drop table word_dictionary_name_catalog_log;
 drop table kanji_dictionary_catalog_log;
 drop table admin_request_log;
 drop table android_send_missing_word_log;
+drop table word_dictionary_search_missing_words_queue;

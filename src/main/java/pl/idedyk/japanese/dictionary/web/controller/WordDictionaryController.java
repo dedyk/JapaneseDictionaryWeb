@@ -127,8 +127,10 @@ public class WordDictionaryController {
 		// szukanie		
 		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
 		
+		final String remoteUser = request.getRemoteUser();
+		
 		// logowanie
-		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult));
+		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult, remoteUser == null ? 1 : 2));
 
 		// logowanie wyszukiwania, dodatkowe sprawdzenie przez system, aby zalogowac ewentualne brakujace slowa
 		// uruchom w osobnym watku
@@ -140,7 +142,7 @@ public class WordDictionaryController {
 				
 				FindWordResult findWordResultForSystemLog = dictionaryManager.findWord(findWordRequestForSystemLog);
 			
-				loggerSender.sendLog(new WordDictionarySearchLoggerModel(null, findWordRequestForSystemLog, findWordResultForSystemLog));				
+				loggerSender.sendLog(new WordDictionarySearchLoggerModel(null, findWordRequestForSystemLog, findWordResultForSystemLog, remoteUser == null ? 1 : 2));			
 			}
 		}).start();
 		

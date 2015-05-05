@@ -89,7 +89,7 @@ public class AndroidController {
 		
 		// logowanie
 		loggerSender.sendLog(new AndroidSendMissingWordLoggerModel(Utils.createLoggerModelCommon(request), word, wordPlaceSearch));
-		loggerSender.sendLog(new WordDictionarySearchLoggerModel(null, findWordRequest, findWordResult));
+		loggerSender.sendLog(new WordDictionarySearchLoggerModel(null, findWordRequest, findWordResult, 1));
 				
 		// brak odpowiedzi
 		response.sendError(204); // No content
@@ -127,7 +127,7 @@ public class AndroidController {
 		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
 		
 		// logowanie
-		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult));
+		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult, 1));
 		
 		// przygotowanie odpowiedzi
 		JSONObject jsonObjectFromFindWordResult = createJSONObjectFromFindWordResult(findWordResult);

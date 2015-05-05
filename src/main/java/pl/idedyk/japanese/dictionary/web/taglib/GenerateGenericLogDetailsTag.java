@@ -691,10 +691,12 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 
 			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestWordPlace"), wordDictionarySearchLog.getFindWordRequestWordPlace());
 
-			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestDictionaryEntryTypeList"), wordDictionarySearchLog.getFindWordRequestDictionaryEntryTypeList());
-
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordRequestDictionaryEntryTypeList"), wordDictionarySearchLog.getFindWordRequestDictionaryEntryTypeList());			
+			
 			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.findWordResultResultSize"), String.valueOf(wordDictionarySearchLog.getFindWordResultResultSize()));
-									
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.wordDictionarySearchLog.priority"), String.valueOf(wordDictionarySearchLog.getPriority()));
+			
 			panelBody.addHtmlElement(table);
 			
 		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_NAME_CATALOG) {

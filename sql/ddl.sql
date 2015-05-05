@@ -29,7 +29,8 @@ create table word_dictionary_search_log (
     find_word_request_search_only_common_words boolean null,
     find_word_request_word_place varchar(20) null,
     find_word_request_dictionary_entry_type_list text null,
-    find_word_result_result_size int null
+    find_word_result_result_size int null,
+    priority int not null default 1
 ) default character set = utf8 collate = utf8_polish_ci;
 
 create table word_dictionary_details_log (
@@ -170,5 +171,6 @@ create table word_dictionary_search_missing_words_queue (
     counter int not null,
     first_appearance_timestamp timestamp not null,
     last_appearance_timestamp timestamp not null,
-    lock_timestamp timestamp null
+    lock_timestamp timestamp null,
+    priority int not null default 1
 ) default character set = utf8 collate = utf8_polish_ci;

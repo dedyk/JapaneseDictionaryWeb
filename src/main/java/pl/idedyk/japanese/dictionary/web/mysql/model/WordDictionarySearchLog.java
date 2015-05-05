@@ -19,9 +19,11 @@ public class WordDictionarySearchLog {
 	private String findWordRequestWordPlace;
 
 	private String findWordRequestDictionaryEntryTypeList;
-	
+		
 	private Integer findWordResultResultSize;
-
+	
+	private int priority;
+	
 	public Long getId() {
 		return id;
 	}
@@ -116,6 +118,14 @@ public class WordDictionarySearchLog {
 
 	public void setFindWordResultResultSize(Integer findWordResultResultSize) {
 		this.findWordResultResultSize = findWordResultResultSize;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 }
 

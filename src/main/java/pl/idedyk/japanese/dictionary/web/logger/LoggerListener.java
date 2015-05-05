@@ -179,6 +179,8 @@ public class LoggerListener {
 			
 			wordDictionarySearchLog.setFindWordResultResultSize(wordDictionarySearchLoggerModel.getFindWordResult().result.size());
 			
+			wordDictionarySearchLog.setPriority(wordDictionarySearchLoggerModel.getPriority());
+			
 			// wstawienie wpisu do bazy danych
 			try {
 				mySQLConnector.insertWordDictionarySearchLog(wordDictionarySearchLog);
@@ -211,7 +213,8 @@ public class LoggerListener {
 					wordDictionarySearchMissingWordQueue.setFirstAppearanceTimestamp(new Timestamp(new Date().getTime()));
 					wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(new Timestamp(new Date().getTime()));
 					wordDictionarySearchMissingWordQueue.setLockTimestamp(null);
-
+					wordDictionarySearchMissingWordQueue.setPriority(wordDictionarySearchLoggerModel.getPriority());
+					
 					try {
 						mySQLConnector.insertWordDictionarySearchMissingWordsQueue(wordDictionarySearchMissingWordQueue);
 						

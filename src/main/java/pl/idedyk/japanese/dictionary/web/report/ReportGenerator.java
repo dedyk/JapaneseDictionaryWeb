@@ -226,9 +226,9 @@ public class ReportGenerator {
 		appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.queue.full", allUnlockedWordDictionarySearchMissingWordQueue, true);
 		
 		// cala zawartosc kolejki
-		List<WordDictionarySearchMissingWordQueue> allWordDictionarySearchMissingWordQueue = mySQLConnector.getAllWordDictionarySearchMissingWordQueue();
+		// List<WordDictionarySearchMissingWordQueue> allWordDictionarySearchMissingWordQueue = mySQLConnector.getAllWordDictionarySearchMissingWordQueue();
 		
-		appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.full", allWordDictionarySearchMissingWordQueue, true);
+		// appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.full", allWordDictionarySearchMissingWordQueue, true);
 
 		///
 		
@@ -382,7 +382,12 @@ public class ReportGenerator {
 				
 				if (wordDictionarySearchMissingWordQueue.getLockTimestamp() != null) {
 					td5.addHtmlElement(new Text(sdf.format(wordDictionarySearchMissingWordQueue.getLockTimestamp())));
-				}				
+				}
+				
+				Td td6 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
+				tr.addHtmlElement(td6);
+				
+				td6.addHtmlElement(new Text(String.valueOf(wordDictionarySearchMissingWordQueue.getPriority())));
 			}			
 		}
 		

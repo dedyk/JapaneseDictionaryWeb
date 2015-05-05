@@ -17,7 +17,9 @@ public class WordDictionarySearchMissingWordQueue implements Serializable {
 	private Timestamp lastAppearanceTimestamp;
 	
 	private Timestamp lockTimestamp;
-
+	
+	private int priority;
+	
 	public Long getId() {
 		return id;
 	}
@@ -64,5 +66,13 @@ public class WordDictionarySearchMissingWordQueue implements Serializable {
 
 	public void setLockTimestamp(Timestamp lockTimestamp) {
 		this.lockTimestamp = lockTimestamp;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 }

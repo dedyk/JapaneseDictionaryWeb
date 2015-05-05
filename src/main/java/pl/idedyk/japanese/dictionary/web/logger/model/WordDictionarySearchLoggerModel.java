@@ -11,12 +11,16 @@ public class WordDictionarySearchLoggerModel extends LoggerModelCommon {
 	
 	private FindWordResult findWordResult;
 	
-	public WordDictionarySearchLoggerModel(LoggerModelCommon loggerModelCommon, FindWordRequest findWordRequest, FindWordResult findWordResult) {
+	private int priority;
+	
+	public WordDictionarySearchLoggerModel(LoggerModelCommon loggerModelCommon, FindWordRequest findWordRequest, FindWordResult findWordResult, int priority) {
 		
 		super(loggerModelCommon);
 		
 		this.findWordRequest = findWordRequest;
 		this.findWordResult = findWordResult;
+		
+		this.priority = priority;
 	}
 
 	public FindWordRequest getFindWordRequest() {
@@ -35,9 +39,17 @@ public class WordDictionarySearchLoggerModel extends LoggerModelCommon {
 		this.findWordResult = findWordResult;
 	}
 
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+
 	@Override
 	public String toString() {
 		return "WordDictionarySearchLoggerModel [findWordRequest=" + findWordRequest + ", findWordResult="
-				+ findWordResult + "]";
+				+ findWordResult + ", priority=" + priority + "]";
 	}
 }

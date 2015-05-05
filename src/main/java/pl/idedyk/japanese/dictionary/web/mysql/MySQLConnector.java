@@ -445,8 +445,8 @@ public class MySQLConnector {
 			
 			preparedStatement = connection.prepareStatement( "insert into word_dictionary_search_log(generic_log_id, find_word_request_word, find_word_request_search_kanji, "
 					+ "find_word_request_search_kana, find_word_request_search_romaji, find_word_request_search_translate, find_word_request_search_info, find_word_request_search_only_common_words, "
-					+ "find_word_request_word_place, find_word_request_dictionary_entry_type_list, find_word_result_result_size) "
-					+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					+ "find_word_request_word_place, find_word_request_dictionary_entry_type_list, find_word_result_result_size, priority) "
+					+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			preparedStatement.setLong(1, wordDictionarySearchLog.getGenericLogId());
 			
@@ -466,6 +466,8 @@ public class MySQLConnector {
 			
 			preparedStatement.setInt(11, wordDictionarySearchLog.getFindWordResultResultSize());
 			
+			preparedStatement.setInt(12, wordDictionarySearchLog.getPriority());
+						
 			preparedStatement.executeUpdate();
 			
 			generatedKeys = preparedStatement.getGeneratedKeys();
@@ -504,7 +506,7 @@ public class MySQLConnector {
 
 			preparedStatement = connection.prepareStatement("select id, generic_log_id, find_word_request_word, find_word_request_search_kanji, "
 					+ "find_word_request_search_kana, find_word_request_search_romaji, find_word_request_search_translate, find_word_request_search_info, find_word_request_search_only_common_words, "
-					+ "find_word_request_word_place, find_word_request_dictionary_entry_type_list, find_word_result_result_size "
+					+ "find_word_request_word_place, find_word_request_dictionary_entry_type_list, find_word_result_result_size, priority "
 					+ "from word_dictionary_search_log where generic_log_id = ?");
 
 			preparedStatement.setLong(1, genericId);
@@ -551,6 +553,7 @@ public class MySQLConnector {
 		wordDictionarySearchLog.setFindWordRequestWordPlace(resultSet.getString("find_word_request_word_place"));
 		wordDictionarySearchLog.setFindWordRequestDictionaryEntryTypeList(resultSet.getString("find_word_request_dictionary_entry_type_list"));
 		wordDictionarySearchLog.setFindWordResultResultSize((Integer)resultSet.getObject("find_word_result_result_size"));
+		wordDictionarySearchLog.setPriority(resultSet.getInt("priority"));
 
 		return wordDictionarySearchLog;
 	}
@@ -2552,7 +2555,7 @@ public class MySQLConnector {
 		try {						
 			connection = connectionPool.getConnection();
 
-			preparedStatement = connection.prepareStatement("select id, missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp "
+			preparedStatement = connection.prepareStatement("select id, missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp, priority "
 					+ "from word_dictionary_search_missing_words_queue where missing_word = ?");
 
 			preparedStatement.setString(1, word);
@@ -2592,6 +2595,7 @@ public class MySQLConnector {
 		wordDictionarySearchMissingWordQueue.setFirstAppearanceTimestamp(resultSet.getTimestamp("first_appearance_timestamp"));
 		wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(resultSet.getTimestamp("last_appearance_timestamp"));
 		wordDictionarySearchMissingWordQueue.setLockTimestamp(resultSet.getTimestamp("lock_timestamp"));
+		wordDictionarySearchMissingWordQueue.setPriority(resultSet.getInt("priority"));
 		
 		return wordDictionarySearchMissingWordQueue;
 	}
@@ -2609,14 +2613,15 @@ public class MySQLConnector {
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "insert into word_dictionary_search_missing_words_queue(missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp) "
-					+ "values(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			preparedStatement = connection.prepareStatement( "insert into word_dictionary_search_missing_words_queue(missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp, priority) "
+					+ "values(?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			preparedStatement.setString(1, wordDictionarySearchMissingWordQueue.getMissingWord());
 			preparedStatement.setInt(2, wordDictionarySearchMissingWordQueue.getCounter());
 			preparedStatement.setTimestamp(3, wordDictionarySearchMissingWordQueue.getFirstAppearanceTimestamp());
 			preparedStatement.setTimestamp(4, wordDictionarySearchMissingWordQueue.getLastAppearanceTimestamp());
 			preparedStatement.setTimestamp(5, wordDictionarySearchMissingWordQueue.getLockTimestamp());
+			preparedStatement.setInt(6, wordDictionarySearchMissingWordQueue.getPriority());
 						
 			// wstaw
 			preparedStatement.executeUpdate();
@@ -2701,8 +2706,8 @@ public class MySQLConnector {
 		try {						
 			connection = connectionPool.getConnection();
 									
-			preparedStatement = connection.prepareStatement("select id, missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp "
-					+ "from word_dictionary_search_missing_words_queue where lock_timestamp is null order by first_appearance_timestamp, id limit ?");
+			preparedStatement = connection.prepareStatement("select id, missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp, priority "
+					+ "from word_dictionary_search_missing_words_queue where lock_timestamp is null order by priority desc, first_appearance_timestamp, id limit ?");
 						
 			preparedStatement.setInt(1, size);
 			
@@ -2746,7 +2751,7 @@ public class MySQLConnector {
 		try {						
 			connection = connectionPool.getConnection();
 									
-			preparedStatement = connection.prepareStatement("select id, missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp "
+			preparedStatement = connection.prepareStatement("select id, missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp, priority "
 					+ "from word_dictionary_search_missing_words_queue order by id");
 						
 			resultSet = preparedStatement.executeQuery();
