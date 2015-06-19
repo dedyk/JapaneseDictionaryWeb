@@ -2666,13 +2666,14 @@ public class MySQLConnector {
 			connection = connectionPool.getConnection();
 			
 			preparedStatement = connection.prepareStatement( "update word_dictionary_search_missing_words_queue set counter = ?, first_appearance_timestamp = ?, "
-					+ "last_appearance_timestamp = ?, lock_timestamp = ? where id = ?");
+					+ "last_appearance_timestamp = ?, lock_timestamp = ?, priority = ? where id = ?");
 			
 			preparedStatement.setInt(1, wordDictionarySearchMissingWordsQueue.getCounter());
 			preparedStatement.setTimestamp(2, wordDictionarySearchMissingWordsQueue.getFirstAppearanceTimestamp());
 			preparedStatement.setTimestamp(3, wordDictionarySearchMissingWordsQueue.getLastAppearanceTimestamp());
 			preparedStatement.setTimestamp(4, wordDictionarySearchMissingWordsQueue.getLockTimestamp());
-			preparedStatement.setLong(5, wordDictionarySearchMissingWordsQueue.getId());
+			preparedStatement.setLong(5, wordDictionarySearchMissingWordsQueue.getPriority());
+			preparedStatement.setLong(6, wordDictionarySearchMissingWordsQueue.getId());
 						
 			// uaktualnij
 			preparedStatement.executeUpdate();

@@ -228,6 +228,10 @@ public class LoggerListener {
 					
 					wordDictionarySearchMissingWordQueue.setCounter(wordDictionarySearchMissingWordQueue.getCounter() + 1);
 					wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(new Timestamp(new Date().getTime()));
+					
+					if (wordDictionarySearchLoggerModel.getPriority() > wordDictionarySearchMissingWordQueue.getPriority()) {
+						wordDictionarySearchMissingWordQueue.setPriority(wordDictionarySearchLoggerModel.getPriority());
+					}
 
 					try {
 						mySQLConnector.updateWordDictionarySearchMissingWordQueue(wordDictionarySearchMissingWordQueue);
