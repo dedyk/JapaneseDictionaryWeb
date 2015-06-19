@@ -59,14 +59,16 @@ public class ReportGenerator {
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				
 				logger.info("Przetwarzam wpisy od " + dailyLogProcessedMinMaxIds.getMinId() + " do " + dailyLogProcessedMinMaxIds.getMaxId() + 
-						" (" + simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMinDate()) + " - " + simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMaxDate()));
+						" (" + (dailyLogProcessedMinMaxIds.getMinDate() != null ? simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMinDate()) : "") + 
+						" - " + (dailyLogProcessedMinMaxIds.getMaxDate() != null ? simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMaxDate()) : ""));
 
 				Div reportDiv = new Div();
 				
 				// tytul
 				String title = messageSource.getMessage("report.generate.daily.title", 
-						new Object[] { dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId(), simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMinDate()),
-						simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMaxDate())}, Locale.getDefault());
+						new Object[] { dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId(), 
+						(dailyLogProcessedMinMaxIds.getMinDate() != null ? simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMinDate()) : ""),
+						(dailyLogProcessedMinMaxIds.getMaxDate() != null ? simpleDateFormat.format(dailyLogProcessedMinMaxIds.getMaxDate()) : "")}, Locale.getDefault());
 
 				P titleP = new P();
 				reportDiv.addHtmlElement(titleP);

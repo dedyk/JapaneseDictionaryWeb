@@ -1976,11 +1976,7 @@ public class MySQLConnector {
 			
 			Long maxId = resultSet.getLong(3);
 			Date maxDate = resultSet.getTimestamp(4);
-			
-			if (minId == null || minId == 0 || maxId == null || maxId == 0) {
-				return null;
-			}
-			
+						
 			DailyLogProcessedMinMaxIds result = new DailyLogProcessedMinMaxIds();
 			
 			result.setMinId(minId);
