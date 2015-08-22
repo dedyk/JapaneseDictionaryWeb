@@ -185,10 +185,6 @@ public class MySQLConnector {
 			}
 			
 			Long result = resultSet.getLong(1);
-			
-			if (result == null) {
-				throw new RuntimeException();
-			}
 						
 			return result;
 			

@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +27,7 @@ public class ScheduleTask {
 
 	@Autowired
 	private MySQLConnector mySQLConnector;
-	
-	@Autowired
-	private MessageSource messageSource;
-	
+		
 	@Autowired
 	private QueueService queueService;
 	

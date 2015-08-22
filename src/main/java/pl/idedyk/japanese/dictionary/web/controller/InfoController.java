@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.InfoLoggerModel;
-import pl.idedyk.japanese.dictionary.web.schedule.ScheduleTask;
 
 @Controller
 public class InfoController {
@@ -23,10 +22,7 @@ public class InfoController {
 	
 	@Autowired
 	private LoggerSender loggerSender;
-	
-	@Autowired
-	private ScheduleTask scheduleTask;
-	
+		
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
 		
