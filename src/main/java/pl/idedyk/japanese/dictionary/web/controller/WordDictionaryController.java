@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest.WordPlaceSearch;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
@@ -138,7 +138,7 @@ public class WordDictionaryController {
 			
 			@Override
 			public void run() {				
-				FindWordRequest findWordRequestForSystemLog = Utils.createFindWordRequestForSystemLog(searchModel.getWord(), FindWordRequest.WordPlaceSearch.valueOf(searchModel.getWordPlace()));
+				FindWordRequest findWordRequestForSystemLog = Utils.createFindWordRequestForSystemLog(searchModel.getWord(), WordPlaceSearch.valueOf(searchModel.getWordPlace()));
 				
 				FindWordResult findWordResultForSystemLog = dictionaryManager.findWord(findWordRequestForSystemLog);
 			
@@ -197,7 +197,7 @@ public class WordDictionaryController {
 		findWordRequest.word = wordJoined.toString();
 		
 		// wordPlace
-		findWordRequest.wordPlaceSearch = FindWordRequest.WordPlaceSearch.valueOf(searchModel.getWordPlace());
+		findWordRequest.wordPlaceSearch = WordPlaceSearch.valueOf(searchModel.getWordPlace());
 		
 		// searchIn
 		findWordRequest.searchKanji = false;

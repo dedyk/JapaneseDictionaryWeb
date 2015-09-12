@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult.ResultItem;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dto.Attribute;
 import pl.idedyk.japanese.dictionary.api.dto.AttributeList;
 import pl.idedyk.japanese.dictionary.api.dto.AttributeType;
@@ -71,7 +72,7 @@ public class AndroidController {
 		JSONObject jsonObject = new JSONObject(jsonRequestSb.toString());
 		
 		String word = (String)jsonObject.get("word");
-		FindWordRequest.WordPlaceSearch wordPlaceSearch = FindWordRequest.WordPlaceSearch.valueOf((String)jsonObject.get("wordPlaceSearch"));
+		WordPlaceSearch wordPlaceSearch = WordPlaceSearch.valueOf((String)jsonObject.get("wordPlaceSearch"));
 		
 		if (word == null || word.length() == 0) {
 			logger.info("[SendMissingWord] Brak słowa");
@@ -157,7 +158,7 @@ public class AndroidController {
 		findWordRequest.word = wordJoined.toString();
 		
 		// wordPlace
-		findWordRequest.wordPlaceSearch = FindWordRequest.WordPlaceSearch.valueOf((String)searchJSONObject.get("wordPlaceSearch"));;
+		findWordRequest.wordPlaceSearch = WordPlaceSearch.valueOf((String)searchJSONObject.get("wordPlaceSearch"));;
 		
 		// searchIn
 		findWordRequest.searchKanji = searchJSONObject.getBoolean("searchKanji");

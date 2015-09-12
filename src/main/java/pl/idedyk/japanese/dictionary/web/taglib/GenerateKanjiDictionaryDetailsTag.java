@@ -15,7 +15,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
@@ -296,7 +296,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		WordDictionarySearchModel searchModel = new WordDictionarySearchModel();
 		
 		searchModel.setWord(kanjiEntry.getKanji());
-		searchModel.setWordPlace(FindWordRequest.WordPlaceSearch.START_WITH.toString());
+		searchModel.setWordPlace(WordPlaceSearch.START_WITH.toString());
 		
 		List<String> searchIn = new ArrayList<String>();
 		searchIn.add("KANJI");

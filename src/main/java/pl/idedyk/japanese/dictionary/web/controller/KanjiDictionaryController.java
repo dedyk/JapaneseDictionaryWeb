@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest.WordPlaceSearch;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
@@ -253,7 +253,7 @@ public class KanjiDictionaryController {
 		findKanjiRequest.word = wordJoined.toString();
 
 		// wordPlace
-		findKanjiRequest.wordPlaceSearch = FindKanjiRequest.WordPlaceSearch.valueOf(searchModel.getWordPlace());
+		findKanjiRequest.wordPlaceSearch = WordPlaceSearch.valueOf(searchModel.getWordPlace());
 
 		// strokeCountFrom
 		String strokeCountFrom = searchModel.getStrokeCountFrom();

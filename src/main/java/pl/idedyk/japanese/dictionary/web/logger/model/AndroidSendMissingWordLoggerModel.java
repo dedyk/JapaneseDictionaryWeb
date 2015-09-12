@@ -1,6 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.logger.model;
 
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 
 public class AndroidSendMissingWordLoggerModel extends LoggerModelCommon {
 
@@ -8,9 +8,9 @@ public class AndroidSendMissingWordLoggerModel extends LoggerModelCommon {
 
 	private String word;
 	
-	private FindWordRequest.WordPlaceSearch wordPlaceSearch;
+	private WordPlaceSearch wordPlaceSearch;
 	
-	public AndroidSendMissingWordLoggerModel(LoggerModelCommon loggerModelCommon, String word, FindWordRequest.WordPlaceSearch wordPlaceSearch) {
+	public AndroidSendMissingWordLoggerModel(LoggerModelCommon loggerModelCommon, String word, WordPlaceSearch wordPlaceSearch) {
 		
 		super(loggerModelCommon);
 		
@@ -26,11 +26,11 @@ public class AndroidSendMissingWordLoggerModel extends LoggerModelCommon {
 		this.word = word;
 	}
 
-	public FindWordRequest.WordPlaceSearch getWordPlaceSearch() {
+	public WordPlaceSearch getWordPlaceSearch() {
 		return wordPlaceSearch;
 	}
 
-	public void setWordPlaceSearch(FindWordRequest.WordPlaceSearch wordPlaceSearch) {
+	public void setWordPlaceSearch(WordPlaceSearch wordPlaceSearch) {
 		this.wordPlaceSearch = wordPlaceSearch;
 	}
 }

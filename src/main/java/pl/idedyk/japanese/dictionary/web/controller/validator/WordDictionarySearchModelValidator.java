@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
@@ -46,7 +46,7 @@ public class WordDictionarySearchModelValidator implements Validator {
 		} else {
 			
 			try {
-				FindWordRequest.WordPlaceSearch.valueOf(wordPlace);
+				WordPlaceSearch.valueOf(wordPlace);
 				
 			} catch (IllegalArgumentException e) {
 				errors.rejectValue("wordPlace", "wordDictionary.validation.wordDictionarySearchModel.wordPlace.illegalArgument");				

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 
 public class Utils {
@@ -233,7 +234,7 @@ public class Utils {
 		return loggerModelCommon;
 	}	
 	
-	public static FindWordRequest createFindWordRequestForSystemLog(String word, FindWordRequest.WordPlaceSearch wordPlaceSearch) {
+	public static FindWordRequest createFindWordRequestForSystemLog(String word, WordPlaceSearch wordPlaceSearch) {
 		
 		FindWordRequest findWordRequest = new FindWordRequest();
 		
