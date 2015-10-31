@@ -363,7 +363,7 @@ public class AdminController {
     	return "admMissingWordsQueuePanel";
     }
     
-    @RequestMapping(value = "/adm/getMissingWordsQueue", method = RequestMethod.GET)
+    @RequestMapping(value = "/adm/getMissingWordsQueue", method = RequestMethod.POST)
     public String searchPanel(HttpServletRequest request, HttpSession session, Writer writer, @ModelAttribute("command2") @Valid AdminPanelMissingWordsQueueModel adminPanelMissingWordsQueueModel,
 			BindingResult result, Map<String, Object> model) throws Exception {
 
@@ -395,6 +395,7 @@ public class AdminController {
     		boolean isLock = adminPanelMissingWordsQueueModel.isLock();
     		
     		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+    		adminLoggerModel.addParam("wordList", adminPanelMissingWordsQueueModel.getWordList());
     		adminLoggerModel.addParam("lock", Boolean.valueOf(isLock).toString());
     		
     		if (isLock == true) {
@@ -402,7 +403,21 @@ public class AdminController {
     		}
     		
     		// pobieranie brakujacych slow
-    		List<WordDictionarySearchMissingWordQueue> unlockedWordDictionarySearchMissingWordQueue = mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueue(Integer.parseInt(adminPanelMissingWordsQueueModel.getSize()));
+    		List<String> wordListAsList = adminPanelMissingWordsQueueModel.getWordListAsList();
+    		
+    		List<WordDictionarySearchMissingWordQueue> unlockedWordDictionarySearchMissingWordQueue = null;
+    		
+    		if (wordListAsList.size() == 0) { // pobieranie listy slow wedlug liczby
+    			
+        		unlockedWordDictionarySearchMissingWordQueue = 
+        				mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueue(Integer.parseInt(adminPanelMissingWordsQueueModel.getSize()));    			
+    			
+    		} else {
+    			
+        		unlockedWordDictionarySearchMissingWordQueue = 
+        				mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueue(wordListAsList);    			
+    			
+    		}    		
     		
     		Report generateMissingWordsQueueReportBody = reportGenerator.generateMissingWordsQueueReportBody(unlockedWordDictionarySearchMissingWordQueue);
     		

@@ -2731,6 +2731,68 @@ public class MySQLConnector {
 			}			
 		}		
 	}
+
+	public List<WordDictionarySearchMissingWordQueue> getUnlockedWordDictionarySearchMissingWordQueue(List<String> wordList) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		List<WordDictionarySearchMissingWordQueue> result = new ArrayList<WordDictionarySearchMissingWordQueue>();
+				
+		try {						
+			connection = connectionPool.getConnection();
+			
+			StringBuffer sql = new StringBuffer("select id, missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp, priority "
+					+ "from word_dictionary_search_missing_words_queue where lock_timestamp is null and missing_word in ");
+			
+			sql.append("(");
+			
+			for (int wordListIdx = 0; wordListIdx < wordList.size(); ++wordListIdx) {
+				
+				sql.append("?");
+				
+				if (wordListIdx != wordList.size() - 1) {
+					sql.append(",");
+				}				
+			}
+			
+			sql.append(")");			
+			
+			preparedStatement = connection.prepareStatement(sql.toString());
+			
+			for (int wordListIdx = 0; wordListIdx < wordList.size(); ++wordListIdx) {
+				preparedStatement.setString(wordListIdx + 1, wordList.get(wordListIdx));
+			}
+						
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {
+				
+				WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue = createWordDictionarySearchMissingWordQueueFromResultSet(resultSet);
+								
+				result.add(wordDictionarySearchMissingWordQueue);
+			}
+			
+			return result;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
 	
 	public List<WordDictionarySearchMissingWordQueue> getAllWordDictionarySearchMissingWordQueue() throws SQLException {
 		

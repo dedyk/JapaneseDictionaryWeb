@@ -19,7 +19,7 @@
 
 	<jsp:body>
 	
-		<form:form commandName="command2" method="get" id="panelMissingWordsQueueId" action="${pageContext.request.contextPath}/adm/getMissingWordsQueue">
+		<form:form commandName="command2" method="post" id="panelMissingWordsQueueId" action="${pageContext.request.contextPath}/adm/getMissingWordsQueue">
 		
 			<fieldset>
 				<legend><spring:message code="admin.missing.words.queue.panel.form.title" /></legend>			
@@ -32,7 +32,12 @@
 					<td><form:label path="size" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="admin.missing.words.queue.panel.get.size"/></form:label></td>
 					<td><form:input cssClass="form-control" cssStyle="margin: 0px 10px 10px 0px" id="sizeId" path="size"/></td>					
 				</tr>
-				
+
+				<tr>
+					<td><form:label path="wordList" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="admin.missing.words.queue.panel.get.wordList"/></form:label></td>
+					<td><form:textarea rows="15" cssClass="form-control" cssStyle="margin: 0px 10px 10px 0px" id="wordListId" path="wordList"/></td>					
+				</tr>				
+								
 				<tr>
 					<td><form:label path="lock" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="admin.missing.words.queue.panel.get.lock"/></form:label></td>
 					<td><form:checkbox cssClass="checkbox" cssStyle="margin: 0px 10px 10px 0px" id="lockId" path="lock"/>
