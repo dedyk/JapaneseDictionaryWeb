@@ -379,6 +379,7 @@ public class AdminController {
     		adminLoggerModel.setResult(Result.ERROR);
     		
     		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+    		adminLoggerModel.addParam("wordList", adminPanelMissingWordsQueueModel.getWordList());
     		adminLoggerModel.addParam("lock", Boolean.valueOf(adminPanelMissingWordsQueueModel.isLock()).toString());
     		
     		// logowanie
