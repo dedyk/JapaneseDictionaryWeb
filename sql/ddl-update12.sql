@@ -3,3 +3,5 @@ create table lock_operation (
     lock_name varchar(30) not null, unique(lock_name),
     lock_timestamp timestamp not null
 ) default character set = utf8 collate = utf8_polish_ci;
+
+alter table queue add host_name varchar(30) not null after status;

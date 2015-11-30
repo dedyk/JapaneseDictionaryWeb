@@ -125,6 +125,7 @@ create table queue (
 	id int not null auto_increment, primary key(id),
 	name varchar(30) not null, 
 	status varchar(20) not null,
+	host_name varchar(30) not null,
 	send_timestamp timestamp not null,
 	delivery_count int not null,
 	next_attempt timestamp not null,
@@ -180,4 +181,3 @@ create table lock_operation (
     lock_name varchar(30) not null, unique(lock_name),
     lock_timestamp timestamp not null
 ) default character set = utf8 collate = utf8_polish_ci;
-

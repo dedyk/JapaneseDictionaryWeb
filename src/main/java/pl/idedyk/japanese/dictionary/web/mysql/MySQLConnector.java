@@ -2357,19 +2357,20 @@ public class MySQLConnector {
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "insert into queue(name, status, send_timestamp, delivery_count, next_attempt, object) "
-					+ "values(?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			preparedStatement = connection.prepareStatement( "insert into queue(name, status, host_name, send_timestamp, delivery_count, next_attempt, object) "
+					+ "values(?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			preparedStatement.setString(1, queueItem.getName());
 			preparedStatement.setString(2, queueItem.getStatus().toString());
-			preparedStatement.setTimestamp(3, queueItem.getSendTimestamp());
-			preparedStatement.setInt(4, queueItem.getDeliveryCount());
-			preparedStatement.setTimestamp(5, queueItem.getNextAttempt());
+			preparedStatement.setString(3, queueItem.getHostName());
+			preparedStatement.setTimestamp(4, queueItem.getSendTimestamp());
+			preparedStatement.setInt(5, queueItem.getDeliveryCount());
+			preparedStatement.setTimestamp(6, queueItem.getNextAttempt());
 			
 			objectBlob = connection.createBlob();			
 			objectBlob.setBytes(1, queueItem.getObject());
 			
-			preparedStatement.setBlob(6, objectBlob);
+			preparedStatement.setBlob(7, objectBlob);
 			
 			// wstaw
 			preparedStatement.executeUpdate();
@@ -2402,7 +2403,7 @@ public class MySQLConnector {
 		}		
 	}
 	
-	public List<QueueItem> getNextQueueItem(String queueName) throws SQLException {
+	public List<QueueItem> getNextQueueItem(String queueName, String hostName) throws SQLException {
 		
 		Connection connection = null;
 		
@@ -2415,11 +2416,12 @@ public class MySQLConnector {
 		try {			
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement("select id, name, status, send_timestamp, delivery_count, next_attempt, object from queue where "
-					+ "name = ? and status = ? and next_attempt < current_timestamp order by next_attempt, send_timestamp, delivery_count desc limit 5"); 
+			preparedStatement = connection.prepareStatement("select id, name, status, host_name, send_timestamp, delivery_count, next_attempt, object from queue where "
+					+ "name = ? and status = ? and next_attempt < current_timestamp and host_name = ? order by next_attempt, send_timestamp, delivery_count desc limit 5"); 
 			
 			preparedStatement.setString(1, queueName);
 			preparedStatement.setString(2, QueueItemStatus.WAITING.toString());
+			preparedStatement.setString(3, hostName);
 			
 			resultSet = preparedStatement.executeQuery();
 			
@@ -2431,6 +2433,7 @@ public class MySQLConnector {
 				
 				queueItem.setId(resultSet.getLong("id"));
 				queueItem.setStatus(QueueItemStatus.valueOf(resultSet.getString("status")));
+				queueItem.setHostName(resultSet.getString("host_name"));
 				queueItem.setSendTimestamp(resultSet.getTimestamp("send_timestamp"));
 				queueItem.setDeliveryCount(resultSet.getInt("delivery_count"));
 				queueItem.setNextAttempt(resultSet.getTimestamp("next_attempt"));

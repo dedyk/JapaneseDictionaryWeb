@@ -13,6 +13,8 @@ public class QueueItem implements Serializable {
 	
 	private QueueItemStatus status;
 	
+	private String hostName;
+	
 	private Timestamp sendTimestamp;
 	
 	private int deliveryCount;
@@ -20,7 +22,7 @@ public class QueueItem implements Serializable {
 	private Timestamp nextAttempt;
 	
 	private byte[] object;
-	
+		
 	public Long getId() {
 		return id;
 	}
@@ -43,6 +45,14 @@ public class QueueItem implements Serializable {
 
 	public void setStatus(QueueItemStatus status) {
 		this.status = status;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
 	}
 
 	public Timestamp getSendTimestamp() {

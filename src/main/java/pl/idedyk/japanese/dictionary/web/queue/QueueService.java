@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -70,11 +72,12 @@ public class QueueService {
 		
 		queueItem.setName(queueName);
 		queueItem.setStatus(QueueItemStatus.WAITING);
+		queueItem.setHostName(getHostName());
 		queueItem.setSendTimestamp(new Timestamp(new Date().getTime()));
 		queueItem.setDeliveryCount(0);
 		queueItem.setNextAttempt(queueItem.getSendTimestamp());
 		queueItem.setObject(object);
-		
+				
 		try {
 			// wstawienie do kolejki
 			mySQLConnector.insertQueueItem(queueItem);
@@ -85,6 +88,16 @@ public class QueueService {
 			saveToLocalDir(queueItem);
 			
 			throw e;
+		}
+	}
+	
+	private String getHostName() {
+		
+		try {
+			return InetAddress.getLocalHost().getHostName();
+			
+		} catch (UnknownHostException e) {
+			return "localhost";			
 		}
 	}
 	
@@ -139,7 +152,22 @@ public class QueueService {
 	}
 	
 	public List<QueueItem> getNextItemQueueItem(String queueName) throws SQLException {
-		return mySQLConnector.getNextQueueItem(queueName);
+		
+		List<QueueItem> result = mySQLConnector.getNextQueueItem(queueName, getHostName());
+		
+		if (result != null) {
+			
+			for (QueueItem queueItem : result) {
+				
+				// zachowanie zgodnosci
+				if (queueItem.getHostName() == null) {
+					queueItem.setHostName(getHostName());
+				}				
+			}
+			
+		}
+		
+		return result;
 	}
 	
 	public void setQueueItemDone(QueueItem queueItem) throws SQLException {
@@ -230,6 +258,11 @@ public class QueueService {
 							// noop
 						}
 					}					
+				}
+				
+				// zachowanie zgodnosci
+				if (queueItem.getHostName() == null) {
+					queueItem.setHostName(getHostName());
 				}
 				
 				try {
