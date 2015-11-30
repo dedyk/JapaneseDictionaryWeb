@@ -19,6 +19,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
 import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 import pl.idedyk.japanese.dictionary.web.report.ReportGenerator;
+import pl.idedyk.japanese.dictionary.web.service.SemaphoreService;
 
 @Service
 public class ScheduleTask {
@@ -39,11 +40,40 @@ public class ScheduleTask {
 	
 	@Autowired
 	private ReportGenerator reportGenerator;
-			
+	
+	@Autowired
+	private SemaphoreService semaphoreService;
+
 	//@Scheduled(cron="0 * * * * ?") // co minute
 	@Scheduled(cron="0 0 19 * * ?") // o 19
 	public void generateDailyReport() {
-										
+		generateDailyReport(true);
+	}
+			
+	public void generateDailyReport(boolean checkLock) {
+		
+		final String lockName = "generateDailyReport";
+		
+		boolean canDoOperation = true;
+		
+		if (checkLock == true) { // sprawdzamy blokade
+			
+			try {
+				canDoOperation = semaphoreService.canDoOperation(lockName, 30 * 60);
+							
+			} catch (Exception e) {
+				logger.error("Blad generowania dziennego raportu", e);
+				
+				return;
+			}			
+		}
+		
+		if (canDoOperation == false) {
+			logger.info("Nie uzyskano blokady dla: " + lockName);
+			
+			return;
+		}
+		
 		// pobranie przedzialu wpisow
 		try {
 			ReportGenerator.DailyReport dailyReport = reportGenerator.generateDailyReportBody();
@@ -72,7 +102,7 @@ public class ScheduleTask {
 	
 	@Scheduled(cron="* * * * * ?")
 	public void processLogQueueItem() {
-		
+				
 		QueueItem currentQueueItem = null;
 				
 		try {
@@ -132,13 +162,32 @@ public class ScheduleTask {
 	@Scheduled(cron="0 0 0 * * ?") // o polnocy
 	public void deleteOldQueueItems() {
 		
+		final String lockName = "deleteOldQueueItems";
+		
+		boolean canDoOperation = false;
+		
+		// sprawdzamy blokade			
+		try {
+			canDoOperation = semaphoreService.canDoOperation(lockName, 30 * 60);
+						
+		} catch (Exception e) {
+			logger.error("Blad podczas kasowania starych wpisow z kolejki", e);
+			
+			return;
+		}			
+
+		if (canDoOperation == false) {
+			logger.info("Nie uzyskano blokady dla: " + lockName);
+			
+			return;
+		}
+		
 		logger.info("Kasuje stare przetworzone wpisy z kolejki");
 		
 		try {			
 			mySQLConnector.deleteOldQueueItems(7);
 			
 		} catch (Exception e) {
-			
 			logger.error("Blad podczas kasowania starych wpisow z kolejki", e);
 		}
 	}

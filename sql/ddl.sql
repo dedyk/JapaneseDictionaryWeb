@@ -174,3 +174,10 @@ create table word_dictionary_search_missing_words_queue (
     lock_timestamp timestamp null,
     priority int not null default 1
 ) default character set = utf8 collate = utf8_polish_ci;
+
+create table lock_operation (
+    id int not null auto_increment, primary key(id),
+    lock_name varchar(30) not null, unique(lock_name),
+    lock_timestamp timestamp not null
+) default character set = utf8 collate = utf8_polish_ci;
+

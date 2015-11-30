@@ -2837,6 +2837,105 @@ public class MySQLConnector {
 		}		
 	}
 	
+	public boolean canDoOperation(String semaphoreName, int lockLengthInSeconds) throws SQLException {
+		
+		Connection connection = null;
+		
+		Statement statement = null;
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			// zakladanie blokady			
+			statement = connection.createStatement();
+			
+			statement.execute("lock table lock_operation write");
+						
+			// sprawdzenie, czy rekord istnieje w tabelce lock_operation
+			preparedStatement = connection.prepareStatement("select count(*) from lock_operation where lock_name = ?");
+			
+			preparedStatement.setString(1, semaphoreName);
+			
+			resultSet = preparedStatement.executeQuery();
+			resultSet.next();
+						
+			int lockOperationNameRowCount = resultSet.getInt(1);
+			
+			preparedStatement.close();
+			resultSet.close();
+			
+			if (lockOperationNameRowCount == 0) { // jesli nie ma rekordu, wstaw rekord i zwroc wynik, ze uzystano dostep
+				
+				preparedStatement = connection.prepareStatement("insert into lock_operation(lock_name, lock_timestamp) values (?, current_timestamp)");
+				
+				preparedStatement.setString(1, semaphoreName);
+				
+				preparedStatement.executeUpdate();
+				
+				preparedStatement.close();
+				
+				return true;
+				
+			} else { // jesli rekord istnieje, sprawdz, czy minal czas od ostatniej blokady
+				
+				preparedStatement = connection.prepareStatement("select count(*) from lock_operation where lock_name = ? and "
+						+ "date_add(lock_timestamp, interval ? second) <= current_timestamp");
+				
+				preparedStatement.setString(1, semaphoreName);
+				preparedStatement.setInt(2, lockLengthInSeconds);
+				
+				resultSet = preparedStatement.executeQuery();
+				resultSet.next();
+
+				lockOperationNameRowCount = resultSet.getInt(1);
+				
+				preparedStatement.close();
+				resultSet.close();
+
+				if (lockOperationNameRowCount == 0) { // ktos juz byl szybszy
+					return false;
+					
+				} else { // my jestesmy jako pierwsi, uaktualniamy blokade
+					
+					preparedStatement = connection.prepareStatement("update lock_operation set lock_timestamp = current_timestamp where lock_name = ?");
+					
+					preparedStatement.setString(1, semaphoreName);
+					
+					preparedStatement.executeUpdate();
+					
+					preparedStatement.close();
+					
+					return true;
+				}
+			}
+			
+		} finally {
+			
+			if (statement != null) {
+				statement.execute("unlock tables");
+			}			
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+			
+			if (statement != null) {
+				statement.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}	
+	}
+	
 	public String getUrl() {
 		return url;
 	}

@@ -266,7 +266,7 @@ public class AdminController {
 		loggerSender.sendLog(adminLoggerModel);    	
 		
 		// generowanie raportu
-		scheduleTask.generateDailyReport();    		
+		scheduleTask.generateDailyReport(false);	
 		
 		return "redirect:/adm/panel";
     }
