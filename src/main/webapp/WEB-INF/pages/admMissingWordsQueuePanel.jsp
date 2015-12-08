@@ -34,6 +34,11 @@
 				</tr>
 
 				<tr>
+					<td><form:label path="showMaxSize" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="admin.missing.words.queue.panel.get.showMaxSize"/></form:label></td>
+					<td><form:input cssClass="form-control" cssStyle="margin: 0px 10px 10px 0px" id="showMaxSizeId" path="showMaxSize"/></td>					
+				</tr>
+
+				<tr>
 					<td><form:label path="wordList" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="admin.missing.words.queue.panel.get.wordList"/></form:label></td>
 					<td><form:textarea rows="15" cssClass="form-control" cssStyle="margin: 0px 10px 10px 0px" id="wordListId" path="wordList"/></td>					
 				</tr>				

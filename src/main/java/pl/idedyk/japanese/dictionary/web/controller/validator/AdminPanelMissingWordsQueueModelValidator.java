@@ -22,6 +22,8 @@ public class AdminPanelMissingWordsQueueModelValidator implements Validator {
 		AdminPanelMissingWordsQueueModel adminPanelMissingWordsQueueModel = (AdminPanelMissingWordsQueueModel)target;
 
 		String size = adminPanelMissingWordsQueueModel.getSize();
+		String showMaxSize = adminPanelMissingWordsQueueModel.getShowMaxSize();
+		
 		List<String> wordListAsList = adminPanelMissingWordsQueueModel.getWordListAsList();
 		
 		if ((size == null || size.trim().equals("") == true) && wordListAsList.size() == 0) {
@@ -54,6 +56,26 @@ public class AdminPanelMissingWordsQueueModelValidator implements Validator {
 				
 				// noop
 								
+			}
+		}
+		
+		if (showMaxSize == null || showMaxSize.trim().equals("") == true) {
+			errors.rejectValue("size", "admin.panel.validation.adminPanelMissingWordsQueueModel.showMaxSize.incorrect");
+			
+		} else {
+			
+			Long showMaxSizeLong = null;
+			
+			try {
+				showMaxSizeLong = Long.parseLong(showMaxSize);
+				
+			} catch (NumberFormatException e) {
+				errors.rejectValue("size", "admin.panel.validation.adminPanelMissingWordsQueueModel.showMaxSize.incorrect");
+				
+			}
+			
+			if (showMaxSizeLong != null && showMaxSizeLong.longValue() <= 0) {
+				errors.rejectValue("size", "admin.panel.validation.adminPanelMissingWordsQueueModel.showMaxSize.incorrect");				
 			}
 		}
 	}

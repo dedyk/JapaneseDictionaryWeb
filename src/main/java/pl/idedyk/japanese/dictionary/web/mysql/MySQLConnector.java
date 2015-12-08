@@ -2689,7 +2689,9 @@ public class MySQLConnector {
 		}		
 	}
 	
-	public List<WordDictionarySearchMissingWordQueue> getUnlockedWordDictionarySearchMissingWordQueue(int size) throws SQLException {
+	public List<WordDictionarySearchMissingWordQueue> getUnlockedWordDictionarySearchMissingWordQueue(long size) throws SQLException {
+		
+		// UWAGA: Jesli zmieniasz te metode, zmien rowniez metode getUnlockedWordDictionarySearchMissingWordQueueLength
 		
 		Connection connection = null;
 		
@@ -2706,7 +2708,7 @@ public class MySQLConnector {
 					+ "from word_dictionary_search_missing_words_queue where lock_timestamp is null order by priority desc, "
 					+ "date_format(first_appearance_timestamp, '%Y-%m-%d %H') != date_format(last_appearance_timestamp, '%Y-%m-%d %H') desc, first_appearance_timestamp, id limit ?");
 						
-			preparedStatement.setInt(1, size);
+			preparedStatement.setLong(1, size);
 			
 			resultSet = preparedStatement.executeQuery();
 			
@@ -2735,6 +2737,46 @@ public class MySQLConnector {
 		}		
 	}
 
+	public long getUnlockedWordDictionarySearchMissingWordQueueLength() throws SQLException {
+		
+		// UWAGA: Jesli zmieniasz te metode, zmien rowniez metode getUnlockedWordDictionarySearchMissingWordQueue
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+						
+		try {						
+			connection = connectionPool.getConnection();
+									
+			preparedStatement = connection.prepareStatement("select count(*) "
+					+ "from word_dictionary_search_missing_words_queue where lock_timestamp is null order by priority desc, "
+					+ "date_format(first_appearance_timestamp, '%Y-%m-%d %H') != date_format(last_appearance_timestamp, '%Y-%m-%d %H') desc, first_appearance_timestamp, id");
+									
+			resultSet = preparedStatement.executeQuery();
+			
+			resultSet.next();
+			
+			return resultSet.getLong(1);
+						
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+
+	
 	public List<WordDictionarySearchMissingWordQueue> getUnlockedWordDictionarySearchMissingWordQueue(List<String> wordList) throws SQLException {
 		
 		Connection connection = null;

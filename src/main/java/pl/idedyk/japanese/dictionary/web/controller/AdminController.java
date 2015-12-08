@@ -352,6 +352,8 @@ public class AdminController {
     	adminLoggerModel.setResult(Result.OK);
     	
     	adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+    	adminLoggerModel.addParam("showMaxSize", adminPanelMissingWordsQueueModel.getShowMaxSize());
+    	adminLoggerModel.addParam("wordList", adminPanelMissingWordsQueueModel.getWordList());
     	adminLoggerModel.addParam("lock", Boolean.valueOf(adminPanelMissingWordsQueueModel.isLock()).toString());
 		
 		model.put("selectedMenu", "missingWordsQueuePanel");		
@@ -379,6 +381,7 @@ public class AdminController {
     		adminLoggerModel.setResult(Result.ERROR);
     		
     		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+    		adminLoggerModel.addParam("showMaxSize", adminPanelMissingWordsQueueModel.getShowMaxSize());
     		adminLoggerModel.addParam("wordList", adminPanelMissingWordsQueueModel.getWordList());
     		adminLoggerModel.addParam("lock", Boolean.valueOf(adminPanelMissingWordsQueueModel.isLock()).toString());
     		
@@ -396,6 +399,7 @@ public class AdminController {
     		boolean isLock = adminPanelMissingWordsQueueModel.isLock();
     		
     		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
+    		adminLoggerModel.addParam("showMaxSize", adminPanelMissingWordsQueueModel.getShowMaxSize());
     		adminLoggerModel.addParam("wordList", adminPanelMissingWordsQueueModel.getWordList());
     		adminLoggerModel.addParam("lock", Boolean.valueOf(isLock).toString());
     		
@@ -420,7 +424,7 @@ public class AdminController {
     			
     		}    		
     		
-    		Report generateMissingWordsQueueReportBody = reportGenerator.generateMissingWordsQueueReportBody(unlockedWordDictionarySearchMissingWordQueue);
+    		Report generateMissingWordsQueueReportBody = reportGenerator.generateMissingWordsQueueReportBody(unlockedWordDictionarySearchMissingWordQueue, Long.parseLong(adminPanelMissingWordsQueueModel.getShowMaxSize()));
     		
     		model.put("reportBody", generateMissingWordsQueueReportBody.body);
 

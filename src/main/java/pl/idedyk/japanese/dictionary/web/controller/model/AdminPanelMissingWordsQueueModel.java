@@ -10,6 +10,8 @@ public class AdminPanelMissingWordsQueueModel implements Serializable {
 	
 	private String size = "50";
 	
+	private String showMaxSize = "1000";
+	
 	private String wordList = null;
 	
 	private boolean lock = false;
@@ -20,6 +22,14 @@ public class AdminPanelMissingWordsQueueModel implements Serializable {
 
 	public void setSize(String size) {
 		this.size = size;
+	}
+
+	public String getShowMaxSize() {
+		return showMaxSize;
+	}
+
+	public void setShowMaxSize(String showMaxSize) {
+		this.showMaxSize = showMaxSize;
 	}
 
 	public boolean isLock() {
