@@ -177,6 +177,14 @@ public class QueueService {
 		// uaktualnie wpisu
 		mySQLConnector.updateQueueItem(queueItem);	
 	}
+
+	public void setQueueItemError(QueueItem queueItem) throws SQLException {
+		
+		queueItem.setStatus(QueueItemStatus.ERROR);
+		
+		// uaktualnie wpisu
+		mySQLConnector.updateQueueItem(queueItem);	
+	}
 	
 	public void delayQueueItem(QueueItem queueItem) throws SQLException {
 		

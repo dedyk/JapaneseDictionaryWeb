@@ -4,6 +4,8 @@ public enum QueueItemStatus {
 
 	WAITING,
 	
+	ERROR,
+	
 	DONE;
 	
 }

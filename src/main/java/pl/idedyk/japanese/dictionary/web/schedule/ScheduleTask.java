@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.mysql.jdbc.MysqlDataTruncation;
+
 import pl.idedyk.japanese.dictionary.web.logger.LoggerListener;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
@@ -137,13 +139,32 @@ public class ScheduleTask {
 			
 			logger.error("Blad podczas przetwarzania log'ow z kolejki: " + e);
 			
+			// bledow typu com.mysql.jdbc.MysqlDataTruncation: Data truncation: Incorrect string value: '\xF0\x9F\x88\xB5' - nie ponawiamy
+			
+			Throwable eCause = e.getCause();
+			
 			// opoznij zadanie
-			if (currentQueueItem != null) {
+			if (currentQueueItem != null && 
+					(
+							e instanceof MysqlDataTruncation == false && (eCause == null || eCause instanceof MysqlDataTruncation == false)					
+					)
+				) {
+				
 				try {
 					queueService.delayQueueItem(currentQueueItem);
 					
 				} catch (SQLException e1) {					
 					logger.error("Blad podcza opozniania zadania z kolejki", e);
+				}
+				
+			} else if (currentQueueItem != null) {
+				
+				// ustaw wpis jako przetworzony z bledem
+				try {
+					queueService.setQueueItemError(currentQueueItem);
+					
+				} catch (Exception e2) {
+					logger.error("Blad podczas przetwarzania log'ow z kolejki: " + e2);
 				}
 			}
 			
