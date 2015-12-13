@@ -143,12 +143,26 @@ public class ScheduleTask {
 			
 			Throwable eCause = e.getCause();
 			
-			// opoznij zadanie
-			if (currentQueueItem != null && 
-					(
-							e instanceof MysqlDataTruncation == false && (eCause == null || eCause instanceof MysqlDataTruncation == false)					
-					)
-				) {
+			// czy opoznij zadanie
+			boolean delayQueueItem = true;
+			
+			if (delayQueueItem == true && e instanceof MysqlDataTruncation == true) {
+				delayQueueItem = false;
+			}
+			
+			if (delayQueueItem == true && eCause != null && eCause instanceof MysqlDataTruncation == true) {
+				delayQueueItem = false;
+			}
+			
+			if (delayQueueItem == true && e instanceof SQLException == true && e.getMessage().contains("Incorrect string value") == true) {
+				delayQueueItem = false;
+			}
+			
+			if (delayQueueItem == true && eCause != null && eCause instanceof SQLException == true && eCause.getMessage().contains("Incorrect string value") == true) {
+				delayQueueItem = false;
+			}
+						
+			if (currentQueueItem != null && delayQueueItem == true) {
 				
 				try {
 					queueService.delayQueueItem(currentQueueItem);
@@ -157,7 +171,7 @@ public class ScheduleTask {
 					logger.error("Blad podcza opozniania zadania z kolejki", e);
 				}
 				
-			} else if (currentQueueItem != null) {
+			} else if (currentQueueItem != null && delayQueueItem == false) {
 				
 				// ustaw wpis jako przetworzony z bledem
 				try {
