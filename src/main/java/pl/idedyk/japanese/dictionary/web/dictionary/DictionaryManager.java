@@ -79,24 +79,29 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 			throw new RuntimeException(e);
 		}
 		
-		logger.info("Inicjalizacja podpowiadacza");
-		
 		new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
 				
 				try {
-					luceneDatabase.openSuggester();
-				
+					
+					logger.info("Inicjalizacja podpowiadacza");		
+					luceneDatabase.openSuggester();				
 					logger.info("Zakończono inicjalizację podpowiadacza");
+					
+					//
+					
+					logger.info("Inicjalizacja poprawiacza słów");					
+					luceneDatabase.openSpellChecker();					
+					logger.info("Zakończono inicjalizację poprawiacza słów");
 					
 				} catch (Exception e) {
 					
-					logger.error("Błąd inicjalizacji podpowiadacza", e);
+					logger.error("Błąd inicjalizacji podpowiadacza lub poprawiacza słów", e);
 				}
 			}
-		}).start();		
+		}).start();	
 		
 		logger.info("Inicjalizuje Keigo Helper");
 		keigoHelper = new KeigoHelper();
@@ -415,5 +420,33 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		waitForDatabaseReady();
 		
 		return luceneDatabase.getKanjiAutocomplete(term, limit);
+	}
+	
+	public boolean isWordDictionaryEntrySpellCheckerInitialized() {
+		
+		waitForDatabaseReady();
+		
+		return luceneDatabase.isWordDictionaryEntrySpellCheckerInitialized();
+	}
+	
+	public List<String> getWordDictionaryEntrySpellCheckerSuggestion(String term, int limit) throws DictionaryException {
+		
+		waitForDatabaseReady();
+		
+		return luceneDatabase.getWordDictionaryEntrySpellCheckerSuggestion(term, limit);
+	}
+		
+	public boolean isKanjiEntryDictionarySpellChecker() {
+		
+		waitForDatabaseReady();
+		
+		return luceneDatabase.isKanjiEntryDictionarySpellChecker();		
+	}
+	
+	public List<String> getKanjiEntryDictionarySpellCheckerSuggestion(String term, int limit) throws DictionaryException {
+		
+		waitForDatabaseReady();
+		
+		return luceneDatabase.getKanjiEntryDictionarySpellCheckerSuggestion(term, limit);
 	}
 }

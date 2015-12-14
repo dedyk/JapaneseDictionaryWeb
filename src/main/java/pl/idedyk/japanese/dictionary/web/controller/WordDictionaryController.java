@@ -160,6 +160,31 @@ public class WordDictionaryController {
 			model.put("runScrollAnim", findWordRequest.hashCode() != lastWordDictionarySearchHash);
 		}
 		
+		// testy !!!!!!!!!!!
+		//int fixme = 1;
+		
+		/*
+		if (findWordResult.getResult().isEmpty() == true) {
+			
+			List<String> wordDictionaryEntrySpellCheckerSuggestionList = null;
+			
+			try {
+				wordDictionaryEntrySpellCheckerSuggestionList = dictionaryManager.getWordDictionaryEntrySpellCheckerSuggestion(findWordRequest.word, 10);
+				
+			} catch (DictionaryException e) {
+				
+				// przygotowanie info do logger'a
+				GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(
+						LoggerModelCommon.createLoggerModelCommon(null, null, null, null, null), -1, e);
+				
+				// wyslanie do logger'a
+				loggerSender.sendLog(generalExceptionLoggerModel);
+			}
+			
+			logger.info("TTTTTT: " + wordDictionaryEntrySpellCheckerSuggestionList.toString());
+		}
+		*/
+		
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
 		model.put("wordAutocompleteInitialized", dictionaryManager.isWordAutocompleteInitialized());
