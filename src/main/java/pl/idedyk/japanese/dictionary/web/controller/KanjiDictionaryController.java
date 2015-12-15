@@ -37,6 +37,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
+import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
@@ -48,6 +49,7 @@ import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
@@ -55,6 +57,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLogge
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
 
@@ -207,6 +210,28 @@ public class KanjiDictionaryController {
 		// logowanie
 		loggerSender.sendLog(new KanjiDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findKanjiRequest, findKanjiResult));
 		
+		// jesli nie znaleziono wynikow, nastepuje proba znalezienia podobnych hasel do wyboru przez uzytkownika
+		List<String> kanjiDictionaryEntrySpellCheckerSuggestionList = null;
+		
+		if (findKanjiResult.getResult().isEmpty() == true) {
+						
+			try {
+				
+				kanjiDictionaryEntrySpellCheckerSuggestionList = dictionaryManager.getSpellCheckerSuggestion(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_WEB, findKanjiRequest.word, 10);
+				
+			} catch (DictionaryException e) {
+				
+				// przygotowanie info do logger'a
+				GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(
+						LoggerModelCommon.createLoggerModelCommon(null, null, null, null, null), -1, e);
+				
+				// wyslanie do logger'a
+				loggerSender.sendLog(generalExceptionLoggerModel);
+			}
+			
+			logger.info("Dla słowa: '" + findKanjiRequest.word + "' znaleziono następujące sugestie: " + kanjiDictionaryEntrySpellCheckerSuggestionList.toString());
+		}
+		
 		// sprawdzanie, czy uruchomic animacje przewijania
 		Integer lastKanjiDictionarySearchHash = (Integer)session.getAttribute("lastKanjiDictionarySearchHash");
 		
@@ -229,6 +254,10 @@ public class KanjiDictionaryController {
 		model.put("findKanjiRequest", findKanjiRequest);
 		model.put("findKanjiResult", findKanjiResult);
 		model.put("doNotShowSocialButtons", Boolean.TRUE);
+		
+		if (kanjiDictionaryEntrySpellCheckerSuggestionList != null) {
+			model.put("kanjiDictionaryEntrySpellCheckerSuggestionList", kanjiDictionaryEntrySpellCheckerSuggestionList);
+		}
 		
 		return "kanjiDictionary";
 	}

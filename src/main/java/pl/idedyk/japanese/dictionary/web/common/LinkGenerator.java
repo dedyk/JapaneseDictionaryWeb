@@ -8,6 +8,7 @@ import java.util.Properties;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
+import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 
@@ -84,7 +85,7 @@ public class LinkGenerator {
 			link.append(word);
 		}
 		
-		//word place
+		// word place
 		String wordPlace = searchModel.getWordPlace();
 		
 		link.append("&amp;wordPlace=");
@@ -111,6 +112,49 @@ public class LinkGenerator {
 			}
 		}	
 				
+		return link.toString();
+	}
+	
+	public static String generateKanjiSearchLink(String contextPath, KanjiDictionarySearchModel searchModel) {
+		
+		StringBuffer link = new StringBuffer(contextPath + "/kanjiDictionarySearch?");
+		
+		// word
+		String word = searchModel.getWord();
+		
+		link.append("word=");
+		
+		if (word != null) {
+			link.append(word);
+		}
+
+		// word place
+		String wordPlace = searchModel.getWordPlace();
+		
+		link.append("&amp;wordPlace=");
+		
+		if (wordPlace != null) {
+			link.append(wordPlace);
+		}
+
+		// strokeCountFrom
+		String strokeCountFrom = searchModel.getStrokeCountFrom();
+		
+		link.append("&amp;strokeCountFrom=");
+		
+		if (strokeCountFrom != null) {
+			link.append(strokeCountFrom);
+		}
+		
+		// strokeCountTo
+		String strokeCountTo = searchModel.getStrokeCountTo();
+		
+		link.append("&amp;strokeCountTo=");
+		
+		if (strokeCountTo != null) {
+			link.append(strokeCountTo);
+		}
+		
 		return link.toString();
 	}
 	

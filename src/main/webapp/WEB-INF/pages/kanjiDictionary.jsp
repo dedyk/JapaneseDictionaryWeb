@@ -293,7 +293,11 @@
 							<hr id="findKanjiResultHrId" style="margin-top: 10px; margin-bottom: 10px" />
 						
 							<p class="text-left"><h4><spring:message code="kanjiDictionary.page.search.table.caption" /></h4></p>
-						
+							
+							<c:if test="${kanjiDictionaryEntrySpellCheckerSuggestionList != null}">				
+								<jdwt:generateSpellCheckerSuggestionList id="kanjiDictionaryEntrySpellCheckerSuggestionListId" spellCheckerSuggestionList="${kanjiDictionaryEntrySpellCheckerSuggestionList}" type="kanjiDictionaryEntry" />
+							</c:if>
+														
 							<table id="kanjiDictionaryFindKanjiResult" class="table table-striped" style="font-size: 120%;">
 								<thead>
 									<tr>

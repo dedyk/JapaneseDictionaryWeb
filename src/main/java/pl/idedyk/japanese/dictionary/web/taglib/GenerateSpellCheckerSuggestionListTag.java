@@ -17,6 +17,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
+import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
@@ -92,6 +93,15 @@ public class GenerateSpellCheckerSuggestionListTag extends TagSupport {
             		}
             		
             		link.setHref(LinkGenerator.generateWordSearchLink(pageContext.getServletContext().getContextPath(), searchModel));
+            		
+            	} else if (type.equals("kanjiDictionaryEntry") == true) {
+            		
+            		KanjiDictionarySearchModel searchModel = new KanjiDictionarySearchModel();
+            		
+            		searchModel.setWord(currentSpellCheckerSuggestion);
+            		searchModel.setWordPlace(WordPlaceSearch.START_WITH.toString());
+
+            		link.setHref(LinkGenerator.generateKanjiSearchLink(pageContext.getServletContext().getContextPath(), searchModel));
             	}
             	
             	link.addHtmlElement(new Text(currentSpellCheckerSuggestion));
