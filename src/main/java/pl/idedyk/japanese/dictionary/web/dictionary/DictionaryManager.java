@@ -26,6 +26,7 @@ import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.api.keigo.KeigoHelper;
 import pl.idedyk.japanese.dictionary.api.tools.KanaHelper;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabase;
+import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 
 import com.csvreader.CsvReader;
@@ -394,59 +395,31 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		return transitiveIntransitivePairsList;
 	}
 
-	public boolean isWordAutocompleteInitialized() {
+	public boolean isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource source) {
 		
 		waitForDatabaseReady();
 		
-		return luceneDatabase.isWordAutocompleteInitialized();
+		return luceneDatabase.isAutocompleteInitialized(source);
 	}
 	
-	public List<String> getWordAutocomplete(String term, int limit) throws DictionaryException {
+	public List<String> getAutocomplete(LuceneDatabaseSuggesterAndSpellCheckerSource source, String term, int limit) throws DictionaryException {
 		
 		waitForDatabaseReady();
 		
-		return luceneDatabase.getWordAutocomplete(term, limit);
+		return luceneDatabase.getAutocomplete(source, term, limit);
+	}
+		
+	public boolean isSpellCheckerInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource source) {
+		
+		waitForDatabaseReady();
+		
+		return luceneDatabase.isSpellCheckerInitialized(source);
 	}
 	
-	public boolean isKanjiAutocompleteInitialized() {
+	public List<String> getWordDictionaryEntrySpellCheckerSuggestion(LuceneDatabaseSuggesterAndSpellCheckerSource source, String term, int limit) throws DictionaryException {
 		
 		waitForDatabaseReady();
 		
-		return luceneDatabase.isKanjiAutocompleteInitialized();
-	}
-
-	public List<String> getKanjiAutocomplete(String term, int limit) {
-		
-		waitForDatabaseReady();
-		
-		return luceneDatabase.getKanjiAutocomplete(term, limit);
-	}
-	
-	public boolean isWordDictionaryEntrySpellCheckerInitialized() {
-		
-		waitForDatabaseReady();
-		
-		return luceneDatabase.isWordDictionaryEntrySpellCheckerInitialized();
-	}
-	
-	public List<String> getWordDictionaryEntrySpellCheckerSuggestion(String term, int limit) throws DictionaryException {
-		
-		waitForDatabaseReady();
-		
-		return luceneDatabase.getWordDictionaryEntrySpellCheckerSuggestion(term, limit);
-	}
-		
-	public boolean isKanjiEntryDictionarySpellChecker() {
-		
-		waitForDatabaseReady();
-		
-		return luceneDatabase.isKanjiEntryDictionarySpellChecker();		
-	}
-	
-	public List<String> getKanjiEntryDictionarySpellCheckerSuggestion(String term, int limit) throws DictionaryException {
-		
-		waitForDatabaseReady();
-		
-		return luceneDatabase.getKanjiEntryDictionarySpellCheckerSuggestion(term, limit);
+		return luceneDatabase.getSpellCheckerSuggestion(source, term, limit);
 	}
 }

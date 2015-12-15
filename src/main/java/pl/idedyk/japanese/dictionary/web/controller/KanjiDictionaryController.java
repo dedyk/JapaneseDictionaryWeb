@@ -37,6 +37,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
+import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke;
@@ -103,7 +104,7 @@ public class KanjiDictionaryController {
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
-		model.put("kanjiAutocompleteInitialized", dictionaryManager.isKanjiAutocompleteInitialized());
+		model.put("kanjiAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_WEB));
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 				
 		return "kanjiDictionary";
@@ -148,7 +149,7 @@ public class KanjiDictionaryController {
 			model.put("radicalList", radicalList);
 			model.put("selectedMenu", "kanjiDictionary");
 			model.put("tabs", KanjiDictionaryTab.values());
-			model.put("kanjiAutocompleteInitialized", dictionaryManager.isKanjiAutocompleteInitialized());
+			model.put("kanjiAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_WEB));
 			model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 			
 			return "kanjiDictionary";
@@ -222,7 +223,7 @@ public class KanjiDictionaryController {
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
-		model.put("kanjiAutocompleteInitialized", dictionaryManager.isKanjiAutocompleteInitialized());
+		model.put("kanjiAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_WEB));
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 		
 		model.put("findKanjiRequest", findKanjiRequest);
@@ -281,7 +282,7 @@ public class KanjiDictionaryController {
 		term = term.trim();
 
 		try {
-			List<String> kanjiAutocomplete = dictionaryManager.getKanjiAutocomplete(term, 5);
+			List<String> kanjiAutocomplete = dictionaryManager.getAutocomplete(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_WEB, term, 5);
 
 			// logowanie
 			loggerSender.sendLog(new KanjiDictionaryAutocompleteLoggerModel(Utils.createLoggerModelCommon(request), term, kanjiAutocomplete.size()));
@@ -514,7 +515,7 @@ public class KanjiDictionaryController {
 		model.put("radicalList", radicalList);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
-		model.put("kanjiAutocompleteInitialized", dictionaryManager.isKanjiAutocompleteInitialized());
+		model.put("kanjiAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_WEB));
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.DETECT));
 		
 		model.put("kanjiDictionaryDetectErrorMessage", errorMessage);

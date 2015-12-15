@@ -17,5 +17,6 @@ cp $HOME/.m2/repository/org/apache/lucene/lucene-analyzers-common/$LUCENE_VERSIO
 cp $HOME/.m2/repository/org/apache/lucene/lucene-queries/$LUCENE_VERSION/lucene-queries-$LUCENE_VERSION.jar $BASE_DIR/lib
 cp $HOME/.m2/repository/org/apache/lucene/lucene-queryparser/$LUCENE_VERSION/lucene-queryparser-$LUCENE_VERSION.jar $BASE_DIR/lib
 cp $HOME/.m2/repository/org/apache/lucene/lucene-sandbox/$LUCENE_VERSION/lucene-sandbox-$LUCENE_VERSION.jar $BASE_DIR/lib
+cp $HOME/.m2/repository/org/apache/lucene/lucene-suggest/$LUCENE_VERSION/lucene-suggest-$LUCENE_VERSION.jar $BASE_DIR/lib
 
 cp -r db $BASE_DIR/db

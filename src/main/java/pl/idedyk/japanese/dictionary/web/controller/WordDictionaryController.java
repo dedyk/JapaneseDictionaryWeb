@@ -33,6 +33,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
@@ -97,7 +98,7 @@ public class WordDictionaryController {
 
 		model.put("addableDictionaryEntryList", addableDictionaryEntryList);
 		model.put("command", wordDictionarySearchModel);
-		model.put("wordAutocompleteInitialized", dictionaryManager.isWordAutocompleteInitialized());
+		model.put("wordAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_WEB));
 		model.put("selectedMenu", "wordDictionary");
 		
 		return "wordDictionary";
@@ -113,7 +114,7 @@ public class WordDictionaryController {
 						
 			model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 			model.put("command", searchModel);
-			model.put("wordAutocompleteInitialized", dictionaryManager.isWordAutocompleteInitialized());
+			model.put("wordAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_WEB));
 			model.put("selectedMenu", "wordDictionary");
 			
 			return "wordDictionary";
@@ -187,7 +188,7 @@ public class WordDictionaryController {
 		
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
-		model.put("wordAutocompleteInitialized", dictionaryManager.isWordAutocompleteInitialized());
+		model.put("wordAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_WEB));
 		model.put("selectedMenu", "wordDictionary");
 		model.put("findWordRequest", findWordRequest);
 		model.put("findWordResult", findWordResult);
@@ -299,7 +300,7 @@ public class WordDictionaryController {
 		term = term.trim();
 		
 		try {
-			List<String> wordAutocomplete = dictionaryManager.getWordAutocomplete(term, 5);
+			List<String> wordAutocomplete = dictionaryManager.getAutocomplete(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_WEB, term, 5);
 
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryAutocompleteLoggerModel(Utils.createLoggerModelCommon(request), term, wordAutocomplete.size()));
