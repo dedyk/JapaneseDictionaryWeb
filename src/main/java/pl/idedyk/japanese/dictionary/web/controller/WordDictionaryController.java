@@ -33,6 +33,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
@@ -40,6 +41,8 @@ import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchMo
 import pl.idedyk.japanese.dictionary.web.controller.validator.WordDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
@@ -163,14 +166,13 @@ public class WordDictionaryController {
 		
 		// testy !!!!!!!!!!!
 		//int fixme = 1;
-		
 		/*
 		if (findWordResult.getResult().isEmpty() == true) {
 			
 			List<String> wordDictionaryEntrySpellCheckerSuggestionList = null;
 			
 			try {
-				wordDictionaryEntrySpellCheckerSuggestionList = dictionaryManager.getWordDictionaryEntrySpellCheckerSuggestion(findWordRequest.word, 10);
+				wordDictionaryEntrySpellCheckerSuggestionList = dictionaryManager.getSpellCheckerSuggestion(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_WEB, findWordRequest.word, 10);
 				
 			} catch (DictionaryException e) {
 				

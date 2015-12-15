@@ -416,7 +416,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		return luceneDatabase.isSpellCheckerInitialized(source);
 	}
 	
-	public List<String> getWordDictionaryEntrySpellCheckerSuggestion(LuceneDatabaseSuggesterAndSpellCheckerSource source, String term, int limit) throws DictionaryException {
+	public List<String> getSpellCheckerSuggestion(LuceneDatabaseSuggesterAndSpellCheckerSource source, String term, int limit) throws DictionaryException {
 		
 		waitForDatabaseReady();
 		
