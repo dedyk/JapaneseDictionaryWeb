@@ -164,14 +164,13 @@ public class WordDictionaryController {
 			model.put("runScrollAnim", findWordRequest.hashCode() != lastWordDictionarySearchHash);
 		}
 		
-		// testy !!!!!!!!!!!
-		//int fixme = 1;
-		/*
+		// jesli nie znaleziono wynikow, nastepuje proba znalezienia podobnych hasel do wyboru przez uzytkownika
+		List<String> wordDictionaryEntrySpellCheckerSuggestionList = null;
+		
 		if (findWordResult.getResult().isEmpty() == true) {
-			
-			List<String> wordDictionaryEntrySpellCheckerSuggestionList = null;
-			
+						
 			try {
+				
 				wordDictionaryEntrySpellCheckerSuggestionList = dictionaryManager.getSpellCheckerSuggestion(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_WEB, findWordRequest.word, 10);
 				
 			} catch (DictionaryException e) {
@@ -184,9 +183,8 @@ public class WordDictionaryController {
 				loggerSender.sendLog(generalExceptionLoggerModel);
 			}
 			
-			logger.info("TTTTTT: " + wordDictionaryEntrySpellCheckerSuggestionList.toString());
+			logger.info("Dla słowa: '" + findWordRequest.word + "' znaleziono następujące sugestie: " + wordDictionaryEntrySpellCheckerSuggestionList.toString());
 		}
-		*/
 		
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
@@ -199,6 +197,10 @@ public class WordDictionaryController {
 		if (findWordResult.foundGrammaAndExamples == true) {
 			model.put("searchResultInfo", messageSource.getMessage("wordDictionary.page.search.info.foundGrammaAndExamples", 
 					new Object[] { }, Locale.getDefault()));
+		}
+		
+		if (wordDictionaryEntrySpellCheckerSuggestionList != null) {
+			model.put("wordDictionaryEntrySpellCheckerSuggestionList", wordDictionaryEntrySpellCheckerSuggestionList);
 		}
 		
 		return "wordDictionary";

@@ -98,4 +98,24 @@
 		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.IsRobotTag</tagclass>
 		<info>Generuje zawartosc tylko dla robotow</info>
 	</tag>
+	<tag>
+		<name>generateSpellCheckerSuggestionList</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.GenerateSpellCheckerSuggestionListTag</tagclass>
+		<info>Generuje sugestie podczas wyszukiwania</info>
+		<attribute>
+			<name>id</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>spellCheckerSuggestionList</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>type</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>	
 </taglib> 

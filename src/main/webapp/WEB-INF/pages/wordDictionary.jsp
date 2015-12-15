@@ -111,6 +111,10 @@
 			<c:if test="${searchResultInfo != null}">
 				<div class="alert alert-info" id="searchResultInfoId"> ${searchResultInfo} </div>
 			</c:if>
+			
+			<c:if test="${wordDictionaryEntrySpellCheckerSuggestionList != null}">				
+				<jdwt:generateSpellCheckerSuggestionList id="wordDictionaryEntrySpellCheckerSuggestionListId" spellCheckerSuggestionList="${wordDictionaryEntrySpellCheckerSuggestionList}" type="wordDictionaryEntry" />
+			</c:if>
 
 			<table id="wordDictionaryFindWordResult" class="table table-striped" style="font-size: 120%;">
 				<thead>

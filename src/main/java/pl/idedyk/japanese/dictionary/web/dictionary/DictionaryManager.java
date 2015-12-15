@@ -87,7 +87,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 				
 				try {
 					
-					logger.info("Inicjalizacja podpowiadacza");		
+					logger.info("Inicjalizacja podpowiadacza");
 					luceneDatabase.openSuggester();				
 					logger.info("Zakończono inicjalizację podpowiadacza");
 					
