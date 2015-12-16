@@ -30,10 +30,13 @@ import pl.idedyk.japanese.dictionary.api.dto.AttributeType;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
+import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 
 @Controller
@@ -122,7 +125,7 @@ public class AndroidController {
 
 		FindWordRequest findWordRequest = createFindWordRequest(jsonObject);
 
-		logger.info("[AndroidSendMissingWord] Wyszukiwanie słowek dla zapytania: " + findWordRequest);
+		logger.info("[AndroidSearch] Wyszukiwanie słowek dla zapytania: " + findWordRequest);
 		
 		// szukanie		
 		FindWordResult findWordResult = dictionaryManager.findWord(findWordRequest);
@@ -135,6 +138,100 @@ public class AndroidController {
 		
 		// zwrocenie wyniku
 		writer.append(jsonObjectFromFindWordResult.toString());		
+	}
+	
+	@RequestMapping(value = "/android/autocomplete", method = RequestMethod.POST)
+	public void autocomplete(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException {
+		
+		BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+		
+		String readLine = null;
+		
+		StringBuffer jsonRequestSb = new StringBuffer();
+		
+		while (true) {		
+			readLine = inputStreamReader.readLine();
+			
+			if (readLine == null) {
+				break;
+			}
+			
+			jsonRequestSb.append(readLine);			
+		}
+		
+		logger.info("[AndroidGetAutoComplete] Parsuję żądanie: " + jsonRequestSb.toString());
+		
+		JSONObject jsonObject = new JSONObject(jsonRequestSb.toString());
+		
+		String word = (String)jsonObject.get("word");
+		String type = (String)jsonObject.get("type");
+		
+		if (word == null || word.length() == 0) {
+			logger.info("[AndroidGetAutoComplete] Brak słowa");
+			
+			return;
+		}
+		
+		if (word.length() < 2) {
+			logger.info("[AndroidGetAutoComplete] Zbyt krótkie słowo: " + word);
+			
+			return;
+		}
+		
+		if (type == null || type.length() == 0) {
+			logger.info("[AndroidGetAutoComplete] Brak typu");
+			
+			return;
+		}
+		
+		if (type.equals("wordDictionaryEntry") == false && type.equals("kanjiDictionaryEntry") == false) {
+			logger.info("[AndroidGetAutoComplete] Niepoprawny typ: " + type);
+			
+			return;
+		}
+		
+		word = word.trim();
+		
+		try {
+			
+			List<String> autocomplete = null;
+			
+			if (type.equals("wordDictionaryEntry") == true) {
+				
+				autocomplete = dictionaryManager.getAutocomplete(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_ANDROID, word, 5);
+				
+				// logowanie
+				loggerSender.sendLog(new WordDictionaryAutocompleteLoggerModel(Utils.createLoggerModelCommon(request), word, autocomplete.size()));
+
+				
+			} else if (type.equals("kanjiDictionaryEntry") == true) {
+				
+				autocomplete = dictionaryManager.getAutocomplete(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_ANDROID, word, 5);
+				
+				// logowanie
+				loggerSender.sendLog(new KanjiDictionaryAutocompleteLoggerModel(Utils.createLoggerModelCommon(request), word, autocomplete.size()));
+				
+			}			
+			
+			JSONArray resultJsonArray = new JSONArray();
+
+			for (String currentWordAutocomplete : autocomplete) {
+
+				JSONObject resultJsonObject = new JSONObject();
+
+				resultJsonObject.put("label", currentWordAutocomplete);
+				resultJsonObject.put("value", currentWordAutocomplete);
+
+				resultJsonArray.put(resultJsonObject);
+			}
+
+			// zwrocenie wyniku
+			writer.append(resultJsonArray.toString());
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	private FindWordRequest createFindWordRequest(JSONObject searchJSONObject) {
