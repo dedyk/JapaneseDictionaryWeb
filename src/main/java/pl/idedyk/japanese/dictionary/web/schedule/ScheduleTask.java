@@ -227,7 +227,7 @@ public class ScheduleTask {
 		}
 	}
 	
-	@Scheduled(cron="0 * * * * ?") // co minute
+	@Scheduled(cron="* * * * * ?")
 	public void processLocalDirQueueItems() {
 		
 		queueService.processLocalDirQueueItems();

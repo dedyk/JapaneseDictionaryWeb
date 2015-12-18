@@ -77,18 +77,21 @@ public class QueueService {
 		queueItem.setDeliveryCount(0);
 		queueItem.setNextAttempt(queueItem.getSendTimestamp());
 		queueItem.setObject(object);
-				
+		
+		// zapisanie do lokalnego katalogu z kolejka
+		saveToLocalDir(queueItem);
+		
+		/*
 		try {
 			// wstawienie do kolejki
 			mySQLConnector.insertQueueItem(queueItem);
 			
 		} catch (SQLException e) {
 			
-			// zapisanie do lokalnego katalogu z kolejka
-			saveToLocalDir(queueItem);
 			
 			throw e;
 		}
+		*/
 	}
 	
 	private String getHostName() {
@@ -103,7 +106,7 @@ public class QueueService {
 	
 	private void saveToLocalDir(QueueItem queueItem) {
 		
-		logger.info("Zapisanie do lokalnego katalogu kolejki");
+		// logger.info("Zapisanie do lokalnego katalogu kolejki");
 		
 		String randomFileName = UUID.randomUUID().toString();
 		
@@ -231,7 +234,7 @@ public class QueueService {
 		
 		if (queueItemsFileReadyList != null && queueItemsFileReadyList.length > 0) {
 			
-			logger.info("Znaleziono pliki z lokalnej kolejki");
+			// logger.info("Znaleziono pliki z lokalnej kolejki");
 			
 			for (File currentReadyQueueItemFile : queueItemsFileReadyList) {
 				
