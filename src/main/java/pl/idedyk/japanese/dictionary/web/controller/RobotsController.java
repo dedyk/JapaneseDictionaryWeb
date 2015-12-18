@@ -53,14 +53,18 @@ public class RobotsController {
 		
 		robotsBody.append("Disallow: /suggestion/sendSuggestion\n\n");
 		
-		// robotsBody.append("User-agent: MJ12bot\n");
+		robotsBody.append("User-agent: MJ12bot\n");
 		
-		// robotsBody.append("Disallow: /\n\n");
+		robotsBody.append("Disallow: /\n\n");
 		
-		// robotsBody.append("User-agent: AhrefsBot\n");
+		robotsBody.append("User-agent: AhrefsBot\n");
 		
-		// robotsBody.append("Disallow: /\n\n");
+		robotsBody.append("Disallow: /\n\n");
+
+		robotsBody.append("User-agent: SEOkicks-Robot\n");
 		
+		robotsBody.append("Disallow: /\n\n");
+
 		/*
 		robotsBody.append("User-agent: Googlebot\n");
 		
