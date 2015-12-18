@@ -17,9 +17,7 @@ public class LoggerSender {
 	private QueueService queueService;
 	
 	public void sendLog(LoggerModelCommon loggerModelCommon) {
-		
-		long start = System.currentTimeMillis();
-		
+						
 		ByteArrayOutputStream bos = null;
 		ObjectOutput objectOutput = null;
 		
@@ -57,10 +55,6 @@ public class LoggerSender {
 				} catch (IOException e) {
 				}
 			}
-			
-			long stop = System.currentTimeMillis();
-			
-			logger.info("sendLog time: " + (stop - start));
 		}		
 	}
 
