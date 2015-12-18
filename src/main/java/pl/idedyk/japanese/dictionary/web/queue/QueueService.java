@@ -106,7 +106,7 @@ public class QueueService {
 	
 	private void saveToLocalDir(QueueItem queueItem) {
 		
-		logger.info("Zapisanie do lokalnego katalogu kolejki");
+		// logger.info("Zapisanie do lokalnego katalogu kolejki");
 		
 		String randomFileName = UUID.randomUUID().toString();
 		
