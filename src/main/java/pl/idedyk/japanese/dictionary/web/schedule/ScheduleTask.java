@@ -106,14 +106,22 @@ public class ScheduleTask {
 	public void processLogQueueItem() {
 				
 		QueueItem currentQueueItem = null;
-				
+		
+		long start = System.currentTimeMillis();
+		
 		try {
+			long getNextItemQueueItemStart = System.currentTimeMillis();
+			
 			// pobranie elementow do przetworzenia
 			List<QueueItem> queueItemList = queueService.getNextItemQueueItem("log");
 						
 			if (queueItemList.size() == 0) {
 				return;
 			}
+			
+			long getNextItemQueueItemStop = System.currentTimeMillis();
+			
+			logger.info("processLogQueueItem: after get next item queue item: " + (getNextItemQueueItemStop - getNextItemQueueItemStart));
 			
 			for (QueueItem queueItem : queueItemList) { // dla kazdego wpisu
 				
@@ -126,14 +134,24 @@ public class ScheduleTask {
 				
 				LoggerModelCommon loggerModelCommon = (LoggerModelCommon)objectInputStream.readObject();
 				
+				long onMessageStart = System.currentTimeMillis();
+				
 				// przetworz wpis
 				loggerListener.onMessage(loggerModelCommon);
 				
+				long onMessageStop = System.currentTimeMillis();
+				
+				logger.info("processLogQueueItem: after on message : " + (onMessageStop - onMessageStart));
+				
 				// ustaw wpis jako przetworzony
 				queueService.setQueueItemDone(queueItem);
-				
+								
 				currentQueueItem = null;
 			}
+			
+			long stop = System.currentTimeMillis();
+			
+			logger.info("processLogQueueItem: stop: " + (stop - start));
 			
 		} catch (Exception e) {
 			
