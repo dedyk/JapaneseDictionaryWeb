@@ -240,7 +240,7 @@ public class QueueService {
 				
 				File queueItemFile = new File(currentReadyQueueItemFile.getParent(), currentReadyQueueItemFile.getName().substring(0, currentReadyQueueItemFile.getName().length() - ".ready".length()));
 				
-				logger.info("Przetwarzam plik " + queueItemFile.getName());
+				// logger.info("Przetwarzam plik " + queueItemFile.getName());
 				
 				ObjectInputStream ois = null;
 				

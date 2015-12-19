@@ -36,6 +36,7 @@ import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidGetSpellCheckerSuggestionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidSendMissingWordLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
@@ -303,6 +304,22 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 			
 			panelBody.addHtmlElement(table);			
 			
+		} else if (operation == GenericLogOperationEnum.ANDROID_GET_SPELL_CHECKER_SUGGESTION) { 
+			
+			AndroidGetSpellCheckerSuggestionLog androidGetSpellCheckerSuggestionLog = mySQLConnector.getAndroidGetSpellCheckerSuggestionLogByGenericId(genericLog.getId());
+			
+			if (androidGetSpellCheckerSuggestionLog == null) {
+				return null;
+			}
+			
+			Table table = new Table();
+			
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.androidGetSpellCheckerSuggestionLog.word"), androidGetSpellCheckerSuggestionLog.getWord());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.androidGetSpellCheckerSuggestionLog.type"), androidGetSpellCheckerSuggestionLog.getType());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.androidGetSpellCheckerSuggestionLog.spellCheckerSuggestionList"), androidGetSpellCheckerSuggestionLog.getSpellCheckerSuggestionList());
+			
+			panelBody.addHtmlElement(table);			
+		
 		} else if (operation == GenericLogOperationEnum.DAILY_REPORT) {
 			
 			DailyReportSendLog dailyReportSendLog = mySQLConnector.getDailyReportSendLogByGenericId(genericLog.getId());

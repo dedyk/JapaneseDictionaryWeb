@@ -13,6 +13,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetSpellCheckerSuggestionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.BingSiteAuthGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
@@ -47,6 +48,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerM
 import pl.idedyk.japanese.dictionary.web.mail.MailSender;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidGetSpellCheckerSuggestionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidSendMissingWordLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
@@ -536,6 +538,27 @@ public class LoggerListener {
 				throw new RuntimeException(e);
 			}			
 			
+		} else if (operation == GenericLogOperationEnum.ANDROID_GET_SPELL_CHECKER_SUGGESTION) {
+			
+			AndroidGetSpellCheckerSuggestionLoggerModel androidGetSpellCheckerSuggestionLoggerModel = (AndroidGetSpellCheckerSuggestionLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			AndroidGetSpellCheckerSuggestionLog androidGetSpellCheckerSuggestionLog = new AndroidGetSpellCheckerSuggestionLog();
+			
+			androidGetSpellCheckerSuggestionLog.setGenericLogId(genericLog.getId());
+			androidGetSpellCheckerSuggestionLog.setWord(androidGetSpellCheckerSuggestionLoggerModel.getWord());
+			androidGetSpellCheckerSuggestionLog.setType(androidGetSpellCheckerSuggestionLoggerModel.getType());
+			androidGetSpellCheckerSuggestionLog.setSpellCheckerSuggestionList(androidGetSpellCheckerSuggestionLoggerModel.getSpellCheckerSuggestionList().toString());
+			
+			// wstawienie wpisu do bazy danych
+			try {
+				mySQLConnector.insertAndroidGetSpellCheckerSuggestionLog(androidGetSpellCheckerSuggestionLog);
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}			
+			
 		} else if (operation == GenericLogOperationEnum.SUGGESTION_SEND) {
 			
 			SuggestionSendLoggerModel suggestionSendLoggerModel = (SuggestionSendLoggerModel)loggerModelCommon;
@@ -731,6 +754,9 @@ public class LoggerListener {
 		
 		} else if (AndroidSendMissingWordLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.ANDROID_SEND_MISSING_WORD;
+			
+		} else if (AndroidGetSpellCheckerSuggestionLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.ANDROID_GET_SPELL_CHECKER_SUGGESTION;
 			
 		} else if (SuggestionStartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.SUGGESTION_START;

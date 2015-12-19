@@ -34,6 +34,7 @@ import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheck
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetSpellCheckerSuggestionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
@@ -222,6 +223,99 @@ public class AndroidController {
 
 				resultJsonObject.put("label", currentWordAutocomplete);
 				resultJsonObject.put("value", currentWordAutocomplete);
+
+				resultJsonArray.put(resultJsonObject);
+			}
+
+			// zwrocenie wyniku
+			writer.append(resultJsonArray.toString());
+			
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@RequestMapping(value = "/android/spellCheckerSuggestion", method = RequestMethod.POST)
+	public void spellCheckerSuggestion(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException {
+		
+		BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+		
+		String readLine = null;
+		
+		StringBuffer jsonRequestSb = new StringBuffer();
+		
+		while (true) {		
+			readLine = inputStreamReader.readLine();
+			
+			if (readLine == null) {
+				break;
+			}
+			
+			jsonRequestSb.append(readLine);			
+		}
+		
+		logger.info("[AndroidSpellCheckerSuggestion] Parsuję żądanie: " + jsonRequestSb.toString());
+		
+		JSONObject jsonObject = new JSONObject(jsonRequestSb.toString());
+		
+		String word = (String)jsonObject.get("word");
+		String type = (String)jsonObject.get("type");
+		
+		if (word == null || word.length() == 0) {
+			logger.info("[AndroidGetAutoComplete] Brak słowa");
+			
+			return;
+		}
+		
+		if (word.length() < 2) {
+			logger.info("[AndroidGetAutoComplete] Zbyt krótkie słowo: " + word);
+			
+			return;
+		}
+		
+		if (type == null || type.length() == 0) {
+			logger.info("[AndroidGetAutoComplete] Brak typu");
+			
+			return;
+		}
+		
+		if (type.equals("wordDictionaryEntry") == false && type.equals("kanjiDictionaryEntry") == false) {
+			logger.info("[AndroidGetAutoComplete] Niepoprawny typ: " + type);
+			
+			return;
+		}
+		
+		word = word.trim();
+		
+		try {
+			
+			List<String> spellCheckerSuggestion = null;
+			
+			if (type.equals("wordDictionaryEntry") == true) {
+				
+				spellCheckerSuggestion = dictionaryManager.getSpellCheckerSuggestion(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_ANDROID, word, 10);
+				
+				// logowanie
+				loggerSender.sendLog(new AndroidGetSpellCheckerSuggestionLoggerModel(Utils.createLoggerModelCommon(request), word, type, spellCheckerSuggestion));
+
+				
+			} else if (type.equals("kanjiDictionaryEntry") == true) {
+				
+				spellCheckerSuggestion = dictionaryManager.getSpellCheckerSuggestion(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_ANDROID, word, 10);
+				
+				// logowanie
+				loggerSender.sendLog(new AndroidGetSpellCheckerSuggestionLoggerModel(Utils.createLoggerModelCommon(request), word, type, spellCheckerSuggestion));
+				
+			}			
+			
+			JSONArray resultJsonArray = new JSONArray();
+
+			for (String currentSpellCheckerSuggesion : spellCheckerSuggestion) {
+
+				JSONObject resultJsonObject = new JSONObject();
+
+				resultJsonObject.put("value", currentSpellCheckerSuggesion);
 
 				resultJsonArray.put(resultJsonObject);
 			}

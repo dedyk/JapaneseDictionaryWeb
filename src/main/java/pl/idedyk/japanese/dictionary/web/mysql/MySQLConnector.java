@@ -20,6 +20,7 @@ import javax.annotation.PreDestroy;
 import org.apache.log4j.Logger;
 
 import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidGetSpellCheckerSuggestionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidSendMissingWordLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
@@ -1654,6 +1655,104 @@ public class MySQLConnector {
 		androidSendMissingWordLog.setWordPlaceSearch(resultSet.getString("word_place_search"));
 
 		return androidSendMissingWordLog;
+	}
+	
+	public void insertAndroidGetSpellCheckerSuggestionLog(AndroidGetSpellCheckerSuggestionLog androidGetSpellCheckerSuggestionLog) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into android_get_spell_checker_suggestion_log(generic_log_id, word, type, spell_checker_suggestion_list) "
+					+ "values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, androidGetSpellCheckerSuggestionLog.getGenericLogId());
+			preparedStatement.setString(2, androidGetSpellCheckerSuggestionLog.getWord());
+			preparedStatement.setString(3, androidGetSpellCheckerSuggestionLog.getType());
+			preparedStatement.setString(4, androidGetSpellCheckerSuggestionLog.getSpellCheckerSuggestionList());
+						
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			androidGetSpellCheckerSuggestionLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public AndroidGetSpellCheckerSuggestionLog getAndroidGetSpellCheckerSuggestionLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, word, type, spell_checker_suggestion_list "
+					+ "from android_get_spell_checker_suggestion_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createAndroidGetSpellCheckerSuggestionLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private AndroidGetSpellCheckerSuggestionLog createAndroidGetSpellCheckerSuggestionLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		AndroidGetSpellCheckerSuggestionLog androidGetSpellCheckerSuggestionLog = new AndroidGetSpellCheckerSuggestionLog();
+
+		androidGetSpellCheckerSuggestionLog.setId(resultSet.getLong("id"));
+		androidGetSpellCheckerSuggestionLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		androidGetSpellCheckerSuggestionLog.setWord(resultSet.getString("word"));
+		androidGetSpellCheckerSuggestionLog.setType(resultSet.getString("type"));
+		androidGetSpellCheckerSuggestionLog.setSpellCheckerSuggestionList(resultSet.getString("spell_checker_suggestion_list"));
+
+		return androidGetSpellCheckerSuggestionLog;
 	}
 		
 	public void insertSuggestionSendLoggerModel(SuggestionSendLog suggestionSendLog) throws SQLException {
