@@ -232,4 +232,9 @@ public class ScheduleTask {
 		
 		queueService.processLocalDirQueueItems();
 	}
+	
+	@Scheduled(cron="0 * * * * ?") // co minute
+	public void runGC() {
+		System.gc();
+	}
 }
