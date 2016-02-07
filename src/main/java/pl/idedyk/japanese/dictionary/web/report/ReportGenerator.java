@@ -125,6 +125,7 @@ public class ReportGenerator {
 				reportDiv.addHtmlElement(new Hr());
 				
 				// wyszukiwanie slowek bez wynikow				
+				/*
 				List<GenericTextStat> wordDictionarySearchNoFoundStatList = mySQLConnector.getWordDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				appendGenericTextStat(reportDiv, "report.generate.daily.report.word.dictionary.no.found", wordDictionarySearchNoFoundStatList);
@@ -168,7 +169,7 @@ public class ReportGenerator {
 				List<GenericTextStat> kanjiDictionaryAutocompleteStat = mySQLConnector.getKanjiDictionaryAutocompleteStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				appendGenericTextStat(reportDiv, "report.generate.daily.report.kanji.dictionary.autocomplete.search", kanjiDictionaryAutocompleteStat);				
-				
+				*/
 				// statystyki ilosci wywolan
 				List<RemoteClientStat> remoteClientStat = mySQLConnector.getRemoteClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
@@ -190,9 +191,11 @@ public class ReportGenerator {
 				appendGenericTextStat(reportDiv, "report.generate.daily.report.page.not.found.stat", pageNotFoundStat);				
 				
 				// kolejka brakujacych slow
+				/*
 				List<WordDictionarySearchMissingWordQueue> allUnlockedWordDictionarySearchMissingWordQueue = mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueue(Integer.MAX_VALUE);
 				
 				appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.queue.full", allUnlockedWordDictionarySearchMissingWordQueue, null, false);				
+				*/
 				
 				StringWriter stringWriter = new StringWriter();
 				
