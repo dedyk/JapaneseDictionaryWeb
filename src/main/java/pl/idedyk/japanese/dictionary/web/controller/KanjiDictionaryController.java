@@ -289,14 +289,14 @@ public class KanjiDictionaryController {
 		String strokeCountFrom = searchModel.getStrokeCountFrom();
 		
 		if (strokeCountFrom != null && strokeCountFrom.trim().equals("") == false) {
-			findKanjiRequest.strokeCountFrom = Integer.parseInt(strokeCountFrom);
+			findKanjiRequest.strokeCountFrom = Integer.parseInt(strokeCountFrom.trim());
 		}
 
 		// strokeCountTo
 		String strokeCountTo = searchModel.getStrokeCountTo();
 		
 		if (strokeCountTo != null && strokeCountTo.trim().equals("") == false) {
-			findKanjiRequest.strokeCountTo = Integer.parseInt(strokeCountTo);
+			findKanjiRequest.strokeCountTo = Integer.parseInt(strokeCountTo.trim());
 		}
 
 		return findKanjiRequest;
