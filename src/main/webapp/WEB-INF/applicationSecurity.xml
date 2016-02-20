@@ -6,7 +6,12 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-	<http auto-config="true">       
+	<http 	auto-config="false"
+			entry-point-ref="authenticationProcessingFilterEntryPoint" 
+			access-decision-manager-ref="accessDecisionManager"> 
+
+		<custom-filter position="CHANNEL_FILTER" ref="myChannelProcessingFilter"/>
+		   		   
 		<intercept-url pattern="/adm/**" access="ROLE_ADMIN" requires-channel="https" />
 		
 		<form-login 
@@ -26,9 +31,35 @@
 		<port-mappings>
         	<port-mapping http="8080" https="8443"/> <!-- dla DEV -->
         </port-mappings>
-        
 	</http> 
- 
+	
+	<beans:bean id="myChannelProcessingFilter" class="org.springframework.security.web.access.channel.ChannelProcessingFilter">
+		<beans:property name="channelDecisionManager" ref="channelDecisionManager" />
+		
+		<beans:property name="securityMetadataSource">
+			<filter-security-metadata-source>
+				<intercept-url pattern="/adm/**" access="REQUIRES_SECURE_CHANNEL" />
+			</filter-security-metadata-source>
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean id="myChannelDecisionManager" class="org.springframework.security.web.access.channel.ChannelDecisionManagerImpl">
+		<beans:property name="channelProcessors">
+			<beans:list>
+				<beans:ref bean="myRecureChannelProcessor" />
+				<beans:ref bean="myInsecureChannelProcessor" />
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean id="mySecureChannelProcessor" class="org.springframework.security.web.access.channel.SecureChannelProcessor">
+		<beans:property name="entryPoint" ref="myRetryWithHttps"/>
+	</beans:bean>
+	
+	<beans:bean id="myInsecureChannelProcessor" class="org.springframework.security.web.access.channel.InsecureChannelProcessor" />
+
+	<beans:bean id="myRetryWithHttps" class="pl.idedyk.japanese.dictionary.web.spring.SecureChannelProcessorEntryPoint" />
+	 
 	<authentication-manager>
 		<authentication-provider ref="authenticationService" />
 	</authentication-manager>

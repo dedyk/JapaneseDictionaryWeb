@@ -86,30 +86,6 @@
 		</property>
 	</bean>
 
-	<!-- Spring security -->
-  
-	<bean id="channelProcessingFilter" class="org.springframework.security.web.access.channel.ChannelProcessingFilter">
-		<property name="channelDecisionManager" ref="channelDecisionManager" />
-		
-		<property name="securityMetadataSource">
-			<security:filter-security-metadata-source>
-				<security:intercept-url pattern="/adm/**" access="REQUIRES_SECURE_CHANNEL" />
-			</security:filter-security-metadata-source>
-		</property>
-	</bean>
-
-	<bean id="channelDecisionManager" class="org.springframework.security.web.access.channel.ChannelDecisionManagerImpl">
-		<property name="channelProcessors">
-			<list>
-				<ref bean="secureChannelProcessor" />
-				<ref bean="insecureChannelProcessor" />
-			</list>
-		</property>
-	</bean>
-
-	<bean id="secureChannelProcessor" class="org.springframework.security.web.access.channel.SecureChannelProcessor" />
-	<bean id="insecureChannelProcessor" class="org.springframework.security.web.access.channel.InsecureChannelProcessor" />
-
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
