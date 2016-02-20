@@ -6,8 +6,8 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-	<http auto-config="true">        	
-		<intercept-url pattern="/adm/**" access="ROLE_ADMIN" />
+	<http auto-config="true">       
+		<intercept-url pattern="/adm/**" access="ROLE_ADMIN" requires-channel="https" />
 		
 		<form-login 
 			login-page="/admlogin" 
@@ -22,6 +22,12 @@
 		<logout success-handler-ref="authenticationService" />
 		
 		<access-denied-handler ref="authenticationService"/>
+		
+		<port-mappings>
+        	<port-mapping http="80" https="443"/> <!-- dla PROD -->
+        	<port-mapping http="8080" https="8443"/> <!-- dla DEV -->
+        </port-mappings>
+        
 	</http> 
  
 	<authentication-manager>
