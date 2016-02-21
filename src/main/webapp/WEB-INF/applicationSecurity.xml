@@ -38,7 +38,8 @@
 		
 		<beans:property name="securityMetadataSource">
 			<filter-security-metadata-source>
-				<intercept-url pattern="/adm/**" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/admlogin" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/adm/**" access="REQUIRES_SECURE_CHANNEL" />				
 			</filter-security-metadata-source>
 		</beans:property>
 	</beans:bean>
