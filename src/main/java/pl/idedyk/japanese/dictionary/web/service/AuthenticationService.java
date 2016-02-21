@@ -19,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.web.PortMapper;
+import org.springframework.security.web.PortResolver;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -42,6 +44,12 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
 	private String adminPassword;
 	
 	@Autowired
+	private PortResolver portResolver;
+	
+	@Autowired
+	private PortMapper portMapper;
+	
+	@Autowired
 	private LoggerSender loggerSender;
 	
 	@Override
@@ -56,8 +64,27 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
 		// logowanie
 		loggerSender.sendLog(adminLoggerModel);
 		
-		// przekierowanie do panelu admina		
-		response.sendRedirect(request.getContextPath() + "/adm/panel");
+		// przekierowanie do panelu admina	
+		redirect(request, response, "/adm/panel");
+	}
+	
+	private void redirect(HttpServletRequest request, HttpServletResponse response, String redirectUrl) throws IOException {
+				
+        Integer currentPort = Integer.valueOf(portResolver.getServerPort(request));
+        Integer redirectPort = portMapper.lookupHttpsPort(currentPort);
+
+        if (redirectPort != null) {
+        	
+            boolean includePort = redirectPort.intValue() != 443;
+
+            redirectUrl = "https://" + request.getServerName() + ((includePort) ? (":" + redirectPort) : "") + redirectUrl;
+            
+            response.sendRedirect(redirectUrl);
+            
+        } else {
+        	
+        	response.sendRedirect(request.getContextPath() + redirectUrl);
+        }		
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -79,7 +106,7 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
 		loggerSender.sendLog(adminLoggerModel);
 
 		// przekierowanie na strone logowania
-		response.sendRedirect(request.getContextPath() + "/admlogin?error");
+		redirect(request, response, "/admlogin?error");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -122,7 +149,7 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
 		loggerSender.sendLog(adminLoggerModel);
 
 		// przekierowanie na strone glowna
-		response.sendRedirect(request.getContextPath() + "/");
+		redirect(request, response, "/");		
 	}
 	
 	@Override
@@ -142,7 +169,7 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
 		loggerSender.sendLog(adminLoggerModel);
 
 		// przekierowanie na strone bledu
-		response.sendRedirect(request.getContextPath() + "/admAccessDenied");
+		redirect(request, response, "/admAccessDenied");
 	}
 
 	@Override
