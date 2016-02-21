@@ -6,13 +6,11 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-	<http 	auto-config="false"
-			entry-point-ref="authenticationProcessingFilterEntryPoint" 
-			access-decision-manager-ref="accessDecisionManager"> 
+	<http auto-config="true">        	
 
-		<custom-filter position="CHANNEL_FILTER" ref="myChannelProcessingFilter"/>
+		<custom-filter position="CHANNEL_FILTER" ref="channelProcessingFilter"/>
 		   		   
-		<intercept-url pattern="/adm/**" access="ROLE_ADMIN" requires-channel="https" />
+		<intercept-url pattern="/adm/**" access="ROLE_ADMIN" />
 		
 		<form-login 
 			login-page="/admlogin" 
@@ -25,7 +23,7 @@
 			authentication-success-handler-ref="authenticationService" />
 			
 		<logout success-handler-ref="authenticationService" />
-		
+
 		<access-denied-handler ref="authenticationService"/>
 		
 		<port-mappings>
@@ -33,7 +31,8 @@
         </port-mappings>
 	</http> 
 	
-	<beans:bean id="myChannelProcessingFilter" class="org.springframework.security.web.access.channel.ChannelProcessingFilter">
+	<beans:bean id="channelProcessingFilter" class="org.springframework.security.web.access.channel.ChannelProcessingFilter">
+	
 		<beans:property name="channelDecisionManager" ref="channelDecisionManager" />
 		
 		<beans:property name="securityMetadataSource">
@@ -43,22 +42,22 @@
 		</beans:property>
 	</beans:bean>
 
-	<beans:bean id="myChannelDecisionManager" class="org.springframework.security.web.access.channel.ChannelDecisionManagerImpl">
+	<beans:bean id="channelDecisionManager" class="org.springframework.security.web.access.channel.ChannelDecisionManagerImpl">
 		<beans:property name="channelProcessors">
 			<beans:list>
-				<beans:ref bean="myRecureChannelProcessor" />
-				<beans:ref bean="myInsecureChannelProcessor" />
+				<beans:ref bean="secureChannelProcessor" />
+				<beans:ref bean="insecureChannelProcessor" />
 			</beans:list>
 		</beans:property>
 	</beans:bean>
 
-	<beans:bean id="mySecureChannelProcessor" class="org.springframework.security.web.access.channel.SecureChannelProcessor">
-		<beans:property name="entryPoint" ref="myRetryWithHttps"/>
+	<beans:bean id="secureChannelProcessor" class="org.springframework.security.web.access.channel.SecureChannelProcessor">
+		<beans:property name="entryPoint" ref="retryWithHttps"/>
 	</beans:bean>
 	
-	<beans:bean id="myInsecureChannelProcessor" class="org.springframework.security.web.access.channel.InsecureChannelProcessor" />
+	<beans:bean id="insecureChannelProcessor" class="org.springframework.security.web.access.channel.InsecureChannelProcessor" />
 
-	<beans:bean id="myRetryWithHttps" class="pl.idedyk.japanese.dictionary.web.spring.SecureChannelProcessorEntryPoint" />
+	<beans:bean id="retryWithHttps" class="pl.idedyk.japanese.dictionary.web.spring.SecureChannelProcessorEntryPoint" />
 	 
 	<authentication-manager>
 		<authentication-provider ref="authenticationService" />
