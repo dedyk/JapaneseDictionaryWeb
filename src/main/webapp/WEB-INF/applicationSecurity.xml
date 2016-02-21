@@ -27,6 +27,7 @@
 		<access-denied-handler ref="authenticationService"/>
 		
 		<port-mappings>
+			<port-mapping http="80" https="443"/> <!-- dla PROD -->
         	<port-mapping http="8080" https="8443"/> <!-- dla DEV -->
         </port-mappings>
 	</http> 
@@ -51,14 +52,10 @@
 		</beans:property>
 	</beans:bean>
 
-	<beans:bean id="secureChannelProcessor" class="org.springframework.security.web.access.channel.SecureChannelProcessor">
-		<beans:property name="entryPoint" ref="retryWithHttps"/>
-	</beans:bean>
+	<beans:bean id="secureChannelProcessor" class="pl.idedyk.japanese.dictionary.web.spring.SecureChannelProcessor" />
 	
 	<beans:bean id="insecureChannelProcessor" class="org.springframework.security.web.access.channel.InsecureChannelProcessor" />
-
-	<beans:bean id="retryWithHttps" class="pl.idedyk.japanese.dictionary.web.spring.SecureChannelProcessorEntryPoint" />
-	 
+		 
 	<authentication-manager>
 		<authentication-provider ref="authenticationService" />
 	</authentication-manager>
