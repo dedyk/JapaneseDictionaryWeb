@@ -13,7 +13,7 @@
 		<intercept-url pattern="/adm/**" access="ROLE_ADMIN" />
 		
 		<form-login 
-			login-page="/admlogin" 
+			login-page="${admin.login.page.redirect.url}" 
 		    default-target-url="/adm/panel" 
 		
 			username-parameter="username"
