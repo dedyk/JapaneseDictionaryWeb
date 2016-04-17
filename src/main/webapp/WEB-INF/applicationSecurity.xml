@@ -41,18 +41,18 @@
 				<intercept-url pattern="/" access="REQUIRES_SECURE_CHANNEL" />
 				
 				<intercept-url pattern="/word*" access="REQUIRES_SECURE_CHANNEL" />
-				<intercept-url pattern="/word**" access="REQUIRES_SECURE_CHANNEL" />				
+				<intercept-url pattern="/word*/**" access="REQUIRES_SECURE_CHANNEL" />				
 
 				<intercept-url pattern="/kanji*" access="REQUIRES_SECURE_CHANNEL" />
-				<intercept-url pattern="/kanji**" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/kanji*/**" access="REQUIRES_SECURE_CHANNEL" />
 				
 				<intercept-url pattern="/info" access="REQUIRES_SECURE_CHANNEL" />
 				<intercept-url pattern="/info*" access="REQUIRES_SECURE_CHANNEL" />
-				<intercept-url pattern="/info**" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/info*/**" access="REQUIRES_SECURE_CHANNEL" />
 				
 				<intercept-url pattern="/suggestion" access="REQUIRES_SECURE_CHANNEL" />
-				<intercept-url pattern="/suggestion*" access="REQUIRES_SECURE_CHANNEL" />
-				<intercept-url pattern="/suggestion**" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/suggestion*/**" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/suggestion*/**" access="REQUIRES_SECURE_CHANNEL" />
 				
 				<intercept-url pattern="/info" access="REQUIRES_SECURE_CHANNEL" />				
 				
