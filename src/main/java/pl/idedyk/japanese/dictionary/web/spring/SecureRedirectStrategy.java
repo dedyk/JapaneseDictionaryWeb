@@ -7,8 +7,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.util.UrlUtils;
+
+import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
 
 // kopia z zmianami: DefaultRedirectStrategy
 
@@ -17,6 +22,9 @@ public class SecureRedirectStrategy implements RedirectStrategy {
     protected final Log logger = LogFactory.getLog(getClass());
 
     private boolean contextRelative;
+    
+	@Autowired
+	private LoggerSender loggerSender;
 
     /**
      * Redirects the response to the supplied URL.
@@ -33,8 +41,18 @@ public class SecureRedirectStrategy implements RedirectStrategy {
             logger.debug("Redirecting to '" + redirectUrl + "'");
         }
         
+        // dodanie do logowania
+		RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), redirectUrl);
+		
+		loggerSender.sendLog(redirectLoggerModel);
+		
+		//
+        
         response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
         response.setHeader("Location", redirectUrl);
+        
+        // zrobienie commit'a
+        response.flushBuffer();
     }
 
     private String calculateRedirectUrl(String contextPath, String url) {
