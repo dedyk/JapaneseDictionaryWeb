@@ -38,6 +38,24 @@
 		
 		<beans:property name="securityMetadataSource">
 			<filter-security-metadata-source>
+				<intercept-url pattern="/" access="REQUIRES_SECURE_CHANNEL" />
+				
+				<intercept-url pattern="/word*" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/word**" access="REQUIRES_SECURE_CHANNEL" />				
+
+				<intercept-url pattern="/kanji*" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/kanji**" access="REQUIRES_SECURE_CHANNEL" />
+				
+				<intercept-url pattern="/info" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/info*" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/info**" access="REQUIRES_SECURE_CHANNEL" />
+				
+				<intercept-url pattern="/suggestion" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/suggestion*" access="REQUIRES_SECURE_CHANNEL" />
+				<intercept-url pattern="/suggestion**" access="REQUIRES_SECURE_CHANNEL" />
+				
+				<intercept-url pattern="/info" access="REQUIRES_SECURE_CHANNEL" />				
+				
 				<intercept-url pattern="/admlogin" access="REQUIRES_SECURE_CHANNEL" />
 				<intercept-url pattern="/adm/**" access="REQUIRES_SECURE_CHANNEL" />				
 			</filter-security-metadata-source>
@@ -53,7 +71,16 @@
 		</beans:property>
 	</beans:bean>
 
-	<beans:bean id="secureChannelProcessor" class="pl.idedyk.japanese.dictionary.web.spring.SecureChannelProcessor" />
+	<beans:bean id="secureChannelProcessor" class="pl.idedyk.japanese.dictionary.web.spring.SecureChannelProcessor">
+		<beans:property name="entryPoint" ref="secureChannelProcessorentryPoint" />	
+	</beans:bean>
+	
+	<beans:bean id="secureChannelProcessorentryPoint" class="org.springframework.security.web.access.channel.RetryWithHttpsEntryPoint">
+		<beans:property name="redirectStrategy" ref="secureRedirectStrategy" />	
+	</beans:bean>
+	
+	<beans:bean id="secureRedirectStrategy" class="pl.idedyk.japanese.dictionary.web.spring.SecureRedirectStrategy">
+	</beans:bean>
 	
 	<beans:bean id="insecureChannelProcessor" class="org.springframework.security.web.access.channel.InsecureChannelProcessor" />
 		 
