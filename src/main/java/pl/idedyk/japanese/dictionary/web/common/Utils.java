@@ -2,7 +2,9 @@ package pl.idedyk.japanese.dictionary.web.common;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
@@ -154,18 +156,53 @@ public class Utils {
 	public static String getRemoteIp(HttpServletRequest httpServletRequest) {
 				
 		String remoteIp = httpServletRequest.getHeader("x-forwarded-for");
-		
+				
 		if (remoteIp != null) {
-			return remoteIp;
+			return removeDuplicateIp(remoteIp);
 		}
 		
 		remoteIp = httpServletRequest.getHeader("x-real-ip");
 
 		if (remoteIp != null) {
-			return remoteIp;
+			return removeDuplicateIp(remoteIp);
 		}
 
-		return httpServletRequest.getRemoteAddr();		
+		return removeDuplicateIp(httpServletRequest.getRemoteAddr());		
+	}
+	
+	private static String removeDuplicateIp(String ip) {
+		
+		if (ip == null) {
+			return ip;
+		}
+		
+		String[] ipSplited = ip.split(",");
+		
+		if (ipSplited == null || ipSplited.length == 0) {
+			return ip;
+		}
+		
+		Set<String> uniqueIpSet = new LinkedHashSet<>();
+		
+		for (String currentIp : ipSplited) {
+			
+			currentIp = currentIp.trim();
+
+			uniqueIpSet.add(currentIp);
+		}
+		
+		StringBuffer result = new StringBuffer();
+		
+		for (String currentIp : uniqueIpSet) {
+			
+			if (result.length() > 0) {
+				result.append(", ");
+			}
+			
+			result.append(currentIp);			
+		}
+		
+		return result.toString();
 	}
 		
 	public static String getHostname(String ip) {
