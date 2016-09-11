@@ -1,0 +1,12 @@
+1. git status, sprawdzamy, czy wszystko jest zakomitowane
+2. git tag -l, sprawdzamy, czy jest tag z poprzedniej wersji
+3. ./clean-lucene-package.sh
+4. kopiowanie bazy do db
+5. ustalenie wersji na release_20RRMMDD i zapisaniu na boku
+5. git status
+6. git add -u
+7. w pliku profiles/production/config, zmieniamy wersje
+8. git commit -m "Release 20160911: Nowy slownik"
+9. git tag release_20RRMMDD
+10. git log
+11. git tag -l | grep release_20RRMMDD
