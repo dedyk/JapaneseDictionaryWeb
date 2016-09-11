@@ -11,3 +11,5 @@
 10. git log
 11. git tag -l | grep release_20RRMMDD
 12. git pull ; git push ; git push --tag
+13. ./generate-lucene-package.sh
+14. mvn clean install -Pproduction
