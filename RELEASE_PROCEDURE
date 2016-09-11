@@ -1,4 +1,4 @@
-1. git status, sprawdzamy, czy wszystko jest zakomitowane
+1. git status, git log, sprawdzamy, czy wszystko jest zakomitowane
 2. git tag -l, sprawdzamy, czy jest tag z poprzedniej wersji
 3. ./clean-lucene-package.sh
 4. kopiowanie bazy do db
