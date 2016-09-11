@@ -10,3 +10,4 @@
 9. git tag release_20RRMMDD
 10. git log
 11. git tag -l | grep release_20RRMMDD
+12. git pull ; git push ; git push --tag
