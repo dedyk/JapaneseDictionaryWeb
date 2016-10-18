@@ -2805,7 +2805,7 @@ public class MySQLConnector {
 									
 			preparedStatement = connection.prepareStatement("select id, missing_word, counter, first_appearance_timestamp, last_appearance_timestamp, lock_timestamp, priority "
 					+ "from word_dictionary_search_missing_words_queue where lock_timestamp is null order by priority desc, "
-					+ "date_format(first_appearance_timestamp, '%Y-%m-%d %H') != date_format(last_appearance_timestamp, '%Y-%m-%d %H') desc, first_appearance_timestamp, id limit ?");
+					+ "date_format(first_appearance_timestamp, '%Y-%m-%d') != date_format(last_appearance_timestamp, '%Y-%m-%d') desc, first_appearance_timestamp, id limit ?");
 						
 			preparedStatement.setLong(1, size);
 			
@@ -2851,7 +2851,7 @@ public class MySQLConnector {
 									
 			preparedStatement = connection.prepareStatement("select count(*) "
 					+ "from word_dictionary_search_missing_words_queue where lock_timestamp is null order by priority desc, "
-					+ "date_format(first_appearance_timestamp, '%Y-%m-%d %H') != date_format(last_appearance_timestamp, '%Y-%m-%d %H') desc, first_appearance_timestamp, id");
+					+ "date_format(first_appearance_timestamp, '%Y-%m-%d') != date_format(last_appearance_timestamp, '%Y-%m-%d') desc, first_appearance_timestamp, id");
 									
 			resultSet = preparedStatement.executeQuery();
 			
