@@ -25,7 +25,6 @@ import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericTextStat;
-import pl.idedyk.japanese.dictionary.web.mysql.model.RemoteClientStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
 
 @Service
@@ -169,11 +168,12 @@ public class ReportGenerator {
 				List<GenericTextStat> kanjiDictionaryAutocompleteStat = mySQLConnector.getKanjiDictionaryAutocompleteStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				appendGenericTextStat(reportDiv, "report.generate.daily.report.kanji.dictionary.autocomplete.search", kanjiDictionaryAutocompleteStat);				
-				*/
+
 				// statystyki ilosci wywolan
 				List<RemoteClientStat> remoteClientStat = mySQLConnector.getRemoteClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				appendRemoteClientStat(reportDiv, "report.generate.daily.report.remote.client", remoteClientStat);
+				*/
 				
 				// statystyki user agentow
 				List<GenericTextStat> userAgentClientStat = mySQLConnector.getUserAgentClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
@@ -288,7 +288,8 @@ public class ReportGenerator {
 		reportDiv.addHtmlElement(div);		
 		reportDiv.addHtmlElement(new Hr());
 	}
-
+	
+	/*
 	private void appendRemoteClientStat(Div reportDiv, String titleCode, List<RemoteClientStat> remoteClientStatList) {
 		
 		Div div = new Div();
@@ -336,6 +337,7 @@ public class ReportGenerator {
 		reportDiv.addHtmlElement(div);		
 		reportDiv.addHtmlElement(new Hr());
 	}
+	*/
 	
 	private void appendWordDictionarySearchMissingWordQueueStat(Div reportDiv, String titleCode, List<WordDictionarySearchMissingWordQueue> wordDictionarySearchMissingWordQueueList, Long wordDictionarySearchMissingWordQueueListLength, boolean full) {
 		
