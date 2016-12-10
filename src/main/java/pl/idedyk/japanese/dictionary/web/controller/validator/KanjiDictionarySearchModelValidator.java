@@ -76,6 +76,9 @@ public class KanjiDictionarySearchModelValidator implements Validator {
 			
 			if (tokenWord == null || tokenWord.size() == 0) {
 				errors.rejectValue("word", "kanjiDictionary.validation.kanjiDictionarySearchModel.word.null");
+
+			} else if (tokenWord.size() > 30) {
+				errors.rejectValue("word", "kanjiDictionary.validation.kanjiDictionarySearchModel.word.tooMany");				
 			}
 		}
 		

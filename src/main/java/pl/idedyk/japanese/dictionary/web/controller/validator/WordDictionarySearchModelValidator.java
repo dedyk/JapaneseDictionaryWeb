@@ -35,6 +35,9 @@ public class WordDictionarySearchModelValidator implements Validator {
 			
 			if (tokenWord == null || tokenWord.size() == 0) {
 				errors.rejectValue("word", "wordDictionary.validation.wordDictionarySearchModel.word.null");
+				
+			} else if (tokenWord.size() > 30) {
+				errors.rejectValue("word", "wordDictionary.validation.wordDictionarySearchModel.word.tooMany");				
 			}
 		}
 		
