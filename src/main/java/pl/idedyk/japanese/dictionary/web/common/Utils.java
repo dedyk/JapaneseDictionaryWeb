@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.common;
 
 import java.net.InetAddress;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import com.mysql.jdbc.MysqlDataTruncation;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
@@ -317,5 +320,28 @@ public class Utils {
 		findWordRequest.searchName = false;
 		
 		return findWordRequest;
+	}
+	
+	public static boolean isMysqlDataTruncationException(Exception e) {
+		
+		Throwable eCause = e.getCause();
+		
+		if (e instanceof MysqlDataTruncation == true) {
+			return true;
+		}
+		
+		if (eCause != null && eCause instanceof MysqlDataTruncation == true) {
+			return true;
+		}
+		
+		if (e instanceof SQLException == true && e.getMessage().contains("Incorrect string value") == true) {
+			return true;
+		}
+		
+		if (eCause != null && eCause instanceof SQLException == true && eCause.getMessage().contains("Incorrect string value") == true) {
+			return true;
+		}
+
+		return false;
 	}
 }

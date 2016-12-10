@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.mysql.jdbc.MysqlDataTruncation;
-
+import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerListener;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
@@ -138,30 +137,15 @@ public class ScheduleTask {
 		} catch (Exception e) {
 			
 			logger.error("Blad podczas przetwarzania log'ow z kolejki: " + e);
-			
-			// bledow typu com.mysql.jdbc.MysqlDataTruncation: Data truncation: Incorrect string value: '\xF0\x9F\x88\xB5' - nie ponawiamy
-			
-			Throwable eCause = e.getCause();
-			
+						
 			// czy opoznij zadanie
 			boolean delayQueueItem = true;
 			
-			if (delayQueueItem == true && e instanceof MysqlDataTruncation == true) {
+			// bledow typu com.mysql.jdbc.MysqlDataTruncation: Data truncation: Incorrect string value: '\xF0\x9F\x88\xB5' - nie ponawiamy
+			if (Utils.isMysqlDataTruncationException(e) == true) {
 				delayQueueItem = false;
 			}
 			
-			if (delayQueueItem == true && eCause != null && eCause instanceof MysqlDataTruncation == true) {
-				delayQueueItem = false;
-			}
-			
-			if (delayQueueItem == true && e instanceof SQLException == true && e.getMessage().contains("Incorrect string value") == true) {
-				delayQueueItem = false;
-			}
-			
-			if (delayQueueItem == true && eCause != null && eCause instanceof SQLException == true && eCause.getMessage().contains("Incorrect string value") == true) {
-				delayQueueItem = false;
-			}
-						
 			if (currentQueueItem != null && delayQueueItem == true) {
 				
 				try {

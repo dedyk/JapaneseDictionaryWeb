@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,15 +130,27 @@ public class LoggerListener {
 			WordDictionaryAutocompleteLoggerModel wordDictionaryAutocompleteLoggerModel = (WordDictionaryAutocompleteLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
-			WordDictionaryAutocompleteLog wordDictionaryAutocompleteLog = new WordDictionaryAutocompleteLog();
+			final WordDictionaryAutocompleteLog wordDictionaryAutocompleteLog = new WordDictionaryAutocompleteLog();
 			
 			wordDictionaryAutocompleteLog.setGenericLogId(genericLog.getId());
 			wordDictionaryAutocompleteLog.setTerm(wordDictionaryAutocompleteLoggerModel.getTerm());
 			wordDictionaryAutocompleteLog.setFoundElements(wordDictionaryAutocompleteLoggerModel.getFoundElemets());
 			
 			// wstawienie wpisu do bazy danych
-			try {
-				mySQLConnector.insertWordDictionaryAutocompleteLog(wordDictionaryAutocompleteLog);
+			try {				
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertWordDictionaryAutocompleteLog(wordDictionaryAutocompleteLog);						
+					}
+					
+					@Override
+					public void changeDate() {						
+						wordDictionaryAutocompleteLog.setTerm(stringToBase64String(wordDictionaryAutocompleteLog.getTerm()));
+					}
+				});
+
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
@@ -149,7 +162,7 @@ public class LoggerListener {
 			WordDictionarySearchLoggerModel wordDictionarySearchLoggerModel = (WordDictionarySearchLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
-			WordDictionarySearchLog wordDictionarySearchLog = new WordDictionarySearchLog();
+			final WordDictionarySearchLog wordDictionarySearchLog = new WordDictionarySearchLog();
 			
 			wordDictionarySearchLog.setGenericLogId(genericLog.getId());
 			
@@ -185,7 +198,19 @@ public class LoggerListener {
 			
 			// wstawienie wpisu do bazy danych
 			try {
-				mySQLConnector.insertWordDictionarySearchLog(wordDictionarySearchLog);
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertWordDictionarySearchLog(wordDictionarySearchLog);						
+					}
+					
+					@Override
+					public void changeDate() {						
+						wordDictionarySearchLog.setFindWordRequestWord(stringToBase64String(wordDictionarySearchLog.getFindWordRequestWord()));
+					}
+				});
+				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
@@ -198,7 +223,7 @@ public class LoggerListener {
 				WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue = null;
 				
 				try {
-					wordDictionarySearchMissingWordQueue = mySQLConnector.getWordDictionarySearchMissingWordsQueue(wordDictionarySearchLoggerModel.getFindWordRequest().getWord());
+					wordDictionarySearchMissingWordQueue = mySQLConnector.getWordDictionarySearchMissingWordsQueue(wordDictionarySearchLog.getFindWordRequestWord());
 
 				} catch (SQLException e) {
 					logger.error("Błąd podczas dostępu do bazy danych", e);
@@ -210,7 +235,7 @@ public class LoggerListener {
 					
 					wordDictionarySearchMissingWordQueue = new WordDictionarySearchMissingWordQueue();
 					
-					wordDictionarySearchMissingWordQueue.setMissingWord(wordDictionarySearchLoggerModel.getFindWordRequest().getWord());
+					wordDictionarySearchMissingWordQueue.setMissingWord(wordDictionarySearchLog.getFindWordRequestWord());
 					wordDictionarySearchMissingWordQueue.setCounter(1);
 					wordDictionarySearchMissingWordQueue.setFirstAppearanceTimestamp(new Timestamp(new Date().getTime()));
 					wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(new Timestamp(new Date().getTime()));
@@ -218,7 +243,20 @@ public class LoggerListener {
 					wordDictionarySearchMissingWordQueue.setPriority(wordDictionarySearchLoggerModel.getPriority());
 					
 					try {
-						mySQLConnector.insertWordDictionarySearchMissingWordsQueue(wordDictionarySearchMissingWordQueue);
+						final WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue2 = wordDictionarySearchMissingWordQueue;
+						
+						repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+							
+							@Override
+							public void operation() throws SQLException {
+								mySQLConnector.insertWordDictionarySearchMissingWordsQueue(wordDictionarySearchMissingWordQueue2);						
+							}
+							
+							@Override
+							public void changeDate() {								
+								wordDictionarySearchMissingWordQueue2.setMissingWord(stringToBase64String(wordDictionarySearchMissingWordQueue2.getMissingWord()));
+							}
+						});
 						
 					} catch (SQLException e) {
 						logger.error("Błąd podczas zapisu do bazy danych", e);
@@ -355,7 +393,7 @@ public class LoggerListener {
 			KanjiDictionaryAutocompleteLoggerModel kanjiDictionaryAutocompleteLoggerModel = (KanjiDictionaryAutocompleteLoggerModel)loggerModelCommon;
 
 			// utworzenie wpisu do bazy danych
-			KanjiDictionaryAutocompleteLog kanjiDictionaryAutocompleteLog = new KanjiDictionaryAutocompleteLog();
+			final KanjiDictionaryAutocompleteLog kanjiDictionaryAutocompleteLog = new KanjiDictionaryAutocompleteLog();
 
 			kanjiDictionaryAutocompleteLog.setGenericLogId(genericLog.getId());
 			kanjiDictionaryAutocompleteLog.setTerm(kanjiDictionaryAutocompleteLoggerModel.getTerm());
@@ -363,7 +401,19 @@ public class LoggerListener {
 
 			// wstawienie wpisu do bazy danych
 			try {
-				mySQLConnector.insertKanjiDictionaryAutocompleteLog(kanjiDictionaryAutocompleteLog);
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertKanjiDictionaryAutocompleteLog(kanjiDictionaryAutocompleteLog);						
+					}
+					
+					@Override
+					public void changeDate() {						
+						kanjiDictionaryAutocompleteLog.setTerm(stringToBase64String(kanjiDictionaryAutocompleteLog.getTerm()));
+					}
+				});
+				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 
@@ -375,7 +425,7 @@ public class LoggerListener {
 			KanjiDictionarySearchLoggerModel kanjiDictionarySearchLoggerModel = (KanjiDictionarySearchLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
-			KanjiDictionarySearchLog kanjiDictionarySearchLog = new KanjiDictionarySearchLog();
+			final KanjiDictionarySearchLog kanjiDictionarySearchLog = new KanjiDictionarySearchLog();
 			
 			kanjiDictionarySearchLog.setGenericLogId(genericLog.getId());
 			
@@ -390,7 +440,19 @@ public class LoggerListener {
 							
 			// wstawienie wpisu do bazy danych
 			try {
-				mySQLConnector.insertKanjiDictionarySearchLog(kanjiDictionarySearchLog);
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertKanjiDictionarySearchLog(kanjiDictionarySearchLog);						
+					}
+					
+					@Override
+					public void changeDate() {						
+						kanjiDictionarySearchLog.setFindKanjiRequestWord(stringToBase64String(kanjiDictionarySearchLog.getFindKanjiRequestWord()));
+					}
+				});
+				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
@@ -523,7 +585,7 @@ public class LoggerListener {
 			AndroidSendMissingWordLoggerModel androidSendMissingWordLoggerModel = (AndroidSendMissingWordLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
-			AndroidSendMissingWordLog androidSendMissingWordLog = new AndroidSendMissingWordLog();
+			final AndroidSendMissingWordLog androidSendMissingWordLog = new AndroidSendMissingWordLog();
 			
 			androidSendMissingWordLog.setGenericLogId(genericLog.getId());
 			androidSendMissingWordLog.setWord(androidSendMissingWordLoggerModel.getWord());
@@ -531,7 +593,19 @@ public class LoggerListener {
 			
 			// wstawienie wpisu do bazy danych
 			try {
-				mySQLConnector.insertAndroidSendMissingWordLog(androidSendMissingWordLog);
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertAndroidSendMissingWordLog(androidSendMissingWordLog);						
+					}
+					
+					@Override
+					public void changeDate() {						
+						androidSendMissingWordLog.setWord(stringToBase64String(androidSendMissingWordLog.getWord()));
+					}
+				});				
+				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
@@ -543,7 +617,7 @@ public class LoggerListener {
 			AndroidGetSpellCheckerSuggestionLoggerModel androidGetSpellCheckerSuggestionLoggerModel = (AndroidGetSpellCheckerSuggestionLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
-			AndroidGetSpellCheckerSuggestionLog androidGetSpellCheckerSuggestionLog = new AndroidGetSpellCheckerSuggestionLog();
+			final AndroidGetSpellCheckerSuggestionLog androidGetSpellCheckerSuggestionLog = new AndroidGetSpellCheckerSuggestionLog();
 			
 			androidGetSpellCheckerSuggestionLog.setGenericLogId(genericLog.getId());
 			androidGetSpellCheckerSuggestionLog.setWord(androidGetSpellCheckerSuggestionLoggerModel.getWord());
@@ -552,7 +626,19 @@ public class LoggerListener {
 			
 			// wstawienie wpisu do bazy danych
 			try {
-				mySQLConnector.insertAndroidGetSpellCheckerSuggestionLog(androidGetSpellCheckerSuggestionLog);
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertAndroidGetSpellCheckerSuggestionLog(androidGetSpellCheckerSuggestionLog);						
+					}
+					
+					@Override
+					public void changeDate() {						
+						androidGetSpellCheckerSuggestionLog.setWord(stringToBase64String(androidGetSpellCheckerSuggestionLog.getWord()));
+					}
+				});
+				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
@@ -564,7 +650,7 @@ public class LoggerListener {
 			SuggestionSendLoggerModel suggestionSendLoggerModel = (SuggestionSendLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
-			SuggestionSendLog suggestionSendLog = new SuggestionSendLog();
+			final SuggestionSendLog suggestionSendLog = new SuggestionSendLog();
 			
 			suggestionSendLog.setGenericLogId(genericLog.getId());
 
@@ -574,7 +660,21 @@ public class LoggerListener {
 			
 			// wstawienie wpisu do bazy danych
 			try {
-				mySQLConnector.insertSuggestionSendLoggerModel(suggestionSendLog);
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertSuggestionSendLoggerModel(suggestionSendLog);						
+					}
+					
+					@Override
+					public void changeDate() {						
+						suggestionSendLog.setTitle(stringToBase64String(suggestionSendLog.getTitle()));
+						suggestionSendLog.setSender(stringToBase64String(suggestionSendLog.getSender()));
+						suggestionSendLog.setBody(stringToBase64String(suggestionSendLog.getBody()));
+					}
+				});
+				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
@@ -655,7 +755,7 @@ public class LoggerListener {
 			GeneralExceptionLoggerModel generalExceptionLoggerModel = (GeneralExceptionLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
-			GeneralExceptionLog generalExceptionLog = new GeneralExceptionLog();
+			final GeneralExceptionLog generalExceptionLog = new GeneralExceptionLog();
 			
 			generalExceptionLog.setGenericLogId(genericLog.getId());
 			
@@ -671,7 +771,19 @@ public class LoggerListener {
 			
 			// wstawienie wpisu do bazy danych
 			try {
-				mySQLConnector.insertGeneralExceptionLog(generalExceptionLog);
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertGeneralExceptionLog(generalExceptionLog);						
+					}
+					
+					@Override
+					public void changeDate() {						
+						generalExceptionLog.setException(stringToBase64String(generalExceptionLog.getException()));
+					}
+				});				
+				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
@@ -791,5 +903,44 @@ public class LoggerListener {
 		} else {
 			throw new RuntimeException("Nieznany klasa: " + clazz);
 		}
+	}
+	
+	private void repeatIfNeededMysqlDataTruncationException(IRepeatableOperation repeatableOperation) throws SQLException {
+
+		for (int idx = 0; idx < 2; ++idx) {
+			
+			try {
+				repeatableOperation.operation();
+				
+				// jest ok, wychodzimy
+				return;
+				
+			} catch (SQLException e) {
+				
+				// jesli byl blad typu MysqlDataTruncationException, proba zmiany danych i ponowienie
+				if (idx == 0 && Utils.isMysqlDataTruncationException(e) == true) {					
+					repeatableOperation.changeDate();
+					
+				} else {
+					throw e;
+				}
+			}
+		}
+	}
+	
+	private String stringToBase64String(String s) {
+		
+		if (s == null) {
+			return s;
+		}
+		
+		return "B64: " + Base64.encodeBase64String(s.getBytes());
+	}
+	
+	private static interface IRepeatableOperation {		
+		
+		public void operation() throws SQLException;
+
+		public void changeDate();		
 	}
 }
