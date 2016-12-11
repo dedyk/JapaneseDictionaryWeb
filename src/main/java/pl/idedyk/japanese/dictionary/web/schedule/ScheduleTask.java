@@ -204,7 +204,7 @@ public class ScheduleTask {
 		logger.info("Kasuje stare przetworzone wpisy z kolejki");
 		
 		try {			
-			mySQLConnector.deleteOldQueueItems(7);
+			mySQLConnector.deleteOldQueueItems(1);
 			
 		} catch (Exception e) {
 			logger.error("Blad podczas kasowania starych wpisow z kolejki", e);
