@@ -289,7 +289,7 @@ public class LoggerListener {
 			WordDictionaryDetailsLoggerModel wordDictionaryDetailsLoggerModel = (WordDictionaryDetailsLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
-			WordDictionaryDetailsLog wordDictionaryDetailsLog = new WordDictionaryDetailsLog();
+			final WordDictionaryDetailsLog wordDictionaryDetailsLog = new WordDictionaryDetailsLog();
 			
 			wordDictionaryDetailsLog.setGenericLogId(genericLog.getId());
 
@@ -310,7 +310,19 @@ public class LoggerListener {
 			
 			// wstawienie wpisu do bazy danych
 			try {
-				mySQLConnector.insertWordDictionaryDetailsLog(wordDictionaryDetailsLog);
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertWordDictionaryDetailsLog(wordDictionaryDetailsLog);						
+					}
+					
+					@Override
+					public void changeDate() {							
+						wordDictionaryDetailsLog.setDictionaryEntryKanji(stringToBase64String(wordDictionaryDetailsLog.getDictionaryEntryKanji()));
+					}
+				});				
+				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
