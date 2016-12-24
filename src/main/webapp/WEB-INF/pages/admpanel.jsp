@@ -31,7 +31,7 @@
 				<tr>
 					<td><form:label path="pageNo" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="admin.panel.search.pageNo"/></form:label></td>
 					<td><form:input cssClass="form-control" cssStyle="margin: 0px 10px 10px 0px" id="pageNoId" path="pageNo"/></td>
-					<td><label style="margin: 0px 0px 10px 10px"><spring:message code="admin.panel.search.pageNoFrom" arguments="${maxPageSize}"/></label>					
+					<%-- <td><label style="margin: 0px 0px 10px 10px"><spring:message code="admin.panel.search.pageNoFrom" arguments="${maxPageSize}"/></label> --%>					
 				</tr>
 
 				<tr>

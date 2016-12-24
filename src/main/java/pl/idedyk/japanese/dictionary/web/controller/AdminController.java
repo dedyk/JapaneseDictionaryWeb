@@ -169,7 +169,7 @@ public class AdminController {
     	session.setAttribute("adminPanelModel", adminPanelModel);
     	
 		// pobranie ilosci operacji
-		long genericLogSize = mySQLConnector.getGenericLogSize(adminPanelModel.getGenericLogOperationStringList());
+		long genericLogSize = Integer.MAX_VALUE; // mySQLConnector.getGenericLogSize(adminPanelModel.getGenericLogOperationStringList());
     	
 		model.put("selectedMenu", "panel");
 		
