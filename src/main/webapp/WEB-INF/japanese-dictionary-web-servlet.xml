@@ -69,6 +69,8 @@
 			<props>
 				<prop key="app.version">${app.version}</prop>
 				
+				<prop key="base.server">${base.server}</prop>
+				
 				<prop key="private.policy.url">${private.policy.url}</prop>
 				
 				<prop key="use.google.analytics">${use.google.analytics}</prop>
