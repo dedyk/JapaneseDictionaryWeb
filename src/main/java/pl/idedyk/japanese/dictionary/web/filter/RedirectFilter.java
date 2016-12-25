@@ -36,65 +36,77 @@ public class RedirectFilter implements Filter {
 
 		Properties applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
 				
-		String configBaseServer = applicationProperties.getProperty("base.server");
+		String newServerName = applicationProperties.getProperty("new.server.name");
+		
+		if (newServerName == null || newServerName.trim().equals("") == true) { // gdy nazwa nie ustawiona, idziemy dalej
+			chain.doFilter(request, response);
+			
+			return;
+		}
 		
 		//
 		
-		HttpServletRequest httpServletReuqest = (HttpServletRequest)request;
+		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 		
-		String requestBaseServer = getRequestBaseServer(httpServletReuqest);
+		// wywolan z androida nie przekierowujemy
+		String requestURI = httpServletRequest.getRequestURI();
 		
-		if (requestBaseServer.equals(configBaseServer) == false) { // mozliwe przekierowanie
-			
-			String requestURI = httpServletReuqest.getRequestURI();
-			
-			if (requestURI != null && requestURI.startsWith("/android/") == true) { // wywolan z androida nie przekierowujemy
-				chain.doFilter(request, response);
-				
-				return;
-			}			
-			
-			LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
-			
-			String redirectUrl = getRedirectUrl(httpServletReuqest, httpServletResponse, configBaseServer);
-			
-	        // dodanie do logowania
-			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(httpServletReuqest), redirectUrl);
-			
-			loggerSender.sendLog(redirectLoggerModel);
-
-			httpServletResponse.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-			httpServletResponse.setHeader("Location", redirectUrl);
-	        
-	        // zrobienie commit'a
-	        response.flushBuffer();
-			
-		} else {
+		if (requestURI != null && requestURI.startsWith("/android/") == true) { 
 			chain.doFilter(request, response);
+			
+			return;
 		}
+		
+		// pobranie server name
+		String serverName = httpServletRequest.getServerName();
+		
+		if (serverName.equals(newServerName) == true) { // ta sama nazwa, nic nie robimy
+			chain.doFilter(request, response);
+			
+			return;
+		}
+		
+		String redirectUrl = getRedirectUrl(httpServletRequest, httpServletResponse, newServerName);
+
+		// przekierowanie		
+		LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
+
+        // dodanie do logowania
+		RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(httpServletRequest), redirectUrl);
+		
+		loggerSender.sendLog(redirectLoggerModel);
+
+		httpServletResponse.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+		httpServletResponse.setHeader("Location", redirectUrl);
+        
+        // zrobienie commit'a
+        response.flushBuffer();		
 	}
 
 	@Override
 	public void destroy() {
 		// noop		
 	}
-	
-	private String getRequestBaseServer(HttpServletRequest httpServletReuqest) {
 		
-		int serverPort = httpServletReuqest.getServerPort();
+	private String getRedirectUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, String newServerName) {
 		
-		String requestBaseServer = httpServletReuqest.getScheme() + "://" + httpServletReuqest.getServerName() + (serverPort != 80 && serverPort != 443 ? (":" + serverPort) : "");
+        String queryString = httpServletRequest.getQueryString();
+        String redirectUrl = httpServletRequest.getRequestURI() + ((queryString == null) ? "" : ("?" + queryString));
+        
+        int serverPort = httpServletRequest.getServerPort();
+        
+        //
+        
+		String scheme = httpServletRequest.getScheme();
 		
-		return requestBaseServer;
-	}
-	
-	private String getRedirectUrl(HttpServletRequest httpServletReuqest, HttpServletResponse httpServletResponse, String configBaseServer) {
-		
-        String queryString = httpServletReuqest.getQueryString();
-        String redirectUrl = httpServletReuqest.getRequestURI() + ((queryString == null) ? "" : ("?" + queryString));
-
-        String fullRedirectUrl = configBaseServer + redirectUrl;		
+    	String xForwardedProto = httpServletRequest.getHeader("x-forwarded-proto");
+    	
+    	if (xForwardedProto != null) {
+    		scheme = xForwardedProto;
+    	}
+    	
+        String fullRedirectUrl = scheme + "://" + newServerName + (serverPort != 80 && serverPort != 443 ? (":" + serverPort) : "") + redirectUrl;	
 		
 		return httpServletResponse.encodeRedirectURL(fullRedirectUrl);
 	}

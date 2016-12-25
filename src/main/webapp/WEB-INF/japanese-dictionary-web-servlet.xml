@@ -69,7 +69,7 @@
 			<props>
 				<prop key="app.version">${app.version}</prop>
 				
-				<prop key="base.server">${base.server}</prop>
+				<prop key="new.server.name">${new.server.name}</prop>
 				
 				<prop key="private.policy.url">${private.policy.url}</prop>
 				
