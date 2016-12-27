@@ -248,14 +248,23 @@ public class Utils {
 	}
 	
 	public static String getRequestURL(HttpServletRequest request) {
+				
+        String queryString = request.getQueryString();
+        String requestUrl = request.getRequestURI() + ((queryString == null) ? "" : ("?" + queryString));
+        String serverName = request.getServerName();
+		String scheme = request.getScheme();
+        
+        int serverPort = request.getServerPort();
+        
+        //        
 		
-		String result = request.getRequestURL().toString();
-		
-		String queryString = request.getQueryString();
-		
-		if (queryString != null && queryString.trim().equals("") == false) {
-			result += "?" + queryString;
-		}
+    	String xForwardedProto = request.getHeader("x-forwarded-proto");
+    	
+    	if (xForwardedProto != null) {
+    		scheme = xForwardedProto;
+    	}
+    	
+        String result = scheme + "://" + serverName + (serverPort != 80 && serverPort != 443 ? (":" + serverPort) : "") + requestUrl;	
 		
 		return result;
 	}
