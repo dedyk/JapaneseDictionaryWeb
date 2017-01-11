@@ -46,6 +46,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLo
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
+import snaq.db.AutoCommitValidator;
 import snaq.db.ConnectionPool;
 
 public class MySQLConnector {
@@ -78,6 +79,8 @@ public class MySQLConnector {
 			DriverManager.registerDriver(driver);
 			
 			connectionPool = new ConnectionPool( "mysql",  minPool, maxPool, maxSize, idleTimeout, url, user, password);
+			
+			connectionPool.setValidator(new AutoCommitValidator());
 			
 		} catch (Exception e) {
 			logger.error("Bład inicjalizacji MySQLConnector", e);
@@ -3082,6 +3085,84 @@ public class MySQLConnector {
 		}	
 	}
 	
+	public Transaction beginTransaction() throws SQLException {
+		
+		Connection connection = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			if (connection == null) {
+				throw new SQLException("Brak dostępnych połączeń");
+			}
+			
+			connection.setAutoCommit(false);
+			connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+			
+			Transaction transaction = new Transaction(connection);
+			
+			return transaction;
+			
+		} catch (SQLException e) {
+			
+			if (connection != null) {
+				connection.close();
+			}			
+
+			throw e;
+		}
+	}
+	
+	public void commitTransaction(Transaction transaction) throws SQLException {
+		
+		try {
+			transaction.connection.commit();
+		
+		} finally {
+			
+			if (transaction.connection != null) {
+				transaction.connection.close();
+			}	
+		}
+	}
+
+	public void rollbackTransaction(Transaction transaction) throws SQLException {
+		
+		try {
+			transaction.connection.rollback();
+		
+		} finally {
+			
+			if (transaction.connection != null) {
+				transaction.connection.close();
+			}	
+		}
+	}
+	
+	public void deleteOldDailyLogProcessedIds(Transaction transaction) throws SQLException {
+				
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+				
+		try {			
+			preparedStatement = transaction.connection.prepareStatement("delete from daily_log_processed_ids where id < ((select * from (select max(id) - 1 from daily_log_processed_ids) as p))");
+									
+			// skasuj
+			preparedStatement.executeUpdate();
+			
+		} finally {
+						
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}			
+		}
+	}
+
 	public String getUrl() {
 		return url;
 	}
@@ -3136,5 +3217,14 @@ public class MySQLConnector {
 
 	public void setIdleTimeout(int idleTimeout) {
 		this.idleTimeout = idleTimeout;
+	}
+	
+	public static class Transaction {
+		
+		private Connection connection;
+
+		private Transaction(Connection connection) {
+			this.connection = connection;
+		}
 	}
 }

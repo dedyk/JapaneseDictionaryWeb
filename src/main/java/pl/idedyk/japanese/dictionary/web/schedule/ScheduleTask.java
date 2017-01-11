@@ -17,6 +17,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
+import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.Transaction;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
 import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 import pl.idedyk.japanese.dictionary.web.report.ReportGenerator;
@@ -215,6 +216,51 @@ public class ScheduleTask {
 	public void processLocalDirQueueItems() {
 		
 		queueService.processLocalDirQueueItems();
+	}
+	
+	//@Scheduled(cron="* * * * * ?") // tymczasowo
+	@Scheduled(cron="0 0 2 * * ?") // o 2 w nocy
+	public void processDBCleanup() {
+
+		logger.info("Czyszczenie bazy danych");
+
+		Transaction transaction = null;
+
+		try {
+			transaction = mySQLConnector.beginTransaction();
+
+		} catch (Exception e) {
+			logger.error("Blad podczas czyszczenia bazy danych", e);
+
+			return;
+		}
+		
+		// zaczynamy przetwarzanie
+		try {
+			
+			// skasuj stare wpisy z przetworzonych id'kow
+			logger.info("Kasowanie starych przetworzonych id'kow");			
+			mySQLConnector.deleteOldDailyLogProcessedIds(transaction);
+						
+			// zakomitowanie zmian
+			mySQLConnector.commitTransaction(transaction);
+			
+			transaction = null;
+			
+		} catch (Exception e) {
+			
+			logger.error("Blad podczas czyszczenia bazy danych", e);
+
+			if (transaction != null) {
+				
+				try {
+					mySQLConnector.rollbackTransaction(transaction);
+					
+				} catch (SQLException e2) {				
+					logger.error("Drugi błąd podczas czyszczenia bazy danych", e);
+				}			
+			}			
+		}
 	}
 	
 	/*
