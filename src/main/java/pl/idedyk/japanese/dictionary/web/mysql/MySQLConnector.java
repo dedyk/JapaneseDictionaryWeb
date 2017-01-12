@@ -3162,6 +3162,78 @@ public class MySQLConnector {
 			}			
 		}
 	}
+	
+	public List<String> getOldGenericLogOperationDateList(Transaction transaction, GenericLogOperationEnum operation, int dayOlderThan) throws SQLException {
+				
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		List<String> result = new ArrayList<String>();
+		
+		try {	
+			
+			preparedStatement = transaction.connection.prepareStatement("select date_format(timestamp, '%Y-%m-%d'), count(*) from generic_log "
+					+ "where operation = ? and datediff(current_timestamp, timestamp) > ? group by date_format(timestamp, '%Y-%m-%d')");
+			
+			preparedStatement.setString(1, operation.toString());
+			preparedStatement.setInt(2, dayOlderThan);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+				result.add(resultSet.getString(1));				
+			}
+			
+			return result;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> void processGenericLogRecords(Transaction transaction, GenericLogOperationEnum operation, String dateString, ProcessRecordCallback<T> processRecordCallback) throws SQLException {
+				
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
+					+ "from generic_log where operation = ? and date_format(timestamp, '%Y-%m-%d') = ?");
+			
+			preparedStatement.setString(1, operation.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				GenericLog genericLog = createGenericLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback((T)genericLog);				
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
 
 	public String getUrl() {
 		return url;
@@ -3226,5 +3298,9 @@ public class MySQLConnector {
 		private Transaction(Connection connection) {
 			this.connection = connection;
 		}
+	}
+	
+	public static interface ProcessRecordCallback<T> {		
+		public void callback(T genericLog);		
 	}
 }

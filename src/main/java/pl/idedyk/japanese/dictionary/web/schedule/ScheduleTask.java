@@ -1,14 +1,20 @@
 package pl.idedyk.japanese.dictionary.web.schedule;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import com.csvreader.CsvWriter;
 
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerListener;
@@ -17,7 +23,10 @@ import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
+import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.ProcessRecordCallback;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.Transaction;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
 import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 import pl.idedyk.japanese.dictionary.web.report.ReportGenerator;
@@ -241,6 +250,9 @@ public class ScheduleTask {
 			// skasuj stare wpisy z przetworzonych id'kow
 			logger.info("Kasowanie starych przetworzonych id'kow");			
 			mySQLConnector.deleteOldDailyLogProcessedIds(transaction);
+			
+			// archiwizacja starych operacji
+			archiveOperations(transaction);
 						
 			// zakomitowanie zmian
 			mySQLConnector.commitTransaction(transaction);
@@ -260,6 +272,84 @@ public class ScheduleTask {
 					logger.error("Drugi błąd podczas czyszczenia bazy danych", e);
 				}			
 			}			
+		}
+	}
+
+	private void archiveOperations(Transaction transaction) throws SQLException, IOException {
+		
+		final int dayOlderThan = 365;
+		
+		List<GenericLogOperationEnum> operationTypeToArchive = Arrays.asList(GenericLogOperationEnum.START);
+		
+		// dla kazdego rodzaju
+		for (GenericLogOperationEnum genericLogOperationEnum : operationTypeToArchive) {
+			
+			// pobranie starych dat operacji
+			List<String> oldGenericLogOperationDateList = mySQLConnector.getOldGenericLogOperationDateList(transaction, genericLogOperationEnum, dayOlderThan);
+			
+			for (String dateString : oldGenericLogOperationDateList) {
+				
+				logger.info("Archiwizacja dla operacji: " + genericLogOperationEnum.toString() + " dla daty: " + dateString);
+								
+				// przetwarzanie GenericLog
+				GenericLogCsvExport genericLogCsvExport = new GenericLogCsvExport();
+				
+				int fixme = 1;
+				genericLogCsvExport.init(new File("/tmp/a/test.csv")); 
+				
+				mySQLConnector.processGenericLogRecords(transaction, genericLogOperationEnum, dateString, genericLogCsvExport);
+				
+				genericLogCsvExport.finish();
+			}
+			
+			
+			
+			
+			/*
+			switch (genericLogOperationEnum) {
+				
+				case START:
+					
+					
+					
+					break;
+
+				default:
+					throw new RuntimeException("Nieznana operacji do archiwizacji: " + genericLogOperationEnum);
+			}
+			*/
+				
+				
+			
+		}
+	}
+	
+	private static class GenericLogCsvExport implements ProcessRecordCallback<GenericLog> {
+		
+		private CsvWriter csvWriter = null;
+		
+		public void init(File fileName) throws IOException {
+			csvWriter = new CsvWriter(new FileWriter(fileName), ',');
+		}
+		
+		@Override
+		public void callback(GenericLog genericLog) {
+			
+			int fixme = 1;
+			
+			try {
+				csvWriter.write("TEST: " + genericLog.getId());
+				csvWriter.write("TEST: " + genericLog.getTimestamp());				
+				
+				csvWriter.endRecord();
+				
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
+		public void finish() {
+			csvWriter.close();
 		}
 	}
 	
