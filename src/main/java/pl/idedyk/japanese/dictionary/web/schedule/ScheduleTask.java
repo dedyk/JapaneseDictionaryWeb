@@ -239,7 +239,8 @@ public class ScheduleTask {
 	}
 	
 	//@Scheduled(cron="* * * * * ?") // tymczasowo
-	@Scheduled(cron="0 0 2 * * ?") // o 2 w nocy
+	//@Scheduled(cron="0 0 2 * * ?") // o 2 w nocy
+	@Scheduled(cron="0 42 19 * * ?") // o 2 w nocy
 	public void processDBCleanup() {
 
 		logger.info("Czyszczenie bazy danych");

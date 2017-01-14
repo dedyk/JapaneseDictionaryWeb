@@ -3208,10 +3208,11 @@ public class MySQLConnector {
 		try {
 			
 			preparedStatement = transaction.connection.prepareStatement("select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
-					+ "from generic_log where operation = ? and date_format(timestamp, '%Y-%m-%d') = ?");
+					+ "from generic_log where operation = ? and timestamp >= ? and timestamp <= ?");
 			
 			preparedStatement.setString(1, operation.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3240,10 +3241,11 @@ public class MySQLConnector {
 		
 		try {
 			
-			preparedStatement = transaction.connection.prepareStatement("delete from generic_log where operation = ? and date_format(timestamp, '%Y-%m-%d') = ?");
+			preparedStatement = transaction.connection.prepareStatement("delete from generic_log where operation = ? and timestamp >= ? and timestamp <= ?");
 			
 			preparedStatement.setString(1, operation.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3267,7 +3269,8 @@ public class MySQLConnector {
 					+ "from word_dictionary_autocomplete_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3299,7 +3302,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_autocomplete_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3323,7 +3327,8 @@ public class MySQLConnector {
 					+ "from word_dictionary_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_CATALOG.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3355,7 +3360,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_CATALOG.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3381,7 +3387,8 @@ public class MySQLConnector {
 					+ "from word_dictionary_details_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_DETAILS.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3413,7 +3420,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_details_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_DETAILS.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3437,7 +3445,8 @@ public class MySQLConnector {
 					+ "from word_dictionary_name_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_NAME_CATALOG.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3469,7 +3478,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_name_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_NAME_CATALOG.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3495,7 +3505,8 @@ public class MySQLConnector {
 					+ "from word_dictionary_name_details_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_NAME_DETAILS.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3527,7 +3538,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_name_details_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_NAME_DETAILS.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3553,7 +3565,8 @@ public class MySQLConnector {
 					+ "from word_dictionary_search_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_SEARCH.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3585,7 +3598,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_search_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_SEARCH.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3609,7 +3623,8 @@ public class MySQLConnector {
 					+ "from kanji_dictionary_autocomplete_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3641,7 +3656,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_autocomplete_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3665,7 +3681,8 @@ public class MySQLConnector {
 					+ "from kanji_dictionary_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_CATALOG.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3697,7 +3714,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_CATALOG.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3721,7 +3739,8 @@ public class MySQLConnector {
 					+ "from kanji_dictionary_details_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3753,7 +3772,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_details_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3777,7 +3797,8 @@ public class MySQLConnector {
 					+ "from kanji_dictionary_detect_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_DETECT.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3809,7 +3830,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_detect_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_DETECT.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3833,7 +3855,8 @@ public class MySQLConnector {
 					+ "from kanji_dictionary_radicals_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_RADICALS.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3865,7 +3888,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_radicals_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_RADICALS.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3890,7 +3914,8 @@ public class MySQLConnector {
 					+ "from kanji_dictionary_search_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3922,7 +3947,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_search_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -3946,7 +3972,8 @@ public class MySQLConnector {
 					+ "from android_get_spell_checker_suggestion_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.ANDROID_GET_SPELL_CHECKER_SUGGESTION.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -3978,7 +4005,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from android_get_spell_checker_suggestion_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.ANDROID_GET_SPELL_CHECKER_SUGGESTION.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -4002,7 +4030,8 @@ public class MySQLConnector {
 					+ "from android_send_missing_word_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.ANDROID_SEND_MISSING_WORD.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			resultSet = preparedStatement.executeQuery();
 			
@@ -4034,7 +4063,8 @@ public class MySQLConnector {
 			preparedStatement = transaction.connection.prepareStatement("delete from android_send_missing_word_log " + getWhereGenericLogIdGenericLogIdSql());
 			
 			preparedStatement.setString(1, GenericLogOperationEnum.ANDROID_SEND_MISSING_WORD.toString());
-			preparedStatement.setString(2, dateString);
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
 
 			preparedStatement.executeUpdate();
 						
@@ -4047,7 +4077,7 @@ public class MySQLConnector {
 	}
 
 	private String getWhereGenericLogIdGenericLogIdSql() {		
-		return " where generic_log_id in (select id from generic_log where operation = ? and date_format(timestamp, '%Y-%m-%d') = ?)";
+		return " where generic_log_id in (select id from generic_log where operation = ? and timestamp >= ? and timestamp <= ?)";
 	}
 
 	public String getUrl() {
