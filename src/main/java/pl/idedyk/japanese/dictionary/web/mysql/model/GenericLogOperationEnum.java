@@ -1,55 +1,63 @@
 package pl.idedyk.japanese.dictionary.web.mysql.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public enum GenericLogOperationEnum {
 	
-	START_APP,
+	START_APP(true),
 	
-	START,
-	FAVICON_ICON,
-	ROBOTS_GENERATE,
-	BING_SITE_AUTH,
-	SITEMAP_GENERATE,
+	START(true),
+	FAVICON_ICON(true),
+	ROBOTS_GENERATE(true),
+	BING_SITE_AUTH(true),
+	SITEMAP_GENERATE(true),
 	
-	WORD_DICTIONARY_START,
-	WORD_DICTIONARY_AUTOCOMPLETE,
-	WORD_DICTIONARY_SEARCH,
-	WORD_DICTIONARY_DETAILS,
+	WORD_DICTIONARY_START(false),
+	WORD_DICTIONARY_AUTOCOMPLETE(false),
+	WORD_DICTIONARY_SEARCH(false),
+	WORD_DICTIONARY_DETAILS(false),
 	
-	WORD_DICTIONARY_CATALOG,
+	WORD_DICTIONARY_CATALOG(false),
 	
-	WORD_DICTIONARY_NAME_DETAILS,
-	WORD_DICTIONARY_NAME_CATALOG,
+	WORD_DICTIONARY_NAME_DETAILS(false),
+	WORD_DICTIONARY_NAME_CATALOG(false),
 	
-	KANJI_DICTIONARY_START,
-	KANJI_DICTIONARY_AUTOCOMPLETE,
-	KANJI_DICTIONARY_SEARCH,
-	KANJI_DICTIONARY_RADICALS,
-	KANJI_DICTIONARY_DETECT,
-	KANJI_DICTIONARY_DETAILS,
+	KANJI_DICTIONARY_START(false),
+	KANJI_DICTIONARY_AUTOCOMPLETE(false),
+	KANJI_DICTIONARY_SEARCH(false),
+	KANJI_DICTIONARY_RADICALS(false),
+	KANJI_DICTIONARY_DETECT(false),
+	KANJI_DICTIONARY_DETAILS(false),
 	
-	KANJI_DICTIONARY_CATALOG,
+	KANJI_DICTIONARY_CATALOG(false),
 	
-	SUGGESTION_START,
-	SUGGESTION_SEND,
+	SUGGESTION_START(false),
+	SUGGESTION_SEND(false),
 	
-	ANDROID_SEND_MISSING_WORD,
-	ANDROID_GET_SPELL_CHECKER_SUGGESTION,
+	ANDROID_SEND_MISSING_WORD(false),
+	ANDROID_GET_SPELL_CHECKER_SUGGESTION(false),
 	
-	DAILY_REPORT,
+	DAILY_REPORT(false),
 	
-	INFO,
+	INFO(false),
 	
-	ADMIN_REQUEST,
+	ADMIN_REQUEST(false),
 	
-	REDIRECT,
+	REDIRECT(false),
 	
-	GENERAL_EXCEPTION,
-	PAGE_NO_FOUND_EXCEPTION,
-	SERVICE_UNAVAILABLE_EXCEPTION,
-	METHOD_NOT_ALLOWED_EXCEPTION;
+	GENERAL_EXCEPTION(false),
+	PAGE_NO_FOUND_EXCEPTION(false),
+	SERVICE_UNAVAILABLE_EXCEPTION(false),
+	METHOD_NOT_ALLOWED_EXCEPTION(false);
+	
+	private boolean exportable;
+	
+	GenericLogOperationEnum(boolean exportable) {
+		this.exportable = exportable;
+	}
 	
 	public static GenericLogOperationEnum[] getSortedValues() {
 		
@@ -64,5 +72,25 @@ public enum GenericLogOperationEnum {
 		});
 		
 		return values;
+	}
+	
+	public static List<GenericLogOperationEnum> getAllExportableOperationList() {
+		
+		GenericLogOperationEnum[] values = values();
+		
+		List<GenericLogOperationEnum> result = new ArrayList<GenericLogOperationEnum>();
+		
+		for (GenericLogOperationEnum genericLogOperationEnum : values) {
+			
+			if (genericLogOperationEnum.isExportable() == true) {
+				result.add(genericLogOperationEnum);
+			}
+		}
+		
+		return result;
+	}
+
+	public boolean isExportable() {
+		return exportable;
 	}
 }

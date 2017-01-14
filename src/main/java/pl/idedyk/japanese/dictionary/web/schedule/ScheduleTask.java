@@ -5,12 +5,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.lang.reflect.Field;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +56,10 @@ public class ScheduleTask {
 	
 	@Autowired
 	private SemaphoreService semaphoreService;
-
+	
+	@Value("${db.arch.dir}")
+	private String dbArchDir; 
+	
 	//@Scheduled(cron="0 * * * * ?") // co minute
 	@Scheduled(cron="0 0 19 * * ?") // o 19
 	public void generateDailyReport() {
@@ -279,7 +284,7 @@ public class ScheduleTask {
 		
 		final int dayOlderThan = 365;
 		
-		List<GenericLogOperationEnum> operationTypeToArchive = Arrays.asList(GenericLogOperationEnum.START);
+		List<GenericLogOperationEnum> operationTypeToArchive = GenericLogOperationEnum.getAllExportableOperationList();
 		
 		// dla kazdego rodzaju
 		for (GenericLogOperationEnum genericLogOperationEnum : operationTypeToArchive) {
@@ -290,15 +295,20 @@ public class ScheduleTask {
 			for (String dateString : oldGenericLogOperationDateList) {
 				
 				logger.info("Archiwizacja dla operacji: " + genericLogOperationEnum.toString() + " dla daty: " + dateString);
+				
+				// utworz nazwe pliku
+				File genericLogExportFile = createCsvExportFile("generic_log-" + genericLogOperationEnum.toString(), dateString);				
 								
 				// przetwarzanie GenericLog
-				GenericLogCsvExport genericLogCsvExport = new GenericLogCsvExport();
+				CsvExporter<GenericLog> genericLogCsvExport = new CsvExporter<GenericLog>();
 				
-				int fixme = 1;
-				genericLogCsvExport.init(new File("/tmp/a/test.csv")); 
+				// inicjalizacja exportera do pliku csv
+				genericLogCsvExport.init(genericLogExportFile); 
 				
+				// eksportowanie danych
 				mySQLConnector.processGenericLogRecords(transaction, genericLogOperationEnum, dateString, genericLogCsvExport);
 				
+				// zakonczenie exportowania do pliku csv
 				genericLogCsvExport.finish();
 			}
 			
@@ -324,32 +334,111 @@ public class ScheduleTask {
 		}
 	}
 	
-	private static class GenericLogCsvExport implements ProcessRecordCallback<GenericLog> {
+	private File createCsvExportFile(String prefix, String dateString) {
+		
+		String[] dateStringSplited = dateString.split("-");
+		
+		File descDir = new File(dbArchDir + "/" + dateStringSplited[0], dateStringSplited[1]);
+		
+		if (descDir.exists() == false) {
+			descDir.mkdirs();
+		}
+		
+		return new File(descDir, prefix + "-" + dateString + ".csv");
+	}
+	
+	private static class CsvExporter<T> implements ProcessRecordCallback<T> {
 		
 		private CsvWriter csvWriter = null;
+		
+		private boolean isFirst = true;
 		
 		public void init(File fileName) throws IOException {
 			csvWriter = new CsvWriter(new FileWriter(fileName), ',');
 		}
 		
 		@Override
-		public void callback(GenericLog genericLog) {
-			
-			int fixme = 1;
-			
-			try {
-				csvWriter.write("TEST: " + genericLog.getId());
-				csvWriter.write("TEST: " + genericLog.getTimestamp());				
+		public void callback(T object) {
+						
+			try {				
+				exportObjectToCsv(csvWriter, object);
 				
-				csvWriter.endRecord();
-				
-			} catch (IOException e) {
+			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
 		
 		public void finish() {
 			csvWriter.close();
+		}
+		
+		protected void exportObjectToCsv(CsvWriter csvWriter, T object) throws Exception {
+						
+			// pobranie listy zadeklarowanych pol
+			Field[] declaredFields = object.getClass().getDeclaredFields();
+			
+			if (isFirst == true) { // dodanie naglowka
+				
+				for (Field field : declaredFields) {
+					
+					if (java.lang.reflect.Modifier.isStatic(field.getModifiers()) == true) { // pole statyczne
+						continue;
+					}
+					
+					csvWriter.write(field.getName());
+				}
+				
+				csvWriter.endRecord();
+			
+				isFirst = false;
+			}
+			
+			for (Field field : declaredFields) {
+				
+				if (java.lang.reflect.Modifier.isStatic(field.getModifiers()) == true) { // pole statyczne
+					continue;
+				}
+				
+				// pobranie wartosci pola
+				field.setAccessible(true);
+				
+				Object fieldValue = field.get(object);
+				
+				csvWriter.write(toStringValue(fieldValue));				
+			}
+			
+			csvWriter.endRecord();
+		}
+		
+		private String toStringValue(Object fieldValue) {
+			
+			if (fieldValue == null) {
+				return "<null>";
+				
+			} else {
+				
+				if (fieldValue instanceof String == true) {
+					return (String)fieldValue;
+					
+				} else if (fieldValue instanceof Long == true) {
+					return ((Long)fieldValue).toString();					
+					
+				} else if (fieldValue instanceof Timestamp == true) {
+					
+					Timestamp timestamp = (Timestamp)fieldValue;
+					
+					return timestamp.toString();
+					
+				} else if (fieldValue instanceof GenericLogOperationEnum == true) {
+					
+					GenericLogOperationEnum genericLogOperationEnum = (GenericLogOperationEnum)fieldValue;
+					
+					return genericLogOperationEnum.toString();					
+					
+				} else {					
+					throw new RuntimeException("Nieznany rodzaj klasy: " + fieldValue.getClass());
+				}
+			}
 		}
 	}
 	
