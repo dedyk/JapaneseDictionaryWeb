@@ -3234,6 +3234,27 @@ public class MySQLConnector {
 		}
 	}
 	
+	public void deleteGenericLogRecords(Transaction transaction, GenericLogOperationEnum operation, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from generic_log where operation = ? and date_format(timestamp, '%Y-%m-%d') = ?");
+			
+			preparedStatement.setString(1, operation.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
 	public void processWordDictionaryAutocompleteLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<WordDictionaryAutocompleteLog> processRecordCallback) throws SQLException {
 		
 		PreparedStatement preparedStatement = null;
@@ -3263,6 +3284,27 @@ public class MySQLConnector {
 				resultSet.close();
 			}
 						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
+	public void deleteWordDictionaryAutocompleteLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_autocomplete_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
 			if (preparedStatement != null) {
 				preparedStatement.close();
 			}
@@ -3298,6 +3340,27 @@ public class MySQLConnector {
 				resultSet.close();
 			}
 						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
+	public void deleteWordDictionaryCatalogLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_CATALOG.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
 			if (preparedStatement != null) {
 				preparedStatement.close();
 			}
@@ -3341,6 +3404,27 @@ public class MySQLConnector {
 		}
 	}
 	
+	public void deleteWordDictionaryDetailsLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_details_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_DETAILS.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
 	public void processWordDictionaryNameCatalogLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<WordDictionaryNameCatalogLog> processRecordCallback) throws SQLException {
 		
 		PreparedStatement preparedStatement = null;
@@ -3370,6 +3454,27 @@ public class MySQLConnector {
 				resultSet.close();
 			}
 						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
+	public void deleteWordDictionaryNameCatalogLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_name_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_NAME_CATALOG.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
 			if (preparedStatement != null) {
 				preparedStatement.close();
 			}
@@ -3412,6 +3517,27 @@ public class MySQLConnector {
 			}
 		}
 	}
+	
+	public void deleteWordDictionaryNameDetailsLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_name_details_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_NAME_DETAILS.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
 
 	public void processWordDictionarySearchLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<WordDictionarySearchLog> processRecordCallback) throws SQLException {
 		
@@ -3444,6 +3570,27 @@ public class MySQLConnector {
 				resultSet.close();
 			}
 						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
+	public void deleteWordDictionarySearchLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from word_dictionary_search_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_SEARCH.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
 			if (preparedStatement != null) {
 				preparedStatement.close();
 			}
@@ -3484,6 +3631,27 @@ public class MySQLConnector {
 			}
 		}
 	}
+	
+	public void deleteKanjiDictionaryAutocompleteLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_autocomplete_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
 
 	public void processKanjiDictionaryCatalogLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<KanjiDictionaryCatalogLog> processRecordCallback) throws SQLException {
 		
@@ -3514,6 +3682,27 @@ public class MySQLConnector {
 				resultSet.close();
 			}
 						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
+	public void deleteKanjiDictionaryCatalogLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_CATALOG.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
 			if (preparedStatement != null) {
 				preparedStatement.close();
 			}
@@ -3554,6 +3743,27 @@ public class MySQLConnector {
 			}
 		}
 	}
+	
+	public void deleteKanjiDictionaryDetailsLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_details_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
 
 	public void processKanjiDictionaryDetectLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<KanjiDictionaryDetectLog> processRecordCallback) throws SQLException {
 		
@@ -3589,6 +3799,27 @@ public class MySQLConnector {
 			}
 		}
 	}
+	
+	public void deleteKanjiDictionaryDetectLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_detect_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_DETECT.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
 
 	public void processKanjiDictionaryRadicalsLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<KanjiDictionaryRadicalsLog> processRecordCallback) throws SQLException {
 		
@@ -3619,6 +3850,27 @@ public class MySQLConnector {
 				resultSet.close();
 			}
 						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
+	public void deleteKanjiDictionaryRadicalsLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_radicals_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_RADICALS.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
 			if (preparedStatement != null) {
 				preparedStatement.close();
 			}
@@ -3660,6 +3912,27 @@ public class MySQLConnector {
 			}
 		}
 	}
+	
+	public void deleteKanjiDictionarySearchLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from kanji_dictionary_search_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
 
 	public void processAndroidGetSpellCheckerSuggestionLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<AndroidGetSpellCheckerSuggestionLog> processRecordCallback) throws SQLException {
 		
@@ -3695,6 +3968,27 @@ public class MySQLConnector {
 			}
 		}
 	}
+	
+	public void deleteAndroidGetSpellCheckerSuggestionLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from android_get_spell_checker_suggestion_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.ANDROID_GET_SPELL_CHECKER_SUGGESTION.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
 
 	public void processAndroidSendMissingWordLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<AndroidSendMissingWordLog> processRecordCallback) throws SQLException {
 		
@@ -3725,6 +4019,27 @@ public class MySQLConnector {
 				resultSet.close();
 			}
 						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
+	public void deleteAndroidSendMissingWordLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from android_send_missing_word_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.ANDROID_SEND_MISSING_WORD.toString());
+			preparedStatement.setString(2, dateString);
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
 			if (preparedStatement != null) {
 				preparedStatement.close();
 			}

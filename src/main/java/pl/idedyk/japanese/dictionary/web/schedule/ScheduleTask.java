@@ -286,9 +286,12 @@ public class ScheduleTask {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void archiveOperations(final Transaction transaction) throws SQLException, IOException {
 		
 		final int dayOlderThan = 365;
+		
+		final boolean doDelete = false; // na razie nie kasujemy
 		
 		List<GenericLogOperationEnum> operationTypeToArchive = GenericLogOperationEnum.getAllExportableOperationList();
 				
@@ -314,7 +317,7 @@ public class ScheduleTask {
 				
 				//
 								
-				// dodatkowo jeszcze dla wybranych typow, eksportowanie danych szczegolowych
+				// dodatkowo jeszcze dla wybranych typow, eksportowanie danych szczegolowych oraz ich usuniecie
 				switch (genericLogOperationEnum) {
 				
 					case START_APP:
@@ -342,6 +345,10 @@ public class ScheduleTask {
 							@Override
 							protected void callExport(String prefix, String dateString) throws SQLException {								
 								mySQLConnector.processWordDictionaryDetailsLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteWordDictionaryDetailsLogRecords(transaction, dateString);
+								}
 							}
 						}
 						
@@ -356,6 +363,10 @@ public class ScheduleTask {
 							@Override
 							protected void callExport(String prefix, String dateString) throws SQLException {								
 								mySQLConnector.processWordDictionaryCatalogLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteWordDictionaryCatalogLogRecords(transaction, dateString);
+								}
 							}
 						}
 						
@@ -370,6 +381,10 @@ public class ScheduleTask {
 							@Override
 							protected void callExport(String prefix, String dateString) throws SQLException {								
 								mySQLConnector.processWordDictionaryNameDetailsLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteWordDictionaryNameDetailsLogRecords(transaction, dateString);
+								}
 							}
 						}
 						
@@ -384,6 +399,10 @@ public class ScheduleTask {
 							@Override
 							protected void callExport(String prefix, String dateString) throws SQLException {								
 								mySQLConnector.processWordDictionaryNameCatalogLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteWordDictionaryNameCatalogLogRecords(transaction, dateString);
+								}
 							}
 						}
 						
@@ -398,6 +417,10 @@ public class ScheduleTask {
 							@Override
 							protected void callExport(String prefix, String dateString) throws SQLException {								
 								mySQLConnector.processKanjiDictionaryDetailsLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteKanjiDictionaryDetailsLogRecords(transaction, dateString);
+								}
 							}
 						}
 						
@@ -412,6 +435,10 @@ public class ScheduleTask {
 							@Override
 							protected void callExport(String prefix, String dateString) throws SQLException {								
 								mySQLConnector.processKanjiDictionaryCatalogLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteKanjiDictionaryCatalogLogRecords(transaction, dateString);
+								}
 							}
 						}
 						
@@ -421,6 +448,10 @@ public class ScheduleTask {
 						
 					default:
 						throw new RuntimeException("Nieznana operacji do archiwizacji: " + genericLogOperationEnum);
+				}
+				
+				if (doDelete == true) {
+					mySQLConnector.deleteGenericLogRecords(transaction, genericLogOperationEnum, dateString);
 				}
 			}
 		}
