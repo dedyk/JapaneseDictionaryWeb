@@ -10,7 +10,7 @@ create table generic_log (
     operation varchar(40) not null
 ) default character set = utf8 collate = utf8_polish_ci;
 
-create index generic_log_operation_timestamp on generic_log(operation, timestamp);
+create index generic_log_operation_timestamp_idx on generic_log(operation, timestamp);
 
 create table word_dictionary_autocomplete_log (
     id int not null auto_increment, primary key(id),
