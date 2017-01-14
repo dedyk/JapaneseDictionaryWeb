@@ -10,7 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -3171,13 +3173,28 @@ public class MySQLConnector {
 		
 		List<String> result = new ArrayList<String>();
 		
-		try {	
-			
-			preparedStatement = transaction.connection.prepareStatement("select date_format(timestamp, '%Y-%m-%d'), count(*) from generic_log "
-					+ "where operation = ? and datediff(current_timestamp, timestamp) > ? group by date_format(timestamp, '%Y-%m-%d')");
+		//
+		
+		Calendar calendar = Calendar.getInstance();
+		
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.clear(Calendar.MINUTE);
+		calendar.clear(Calendar.SECOND);
+		calendar.clear(Calendar.MILLISECOND);
+
+		calendar.add(Calendar.DAY_OF_YEAR, -dayOlderThan);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		String olderThanTimestampString = sdf.format(calendar.getTime());
+		
+		//
+		
+		try {						
+			preparedStatement = transaction.connection.prepareStatement("select distinct date_format(timestamp, '%Y-%m-%d') from generic_log where operation = ? and timestamp < ?");
 			
 			preparedStatement.setString(1, operation.toString());
-			preparedStatement.setInt(2, dayOlderThan);
+			preparedStatement.setString(2, olderThanTimestampString);
 			
 			resultSet = preparedStatement.executeQuery();
 			
