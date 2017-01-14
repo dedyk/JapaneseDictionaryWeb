@@ -29,8 +29,13 @@ import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.ProcessRecordCallb
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.Transaction;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryCatalogLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
-import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
 import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 import pl.idedyk.japanese.dictionary.web.report.ReportGenerator;
 import pl.idedyk.japanese.dictionary.web.service.SemaphoreService;
@@ -281,16 +286,14 @@ public class ScheduleTask {
 		}
 	}
 
-	private void archiveOperations(Transaction transaction) throws SQLException, IOException {
+	private void archiveOperations(final Transaction transaction) throws SQLException, IOException {
 		
 		final int dayOlderThan = 365;
 		
 		List<GenericLogOperationEnum> operationTypeToArchive = GenericLogOperationEnum.getAllExportableOperationList();
-		
-		logger.info("AAAAA: " + operationTypeToArchive);
-		
+				
 		// dla kazdego rodzaju
-		for (GenericLogOperationEnum genericLogOperationEnum : operationTypeToArchive) {
+		for (final GenericLogOperationEnum genericLogOperationEnum : operationTypeToArchive) {
 			
 			// pobranie starych dat operacji
 			List<String> oldGenericLogOperationDateList = mySQLConnector.getOldGenericLogOperationDateList(transaction, genericLogOperationEnum, dayOlderThan);
@@ -299,21 +302,18 @@ public class ScheduleTask {
 				
 				logger.info("Archiwizacja dla operacji: " + genericLogOperationEnum.toString() + " dla daty: " + dateString);
 				
-				// utworz nazwe pliku
-				File genericLogExportFile = createCsvExportFile("generic_log-" + genericLogOperationEnum.toString(), dateString);
+				class GenericLogExporter extends CsvExporter<GenericLog> {
+
+					@Override
+					protected void callExport(String prefix, String dateString) throws SQLException {
+						mySQLConnector.processGenericLogRecords(transaction, genericLogOperationEnum, dateString, this);						
+					}
+				}
+				
+				new GenericLogExporter().export("generic_log-" + genericLogOperationEnum.toString(), dateString);	
+				
+				//
 								
-				// przetwarzanie GenericLog
-				CsvExporter<GenericLog> genericLogCsvExport = new CsvExporter<GenericLog>();
-				
-				// inicjalizacja exportera do pliku csv
-				genericLogCsvExport.init(genericLogExportFile); 
-				
-				// eksportowanie danych
-				mySQLConnector.processGenericLogRecords(transaction, genericLogOperationEnum, dateString, genericLogCsvExport);
-				
-				// zakonczenie exportowania do pliku csv
-				genericLogCsvExport.finish();
-				
 				// dodatkowo jeszcze dla wybranych typow, eksportowanie danych szczegolowych
 				switch (genericLogOperationEnum) {
 				
@@ -330,78 +330,151 @@ public class ScheduleTask {
 					case PAGE_NO_FOUND_EXCEPTION:
 					case SERVICE_UNAVAILABLE_EXCEPTION:
 					case METHOD_NOT_ALLOWED_EXCEPTION:
+					case REDIRECT:
 						
 						// noop
 						break;					
 					
-					case WORD_DICTIONARY_AUTOCOMPLETE:
+					case WORD_DICTIONARY_DETAILS:
 						
-						// utworz nazwe pliku
-						File wordDictionaryAutocompleteExportFile = createCsvExportFile("word-dictionary-autocomplete", dateString);
-						
-						// przetwarzanie GenericLog
-						CsvExporter<WordDictionaryAutocompleteLog> wordDictionaryAutocompleteLogCsvExport = new CsvExporter<WordDictionaryAutocompleteLog>();
-						
-						// inicjalizacja exportera do pliku csv
-						wordDictionaryAutocompleteLogCsvExport.init(wordDictionaryAutocompleteExportFile); 
-						
-						// eksportowanie danych
-						mySQLConnector.processWordDictionaryAutocompleteLogRecords(transaction, dateString, wordDictionaryAutocompleteLogCsvExport);
-						
-						// zakonczenie exportowania do pliku csv
-						wordDictionaryAutocompleteLogCsvExport.finish();
+						class WordDictionaryDetailsExporter extends CsvExporter<WordDictionaryDetailsLog> {
 
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processWordDictionaryDetailsLogRecords(transaction, dateString, this);
+							}
+						}
+						
+						new WordDictionaryDetailsExporter().export("word-dictionary-details", dateString);	
+						
+						break;					
+						
+					case WORD_DICTIONARY_CATALOG:
+						
+						class WordDictionaryCatalogExporter extends CsvExporter<WordDictionaryCatalogLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processWordDictionaryCatalogLogRecords(transaction, dateString, this);
+							}
+						}
+						
+						new WordDictionaryCatalogExporter().export("word-dictionary-catalog", dateString);	
+						
 						break;
-					
+						
+					case WORD_DICTIONARY_NAME_DETAILS:
+						
+						class WordDictionaryNameDetailsExporter extends CsvExporter<WordDictionaryNameDetailsLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processWordDictionaryNameDetailsLogRecords(transaction, dateString, this);
+							}
+						}
+						
+						new WordDictionaryNameDetailsExporter().export("word-dictionary-name-details", dateString);	
+						
+						break;
+						
+					case WORD_DICTIONARY_NAME_CATALOG:
+						
+						class WordDictionaryNameCatalogExporter extends CsvExporter<WordDictionaryNameCatalogLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processWordDictionaryNameCatalogLogRecords(transaction, dateString, this);
+							}
+						}
+						
+						new WordDictionaryNameCatalogExporter().export("word-dictionary-name-catalog", dateString);	
+						
+						break;	
+												
+					case KANJI_DICTIONARY_DETAILS:
+						
+						class KanjiDictionaryDetailsExporter extends CsvExporter<KanjiDictionaryDetailsLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processKanjiDictionaryDetailsLogRecords(transaction, dateString, this);
+							}
+						}
+						
+						new KanjiDictionaryDetailsExporter().export("kanji-dictionary-details", dateString);	
+						
+						break;	
+						
+					case KANJI_DICTIONARY_CATALOG:
+						
+						class KanjiDictionaryCatalogExporter extends CsvExporter<KanjiDictionaryCatalogLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processKanjiDictionaryCatalogLogRecords(transaction, dateString, this);
+							}
+						}
+						
+						new KanjiDictionaryCatalogExporter().export("kanji-dictionary-catalog", dateString);	
+						
+						break;
+						
 					default:
 						throw new RuntimeException("Nieznana operacji do archiwizacji: " + genericLogOperationEnum);
 				}
 			}
-			
-			
-			
-			
-			/*
-			switch (genericLogOperationEnum) {
-				
-				case START:
-					
-					
-					
-					break;
-
-				default:
-					throw new RuntimeException("Nieznana operacji do archiwizacji: " + genericLogOperationEnum);
-			}
-			*/
-				
-				
-			
-		}
-	}
-	
-	private File createCsvExportFile(String prefix, String dateString) {
-		
-		String[] dateStringSplited = dateString.split("-");
-		
-		File descDir = new File(dbArchDir + "/" + dateStringSplited[0], dateStringSplited[1]);
-		
-		if (descDir.exists() == false) {
-			descDir.mkdirs();
 		}
 		
-		return new File(descDir, prefix + "-" + dateString + ".csv");
+		logger.info("Zakończono archiwizację");
 	}
-	
-	private static class CsvExporter<T> implements ProcessRecordCallback<T> {
+		
+	private abstract class CsvExporter<T> implements ProcessRecordCallback<T> {
 		
 		private CsvWriter csvWriter = null;
 		
 		private boolean isFirst = true;
 		
+		public void export(String prefix, String dateString) throws IOException, SQLException {
+			
+			// utworz nazwe pliku
+			File exportFile = createCsvExportFile(prefix, dateString);
+			
+			try {
+				// inicjalizacja
+				init(exportFile);
+				
+				// eksportowanie danych
+				callExport(prefix, dateString);
+				
+			} finally {
+				
+				// zakonczenie exportowania do pliku csv
+				finish();			
+			}
+		}
+		
+		private File createCsvExportFile(String prefix, String dateString) {
+			
+			String[] dateStringSplited = dateString.split("-");
+			
+			File descDir = new File(dbArchDir + "/" + dateStringSplited[0], dateStringSplited[1]);
+			
+			if (descDir.exists() == false) {
+				descDir.mkdirs();
+			}
+			
+			return new File(descDir, prefix + "-" + dateString + ".csv");
+		}
+		
 		public void init(File fileName) throws IOException {
 			csvWriter = new CsvWriter(new FileWriter(fileName), ',');
 		}
+		
+		public void finish() {
+			csvWriter.close();
+		}
+		
+		protected abstract void callExport(String prefix, String dateString) throws SQLException;
 		
 		@Override
 		public void callback(T object) {
@@ -414,11 +487,7 @@ public class ScheduleTask {
 			}
 		}
 		
-		public void finish() {
-			csvWriter.close();
-		}
-		
-		protected void exportObjectToCsv(CsvWriter csvWriter, T object) throws Exception {
+		private void exportObjectToCsv(CsvWriter csvWriter, T object) throws Exception {
 						
 			// pobranie listy zadeklarowanych pol
 			Field[] declaredFields = object.getClass().getDeclaredFields();

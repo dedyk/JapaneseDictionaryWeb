@@ -3268,7 +3268,469 @@ public class MySQLConnector {
 			}
 		}
 	}
+
+	public void processWordDictionaryCatalogLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<WordDictionaryCatalogLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, page_no "
+					+ "from word_dictionary_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_CATALOG.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				WordDictionaryCatalogLog wordDictionaryCatalogLog = createWordDictionaryCatalogLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(wordDictionaryCatalogLog);				
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
 	
+	public void processWordDictionaryDetailsLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<WordDictionaryDetailsLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, dictionary_entry_id, "
+					+ "dictionary_entry_kanji, dictionary_entry_kanaList, dictionary_entry_romajiList, "
+					+ "dictionary_entry_translateList, dictionary_entry_info "
+					+ "from word_dictionary_details_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_DETAILS.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				WordDictionaryDetailsLog wordDictionaryDetailsLog = createWordDictionaryDetailsLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(wordDictionaryDetailsLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
+	public void processWordDictionaryNameCatalogLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<WordDictionaryNameCatalogLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, page_no "
+					+ "from word_dictionary_name_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_NAME_CATALOG.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				WordDictionaryNameCatalogLog wordDictionaryNameCatalogLog = createWordDictionaryNameCatalogLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(wordDictionaryNameCatalogLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	public void processWordDictionaryNameDetailsLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<WordDictionaryNameDetailsLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, dictionary_entry_id, "
+					+ "dictionary_entry_kanji, dictionary_entry_kanaList, dictionary_entry_romajiList, "
+					+ "dictionary_entry_translateList, dictionary_entry_info "
+					+ "from word_dictionary_name_details_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_NAME_DETAILS.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				WordDictionaryNameDetailsLog wordDictionaryNameDetailsLog = createWordDictionaryNameDetailsLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(wordDictionaryNameDetailsLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	public void processWordDictionarySearchLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<WordDictionarySearchLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, find_word_request_word, find_word_request_search_kanji, "
+					+ "find_word_request_search_kana, find_word_request_search_romaji, find_word_request_search_translate, find_word_request_search_info, find_word_request_search_only_common_words, "
+					+ "find_word_request_word_place, find_word_request_dictionary_entry_type_list, find_word_result_result_size, priority "
+					+ "from word_dictionary_search_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_SEARCH.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				WordDictionarySearchLog wordDictionarySearchLog = createWordDictionarySearchLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(wordDictionarySearchLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	public void processKanjiDictionaryAutocompleteLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<KanjiDictionaryAutocompleteLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, term, found_elements "
+					+ "from kanji_dictionary_autocomplete_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				KanjiDictionaryAutocompleteLog kanjiDictionaryAutocompleteLog = createKanjiDictionaryAutocompleteLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(kanjiDictionaryAutocompleteLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	public void processKanjiDictionaryCatalogLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<KanjiDictionaryCatalogLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, page_no "
+					+ "from kanji_dictionary_catalog_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_CATALOG.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				KanjiDictionaryCatalogLog kanjiDictionaryCatalogLog = createKanjiDictionaryCatalogLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(kanjiDictionaryCatalogLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	public void processKanjiDictionaryDetailsLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<KanjiDictionaryDetailsLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, kanji_entry_id, kanji_entry_kanji, kanji_entry_translateList, kanji_entry_info "
+					+ "from kanji_dictionary_details_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				KanjiDictionaryDetailsLog kanjiDictionaryDetailsLog = createKanjiDictionaryDetailsLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(kanjiDictionaryDetailsLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	public void processKanjiDictionaryDetectLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<KanjiDictionaryDetectLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, strokes, detect_kanji_result "
+					+ "from kanji_dictionary_detect_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_DETECT.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				KanjiDictionaryDetectLog kanjiDictionaryDetectLog = createKanjiDictionaryDetectLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(kanjiDictionaryDetectLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	public void processKanjiDictionaryRadicalsLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<KanjiDictionaryRadicalsLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, radicals, found_elements "
+					+ "from kanji_dictionary_radicals_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_RADICALS.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				KanjiDictionaryRadicalsLog kanjiDictionaryRadicalsLog = createKanjiDictionaryRadicalsLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(kanjiDictionaryRadicalsLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	public void processKanjiDictionarySearchLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<KanjiDictionarySearchLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, find_kanji_request_word, find_kanji_request_word_place, "
+					+ "find_kanji_request_stroke_count_from, find_kanji_request_stroke_count_to, find_kanji_result_result_size "
+					+ "from kanji_dictionary_search_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				KanjiDictionarySearchLog kanjiDictionarySearchLog = createKanjiDictionarySearchLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(kanjiDictionarySearchLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	public void processAndroidGetSpellCheckerSuggestionLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<AndroidGetSpellCheckerSuggestionLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, word, type, spell_checker_suggestion_list "
+					+ "from android_get_spell_checker_suggestion_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.ANDROID_GET_SPELL_CHECKER_SUGGESTION.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				AndroidGetSpellCheckerSuggestionLog androidGetSpellCheckerSuggestionLog = createAndroidGetSpellCheckerSuggestionLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(androidGetSpellCheckerSuggestionLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
+	public void processAndroidSendMissingWordLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<AndroidSendMissingWordLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, word, word_place_search "
+					+ "from android_send_missing_word_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.ANDROID_SEND_MISSING_WORD.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				AndroidSendMissingWordLog androidSendMissingWordLog = createAndroidSendMissingWordLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(androidSendMissingWordLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+
 	private String getWhereGenericLogIdGenericLogIdSql() {		
 		return " where generic_log_id in (select id from generic_log where operation = ? and date_format(timestamp, '%Y-%m-%d') = ?)";
 	}
