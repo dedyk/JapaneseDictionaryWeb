@@ -3199,8 +3199,7 @@ public class MySQLConnector {
 		}		
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <T> void processGenericLogRecords(Transaction transaction, GenericLogOperationEnum operation, String dateString, ProcessRecordCallback<T> processRecordCallback) throws SQLException {
+	public void processGenericLogRecords(Transaction transaction, GenericLogOperationEnum operation, String dateString, ProcessRecordCallback<GenericLog> processRecordCallback) throws SQLException {
 				
 		PreparedStatement preparedStatement = null;
 		
@@ -3220,7 +3219,7 @@ public class MySQLConnector {
 
 				GenericLog genericLog = createGenericLogFromResultSet(resultSet);
 				
-				processRecordCallback.callback((T)genericLog);				
+				processRecordCallback.callback(genericLog);				
 			}
 			
 		} finally {
@@ -3233,6 +3232,45 @@ public class MySQLConnector {
 				preparedStatement.close();
 			}
 		}
+	}
+	
+	public void processWordDictionaryAutocompleteLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<WordDictionaryAutocompleteLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, term, found_elements "
+					+ "from word_dictionary_autocomplete_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE.toString());
+			preparedStatement.setString(2, dateString);
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				WordDictionaryAutocompleteLog wordDictionaryAutocompleteLog = createWordDictionaryAutocompleteLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(wordDictionaryAutocompleteLog);				
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
+	private String getWhereGenericLogIdGenericLogIdSql() {		
+		return " where generic_log_id in (select id from generic_log where operation = ? and date_format(timestamp, '%Y-%m-%d') = ?)";
 	}
 
 	public String getUrl() {

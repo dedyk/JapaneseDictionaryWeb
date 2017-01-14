@@ -30,6 +30,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.Transaction;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 import pl.idedyk.japanese.dictionary.web.report.ReportGenerator;
 import pl.idedyk.japanese.dictionary.web.service.SemaphoreService;
@@ -286,6 +287,8 @@ public class ScheduleTask {
 		
 		List<GenericLogOperationEnum> operationTypeToArchive = GenericLogOperationEnum.getAllExportableOperationList();
 		
+		logger.info("AAAAA: " + operationTypeToArchive);
+		
 		// dla kazdego rodzaju
 		for (GenericLogOperationEnum genericLogOperationEnum : operationTypeToArchive) {
 			
@@ -297,7 +300,7 @@ public class ScheduleTask {
 				logger.info("Archiwizacja dla operacji: " + genericLogOperationEnum.toString() + " dla daty: " + dateString);
 				
 				// utworz nazwe pliku
-				File genericLogExportFile = createCsvExportFile("generic_log-" + genericLogOperationEnum.toString(), dateString);				
+				File genericLogExportFile = createCsvExportFile("generic_log-" + genericLogOperationEnum.toString(), dateString);
 								
 				// przetwarzanie GenericLog
 				CsvExporter<GenericLog> genericLogCsvExport = new CsvExporter<GenericLog>();
@@ -310,6 +313,49 @@ public class ScheduleTask {
 				
 				// zakonczenie exportowania do pliku csv
 				genericLogCsvExport.finish();
+				
+				// dodatkowo jeszcze dla wybranych typow, eksportowanie danych szczegolowych
+				switch (genericLogOperationEnum) {
+				
+					case START_APP:
+					case START:
+					case FAVICON_ICON:
+					case ROBOTS_GENERATE:
+					case BING_SITE_AUTH:
+					case SITEMAP_GENERATE:
+					case WORD_DICTIONARY_START:
+					case KANJI_DICTIONARY_START:
+					case SUGGESTION_START:
+					case INFO:
+					case PAGE_NO_FOUND_EXCEPTION:
+					case SERVICE_UNAVAILABLE_EXCEPTION:
+					case METHOD_NOT_ALLOWED_EXCEPTION:
+						
+						// noop
+						break;					
+					
+					case WORD_DICTIONARY_AUTOCOMPLETE:
+						
+						// utworz nazwe pliku
+						File wordDictionaryAutocompleteExportFile = createCsvExportFile("word-dictionary-autocomplete", dateString);
+						
+						// przetwarzanie GenericLog
+						CsvExporter<WordDictionaryAutocompleteLog> wordDictionaryAutocompleteLogCsvExport = new CsvExporter<WordDictionaryAutocompleteLog>();
+						
+						// inicjalizacja exportera do pliku csv
+						wordDictionaryAutocompleteLogCsvExport.init(wordDictionaryAutocompleteExportFile); 
+						
+						// eksportowanie danych
+						mySQLConnector.processWordDictionaryAutocompleteLogRecords(transaction, dateString, wordDictionaryAutocompleteLogCsvExport);
+						
+						// zakonczenie exportowania do pliku csv
+						wordDictionaryAutocompleteLogCsvExport.finish();
+
+						break;
+					
+					default:
+						throw new RuntimeException("Nieznana operacji do archiwizacji: " + genericLogOperationEnum);
+				}
 			}
 			
 			
@@ -419,6 +465,9 @@ public class ScheduleTask {
 				
 				if (fieldValue instanceof String == true) {
 					return (String)fieldValue;
+					
+				} else if (fieldValue instanceof Integer == true) {
+					return ((Integer)fieldValue).toString();					
 					
 				} else if (fieldValue instanceof Long == true) {
 					return ((Long)fieldValue).toString();					

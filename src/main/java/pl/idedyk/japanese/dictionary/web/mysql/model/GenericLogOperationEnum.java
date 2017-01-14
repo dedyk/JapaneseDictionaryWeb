@@ -15,8 +15,8 @@ public enum GenericLogOperationEnum {
 	BING_SITE_AUTH(true),
 	SITEMAP_GENERATE(true),
 	
-	WORD_DICTIONARY_START(false),
-	WORD_DICTIONARY_AUTOCOMPLETE(false),
+	WORD_DICTIONARY_START(true),
+	WORD_DICTIONARY_AUTOCOMPLETE(true),
 	WORD_DICTIONARY_SEARCH(false),
 	WORD_DICTIONARY_DETAILS(false),
 	
@@ -25,7 +25,7 @@ public enum GenericLogOperationEnum {
 	WORD_DICTIONARY_NAME_DETAILS(false),
 	WORD_DICTIONARY_NAME_CATALOG(false),
 	
-	KANJI_DICTIONARY_START(false),
+	KANJI_DICTIONARY_START(true),
 	KANJI_DICTIONARY_AUTOCOMPLETE(false),
 	KANJI_DICTIONARY_SEARCH(false),
 	KANJI_DICTIONARY_RADICALS(false),
@@ -34,7 +34,7 @@ public enum GenericLogOperationEnum {
 	
 	KANJI_DICTIONARY_CATALOG(false),
 	
-	SUGGESTION_START(false),
+	SUGGESTION_START(true),
 	SUGGESTION_SEND(false),
 	
 	ANDROID_SEND_MISSING_WORD(false),
@@ -42,16 +42,16 @@ public enum GenericLogOperationEnum {
 	
 	DAILY_REPORT(false),
 	
-	INFO(false),
+	INFO(true),
 	
 	ADMIN_REQUEST(false),
 	
 	REDIRECT(false),
 	
 	GENERAL_EXCEPTION(false),
-	PAGE_NO_FOUND_EXCEPTION(false),
-	SERVICE_UNAVAILABLE_EXCEPTION(false),
-	METHOD_NOT_ALLOWED_EXCEPTION(false);
+	PAGE_NO_FOUND_EXCEPTION(true),
+	SERVICE_UNAVAILABLE_EXCEPTION(true),
+	METHOD_NOT_ALLOWED_EXCEPTION(true);
 	
 	private boolean exportable;
 	
