@@ -241,6 +241,10 @@ public class ScheduleTask {
 	//@Scheduled(cron="* * * * * ?") // tymczasowo
 	@Scheduled(cron="0 0 2 * * ?") // o 2 w nocy
 	public void processDBCleanup() {
+		
+		final int dayOlderThan = 365;
+		
+		final boolean doDelete = false; // na razie nie kasujemy
 
 		logger.info("Czyszczenie bazy danych");
 
@@ -263,7 +267,7 @@ public class ScheduleTask {
 			mySQLConnector.deleteOldDailyLogProcessedIds(transaction);
 			
 			// archiwizacja starych operacji
-			archiveOperations(transaction);
+			archiveOperations(transaction, dayOlderThan, doDelete);
 						
 			// zakomitowanie zmian
 			mySQLConnector.commitTransaction(transaction);
@@ -286,13 +290,8 @@ public class ScheduleTask {
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private void archiveOperations(final Transaction transaction) throws SQLException, IOException {
-		
-		final int dayOlderThan = 365;
-		
-		final boolean doDelete = false; // na razie nie kasujemy
-		
+	private void archiveOperations(final Transaction transaction, final int dayOlderThan, final boolean doDelete) throws SQLException, IOException {
+				
 		List<GenericLogOperationEnum> operationTypeToArchive = GenericLogOperationEnum.getAllExportableOperationList();
 				
 		// dla kazdego rodzaju
