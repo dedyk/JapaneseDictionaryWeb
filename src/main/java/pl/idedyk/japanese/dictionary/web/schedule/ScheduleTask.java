@@ -244,7 +244,7 @@ public class ScheduleTask {
 		
 		final int dayOlderThan = 365;
 		
-		final boolean doDelete = false; // na razie nie kasujemy
+		final boolean doDelete = true;
 
 		logger.info("Czyszczenie bazy danych");
 
