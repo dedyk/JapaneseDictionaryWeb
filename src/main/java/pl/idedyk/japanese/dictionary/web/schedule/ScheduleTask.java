@@ -326,6 +326,7 @@ public class ScheduleTask {
 					case BING_SITE_AUTH:
 					case SITEMAP_GENERATE:
 					case WORD_DICTIONARY_START:
+					case WORD_DICTIONARY_PDF_DICTIONARY:
 					case KANJI_DICTIONARY_START:
 					case SUGGESTION_START:
 					case INFO:

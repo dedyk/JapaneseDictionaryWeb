@@ -1,6 +1,10 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,6 +54,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryCatalogLogge
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryPdfDictionaryLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
 
@@ -719,5 +724,58 @@ public class WordDictionaryController {
 		model.put("pageDescription", pageDescription);
 				
 		return "wordDictionaryNameCatalog";
+	}
+	
+	@RequestMapping(value = "/wordDictionary/dictionary.pdf", method = RequestMethod.GET)
+	public void getWordDictionaryPdf(HttpServletRequest request, HttpServletResponse response, HttpSession session, OutputStream outputStream) throws IOException {
+		
+		logger.info("Pobieranie słownika w postaci pdf");
+				
+		// pobranie sciezki do pliku ze slownikiem
+		File pdfDictionary = dictionaryManager.getPdfDictionary();
+		
+		if (pdfDictionary == null || pdfDictionary.isFile() == false || pdfDictionary.canRead() == false) { // gdy nie mozna odczytac pliku
+			
+			response.sendError(404);
+			
+			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);
+			
+			return;
+		}
+
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryPdfDictionaryLoggerModel(Utils.createLoggerModelCommon(request)));
+		
+		// ustawianie naglowkow
+		response.setContentType("application/pdf");
+		response.setHeader("Content-Disposition","attachment; filename=\"maly-skromny-japonski-slownik.pdf\""); 
+		
+		// wysylanie pliku
+		FileInputStream sitemapFileInputStream = null;
+		
+		try {
+			sitemapFileInputStream = new FileInputStream(pdfDictionary);
+			
+			copyStream(sitemapFileInputStream, outputStream);
+			
+		} finally {
+			
+			if (sitemapFileInputStream != null) {
+				sitemapFileInputStream.close();
+			}			
+		}
+	}
+	
+	private void copyStream(InputStream input, OutputStream output) throws IOException {
+		
+		byte[] buffer = new byte[1024];
+		
+		int bytesRead;
+		
+		while ((bytesRead = input.read(buffer)) != -1) {
+			output.write(buffer, 0, bytesRead);
+		}
 	}
 }

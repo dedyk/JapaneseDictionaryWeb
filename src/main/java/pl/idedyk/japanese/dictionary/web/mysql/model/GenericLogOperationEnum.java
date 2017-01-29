@@ -22,6 +22,8 @@ public enum GenericLogOperationEnum {
 	
 	WORD_DICTIONARY_CATALOG(true),
 	
+	WORD_DICTIONARY_PDF_DICTIONARY(true),
+	
 	WORD_DICTIONARY_NAME_DETAILS(true),
 	WORD_DICTIONARY_NAME_CATALOG(true),
 	

@@ -422,4 +422,8 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		
 		return luceneDatabase.getSpellCheckerSuggestion(source, term, limit);
 	}
+	
+	public File getPdfDictionary() {		
+		return new File(dbDir, "dictionary.pdf");		
+	}
 }
