@@ -93,6 +93,7 @@ public class SitemapManager {
 		
 		sitemapHelper.createUrl("main", "", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
 		sitemapHelper.createUrl("main", "/wordDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
+		sitemapHelper.createUrl("main", "/wordDictionary/dictionary.pdf", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
 		sitemapHelper.createUrl("main", "/kanjiDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
 		sitemapHelper.createUrl("main", "/suggestion", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
 		sitemapHelper.createUrl("main", "/info", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));

@@ -153,6 +153,10 @@
 			</script>
 		</c:if>
 		
+		<div style="margin-top: 30px">
+			<a href="<c:out value='${pageContext.request.contextPath}' />/wordDictionary/dictionary.pdf"><spring:message code="wordDictionary.page.label.pdf.download"/></a>		
+		</div>
+		
 		<script>
 			$(document).ready(function() {
 				
