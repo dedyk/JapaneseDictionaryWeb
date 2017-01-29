@@ -10,3 +10,5 @@ src/main/resources/db/db-lucene/
 
 profiles/test
 profiles/production
+
+db/dictionary.pdf
