@@ -750,7 +750,8 @@ public class WordDictionaryController {
 		
 		// ustawianie naglowkow
 		response.setContentType("application/pdf");
-		response.setHeader("Content-Disposition","attachment; filename=\"maly-skromny-japonski-slownik.pdf\""); 
+		response.setContentLengthLong(pdfDictionary.length());
+		//response.setHeader("Content-Disposition","attachment; filename=\"maly-skromny-japonski-slownik.pdf\""); 
 		
 		// wysylanie pliku
 		FileInputStream sitemapFileInputStream = null;

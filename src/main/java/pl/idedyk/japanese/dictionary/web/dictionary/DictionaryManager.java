@@ -148,7 +148,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		
 		initialized = true;
 		
-		logger.info("Inicjalizacja Dictionary Manager zakonczona sukcesem");
+		logger.info("Inicjalizacja Dictionary Manager zakończona sukcesem");
 	}
 	
 	@PreDestroy
