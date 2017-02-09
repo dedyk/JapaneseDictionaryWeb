@@ -707,7 +707,7 @@ public class KanjiDictionaryController {
 		model.put("findKanjiResult", findKanjiResult);
 		model.put("pageNo", pageNo);
 		model.put("lastPageNo", lastPageNo);
-		//model.put("metaRobots", "noindex, follow");
+		model.put("metaRobots", "noindex, follow");
 		
 		String pageTitle = messageSource.getMessage("kanjiDictionary.catalog.page.title", 
 				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + resultList.size() - 1) }, Locale.getDefault());

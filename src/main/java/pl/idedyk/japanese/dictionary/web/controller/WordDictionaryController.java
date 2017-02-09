@@ -650,7 +650,7 @@ public class WordDictionaryController {
 		model.put("findWordResult", findWordResult);
 		model.put("pageNo", pageNo);
 		model.put("lastPageNo", lastPageNo);
-		//model.put("metaRobots", "noindex, follow");
+		model.put("metaRobots", "noindex, follow");
 		
 		String pageTitle = messageSource.getMessage("wordDictionary.catalog.page.title", 
 				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + dictionaryEntryList.size() - 1) }, Locale.getDefault());
@@ -712,7 +712,7 @@ public class WordDictionaryController {
 		model.put("findWordResult", findWordResult);
 		model.put("pageNo", pageNo);
 		model.put("lastPageNo", lastPageNo);
-		//model.put("metaRobots", "noindex, follow");
+		model.put("metaRobots", "noindex, follow");
 		
 		String pageTitle = messageSource.getMessage("wordDictionaryName.catalog.page.title", 
 				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + dictionaryEntryList.size() - 1) }, Locale.getDefault());
