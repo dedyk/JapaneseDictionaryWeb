@@ -2,13 +2,15 @@ package pl.idedyk.japanese.dictionary.web.schedule;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -241,9 +243,7 @@ public class ScheduleTask {
 	//@Scheduled(cron="* * * * * ?") // tymczasowo
 	@Scheduled(cron="0 0 2 * * ?") // o 2 w nocy
 	public void processDBCleanup() {
-		
-		final int dayOlderThan = 365;
-		
+				
 		final boolean doDelete = true;
 
 		logger.info("Czyszczenie bazy danych");
@@ -267,7 +267,7 @@ public class ScheduleTask {
 			mySQLConnector.deleteOldDailyLogProcessedIds(transaction);
 			
 			// archiwizacja starych operacji
-			archiveOperations(transaction, dayOlderThan, doDelete);
+			archiveOperations(transaction, doDelete);
 						
 			// zakomitowanie zmian
 			mySQLConnector.commitTransaction(transaction);
@@ -290,7 +290,7 @@ public class ScheduleTask {
 		}
 	}
 
-	private void archiveOperations(final Transaction transaction, final int dayOlderThan, final boolean doDelete) throws SQLException, IOException {
+	private void archiveOperations(final Transaction transaction, final boolean doDelete) throws SQLException, IOException {
 				
 		List<GenericLogOperationEnum> operationTypeToArchive = GenericLogOperationEnum.getAllExportableOperationList();
 				
@@ -298,7 +298,7 @@ public class ScheduleTask {
 		for (final GenericLogOperationEnum genericLogOperationEnum : operationTypeToArchive) {
 			
 			// pobranie starych dat operacji
-			List<String> oldGenericLogOperationDateList = mySQLConnector.getOldGenericLogOperationDateList(transaction, genericLogOperationEnum, dayOlderThan);
+			List<String> oldGenericLogOperationDateList = mySQLConnector.getOldGenericLogOperationDateList(transaction, genericLogOperationEnum, genericLogOperationEnum.getDayOlderThan());
 			
 			for (String dateString : oldGenericLogOperationDateList) {
 				
@@ -494,11 +494,11 @@ public class ScheduleTask {
 				descDir.mkdirs();
 			}
 			
-			return new File(descDir, prefix + "-" + dateString + ".csv");
+			return new File(descDir, prefix + "-" + dateString + ".csv.gz");
 		}
 		
 		public void init(File fileName) throws IOException {
-			csvWriter = new CsvWriter(new FileWriter(fileName), ',');
+			csvWriter = new CsvWriter(new GZIPOutputStream(new FileOutputStream(fileName)), ',', StandardCharsets.UTF_8);
 		}
 		
 		public void finish() {

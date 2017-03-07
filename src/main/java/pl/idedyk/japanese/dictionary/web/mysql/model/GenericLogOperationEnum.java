@@ -7,60 +7,67 @@ import java.util.List;
 
 public enum GenericLogOperationEnum {
 	
-	START_APP(true),
+	START_APP(90),
 	
-	START(true),
-	FAVICON_ICON(true),
-	ROBOTS_GENERATE(true),
-	BING_SITE_AUTH(true),
-	SITEMAP_GENERATE(true),
+	START(90),
+	FAVICON_ICON(90),
+	ROBOTS_GENERATE(90),
+	BING_SITE_AUTH(90),
+	SITEMAP_GENERATE(90),
 	
-	WORD_DICTIONARY_START(true),
-	WORD_DICTIONARY_AUTOCOMPLETE(false),
-	WORD_DICTIONARY_SEARCH(false),
-	WORD_DICTIONARY_DETAILS(true),
+	WORD_DICTIONARY_START(90),
+	WORD_DICTIONARY_AUTOCOMPLETE(),
+	WORD_DICTIONARY_SEARCH(),
+	WORD_DICTIONARY_DETAILS(90),
 	
-	WORD_DICTIONARY_CATALOG(true),
+	WORD_DICTIONARY_CATALOG(90),
 	
-	WORD_DICTIONARY_PDF_DICTIONARY(true),
+	WORD_DICTIONARY_PDF_DICTIONARY(365),
 	
-	WORD_DICTIONARY_NAME_DETAILS(true),
-	WORD_DICTIONARY_NAME_CATALOG(true),
+	WORD_DICTIONARY_NAME_DETAILS(90),
+	WORD_DICTIONARY_NAME_CATALOG(90),
 	
-	KANJI_DICTIONARY_START(true),
-	KANJI_DICTIONARY_AUTOCOMPLETE(false),
-	KANJI_DICTIONARY_SEARCH(false),
-	KANJI_DICTIONARY_RADICALS(false),
-	KANJI_DICTIONARY_DETECT(false),
-	KANJI_DICTIONARY_DETAILS(true),
+	KANJI_DICTIONARY_START(90),
+	KANJI_DICTIONARY_AUTOCOMPLETE(),
+	KANJI_DICTIONARY_SEARCH(),
+	KANJI_DICTIONARY_RADICALS(),
+	KANJI_DICTIONARY_DETECT(),
+	KANJI_DICTIONARY_DETAILS(90),
 	
-	KANJI_DICTIONARY_CATALOG(true),
+	KANJI_DICTIONARY_CATALOG(90),
 	
-	SUGGESTION_START(true),
-	SUGGESTION_SEND(false),
+	SUGGESTION_START(90),
+	SUGGESTION_SEND(),
 	
-	ANDROID_SEND_MISSING_WORD(false),
-	ANDROID_GET_SPELL_CHECKER_SUGGESTION(false),
+	ANDROID_SEND_MISSING_WORD(),
+	ANDROID_GET_SPELL_CHECKER_SUGGESTION(),
 	
-	DAILY_REPORT(false),
+	DAILY_REPORT(),
 	
-	INFO(true),
+	INFO(90),
 	
-	ADMIN_REQUEST(false),
+	ADMIN_REQUEST(),
 	
-	REDIRECT(true),
+	REDIRECT(90),
 	
-	GENERAL_EXCEPTION(false),
-	PAGE_NO_FOUND_EXCEPTION(true),
-	SERVICE_UNAVAILABLE_EXCEPTION(true),
-	METHOD_NOT_ALLOWED_EXCEPTION(true);
+	GENERAL_EXCEPTION(),
+	PAGE_NO_FOUND_EXCEPTION(365),
+	SERVICE_UNAVAILABLE_EXCEPTION(365),
+	METHOD_NOT_ALLOWED_EXCEPTION(365);
 	
 	private boolean exportable;
 	
-	GenericLogOperationEnum(boolean exportable) {
-		this.exportable = exportable;
-	}
+	private int dayOlderThan = Integer.MAX_VALUE;
 	
+	GenericLogOperationEnum() {
+		this.exportable = false;
+	}
+
+	GenericLogOperationEnum(int dayOlderThan) {
+		this.exportable = true;
+		this.dayOlderThan = dayOlderThan;
+	}
+
 	public static GenericLogOperationEnum[] getSortedValues() {
 		
 		GenericLogOperationEnum[] values = values();
@@ -94,5 +101,9 @@ public enum GenericLogOperationEnum {
 
 	public boolean isExportable() {
 		return exportable;
+	}
+
+	public int getDayOlderThan() {
+		return dayOlderThan;
 	}
 }
