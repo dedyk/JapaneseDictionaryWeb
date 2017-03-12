@@ -378,7 +378,7 @@ public class WordDictionaryController {
 				return "redirect:" + destinationUrl;			
 			}			
 			
-			logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
+			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
 			
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
@@ -475,7 +475,7 @@ public class WordDictionaryController {
 				return "redirect:" + destinationUrl;			
 			}			
 			
-			logger.info("Znaleziono słówko dla zapytania o szczegóły słowa (nazwa): " + dictionaryEntry);
+			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa (nazwa): " + dictionaryEntry);
 			
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));

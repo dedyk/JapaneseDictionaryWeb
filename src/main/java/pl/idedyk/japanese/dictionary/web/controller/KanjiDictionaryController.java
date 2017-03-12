@@ -410,7 +410,7 @@ public class KanjiDictionaryController {
 		// tytul strony
 		if (kanjiEntry != null) {
 			
-			logger.info("Znaleziono kanji dla zapytania o szczegóły kanji: " + kanjiEntry);
+			//logger.info("Znaleziono kanji dla zapytania o szczegóły kanji: " + kanjiEntry);
 			
 			// logowanie
 			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
