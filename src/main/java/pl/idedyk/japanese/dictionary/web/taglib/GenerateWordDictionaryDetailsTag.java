@@ -768,7 +768,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    		currentAttributeH.addHtmlElement(new Text(attributeType.getName()));
 			}
 			
-			if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR || attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR || attributeType == AttributeType.ALTERNATIVE) {
+			if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR || attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR || attributeType == AttributeType.ALTERNATIVE ||
+					attributeType == AttributeType.RELATED) {
 				
 				Integer referenceWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
 
