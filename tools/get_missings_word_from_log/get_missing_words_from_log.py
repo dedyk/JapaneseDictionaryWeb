@@ -95,5 +95,7 @@ def parse_date(date_string):
     
     return parsed_date
 
+# Przyklad wywolania python get_missing_words_from_log.py catalina.out "2017-06-13 00:00:00" "2017-06-13 18:00:00"
+
 if __name__ == "__main__":
     main()
