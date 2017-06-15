@@ -13,7 +13,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -231,7 +233,24 @@ public class QueueService {
 				return false;
 			}
 		});
-		
+				
+		Arrays.sort(queueItemsFileReadyList, new Comparator<File>() {
+
+			@Override
+			public int compare(File f1, File f2) {
+				
+				if (f1.lastModified() < f2.lastModified()) {
+					return -1;
+					
+				} else if (f1.lastModified() > f2.lastModified()) {
+					return 1;
+					
+				} else {
+					return 0;
+				}
+			}
+		});
+				
 		if (queueItemsFileReadyList != null && queueItemsFileReadyList.length > 0) {
 			
 			// logger.info("Znaleziono pliki z lokalnej kolejki");
