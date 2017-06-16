@@ -13,12 +13,14 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.GZIPOutputStream;
 
 import javax.annotation.PostConstruct;
 
@@ -44,6 +46,8 @@ public class QueueService {
 	
 	private File localDirJobQueueDirFile;
 	
+	private File localDirJobQueryArchiveDirFile;
+	
 	@PostConstruct
 	public void init() {
 		
@@ -64,6 +68,25 @@ public class QueueService {
 			
 			throw new RuntimeException();
 		}
+		
+		//
+		
+		localDirJobQueryArchiveDirFile = new File(localDirJobQueueDirFile, "archive");
+		
+		if (localDirJobQueryArchiveDirFile.exists() == false) {
+			
+			logger.info("Tworzę katalog " + localDirJobQueryArchiveDirFile.getPath() + " do archiwum lokalnej kolejki");
+			
+			localDirJobQueryArchiveDirFile.mkdirs();
+		}
+		
+		if (localDirJobQueryArchiveDirFile.exists() == false || localDirJobQueryArchiveDirFile.canWrite() == false) {
+			
+			logger.error("Nie mogę zainicjalizować katalogu " + localDirJobQueryArchiveDirFile.getPath() + " do archiwum lokalnej kolejki");
+			
+			throw new RuntimeException();
+		}
+
 	}
 
 	public void sendToQueue(String queueName, byte[] object) throws SQLException {
@@ -110,10 +133,14 @@ public class QueueService {
 		
 		// logger.info("Zapisanie do lokalnego katalogu kolejki");
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		
+		String dateString = sdf.format(queueItem.getSendTimestamp());
+		
 		String randomFileName = UUID.randomUUID().toString();
 		
-		File queueItemFileBody = new File(localDirJobQueueDirFile, queueItem.getName() + "_" + randomFileName);
-		File queueItemBodyReady = new File(localDirJobQueueDirFile, queueItem.getName() + "_" + randomFileName + ".ready");
+		File queueItemFileBody = new File(localDirJobQueueDirFile, queueItem.getName() + "_" + dateString + "_" + randomFileName);
+		File queueItemBodyReady = new File(localDirJobQueueDirFile, queueItem.getName() + "_" + dateString + "_" + randomFileName + ".ready");
 		
 		ByteArrayOutputStream bos = null;
 		ObjectOutput objectOutput = null;
@@ -212,7 +239,7 @@ public class QueueService {
 	}
 
 	public void processLocalDirQueueItems() {
-		
+				
 		// proba znalezienia plikow z lokalnego katalogu kolejki
 		
 		File[] queueItemsFileReadyList = localDirJobQueueDirFile.listFiles(new FileFilter() {
@@ -254,7 +281,7 @@ public class QueueService {
 		if (queueItemsFileReadyList != null && queueItemsFileReadyList.length > 0) {
 			
 			// logger.info("Znaleziono pliki z lokalnej kolejki");
-			
+						
 			for (File currentReadyQueueItemFile : queueItemsFileReadyList) {
 				
 				File queueItemFile = new File(currentReadyQueueItemFile.getParent(), currentReadyQueueItemFile.getName().substring(0, currentReadyQueueItemFile.getName().length() - ".ready".length()));
@@ -305,10 +332,54 @@ public class QueueService {
 					continue;
 				}
 				
+				// udalo sie, mozemy przeniesc do archiwum
+								
+				// przenosimy i kompresujemy plik
+				try {
+					copyAndGzipFile(queueItemFile, new File(localDirJobQueryArchiveDirFile, queueItemFile.getName() + ".gz"));
+					
+				} catch (IOException e) {
+					logger.error("Błąd podczas archiwizowania pliku z lokalnej kolejki: " + queueItemFile.getName(), e);
+
+				}
+				
 				// skasowanie plikow z lokalnej kolejki
 				currentReadyQueueItemFile.delete();
 				queueItemFile.delete();
 			}
 		}
+	}
+	
+	private void copyAndGzipFile(File source, File destination) throws IOException {
+		
+		byte[] buffer = new byte[1024];
+		
+		FileInputStream sourceInputStream = null;
+		GZIPOutputStream destinationOutputStream = null;
+		
+		try {
+
+			sourceInputStream = new FileInputStream(source);
+			
+			destinationOutputStream = new GZIPOutputStream(new FileOutputStream(destination));
+
+	        int len;
+	        
+	        while ((len = sourceInputStream.read(buffer)) > 0) {
+	        	destinationOutputStream.write(buffer, 0, len);
+	        }
+	        
+	    } finally {
+	    	
+	    	if (sourceInputStream != null) {
+	    		sourceInputStream.close();
+	    	}
+	    	
+	    	if (destinationOutputStream != null) {
+	    		destinationOutputStream.finish();
+	    		destinationOutputStream.close();
+	    	}	    	
+	    }
+		
 	}
 }
