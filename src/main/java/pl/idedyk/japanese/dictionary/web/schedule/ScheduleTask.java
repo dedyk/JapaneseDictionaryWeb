@@ -69,7 +69,7 @@ public class ScheduleTask {
 	private String dbArchDir; 
 	
 	//@Scheduled(cron="0 * * * * ?") // co minute
-	//@Scheduled(cron="0 0 19 * * ?") // o 19
+	@Scheduled(cron="0 0 19 * * ?") // o 19
 	public void generateDailyReport() {
 		generateDailyReport(true);
 	}
@@ -124,7 +124,7 @@ public class ScheduleTask {
 	}
 	
 	
-	//@Scheduled(cron="* * * * * ?")
+	@Scheduled(cron="* * * * * ?")
 	public void processLogQueueItem() {
 				
 		QueueItem currentQueueItem = null;
@@ -201,7 +201,7 @@ public class ScheduleTask {
 		}
 	}
 	
-	// @Scheduled(cron="0 0 0 * * ?") // o polnocy
+	@Scheduled(cron="0 0 0 * * ?") // o polnocy
 	public void deleteOldQueueItems() {
 		
 		final String lockName = "deleteOldQueueItems";
@@ -234,14 +234,14 @@ public class ScheduleTask {
 		}
 	}
 	
-	//@Scheduled(cron="* * * * * ?")
+	@Scheduled(cron="* * * * * ?")
 	public void processLocalDirQueueItems() {
 		
 		queueService.processLocalDirQueueItems();
 	}
 	
 	//@Scheduled(cron="* * * * * ?") // tymczasowo
-	// @Scheduled(cron="0 0 2 * * ?") // o 2 w nocy
+	@Scheduled(cron="0 0 2 * * ?") // o 2 w nocy
 	public void processDBCleanup() {
 				
 		final boolean doDelete = true;
