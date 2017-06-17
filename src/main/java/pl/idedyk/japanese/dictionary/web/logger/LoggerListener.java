@@ -2,7 +2,6 @@ package pl.idedyk.japanese.dictionary.web.logger;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
@@ -238,8 +237,8 @@ public class LoggerListener {
 					
 					wordDictionarySearchMissingWordQueue.setMissingWord(wordDictionarySearchLog.getFindWordRequestWord());
 					wordDictionarySearchMissingWordQueue.setCounter(1);
-					wordDictionarySearchMissingWordQueue.setFirstAppearanceTimestamp(new Timestamp(new Date().getTime()));
-					wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(new Timestamp(new Date().getTime()));
+					wordDictionarySearchMissingWordQueue.setFirstAppearanceTimestamp(new Timestamp(wordDictionarySearchLoggerModel.getDate().getTime()));
+					wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(new Timestamp(wordDictionarySearchLoggerModel.getDate().getTime()));
 					wordDictionarySearchMissingWordQueue.setLockTimestamp(null);
 					wordDictionarySearchMissingWordQueue.setPriority(wordDictionarySearchLoggerModel.getPriority());
 					
@@ -268,7 +267,7 @@ public class LoggerListener {
 				} else { // uaktualnienie istniejacego wpisu
 					
 					wordDictionarySearchMissingWordQueue.setCounter(wordDictionarySearchMissingWordQueue.getCounter() + 1);
-					wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(new Timestamp(new Date().getTime()));
+					wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(new Timestamp(wordDictionarySearchLoggerModel.getDate().getTime()));
 					
 					if (wordDictionarySearchLoggerModel.getPriority() > wordDictionarySearchMissingWordQueue.getPriority()) {
 						wordDictionarySearchMissingWordQueue.setPriority(wordDictionarySearchLoggerModel.getPriority());
