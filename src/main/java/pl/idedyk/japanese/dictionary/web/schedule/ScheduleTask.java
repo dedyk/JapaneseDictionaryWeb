@@ -215,7 +215,7 @@ public class ScheduleTask {
 	}
 	
 	@Scheduled(cron="0 0 0 * * ?") // o polnocy
-	public void deleteOldQueueItems() {
+	public void deleteDatabaseOldQueueItems() {
 		
 		if (configService.isStopAllSchedulers() == true) {
 			return;
@@ -249,6 +249,19 @@ public class ScheduleTask {
 		} catch (Exception e) {
 			logger.error("Blad podczas kasowania starych wpisow z kolejki", e);
 		}
+	}
+	
+	@Scheduled(cron="0 0 0 * * ?") // o polnocy
+	//@Scheduled(cron="* * * * * ?") // dev
+	public void deleteLocalDirArchiveOldQueueItems() {
+		
+		if (configService.isStopAllSchedulers() == true) {
+			return;
+		}
+		
+		logger.info("Kasuje stare wpisy z lokalnego archiwum kolejki");
+		
+		queueService.deleteLocalDirArchiveOldQueueItems(8); // starsze niz 8 dni
 	}
 	
 	@Scheduled(cron="* * * * * ?")

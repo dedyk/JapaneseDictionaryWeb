@@ -382,4 +382,49 @@ public class QueueService {
 	    }
 		
 	}
+
+	public void deleteLocalDirArchiveOldQueueItems(final int olderThanDays) {
+		
+		// pobieramy liste plikow do skasowania
+		File[] oldQueueItemsArchiveFiles = localDirJobQueryArchiveDirFile.listFiles(new FileFilter() {
+			
+			@Override
+			public boolean accept(File pathname) {
+				
+				if (pathname.isFile() == false) {
+					return false;
+				}
+				
+				if (pathname.getName().endsWith(".gz") == false) {
+					return false;
+				}
+				
+				Calendar calendarNowMinusDays = Calendar.getInstance();
+				
+				calendarNowMinusDays.add(Calendar.DAY_OF_YEAR, -olderThanDays);
+				
+				//
+				
+				Date pathNameLastModifiedDate = new Date(pathname.lastModified());
+				
+				Calendar pathNameLastModifiedDateCalendar = Calendar.getInstance();
+				
+				pathNameLastModifiedDateCalendar.setTime(pathNameLastModifiedDate);
+				
+				if (calendarNowMinusDays.getTime().getTime() > pathNameLastModifiedDateCalendar.getTime().getTime()) { // kasujemy
+					return true;
+					
+				} else {
+					return false;
+				}
+			}
+		});
+		
+		// kasujemy pliki
+		for (File file : oldQueueItemsArchiveFiles) {
+			logger.info("Kasuje plik: " + file.getName());
+			
+			file.delete();
+		}
+	}
 }
