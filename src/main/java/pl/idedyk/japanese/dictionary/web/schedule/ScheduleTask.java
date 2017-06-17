@@ -40,6 +40,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLo
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
 import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 import pl.idedyk.japanese.dictionary.web.report.ReportGenerator;
+import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.SemaphoreService;
 
 @Service
@@ -65,12 +66,20 @@ public class ScheduleTask {
 	@Autowired
 	private SemaphoreService semaphoreService;
 	
+	@Autowired
+	private ConfigService configService;
+	
 	@Value("${db.arch.dir}")
 	private String dbArchDir; 
 	
 	//@Scheduled(cron="0 * * * * ?") // co minute
 	@Scheduled(cron="0 0 19 * * ?") // o 19
 	public void generateDailyReport() {
+		
+		if (configService.isStopAllSchedulers() == true) {
+			return;
+		}
+		
 		generateDailyReport(true);
 	}
 			
@@ -126,6 +135,10 @@ public class ScheduleTask {
 	
 	@Scheduled(cron="* * * * * ?")
 	public void processLogQueueItem() {
+		
+		if (configService.isStopAllSchedulers() == true) {
+			return;
+		}
 				
 		QueueItem currentQueueItem = null;
 				
@@ -204,6 +217,10 @@ public class ScheduleTask {
 	@Scheduled(cron="0 0 0 * * ?") // o polnocy
 	public void deleteOldQueueItems() {
 		
+		if (configService.isStopAllSchedulers() == true) {
+			return;
+		}
+		
 		final String lockName = "deleteOldQueueItems";
 		
 		boolean canDoOperation = false;
@@ -237,12 +254,20 @@ public class ScheduleTask {
 	@Scheduled(cron="* * * * * ?")
 	public void processLocalDirQueueItems() {
 		
+		if (configService.isStopAllSchedulers() == true) {
+			return;
+		}
+		
 		queueService.processLocalDirQueueItems();
 	}
 	
 	//@Scheduled(cron="* * * * * ?") // tymczasowo
 	@Scheduled(cron="0 0 2 * * ?") // o 2 w nocy
 	public void processDBCleanup() {
+		
+		if (configService.isStopAllSchedulers() == true) {
+			return;
+		}
 				
 		final boolean doDelete = true;
 
