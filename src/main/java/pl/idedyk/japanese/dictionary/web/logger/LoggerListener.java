@@ -267,7 +267,14 @@ public class LoggerListener {
 				} else { // uaktualnienie istniejacego wpisu
 					
 					wordDictionarySearchMissingWordQueue.setCounter(wordDictionarySearchMissingWordQueue.getCounter() + 1);
-					wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(new Timestamp(wordDictionarySearchLoggerModel.getDate().getTime()));
+					
+					if (wordDictionarySearchLoggerModel.getDate().getTime() < wordDictionarySearchMissingWordQueue.getFirstAppearanceTimestamp().getTime()) {
+						wordDictionarySearchMissingWordQueue.setFirstAppearanceTimestamp(new Timestamp(wordDictionarySearchLoggerModel.getDate().getTime()));
+					}
+					
+					if (wordDictionarySearchLoggerModel.getDate().getTime() > wordDictionarySearchMissingWordQueue.getLastAppearanceTimestamp().getTime()) {
+						wordDictionarySearchMissingWordQueue.setLastAppearanceTimestamp(new Timestamp(wordDictionarySearchLoggerModel.getDate().getTime()));
+					}					
 					
 					if (wordDictionarySearchLoggerModel.getPriority() > wordDictionarySearchMissingWordQueue.getPriority()) {
 						wordDictionarySearchMissingWordQueue.setPriority(wordDictionarySearchLoggerModel.getPriority());
