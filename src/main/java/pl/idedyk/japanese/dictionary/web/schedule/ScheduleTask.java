@@ -261,7 +261,7 @@ public class ScheduleTask {
 		
 		logger.info("Kasuje stare wpisy z lokalnego archiwum kolejki");
 		
-		queueService.deleteLocalDirArchiveOldQueueItems(8); // starsze niz 8 dni
+		queueService.deleteLocalDirArchiveOldQueueItems(10); // starsze niz 10 dni
 	}
 	
 	@Scheduled(cron="* * * * * ?")
