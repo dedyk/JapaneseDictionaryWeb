@@ -333,10 +333,19 @@ public class QueueService {
 				}
 				
 				// udalo sie, mozemy przeniesc do archiwum
+				
+				// sprawdzenie i ewentualne utworzenie katalogu z data
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				
+				File localDirJobQueryArchiveDirWithDateFile = new File(localDirJobQueryArchiveDirFile, dateFormat.format(queueItem.getSendTimestamp()));
+				
+				if (localDirJobQueryArchiveDirWithDateFile.exists() == false && localDirJobQueryArchiveDirWithDateFile.isDirectory() == false) { // tworzymy katalog
+					localDirJobQueryArchiveDirWithDateFile.mkdir();
+				}
 								
 				// przenosimy i kompresujemy plik
 				try {
-					copyAndGzipFile(queueItemFile, new File(localDirJobQueryArchiveDirFile, queueItemFile.getName() + ".gz"));
+					copyAndGzipFile(queueItemFile, new File(localDirJobQueryArchiveDirWithDateFile, queueItemFile.getName() + ".gz"));
 					
 				} catch (IOException e) {
 					logger.error("Błąd podczas archiwizowania pliku z lokalnej kolejki: " + queueItemFile.getName(), e);
