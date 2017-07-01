@@ -13,6 +13,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -47,6 +48,10 @@ public class QueueService {
 	private File localDirJobQueueDirFile;
 	
 	private File localDirJobQueryArchiveDirFile;
+	
+	//
+	
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@PostConstruct
 	public void init() {
@@ -334,9 +339,7 @@ public class QueueService {
 				
 				// udalo sie, mozemy przeniesc do archiwum
 				
-				// sprawdzenie i ewentualne utworzenie katalogu z data
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				
+				// sprawdzenie i ewentualne utworzenie katalogu z data				
 				File localDirJobQueryArchiveDirWithDateFile = new File(localDirJobQueryArchiveDirFile, dateFormat.format(queueItem.getSendTimestamp()));
 				
 				if (localDirJobQueryArchiveDirWithDateFile.exists() == false && localDirJobQueryArchiveDirWithDateFile.isDirectory() == false) { // tworzymy katalog
@@ -395,45 +398,79 @@ public class QueueService {
 	public void deleteLocalDirArchiveOldQueueItems(final int olderThanDays) {
 		
 		// pobieramy liste plikow do skasowania
-		File[] oldQueueItemsArchiveFiles = localDirJobQueryArchiveDirFile.listFiles(new FileFilter() {
+		File[] oldQueueItemsDirListFiles = localDirJobQueryArchiveDirFile.listFiles(new FileFilter() {
 			
 			@Override
 			public boolean accept(File pathname) {
 				
-				if (pathname.isFile() == false) {
+				if (pathname.isFile() == true) {
 					return false;
 				}
 				
-				if (pathname.getName().endsWith(".gz") == false) {
+				if (pathname.isDirectory() == false) {
 					return false;
 				}
+
+				Date pathnameDate = null;
+				
+				try {
+					pathnameDate = dateFormat.parse(pathname.getName());
+					
+				} catch (ParseException e) { // zly format nazwy katalogu
+					return false;
+				}
+				
+				// nazwa katalogu jest w odpowiednim formacie, wiec sprawdzamy liczbe dni
 				
 				Calendar calendarNowMinusDays = Calendar.getInstance();
 				
 				calendarNowMinusDays.add(Calendar.DAY_OF_YEAR, -olderThanDays);
 				
-				//
-				
-				Date pathNameLastModifiedDate = new Date(pathname.lastModified());
-				
-				Calendar pathNameLastModifiedDateCalendar = Calendar.getInstance();
-				
-				pathNameLastModifiedDateCalendar.setTime(pathNameLastModifiedDate);
-				
-				if (calendarNowMinusDays.getTime().getTime() > pathNameLastModifiedDateCalendar.getTime().getTime()) { // kasujemy
+				if (calendarNowMinusDays.getTime().getTime() > pathnameDate.getTime()) { // kasujemy
 					return true;
 					
 				} else {
 					return false;
-				}
+				}				
 			}
 		});
 		
 		// kasujemy pliki
-		for (File file : oldQueueItemsArchiveFiles) {
-			logger.info("Kasuje plik: " + file.getName());
+		for (File directoryToDelete : oldQueueItemsDirListFiles) {
 			
-			file.delete();
+			logger.info("Kasuje katalog archiwum: " + directoryToDelete.getName());
+			
+			// najpierw kasujemy pliki z tego katalogu
+			File[] directoryToDeleteListFiles = directoryToDelete.listFiles();
+			
+			for (File fileToDelete : directoryToDeleteListFiles) {
+				
+				// tylko gz
+				if (fileToDelete.getName().endsWith(".gz") == false) {
+					continue;
+				}
+				
+				fileToDelete.delete();
+			}
+			
+			// a pozniej sam katalog (powinien byc) pusty
+			directoryToDelete.delete();
 		}
 	}
+	
+	//
+	
+	/*
+	public static void main(String[] args) {
+		
+		org.apache.log4j.BasicConfigurator.configure();
+		
+		QueueService queueService = new QueueService();
+		
+		queueService.localDirJobQueueDir = "/opt/apache-tomcat-8.0.8/local-job-queue";
+		queueService.init(); 
+		
+		queueService.deleteLocalDirArchiveOldQueueItems(10);
+	}
+	*/
 }
