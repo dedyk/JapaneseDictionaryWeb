@@ -13,6 +13,8 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
+import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Type;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetSpellCheckerSuggestionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.BingSiteAuthGenerateLoggerModel;
@@ -80,6 +82,7 @@ public class LoggerListener {
 	@Autowired
 	private MailSender mailSender;
 		
+	@SuppressWarnings("unchecked")
 	public void onMessage(LoggerModelCommon loggerModelCommon) {
 							
 		GenericLogOperationEnum operation = mapClassToGenericLogOperationEnum(loggerModelCommon.getClass());
@@ -768,7 +771,42 @@ public class LoggerListener {
 				
 				throw new RuntimeException(e);
 			}
-		
+			
+			// jesli operacja to pobranie slow z kolejki wraz z blokada to wykonujemy te operacje
+			if (adminLoggerModel.getType() == Type.ADMIN_GET_MISSING_WORDS_QUEUE && adminLoggerModel.getResult() == Result.OK) {
+				
+	    		// !!! uwaga !!! jesli cos tu zmieniasz to zmien rowniez w klasie AdminController, podtyp ADMIN_GET_MISSING_WORDS_QUEUE
+				
+				Boolean lock = (Boolean)adminLoggerModel.getParams().get("lock");				
+				Timestamp lockTimestamp = (Timestamp)adminLoggerModel.getParams().get("lockTimestamp");
+				
+				AdminLoggerModel.ObjectWrapper unlockedWordDictionarySearchMissingWordQueueObjectWrapper = ((AdminLoggerModel.ObjectWrapper)adminLoggerModel.getParams().get("unlockedWordDictionarySearchMissingWordQueue"));
+				
+				List<WordDictionarySearchMissingWordQueue> unlockedWordDictionarySearchMissingWordQueue = null;
+				
+				if (unlockedWordDictionarySearchMissingWordQueueObjectWrapper != null) {
+					unlockedWordDictionarySearchMissingWordQueue = (List<WordDictionarySearchMissingWordQueue>)unlockedWordDictionarySearchMissingWordQueueObjectWrapper.getObject();
+				}
+				
+				//
+				 
+				if (lock != null && lock.booleanValue() == true && lockTimestamp != null && unlockedWordDictionarySearchMissingWordQueue != null) { // mozemy zakladac blokade
+					
+	        		for (WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue : unlockedWordDictionarySearchMissingWordQueue) {
+	    				
+	        			wordDictionarySearchMissingWordQueue.setLockTimestamp(lockTimestamp);
+	        			
+	        			try {
+	        				mySQLConnector.updateWordDictionarySearchMissingWordQueue(wordDictionarySearchMissingWordQueue);
+	        			} catch (SQLException e) {
+	        				logger.error("Błąd podczas zapisu do bazy danych", e);
+	        				
+	        				throw new RuntimeException(e);
+	        			}
+	    			}    		
+				}
+			}
+			
 		} else if (operation == GenericLogOperationEnum.GENERAL_EXCEPTION) {
 			
 			GeneralExceptionLoggerModel generalExceptionLoggerModel = (GeneralExceptionLoggerModel)loggerModelCommon;

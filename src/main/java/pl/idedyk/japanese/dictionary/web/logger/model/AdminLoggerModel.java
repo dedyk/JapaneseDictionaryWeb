@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.logger.model;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -11,7 +12,7 @@ public class AdminLoggerModel extends LoggerModelCommon {
 	
 	private Result result;
 	
-	private Map<String, String> params = new TreeMap<String, String>();
+	private Map<String, Object> params = new TreeMap<String, Object>();
 		
 	public AdminLoggerModel(LoggerModelCommon loggerModelCommon) {		
 		super(loggerModelCommon);
@@ -33,17 +34,18 @@ public class AdminLoggerModel extends LoggerModelCommon {
 		this.result = result;
 	}
 
-	public Map<String, String> getParams() {
+	public Map<String, Object> getParams() {
 		return params;
 	}
 
-	public void setParams(Map<String, String> params) {
+	public void setParams(Map<String, Object> params) {
 		this.params = params;
 	}
 	
-	public void addParam(String key, String value) {
+	public void addParam(String key, Object value) {
+		
 		if (params == null) {
-			params = new TreeMap<String, String>();
+			params = new TreeMap<String, Object>();
 		}
 		
 		params.put(key, value);
@@ -83,5 +85,32 @@ public class AdminLoggerModel extends LoggerModelCommon {
 		OK,
 		
 		ERROR;		
-	}	
+	}
+	
+	public static class ObjectWrapper implements Serializable {
+		
+		private static final long serialVersionUID = 1L;
+		
+		private String name;
+		
+		private Object object;
+		
+		public ObjectWrapper(String name, Object object) {
+			this.name = name;
+			this.object = object;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public Object getObject() {
+			return object;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}		
+	}
 }

@@ -354,7 +354,7 @@ public class AdminController {
     	adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
     	adminLoggerModel.addParam("showMaxSize", adminPanelMissingWordsQueueModel.getShowMaxSize());
     	adminLoggerModel.addParam("wordList", adminPanelMissingWordsQueueModel.getWordList());
-    	adminLoggerModel.addParam("lock", Boolean.valueOf(adminPanelMissingWordsQueueModel.isLock()).toString());
+    	adminLoggerModel.addParam("lock", Boolean.valueOf(adminPanelMissingWordsQueueModel.isLock()));
 		
 		model.put("selectedMenu", "missingWordsQueuePanel");		
     	model.put("command2", adminPanelMissingWordsQueueModel);
@@ -383,7 +383,7 @@ public class AdminController {
     		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
     		adminLoggerModel.addParam("showMaxSize", adminPanelMissingWordsQueueModel.getShowMaxSize());
     		adminLoggerModel.addParam("wordList", adminPanelMissingWordsQueueModel.getWordList());
-    		adminLoggerModel.addParam("lock", Boolean.valueOf(adminPanelMissingWordsQueueModel.isLock()).toString());
+    		adminLoggerModel.addParam("lock", Boolean.valueOf(adminPanelMissingWordsQueueModel.isLock()));
     		
     		// logowanie
     		loggerSender.sendLog(adminLoggerModel);
@@ -401,15 +401,16 @@ public class AdminController {
     		adminLoggerModel.addParam("size", adminPanelMissingWordsQueueModel.getSize());
     		adminLoggerModel.addParam("showMaxSize", adminPanelMissingWordsQueueModel.getShowMaxSize());
     		adminLoggerModel.addParam("wordList", adminPanelMissingWordsQueueModel.getWordList());
-    		adminLoggerModel.addParam("lock", Boolean.valueOf(isLock).toString());
+    		adminLoggerModel.addParam("lock", Boolean.valueOf(isLock));
     		
     		if (isLock == true) {
-    			adminLoggerModel.addParam("lockTimestamp", lockTimestamp.toString());
+    			adminLoggerModel.addParam("lockTimestamp", lockTimestamp);
     		}
     		
     		// pobieranie brakujacych slow
     		List<String> wordListAsList = adminPanelMissingWordsQueueModel.getWordListAsList();
     		
+    		// !!! uwaga !!! jesli cos tu zmieniasz to zmien rowniez w klasie LoggerListener, obsluga ADMIN_REQUEST
     		List<WordDictionarySearchMissingWordQueue> unlockedWordDictionarySearchMissingWordQueue = null;
     		
     		if (wordListAsList.size() == 0) { // pobieranie listy slow wedlug liczby
@@ -422,7 +423,11 @@ public class AdminController {
         		unlockedWordDictionarySearchMissingWordQueue = 
         				mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueue(wordListAsList);    			
     			
-    		}    		
+    		}    
+    		
+    		adminLoggerModel.addParam("unlockedWordDictionarySearchMissingWordQueue", new AdminLoggerModel.ObjectWrapper("<WordDictionarySearchMissingWordQueue list> ", unlockedWordDictionarySearchMissingWordQueue));
+    		
+    		//
     		
     		Report generateMissingWordsQueueReportBody = reportGenerator.generateMissingWordsQueueReportBody(unlockedWordDictionarySearchMissingWordQueue, Long.parseLong(adminPanelMissingWordsQueueModel.getShowMaxSize()));
     		
@@ -430,18 +435,7 @@ public class AdminController {
 
     		model.put("pageTitle", messageSource.getMessage("admin.panel.showMissingWordsQueueReport.title", new Object[] { }, Locale.getDefault()));
     		model.put("pageDescription", "");
-    		
-    		// zalozenie blokady   		
-    		if (isLock == true) {
-    			
-        		for (WordDictionarySearchMissingWordQueue wordDictionarySearchMissingWordQueue : unlockedWordDictionarySearchMissingWordQueue) {
-    				
-        			wordDictionarySearchMissingWordQueue.setLockTimestamp(lockTimestamp);
-        			
-        			mySQLConnector.updateWordDictionarySearchMissingWordQueue(wordDictionarySearchMissingWordQueue);
-    			}    		
-    		}
-    		    		
+    		    		    		
     		// logowanie
     		loggerSender.sendLog(adminLoggerModel);
     		
