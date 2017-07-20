@@ -71,7 +71,7 @@ def main():
             conn.close()
         
         if csv_output_file_name_handler:
-            csv_output_name_handler.close()
+            csv_output_file_name_handler.close()
 
 
 if __name__ == "__main__":
