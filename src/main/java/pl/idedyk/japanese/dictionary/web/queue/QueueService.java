@@ -372,16 +372,15 @@ public class QueueService {
 					FileSystem archiveFileSystem = null;
 					
 					try {						
-						// utworzenie nazwy pliku z archiwum
-						SimpleDateFormat dateFormatWithHours = new SimpleDateFormat("yyyy-MM-dd_HH");
-												
+						// utworzenie nazwy pliku z archiwum												
 						Date date = new Date();
 						
 						Calendar querySendTimestampCalendar = Calendar.getInstance();
 						
 						querySendTimestampCalendar.setTime(queueItem.getSendTimestamp());
 						
-						String archivePartFileName = dateFormatWithHours.format(date) + "_" + (querySendTimestampCalendar.get(Calendar.MINUTE) / 10) + "0";		
+						String archivePartFileName = dateFormat.format(date) + "_" + querySendTimestampCalendar.get(Calendar.HOUR_OF_DAY) + "_" + 
+								(querySendTimestampCalendar.get(Calendar.MINUTE) / 10) + "0";		
 						
 						//
 												
