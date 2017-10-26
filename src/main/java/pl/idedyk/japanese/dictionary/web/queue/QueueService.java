@@ -10,7 +10,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.UnknownHostException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -19,9 +25,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import java.util.zip.GZIPOutputStream;
 
 import javax.annotation.PostConstruct;
 
@@ -345,23 +352,79 @@ public class QueueService {
 				if (localDirJobQueryArchiveDirWithDateFile.exists() == false && localDirJobQueryArchiveDirWithDateFile.isDirectory() == false) { // tworzymy katalog
 					localDirJobQueryArchiveDirWithDateFile.mkdir();
 				}
-								
-				// przenosimy i kompresujemy plik
-				try {
-					copyAndGzipFile(queueItemFile, new File(localDirJobQueryArchiveDirWithDateFile, queueItemFile.getName() + ".gz"));
-					
-				} catch (IOException e) {
-					logger.error("Błąd podczas archiwizowania pliku z lokalnej kolejki: " + queueItemFile.getName(), e);
-
-				}
 				
-				// skasowanie plikow z lokalnej kolejki
-				currentReadyQueueItemFile.delete();
-				queueItemFile.delete();
+				// najpierw przenosimy plik do katalogu archiwum
+				File currentQueueItemFileInArchiveFile = new File(localDirJobQueryArchiveDirWithDateFile, queueItemFile.getName());
+				
+				if (queueItemFile.renameTo(currentQueueItemFileInArchiveFile) == false) {										
+					
+					logger.error("Błąd podczas przenoszenia pliku do archiwum: " + queueItemFile);
+					
+					// kasujemy plik ready
+					currentReadyQueueItemFile.delete();
+					
+				} else {
+					
+					queueItemFile = currentQueueItemFileInArchiveFile;
+					currentQueueItemFileInArchiveFile = null;
+					
+					// przenosimy plik do wspolnego archiwum
+					FileSystem archiveFileSystem = null;
+					
+					try {						
+						// utworzenie nazwy pliku z archiwum
+						SimpleDateFormat dateFormatWithHours = new SimpleDateFormat("yyyy-MM-dd_HH");
+												
+						Date date = new Date();
+						
+						Calendar querySendTimestampCalendar = Calendar.getInstance();
+						
+						querySendTimestampCalendar.setTime(queueItem.getSendTimestamp());
+						
+						String archivePartFileName = dateFormatWithHours.format(date) + "_" + (querySendTimestampCalendar.get(Calendar.MINUTE) / 10) + "0";		
+						
+						//
+												
+						File archiveFile = new File(localDirJobQueryArchiveDirWithDateFile, archivePartFileName + ".zip");
+										
+						URI archiveFileUri = URI.create("jar:file:" + archiveFile.getAbsolutePath());
+						
+						// utworzenie archiwum												
+						Map<String, String> archiveEnv = new HashMap<>();
+						
+						archiveEnv.put("create", String.valueOf(archiveFile.exists() == false));
+
+						archiveFileSystem = FileSystems.newFileSystem(archiveFileUri, archiveEnv);
+						
+						// przenoszenie pliku do archiwum						
+			            Path queueItemFilePathInArchiveFile = archiveFileSystem.getPath(queueItemFile.getName());
+			            
+			            Files.copy(queueItemFile.toPath(), queueItemFilePathInArchiveFile, StandardCopyOption.REPLACE_EXISTING); 					
+						
+					} catch (Exception e) {
+						logger.error("Błąd podczas przenoszenia pliku do archiwum: " + e.getMessage());
+						
+					} finally {
+						
+						if (archiveFileSystem != null) {
+							
+							try {
+								archiveFileSystem.close();
+								
+							} catch (IOException e) {
+								logger.error("Błąd podczas przenoszenia pliku do archiwum: " + e.getMessage());
+							}
+						}						
+					}
+					
+					// kasujemy plik ready					
+					currentReadyQueueItemFile.delete();
+				}
 			}
 		}
 	}
 	
+	/*
 	private void copyAndGzipFile(File source, File destination) throws IOException {
 		
 		byte[] buffer = new byte[1024];
@@ -391,9 +454,9 @@ public class QueueService {
 	    		destinationOutputStream.finish();
 	    		destinationOutputStream.close();
 	    	}	    	
-	    }
-		
+	    }		
 	}
+	*/
 
 	public void deleteLocalDirArchiveOldQueueItems(final int olderThanDays) {
 		
@@ -443,13 +506,7 @@ public class QueueService {
 			// najpierw kasujemy pliki z tego katalogu
 			File[] directoryToDeleteListFiles = directoryToDelete.listFiles();
 			
-			for (File fileToDelete : directoryToDeleteListFiles) {
-				
-				// tylko gz
-				if (fileToDelete.getName().endsWith(".gz") == false) {
-					continue;
-				}
-				
+			for (File fileToDelete : directoryToDeleteListFiles) {				
 				fileToDelete.delete();
 			}
 			
