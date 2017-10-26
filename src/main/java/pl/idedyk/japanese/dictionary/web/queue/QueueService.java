@@ -416,8 +416,9 @@ public class QueueService {
 						}						
 					}
 					
-					// kasujemy plik ready					
+					// kasujemy pliki
 					currentReadyQueueItemFile.delete();
+					queueItemFile.delete();
 				}
 			}
 		}
