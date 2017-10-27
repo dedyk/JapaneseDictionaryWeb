@@ -344,8 +344,11 @@ public class QueueService {
 					continue;
 				}
 				
-				// udalo sie, mozemy przeniesc do archiwum
-				
+				// udalo sie, kasujemy plik ready
+				currentReadyQueueItemFile.delete();
+								
+				// przenosimy plik do archiwum
+								
 				// sprawdzenie i ewentualne utworzenie katalogu z data				
 				File localDirJobQueryArchiveDirWithDateFile = new File(localDirJobQueryArchiveDirFile, dateFormat.format(queueItem.getSendTimestamp()));
 				
@@ -353,73 +356,56 @@ public class QueueService {
 					localDirJobQueryArchiveDirWithDateFile.mkdir();
 				}
 				
-				// najpierw przenosimy plik do katalogu archiwum
-				File currentQueueItemFileInArchiveFile = new File(localDirJobQueryArchiveDirWithDateFile, queueItemFile.getName());
+				// przenosimy plik do wspolnego archiwum
+				FileSystem archiveFileSystem = null;
 				
-				if (queueItemFile.renameTo(currentQueueItemFileInArchiveFile) == false) {										
+				try {						
+					// utworzenie nazwy pliku z archiwum					
+					Calendar querySendTimestampCalendar = Calendar.getInstance();
 					
-					logger.error("Błąd podczas przenoszenia pliku do archiwum: " + queueItemFile);
+					querySendTimestampCalendar.setTime(queueItem.getSendTimestamp());
 					
-					// kasujemy plik ready
-					currentReadyQueueItemFile.delete();
-					
-				} else {
-					
-					queueItemFile = currentQueueItemFileInArchiveFile;
-					currentQueueItemFileInArchiveFile = null;
-					
-					// przenosimy plik do wspolnego archiwum
-					FileSystem archiveFileSystem = null;
-					
-					try {						
-						// utworzenie nazwy pliku z archiwum												
-						Date date = new Date();
-						
-						Calendar querySendTimestampCalendar = Calendar.getInstance();
-						
-						querySendTimestampCalendar.setTime(queueItem.getSendTimestamp());
-						
-						String archivePartFileName = dateFormat.format(date) + "_" + querySendTimestampCalendar.get(Calendar.HOUR_OF_DAY) + "_" + 
-								(querySendTimestampCalendar.get(Calendar.MINUTE) / 10) + "0";		
-						
-						//
-												
-						File archiveFile = new File(localDirJobQueryArchiveDirWithDateFile, archivePartFileName + ".zip");
+					int sendTimestampHourOfDay = querySendTimestampCalendar.get(Calendar.HOUR_OF_DAY);
 										
-						URI archiveFileUri = URI.create("jar:file:" + archiveFile.getAbsolutePath());
-						
-						// utworzenie archiwum												
-						Map<String, String> archiveEnv = new HashMap<>();
-						
-						archiveEnv.put("create", String.valueOf(archiveFile.exists() == false));
-
-						archiveFileSystem = FileSystems.newFileSystem(archiveFileUri, archiveEnv);
-						
-						// przenoszenie pliku do archiwum						
-			            Path queueItemFilePathInArchiveFile = archiveFileSystem.getPath(queueItemFile.getName());
-			            
-			            Files.copy(queueItemFile.toPath(), queueItemFilePathInArchiveFile, StandardCopyOption.REPLACE_EXISTING); 					
-						
-					} catch (Exception e) {
-						logger.error("Błąd podczas przenoszenia pliku do archiwum: " + e.getMessage());
-						
-					} finally {
-						
-						if (archiveFileSystem != null) {
-							
-							try {
-								archiveFileSystem.close();
-								
-							} catch (IOException e) {
-								logger.error("Błąd podczas przenoszenia pliku do archiwum: " + e.getMessage());
-							}
-						}						
-					}
+					String archivePartFileName = dateFormat.format(querySendTimestampCalendar.getTime()) + "_" + (sendTimestampHourOfDay < 10 ? "0" + sendTimestampHourOfDay : sendTimestampHourOfDay) 
+							+ "_" + (querySendTimestampCalendar.get(Calendar.MINUTE) / 10) + "0";		
 					
-					// kasujemy pliki
-					currentReadyQueueItemFile.delete();
-					queueItemFile.delete();
+					//
+					
+					File archiveFile = new File(localDirJobQueryArchiveDirWithDateFile, archivePartFileName + ".zip");
+									
+					URI archiveFileUri = URI.create("jar:file:" + archiveFile.getAbsolutePath());
+					
+					// utworzenie archiwum												
+					Map<String, String> archiveEnv = new HashMap<>();
+					
+					archiveEnv.put("create", String.valueOf(archiveFile.exists() == false));
+
+					archiveFileSystem = FileSystems.newFileSystem(archiveFileUri, archiveEnv);
+					
+					// przenoszenie pliku do archiwum						
+		            Path queueItemFilePathInArchiveFile = archiveFileSystem.getPath(queueItemFile.getName());
+		            
+		            Files.copy(queueItemFile.toPath(), queueItemFilePathInArchiveFile, StandardCopyOption.REPLACE_EXISTING); 					
+					
+				} catch (Exception e) {
+					logger.error("Błąd podczas przenoszenia pliku do archiwum: " + e.getMessage());
+					
+				} finally {
+					
+					if (archiveFileSystem != null) {
+						
+						try {
+							archiveFileSystem.close();
+							
+						} catch (IOException e) {
+							logger.error("Błąd podczas przenoszenia pliku do archiwum: " + e.getMessage());
+						}
+					}						
 				}
+				
+				// kasujemy plik				
+				queueItemFile.delete();
 			}
 		}
 	}
