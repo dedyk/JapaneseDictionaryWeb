@@ -323,7 +323,7 @@ public class Utils {
 		findWordRequest.dictionaryEntryTypeList = null;
 				
 		// searchGrammaFormAndExamples
-		findWordRequest.searchGrammaFormAndExamples = true;
+		findWordRequest.searchGrammaFormAndExamples = false;
 		
 		// searchName
 		findWordRequest.searchName = false;
