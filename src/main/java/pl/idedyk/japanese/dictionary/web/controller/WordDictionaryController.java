@@ -334,8 +334,8 @@ public class WordDictionaryController {
 	}
 		
 	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
-	public String showWordDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
-			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) {
+	public String showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
+			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) throws IOException {
 		
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
@@ -358,6 +358,22 @@ public class WordDictionaryController {
 		// tytul strony
 		if (dictionaryEntry != null) {
 			
+			if (forceDictionaryEntryTypeType != null) { // sprawdzamy, czy nie zostal podany zly parametr forceDictionaryEntryTypeType
+				
+				List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
+				
+				if (dictionaryEntryTypeList.contains(forceDictionaryEntryTypeType) == false) {
+					
+					response.sendError(404);
+					
+					PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+					
+					loggerSender.sendLog(pageNoFoundExceptionLoggerModel);
+
+					return null;
+				}
+			}
+			
 			// sprawdzenie, czy nie odwolujemy sie do innej strony
 			String dictionaryEntryKanji = "-";
 			
@@ -366,7 +382,7 @@ public class WordDictionaryController {
 			}
 			
 			String dictionaryEntryKana = dictionaryEntry.getKana();
-			
+						
 			if (dictionaryEntryKanji.equals(kanji) == false || dictionaryEntryKana.equals(kana) == false) { // przekierowanie na wlasciwa strone o id
 				
 				String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null);
