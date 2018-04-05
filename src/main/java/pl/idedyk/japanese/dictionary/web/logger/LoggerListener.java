@@ -502,6 +502,10 @@ public class LoggerListener {
 						currentRadical = "个";
 					}
 					
+					if (currentRadical.equals("𠂉") == true) { // maly problem z mysql, znak U+20089 (daszek)
+						currentRadical = "/-";
+					}
+					
 					radicalsJoined.append(currentRadical);
 				}
 				
