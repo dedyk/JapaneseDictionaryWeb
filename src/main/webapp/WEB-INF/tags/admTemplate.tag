@@ -133,8 +133,10 @@
 								<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/showMissingWordsQueuePanel"><spring:message code="admTemplate.menu.showMissingWordsQueuePanel"/></a></li>
 							</c:otherwise>
 						</c:choose>
-												
+						
+						<!--  												
 						<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/reloadDatabase"><spring:message code="admTemplate.menu.reloadDatabase"/></a></li>
+						-->
 						
 						<li><a href="<c:url value="/adm/j_spring_security_logout" />"><spring:message code="admTemplate.menu.logout"/></a></li>
 					</ul>
