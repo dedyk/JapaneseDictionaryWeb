@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -31,6 +30,7 @@ import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
+import pl.idedyk.japanese.dictionary.web.service.exception.BadCredentialsExceptionWithAuthentication;
 
 @Component
 public class AuthenticationService implements AuthenticationProvider, AuthenticationSuccessHandler, AuthenticationFailureHandler, AccessDeniedHandler, LogoutSuccessHandler {
@@ -87,7 +87,6 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
         }		
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
@@ -98,9 +97,14 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
     	
     	adminLoggerModel.setType(AdminLoggerModel.Type.ADMIN_LOGIN_FAILURE);
     	adminLoggerModel.setResult(Result.ERROR);
-		
-    	adminLoggerModel.addParam("user", exception.getAuthentication().getName());
-    	adminLoggerModel.addParam("password", exception.getAuthentication().getCredentials().toString());
+    	
+    	if (exception instanceof BadCredentialsExceptionWithAuthentication) {
+    		
+    		BadCredentialsExceptionWithAuthentication badCredentialsExceptionWithAuthentication = (BadCredentialsExceptionWithAuthentication)exception;
+    		
+        	adminLoggerModel.addParam("user", badCredentialsExceptionWithAuthentication.getAuthentication().getName());
+        	adminLoggerModel.addParam("password", badCredentialsExceptionWithAuthentication.getAuthentication().getCredentials().toString());
+    	}		
     	
 		// logowanie
 		loggerSender.sendLog(adminLoggerModel);
@@ -109,7 +113,6 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
 		redirect(request, response, "/admlogin?error");
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 				
@@ -126,11 +129,11 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
 
 		} else {
 			
-			BadCredentialsException badCredentialsException = new BadCredentialsException("Błąd logowania");
+			BadCredentialsExceptionWithAuthentication badCredentialsExceptionWithAuthentication = new BadCredentialsExceptionWithAuthentication("Błąd logowania");
 			
-			badCredentialsException.setAuthentication(authentication);
+			badCredentialsExceptionWithAuthentication.setAuthentication(authentication);
 			
-			throw badCredentialsException;			
+			throw badCredentialsExceptionWithAuthentication;
 		}		
 	}
 	

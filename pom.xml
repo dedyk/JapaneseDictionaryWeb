@@ -20,7 +20,7 @@
 		<version.compiler.plugin>3.1</version.compiler.plugin>
 
 		<!-- spring version -->
-		<spring.version>4.0.5.RELEASE</spring.version>
+		<spring.version>4.3.15.RELEASE</spring.version>
 		
 		<!-- spring security version -->
 		<spring.security.version>3.2.5.RELEASE</spring.security.version>
