@@ -4,17 +4,18 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/security
-	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+	http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 
 	<http auto-config="true">        	
 
 		<custom-filter position="CHANNEL_FILTER" ref="channelProcessingFilter"/>
-		   		   
-		<intercept-url pattern="/adm/**" access="ROLE_ADMIN" />
+					
+		<intercept-url pattern="/adm/**" access="hasRole('ROLE_ADMIN')" />
 		
 		<form-login 
 			login-page="${admin.login.page.redirect.url}" 
 		    default-target-url="/adm/panel" 
+		    login-processing-url="/adm/j_spring_security_check"
 		
 			username-parameter="username"
 			password-parameter="password"
@@ -22,7 +23,7 @@
 			authentication-failure-handler-ref="authenticationService"
 			authentication-success-handler-ref="authenticationService" />
 			
-		<logout success-handler-ref="authenticationService" />
+		<logout success-handler-ref="authenticationService" logout-url="/adm/j_spring_security_logout"/>
 
 		<access-denied-handler ref="authenticationService"/>
 		
@@ -30,6 +31,8 @@
 			<port-mapping http="80" https="443"/> <!-- dla PROD -->
         	<port-mapping http="8080" https="8443"/> <!-- dla DEV -->
         </port-mappings>
+        
+        <csrf disabled="true"/>
 	</http> 
 	
 	<beans:bean id="channelProcessingFilter" class="org.springframework.security.web.access.channel.ChannelProcessingFilter">
@@ -37,7 +40,8 @@
 		<beans:property name="channelDecisionManager" ref="channelDecisionManager" />
 		
 		<beans:property name="securityMetadataSource">
-			<filter-security-metadata-source>
+			<filter-security-metadata-source use-expressions="false">
+				
 				<intercept-url pattern="/" access="REQUIRES_SECURE_CHANNEL" />
 				
 				<intercept-url pattern="/word*" access="REQUIRES_SECURE_CHANNEL" />

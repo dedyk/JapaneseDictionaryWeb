@@ -16,7 +16,7 @@
 			<div class="alert alert-danger" id="errorMessageId"> ${errorMessage} </div>
 		</c:if>
 					
-		<form name="loginForm" action="<c:url value='j_spring_security_check' />" method='POST'>
+		<form name="loginForm" action="<c:url value='/adm/j_spring_security_check' />" method='POST'>
 		
 			<fieldset>
 				<legend>
