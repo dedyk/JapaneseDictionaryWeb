@@ -570,8 +570,14 @@ public class LoggerListener {
 			kanjiDictionaryDetailsLog.setGenericLogId(genericLog.getId());
 			
 			kanjiDictionaryDetailsLog.setKanjiEntryId(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getId());
+			
+			String kanji = kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getKanji();
 
-			kanjiDictionaryDetailsLog.setKanjiEntryKanji(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getKanji());
+			if (kanji.equals("𠮟") == true) {
+				kanji = stringToBase64String(kanji);
+			}					
+					
+			kanjiDictionaryDetailsLog.setKanjiEntryKanji(kanji);
 			
 			kanjiDictionaryDetailsLog.setKanjiEntryTranslateList(
 					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getPolishTranslates()));
