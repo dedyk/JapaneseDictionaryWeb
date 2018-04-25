@@ -184,7 +184,8 @@ public class ZinniaManager {
 					float score = zinnia.zinnia_result_score(recognizerResult, i);
 					
 					if (kanji.equals("ð") == true) { // workaround: dziwny blad, funkcja z jni NewStringUTF z ciagu bajtów 240 160 174 159 odpowiadającemu znakowi 𠮟 zwraca znak ð
-						kanji = "𠮟";
+													 // druga dziwna rzecz: znaki 叱 (jest) oraz 𠮟 (nie ma)
+						kanji = "叱";
 					}
 					
 					result.add(new KanjiRecognizerResultItem(kanji, score));
