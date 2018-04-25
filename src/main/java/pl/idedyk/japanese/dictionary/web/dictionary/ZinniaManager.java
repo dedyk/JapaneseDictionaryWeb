@@ -178,8 +178,16 @@ public class ZinniaManager {
 			long recognizerResult = zinnia.zinnia_recognizer_classify(zinniaHandler, character, limit);
 
 			if (recognizerResult != 0) {
-				for (int i = 0; i < zinnia.zinnia_result_size(recognizerResult); ++i) {	
-					result.add(new KanjiRecognizerResultItem(zinnia.zinnia_result_value(recognizerResult, i), zinnia.zinnia_result_score(recognizerResult, i)));
+				for (int i = 0; i < zinnia.zinnia_result_size(recognizerResult); ++i) {
+					
+					String kanji = zinnia.zinnia_result_value(recognizerResult, i);
+					float score = zinnia.zinnia_result_score(recognizerResult, i);
+					
+					if (kanji.equals("ð") == true) { // workaround: dziwny blad, funkcja z jni NewStringUTF z ciagu bajtów 240 160 174 159 odpowiadającemu znakowi 𠮟 zwraca znak ð
+						kanji = "𠮟";
+					}
+					
+					result.add(new KanjiRecognizerResultItem(kanji, score));
 				}
 				
 				zinnia.zinnia_result_destroy(recognizerResult);
