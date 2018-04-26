@@ -29,7 +29,7 @@ public class Zinnia {
 	public native String zinnia_character_strerror(long character);
 
 
-	public native String zinnia_result_value_(long result, long i);
+	public native String zinnia_result_value(long result, long i);
 	public native int[] zinnia_result_value_as_int_array(long result, long i);
 	
 	public String zinnia_result_value_from_int_array_to_string(long result, long i) {
