@@ -528,7 +528,7 @@ public class LoggerListener {
 			KanjiDictionaryDetectLoggerModel kanjiDictionaryDetectLoggerModel = (KanjiDictionaryDetectLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
-			KanjiDictionaryDetectLog kanjiDictionaryDetectLog = new KanjiDictionaryDetectLog();
+			final KanjiDictionaryDetectLog kanjiDictionaryDetectLog = new KanjiDictionaryDetectLog();
 			
 			kanjiDictionaryDetectLog.setGenericLogId(genericLog.getId());
 			
@@ -552,8 +552,21 @@ public class LoggerListener {
 			kanjiDictionaryDetectLog.setDetectKanjiResult(detectKanjiResultSb.toString());
 			
 			// wstawienie wpisu do bazy danych
+			
 			try {
-				mySQLConnector.insertKanjiDictionaryDetectLog(kanjiDictionaryDetectLog);
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertKanjiDictionaryDetectLog(kanjiDictionaryDetectLog);			
+					}
+					
+					@Override
+					public void changeDate() {						
+						kanjiDictionaryDetectLog.setDetectKanjiResult(stringToBase64String(kanjiDictionaryDetectLog.getDetectKanjiResult()));
+					}
+				});
+				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
@@ -565,28 +578,34 @@ public class LoggerListener {
 			KanjiDictionaryDetailsLoggerModel kanjiDictionaryDetailsLoggerModel = (KanjiDictionaryDetailsLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
-			KanjiDictionaryDetailsLog kanjiDictionaryDetailsLog = new KanjiDictionaryDetailsLog();
+			final KanjiDictionaryDetailsLog kanjiDictionaryDetailsLog = new KanjiDictionaryDetailsLog();
 			
 			kanjiDictionaryDetailsLog.setGenericLogId(genericLog.getId());
 			
 			kanjiDictionaryDetailsLog.setKanjiEntryId(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getId());
-			
-			String kanji = kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getKanji();
-
-			if (kanji.equals("𠮟") == true) {
-				kanji = stringToBase64String(kanji);
-			}					
-					
-			kanjiDictionaryDetailsLog.setKanjiEntryKanji(kanji);
+						
+			kanjiDictionaryDetailsLog.setKanjiEntryKanji(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getKanji());
 			
 			kanjiDictionaryDetailsLog.setKanjiEntryTranslateList(
 					pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getPolishTranslates()));
 			
 			kanjiDictionaryDetailsLog.setKanjiEntryInfo(kanjiDictionaryDetailsLoggerModel.getKanjiEntry().getInfo());
-			
+						
 			// wstawienie wpisu do bazy danych
 			try {
-				mySQLConnector.insertKanjiDictionaryDetailsLog(kanjiDictionaryDetailsLog);
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertKanjiDictionaryDetailsLog(kanjiDictionaryDetailsLog);			
+					}
+					
+					@Override
+					public void changeDate() {
+						kanjiDictionaryDetailsLog.setKanjiEntryKanji(stringToBase64String(kanjiDictionaryDetailsLog.getKanjiEntryKanji()));
+					}
+				});
+				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
 				
