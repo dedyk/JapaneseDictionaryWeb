@@ -31,9 +31,11 @@ import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.ProcessRecordCallb
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.Transaction;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLog;
@@ -446,7 +448,25 @@ public class ScheduleTask {
 						
 						new WordDictionaryNameCatalogExporter().export("word-dictionary-name-catalog", dateString);	
 						
-						break;	
+						break;
+						
+					case WORD_DICTIONARY_AUTOCOMPLETE:
+						
+						class WordDictionaryAutocompleteExporter extends CsvExporter<WordDictionaryAutocompleteLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processWordDictionaryAutocompleteLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteWordDictionaryAutocompleteLogRecords(transaction, dateString);
+								}
+							}
+						}
+						
+						new WordDictionaryAutocompleteExporter().export("word-dictionary-autocomplete", dateString);	
+						
+						break;
 												
 					case KANJI_DICTIONARY_DETAILS:
 						
@@ -481,6 +501,24 @@ public class ScheduleTask {
 						}
 						
 						new KanjiDictionaryCatalogExporter().export("kanji-dictionary-catalog", dateString);	
+						
+						break;
+						
+					case KANJI_DICTIONARY_AUTOCOMPLETE:
+						
+						class KanjiDictionaryAutocompleteExporter extends CsvExporter<KanjiDictionaryAutocompleteLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processKanjiDictionaryAutocompleteLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteKanjiDictionaryAutocompleteLogRecords(transaction, dateString);
+								}
+							}
+						}
+						
+						new KanjiDictionaryAutocompleteExporter().export("kanji-dictionary-autocomplete", dateString);	
 						
 						break;
 						
