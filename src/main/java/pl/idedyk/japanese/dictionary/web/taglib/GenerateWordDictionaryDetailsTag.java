@@ -81,8 +81,17 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             	
             	return SKIP_BODY;
             }
-                        
+
             Div mainContentDiv = new Div();
+            
+            if (dictionaryEntry.isName() == true) {
+            	
+            	Div infoDiv = new Div("alert alert-info");
+            	
+            	infoDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.name.info")));
+
+            	mainContentDiv.addHtmlElement(infoDiv);
+            }                        
             
             Menu mainMenu = new Menu(null, null);
 
