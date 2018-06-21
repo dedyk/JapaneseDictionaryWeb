@@ -411,7 +411,7 @@ public class WordDictionaryController {
 			
 			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa: " + id + " / " + kanji + " / " + kana);
 			
-			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji", 
+			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType",
 					new Object[] { "-", "-", "-" }, Locale.getDefault());
 			
 			model.put("pageTitle", pageTitle);
@@ -508,7 +508,7 @@ public class WordDictionaryController {
 			
 			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa (nazwa): " + id + " / " + kanji + " / " + kana);
 			
-			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji", 
+			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType",
 					new Object[] { "-", "-", "-" }, Locale.getDefault());
 			
 			model.put("pageTitle", pageTitle);
