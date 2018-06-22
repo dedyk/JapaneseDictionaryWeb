@@ -3,11 +3,13 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.ErrorData;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -59,6 +61,19 @@ public class HandleException extends TagSupport {
 		if (requestURI != null && requestURI.contains("/autocomple") == true) { // bledy autocomplete sa ignorowane, klient zrezygnowal z polaczenia
 			logger.error("Błędy 'autocomplete' są ignorowane!");
 			
+			return SKIP_BODY;
+		}
+		
+		if (throwable != null && throwable instanceof RequestRejectedException == true) { // bledy typu RequestRejectedException sa ignorowane
+			logger.error("Błędy 'RequestRejectedException' są ignorowane!");
+			
+			if (pageContext.getResponse() instanceof HttpServletResponse) {
+				
+				HttpServletResponse httpServletResponse = (HttpServletResponse)pageContext.getResponse();
+				
+				httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			}
+						
 			return SKIP_BODY;
 		}
 		
