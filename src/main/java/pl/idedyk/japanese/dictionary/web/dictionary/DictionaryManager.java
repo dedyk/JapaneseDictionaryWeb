@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.DictionaryManagerAbstract;
 import pl.idedyk.japanese.dictionary.api.dictionary.Utils;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.api.dto.RadicalInfo;
 import pl.idedyk.japanese.dictionary.api.dto.TransitiveIntransitivePair;
@@ -421,6 +423,13 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		waitForDatabaseReady();
 		
 		return luceneDatabase.getSpellCheckerSuggestion(source, term, limit);
+	}
+	
+	public FindWordResult findDictionaryEntriesForRemoteDatabaseConnector(FindWordRequest findWordRequest) throws DictionaryException {
+		
+		waitForDatabaseReady();
+		
+		return luceneDatabase.findDictionaryEntries(findWordRequest);
 	}
 	
 	public File getPdfDictionary() {		
