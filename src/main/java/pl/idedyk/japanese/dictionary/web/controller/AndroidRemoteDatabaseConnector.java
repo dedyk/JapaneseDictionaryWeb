@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,15 +20,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 
 @Controller
@@ -103,6 +110,78 @@ public class AndroidRemoteDatabaseConnector {
 		// zwrocenie wyniku
 		writer.append(gson.toJson(dictionaryEntry));
 	}
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntryNameById", method = RequestMethod.POST)
+	public void getDictionaryEntryNameById(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameById] Parsuję żądanie: " + jsonRequest);
+		
+		// pobranie id
+		String id = gson.fromJson(jsonRequest, String.class);
+		
+		// pobranie slowka
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameById(Integer.parseInt(id));
+		
+		if (dictionaryEntry != null) {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameById]: Znaleziono słowo: " + dictionaryEntry);
+			
+			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
+			
+		} else {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameById]: Nie znaleziono słowa o id: " + id);
+		}
+		
+		// zwrocenie wyniku
+		writer.append(gson.toJson(dictionaryEntry));
+	}
+	
+	// findAllAvailableRadicals
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/findAllAvailableRadicals", method = RequestMethod.POST)
+	public void findAllAvailableRadicals(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.findAllAvailableRadicals] Parsuję żądanie: " + jsonRequest);
+
+		// pobranie wejscie
+		String[] radicals = gson.fromJson(jsonRequest, new TypeToken<String[]>(){}.getType());
+
+		if (radicals == null) {
+			radicals = new String[] { };
+		}
+		
+		logger.info("[AndroidRemoteDatabaseConnector.findAllAvailableRadicals] Pokaż dostępne elementy podstawowe dla zapytania: " + Arrays.toString(radicals));
+
+		Set<String> allAvailableRadicals = dictionaryManager.findAllAvailableRadicals(radicals);
+		
+		List<KanjiEntry> findKnownKanjiFromRadicalsResult = dictionaryManager.findKnownKanjiFromRadicals(radicals);
+
+		// logowanie
+		if (radicals.length > 0) {
+			loggerSender.sendLog(new KanjiDictionaryRadicalsLoggerModel(Utils.createLoggerModelCommon(request), radicals, findKnownKanjiFromRadicalsResult.size()));
+		}
+
+		// zwrocenie wyniku
+		writer.append(gson.toJson(allAvailableRadicals));
+	}
+	
 	
 	private String getJson(HttpServletRequest request) throws IOException {
 		
