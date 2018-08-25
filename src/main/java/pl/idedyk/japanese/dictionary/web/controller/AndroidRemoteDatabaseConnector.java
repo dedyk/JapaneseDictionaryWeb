@@ -20,10 +20,12 @@ import com.google.gson.Gson;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 
 @Controller
@@ -65,6 +67,41 @@ public class AndroidRemoteDatabaseConnector {
 
 		// zwrocenie wyniku
 		writer.append(gson.toJson(findWordResult));
+	}
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntryById", method = RequestMethod.POST)
+	public void getDictionaryEntryById(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryById] Parsuję żądanie: " + jsonRequest);
+		
+		// pobranie id
+		String id = gson.fromJson(jsonRequest, String.class);
+		
+		// pobranie slowka
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(Integer.parseInt(id));
+		
+		if (dictionaryEntry != null) {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryById]: Znaleziono słowo: " + dictionaryEntry);
+			
+			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
+			
+		} else {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryById]: Nie znaleziono słowa o id: " + id);
+		}
+		
+		// zwrocenie wyniku
+		writer.append(gson.toJson(dictionaryEntry));
 	}
 	
 	private String getJson(HttpServletRequest request) throws IOException {
