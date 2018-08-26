@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import pl.idedyk.japanese.dictionary.api.dictionary.IDatabaseConnector.FindKanjisFromStrokeCountWrapper;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
@@ -31,6 +33,7 @@ import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchStrokeCountLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
@@ -145,9 +148,7 @@ public class AndroidRemoteDatabaseConnector {
 		// zwrocenie wyniku
 		writer.append(gson.toJson(dictionaryEntry));
 	}
-	
-	// findAllAvailableRadicals
-	
+		
 	@RequestMapping(value = "/android/remoteDatabaseConnector/findAllAvailableRadicals", method = RequestMethod.POST)
 	public void findAllAvailableRadicals(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
@@ -181,7 +182,64 @@ public class AndroidRemoteDatabaseConnector {
 		// zwrocenie wyniku
 		writer.append(gson.toJson(allAvailableRadicals));
 	}
+		
+	@RequestMapping(value = "/android/remoteDatabaseConnector/findKanjiFromRadicals", method = RequestMethod.POST)
+	public void findKanjiFromRadicals(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.findKanjiFromRadicals] Parsuję żądanie: " + jsonRequest);
+
+		// pobranie wejscie
+		String[] radicals = gson.fromJson(jsonRequest, new TypeToken<String[]>(){}.getType());
+
+		if (radicals == null) {
+			radicals = new String[] { };
+		}
+		
+		logger.info("[AndroidRemoteDatabaseConnector.findKanjiFromRadicals] Pokaż znaki kanji dla elementow podstawowych: " + Arrays.toString(radicals));
+		
+		List<KanjiEntry> findKnownKanjiFromRadicalsResult = dictionaryManager.findKnownKanjiFromRadicals(radicals);
+
+		// logowanie
+		if (radicals.length > 0) {
+			loggerSender.sendLog(new KanjiDictionaryRadicalsLoggerModel(Utils.createLoggerModelCommon(request), radicals, findKnownKanjiFromRadicalsResult.size()));
+		}
+
+		// zwrocenie wyniku
+		writer.append(gson.toJson(findKnownKanjiFromRadicalsResult));
+	}
 	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/findKanjisFromStrokeCount", method = RequestMethod.POST)
+	public void findKanjisFromStrokeCount(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.findKanjisFromStrokeCount] Parsuję żądanie: " + jsonRequest);
+		
+		// pobranie wejscie
+        FindKanjisFromStrokeCountWrapper findKanjisFromStrokeCountWrapper = gson.fromJson(jsonRequest, FindKanjisFromStrokeCountWrapper.class);
+		
+		logger.info("[AndroidRemoteDatabaseConnector.findKanjisFromStrokeCount] Pokaż znaki kanji dla kresek od " + findKanjisFromStrokeCountWrapper.getFrom() + " do " + findKanjisFromStrokeCountWrapper.getTo());
+		
+		FindKanjiResult findKanjiResult = dictionaryManager.findKanjisFromStrokeCount(findKanjisFromStrokeCountWrapper.getFrom(), findKanjisFromStrokeCountWrapper.getTo());
+
+		// logowanie
+		loggerSender.sendLog(new KanjiDictionarySearchStrokeCountLoggerModel(Utils.createLoggerModelCommon(request), findKanjisFromStrokeCountWrapper.getFrom(), findKanjisFromStrokeCountWrapper.getTo()));
+		
+		// zwrocenie wyniku
+		writer.append(gson.toJson(findKanjiResult));
+	}
 	
 	private String getJson(HttpServletRequest request) throws IOException {
 		

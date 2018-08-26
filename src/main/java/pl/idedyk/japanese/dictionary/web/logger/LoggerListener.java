@@ -27,6 +27,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryCatalogLogg
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchStrokeCountLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
@@ -941,6 +942,9 @@ public class LoggerListener {
 		} else if (KanjiDictionarySearchLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH;
 
+		} else if (KanjiDictionarySearchStrokeCountLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH_STROKE_COUNT;
+			
 		} else if (KanjiDictionaryRadicalsLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.KANJI_DICTIONARY_RADICALS;
 
