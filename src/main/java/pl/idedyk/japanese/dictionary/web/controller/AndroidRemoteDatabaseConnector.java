@@ -23,6 +23,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.IDatabaseConnector.FindKanjisFromStrokeCountWrapper;
+import pl.idedyk.japanese.dictionary.api.dictionary.IDatabaseConnector.GetAllKanjisWrapper;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
@@ -32,7 +34,10 @@ import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAllKanjisLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchStrokeCountLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
@@ -240,6 +245,126 @@ public class AndroidRemoteDatabaseConnector {
 		// zwrocenie wyniku
 		writer.append(gson.toJson(findKanjiResult));
 	}
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/findKanji", method = RequestMethod.POST)
+	public void findKanji(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.findKanji] Parsuję żądanie: " + jsonRequest);
+	
+		// tworzenie wywolania z json'a
+		FindKanjiRequest findKanjiRequest = gson.fromJson(jsonRequest, FindKanjiRequest.class);
+		
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.findKanji] Wyszukiwanie kanji dla zapytania: " + findKanjiRequest);
+
+		// szukanie		
+		FindKanjiResult findKanjiResult = dictionaryManager.findKanji(findKanjiRequest);
+		
+		// logowanie
+		loggerSender.sendLog(new KanjiDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findKanjiRequest, findKanjiResult));
+
+		// zwrocenie wyniku
+		writer.append(gson.toJson(findKanjiResult));
+	}
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getKanjiEntryById", method = RequestMethod.POST)
+	public void getKanjiEntryById(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntryById] Parsuję żądanie: " + jsonRequest);
+	
+		// tworzenie wywolania z json'a
+		Integer id = Integer.parseInt(gson.fromJson(jsonRequest, String.class));
+		
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntryById] Pobierz kanji dla id: " + id);
+
+		// szukanie		
+		KanjiEntry kanjiEntry = dictionaryManager.getKanjiEntryById(id);
+		
+		if (kanjiEntry != null) {
+			// logowanie
+			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
+			
+		}		
+
+		// zwrocenie wyniku
+		writer.append(gson.toJson(kanjiEntry));
+	}	
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getKanjiEntry", method = RequestMethod.POST)
+	public void getKanjiEntry(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntry] Parsuję żądanie: " + jsonRequest);
+	
+		// tworzenie wywolania z json'a
+		String kanji = gson.fromJson(jsonRequest, String.class);
+		
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntry] Pobierz kanji dla kanji: " + kanji);
+
+		// szukanie		
+		KanjiEntry kanjiEntry = dictionaryManager.findKanji(kanji);
+		
+		if (kanjiEntry != null) {
+			// logowanie
+			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
+			
+		}		
+
+		// zwrocenie wyniku
+		writer.append(gson.toJson(kanjiEntry));
+	}
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getAllKanjis", method = RequestMethod.POST)
+	public void getAllKanjis(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getAllKanjis] Parsuję żądanie: " + jsonRequest);
+	
+		// tworzenie wywolania z json'a
+		GetAllKanjisWrapper getAllKanjisWrapperRequest = gson.fromJson(jsonRequest, GetAllKanjisWrapper.class);
+		
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntry] Pobierz wszystkie kanji dla withDetails: " + getAllKanjisWrapperRequest.isWithDetails() + " - onlyUsed" + getAllKanjisWrapperRequest.isOnlyUsed());
+
+		// szukanie		
+		List<KanjiEntry> kanjiEntryList = dictionaryManager.getAllKanjis(getAllKanjisWrapperRequest.isWithDetails(), getAllKanjisWrapperRequest.isOnlyUsed());
+		
+		// logowanie
+		loggerSender.sendLog(new KanjiDictionaryAllKanjisLoggerModel(Utils.createLoggerModelCommon(request), getAllKanjisWrapperRequest.isWithDetails(), getAllKanjisWrapperRequest.isOnlyUsed()));
+			
+		// zwrocenie wyniku
+		writer.append(gson.toJson(kanjiEntryList));
+	}
+	
+	//
 	
 	private String getJson(HttpServletRequest request) throws IOException {
 		
