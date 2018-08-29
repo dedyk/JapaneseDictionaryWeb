@@ -29,6 +29,8 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
+import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
+import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
@@ -40,6 +42,8 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLog
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchStrokeCountLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetGroupDictionaryEntriesLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetTatoebaSentenceGroupLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 
@@ -363,7 +367,63 @@ public class AndroidRemoteDatabaseConnector {
 		// zwrocenie wyniku
 		writer.append(gson.toJson(kanjiEntryList));
 	}
+
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getTatoebaSentenceGroup", method = RequestMethod.POST)
+	public void getTatoebaSentenceGroup(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getTatoebaSentenceGroup] Parsuję żądanie: " + jsonRequest);
 	
+		// tworzenie wywolania z json'a
+		String groupId = gson.fromJson(jsonRequest, String.class);
+		
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getTatoebaSentenceGroup] Pobierz zdania dla groupId: " + groupId);
+
+		// szukanie		
+		GroupWithTatoebaSentenceList groupWithTatoebaSentenceList = dictionaryManager.getTatoebaSentenceGroup(groupId);
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryGetTatoebaSentenceGroupLoggerModel(Utils.createLoggerModelCommon(request), groupId));
+			
+		// zwrocenie wyniku
+		writer.append(gson.toJson(groupWithTatoebaSentenceList));
+	}
+
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getGroupDictionaryEntries", method = RequestMethod.POST)
+	public void getGroupDictionaryEntries(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getGroupDictionaryEntries] Parsuję żądanie: " + jsonRequest);
+	
+		// tworzenie wywolania z json'a
+		GroupEnum groupName = gson.fromJson(jsonRequest, GroupEnum.class);
+		
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getGroupDictionaryEntries] Pobierz słówka dla grupy: " + groupName);
+
+		// szukanie		
+		List<DictionaryEntry> result = dictionaryManager.getGroupDictionaryEntries(groupName);
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryGetGroupDictionaryEntriesLoggerModel(Utils.createLoggerModelCommon(request), groupName));
+			
+		// zwrocenie wyniku
+		writer.append(gson.toJson(result));
+	}
+
 	//
 	
 	private String getJson(HttpServletRequest request) throws IOException {

@@ -45,6 +45,8 @@ import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionStartLoggerModel
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetGroupDictionaryEntriesLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetTatoebaSentenceGroupLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryPdfDictionaryLoggerModel;
@@ -927,6 +929,12 @@ public class LoggerListener {
 			
 		} else if (WordDictionaryCatalogLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.WORD_DICTIONARY_CATALOG;
+			
+		} else if (WordDictionaryGetTatoebaSentenceGroupLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.WORD_DICTIONARY_GET_TATOEBA_SENTENCES;
+			
+		} else if (WordDictionaryGetGroupDictionaryEntriesLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.WORD_DICTIONARY_GET_GROUP_DICT_ENTRIES;
 			
 		} else if (KanjiDictionaryStartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.KANJI_DICTIONARY_START;
