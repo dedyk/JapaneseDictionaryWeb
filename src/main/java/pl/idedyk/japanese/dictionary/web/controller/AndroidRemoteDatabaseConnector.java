@@ -42,6 +42,8 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLog
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchStrokeCountLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntriesNameSizeLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntriesSizeLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetGroupDictionaryEntriesLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetTatoebaSentenceGroupLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
@@ -419,6 +421,56 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryGetGroupDictionaryEntriesLoggerModel(Utils.createLoggerModelCommon(request), groupName));
+			
+		// zwrocenie wyniku
+		writer.append(gson.toJson(result));
+	}
+
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntriesSize", method = RequestMethod.POST)
+	public void getDictionaryEntriesSize(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntriesSize] Parsuję żądanie: " + jsonRequest);
+			
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getGroupDictionaryEntries] Pobierz rozmiar bazy słówek");
+
+		// szukanie		
+		int result = dictionaryManager.getDictionaryEntriesSize();
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryGetDictionaryEntriesSizeLoggerModel(Utils.createLoggerModelCommon(request)));
+			
+		// zwrocenie wyniku
+		writer.append(gson.toJson(result));
+	}
+
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntriesNameSize", method = RequestMethod.POST)
+	public void getDictionaryEntriesNameSize(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntriesNameSize] Parsuję żądanie: " + jsonRequest);
+			
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntriesNameSize] Pobierz rozmiar bazy słówek nazw");
+
+		// szukanie		
+		int result = dictionaryManager.getDictionaryEntriesNameSize();
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryGetDictionaryEntriesNameSizeLoggerModel(Utils.createLoggerModelCommon(request)));
 			
 		// zwrocenie wyniku
 		writer.append(gson.toJson(result));
