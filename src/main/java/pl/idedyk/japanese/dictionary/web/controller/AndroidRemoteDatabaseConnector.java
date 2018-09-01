@@ -44,6 +44,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchStrok
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntriesNameSizeLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntriesSizeLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntryGroupTypesLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetGroupDictionaryEntriesLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetTatoebaSentenceGroupLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
@@ -471,6 +472,31 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryGetDictionaryEntriesNameSizeLoggerModel(Utils.createLoggerModelCommon(request)));
+			
+		// zwrocenie wyniku
+		writer.append(gson.toJson(result));
+	}
+
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntryGroupTypes", method = RequestMethod.POST)
+	public void getDictionaryEntryGroupTypes(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryGroupTypes] Parsuję żądanie: " + jsonRequest);
+			
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryGroupTypes] Pobierz typy grupy słówek");
+
+		// szukanie		
+		List<GroupEnum> result = dictionaryManager.getDictionaryEntryGroupTypes();
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryGetDictionaryEntryGroupTypesLoggerModel(Utils.createLoggerModelCommon(request)));
 			
 		// zwrocenie wyniku
 		writer.append(gson.toJson(result));

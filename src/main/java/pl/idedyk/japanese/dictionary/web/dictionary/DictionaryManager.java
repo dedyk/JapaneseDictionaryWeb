@@ -87,6 +87,16 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 			@Override
 			public void run() {
 				
+				if (1 == 1) {
+					
+					int fixme = 1;
+					// FIXME !!!!!!!!!!!!!!!!!
+					
+					logger.error("!!!!!! Generowanie podpowiadacza wyłączone !!!!");
+					
+					return;
+				}
+				
 				try {
 					
 					logger.info("Inicjalizacja podpowiadacza");
