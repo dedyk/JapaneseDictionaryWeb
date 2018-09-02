@@ -32,12 +32,16 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerRequest;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAllKanjisLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchStrokeCountLoggerModel;
@@ -57,6 +61,9 @@ public class AndroidRemoteDatabaseConnector {
 	
 	@Autowired
 	private DictionaryManager dictionaryManager;
+	
+	@Autowired
+	private ZinniaManager zinniaManager;
 	
 	@Autowired
 	private LoggerSender loggerSender;
@@ -501,7 +508,73 @@ public class AndroidRemoteDatabaseConnector {
 		// zwrocenie wyniku
 		writer.append(gson.toJson(result));
 	}
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/kanjiRecognize", method = RequestMethod.POST)
+	public void kanjiRecognize(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+						
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.kanjiRecognize] Parsuję żądanie: " + jsonRequest);
+		
+		KanjiRecognizerRequest kanjiRecognizerRequest = gson.fromJson(jsonRequest, KanjiRecognizerRequest.class);
+		
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.kanjiRecognize] Rozpoznawanie znaków kanji");
+		
+		
+		ZinniaManager.Character character = null;
+		
+		List<KanjiRecognizerResultItem> result = null;
 
+		try {
+			character = zinniaManager.createNewCharacter();
+
+			character.setWidth(kanjiRecognizerRequest.getWidth());
+			character.setHeight(kanjiRecognizerRequest.getHeight());
+
+			for (int strokePathNo = 0; strokePathNo < kanjiRecognizerRequest.getStrokes().size(); ++strokePathNo) {
+				
+				List<KanjiRecognizerRequest.Point> pointList = kanjiRecognizerRequest.getStrokes().get(strokePathNo);
+				
+				for (KanjiRecognizerRequest.Point point : pointList) {					
+					character.add(strokePathNo, point.getX(), point.getY());					
+				}
+			}
+
+			result = character.recognize(50);
+						
+		} finally {
+			if (character != null) {
+				character.destroy();
+			}
+		}
+		
+		StringBuffer detectKanjiResultSb = new StringBuffer();
+		
+		for (int idx = 0; idx < 10 && idx < result.size(); ++idx) {
+			
+			KanjiRecognizerResultItem currentKanjiRecognizerResultItem = result.get(idx);
+			
+			detectKanjiResultSb.append(currentKanjiRecognizerResultItem.getKanji() + " " + currentKanjiRecognizerResultItem.getScore());
+			
+			if (idx != 10 - 1) {
+				detectKanjiResultSb.append("\n");
+			}
+		}
+		
+		logger.info("[AndroidRemoteDatabaseConnector.kanjiRecognize] Rozpoznano znaki kanji:\n\n" + detectKanjiResultSb.toString());
+		
+		// logowanie
+		loggerSender.sendLog(new KanjiDictionaryDetectLoggerModel(Utils.createLoggerModelCommon(request), "", result));
+
+		// zwrocenie wyniku
+		writer.append(gson.toJson(result));
+	}
 	//
 	
 	private String getJson(HttpServletRequest request) throws IOException {
