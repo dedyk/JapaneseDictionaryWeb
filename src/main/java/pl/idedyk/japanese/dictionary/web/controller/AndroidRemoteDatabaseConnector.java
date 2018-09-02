@@ -34,6 +34,7 @@ import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerRequest;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
+import pl.idedyk.japanese.dictionary.api.dto.TransitiveIntransitivePair;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
@@ -51,6 +52,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionar
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntryGroupTypesLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetGroupDictionaryEntriesLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetTatoebaSentenceGroupLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetTransitiveIntransitivePairsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 
@@ -575,6 +577,32 @@ public class AndroidRemoteDatabaseConnector {
 		// zwrocenie wyniku
 		writer.append(gson.toJson(result));
 	}
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getTransitiveIntransitivePairsList", method = RequestMethod.POST)
+	public void getTransitiveIntransitivePairsList(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getTransitiveIntransitivePairsList] Parsuję żądanie: " + jsonRequest);
+			
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getTransitiveIntransitivePairsList] Pobierz pary czasowników przechodnich i nieprzechodnich");
+
+		// szukanie		
+		List<TransitiveIntransitivePair> result = dictionaryManager.getTransitiveIntransitivePairsList();
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryGetTransitiveIntransitivePairsLoggerModel(Utils.createLoggerModelCommon(request)));
+			
+		// zwrocenie wyniku
+		writer.append(gson.toJson(result));
+	}
+	
 	//
 	
 	private String getJson(HttpServletRequest request) throws IOException {

@@ -50,6 +50,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionar
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntryGroupTypesLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetGroupDictionaryEntriesLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetTatoebaSentenceGroupLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetTransitiveIntransitivePairsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryPdfDictionaryLoggerModel;
@@ -947,6 +948,9 @@ public class LoggerListener {
 
 		} else if (WordDictionaryGetDictionaryEntryGroupTypesLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.WORD_DICTIONARY_GET_DICT_ENT_GROUP_TYPES;
+
+		} else if (WordDictionaryGetTransitiveIntransitivePairsLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.WORD_DICTIONARY_GET_TRANS_INTRANS_PAIR;
 
 		} else if (KanjiDictionaryStartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.KANJI_DICTIONARY_START;
