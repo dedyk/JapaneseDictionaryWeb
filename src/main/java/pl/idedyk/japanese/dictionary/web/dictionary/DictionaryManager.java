@@ -329,23 +329,33 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	
 	private void readWordPowerFromCsv(InputStream wordPowerInputStream) throws IOException {
 		
-		CsvReader wordPowerInputStreamCsvReader = new CsvReader(new InputStreamReader(wordPowerInputStream), ',');
+		CsvReader wordPowerInputStreamCsvReader = null;
 		
-		wordPowerList = new WordPowerList();
-		
-		while (wordPowerInputStreamCsvReader.readRecord()) {
+		try {
+			wordPowerInputStreamCsvReader = new CsvReader(new InputStreamReader(wordPowerInputStream), ',');	
 			
-			int columnCount = wordPowerInputStreamCsvReader.getColumnCount();
+			wordPowerList = new WordPowerList();
 			
-			int power = Integer.parseInt(wordPowerInputStreamCsvReader.get(0));
-			
-			for (int columnNo = 1; columnNo < columnCount; ++columnNo) {
+			while (wordPowerInputStreamCsvReader.readRecord()) {
 				
-				int currentDictionaryEntryIdx = Integer.parseInt(wordPowerInputStreamCsvReader.get(columnNo));
+				int columnCount = wordPowerInputStreamCsvReader.getColumnCount();
 				
-				wordPowerList.addPower(power, currentDictionaryEntryIdx);
+				int power = Integer.parseInt(wordPowerInputStreamCsvReader.get(0));
+				
+				for (int columnNo = 1; columnNo < columnCount; ++columnNo) {
+					
+					int currentDictionaryEntryIdx = Integer.parseInt(wordPowerInputStreamCsvReader.get(columnNo));
+					
+					wordPowerList.addPower(power, currentDictionaryEntryIdx);
+				}
 			}
-		}
+			
+		} finally {
+			
+			if (wordPowerInputStreamCsvReader != null) {
+				wordPowerInputStreamCsvReader.close();
+			}
+		}	
 	}
 
 	@Override
