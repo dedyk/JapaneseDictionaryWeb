@@ -18,7 +18,7 @@ java -cp $CLASSPATH pl.idedyk.japanese.dictionary.lucene.LuceneDBGenerator web d
 
 mkdir $1
 
-cp db/kana.csv db/radical.csv db/transitive_intransitive_pairs.csv db/kanji_recognizer.model.db db/dictionary.pdf $1
+cp db/kana.csv db/radical.csv db/transitive_intransitive_pairs.csv db/word-power.csv db/kanji_recognizer.model.db db/dictionary.pdf $1
 cp -r db-lucene $1/db-lucene/
 
 rm -rf db-lucene
