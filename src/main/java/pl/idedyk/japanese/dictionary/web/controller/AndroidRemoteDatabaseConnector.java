@@ -28,6 +28,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPowerList;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
@@ -53,6 +54,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionar
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetGroupDictionaryEntriesLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetTatoebaSentenceGroupLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetTransitiveIntransitivePairsLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetWordPowerListLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 
@@ -308,7 +310,7 @@ public class AndroidRemoteDatabaseConnector {
 		// logowanie
 		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntryById] Pobierz kanji dla id: " + id);
 
-		// szukanie		
+		// pobranie		
 		KanjiEntry kanjiEntry = dictionaryManager.getKanjiEntryById(id);
 		
 		if (kanjiEntry != null) {
@@ -370,7 +372,7 @@ public class AndroidRemoteDatabaseConnector {
 		// logowanie
 		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntry] Pobierz wszystkie kanji dla withDetails: " + getAllKanjisWrapperRequest.isWithDetails() + " - onlyUsed" + getAllKanjisWrapperRequest.isOnlyUsed());
 
-		// szukanie		
+		// pobranie		
 		List<KanjiEntry> kanjiEntryList = dictionaryManager.getAllKanjis(getAllKanjisWrapperRequest.isWithDetails(), getAllKanjisWrapperRequest.isOnlyUsed());
 		
 		// logowanie
@@ -398,7 +400,7 @@ public class AndroidRemoteDatabaseConnector {
 		// logowanie
 		logger.info("[AndroidRemoteDatabaseConnector.getTatoebaSentenceGroup] Pobierz zdania dla groupId: " + groupId);
 
-		// szukanie		
+		// pobranie		
 		GroupWithTatoebaSentenceList groupWithTatoebaSentenceList = dictionaryManager.getTatoebaSentenceGroup(groupId);
 		
 		// logowanie
@@ -426,7 +428,7 @@ public class AndroidRemoteDatabaseConnector {
 		// logowanie
 		logger.info("[AndroidRemoteDatabaseConnector.getGroupDictionaryEntries] Pobierz słówka dla grupy: " + groupName);
 
-		// szukanie		
+		// pobranie		
 		List<DictionaryEntry> result = dictionaryManager.getGroupDictionaryEntries(groupName);
 		
 		// logowanie
@@ -451,7 +453,7 @@ public class AndroidRemoteDatabaseConnector {
 		// logowanie
 		logger.info("[AndroidRemoteDatabaseConnector.getGroupDictionaryEntries] Pobierz rozmiar bazy słówek");
 
-		// szukanie		
+		// pobranie		
 		int result = dictionaryManager.getDictionaryEntriesSize();
 		
 		// logowanie
@@ -476,7 +478,7 @@ public class AndroidRemoteDatabaseConnector {
 		// logowanie
 		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntriesNameSize] Pobierz rozmiar bazy słówek nazw");
 
-		// szukanie		
+		// pobranie		
 		int result = dictionaryManager.getDictionaryEntriesNameSize();
 		
 		// logowanie
@@ -501,7 +503,7 @@ public class AndroidRemoteDatabaseConnector {
 		// logowanie
 		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryGroupTypes] Pobierz typy grupy słówek");
 
-		// szukanie		
+		// pobranie		
 		List<GroupEnum> result = dictionaryManager.getDictionaryEntryGroupTypes();
 		
 		// logowanie
@@ -593,7 +595,7 @@ public class AndroidRemoteDatabaseConnector {
 		// logowanie
 		logger.info("[AndroidRemoteDatabaseConnector.getTransitiveIntransitivePairsList] Pobierz pary czasowników przechodnich i nieprzechodnich");
 
-		// szukanie		
+		// pobranie		
 		List<TransitiveIntransitivePair> result = dictionaryManager.getTransitiveIntransitivePairsList();
 		
 		// logowanie
@@ -603,6 +605,31 @@ public class AndroidRemoteDatabaseConnector {
 		writer.append(gson.toJson(result));
 	}
 	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getWordPowerList", method = RequestMethod.POST)
+	public void getWordPowerList(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getWordPowerList] Parsuję żądanie: " + jsonRequest);
+			
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getWordPowerList] Pobierz moce słów");
+
+		// pobranie		
+		WordPowerList result = dictionaryManager.getWordPowerList();
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryGetWordPowerListLoggerModel(Utils.createLoggerModelCommon(request)));
+			
+		// zwrocenie wyniku
+		writer.append(gson.toJson(result));
+	}
+
 	//
 	
 	private String getJson(HttpServletRequest request) throws IOException {
