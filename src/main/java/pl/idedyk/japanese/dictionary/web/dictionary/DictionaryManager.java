@@ -21,6 +21,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.DictionaryManagerAbstract;
 import pl.idedyk.japanese.dictionary.api.dictionary.Utils;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPowerList;
 import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.api.dto.RadicalInfo;
 import pl.idedyk.japanese.dictionary.api.dto.TransitiveIntransitivePair;
@@ -41,6 +42,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	private static final String RADICAL_FILE = "radical.csv";
 	private static final String TRANSITIVE_INTRANSTIVE_PAIRS_FILE = "transitive_intransitive_pairs.csv";
 	private static final String KANA_FILE = "kana.csv";
+	private static final String WORD_POWER_FILE = "word-power.csv";
 	
 	private static final String LUCENE_DB_DIR = "db-lucene";
 
@@ -52,6 +54,8 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	private List<RadicalInfo> radicalList = null;
 	private List<TransitiveIntransitivePair> transitiveIntransitivePairsList = null;
 
+	private WordPowerList wordPowerList;
+	
 	private boolean initialized = false;
 	
 	@Value("${db.dir}")
@@ -141,6 +145,19 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 
 		} catch (Exception e) {
 			logger.error("Wczytywanie informacji o znakach podstawowych zakonczylo sie bledem", e);
+
+			throw new RuntimeException(e);
+		}
+		
+		logger.info("Wczytywanie informacji o mocach słówek");
+		
+		try {
+			InputStream wordPowerInputStream = new FileInputStream(new File(dbDir, WORD_POWER_FILE));
+			
+			readWordPowerFromCsv(wordPowerInputStream);
+
+		} catch (Exception e) {
+			logger.error("Wczytywanie informacji o mocach słówek zakonczylo sie bledem", e);
 
 			throw new RuntimeException(e);
 		}
@@ -309,6 +326,27 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 
 		csvReader.close();
 	}
+	
+	private void readWordPowerFromCsv(InputStream wordPowerInputStream) throws IOException {
+		
+		CsvReader wordPowerInputStreamCsvReader = new CsvReader(new InputStreamReader(wordPowerInputStream), ',');
+		
+		wordPowerList = new WordPowerList();
+		
+		while (wordPowerInputStreamCsvReader.readRecord()) {
+			
+			int columnCount = wordPowerInputStreamCsvReader.getColumnCount();
+			
+			int power = Integer.parseInt(wordPowerInputStreamCsvReader.get(0));
+			
+			for (int columnNo = 1; columnNo < columnCount; ++columnNo) {
+				
+				int currentDictionaryEntryIdx = Integer.parseInt(wordPowerInputStreamCsvReader.get(columnNo));
+				
+				wordPowerList.addPower(power, currentDictionaryEntryIdx);
+			}
+		}
+	}
 
 	@Override
 	public KanaHelper getKanaHelper() {
@@ -444,5 +482,10 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	
 	public File getPdfDictionary() {		
 		return new File(dbDir, "dictionary.pdf");		
+	}
+
+	@Override
+	public WordPowerList getWordPowerList() throws DictionaryException {
+		return wordPowerList;
 	}
 }
