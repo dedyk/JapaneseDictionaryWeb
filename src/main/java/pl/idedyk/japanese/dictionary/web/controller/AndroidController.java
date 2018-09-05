@@ -30,6 +30,7 @@ import pl.idedyk.japanese.dictionary.api.dto.AttributeType;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
+import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
@@ -53,7 +54,7 @@ public class AndroidController {
 
 	@RequestMapping(value = "/android/sendMissingWord", method = RequestMethod.POST)
 	public void sendMissingWord(HttpServletRequest request, HttpServletResponse response, 
-			HttpSession session, Map<String, Object> model) throws IOException {
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
 		
 		BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		
@@ -102,7 +103,7 @@ public class AndroidController {
 		
 	@RequestMapping(value = "/android/search", method = RequestMethod.POST)
 	public void search(HttpServletRequest request, HttpServletResponse response, Writer writer,
-			HttpSession session, Map<String, Object> model) throws IOException {
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
 		
 		BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		

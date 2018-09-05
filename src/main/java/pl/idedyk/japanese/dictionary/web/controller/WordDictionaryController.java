@@ -114,7 +114,7 @@ public class WordDictionaryController {
 
 	@RequestMapping(value = "/wordDictionarySearch", method = RequestMethod.GET)
 	public String search(HttpServletRequest request, HttpSession session, @ModelAttribute("command") @Valid final WordDictionarySearchModel searchModel,
-			BindingResult result, Map<String, Object> model) {
+			BindingResult result, Map<String, Object> model) throws DictionaryException {
 		
 		// gdy cos bedzie zmieniane trzeba rowniez zmienic w link generatorze
 
@@ -146,12 +146,18 @@ public class WordDictionaryController {
 		new Thread(new Runnable() {
 			
 			@Override
-			public void run() {				
-				FindWordRequest findWordRequestForSystemLog = Utils.createFindWordRequestForSystemLog(searchModel.getWord(), WordPlaceSearch.valueOf(searchModel.getWordPlace()));
+			public void run() {
 				
-				FindWordResult findWordResultForSystemLog = dictionaryManager.findWord(findWordRequestForSystemLog);
-			
-				loggerSender.sendLog(new WordDictionarySearchLoggerModel(null, findWordRequestForSystemLog, findWordResultForSystemLog, remoteUser == null ? 1 : 2));			
+				try {				
+					FindWordRequest findWordRequestForSystemLog = Utils.createFindWordRequestForSystemLog(searchModel.getWord(), WordPlaceSearch.valueOf(searchModel.getWordPlace()));
+					
+					FindWordResult findWordResultForSystemLog = dictionaryManager.findWord(findWordRequestForSystemLog);
+				
+					loggerSender.sendLog(new WordDictionarySearchLoggerModel(null, findWordRequestForSystemLog, findWordResultForSystemLog, remoteUser == null ? 1 : 2));
+					
+				} catch (DictionaryException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		}).start();
 		
@@ -335,7 +341,7 @@ public class WordDictionaryController {
 		
 	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
 	public String showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
-			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) throws IOException {
+			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) throws IOException, DictionaryException {
 		
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
@@ -425,19 +431,19 @@ public class WordDictionaryController {
 	
 	@RequestMapping(value = "/wordDictionaryDetails/{id}", method = RequestMethod.GET)
 	public void showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
-			@PathVariable("id") int id) throws IOException {
+			@PathVariable("id") int id) throws IOException, DictionaryException {
 		
 		processWordDictionaryDetailsRedirect(request, response, id);
 	}
 
 	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}", method = RequestMethod.GET)
 	public void showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
-			@PathVariable("id") int id, @PathVariable("kanji") String kanji) throws IOException {
+			@PathVariable("id") int id, @PathVariable("kanji") String kanji) throws IOException, DictionaryException {
 		
 		processWordDictionaryDetailsRedirect(request, response, id);
 	}
 
-	private void processWordDictionaryDetailsRedirect(HttpServletRequest request, HttpServletResponse response, int id) throws IOException {
+	private void processWordDictionaryDetailsRedirect(HttpServletRequest request, HttpServletResponse response, int id) throws IOException, DictionaryException {
 				
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
@@ -463,7 +469,7 @@ public class WordDictionaryController {
 	
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
 	public String showWordDictionaryNameDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
-			@PathVariable("kana") String kana, Map<String, Object> model) {
+			@PathVariable("kana") String kana, Map<String, Object> model) throws DictionaryException {
 		
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameById(id);
@@ -522,19 +528,19 @@ public class WordDictionaryController {
 	
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}", method = RequestMethod.GET)
 	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
-			@PathVariable("id") int id) throws IOException {
+			@PathVariable("id") int id) throws IOException, DictionaryException {
 		
 		processWordDictionaryNameDetailsRedirect(request, response, id);
 	}
 
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}", method = RequestMethod.GET)
 	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
-			@PathVariable("id") int id, @PathVariable("kanji") String kanji) throws IOException {
+			@PathVariable("id") int id, @PathVariable("kanji") String kanji) throws IOException, DictionaryException {
 		
 		processWordDictionaryNameDetailsRedirect(request, response, id);
 	}
 	
-	private void processWordDictionaryNameDetailsRedirect(HttpServletRequest request, HttpServletResponse response, int id) throws IOException {
+	private void processWordDictionaryNameDetailsRedirect(HttpServletRequest request, HttpServletResponse response, int id) throws IOException, DictionaryException {
 		
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameById(id);
@@ -621,7 +627,7 @@ public class WordDictionaryController {
 	@RequestMapping(value = "/wordDictionaryCatalog/{page}", method = RequestMethod.GET)
 	public String wordDictionaryCatalog(HttpServletRequest request, HttpSession session, 
 			@PathVariable("page") int pageNo,
-			Map<String, Object> model) {
+			Map<String, Object> model) throws DictionaryException {
 		
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
@@ -683,7 +689,7 @@ public class WordDictionaryController {
 	@RequestMapping(value = "/wordDictionaryNameCatalog/{page}", method = RequestMethod.GET)
 	public String wordDictionaryNameCatalog(HttpServletRequest request, HttpSession session, 
 			@PathVariable("page") int pageNo,
-			Map<String, Object> model) {
+			Map<String, Object> model) throws DictionaryException {
 		
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		

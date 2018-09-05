@@ -141,7 +141,7 @@ public class KanjiDictionaryController {
 	
 	@RequestMapping(value = "/kanjiDictionarySearch", method = RequestMethod.GET)
 	public String search(HttpServletRequest request, HttpSession session, @ModelAttribute("command") @Valid KanjiDictionarySearchModel searchModel,
-			BindingResult result, Map<String, Object> model) {
+			BindingResult result, Map<String, Object> model) throws DictionaryException {
 
 		// pobierz elementy podstawowe
 		List<WebRadicalInfo> radicalList = dictionaryManager.getWebRadicalList();
@@ -337,7 +337,7 @@ public class KanjiDictionaryController {
 	
 	@RequestMapping(produces = "application/json;charset=UTF-8", 
 			value = "/kanjiDictionary/showAvailableRadicals", method = RequestMethod.POST)
-	public @ResponseBody String showAvailableRadicals(HttpServletRequest request, HttpSession session, @RequestParam(value="selectedRadicals[]", required=false) String[] selectedRadicals) {
+	public @ResponseBody String showAvailableRadicals(HttpServletRequest request, HttpSession session, @RequestParam(value="selectedRadicals[]", required=false) String[] selectedRadicals) throws DictionaryException{
 
 		if (selectedRadicals == null) {
 			selectedRadicals = new String[] { };
@@ -402,7 +402,7 @@ public class KanjiDictionaryController {
 	}
 	
 	@RequestMapping(value = "/kanjiDictionaryDetails/{id}/{kanji}", method = RequestMethod.GET)
-	public String showKanjiDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji, Map<String, Object> model) {
+	public String showKanjiDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji, Map<String, Object> model) throws DictionaryException {
 		
 		// pobranie kanji entry
 		KanjiEntry kanjiEntry = dictionaryManager.findKanji(kanji);
@@ -441,7 +441,7 @@ public class KanjiDictionaryController {
 	}
 	
 	@RequestMapping(value = "/kanjiDictionaryDetails/{id}", method = RequestMethod.GET)
-	public void showKanjiDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id) throws IOException {
+	public void showKanjiDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id) throws IOException, DictionaryException {
 
 		// pobranie znaku
 		KanjiEntry kanjiEntry = dictionaryManager.getKanjiEntryById(id);
@@ -466,7 +466,7 @@ public class KanjiDictionaryController {
 	}
 		
 	@RequestMapping(value = "/kanjiDictionaryDetectSearch", method = RequestMethod.POST)
-	public String detectSearchResult(HttpServletRequest request, HttpSession session, Map<String, Object> model, @RequestParam(value="strokes", required=false) String strokes) {
+	public String detectSearchResult(HttpServletRequest request, HttpSession session, Map<String, Object> model, @RequestParam(value="strokes", required=false) String strokes) throws DictionaryException {
 		
 		logger.info("Rozpoznawanie znakow kanji dla: " + strokes);
 		
@@ -664,7 +664,7 @@ public class KanjiDictionaryController {
 	@RequestMapping(value = "/kanjiDictionaryCatalog/{page}", method = RequestMethod.GET)
 	public String kanjiDictionaryCatalog(HttpServletRequest request, HttpSession session, 
 			@PathVariable("page") int pageNo,
-			Map<String, Object> model) {
+			Map<String, Object> model) throws DictionaryException {
 		
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		

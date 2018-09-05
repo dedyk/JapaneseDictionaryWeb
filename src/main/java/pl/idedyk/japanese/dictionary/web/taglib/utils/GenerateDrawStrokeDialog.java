@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.springframework.context.MessageSource;
 
 import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
+import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
@@ -51,13 +52,13 @@ public class GenerateDrawStrokeDialog {
 	}
 
 	public static Div generateDrawStrokeDialog(DictionaryManager dictionaryManager, MessageSource messageSource,
-			String word, String dialogId) throws IOException {
+			String word, String dialogId) throws IOException, DictionaryException {
 		
 		return generateDrawStrokeDialog(dictionaryManager, messageSource, word, dialogId, new GenerateDrawStrokeDialogParams());		
 	}
 	
 	public static Div generateDrawStrokeDialog(DictionaryManager dictionaryManager, MessageSource messageSource,
-			String word, String dialogId, GenerateDrawStrokeDialogParams params) throws IOException {
+			String word, String dialogId, GenerateDrawStrokeDialogParams params) throws IOException, DictionaryException {
 		
 		String dialogTitle = messageSource.getMessage("common.generateDrawStrokeDiv.dialog.title", new String[] { word }, null);
 		

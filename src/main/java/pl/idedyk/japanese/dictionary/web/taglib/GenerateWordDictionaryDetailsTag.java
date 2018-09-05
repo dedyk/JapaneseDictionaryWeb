@@ -26,6 +26,7 @@ import pl.idedyk.japanese.dictionary.api.dto.TatoebaSentence;
 import pl.idedyk.japanese.dictionary.api.example.ExampleManager;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupTypeElements;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleResult;
+import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.api.gramma.GrammaConjugaterManager;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateGroupTypeElements;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResult;
@@ -101,11 +102,20 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             Div contentDiv = new Div("col-md-10");
             mainContentDiv.addHtmlElement(contentDiv);
             
-            // generowanie informacji podstawowych
-            contentDiv.addHtmlElement(generateMainInfo(mainMenu));
+            Div exampleSentenceDiv = null;
             
-            // generowanie przykladowych zdan
-            Div exampleSentenceDiv = generateExampleSentence(mainMenu);
+            try {
+	         
+            	// generowanie informacji podstawowych
+	            contentDiv.addHtmlElement(generateMainInfo(mainMenu));
+	            
+	            // generowanie przykladowych zdan
+	            exampleSentenceDiv = generateExampleSentence(mainMenu);
+	            
+            } catch (DictionaryException e) {
+            	throw new JspException(e);
+            }
+            
             
             if (exampleSentenceDiv != null) {
             	contentDiv.addHtmlElement(exampleSentenceDiv);
@@ -169,7 +179,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return pageHeader;
 	}
 	
-	private Div generateMainInfo(Menu mainMenu) throws IOException {
+	private Div generateMainInfo(Menu mainMenu) throws IOException, DictionaryException {
 		
 		Div panelDiv = new Div("panel panel-default");
 		
@@ -246,7 +256,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return panelDiv;
 	}
 	
-	private Div generateKanjiSection(Menu menu) throws IOException {
+	private Div generateKanjiSection(Menu menu) throws IOException, DictionaryException {
 		
 		Div kanjiDiv = new Div();
 		
@@ -400,7 +410,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         return kanjiDiv;
 	}
 	
-	private Div generateReadingSection(Menu menu) throws IOException {
+	private Div generateReadingSection(Menu menu) throws IOException, DictionaryException {
 		
 		Div readingDiv = new Div();
 		
@@ -717,7 +727,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return wordTypeDiv;
 	}
 		
-	private Div generateAttribute(Menu menu) throws IOException {
+	private Div generateAttribute(Menu menu) throws IOException, DictionaryException {
 		
 		List<Attribute> attributeList = dictionaryEntry.getAttributeList().getAttributeList();
 		
@@ -842,7 +852,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return attributeDiv;		
 	}
 	
-	private Div generateKnownKanjiDiv(Menu menu) {
+	private Div generateKnownKanjiDiv(Menu menu) throws DictionaryException {
 		
 		if (dictionaryEntry.isKanjiExists() == false) {
 			return null;
@@ -938,7 +948,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return knownKanjiDiv;
 	}
 	
-	private Div generateExampleSentence(Menu mainMenu) {
+	private Div generateExampleSentence(Menu mainMenu) throws DictionaryException {
 
 		List<String> exampleSentenceGroupIdsList = dictionaryEntry.getExampleSentenceGroupIdsList();
 		

@@ -21,6 +21,7 @@ import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
+import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
@@ -89,7 +90,12 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
             mainContentDiv.addHtmlElement(contentDiv);
             
             // generowanie informacji podstawowych
-            contentDiv.addHtmlElement(generateMainInfo(mainMenu));
+            try {
+            	contentDiv.addHtmlElement(generateMainInfo(mainMenu));
+            	
+            } catch (DictionaryException e) {
+            	throw new JspException(e);
+            }
             
             // dodaj w menu pozycje do zglaszania sugestii
             mainContentDiv.addHtmlElement(addSuggestionElements(mainMenu));
@@ -122,7 +128,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		return pageHeader;
 	}
 	
-	private Div generateMainInfo(Menu mainMenu) throws IOException {
+	private Div generateMainInfo(Menu mainMenu) throws IOException, DictionaryException {
 		
 		Div panelDiv = new Div("panel panel-default");
 		
@@ -214,7 +220,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		return panelDiv;
 	}
 	
-	private Div generateKanjiSection(Menu menu) throws IOException {
+	private Div generateKanjiSection(Menu menu) throws IOException, DictionaryException {
 		
 		Div kanjiDiv = new Div();
 		
