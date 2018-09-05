@@ -85,16 +85,6 @@ public class SitemapManager {
 			return;
 		}
 		
-		if (1 == 1) {
-			
-			int fixme = 1;
-			// FIXME !!!!!!!!!!!!!!!!!
-			
-			logger.error("!!!!!! Generowanie pliku sitemap wyłączone !!!!");
-			
-			return;
-		}
-		
 		logger.info("Generowanie pliku sitemap");
 				
 		SitemapHelper sitemapHelper = new SitemapHelper();
