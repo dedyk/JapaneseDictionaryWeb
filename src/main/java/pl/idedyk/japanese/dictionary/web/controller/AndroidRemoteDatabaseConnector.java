@@ -35,7 +35,7 @@ import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerRequest;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
-import pl.idedyk.japanese.dictionary.api.dto.TransitiveIntransitivePair;
+import pl.idedyk.japanese.dictionary.api.dto.TransitiveIntransitivePairWithDictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
@@ -98,6 +98,9 @@ public class AndroidRemoteDatabaseConnector {
 		// logowanie
 		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult, 1));
 
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(findWordResult));
 	}
@@ -132,6 +135,9 @@ public class AndroidRemoteDatabaseConnector {
 			// logowanie
 			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryById]: Nie znaleziono słowa o id: " + id);
 		}
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
 		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(dictionaryEntry));
@@ -168,6 +174,9 @@ public class AndroidRemoteDatabaseConnector {
 			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameById]: Nie znaleziono słowa o id: " + id);
 		}
 		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(dictionaryEntry));
 	}
@@ -201,6 +210,9 @@ public class AndroidRemoteDatabaseConnector {
 		if (radicals.length > 0) {
 			loggerSender.sendLog(new KanjiDictionaryRadicalsLoggerModel(Utils.createLoggerModelCommon(request), radicals, findKnownKanjiFromRadicalsResult.size()));
 		}
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
 
 		// zwrocenie wyniku
 		writer.append(gson.toJson(allAvailableRadicals));
@@ -233,6 +245,9 @@ public class AndroidRemoteDatabaseConnector {
 		if (radicals.length > 0) {
 			loggerSender.sendLog(new KanjiDictionaryRadicalsLoggerModel(Utils.createLoggerModelCommon(request), radicals, findKnownKanjiFromRadicalsResult.size()));
 		}
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
 
 		// zwrocenie wyniku
 		writer.append(gson.toJson(findKnownKanjiFromRadicalsResult));
@@ -259,6 +274,9 @@ public class AndroidRemoteDatabaseConnector {
 
 		// logowanie
 		loggerSender.sendLog(new KanjiDictionarySearchStrokeCountLoggerModel(Utils.createLoggerModelCommon(request), findKanjisFromStrokeCountWrapper.getFrom(), findKanjisFromStrokeCountWrapper.getTo()));
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
 		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(findKanjiResult));
@@ -288,6 +306,9 @@ public class AndroidRemoteDatabaseConnector {
 		// logowanie
 		loggerSender.sendLog(new KanjiDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findKanjiRequest, findKanjiResult));
 
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(findKanjiResult));
 	}
@@ -317,7 +338,10 @@ public class AndroidRemoteDatabaseConnector {
 			// logowanie
 			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
 			
-		}		
+		}
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
 
 		// zwrocenie wyniku
 		writer.append(gson.toJson(kanjiEntry));
@@ -348,7 +372,10 @@ public class AndroidRemoteDatabaseConnector {
 			// logowanie
 			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
 			
-		}		
+		}
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
 
 		// zwrocenie wyniku
 		writer.append(gson.toJson(kanjiEntry));
@@ -377,7 +404,10 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// logowanie
 		loggerSender.sendLog(new KanjiDictionaryAllKanjisLoggerModel(Utils.createLoggerModelCommon(request), getAllKanjisWrapperRequest.isWithDetails(), getAllKanjisWrapperRequest.isOnlyUsed()));
-			
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(kanjiEntryList));
 	}
@@ -405,7 +435,10 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryGetTatoebaSentenceGroupLoggerModel(Utils.createLoggerModelCommon(request), groupId));
-			
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(groupWithTatoebaSentenceList));
 	}
@@ -433,7 +466,10 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryGetGroupDictionaryEntriesLoggerModel(Utils.createLoggerModelCommon(request), groupName));
-			
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(result));
 	}
@@ -458,7 +494,10 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryGetDictionaryEntriesSizeLoggerModel(Utils.createLoggerModelCommon(request)));
-			
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(result));
 	}
@@ -483,7 +522,10 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryGetDictionaryEntriesNameSizeLoggerModel(Utils.createLoggerModelCommon(request)));
-			
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(result));
 	}
@@ -508,7 +550,10 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryGetDictionaryEntryGroupTypesLoggerModel(Utils.createLoggerModelCommon(request)));
-			
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(result));
 	}
@@ -576,6 +621,9 @@ public class AndroidRemoteDatabaseConnector {
 		// logowanie
 		loggerSender.sendLog(new KanjiDictionaryDetectLoggerModel(Utils.createLoggerModelCommon(request), "", result));
 
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(result));
 	}
@@ -596,11 +644,14 @@ public class AndroidRemoteDatabaseConnector {
 		logger.info("[AndroidRemoteDatabaseConnector.getTransitiveIntransitivePairsList] Pobierz pary czasowników przechodnich i nieprzechodnich");
 
 		// pobranie		
-		List<TransitiveIntransitivePair> result = dictionaryManager.getTransitiveIntransitivePairsList();
+		List<TransitiveIntransitivePairWithDictionaryEntry> result = dictionaryManager.getTransitiveIntransitivePairsList();
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryGetTransitiveIntransitivePairsLoggerModel(Utils.createLoggerModelCommon(request)));
-			
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+				
 		// zwrocenie wyniku
 		writer.append(gson.toJson(result));
 	}
@@ -625,7 +676,10 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryGetWordPowerListLoggerModel(Utils.createLoggerModelCommon(request)));
-			
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(result));
 	}
