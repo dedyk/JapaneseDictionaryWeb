@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,20 @@ public class ErrorController {
 		
 		if (requestURL != null && requestURL.contains("/autocomple") == true) { // bledy autocomplete sa ignorowane, klient zrezygnowal z polaczenia
 			logger.error("Błędy 'autocomplete' są ignorowane!");
+			
+			return new ModelAndView();
+		}
+		
+		// wyjątek: class java.lang.IllegalStateException:IllegalStateException: getOutputStream() has already been called for this response jest ignorowany
+		if (ex.getClass().equals(IllegalStateException.class) == true && ExceptionUtils.getMessage(ex).indexOf("getOutputStream() has already been called for this response") != -1) {
+			logger.error("Błędy 'class java.lang.IllegalStateException:IllegalStateException: getOutputStream() has already been called for this response' są ignorowane!");
+			
+			return new ModelAndView();
+		}
+		
+		// wyjątek: Wyjątek: class org.apache.catalina.connector.ClientAbortException:ClientAbortException: java.io.IOException: Broken pipe jest ignorowany
+		if (ex.getClass().getName().equals("org.apache.catalina.connector.ClientAbortException") && ExceptionUtils.getMessage(ex).indexOf("java.io.IOException: Broken pipe") != -1) {
+			logger.error("Błędy 'class org.apache.catalina.connector.ClientAbortException:ClientAbortException: java.io.IOException: Broken pipe' są ignorowane!");
 			
 			return new ModelAndView();
 		}

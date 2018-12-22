@@ -8,6 +8,7 @@ import javax.servlet.jsp.ErrorData;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.context.WebApplicationContext;
@@ -74,6 +75,20 @@ public class HandleException extends TagSupport {
 				httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			}
 						
+			return SKIP_BODY;
+		}
+		
+		// wyjątek: class java.lang.IllegalStateException:IllegalStateException: getOutputStream() has already been called for this response jest ignorowany
+		if (throwable.getClass().equals(IllegalStateException.class) == true && ExceptionUtils.getMessage(throwable).indexOf("getOutputStream() has already been called for this response") != -1) {
+			logger.error("Błędy 'class java.lang.IllegalStateException:IllegalStateException: getOutputStream() has already been called for this response' są ignorowane!");
+			
+			return SKIP_BODY;
+		}
+		
+		// wyjątek: Wyjątek: class org.apache.catalina.connector.ClientAbortException:ClientAbortException: java.io.IOException: Broken pipe jest ignorowany
+		if (throwable.getClass().getName().equals("org.apache.catalina.connector.ClientAbortException") && ExceptionUtils.getMessage(throwable).indexOf("java.io.IOException: Broken pipe") != -1) {
+			logger.error("Błędy 'class org.apache.catalina.connector.ClientAbortException:ClientAbortException: java.io.IOException: Broken pipe' są ignorowane!");
+			
 			return SKIP_BODY;
 		}
 		
