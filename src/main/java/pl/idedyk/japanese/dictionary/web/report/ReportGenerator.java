@@ -2,9 +2,17 @@ package pl.idedyk.japanese.dictionary.web.report;
 
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +34,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericTextStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
+import pl.idedyk.japanese.dictionary.web.service.UserAgentService;
 
 @Service
 public class ReportGenerator {
@@ -37,6 +46,9 @@ public class ReportGenerator {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	private UserAgentService userAgentService;
 	
 	@Value("${base.server}")
 	private String baseServer;
@@ -176,7 +188,9 @@ public class ReportGenerator {
 				*/
 				
 				// statystyki user agentow
-				List<GenericTextStat> userAgentClientStat = mySQLConnector.getUserAgentClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				List<GenericTextStat> userAgentClientRawStat = mySQLConnector.getUserAgentClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				
+				List<GenericTextStat> userAgentClientStat = regenerateUserAgentClientStat(userAgentClientRawStat);
 				
 				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.client", userAgentClientStat);
 				
@@ -417,6 +431,74 @@ public class ReportGenerator {
 		reportDiv.addHtmlElement(div);		
 		reportDiv.addHtmlElement(new Hr());
 	}
+	
+	private List<GenericTextStat> regenerateUserAgentClientStat(List<GenericTextStat> userAgentClientRawStatList) {
+
+		Map<String, Long> userAgentInPrintableVersionGroupBy = new TreeMap<String, Long>();
+		
+		//
+		
+		for (GenericTextStat currentGenericTextRawStat : userAgentClientRawStatList) {
+			
+			String userAgentInPrintableForm = userAgentService.getUserAgentInPrintableForm(currentGenericTextRawStat.getText());
+			
+			Long userAgentInPrintableFormSize = userAgentInPrintableVersionGroupBy.get(userAgentInPrintableForm);
+			
+			if (userAgentInPrintableFormSize == null) {				
+				userAgentInPrintableFormSize = 0l;
+			}
+			
+			userAgentInPrintableVersionGroupBy.put(userAgentInPrintableForm, userAgentInPrintableFormSize + currentGenericTextRawStat.getStat());			
+		}
+		
+		//
+		
+		List<GenericTextStat> result = new ArrayList<GenericTextStat>();
+		
+		//
+		
+		Set<Entry<String, Long>> userAgentInPrintableVersionGroupByEntrySet = userAgentInPrintableVersionGroupBy.entrySet();
+		
+		Iterator<Entry<String, Long>> userAgentInPrintableVersionGroupByEntrySetIterator = userAgentInPrintableVersionGroupByEntrySet.iterator();
+		
+		while (userAgentInPrintableVersionGroupByEntrySetIterator.hasNext() == true) {
+			
+			Entry<String, Long> currentEntryInSet = userAgentInPrintableVersionGroupByEntrySetIterator.next();
+			
+			GenericTextStat genericTextStat = new GenericTextStat();
+			
+			genericTextStat.setText(currentEntryInSet.getKey());
+			genericTextStat.setStat(currentEntryInSet.getValue());
+			
+			result.add(genericTextStat);
+		}
+		
+		//
+		
+		Collections.sort(result, new Comparator<GenericTextStat>() {
+
+			@Override
+			public int compare(GenericTextStat o1, GenericTextStat o2) {
+				
+				Long o1Stat = o1.getStat();
+				Long o2Stat = o2.getStat();
+				
+				int result = o2Stat.compareTo(o1Stat);
+				
+				if (result != 0) {
+					return result;
+				}
+				
+				String o1Text = o1.getText();
+				String o2Text = o2.getText();
+				
+				return o1Text.compareTo(o2Text);				
+			}
+		});
+				
+		return result;
+	}
+
 	
 	public static class Report {
 		

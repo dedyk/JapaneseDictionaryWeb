@@ -1,14 +1,15 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import net.sf.uadetector.ReadableUserAgent;
-import net.sf.uadetector.UserAgentStringParser;
-import net.sf.uadetector.UserAgentType;
-import net.sf.uadetector.service.UADetectorServiceFactory;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import pl.idedyk.japanese.dictionary.web.service.UserAgentService;
 
 public class IsRobotTag extends TagSupport {
 
@@ -16,8 +17,6 @@ public class IsRobotTag extends TagSupport {
 
 	@Override
 	public int doStartTag() throws JspException {
-
-		UserAgentStringParser parser = UADetectorServiceFactory.getResourceModuleParser();
 		
 		ServletRequest servletRequest = pageContext.getRequest();
 		
@@ -33,19 +32,15 @@ public class IsRobotTag extends TagSupport {
 			return SKIP_BODY;
 		}
 		
-		ReadableUserAgent readableUserAgent = parser.parse(userAgent);
-
-		if (readableUserAgent == null) {
-			return SKIP_BODY;
-		}
-	
-		UserAgentType userAgentType = readableUserAgent.getType();
+		ServletContext servletContext = pageContext.getServletContext();
 		
-		if (userAgentType == null) {
-			return SKIP_BODY;
-		}
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
-		if (userAgentType == UserAgentType.ROBOT) {
+		UserAgentService userAgentService = webApplicationContext.getBean(UserAgentService.class);
+		
+		boolean robot = userAgentService.isRobot(userAgent);
+				
+		if (robot == true) {
 			return EVAL_BODY_INCLUDE;
 			
 		} else {

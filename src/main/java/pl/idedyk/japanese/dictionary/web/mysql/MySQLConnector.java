@@ -2216,7 +2216,7 @@ public class MySQLConnector {
 	public List<GenericTextStat> getUserAgentClientStat(long startId, long endId) throws SQLException {
 		
 		return getGenericTextStat("select user_agent, count(*) from generic_log where "
-				+ "id >= ? and id <= ? group by user_agent having count(*) > 50 order by 2 desc, 1 desc", startId, endId);
+				+ "id >= ? and id <= ? group by user_agent order by 2 desc, 1 desc", startId, endId);
 	}
 	
 	public List<GenericTextStat> getAndroidSendMissingWordStat(long startId, long endId) throws SQLException {

@@ -283,9 +283,9 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>net.sf.uadetector</groupId>
-			<artifactId>uadetector-resources</artifactId>
-			<version>2014.10</version>
+			<groupId>nl.basjes.parse.useragent</groupId>
+			<artifactId>yauaa</artifactId>
+			<version>5.7</version>
 		</dependency>
 
 		<dependency>
