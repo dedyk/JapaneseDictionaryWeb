@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,8 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericTextStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
 import pl.idedyk.japanese.dictionary.web.service.UserAgentService;
+import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo;
+import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo.DesktopInfo;
 
 @Service
 public class ReportGenerator {
@@ -190,9 +193,19 @@ public class ReportGenerator {
 				// statystyki user agentow
 				List<GenericTextStat> userAgentClientRawStat = mySQLConnector.getUserAgentClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
-				List<GenericTextStat> userAgentClientStat = regenerateUserAgentClientStat(userAgentClientRawStat);
+				// podzielenie statystyk na Desktop, Phone + Mobile, Tablet, Robot + Robot Mobile oraz inne
+				SplitUserAgentStatByTypeResult splitUserAgentStatByType = splitUserAgentStatByType(userAgentClientRawStat);
 				
-				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.client", userAgentClientStat);
+				// generowanie statystyk dla aplikacji na androida
+				generateStatForJapanaeseAndroidLearnHelper(reportDiv, splitUserAgentStatByType);
+				
+				// generowanie statystyk dla komputera (desktop)
+				generateStatForDesktop(reportDiv, splitUserAgentStatByType);
+				
+				
+				int fixme = 1;
+				
+				/////////////////////////
 				
 				// statystyki odnosnikow
 				List<GenericTextStat> refererStat = mySQLConnector.getRefererStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId(), baseServer);
@@ -432,6 +445,7 @@ public class ReportGenerator {
 		reportDiv.addHtmlElement(new Hr());
 	}
 	
+	/*
 	private List<GenericTextStat> regenerateUserAgentClientStat(List<GenericTextStat> userAgentClientRawStatList) {
 
 		Map<String, Long> userAgentInPrintableVersionGroupBy = new TreeMap<String, Long>();
@@ -498,7 +512,217 @@ public class ReportGenerator {
 				
 		return result;
 	}
+	*/
+	
+	private SplitUserAgentStatByTypeResult splitUserAgentStatByType(List<GenericTextStat> userAgentClientRawStat) {
+		
+		SplitUserAgentStatByTypeResult result = new SplitUserAgentStatByTypeResult();
+		
+		//
+		
+		for (GenericTextStat currentUserAgentClientStat : userAgentClientRawStat) {
+			
+			UserAgentInfo userAgentInfo = userAgentService.getUserAgentInfo(currentUserAgentClientStat.getText());
+			
+			switch (userAgentInfo.getType()) {
+				
+				case JAPANESE_ANDROID_LEARNER_HELPER:
+					
+					result.japaneseAndroidLearnerHelperList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					
+					break;
+					
+				case DESKTOP:
+					
+					result.desktopList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					
+					break;
+					
+				case PHONE:
+					
+					result.phoneList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					
+					break;
+					
+				case TABLET:
+					
+					result.tableList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					
+					break;
+					
+				case ROBOT:
+					
+					result.robotList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					
+					break;
+					
+				case OTHER:
+					
+					result.otherList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					
+					break;
+					
+				case NULL:
+					
+					result.nullList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					
+					break;
+			}
+		}
+		
+		return result;
+	}
+	
+	private void generateStatForJapanaeseAndroidLearnHelper(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+				
+		List<ImmutablePair<GenericTextStat, UserAgentInfo>> japaneseAndroidLearnerHelperList = splitUserAgentStatByType.japaneseAndroidLearnerHelperList;
+		
+		//
+		
+		List<GenericTextStat> japaneseAndroidLearnerHelperListStat = groupByStat(japaneseAndroidLearnerHelperList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {				
+				return pair.right.getJapaneseAndroidLearnerHelperInfo().getCode() + " - " + pair.right.getJapaneseAndroidLearnerHelperInfo().getCodeName();		
+			}
+		});
+				
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.stat", japaneseAndroidLearnerHelperListStat);		
+	}
+	
+	private void generateStatForDesktop(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		List<ImmutablePair<GenericTextStat, UserAgentInfo>> desktopList = splitUserAgentStatByType.desktopList;
+	
+		//
+		
+		List<GenericTextStat> desktopTypeList = groupByStat(desktopList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+				
+				DesktopInfo desktopInfo = pair.right.getDesktopInfo();
+				
+				return desktopInfo.getDesktopType();
+			}
+		});
 
+		List<GenericTextStat> operationSystemList = groupByStat(desktopList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+				
+				DesktopInfo desktopInfo = pair.right.getDesktopInfo();
+				
+				return desktopInfo.getOperationSystem();
+			}
+		});
+
+		List<GenericTextStat> browserTypeList = groupByStat(desktopList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+				
+				DesktopInfo desktopInfo = pair.right.getDesktopInfo();
+				
+				return desktopInfo.getBrowserType();
+			}
+		});
+						
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.desktopType.stat", desktopTypeList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.operationSystem.stat", operationSystemList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.browserType.stat", browserTypeList);		
+	}
+	
+	private List<GenericTextStat> groupByStat(List<ImmutablePair<GenericTextStat, UserAgentInfo>> list, IGroupByStatFunction groupByStatFunction) {
+		
+		Map<String, Long> resultMap = new TreeMap<String, Long>();
+		
+		//
+		
+		for (ImmutablePair<GenericTextStat, UserAgentInfo> currentPair : list) {
+			
+			String key = groupByStatFunction.getKey(currentPair);
+			
+			Long count = resultMap.get(key);
+			
+			if (count == null) {
+				count = 0l;
+			}
+			
+			count += currentPair.left.getStat();
+			
+			resultMap.put(key, count);
+		}
+		
+		//
+		
+		List<GenericTextStat> result = new ArrayList<GenericTextStat>();
+		
+		//
+		
+		Set<Entry<String, Long>> resultMapEntrySet = resultMap.entrySet();
+		
+		Iterator<Entry<String, Long>> resultMapEntrySetIterator = resultMapEntrySet.iterator();
+		
+		while (resultMapEntrySetIterator.hasNext() == true) {
+			
+			Entry<String, Long> currentEntryInSet = resultMapEntrySetIterator.next();
+			
+			GenericTextStat genericTextStat = new GenericTextStat();
+			
+			genericTextStat.setText(currentEntryInSet.getKey());
+			genericTextStat.setStat(currentEntryInSet.getValue());
+			
+			result.add(genericTextStat);
+		}
+		
+		//
+		
+		Collections.sort(result, new Comparator<GenericTextStat>() {
+
+			@Override
+			public int compare(GenericTextStat o1, GenericTextStat o2) {
+				
+				Long o1Stat = o1.getStat();
+				Long o2Stat = o2.getStat();
+				
+				int result = o2Stat.compareTo(o1Stat);
+				
+				if (result != 0) {
+					return result;
+				}
+				
+				String o1Text = o1.getText();
+				String o2Text = o2.getText();
+				
+				return o1Text.compareTo(o2Text);				
+			}
+		});
+		
+		return result;
+	}
+	
+	private static class SplitUserAgentStatByTypeResult {
+		
+		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> japaneseAndroidLearnerHelperList = new ArrayList<>();
+		
+		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> desktopList = new ArrayList<>();
+		
+		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> phoneList = new ArrayList<>();
+		
+		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> tableList = new ArrayList<>();
+		
+		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> robotList = new ArrayList<>();
+		
+		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> otherList = new ArrayList<>();
+		
+		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> nullList = new ArrayList<>();
+	}
+	
+	private static interface IGroupByStatFunction {		
+		public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair);
+	}
 	
 	public static class Report {
 		
