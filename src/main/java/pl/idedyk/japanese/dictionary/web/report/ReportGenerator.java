@@ -779,7 +779,13 @@ public class ReportGenerator {
 			
 			@Override
 			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {				
-				return pair.left.getText();		
+				String text = pair.left.getText();
+				
+				if (text == null) {
+					text = "-";
+				}
+				
+				return text;
 			}
 		});
 				
