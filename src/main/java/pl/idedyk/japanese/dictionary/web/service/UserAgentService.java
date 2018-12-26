@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import nl.basjes.parse.useragent.UserAgent;
 import nl.basjes.parse.useragent.UserAgentAnalyzer;
 
+import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo;
+
 @Service
 public class UserAgentService {
 	
@@ -50,6 +52,7 @@ public class UserAgentService {
 		return deviceClass.equalsIgnoreCase("Robot") == true;		
 	}
 	
+	/*
 	public synchronized String getUserAgentInPrintableForm(String userAgentString) {
 		
 		if (userAgentString == null) {
@@ -137,26 +140,181 @@ public class UserAgentService {
 				
 				result.append(" / ").append(agentInformationUrl);
 				
-				/*
+				/ *
 				for (String fieldName: userAgent.getAvailableFieldNamesSorted()) {
 					System.out.println(fieldName + " = " + userAgent.getValue(fieldName));
 				}
-				*/
+				* /
 			}				
 		}
 
 		return result.toString();
 	}
+	*/
+	
+	public synchronized UserAgentInfo getUserAgentInfo(String userAgentString) {
+		
+		if (userAgentString == null) {
+			return new UserAgentInfo(UserAgentInfo.Type.NULL);
+		}
+				
+		//
+		
+		if (userAgentString.startsWith("JapaneseAndroidLearnHelper") == true) {	// czy typ to slownik w postaci aplikacji na telefon
+			
+			String[] userAgentStringSplited = userAgentString.split("/");
+			
+			UserAgentInfo userAgentInfo = new UserAgentInfo(UserAgentInfo.Type.JAPANESE_ANDROID_LEARNER_HELPER);
+			
+			userAgentInfo.setJapaneseAndroidLearnerHelperInfo(new UserAgentInfo.JapaneseAndroidLearnerHelperInfo(Integer.parseInt(userAgentStringSplited[1]), userAgentStringSplited[2]));
+			
+			return userAgentInfo;
+		}
+		
+		//
+		
+		UserAgent userAgent = null;
+		
+		try {
+			userAgent = userAgentAnalyzer.parse(userAgentString);
+			
+		} catch (Exception e) {
+			
+			logger.error("Błąd podczas parsowania user agent", e);
+			
+			UserAgentInfo userAgentInfo = new UserAgentInfo(UserAgentInfo.Type.OTHER);
+			
+			userAgentInfo.setOtherInfo(new UserAgentInfo.OtherInfo(userAgentString));
+			
+			return userAgentInfo;
+		}
+		
+		//
+		
+		String deviceClass = userAgent.getValue(UserAgent.DEVICE_CLASS);
+		
+		if (deviceClass == null) {
+			deviceClass = "Unknown";
+		}
+
+		//
+		
+		if (deviceClass.equalsIgnoreCase("Hacker") == true) { // czy typ to jakis nieznany typ (hacker)
+			
+			UserAgentInfo userAgentInfo = new UserAgentInfo(UserAgentInfo.Type.OTHER);
+			
+			userAgentInfo.setOtherInfo(new UserAgentInfo.OtherInfo(userAgentString));
+			
+			return userAgentInfo;
+			
+		} else if (deviceClass.equalsIgnoreCase("Desktop") == true) { // komputer
+			
+			UserAgentInfo userAgentInfo = new UserAgentInfo(UserAgentInfo.Type.DESKTOP);
+			
+			String computerType = userAgent.getValue(UserAgent.DEVICE_NAME); // typ systemu operacyjnego, np. Linux
+			
+			if (computerType == null) {
+				computerType = "Unknown";
+			}
+			
+			if (computerType.equals("Desktop") == true) {
+				computerType = "Windows Desktop";
+			}
+			
+			String operationSystemNameVersion = userAgent.getValue("OperatingSystemNameVersion"); // nazwa i wersja systemu operacyjnego
+			
+			if (operationSystemNameVersion == null) {
+				operationSystemNameVersion = "Unknown";
+			}
+			
+			String agentNameVersionMajor = userAgent.getValue("AgentNameVersionMajor"); // nazwa i wersja glowna przegladarki
+
+			if (agentNameVersionMajor == null) {
+				agentNameVersionMajor = "Unknown";
+			}
+			
+			//
+
+			userAgentInfo.setDesktopInfo(new UserAgentInfo.DesktopInfo(computerType, operationSystemNameVersion, agentNameVersionMajor));
+			
+			return userAgentInfo;
+			
+		} else if (deviceClass.equalsIgnoreCase("Phone") == true || deviceClass.equalsIgnoreCase("Mobile") == true || deviceClass.equalsIgnoreCase("Tablet") == true) { // telefon lub tablet
+			
+			UserAgentInfo userAgentInfo = new UserAgentInfo(deviceClass.equalsIgnoreCase("Tablet") == true ? UserAgentInfo.Type.TABLET : UserAgentInfo.Type.PHONE);
+			
+			String deviceName = userAgent.getValue(UserAgent.DEVICE_NAME); // rodzaj urzadzenia
+			
+			if (deviceName == null) {
+				deviceName = "Unknown";
+			}
+						
+			String operationSystemNameVersion = userAgent.getValue("OperatingSystemNameVersion"); // nazwa i wersja systemu operacyjnego
+			
+			if (operationSystemNameVersion == null) {
+				operationSystemNameVersion = "Unknown";
+			}
+			
+			String agentNameVersionMajor = userAgent.getValue("AgentNameVersionMajor"); // nazwa i wersja glowna przegladarki
+
+			if (agentNameVersionMajor == null) {
+				agentNameVersionMajor = "Unknown";
+			}
+			
+			//
+
+			userAgentInfo.setPhoneTabletInfo(new UserAgentInfo.PhoneTabletInfo(deviceName, operationSystemNameVersion, agentNameVersionMajor));
+			
+			return userAgentInfo;
+			
+		} else if (deviceClass.startsWith("Robot") == true) { // robot
+			
+			UserAgentInfo userAgentInfo = new UserAgentInfo(UserAgentInfo.Type.ROBOT);
+			
+			String deviceName = userAgent.getValue(UserAgent.DEVICE_NAME); // nazwa robota (I czesc)
+			
+			if (deviceName == null) {
+				deviceName = "Unknown";
+			}
+						
+			String operationSystemNameVersion = userAgent.getValue("OperatingSystemNameVersion"); // nazwa robota (II czesc)
+			
+			if (operationSystemNameVersion == null) {
+				operationSystemNameVersion = "Unknown";
+			}
+			
+			String agentInformationUrl = userAgent.getValue("AgentInformationUrl"); // adres do strony informacyjnej robota
+
+			if (agentInformationUrl == null) {
+				agentInformationUrl = "Unknown";
+			}
+			
+			//
+			
+			userAgentInfo.setRobotInfo(new UserAgentInfo.RobotInfo(deviceName + " / " + operationSystemNameVersion, agentInformationUrl));
+
+			return userAgentInfo;
+			
+		} else { // inny
+			
+			UserAgentInfo userAgentInfo = new UserAgentInfo(UserAgentInfo.Type.OTHER);
+			
+			userAgentInfo.setOtherInfo(new UserAgentInfo.OtherInfo(userAgentString));
+			
+			return userAgentInfo;
+		}
+	}
 	
 	/*
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
-		// test
-		
 		UserAgentService userAgentService = new UserAgentService();
 		
 		userAgentService.init();
 		
+		// test
+		
+		/ *		
 		System.out.println("----");
 
 		String[] uas = new String[] {
@@ -174,6 +332,57 @@ public class UserAgentService {
 		
 		for (String userAgentString : uas) {			
 			System.out.println(userAgentString + " = " + userAgentService.getUserAgentInPrintableForm(userAgentString));
+		}
+		* /
+		
+		MySQLConnector mySQLConnection = new MySQLConnector();
+		
+		List<GenericTextStat> userAgentClientStat = mySQLConnection.getUserAgentClientStat(0, 1);
+		
+		for (GenericTextStat genericTextStat : userAgentClientStat) {
+			
+			String userAgentString = genericTextStat.getText();
+			
+			UserAgentInfo userAgentInfo = userAgentService.getUserAgentInfo(userAgentString);
+			
+			if (userAgentInfo != null) {
+				
+				if (userAgentInfo.getType() == UserAgentInfo.Type.JAPANESE_ANDROID_LEARNER_HELPER) {
+					
+					// System.out.println(userAgentInfo.getJapaneseAndroidLearnerHelperInfo().getCode() + " - " + userAgentInfo.getJapaneseAndroidLearnerHelperInfo().getCodeName());
+				}
+				
+				if (userAgentInfo.getType() == UserAgentInfo.Type.DESKTOP) {
+					
+//					System.out.println(userAgentInfo.getDesktopInfo().getDesktopType());
+//					System.out.println(userAgentInfo.getDesktopInfo().getOperationSystem());
+//					System.out.println(userAgentInfo.getDesktopInfo().getBrowserType());
+//					System.out.println("---");
+				}
+
+				if (userAgentInfo.getType() == UserAgentInfo.Type.PHONE || userAgentInfo.getType() == UserAgentInfo.Type.TABLET) {
+					
+//					System.out.println(userAgentInfo.getType());
+//					System.out.println(userAgentInfo.getPhoneTabletInfo().getDeviceName());
+//					System.out.println(userAgentInfo.getPhoneTabletInfo().getOperationSystem());
+//					System.out.println(userAgentInfo.getPhoneTabletInfo().getBrowserType());
+//					System.out.println("---");
+				}
+				
+				if (userAgentInfo.getType() == UserAgentInfo.Type.ROBOT) {
+					
+//					System.out.println(userAgentInfo.getRobotInfo().getRobotName());
+//					System.out.println(userAgentInfo.getRobotInfo().getRobotUrl());
+//					System.out.println("---");
+				}
+				
+				if (userAgentInfo.getType() == UserAgentInfo.Type.OTHER) {
+					
+					System.out.println(userAgentInfo.getOtherInfo().getUserAgent());
+					System.out.println("---");
+					
+				}
+			}			
 		}
 	}
 	*/
