@@ -154,7 +154,7 @@ public class UserAgentService {
 	
 	public synchronized UserAgentInfo getUserAgentInfo(String userAgentString) {
 		
-		if (userAgentString == null) {
+		if (userAgentString == null || userAgentString.equals("-") == true) {
 			return new UserAgentInfo(UserAgentInfo.Type.NULL);
 		}
 				
@@ -277,10 +277,10 @@ public class UserAgentService {
 				deviceName = "Unknown";
 			}
 						
-			String operationSystemNameVersion = userAgent.getValue("OperatingSystemNameVersion"); // nazwa robota (II czesc)
+			String agentNameVersionMajor = userAgent.getValue("AgentNameVersionMajor"); // nazwa robota (II czesc)
 			
-			if (operationSystemNameVersion == null) {
-				operationSystemNameVersion = "Unknown";
+			if (agentNameVersionMajor == null) {
+				agentNameVersionMajor = "Unknown";
 			}
 			
 			String agentInformationUrl = userAgent.getValue("AgentInformationUrl"); // adres do strony informacyjnej robota
@@ -291,7 +291,7 @@ public class UserAgentService {
 			
 			//
 			
-			userAgentInfo.setRobotInfo(new UserAgentInfo.RobotInfo(deviceName + " / " + operationSystemNameVersion, agentInformationUrl));
+			userAgentInfo.setRobotInfo(new UserAgentInfo.RobotInfo(deviceName + " / " + agentNameVersionMajor, agentInformationUrl));
 
 			return userAgentInfo;
 			

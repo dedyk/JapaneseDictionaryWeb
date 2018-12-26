@@ -38,6 +38,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissing
 import pl.idedyk.japanese.dictionary.web.service.UserAgentService;
 import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo;
 import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo.DesktopInfo;
+import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo.PhoneTabletInfo;
 
 @Service
 public class ReportGenerator {
@@ -202,10 +203,22 @@ public class ReportGenerator {
 				// generowanie statystyk dla komputera (desktop)
 				generateStatForDesktop(reportDiv, splitUserAgentStatByType);
 				
+				// generowanie statystyk dla telefonu
+				generateStatForPhone(reportDiv, splitUserAgentStatByType);
 				
-				int fixme = 1;
+				// generowanie statystyk dla tabletu
+				generateStatForTablet(reportDiv, splitUserAgentStatByType);
 				
-				/////////////////////////
+				// generowanie statystyk dla robota
+				generateStatForRobot(reportDiv, splitUserAgentStatByType);
+				
+				// generowanie statystyk dla innych
+				generateStatForOther(reportDiv, splitUserAgentStatByType);
+				
+				// generowanie statystyk dla pustych
+				generateStatForNull(reportDiv, splitUserAgentStatByType);
+				
+				//
 				
 				// statystyki odnosnikow
 				List<GenericTextStat> refererStat = mySQLConnector.getRefererStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId(), baseServer);
@@ -632,6 +645,145 @@ public class ReportGenerator {
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.desktopType.stat", desktopTypeList);
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.operationSystem.stat", operationSystemList);
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.browserType.stat", browserTypeList);		
+	}
+	
+	private void generateStatForPhone(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		List<ImmutablePair<GenericTextStat, UserAgentInfo>> phoneList = splitUserAgentStatByType.phoneList;
+		
+		//
+		
+		List<GenericTextStat> deviceNameList = groupByStat(phoneList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+				
+				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
+				
+				return phoneInfo.getDeviceName();
+			}
+		});
+
+		List<GenericTextStat> operationSystemList = groupByStat(phoneList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+				
+				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
+				
+				return phoneInfo.getOperationSystem();
+			}
+		});
+
+		List<GenericTextStat> browserTypeList = groupByStat(phoneList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+				
+				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
+				
+				return phoneInfo.getBrowserType();
+			}
+		});
+						
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.deviceName.stat", deviceNameList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.operationSystem.stat", operationSystemList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.browserType.stat", browserTypeList);
+	}
+
+	private void generateStatForTablet(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		List<ImmutablePair<GenericTextStat, UserAgentInfo>> tabletList = splitUserAgentStatByType.tableList;
+		
+		//
+		
+		List<GenericTextStat> deviceNameList = groupByStat(tabletList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+				
+				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
+				
+				return phoneInfo.getDeviceName();
+			}
+		});
+
+		List<GenericTextStat> operationSystemList = groupByStat(tabletList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+				
+				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
+				
+				return phoneInfo.getOperationSystem();
+			}
+		});
+
+		List<GenericTextStat> browserTypeList = groupByStat(tabletList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+				
+				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
+				
+				return phoneInfo.getBrowserType();
+			}
+		});
+						
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.deviceName.stat", deviceNameList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.operationSystem.stat", operationSystemList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.browserType.stat", browserTypeList);
+	}
+	
+	private void generateStatForRobot(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		List<ImmutablePair<GenericTextStat, UserAgentInfo>> robotList = splitUserAgentStatByType.robotList;
+		
+		//
+		
+		List<GenericTextStat> robotStatList = groupByStat(robotList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {				
+				return pair.right.getRobotInfo().getRobotName() + " - " + pair.right.getRobotInfo().getRobotUrl();		
+			}
+		});
+				
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.robot.robotName.stat", robotStatList);		
+	}
+
+	private void generateStatForOther(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		List<ImmutablePair<GenericTextStat, UserAgentInfo>> otherList = splitUserAgentStatByType.otherList;
+		
+		//
+		
+		List<GenericTextStat> otherStatList = groupByStat(otherList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {				
+				return pair.right.getOtherInfo().getUserAgent();		
+			}
+		});
+				
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.other.stat", otherStatList);		
+	}
+
+	private void generateStatForNull(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		List<ImmutablePair<GenericTextStat, UserAgentInfo>> nullList = splitUserAgentStatByType.nullList;
+		
+		//
+		
+		List<GenericTextStat> nullStatList = groupByStat(nullList, new IGroupByStatFunction() {
+			
+			@Override
+			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {				
+				return pair.left.getText();		
+			}
+		});
+				
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.null.stat", nullStatList);		
 	}
 	
 	private List<GenericTextStat> groupByStat(List<ImmutablePair<GenericTextStat, UserAgentInfo>> list, IGroupByStatFunction groupByStatFunction) {
