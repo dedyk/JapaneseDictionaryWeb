@@ -92,7 +92,9 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 			@Override
 			public void run() {
 				
-				try {
+				try {					
+					// czekamy minute przed rozpoczeciem generowania
+					Thread.sleep(60 * 1000);
 					
 					logger.info("Inicjalizacja podpowiadacza");
 					luceneDatabase.openSuggester();				

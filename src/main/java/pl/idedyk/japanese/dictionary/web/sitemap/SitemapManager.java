@@ -85,6 +85,9 @@ public class SitemapManager {
 			return;
 		}
 		
+		// czekamy 15 minut przed rozpoczeciem generowania
+		Thread.sleep(15 * 60 * 1000);
+		
 		logger.info("Generowanie pliku sitemap");
 				
 		SitemapHelper sitemapHelper = new SitemapHelper();
