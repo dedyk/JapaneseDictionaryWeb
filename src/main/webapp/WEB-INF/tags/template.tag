@@ -195,8 +195,10 @@
 							</c:otherwise>
 						</c:choose>
 						
+						<%-- 
 						<spring:eval var="googlePlusPageId" expression="@applicationProperties.getProperty('google.plus.page.id')" />
 						<li><a href="https://plus.google.com/${googlePlusPageId}" target="_blank"><spring:message code="template.menu.blog"/></a></li>
+						--%>
 
 						<c:choose>
 							<c:when test="${selectedMenu == 'info'}">
