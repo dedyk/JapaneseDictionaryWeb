@@ -21,4 +21,3 @@ drop table android_send_missing_word_log;
 drop table word_dictionary_search_missing_words_queue;
 drop table lock_operation;
 drop table android_get_spell_checker_suggestion_log;
-drop table word_dictionary_unique_search_log;

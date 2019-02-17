@@ -80,7 +80,6 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLo
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
-import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryUniqueSearch;
 
 public class LoggerListener {
 	
@@ -302,78 +301,7 @@ public class LoggerListener {
 						throw new RuntimeException(e);
 					}
 				}
-			}		
-						
-			// wstawienie slowka do listy unikalnych slowek
-			String uniqueWord = wordDictionarySearchLog.getFindWordRequestWord();
-			
-			if (uniqueWord.length() > 65) {
-				uniqueWord = uniqueWord.substring(0, 65);
-			}
-			
-			WordDictionaryUniqueSearch wordDictionaryUniqueSearch = null;
-			
-			try {
-				wordDictionaryUniqueSearch = mySQLConnector.getWordDictionaryUniqueSearch(uniqueWord);
-
-			} catch (SQLException e) {
-				logger.error("Błąd podczas dostępu do bazy danych", e);
-
-				throw new RuntimeException(e);
-			}
-			
-			if (wordDictionaryUniqueSearch == null) { // nowe slowko do listy
-				
-				wordDictionaryUniqueSearch = new WordDictionaryUniqueSearch();
-				
-				wordDictionaryUniqueSearch.setWord(uniqueWord);
-				wordDictionaryUniqueSearch.setCounter(1);
-				wordDictionaryUniqueSearch.setFirstAppearanceTimestamp(new Timestamp(wordDictionarySearchLoggerModel.getDate().getTime()));
-				wordDictionaryUniqueSearch.setLastAppearanceTimestamp(new Timestamp(wordDictionarySearchLoggerModel.getDate().getTime()));
-				
-				try {
-					final WordDictionaryUniqueSearch wordDictionaryUniqueSearch2 = wordDictionaryUniqueSearch;
-					
-					repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
-						
-						@Override
-						public void operation() throws SQLException {
-							mySQLConnector.insertWordDictionaryUniqueSearch(wordDictionaryUniqueSearch2);						
-						}
-						
-						@Override
-						public void changeDate() {								
-							wordDictionaryUniqueSearch2.setWord(stringToBase64String(wordDictionaryUniqueSearch2.getWord()));
-						}
-					});
-					
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-				
-			} else { // uaktualnienie istniejacego wpisu
-				
-				wordDictionaryUniqueSearch.setCounter(wordDictionaryUniqueSearch.getCounter() + 1);
-				
-				if (wordDictionarySearchLoggerModel.getDate().getTime() < wordDictionaryUniqueSearch.getFirstAppearanceTimestamp().getTime()) {
-					wordDictionaryUniqueSearch.setFirstAppearanceTimestamp(new Timestamp(wordDictionarySearchLoggerModel.getDate().getTime()));
-				}
-				
-				if (wordDictionarySearchLoggerModel.getDate().getTime() > wordDictionaryUniqueSearch.getLastAppearanceTimestamp().getTime()) {
-					wordDictionaryUniqueSearch.setLastAppearanceTimestamp(new Timestamp(wordDictionarySearchLoggerModel.getDate().getTime()));
-				}					
-				
-				try {
-					mySQLConnector.updateWordDictionaryUniqueSearch(wordDictionaryUniqueSearch);
-					
-				} catch (SQLException e) {
-					logger.error("Błąd podczas zapisu do bazy danych", e);
-					
-					throw new RuntimeException(e);
-				}
-			}
+			}			
 			
 		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_DETAILS) {
 			

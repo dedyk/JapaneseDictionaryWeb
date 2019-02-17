@@ -192,10 +192,3 @@ create table android_get_spell_checker_suggestion_log (
     spell_checker_suggestion_list text null
 ) default character set = utf8 collate = utf8_polish_ci;
 
-create table word_dictionary_unique_search_log (
-    id int not null auto_increment, primary key(id),
-    word varchar(70) character set utf8 collate utf8_bin not null, unique(word),
-    counter int not null,
-    first_appearance_timestamp timestamp not null,
-    last_appearance_timestamp timestamp not null
-) default character set = utf8 collate = utf8_polish_ci;
