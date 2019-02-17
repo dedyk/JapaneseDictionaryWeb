@@ -48,6 +48,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLo
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryUniqueSearch;
 import snaq.db.AutoCommitValidator;
 import snaq.db.ConnectionPool;
 
@@ -4095,6 +4096,150 @@ public class MySQLConnector {
 
 	private String getWhereGenericLogIdGenericLogIdSql() {		
 		return " where generic_log_id in (select id from generic_log where operation = ? and timestamp >= ? and timestamp <= ?)";
+	}
+	
+	public WordDictionaryUniqueSearch getWordDictionaryUniqueSearch(String word) throws SQLException {
+		
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, word, counter, first_appearance_timestamp, last_appearance_timestamp "
+					+ "from word_dictionary_unique_search_log where word = ?");
+
+			preparedStatement.setString(1, word);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createWordDictionaryUniqueSearchFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+	
+	private WordDictionaryUniqueSearch createWordDictionaryUniqueSearchFromResultSet(ResultSet resultSet) throws SQLException {
+
+		WordDictionaryUniqueSearch wordDictionaryUniqueSearch = new WordDictionaryUniqueSearch();
+
+		wordDictionaryUniqueSearch.setId(resultSet.getLong("id"));
+		wordDictionaryUniqueSearch.setWord(resultSet.getString("word"));
+		wordDictionaryUniqueSearch.setCounter(resultSet.getInt("counter"));
+		wordDictionaryUniqueSearch.setFirstAppearanceTimestamp(resultSet.getTimestamp("first_appearance_timestamp"));
+		wordDictionaryUniqueSearch.setLastAppearanceTimestamp(resultSet.getTimestamp("last_appearance_timestamp"));
+		
+		return wordDictionaryUniqueSearch;
+	}
+	
+	public void insertWordDictionaryUniqueSearch(WordDictionaryUniqueSearch wordDictionaryUniqueSearch) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		Blob objectBlob = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into word_dictionary_unique_search_log(word, counter, first_appearance_timestamp, last_appearance_timestamp) "
+					+ "values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setString(1, wordDictionaryUniqueSearch.getWord());
+			preparedStatement.setInt(2, wordDictionaryUniqueSearch.getCounter());
+			preparedStatement.setTimestamp(3, wordDictionaryUniqueSearch.getFirstAppearanceTimestamp());
+			preparedStatement.setTimestamp(4, wordDictionaryUniqueSearch.getLastAppearanceTimestamp());
+						
+			// wstaw
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			wordDictionaryUniqueSearch.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (objectBlob != null) {
+				objectBlob.free();
+			}
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	public void updateWordDictionaryUniqueSearch(WordDictionaryUniqueSearch wordDictionaryUniqueSearch) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+				
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "update word_dictionary_unique_search_log set counter = ?, first_appearance_timestamp = ?, "
+					+ "last_appearance_timestamp = ? where id = ?");
+			
+			preparedStatement.setInt(1, wordDictionaryUniqueSearch.getCounter());
+			preparedStatement.setTimestamp(2, wordDictionaryUniqueSearch.getFirstAppearanceTimestamp());
+			preparedStatement.setTimestamp(3, wordDictionaryUniqueSearch.getLastAppearanceTimestamp());
+			preparedStatement.setLong(4, wordDictionaryUniqueSearch.getId());
+						
+			// uaktualnij
+			preparedStatement.executeUpdate();
+			
+		} finally {
+						
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
 	}
 
 	public String getUrl() {
