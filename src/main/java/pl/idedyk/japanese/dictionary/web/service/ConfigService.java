@@ -10,7 +10,9 @@ public class ConfigService {
 	
 	private static final Logger logger = Logger.getLogger(ConfigService.class);
 	
-	public boolean isStopAllSchedulers() {
+	private boolean temporaryStopProcessing = false;
+		
+	private boolean isStopAllSchedulers() {
 		
 		// pobranie katalogu z konfiguracja
 		File catalinaConfDir = getCatalinaConfDir();
@@ -52,5 +54,37 @@ public class ConfigService {
 		}
 		
 		return catalinaConfDir;
+	}
+	
+	public void enableTemporaryStopProcessing() {
+		temporaryStopProcessing = true;
+	}
+	
+	public void disableTemporaryStopProcessing() {
+		temporaryStopProcessing = false;
+	}
+
+	public boolean isGenerateDailyReport() {
+		return isStopAllSchedulers() == false && temporaryStopProcessing == false;
+	}
+	
+	public boolean isProcessLogQueueItem() {
+		return isStopAllSchedulers() == false && temporaryStopProcessing == false;
+	}
+
+	public boolean isProcessLocalDirQueueItems() {
+		return isStopAllSchedulers() == false && temporaryStopProcessing == false;
+	}
+	
+	public boolean isDeleteDatabaseOldQueueItems() {
+		return isStopAllSchedulers() == false && temporaryStopProcessing == false;
+	}
+	
+	public boolean isDeleteLocalDirArchiveOldQueueItems() {
+		return isStopAllSchedulers() == false && temporaryStopProcessing == false;
+	}
+	
+	public boolean isProcessDBCleanup() {
+		return isStopAllSchedulers() == false;
 	}
 }

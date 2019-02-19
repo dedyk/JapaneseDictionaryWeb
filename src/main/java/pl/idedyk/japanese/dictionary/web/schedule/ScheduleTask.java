@@ -29,17 +29,20 @@ import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.ProcessRecordCallback;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.Transaction;
+import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 import pl.idedyk.japanese.dictionary.web.report.ReportGenerator;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
@@ -78,7 +81,7 @@ public class ScheduleTask {
 	@Scheduled(cron="0 0 19 * * ?") // o 19
 	public void generateDailyReport() {
 		
-		if (configService.isStopAllSchedulers() == true) {
+		if (configService.isGenerateDailyReport() == false) {
 			return;
 		}
 		
@@ -138,7 +141,7 @@ public class ScheduleTask {
 	@Scheduled(cron="* * * * * ?")
 	public void processLogQueueItem() {
 		
-		if (configService.isStopAllSchedulers() == true) {
+		if (configService.isProcessLogQueueItem() == false) {
 			return;
 		}
 				
@@ -219,7 +222,7 @@ public class ScheduleTask {
 	@Scheduled(cron="0 0 0 * * ?") // o polnocy
 	public void deleteDatabaseOldQueueItems() {
 		
-		if (configService.isStopAllSchedulers() == true) {
+		if (configService.isDeleteDatabaseOldQueueItems() == false) {
 			return;
 		}
 		
@@ -257,7 +260,7 @@ public class ScheduleTask {
 	//@Scheduled(cron="* * * * * ?") // dev
 	public void deleteLocalDirArchiveOldQueueItems() {
 		
-		if (configService.isStopAllSchedulers() == true) {
+		if (configService.isDeleteLocalDirArchiveOldQueueItems() == false) {
 			return;
 		}
 		
@@ -269,7 +272,7 @@ public class ScheduleTask {
 	@Scheduled(cron="* * * * * ?")
 	public void processLocalDirQueueItems() {
 		
-		if (configService.isStopAllSchedulers() == true) {
+		if (configService.isProcessLocalDirQueueItems() == false) {
 			return;
 		}
 		
@@ -280,53 +283,67 @@ public class ScheduleTask {
 	@Scheduled(cron="0 0 2 * * ?") // o 2 w nocy
 	public void processDBCleanup() {
 		
-		if (configService.isStopAllSchedulers() == true) {
-			return;
-		}
-				
-		final boolean doDelete = true;
-
-		logger.info("Czyszczenie bazy danych");
-
-		Transaction transaction = null;
-
-		try {
-			transaction = mySQLConnector.beginTransaction();
-
-		} catch (Exception e) {
-			logger.error("Blad podczas czyszczenia bazy danych", e);
-
+		if (configService.isProcessDBCleanup() == false) {
 			return;
 		}
 		
-		// zaczynamy przetwarzanie
 		try {
+			configService.enableTemporaryStopProcessing();
 			
-			// skasuj stare wpisy z przetworzonych id'kow
-			logger.info("Kasowanie starych przetworzonych id'kow");			
-			mySQLConnector.deleteOldDailyLogProcessedIds(transaction);
-			
-			// archiwizacja starych operacji
-			archiveOperations(transaction, doDelete);
-						
-			// zakomitowanie zmian
-			mySQLConnector.commitTransaction(transaction);
-			
-			transaction = null;
-			
-		} catch (Exception e) {
-			
-			logger.error("Blad podczas czyszczenia bazy danych", e);
-
-			if (transaction != null) {
+			try {
+				Thread.sleep(10000);
 				
-				try {
-					mySQLConnector.rollbackTransaction(transaction);
+			} catch (InterruptedException e) {
+				// noop
+			}
+			
+			final boolean doDelete = true;
+
+			logger.info("Czyszczenie bazy danych");
+
+			Transaction transaction = null;
+
+			try {
+				transaction = mySQLConnector.beginTransaction();
+
+			} catch (Exception e) {
+				logger.error("Blad podczas czyszczenia bazy danych", e);
+
+				return;
+			}
+			
+			// zaczynamy przetwarzanie
+			try {
+				
+				// skasuj stare wpisy z przetworzonych id'kow
+				logger.info("Kasowanie starych przetworzonych id'kow");			
+				mySQLConnector.deleteOldDailyLogProcessedIds(transaction);
+				
+				// archiwizacja starych operacji
+				archiveOperations(transaction, doDelete);
+							
+				// zakomitowanie zmian
+				mySQLConnector.commitTransaction(transaction);
+				
+				transaction = null;
+				
+			} catch (Exception e) {
+				
+				logger.error("Blad podczas czyszczenia bazy danych", e);
+
+				if (transaction != null) {
 					
-				} catch (SQLException e2) {				
-					logger.error("Drugi błąd podczas czyszczenia bazy danych", e);
+					try {
+						mySQLConnector.rollbackTransaction(transaction);
+						
+					} catch (SQLException e2) {				
+						logger.error("Drugi błąd podczas czyszczenia bazy danych", e);
+					}			
 				}			
-			}			
+			}
+			
+		} finally {			
+			configService.disableTemporaryStopProcessing();
 		}
 	}
 
@@ -422,6 +439,24 @@ public class ScheduleTask {
 						new WordDictionaryCatalogExporter().export("word-dictionary-catalog", dateString);	
 						
 						break;
+					
+					case WORD_DICTIONARY_SEARCH:
+						
+						class WordDictionarySearchExporter extends CsvExporter<WordDictionarySearchLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processWordDictionarySearchLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteWordDictionarySearchLogRecords(transaction, dateString);
+								}
+							}
+						}
+						
+						new WordDictionarySearchExporter().export("word-dictionary-search", dateString);	
+						
+						break;
 						
 					case WORD_DICTIONARY_NAME_DETAILS:
 						
@@ -495,6 +530,24 @@ public class ScheduleTask {
 						
 						break;	
 						
+					case KANJI_DICTIONARY_SEARCH:
+						
+						class KanjiDictionarySearchExporter extends CsvExporter<KanjiDictionarySearchLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processKanjiDictionarySearchLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteKanjiDictionarySearchLogRecords(transaction, dateString);
+								}
+							}
+						}
+						
+						new KanjiDictionarySearchExporter().export("kanji-dictionary-search", dateString);	
+						
+						break;						
+						
 					case KANJI_DICTIONARY_CATALOG:
 						
 						class KanjiDictionaryCatalogExporter extends CsvExporter<KanjiDictionaryCatalogLog> {
@@ -528,6 +581,24 @@ public class ScheduleTask {
 						}
 						
 						new KanjiDictionaryAutocompleteExporter().export("kanji-dictionary-autocomplete", dateString);	
+						
+						break;
+					
+					case DAILY_REPORT:
+						
+						class DailyReportSendExporter extends CsvExporter<DailyReportSendLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processDailyReportSendLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteDailyReportSendLogRecords(transaction, dateString);
+								}
+							}
+						}
+						
+						new DailyReportSendExporter().export("daily-report-send", dateString);	
 						
 						break;
 						
@@ -656,6 +727,9 @@ public class ScheduleTask {
 					
 				} else if (fieldValue instanceof Long == true) {
 					return ((Long)fieldValue).toString();					
+					
+				} else if (fieldValue instanceof Boolean == true) {
+					return ((Boolean)fieldValue).toString();
 					
 				} else if (fieldValue instanceof Timestamp == true) {
 					

@@ -4241,6 +4241,65 @@ public class MySQLConnector {
 			}			
 		}		
 	}
+	
+	public void processDailyReportSendLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<DailyReportSendLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, title, report "
+					+ "from daily_report_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.DAILY_REPORT.toString());
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				DailyReportSendLog dailyReportSendLog = createDailyReportSendLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(dailyReportSendLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
+	
+	public void deleteDailyReportSendLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from daily_report_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.DAILY_REPORT.toString());
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
 
 	public String getUrl() {
 		return url;
