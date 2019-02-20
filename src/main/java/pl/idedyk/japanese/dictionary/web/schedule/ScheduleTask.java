@@ -29,12 +29,15 @@ import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.ProcessRecordCallback;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.Transaction;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidGetSpellCheckerSuggestionLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidSendMissingWordLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
@@ -583,7 +586,25 @@ public class ScheduleTask {
 						new KanjiDictionaryAutocompleteExporter().export("kanji-dictionary-autocomplete", dateString);	
 						
 						break;
-					
+
+					case KANJI_DICTIONARY_RADICALS:
+						
+						class KanjiDictionaryRadicalsExporter extends CsvExporter<KanjiDictionaryRadicalsLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processKanjiDictionaryRadicalsLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteKanjiDictionaryRadicalsLogRecords(transaction, dateString);
+								}
+							}
+						}
+						
+						new KanjiDictionaryRadicalsExporter().export("kanji-dictionary-radicals", dateString);	
+						
+						break;						
+						
 					case DAILY_REPORT:
 						
 						class DailyReportSendExporter extends CsvExporter<DailyReportSendLog> {
@@ -601,6 +622,42 @@ public class ScheduleTask {
 						new DailyReportSendExporter().export("daily-report-send", dateString);	
 						
 						break;
+						
+					case ANDROID_SEND_MISSING_WORD:
+
+						class AndroidSendMissingWordExporter extends CsvExporter<AndroidSendMissingWordLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processAndroidSendMissingWordLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteAndroidSendMissingWordLogRecords(transaction, dateString);
+								}
+							}
+						}
+						
+						new AndroidSendMissingWordExporter().export("android-send-missing-word", dateString);	
+						
+						break;
+					
+					case ANDROID_GET_SPELL_CHECKER_SUGGESTION:
+						
+						class AndroidGetSpellCheckerSuggestionExporter extends CsvExporter<AndroidGetSpellCheckerSuggestionLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processAndroidGetSpellCheckerSuggestionLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteAndroidGetSpellCheckerSuggestionLogRecords(transaction, dateString);
+								}
+							}
+						}
+						
+						new AndroidGetSpellCheckerSuggestionExporter().export("android-get-spell-checker-suggestion", dateString);	
+						
+						break;						
 						
 					default:
 						throw new RuntimeException("Nieznana operacji do archiwizacji: " + genericLogOperationEnum);
