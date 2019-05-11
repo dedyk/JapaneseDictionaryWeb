@@ -20,6 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.google.gson.Gson;
+
+import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventWrapper;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult.ResultItem;
@@ -483,5 +486,57 @@ public class AndroidController {
 		}
 		
 		return result;
+	}
+	
+	@RequestMapping(value = "/android/receiveQueueEvent", method = RequestMethod.POST)
+	public void receiveQueueEvent(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidController.receiveQueueEvent] Parsuję żądanie: " + jsonRequest);
+	
+		// tworzenie wywolania z json'a
+		QueueEventWrapper queueEventWrapper = gson.fromJson(jsonRequest, QueueEventWrapper.class);
+		
+		// TODO !!!!!!!!!
+		logger.info("Operation: " + queueEventWrapper.getOperation());
+		
+		// dodanie do bazy danych		
+		
+		
+		// logowanie
+		//loggerSender.sendLog(...);
+
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
+		// brak odpowiedzi
+		response.sendError(204); // No content
+	}
+	
+	private String getJson(HttpServletRequest request) throws IOException {
+		
+		BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+		
+		String readLine = null;
+		
+		StringBuffer jsonRequestSb = new StringBuffer();
+		
+		while (true) {		
+			readLine = inputStreamReader.readLine();
+			
+			if (readLine == null) {
+				break;
+			}
+			
+			jsonRequestSb.append(readLine);
+		}
+
+		return jsonRequestSb.toString();
 	}
 }
