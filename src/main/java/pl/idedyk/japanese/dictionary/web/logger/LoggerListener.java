@@ -16,6 +16,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Type;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetSpellCheckerSuggestionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.AndroidQueueEventLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.BingSiteAuthGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
@@ -61,6 +62,7 @@ import pl.idedyk.japanese.dictionary.web.mail.MailSender;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidGetSpellCheckerSuggestionLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidQueueEventLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidSendMissingWordLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
@@ -777,6 +779,42 @@ public class LoggerListener {
 				throw new RuntimeException(e);
 			}			
 			
+		} else if (operation == GenericLogOperationEnum.ANDROID_QUEUE_EVENT) { 
+			
+			AndroidQueueEventLoggerModel androidQueueEventLoggerModel = (AndroidQueueEventLoggerModel)loggerModelCommon;
+			
+			// utworzenie wpisu do bazy danych
+			final AndroidQueueEventLog androidQueueEventLog = new AndroidQueueEventLog();
+			
+			androidQueueEventLog.setGenericLogId(genericLog.getId());
+			
+			androidQueueEventLog.setUserId(androidQueueEventLoggerModel.getUserId());
+			androidQueueEventLog.setOperation(androidQueueEventLoggerModel.getOperation());
+			androidQueueEventLog.setCreateDate(new Timestamp(androidQueueEventLoggerModel.getCreateDate().getTime()));
+			androidQueueEventLog.setParams(androidQueueEventLoggerModel.getParams() != null ? androidQueueEventLoggerModel.getParams().toString() : null);
+			
+			//
+			
+			try {
+				repeatIfNeededMysqlDataTruncationException(new IRepeatableOperation() {
+					
+					@Override
+					public void operation() throws SQLException {
+						mySQLConnector.insertAndroidQueueEventLoggerModel(androidQueueEventLog);						
+					}
+					
+					@Override
+					public void changeDate() {	
+						androidQueueEventLog.setParams(stringToBase64String(androidQueueEventLog.getParams()));
+					}
+				});
+				
+			} catch (SQLException e) {
+				logger.error("Błąd podczas zapisu do bazy danych", e);
+				
+				throw new RuntimeException(e);
+			}
+			
 		} else if (operation == GenericLogOperationEnum.SUGGESTION_SEND) {
 			
 			SuggestionSendLoggerModel suggestionSendLoggerModel = (SuggestionSendLoggerModel)loggerModelCommon;
@@ -1066,6 +1104,9 @@ public class LoggerListener {
 			
 		} else if (AndroidGetSpellCheckerSuggestionLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.ANDROID_GET_SPELL_CHECKER_SUGGESTION;
+			
+		} else if (AndroidQueueEventLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.ANDROID_QUEUE_EVENT;
 			
 		} else if (SuggestionStartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.SUGGESTION_START;

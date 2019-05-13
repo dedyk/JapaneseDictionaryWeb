@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Writer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.gson.Gson;
 
+import pl.idedyk.japanese.dictionary.api.android.queue.event.IQueueEvent;
 import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventWrapper;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
@@ -39,6 +43,7 @@ import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetSpellCheckerSuggestionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.AndroidQueueEventLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
@@ -503,14 +508,22 @@ public class AndroidController {
 		// tworzenie wywolania z json'a
 		QueueEventWrapper queueEventWrapper = gson.fromJson(jsonRequest, QueueEventWrapper.class);
 		
-		// TODO !!!!!!!!!
-		logger.info("Operation: " + queueEventWrapper.getOperation());
+		//
 		
-		// dodanie do bazy danych		
-		
+        SimpleDateFormat sdf = new SimpleDateFormat(IQueueEvent.dateFormat);
+
+        Date createDateDate = null;
+
+        try {
+            createDateDate = sdf.parse(queueEventWrapper.getCreateDate());
+
+        } catch (ParseException e) {
+        	createDateDate = new Date();
+        }
 		
 		// logowanie
-		//loggerSender.sendLog(...);
+		loggerSender.sendLog(new AndroidQueueEventLoggerModel(Utils.createLoggerModelCommon(request), 
+				queueEventWrapper.getUserId(), queueEventWrapper.getOperation(), createDateDate, queueEventWrapper.getParams()));
 
 		// typ odpowiedzi
 		response.setContentType("application/json");

@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidGetSpellCheckerSuggestionLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidQueueEventLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidSendMissingWordLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
@@ -1760,7 +1761,59 @@ public class MySQLConnector {
 
 		return androidGetSpellCheckerSuggestionLog;
 	}
+	
+	public void insertAndroidQueueEventLoggerModel(AndroidQueueEventLog androidQueueEventLog) throws SQLException {
 		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet generatedKeys = null;
+		
+		try {
+			connection = connectionPool.getConnection();
+			
+			preparedStatement = connection.prepareStatement( "insert into android_queue_event_log(generic_log_id, user_id, operation, create_date, params) "
+					+ "values(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			preparedStatement.setLong(1, androidQueueEventLog.getGenericLogId());
+			preparedStatement.setString(2, androidQueueEventLog.getUserId());
+			preparedStatement.setString(3, androidQueueEventLog.getOperation().toString());
+			preparedStatement.setTimestamp(4, androidQueueEventLog.getCreateDate());
+			
+			if (androidQueueEventLog.getParams() != null) {
+				preparedStatement.setString(5, androidQueueEventLog.getParams());
+				
+			} else {
+				preparedStatement.setNull(5, Types.VARCHAR);
+			}
+									
+			preparedStatement.executeUpdate();
+			
+			generatedKeys = preparedStatement.getGeneratedKeys();
+			
+			if (generatedKeys.next() == false) {
+				throw new SQLException("Bład pobrania wygenerowanego klucza tabeli");
+			}
+			
+			androidQueueEventLog.setId(generatedKeys.getLong(1));
+			
+		} finally {
+			
+			if (generatedKeys != null) {
+				generatedKeys.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
 	public void insertSuggestionSendLoggerModel(SuggestionSendLog suggestionSendLog) throws SQLException {
 		
 		Connection connection = null;
