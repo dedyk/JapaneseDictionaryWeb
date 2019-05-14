@@ -9,8 +9,6 @@ public class AndroidQueueEventLog {
 	private Long id;
 	
 	private Long genericLogId;
-
-	private Long eventId;
 	
 	private String userId;
 	
@@ -26,10 +24,6 @@ public class AndroidQueueEventLog {
 
 	public Long getGenericLogId() {
 		return genericLogId;
-	}
-
-	public Long getEventId() {
-		return eventId;
 	}
 
 	public String getUserId() {
@@ -55,11 +49,7 @@ public class AndroidQueueEventLog {
 	public void setGenericLogId(Long genericLogId) {
 		this.genericLogId = genericLogId;
 	}
-
-	public void setEventId(Long eventId) {
-		this.eventId = eventId;
-	}
-
+	
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}

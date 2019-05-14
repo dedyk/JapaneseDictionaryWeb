@@ -1870,6 +1870,64 @@ public class MySQLConnector {
 		return androidQueueEventLog;
 	}
 	
+	public void processAndroidQueueEventLogRecords(Transaction transaction, String dateString, ProcessRecordCallback<AndroidQueueEventLog> processRecordCallback) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("select id, generic_log_id, user_id, operation, create_date, params "
+					+ "from android_queue_event_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.ANDROID_QUEUE_EVENT.toString());
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
+
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {				
+
+				AndroidQueueEventLog androidQueueEventLog = createAndroidQueueEventLogFromResultSet(resultSet);
+				
+				processRecordCallback.callback(androidQueueEventLog);
+			}
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
+	public void deleteAndroidQueueEventLogRecords(Transaction transaction, String dateString) throws SQLException {
+		
+		PreparedStatement preparedStatement = null;
+		
+		try {
+			
+			preparedStatement = transaction.connection.prepareStatement("delete from android_queue_event_log " + getWhereGenericLogIdGenericLogIdSql());
+			
+			preparedStatement.setString(1, GenericLogOperationEnum.ANDROID_QUEUE_EVENT.toString());
+			preparedStatement.setString(2, dateString + " 00:00:00");
+			preparedStatement.setString(3, dateString + " 23:59:59");
+
+			preparedStatement.executeUpdate();
+						
+		} finally {
+									
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+		}
+	}
+	
 	public void insertSuggestionSendLoggerModel(SuggestionSendLog suggestionSendLog) throws SQLException {
 		
 		Connection connection = null;

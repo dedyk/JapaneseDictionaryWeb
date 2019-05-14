@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.csvreader.CsvWriter;
 
+import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventOperation;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerListener;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
@@ -30,6 +31,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.ProcessRecordCallback;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector.Transaction;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidGetSpellCheckerSuggestionLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidQueueEventLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidSendMissingWordLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
@@ -657,7 +659,25 @@ public class ScheduleTask {
 						
 						new AndroidGetSpellCheckerSuggestionExporter().export("android-get-spell-checker-suggestion", dateString);	
 						
-						break;						
+						break;
+						
+					case ANDROID_QUEUE_EVENT:
+						
+						class AndroidQueueEventExporter extends CsvExporter<AndroidQueueEventLog> {
+
+							@Override
+							protected void callExport(String prefix, String dateString) throws SQLException {								
+								mySQLConnector.processAndroidQueueEventLogRecords(transaction, dateString, this);
+								
+								if (doDelete == true) {
+									mySQLConnector.deleteAndroidQueueEventLogRecords(transaction, dateString);
+								}
+							}
+						}
+						
+						new AndroidQueueEventExporter().export("android-queue-event", dateString);	
+						
+						break;
 						
 					default:
 						throw new RuntimeException("Nieznana operacji do archiwizacji: " + genericLogOperationEnum);
@@ -799,6 +819,12 @@ public class ScheduleTask {
 					GenericLogOperationEnum genericLogOperationEnum = (GenericLogOperationEnum)fieldValue;
 					
 					return genericLogOperationEnum.toString();					
+					
+				} else if (fieldValue instanceof QueueEventOperation == true) { 
+					
+					QueueEventOperation queueEventOperation = (QueueEventOperation)fieldValue;
+					
+					return queueEventOperation.toString();
 					
 				} else {					
 					throw new RuntimeException("Nieznany rodzaj klasy: " + fieldValue.getClass());
