@@ -21,6 +21,7 @@ import javax.annotation.PreDestroy;
 
 import org.apache.log4j.Logger;
 
+import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventOperation;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidGetSpellCheckerSuggestionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidQueueEventLog;
@@ -1812,6 +1813,61 @@ public class MySQLConnector {
 				connection.close();
 			}			
 		}		
+	}
+	
+	public AndroidQueueEventLog getAndroidQueueEventLogByGenericId(Long genericId) throws SQLException {
+		Connection connection = null;
+
+		PreparedStatement preparedStatement = null;
+
+		ResultSet resultSet = null;
+
+		try {						
+			connection = connectionPool.getConnection();
+
+			preparedStatement = connection.prepareStatement("select id, generic_log_id, user_id, operation, create_date, params "
+					+ "from android_queue_event_log where generic_log_id = ?");
+
+			preparedStatement.setLong(1, genericId);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (resultSet.next() == true) {				
+				return createAndroidQueueEventLogFromResultSet(resultSet);
+
+			} else {
+				return null;
+			}
+
+		} finally {
+
+			if (resultSet != null) {
+				resultSet.close();
+			}
+
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+
+			if (connection != null) {
+				connection.close();
+			}			
+		}
+	}
+
+	private AndroidQueueEventLog createAndroidQueueEventLogFromResultSet(ResultSet resultSet) throws SQLException {
+
+		AndroidQueueEventLog androidQueueEventLog = new AndroidQueueEventLog();
+
+		androidQueueEventLog.setId(resultSet.getLong("id"));
+		androidQueueEventLog.setGenericLogId(resultSet.getLong("generic_log_id"));
+		androidQueueEventLog.setUserId(resultSet.getString("user_id"));
+
+		androidQueueEventLog.setOperation(QueueEventOperation.valueOf(resultSet.getString("operation")));
+		androidQueueEventLog.setCreateDate(resultSet.getTimestamp("create_date"));
+        androidQueueEventLog.setParams(resultSet.getString("params"));
+
+		return androidQueueEventLog;
 	}
 	
 	public void insertSuggestionSendLoggerModel(SuggestionSendLog suggestionSendLog) throws SQLException {
