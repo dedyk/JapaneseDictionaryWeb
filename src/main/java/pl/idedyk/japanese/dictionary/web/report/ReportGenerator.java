@@ -36,6 +36,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericTextStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
+import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
 import pl.idedyk.japanese.dictionary.web.service.UserAgentService;
 import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo;
 import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo.DesktopInfo;
@@ -54,6 +55,9 @@ public class ReportGenerator {
 	
 	@Autowired
 	private UserAgentService userAgentService;
+	
+	@Autowired
+	private GeoIPService geoIPService;
 	
 	@Value("${base.server}")
 	private String baseServer;
@@ -129,6 +133,9 @@ public class ReportGenerator {
 								
 				reportDiv.addHtmlElement(new Hr());
 				
+				// podzielenie statystyk na Desktop, Phone + Mobile, Tablet, Robot + Robot Mobile oraz inne
+				SplitUserAgentStatByTypeResult splitUserAgentStatByType = splitUserAgentStatByType(genericLogRawList);				
+				
 				// wyszukiwanie slowek bez wynikow				
 				/*
 				List<GenericTextStat> wordDictionarySearchNoFoundStatList = mySQLConnector.getWordDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
@@ -181,13 +188,10 @@ public class ReportGenerator {
 				appendRemoteClientStat(reportDiv, "report.generate.daily.report.remote.client", remoteClientStat);
 				*/
 				
-				// statystyki user agentow										
-				// podzielenie statystyk na Desktop, Phone + Mobile, Tablet, Robot + Robot Mobile oraz inne
-				SplitUserAgentStatByTypeResult splitUserAgentStatByType = splitUserAgentStatByType(genericLogRawList);
-												
+				// statystyki user agentow																						
 				// generowanie statystyk dla aplikacji na androida
 				generateStatForJapanaeseAndroidLearnHelper(reportDiv, splitUserAgentStatByType);
-				
+								
 				// generowanie statystyk dla komputera (desktop)
 				generateStatForDesktop(reportDiv, splitUserAgentStatByType);
 				
@@ -628,7 +632,13 @@ public class ReportGenerator {
 			}
 		});
 				
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.stat", japaneseAndroidLearnerHelperListStat);		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.stat", japaneseAndroidLearnerHelperListStat);	
+		
+		// statystyki krajow		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(0)));
+		
+		// statystyki krajow i miast
+		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.city.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(1)));
 	}
 	
 	private void generateStatForDesktop(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
@@ -681,7 +691,13 @@ public class ReportGenerator {
 						
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.desktopType.stat", desktopTypeList);
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.operationSystem.stat", operationSystemList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.browserType.stat", browserTypeList);		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.browserType.stat", browserTypeList);
+				
+		// statystyki krajow		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.country.stat", groupByStat(desktopList, new CountryCityGroupBy(0)));
+		
+		// statystyki krajow i miast
+		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.country.city.stat", groupByStat(desktopList, new CountryCityGroupBy(1)));
 	}
 	
 	private void generateStatForPhone(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
@@ -735,6 +751,12 @@ public class ReportGenerator {
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.deviceName.stat", deviceNameList);
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.operationSystem.stat", operationSystemList);
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.browserType.stat", browserTypeList);
+		
+		// statystyki krajow		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.country.stat", groupByStat(phoneList, new CountryCityGroupBy(0)));
+		
+		// statystyki krajow i miast
+		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.country.city.stat", groupByStat(phoneList, new CountryCityGroupBy(1)));
 	}
 
 	private void generateStatForTablet(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
@@ -788,6 +810,12 @@ public class ReportGenerator {
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.deviceName.stat", deviceNameList);
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.operationSystem.stat", operationSystemList);
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.browserType.stat", browserTypeList);
+		
+		// statystyki krajow		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.country.stat", groupByStat(tabletList, new CountryCityGroupBy(0)));
+		
+		// statystyki krajow i miast
+		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.country.city.stat", groupByStat(tabletList, new CountryCityGroupBy(1)));
 	}
 	
 	private void generateStatForRobot(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
@@ -950,6 +978,37 @@ public class ReportGenerator {
 	
 	private static interface IGroupByFunction {		
 		public String getKey(Object object);
+	}
+	
+	private class CountryCityGroupBy implements IGroupByFunction {
+		
+		private int mode;
+		
+		public CountryCityGroupBy(int mode) {
+			this.mode = mode;
+		}
+		
+		@Override
+		public String getKey(Object o) {
+			
+			@SuppressWarnings("unchecked")
+			ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
+			
+			String remoteIp = pair.getKey().getRemoteIp();
+			
+			if (remoteIp == null || remoteIp.equals("127.0.0.1") == true) {
+				return null;
+			}
+			
+			String[] remoteIpSplited = remoteIp.split(", ");
+			
+			if (mode == 0) {
+				return geoIPService.getCountry(remoteIpSplited[0].trim()); // bierzemy pierwszy adres, gdyz drugi to adres proxy
+				
+			} else {
+				return geoIPService.getCountryAndCity(remoteIpSplited[0].trim()); // bierzemy pierwszy adres, gdyz drugi to adres proxy
+			}
+		} 
 	}
 	
 	public static class Report {
