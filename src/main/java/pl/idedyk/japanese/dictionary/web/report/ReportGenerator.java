@@ -32,7 +32,8 @@ import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
-import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericTextStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
 import pl.idedyk.japanese.dictionary.web.service.UserAgentService;
@@ -71,6 +72,12 @@ public class ReportGenerator {
 				return null;
 				
 			} else {
+				
+				// pobieramy surowe dane zrodlowe
+				List<GenericLog> genericLogRawList = mySQLConnector.getGenericLogList(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+
+				//
+				
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				
 				logger.info("Przetwarzam wpisy od " + dailyLogProcessedMinMaxIds.getMinId() + " do " + dailyLogProcessedMinMaxIds.getMaxId() + 
@@ -105,38 +112,21 @@ public class ReportGenerator {
 				reportDiv.addHtmlElement(new Hr());
 				
 				// statystyki operacji
-				Div operationStatDiv = new Div();
-				reportDiv.addHtmlElement(operationStatDiv);
-				
-				P operationStatDivP = new P();
-				operationStatDiv.addHtmlElement(operationStatDivP);
-				
-				operationStatDivP.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.report.operation.stat",
-						new Object[] { }, Locale.getDefault())));
-				
-				Table operationStatDivTable = new Table(null, "border: 1px solid black");
-				operationStatDiv.addHtmlElement(operationStatDivTable);
-				
-				List<GenericLogOperationStat> genericLogOperationStatList = mySQLConnector.getGenericLogOperationStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
-				
-				for (GenericLogOperationStat genericLogOperationStat : genericLogOperationStatList) {
-					
-					Tr operationStatDivTableTr = new Tr();
-					operationStatDivTable.addHtmlElement(operationStatDivTableTr);
-					
-					String operationString = genericLogOperationStat.getOperation().toString();
-					
-					Td operationStatDivTableTrTd1 = new Td(null, "padding: 5px;");
-					operationStatDivTableTr.addHtmlElement(operationStatDivTableTrTd1);
-					
-					operationStatDivTableTrTd1.addHtmlElement(new Text(operationString));
-					
-					Td operationStatDivTableTrTd2 = new Td(null, "padding: 5px;");
-					operationStatDivTableTr.addHtmlElement(operationStatDivTableTrTd2);
+				List<GenericTextStat> genericLogOperationStatList = groupByStat(genericLogRawList, new IGroupByFunction() {
 
-					operationStatDivTableTrTd2.addHtmlElement(new Text("" + genericLogOperationStat.getStat()));
-				}
-				
+					@Override
+					public String getKey(Object o) {
+						
+						GenericLog genericLog = (GenericLog)o;
+						
+						return genericLog.getOperation().name();
+					} 
+				});
+
+				appendGenericTextStat(reportDiv, "report.generate.daily.report.operation.stat", genericLogOperationStatList);
+												
+				//
+								
 				reportDiv.addHtmlElement(new Hr());
 				
 				// wyszukiwanie slowek bez wynikow				
@@ -191,12 +181,10 @@ public class ReportGenerator {
 				appendRemoteClientStat(reportDiv, "report.generate.daily.report.remote.client", remoteClientStat);
 				*/
 				
-				// statystyki user agentow
-				List<GenericTextStat> userAgentClientRawStat = mySQLConnector.getUserAgentClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
-				
+				// statystyki user agentow										
 				// podzielenie statystyk na Desktop, Phone + Mobile, Tablet, Robot + Robot Mobile oraz inne
-				SplitUserAgentStatByTypeResult splitUserAgentStatByType = splitUserAgentStatByType(userAgentClientRawStat);
-				
+				SplitUserAgentStatByTypeResult splitUserAgentStatByType = splitUserAgentStatByType(genericLogRawList);
+												
 				// generowanie statystyk dla aplikacji na androida
 				generateStatForJapanaeseAndroidLearnHelper(reportDiv, splitUserAgentStatByType);
 				
@@ -221,12 +209,48 @@ public class ReportGenerator {
 				//
 				
 				// statystyki odnosnikow
-				List<GenericTextStat> refererStat = mySQLConnector.getRefererStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId(), baseServer);
+				List<GenericTextStat> refererStat = groupByStat(genericLogRawList, new IGroupByFunction() {
+
+					@Override
+					public String getKey(Object o) {
+						
+						GenericLog genericLog = (GenericLog)o;
+						
+						String refererURL = genericLog.getRefererURL();
+						
+						if (refererURL == null) {
+							return null;
+						}
+						
+						if (refererURL.contains(baseServer) == true) {
+							return null;
+						}
+						
+						if (refererURL.length() > 150) {
+							refererURL = refererURL.substring(0, 150);
+						}
+						
+						return refererURL;						
+					}
+				});
 				
 				appendGenericTextStat(reportDiv, "report.generate.daily.report.referer.stat", refererStat);				
 
 				// statystyki nieznalezionych stron
-				List<GenericTextStat> pageNotFoundStat = mySQLConnector.getPageNotFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				List<GenericTextStat> pageNotFoundStat = groupByStat(genericLogRawList, new IGroupByFunction() {
+
+					@Override
+					public String getKey(Object o) {
+						
+						GenericLog genericLog = (GenericLog)o;
+						
+						if (genericLog.getOperation() != GenericLogOperationEnum.PAGE_NO_FOUND_EXCEPTION) {
+							return null;
+						}
+						
+						return genericLog.getRequestURL();						
+					}
+				});
 				
 				appendGenericTextStat(reportDiv, "report.generate.daily.report.page.not.found.stat", pageNotFoundStat);				
 				
@@ -527,57 +551,57 @@ public class ReportGenerator {
 	}
 	*/
 	
-	private SplitUserAgentStatByTypeResult splitUserAgentStatByType(List<GenericTextStat> userAgentClientRawStat) {
+	private SplitUserAgentStatByTypeResult splitUserAgentStatByType(List<GenericLog> genericLogList) {
 		
 		SplitUserAgentStatByTypeResult result = new SplitUserAgentStatByTypeResult();
 		
 		//
 		
-		for (GenericTextStat currentUserAgentClientStat : userAgentClientRawStat) {
+		for (GenericLog genericLog : genericLogList) {
 			
-			UserAgentInfo userAgentInfo = userAgentService.getUserAgentInfo(currentUserAgentClientStat.getText());
+			UserAgentInfo userAgentInfo = userAgentService.getUserAgentInfo(genericLog.getUserAgent());
 			
 			switch (userAgentInfo.getType()) {
 				
 				case JAPANESE_ANDROID_LEARNER_HELPER:
 					
-					result.japaneseAndroidLearnerHelperList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					result.japaneseAndroidLearnerHelperList.add(new ImmutablePair<GenericLog, UserAgentInfo>(genericLog, userAgentInfo));
 					
 					break;
 					
 				case DESKTOP:
 					
-					result.desktopList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					result.desktopList.add(new ImmutablePair<GenericLog, UserAgentInfo>(genericLog, userAgentInfo));
 					
 					break;
 					
 				case PHONE:
 					
-					result.phoneList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					result.phoneList.add(new ImmutablePair<GenericLog, UserAgentInfo>(genericLog, userAgentInfo));
 					
 					break;
 					
 				case TABLET:
 					
-					result.tableList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					result.tableList.add(new ImmutablePair<GenericLog, UserAgentInfo>(genericLog, userAgentInfo));
 					
 					break;
 					
 				case ROBOT:
 					
-					result.robotList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					result.robotList.add(new ImmutablePair<GenericLog, UserAgentInfo>(genericLog, userAgentInfo));
 					
 					break;
 					
 				case OTHER:
 					
-					result.otherList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					result.otherList.add(new ImmutablePair<GenericLog, UserAgentInfo>(genericLog, userAgentInfo));
 					
 					break;
 					
 				case NULL:
 					
-					result.nullList.add(new ImmutablePair<GenericTextStat, UserAgentInfo>(currentUserAgentClientStat, userAgentInfo));
+					result.nullList.add(new ImmutablePair<GenericLog, UserAgentInfo>(genericLog, userAgentInfo));
 					
 					break;
 			}
@@ -588,14 +612,18 @@ public class ReportGenerator {
 	
 	private void generateStatForJapanaeseAndroidLearnHelper(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 				
-		List<ImmutablePair<GenericTextStat, UserAgentInfo>> japaneseAndroidLearnerHelperList = splitUserAgentStatByType.japaneseAndroidLearnerHelperList;
+		List<ImmutablePair<GenericLog, UserAgentInfo>> japaneseAndroidLearnerHelperList = splitUserAgentStatByType.japaneseAndroidLearnerHelperList;
 		
 		//
 		
-		List<GenericTextStat> japaneseAndroidLearnerHelperListStat = groupByStat(japaneseAndroidLearnerHelperList, new IGroupByStatFunction() {
+		List<GenericTextStat> japaneseAndroidLearnerHelperListStat = groupByStat(japaneseAndroidLearnerHelperList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {				
+			public String getKey(Object o) {	
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
+				
 				return pair.right.getJapaneseAndroidLearnerHelperInfo().getCode() + " - " + pair.right.getJapaneseAndroidLearnerHelperInfo().getCodeName();		
 			}
 		});
@@ -605,14 +633,17 @@ public class ReportGenerator {
 	
 	private void generateStatForDesktop(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
-		List<ImmutablePair<GenericTextStat, UserAgentInfo>> desktopList = splitUserAgentStatByType.desktopList;
+		List<ImmutablePair<GenericLog, UserAgentInfo>> desktopList = splitUserAgentStatByType.desktopList;
 	
 		//
 		
-		List<GenericTextStat> desktopTypeList = groupByStat(desktopList, new IGroupByStatFunction() {
+		List<GenericTextStat> desktopTypeList = groupByStat(desktopList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
 				
 				DesktopInfo desktopInfo = pair.right.getDesktopInfo();
 				
@@ -620,10 +651,13 @@ public class ReportGenerator {
 			}
 		});
 
-		List<GenericTextStat> operationSystemList = groupByStat(desktopList, new IGroupByStatFunction() {
+		List<GenericTextStat> operationSystemList = groupByStat(desktopList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
 				
 				DesktopInfo desktopInfo = pair.right.getDesktopInfo();
 				
@@ -631,10 +665,13 @@ public class ReportGenerator {
 			}
 		});
 
-		List<GenericTextStat> browserTypeList = groupByStat(desktopList, new IGroupByStatFunction() {
+		List<GenericTextStat> browserTypeList = groupByStat(desktopList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
 				
 				DesktopInfo desktopInfo = pair.right.getDesktopInfo();
 				
@@ -649,14 +686,17 @@ public class ReportGenerator {
 	
 	private void generateStatForPhone(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
-		List<ImmutablePair<GenericTextStat, UserAgentInfo>> phoneList = splitUserAgentStatByType.phoneList;
+		List<ImmutablePair<GenericLog, UserAgentInfo>> phoneList = splitUserAgentStatByType.phoneList;
 		
 		//
 		
-		List<GenericTextStat> deviceNameList = groupByStat(phoneList, new IGroupByStatFunction() {
+		List<GenericTextStat> deviceNameList = groupByStat(phoneList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
 				
 				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
 				
@@ -664,10 +704,13 @@ public class ReportGenerator {
 			}
 		});
 
-		List<GenericTextStat> operationSystemList = groupByStat(phoneList, new IGroupByStatFunction() {
+		List<GenericTextStat> operationSystemList = groupByStat(phoneList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
 				
 				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
 				
@@ -675,10 +718,13 @@ public class ReportGenerator {
 			}
 		});
 
-		List<GenericTextStat> browserTypeList = groupByStat(phoneList, new IGroupByStatFunction() {
+		List<GenericTextStat> browserTypeList = groupByStat(phoneList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
 				
 				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
 				
@@ -693,14 +739,17 @@ public class ReportGenerator {
 
 	private void generateStatForTablet(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
-		List<ImmutablePair<GenericTextStat, UserAgentInfo>> tabletList = splitUserAgentStatByType.tableList;
+		List<ImmutablePair<GenericLog, UserAgentInfo>> tabletList = splitUserAgentStatByType.tableList;
 		
 		//
 		
-		List<GenericTextStat> deviceNameList = groupByStat(tabletList, new IGroupByStatFunction() {
+		List<GenericTextStat> deviceNameList = groupByStat(tabletList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
 				
 				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
 				
@@ -708,10 +757,13 @@ public class ReportGenerator {
 			}
 		});
 
-		List<GenericTextStat> operationSystemList = groupByStat(tabletList, new IGroupByStatFunction() {
+		List<GenericTextStat> operationSystemList = groupByStat(tabletList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
 				
 				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
 				
@@ -719,10 +771,13 @@ public class ReportGenerator {
 			}
 		});
 
-		List<GenericTextStat> browserTypeList = groupByStat(tabletList, new IGroupByStatFunction() {
+		List<GenericTextStat> browserTypeList = groupByStat(tabletList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
 				
 				PhoneTabletInfo phoneInfo = pair.right.getPhoneTabletInfo();
 				
@@ -737,14 +792,18 @@ public class ReportGenerator {
 	
 	private void generateStatForRobot(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
-		List<ImmutablePair<GenericTextStat, UserAgentInfo>> robotList = splitUserAgentStatByType.robotList;
+		List<ImmutablePair<GenericLog, UserAgentInfo>> robotList = splitUserAgentStatByType.robotList;
 		
 		//
 		
-		List<GenericTextStat> robotStatList = groupByStat(robotList, new IGroupByStatFunction() {
+		List<GenericTextStat> robotStatList = groupByStat(robotList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {				
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
+				
 				return pair.right.getRobotInfo().getRobotName() + " - " + pair.right.getRobotInfo().getRobotUrl();		
 			}
 		});
@@ -754,14 +813,18 @@ public class ReportGenerator {
 
 	private void generateStatForOther(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
-		List<ImmutablePair<GenericTextStat, UserAgentInfo>> otherList = splitUserAgentStatByType.otherList;
+		List<ImmutablePair<GenericLog, UserAgentInfo>> otherList = splitUserAgentStatByType.otherList;
 		
 		//
 		
-		List<GenericTextStat> otherStatList = groupByStat(otherList, new IGroupByStatFunction() {
+		List<GenericTextStat> otherStatList = groupByStat(otherList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {				
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
+				
 				return pair.right.getOtherInfo().getUserAgent();		
 			}
 		});
@@ -771,15 +834,19 @@ public class ReportGenerator {
 
 	private void generateStatForNull(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
-		List<ImmutablePair<GenericTextStat, UserAgentInfo>> nullList = splitUserAgentStatByType.nullList;
+		List<ImmutablePair<GenericLog, UserAgentInfo>> nullList = splitUserAgentStatByType.nullList;
 		
 		//
 		
-		List<GenericTextStat> nullStatList = groupByStat(nullList, new IGroupByStatFunction() {
+		List<GenericTextStat> nullStatList = groupByStat(nullList, new IGroupByFunction() {
 			
 			@Override
-			public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair) {				
-				String text = pair.left.getText();
+			public String getKey(Object o) {
+				
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
+				
+				String text = pair.left.getUserAgent();
 				
 				if (text == null) {
 					text = "-";
@@ -792,25 +859,28 @@ public class ReportGenerator {
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.null.stat", nullStatList);		
 	}
 	
-	private List<GenericTextStat> groupByStat(List<ImmutablePair<GenericTextStat, UserAgentInfo>> list, IGroupByStatFunction groupByStatFunction) {
+	private List<GenericTextStat> groupByStat(List<?> list, IGroupByFunction groupByFunction) {
 		
 		Map<String, Long> resultMap = new TreeMap<String, Long>();
 		
-		//
-		
-		for (ImmutablePair<GenericTextStat, UserAgentInfo> currentPair : list) {
+		// chodzenie po rekordach i grupowanie 
+		for (Object currentObject : list) {
 			
-			String key = groupByStatFunction.getKey(currentPair);
+			String objectKey = groupByFunction.getKey(currentObject);
 			
-			Long count = resultMap.get(key);
+			if (objectKey == null) {
+				continue;
+			}
+			
+			Long count = resultMap.get(objectKey);
 			
 			if (count == null) {
 				count = 0l;
 			}
 			
-			count += currentPair.left.getStat();
+			count++;
 			
-			resultMap.put(key, count);
+			resultMap.put(objectKey, count);
 		}
 		
 		//
@@ -860,26 +930,26 @@ public class ReportGenerator {
 		
 		return result;
 	}
-	
+			
 	private static class SplitUserAgentStatByTypeResult {
 		
-		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> japaneseAndroidLearnerHelperList = new ArrayList<>();
+		private List<ImmutablePair<GenericLog, UserAgentInfo>> japaneseAndroidLearnerHelperList = new ArrayList<>();
 		
-		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> desktopList = new ArrayList<>();
+		private List<ImmutablePair<GenericLog, UserAgentInfo>> desktopList = new ArrayList<>();
 		
-		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> phoneList = new ArrayList<>();
+		private List<ImmutablePair<GenericLog, UserAgentInfo>> phoneList = new ArrayList<>();
 		
-		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> tableList = new ArrayList<>();
+		private List<ImmutablePair<GenericLog, UserAgentInfo>> tableList = new ArrayList<>();
 		
-		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> robotList = new ArrayList<>();
+		private List<ImmutablePair<GenericLog, UserAgentInfo>> robotList = new ArrayList<>();
 		
-		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> otherList = new ArrayList<>();
+		private List<ImmutablePair<GenericLog, UserAgentInfo>> otherList = new ArrayList<>();
 		
-		private List<ImmutablePair<GenericTextStat, UserAgentInfo>> nullList = new ArrayList<>();
+		private List<ImmutablePair<GenericLog, UserAgentInfo>> nullList = new ArrayList<>();
 	}
 	
-	private static interface IGroupByStatFunction {		
-		public String getKey(ImmutablePair<GenericTextStat, UserAgentInfo> pair);
+	private static interface IGroupByFunction {		
+		public String getKey(Object object);
 	}
 	
 	public static class Report {

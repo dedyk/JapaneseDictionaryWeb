@@ -31,8 +31,6 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
-import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationStat;
-import pl.idedyk.japanese.dictionary.web.mysql.model.GenericTextStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
@@ -41,7 +39,6 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItem;
 import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItemStatus;
-import pl.idedyk.japanese.dictionary.web.mysql.model.RemoteClientStat;
 import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
@@ -2271,6 +2268,55 @@ public class MySQLConnector {
 		}
 	}
 	
+	public List<GenericLog> getGenericLogList(long startId, long endId) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		List<GenericLog> result = new ArrayList<GenericLog>();
+				
+		try {						
+			connection = connectionPool.getConnection();
+						
+			String sql = "select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
+					+ "from generic_log where id >= ? and id <= ? order by id ";
+						
+			preparedStatement = connection.prepareStatement(sql.toString());
+						
+			preparedStatement.setLong(1, startId);
+			preparedStatement.setLong(2, endId);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {
+				
+				GenericLog genericLog = createGenericLogFromResultSet(resultSet);
+								
+				result.add(genericLog);
+			}
+			
+			return result;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
+	
+	/*
 	public List<GenericLogOperationStat> getGenericLogOperationStat(long startId, long endId) throws SQLException {
 		
 		Connection connection = null;
@@ -2318,7 +2364,9 @@ public class MySQLConnector {
 			}			
 		}		
 	}
-
+	*/
+	
+	/*
 	public List<GenericTextStat> getWordDictionarySearchNoFoundStat(long startId, long endId) throws SQLException {
 	
 		return getGenericTextStat("select find_word_request_word, count(*) from word_dictionary_search_log "
@@ -2380,7 +2428,7 @@ public class MySQLConnector {
 		return getGenericTextStat("select request_url, count(*) from generic_log where operation = 'PAGE_NO_FOUND_EXCEPTION' and "
 				+ "id >= ? and id <= ? group by request_url order by 2 desc, 1 desc", startId, endId);
 	}
-	
+
 	public List<GenericTextStat> getUserAgentClientStat(long startId, long endId) throws SQLException {
 		
 		return getGenericTextStat("select user_agent, count(*) from generic_log where "
@@ -2441,6 +2489,7 @@ public class MySQLConnector {
 			}			
 		}		
 	}
+	*/
 	
 	public void blockDailyLogProcessedIds(long startId, long endId) throws SQLException {
 		
@@ -2469,7 +2518,8 @@ public class MySQLConnector {
 			}			
 		}		
 	}
-
+	
+	/*
 	private List<GenericTextStat> getGenericTextStat(String sql, long startId, long endId) throws SQLException {
 		
 		Connection connection = null;
@@ -2517,6 +2567,7 @@ public class MySQLConnector {
 			}			
 		}		
 	}
+	*/
 	
 	public void insertAdminRequestLog(AdminRequestLog adminRequestLog) throws SQLException {
 		
