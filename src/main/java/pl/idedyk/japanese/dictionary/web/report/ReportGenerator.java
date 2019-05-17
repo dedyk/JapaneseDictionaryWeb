@@ -1,6 +1,8 @@
 package pl.idedyk.japanese.dictionary.web.report;
 
 import java.io.StringWriter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -321,6 +323,14 @@ public class ReportGenerator {
 	
 	private void appendGenericTextStat(Div reportDiv, String titleCode, List<GenericTextStat> genericTextStatList) {
 		
+		// liczymy sume
+		
+		long statSum = 0;
+		
+		for (GenericTextStat genericTextStat : genericTextStatList) {			
+			statSum += genericTextStat.getStat();			
+		}
+		
 		Div div = new Div();
 		
 		P titleP = new P();
@@ -350,7 +360,9 @@ public class ReportGenerator {
 			Td td2 = new Td(null, "padding: 5px;");
 			tr.addHtmlElement(td2);
 			
-			td2.addHtmlElement(new Text("" + genericTextStat.getStat()));			
+			BigDecimal percent = (new BigDecimal(genericTextStat.getStat()).divide(new BigDecimal(statSum), 4, RoundingMode.HALF_UP)).multiply(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
+			
+			td2.addHtmlElement(new Text("" + genericTextStat.getStat() + " (" + percent + "%)"));			
 		}
 		
 		reportDiv.addHtmlElement(div);		
@@ -631,14 +643,14 @@ public class ReportGenerator {
 				return pair.right.getJapaneseAndroidLearnerHelperInfo().getCode() + " - " + pair.right.getJapaneseAndroidLearnerHelperInfo().getCodeName();		
 			}
 		});
-				
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.stat", japaneseAndroidLearnerHelperListStat);	
+		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.stat", japaneseAndroidLearnerHelperListStat);
 		
 		// statystyki krajow		
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(0)));
 		
 		// statystyki krajow i miast
-		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.city.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(1)));
+		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.city.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(1)));					
 	}
 	
 	private void generateStatForDesktop(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
@@ -688,16 +700,16 @@ public class ReportGenerator {
 				return desktopInfo.getBrowserType();
 			}
 		});
-						
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.desktopType.stat", desktopTypeList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.operationSystem.stat", operationSystemList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.browserType.stat", browserTypeList);
-				
+		
 		// statystyki krajow		
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.country.stat", groupByStat(desktopList, new CountryCityGroupBy(0)));
 		
 		// statystyki krajow i miast
 		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.country.city.stat", groupByStat(desktopList, new CountryCityGroupBy(1)));
+						
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.desktopType.stat", desktopTypeList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.operationSystem.stat", operationSystemList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.browserType.stat", browserTypeList);				
 	}
 	
 	private void generateStatForPhone(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
@@ -747,16 +759,16 @@ public class ReportGenerator {
 				return phoneInfo.getBrowserType();
 			}
 		});
-						
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.deviceName.stat", deviceNameList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.operationSystem.stat", operationSystemList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.browserType.stat", browserTypeList);
 		
 		// statystyki krajow		
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.country.stat", groupByStat(phoneList, new CountryCityGroupBy(0)));
 		
 		// statystyki krajow i miast
 		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.country.city.stat", groupByStat(phoneList, new CountryCityGroupBy(1)));
+						
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.deviceName.stat", deviceNameList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.operationSystem.stat", operationSystemList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.browserType.stat", browserTypeList);		
 	}
 
 	private void generateStatForTablet(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
@@ -806,16 +818,16 @@ public class ReportGenerator {
 				return phoneInfo.getBrowserType();
 			}
 		});
-						
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.deviceName.stat", deviceNameList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.operationSystem.stat", operationSystemList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.browserType.stat", browserTypeList);
 		
 		// statystyki krajow		
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.country.stat", groupByStat(tabletList, new CountryCityGroupBy(0)));
 		
 		// statystyki krajow i miast
 		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.country.city.stat", groupByStat(tabletList, new CountryCityGroupBy(1)));
+						
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.deviceName.stat", deviceNameList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.operationSystem.stat", operationSystemList);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.browserType.stat", browserTypeList);		
 	}
 	
 	private void generateStatForRobot(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
