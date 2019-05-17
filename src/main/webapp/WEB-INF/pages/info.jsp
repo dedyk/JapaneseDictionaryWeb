@@ -96,12 +96,19 @@
 						</ul>
 					</p>
 
-					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention11"/>	
+					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention11"/>					
+						<ul>
+	 						<li><a style="color: #777777" href="<spring:message code='info.page.body.attention11.link1'/>"><spring:message code="info.page.body.attention11.link1"/></a></li>
+							<li><a style="color: #777777" href="<spring:message code='info.page.body.attention11.link2'/>"><spring:message code="info.page.body.attention11.link2"/></a></li>
+						</ul>
+					</p>
+
+					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention12"/>	
 					</p>				
 
-					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention12"/>					
+					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention13"/>					
 						<ul>
-	 						<li><a style="color: #777777" href="<spring:message code='info.page.body.attention12.link1'/>"><spring:message code="info.page.body.attention12.link1"/></a></li>
+	 						<li><a style="color: #777777" href="<spring:message code='info.page.body.attention13.link1'/>"><spring:message code="info.page.body.attention13.link1"/></a></li>
 						</ul>
 					</p>
 				
