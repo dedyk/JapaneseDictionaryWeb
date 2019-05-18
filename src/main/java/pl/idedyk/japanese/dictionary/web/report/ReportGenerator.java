@@ -24,6 +24,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
+import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventOperation;
 import pl.idedyk.japanese.dictionary.web.html.B;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
@@ -33,6 +34,7 @@ import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.mysql.MySQLConnector;
+import pl.idedyk.japanese.dictionary.web.mysql.model.AndroidQueueEventLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.DailyLogProcessedMinMaxIds;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
@@ -82,6 +84,9 @@ public class ReportGenerator {
 				// pobieramy surowe dane zrodlowe
 				List<GenericLog> genericLogRawList = mySQLConnector.getGenericLogList(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 
+				// pobieramy dane dotyczace zdarzen z androida
+				List<AndroidQueueEventLog> androidQueueEventLogList = mySQLConnector.getAndroidQueueEventLogList(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
+				
 				//
 				
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -192,7 +197,7 @@ public class ReportGenerator {
 				
 				// statystyki user agentow																						
 				// generowanie statystyk dla aplikacji na androida
-				generateStatForJapanaeseAndroidLearnHelper(reportDiv, splitUserAgentStatByType);
+				generateStatForJapanaeseAndroidLearnHelper(reportDiv, splitUserAgentStatByType, androidQueueEventLogList);
 								
 				// generowanie statystyk dla komputera (desktop)
 				generateStatForDesktop(reportDiv, splitUserAgentStatByType);
@@ -626,7 +631,7 @@ public class ReportGenerator {
 		return result;
 	}
 	
-	private void generateStatForJapanaeseAndroidLearnHelper(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+	private void generateStatForJapanaeseAndroidLearnHelper(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType, List<AndroidQueueEventLog> androidQueueEventLogList) {
 				
 		List<ImmutablePair<GenericLog, UserAgentInfo>> japaneseAndroidLearnerHelperList = splitUserAgentStatByType.japaneseAndroidLearnerHelperList;
 		
@@ -644,13 +649,67 @@ public class ReportGenerator {
 			}
 		});
 		
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.stat", japaneseAndroidLearnerHelperListStat);
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.version.stat", japaneseAndroidLearnerHelperListStat);
 		
 		// statystyki krajow		
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(0)));
 		
 		// statystyki krajow i miast
-		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.city.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(1)));					
+		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.city.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(1)));
+		
+		// statystyki rodzaju operacji na androidzie
+		List<GenericTextStat> androidQueueEventOperationStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+			
+			@Override
+			public String getKey(Object o) {
+				
+				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+				
+				return androidQueueEventLog.getOperation().toString();
+			}
+		});
+		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.stat", androidQueueEventOperationStat);
+		
+		// statystyki ekranow
+		List<GenericTextStat> androidQueueEventScreenStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+			
+			@Override
+			public String getKey(Object o) {
+				
+				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+				
+				if (androidQueueEventLog.getOperation() != QueueEventOperation.STAT_LOG_SCREEN_EVENT) {
+					return null;
+				}
+				
+				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+				
+				return paramsAsMap.get("screenName");
+			}
+		});
+		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.screen.stat", androidQueueEventScreenStat);
+		
+		// statystyki zdarzen
+		List<GenericTextStat> androidQueueEventEventStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+			
+			@Override
+			public String getKey(Object o) {
+				
+				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+				
+				if (androidQueueEventLog.getOperation() != QueueEventOperation.STAT_LOG_EVENT_EVENT) {
+					return null;
+				}
+				
+				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+				
+				return paramsAsMap.get("actionName");
+			}
+		});
+		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.event.stat", androidQueueEventEventStat);	
 	}
 	
 	private void generateStatForDesktop(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {

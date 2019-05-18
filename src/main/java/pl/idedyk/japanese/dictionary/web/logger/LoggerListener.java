@@ -791,7 +791,7 @@ public class LoggerListener {
 			androidQueueEventLog.setUserId(androidQueueEventLoggerModel.getUserId());
 			androidQueueEventLog.setOperation(androidQueueEventLoggerModel.getOperation());
 			androidQueueEventLog.setCreateDate(new Timestamp(androidQueueEventLoggerModel.getCreateDate().getTime()));
-			androidQueueEventLog.setParams(androidQueueEventLoggerModel.getParams() != null ? androidQueueEventLoggerModel.getParams().toString() : null);
+			androidQueueEventLog.setParams(androidQueueEventLoggerModel.getParams() != null ? androidQueueEventLoggerModel.getParamsAsJSON() : null);
 			
 			//
 			

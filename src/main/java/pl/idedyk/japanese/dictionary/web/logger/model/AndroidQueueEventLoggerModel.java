@@ -1,7 +1,10 @@
 package pl.idedyk.japanese.dictionary.web.logger.model;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+
+import com.google.gson.Gson;
 
 import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventOperation;
 
@@ -58,5 +61,17 @@ public class AndroidQueueEventLoggerModel extends LoggerModelCommon {
 
 	public void setParams(Map<String, String> params) {
 		this.params = params;
+	}
+
+	public String getParamsAsJSON() {
+		
+		Gson gson = new Gson();
+		
+		if (params != null) {
+			return gson.toJson(params);
+			
+		} else {
+			return gson.toJson(new HashMap<>());
+		}
 	}
 }

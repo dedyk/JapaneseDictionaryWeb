@@ -1851,6 +1851,54 @@ public class MySQLConnector {
 			}			
 		}
 	}
+	
+	public List<AndroidQueueEventLog> getAndroidQueueEventLogList(long genericStartId, long genericEndId) throws SQLException {
+		
+		Connection connection = null;
+		
+		PreparedStatement preparedStatement = null;
+		
+		ResultSet resultSet = null;
+		
+		List<AndroidQueueEventLog> result = new ArrayList<AndroidQueueEventLog>();
+				
+		try {						
+			connection = connectionPool.getConnection();
+						
+			String sql = "select id, generic_log_id, user_id, operation, create_date, params "
+					+ "from android_queue_event_log where generic_log_id >= ? and generic_log_id <= ? order by id ";
+						
+			preparedStatement = connection.prepareStatement(sql.toString());
+						
+			preparedStatement.setLong(1, genericStartId);
+			preparedStatement.setLong(2, genericEndId);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while (resultSet.next() == true) {
+				
+				AndroidQueueEventLog androidQueueEventLog = createAndroidQueueEventLogFromResultSet(resultSet);
+								
+				result.add(androidQueueEventLog);
+			}
+			
+			return result;
+			
+		} finally {
+			
+			if (resultSet != null) {
+				resultSet.close();
+			}
+						
+			if (preparedStatement != null) {
+				preparedStatement.close();
+			}
+			
+			if (connection != null) {
+				connection.close();
+			}			
+		}		
+	}
 
 	private AndroidQueueEventLog createAndroidQueueEventLogFromResultSet(ResultSet resultSet) throws SQLException {
 

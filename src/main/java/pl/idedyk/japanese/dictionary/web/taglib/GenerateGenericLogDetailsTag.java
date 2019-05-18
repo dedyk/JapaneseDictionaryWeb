@@ -336,7 +336,7 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.androidQueueEventLog.userId"), androidQueueEventLog.getUserId());
 			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.androidQueueEventLog.operation"), androidQueueEventLog.getOperation().toString());
 			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.androidQueueEventLog.createDate"), String.valueOf(simpleDateFormat.format(androidQueueEventLog.getCreateDate())));
-			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.androidQueueEventLog.params"), androidQueueEventLog.getParams());
+			addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo.androidQueueEventLog.params"), androidQueueEventLog.getParamsAsMap().toString());
 
 			panelBody.addHtmlElement(table);
 			
