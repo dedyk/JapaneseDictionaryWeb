@@ -133,16 +133,21 @@ public class ReportGenerator {
 						return genericLog.getOperation().name();
 					} 
 				});
-
-				appendGenericTextStat(reportDiv, "report.generate.daily.report.operation.stat", genericLogOperationStatList);
-												
-				//
-								
-				reportDiv.addHtmlElement(new Hr());
 				
 				// podzielenie statystyk na Desktop, Phone + Mobile, Tablet, Robot + Robot Mobile oraz inne
 				SplitUserAgentStatByTypeResult splitUserAgentStatByType = splitUserAgentStatByType(genericLogRawList);				
+
+				//
+
+				appendGenericTextStat(reportDiv, "report.generate.daily.report.operation.stat", genericLogOperationStatList);
 				
+				// statystyki krajow (bez robotow i innych)		
+				appendGenericTextStat(reportDiv, "report.generate.daily.report.city.stat", groupByStat(splitUserAgentStatByType.getHumanList(), new CountryCityGroupBy(0)));
+												
+				//
+								
+				// reportDiv.addHtmlElement(new Hr());
+								
 				// wyszukiwanie slowek bez wynikow				
 				/*
 				List<GenericTextStat> wordDictionarySearchNoFoundStatList = mySQLConnector.getWordDictionarySearchNoFoundStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
@@ -1045,6 +1050,22 @@ public class ReportGenerator {
 		private List<ImmutablePair<GenericLog, UserAgentInfo>> otherList = new ArrayList<>();
 		
 		private List<ImmutablePair<GenericLog, UserAgentInfo>> nullList = new ArrayList<>();
+		
+		//
+		
+		public List<ImmutablePair<GenericLog, UserAgentInfo>> getHumanList() {
+			
+			List<ImmutablePair<GenericLog, UserAgentInfo>> result = new ArrayList<>();
+			
+			//
+			
+			result.addAll(japaneseAndroidLearnerHelperList);
+			result.addAll(desktopList);
+			result.addAll(phoneList);
+			result.addAll(tableList);
+			
+			return result;
+		}
 	}
 	
 	private static interface IGroupByFunction {		
