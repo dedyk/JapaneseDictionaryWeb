@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventOperation;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
 
 public class AndroidQueueEventLog {
 
@@ -82,9 +83,18 @@ public class AndroidQueueEventLog {
 			return new HashMap<String, String>();
 		}
 		
+		String paramsForJson = params;
+		
+		// sprawdzenie, czy to nie jest base64
+		String paramsForJsonAsBase64 = Utils.tryAndGetBase64String(paramsForJson);
+		
+		if (paramsForJsonAsBase64 != null) {
+			paramsForJson = paramsForJsonAsBase64;
+		}		
+		
 		try {
 			// proba sparsowania jako json
-			return gson.fromJson(params, Map.class);
+			return gson.fromJson(paramsForJson, Map.class);
 			
 		} catch (JsonSyntaxException e) {
 			// byl wyjatek, probujemy sparsowac po staremu

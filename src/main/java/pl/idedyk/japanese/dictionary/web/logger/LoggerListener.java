@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,7 +161,7 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {						
-						wordDictionaryAutocompleteLog.setTerm(stringToBase64String(wordDictionaryAutocompleteLog.getTerm()));
+						wordDictionaryAutocompleteLog.setTerm(Utils.stringToBase64String(wordDictionaryAutocompleteLog.getTerm()));
 					}
 				});
 
@@ -222,7 +221,7 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {						
-						wordDictionarySearchLog.setFindWordRequestWord(stringToBase64String(wordDictionarySearchLog.getFindWordRequestWord()));
+						wordDictionarySearchLog.setFindWordRequestWord(Utils.stringToBase64String(wordDictionarySearchLog.getFindWordRequestWord()));
 					}
 				});
 				
@@ -269,7 +268,7 @@ public class LoggerListener {
 							
 							@Override
 							public void changeDate() {								
-								wordDictionarySearchMissingWordQueue2.setMissingWord(stringToBase64String(wordDictionarySearchMissingWordQueue2.getMissingWord()));
+								wordDictionarySearchMissingWordQueue2.setMissingWord(Utils.stringToBase64String(wordDictionarySearchMissingWordQueue2.getMissingWord()));
 							}
 						});
 						
@@ -345,7 +344,7 @@ public class LoggerListener {
 						
 						@Override
 						public void changeDate() {								
-							wordDictionaryUniqueSearch2.setWord(stringToBase64String(wordDictionaryUniqueSearch2.getWord()));
+							wordDictionaryUniqueSearch2.setWord(Utils.stringToBase64String(wordDictionaryUniqueSearch2.getWord()));
 						}
 					});
 					
@@ -412,7 +411,7 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {							
-						wordDictionaryDetailsLog.setDictionaryEntryKanji(stringToBase64String(wordDictionaryDetailsLog.getDictionaryEntryKanji()));
+						wordDictionaryDetailsLog.setDictionaryEntryKanji(Utils.stringToBase64String(wordDictionaryDetailsLog.getDictionaryEntryKanji()));
 					}
 				});				
 				
@@ -515,7 +514,7 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {						
-						kanjiDictionaryAutocompleteLog.setTerm(stringToBase64String(kanjiDictionaryAutocompleteLog.getTerm()));
+						kanjiDictionaryAutocompleteLog.setTerm(Utils.stringToBase64String(kanjiDictionaryAutocompleteLog.getTerm()));
 					}
 				});
 				
@@ -554,7 +553,7 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {						
-						kanjiDictionarySearchLog.setFindKanjiRequestWord(stringToBase64String(kanjiDictionarySearchLog.getFindKanjiRequestWord()));
+						kanjiDictionarySearchLog.setFindKanjiRequestWord(Utils.stringToBase64String(kanjiDictionarySearchLog.getFindKanjiRequestWord()));
 					}
 				});
 				
@@ -646,7 +645,7 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {						
-						kanjiDictionaryDetectLog.setDetectKanjiResult(stringToBase64String(kanjiDictionaryDetectLog.getDetectKanjiResult()));
+						kanjiDictionaryDetectLog.setDetectKanjiResult(Utils.stringToBase64String(kanjiDictionaryDetectLog.getDetectKanjiResult()));
 					}
 				});
 				
@@ -685,7 +684,7 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {
-						kanjiDictionaryDetailsLog.setKanjiEntryKanji(stringToBase64String(kanjiDictionaryDetailsLog.getKanjiEntryKanji()));
+						kanjiDictionaryDetailsLog.setKanjiEntryKanji(Utils.stringToBase64String(kanjiDictionaryDetailsLog.getKanjiEntryKanji()));
 					}
 				});
 				
@@ -736,7 +735,7 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {						
-						androidSendMissingWordLog.setWord(stringToBase64String(androidSendMissingWordLog.getWord()));
+						androidSendMissingWordLog.setWord(Utils.stringToBase64String(androidSendMissingWordLog.getWord()));
 					}
 				});				
 				
@@ -769,7 +768,7 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {						
-						androidGetSpellCheckerSuggestionLog.setWord(stringToBase64String(androidGetSpellCheckerSuggestionLog.getWord()));
+						androidGetSpellCheckerSuggestionLog.setWord(Utils.stringToBase64String(androidGetSpellCheckerSuggestionLog.getWord()));
 					}
 				});
 				
@@ -805,7 +804,7 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {	
-						androidQueueEventLog.setParams(stringToBase64String(androidQueueEventLog.getParams()));
+						androidQueueEventLog.setParams(Utils.stringToBase64String(androidQueueEventLog.getParams()));
 					}
 				});
 				
@@ -839,9 +838,9 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {						
-						suggestionSendLog.setTitle(stringToBase64String(suggestionSendLog.getTitle()));
-						suggestionSendLog.setSender(stringToBase64String(suggestionSendLog.getSender()));
-						suggestionSendLog.setBody(stringToBase64String(suggestionSendLog.getBody()));
+						suggestionSendLog.setTitle(Utils.stringToBase64String(suggestionSendLog.getTitle()));
+						suggestionSendLog.setSender(Utils.stringToBase64String(suggestionSendLog.getSender()));
+						suggestionSendLog.setBody(Utils.stringToBase64String(suggestionSendLog.getBody()));
 					}
 				});
 				
@@ -985,7 +984,7 @@ public class LoggerListener {
 					
 					@Override
 					public void changeDate() {						
-						generalExceptionLog.setException(stringToBase64String(generalExceptionLog.getException()));
+						generalExceptionLog.setException(Utils.stringToBase64String(generalExceptionLog.getException()));
 					}
 				});				
 				
@@ -1165,16 +1164,7 @@ public class LoggerListener {
 			}
 		}
 	}
-	
-	private String stringToBase64String(String s) {
 		
-		if (s == null) {
-			return s;
-		}
-		
-		return "B64: " + Base64.encodeBase64String(s.getBytes());
-	}
-	
 	private static interface IRepeatableOperation {		
 		
 		public void operation() throws SQLException;

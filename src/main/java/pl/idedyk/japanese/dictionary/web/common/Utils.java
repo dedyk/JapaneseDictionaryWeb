@@ -11,6 +11,8 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
+
 import com.mysql.jdbc.MysqlDataTruncation;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
@@ -18,6 +20,8 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 
 public class Utils {
+	
+	private static final String BASE64_PREFIX = "B64: ";
 	
 	public static List<String> tokenWord(String word) {
 		
@@ -352,5 +356,34 @@ public class Utils {
 		}
 
 		return false;
+	}
+	
+	public static String stringToBase64String(String s) {
+		
+		if (s == null) {
+			return s;
+		}
+		
+		return BASE64_PREFIX + Base64.encodeBase64String(s.getBytes());
+	}
+	
+	public static String tryAndGetBase64String(String s) {
+		
+		if (s == null) {
+			return null;
+		}
+		
+		if (s.startsWith(BASE64_PREFIX) == false) {
+			return null;
+		}
+		
+		String base64String = s.substring(BASE64_PREFIX.length());
+		
+		try {
+			return new String(Base64.decodeBase64(base64String));
+			
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }
