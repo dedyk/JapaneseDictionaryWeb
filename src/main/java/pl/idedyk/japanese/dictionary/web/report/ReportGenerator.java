@@ -656,8 +656,40 @@ public class ReportGenerator {
 		
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.version.stat", japaneseAndroidLearnerHelperListStat);
 		
-		// statystyki krajow		
+		// statystyki krajow na podstawie adresu IP
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(0)));
+		
+		// statystyki krajow na podstawie jezyka urzadzenia
+		List<GenericTextStat> androidQueueEventLocaleCountryStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+			
+			@Override
+			public String getKey(Object o) {
+				
+				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+				
+				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+				
+				return paramsAsMap.get("localeCountry");
+			}
+		});
+		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.locale.country", androidQueueEventLocaleCountryStat);	
+
+		// statystyki jezykow na podstawie jezyka urzadzenia
+		List<GenericTextStat> androidQueueEventLocaleLanguageStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+			
+			@Override
+			public String getKey(Object o) {
+				
+				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+				
+				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+				
+				return paramsAsMap.get("localeLanguage");
+			}
+		});
+		
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.locale.language", androidQueueEventLocaleLanguageStat);	
 		
 		// statystyki krajow i miast
 		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.city.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(1)));
@@ -714,7 +746,7 @@ public class ReportGenerator {
 			}
 		});
 		
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.event.stat", androidQueueEventEventStat);	
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.event.stat", androidQueueEventEventStat);			
 	}
 	
 	private void generateStatForDesktop(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
