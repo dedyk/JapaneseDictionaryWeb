@@ -92,10 +92,13 @@ public class UserAgentInfo {
 		private int code;
 		
 		private String codeName;
+		
+		private SubType subType;
 
-		public JapaneseAndroidLearnerHelperInfo(int code, String codeName) {
+		public JapaneseAndroidLearnerHelperInfo(int code, String codeName, SubType subType) {
 			this.code = code;
 			this.codeName = codeName;
+			this.subType = subType;
 		}
 
 		public int getCode() {
@@ -104,6 +107,17 @@ public class UserAgentInfo {
 
 		public String getCodeName() {
 			return codeName;
+		}
+		
+		public SubType getSubType() {
+			return subType;
+		}
+		
+		public static enum SubType {
+			
+			FULL,
+			
+			SLIM;
 		}
 	}
 	

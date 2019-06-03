@@ -44,6 +44,8 @@ import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
 import pl.idedyk.japanese.dictionary.web.service.UserAgentService;
 import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo;
 import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo.DesktopInfo;
+import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo.JapaneseAndroidLearnerHelperInfo;
+import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo.JapaneseAndroidLearnerHelperInfo.SubType;
 import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo.PhoneTabletInfo;
 
 @Service
@@ -650,7 +652,11 @@ public class ReportGenerator {
 				@SuppressWarnings("unchecked")
 				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
 				
-				return pair.right.getJapaneseAndroidLearnerHelperInfo().getCode() + " - " + pair.right.getJapaneseAndroidLearnerHelperInfo().getCodeName();		
+				int code = pair.right.getJapaneseAndroidLearnerHelperInfo().getCode();
+				String codeName = pair.right.getJapaneseAndroidLearnerHelperInfo().getCodeName();
+				JapaneseAndroidLearnerHelperInfo.SubType subType = pair.right.getJapaneseAndroidLearnerHelperInfo().getSubType();
+				
+				return code + " - " + codeName + (subType == SubType.FULL ? "" : " (slim)");
 			}
 		});
 		

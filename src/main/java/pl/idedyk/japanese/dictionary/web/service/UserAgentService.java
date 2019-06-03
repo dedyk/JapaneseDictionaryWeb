@@ -166,7 +166,10 @@ public class UserAgentService {
 			
 			UserAgentInfo userAgentInfo = new UserAgentInfo(UserAgentInfo.Type.JAPANESE_ANDROID_LEARNER_HELPER);
 			
-			userAgentInfo.setJapaneseAndroidLearnerHelperInfo(new UserAgentInfo.JapaneseAndroidLearnerHelperInfo(Integer.parseInt(userAgentStringSplited[1]), userAgentStringSplited[2]));
+			UserAgentInfo.JapaneseAndroidLearnerHelperInfo.SubType subType = userAgentString.startsWith("JapaneseAndroidLearnHelper/") == true ?
+					UserAgentInfo.JapaneseAndroidLearnerHelperInfo.SubType.FULL : UserAgentInfo.JapaneseAndroidLearnerHelperInfo.SubType.SLIM;
+			
+			userAgentInfo.setJapaneseAndroidLearnerHelperInfo(new UserAgentInfo.JapaneseAndroidLearnerHelperInfo(Integer.parseInt(userAgentStringSplited[1]), userAgentStringSplited[2], subType));
 			
 			return userAgentInfo;
 		}
