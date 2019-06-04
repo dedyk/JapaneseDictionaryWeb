@@ -33,7 +33,7 @@ public class ConfigService {
 		}
 	}
 	
-	private File getCatalinaConfDir() {
+	public File getCatalinaConfDir() {
 		
 		String catalinaBase = System.getProperty("catalina.base");
 		

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AndroidMessage>
+    <messageList>
+        <userAgentCondition>default</userAgentCondition>
+        <timestamp>2019-06-04 11:22:33</timestamp>
+        <message>To jest domyślny komunikat</message>
+    </messageList>
+    <messageList>
+        <userAgentCondition>JapaneseAndroidLearnHelper/.*</userAgentCondition>
+        <timestamp>2019-06-04 12:22:33</timestamp>
+        <message>To jest komunikat dla JapaneseAndroidLearnHelper</message>
+    </messageList>
+    <messageList>
+        <userAgentCondition>JapaneseAndroidLearnHelperSlim/.*</userAgentCondition>
+        <timestamp>2019-06-04 13:22:33</timestamp>
+        <message>To jest komunikat dla JapaneseAndroidLearnHelperSlim</message>
+    </messageList>
+    <messageList>
+        <userAgentCondition>curl/.*</userAgentCondition>
+        <timestamp>2019-06-04 20:22:33</timestamp>
+        <message>
+To jest komunikat dla curl
+</message>
+    </messageList>
+</AndroidMessage>

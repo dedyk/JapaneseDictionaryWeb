@@ -12,6 +12,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetMessageLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Type;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetSpellCheckerSuggestionLoggerModel;
@@ -1106,6 +1107,9 @@ public class LoggerListener {
 			
 		} else if (AndroidQueueEventLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.ANDROID_QUEUE_EVENT;
+			
+		} else if (AndroidGetMessageLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.ANDROID_GET_MESSAGE;
 			
 		} else if (SuggestionStartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.SUGGESTION_START;

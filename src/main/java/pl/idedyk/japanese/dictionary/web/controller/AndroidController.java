@@ -42,12 +42,15 @@ import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheck
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetMessageLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetSpellCheckerSuggestionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidQueueEventLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.AndroidMessageService;
+import pl.idedyk.japanese.dictionary.web.service.AndroidMessageService.AndroidMessage.Message;
 
 @Controller
 public class AndroidController {
@@ -59,6 +62,9 @@ public class AndroidController {
 	
 	@Autowired
 	private LoggerSender loggerSender;
+	
+	@Autowired
+	private AndroidMessageService androidMessageService;
 
 	@RequestMapping(value = "/android/sendMissingWord", method = RequestMethod.POST)
 	public void sendMissingWord(HttpServletRequest request, HttpServletResponse response, 
@@ -530,6 +536,34 @@ public class AndroidController {
 		
 		// brak odpowiedzi
 		response.sendError(204); // No content
+	}
+	
+	@RequestMapping(value = "/android/getMessage", method = RequestMethod.POST)
+	public void getMessage(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws Exception {
+
+		// wczytywanie komunikatu dla klienta
+		Message androidMessage = androidMessageService.getMessage(request.getHeader("User-Agent"));
+		
+		// logowanie
+		loggerSender.sendLog(new AndroidGetMessageLoggerModel(Utils.createLoggerModelCommon(request)));
+		
+		// zwrocenie wyniku
+		JSONObject resultJsonObject = new JSONObject();
+		
+		if (androidMessage != null) {
+			resultJsonObject.put("timestamp", androidMessage.getTimestamp().trim());
+			resultJsonObject.put("message", androidMessage.getMessage().trim());
+		}		
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
+		// logowanie
+		logger.info("[AndroidController.getMessage] Zwrócenie odpowiedzi: " + resultJsonObject.toString());
+		
+		// zwrocenie wyniku
+		writer.append(resultJsonObject.toString());
 	}
 	
 	private String getJson(HttpServletRequest request) throws IOException {
