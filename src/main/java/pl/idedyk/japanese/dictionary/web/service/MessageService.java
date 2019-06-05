@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.AndroidMessageListWrapper;
 import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.MessageEntry;
+import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.WebMessageListWrapper;
 
 @Service
 public class MessageService {
@@ -106,6 +107,42 @@ public class MessageService {
 		// nic nie dopasowalismy, zwrocenie domyslnej odpowiedzi (jesli jakas dopasowala sie)
 		return defaultMessage;
 	}
+
+	public Message.MessageEntry getMessageForWeb() {
+		
+		checkAndReloadMessageFile();
+				
+		if (message == null) {
+			return null;
+		}
+		
+		// proba znalezienia odpowiedzi
+		WebMessageListWrapper webMessageListWrapper = message.getWebMessageListWrapper();
+		
+		if (webMessageListWrapper == null) {
+			return null;
+		}
+		
+		List<MessageEntry> webMessageList = webMessageListWrapper.getWebMessageList();
+				
+		for (MessageEntry message : webMessageList) {
+			
+			String messageUserAgentCondition = message.getUserAgentCondition();
+			String messageTimestamp = message.getTimestamp();
+			String messageMessage = message.getMessage();
+			
+			if (messageUserAgentCondition == null || messageTimestamp == null || messageMessage == null) {
+				continue;
+			}
+			
+			if (messageUserAgentCondition.equals("default") == true) { // szukamy tylko default
+				return message;
+			}			
+		}
+		
+		// nic nie znalezlismy
+		return null;
+	}
 	
 	private void checkAndReloadMessageFile() {
 		
@@ -154,7 +191,7 @@ public class MessageService {
 		private AndroidMessageListWrapper androidMessageListWrapper;
 		
 		@XmlElement(name = "webMessageList")
-		private AndroidMessageListWrapper webMessageListWrapper;
+		private WebMessageListWrapper webMessageListWrapper;
 		
 		//
 		
@@ -162,7 +199,7 @@ public class MessageService {
 			return androidMessageListWrapper;
 		}
 
-		public AndroidMessageListWrapper getWebMessageListWrapper() {
+		public WebMessageListWrapper getWebMessageListWrapper() {
 			return webMessageListWrapper;
 		}
 
@@ -170,7 +207,7 @@ public class MessageService {
 			this.androidMessageListWrapper = androidMessageListWrapper;
 		}
 
-		public void setWebMessageListWrapper(AndroidMessageListWrapper webMessageListWrapper) {
+		public void setWebMessageListWrapper(WebMessageListWrapper webMessageListWrapper) {
 			this.webMessageListWrapper = webMessageListWrapper;
 		}
 		
@@ -202,7 +239,7 @@ public class MessageService {
 			@XmlElement(name = "webMessage")
 			private List<MessageEntry> webMessageList;
 
-			public List<MessageEntry> getWebdMessageList() {
+			public List<MessageEntry> getWebMessageList() {
 				
 				if (webMessageList == null) {
 					webMessageList = new ArrayList<>();

@@ -118,4 +118,9 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>	
+	<tag>
+		<name>getWebMessage</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.GetWebMessageTag</tagclass>
+		<info>Generuje zawartosc komunikatu dla użytkownika</info>
+	</tag>
 </taglib> 
