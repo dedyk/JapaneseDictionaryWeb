@@ -78,9 +78,8 @@ public class MessageService {
 			
 			String messageUserAgentCondition = message.getUserAgentCondition();
 			String messageTimestamp = message.getTimestamp();
-			String messageMessage = message.getMessage();
 			
-			if (messageUserAgentCondition == null || messageTimestamp == null || messageMessage == null) {
+			if (messageUserAgentCondition == null || messageTimestamp == null) {
 				continue;
 			}
 			
@@ -129,9 +128,8 @@ public class MessageService {
 			
 			String messageUserAgentCondition = message.getUserAgentCondition();
 			String messageTimestamp = message.getTimestamp();
-			String messageMessage = message.getMessage();
 			
-			if (messageUserAgentCondition == null || messageTimestamp == null || messageMessage == null) {
+			if (messageUserAgentCondition == null || messageTimestamp == null) {
 				continue;
 			}
 			

@@ -553,7 +553,7 @@ public class AndroidController {
 		
 		if (androidMessageEntry != null) {
 			resultJsonObject.put("timestamp", androidMessageEntry.getTimestamp().trim());
-			resultJsonObject.put("message", androidMessageEntry.getMessage().trim());
+			resultJsonObject.put("message", androidMessageEntry.getMessage() != null ? androidMessageEntry.getMessage().trim() : null);
 		}		
 		
 		// typ odpowiedzi
