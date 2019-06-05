@@ -49,8 +49,8 @@ import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLogg
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
-import pl.idedyk.japanese.dictionary.web.service.AndroidMessageService;
-import pl.idedyk.japanese.dictionary.web.service.AndroidMessageService.AndroidMessage.Message;
+import pl.idedyk.japanese.dictionary.web.service.MessageService;
+import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.MessageEntry;
 
 @Controller
 public class AndroidController {
@@ -64,7 +64,7 @@ public class AndroidController {
 	private LoggerSender loggerSender;
 	
 	@Autowired
-	private AndroidMessageService androidMessageService;
+	private MessageService messageService;
 
 	@RequestMapping(value = "/android/sendMissingWord", method = RequestMethod.POST)
 	public void sendMissingWord(HttpServletRequest request, HttpServletResponse response, 
@@ -543,7 +543,7 @@ public class AndroidController {
 			HttpSession session, Map<String, Object> model) throws Exception {
 
 		// wczytywanie komunikatu dla klienta
-		Message androidMessage = androidMessageService.getMessage(request.getHeader("User-Agent"));
+		MessageEntry androidMessageEntry = messageService.getMessageForAndroid(request.getHeader("User-Agent"));
 		
 		// logowanie
 		loggerSender.sendLog(new AndroidGetMessageLoggerModel(Utils.createLoggerModelCommon(request)));
@@ -551,9 +551,9 @@ public class AndroidController {
 		// zwrocenie wyniku
 		JSONObject resultJsonObject = new JSONObject();
 		
-		if (androidMessage != null) {
-			resultJsonObject.put("timestamp", androidMessage.getTimestamp().trim());
-			resultJsonObject.put("message", androidMessage.getMessage().trim());
+		if (androidMessageEntry != null) {
+			resultJsonObject.put("timestamp", androidMessageEntry.getTimestamp().trim());
+			resultJsonObject.put("message", androidMessageEntry.getMessage().trim());
 		}		
 		
 		// typ odpowiedzi

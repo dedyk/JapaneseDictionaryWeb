@@ -18,12 +18,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import pl.idedyk.japanese.dictionary.web.service.AndroidMessageService.AndroidMessage.Message;
+import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.AndroidMessageListWrapper;
+import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.MessageEntry;
 
 @Service
-public class AndroidMessageService {
+public class MessageService {
 
-	private static final Logger logger = Logger.getLogger(AndroidMessageService.class);
+	private static final Logger logger = Logger.getLogger(MessageService.class);
 
 	@Autowired
 	private ConfigService configService;
@@ -35,21 +36,21 @@ public class AndroidMessageService {
 	private File messageFile = null; 
 	private Long messageFileLastModified = null;
 	
-	private AndroidMessage androidMessage = null;
+	private Message message = null;
 	
 	@PostConstruct
 	public void init() throws JAXBException {
 
-		logger.info("Inicjowanie AndroidMessageService");
+		logger.info("Inicjowanie MessageService");
 		
-		jaxbContext = JAXBContext.newInstance(AndroidMessage.class);
+		jaxbContext = JAXBContext.newInstance(Message.class);
 		
-		messageFile = new File(configService.getCatalinaConfDir(), "android_message.xml");
+		messageFile = new File(configService.getCatalinaConfDir(), "message.xml");
 		
 		checkAndReloadMessageFile();
 	}
 	
-	public AndroidMessage.Message getMessage(String userAgent) {
+	public Message.MessageEntry getMessageForAndroid(String userAgent) {
 		
 		checkAndReloadMessageFile();
 		
@@ -57,16 +58,22 @@ public class AndroidMessageService {
 			return null;
 		}
 		
-		if (androidMessage == null) {
+		if (message == null) {
 			return null;
 		}
 		
 		// proba znalezienia odpowiedzi
-		List<Message> messageList = androidMessage.getMessageList();
+		AndroidMessageListWrapper androidMessageListWrapper = message.getAndroidMessageListWrapper();
 		
-		Message defaultMessage = null;
+		if (androidMessageListWrapper == null) {
+			return null;
+		}
 		
-		for (Message message : messageList) {
+		List<MessageEntry> androidMessageList = androidMessageListWrapper.getAndroidMessageList();
+		
+		MessageEntry defaultMessage = null;
+		
+		for (MessageEntry message : androidMessageList) {
 			
 			String messageUserAgentCondition = message.getUserAgentCondition();
 			String messageTimestamp = message.getTimestamp();
@@ -94,7 +101,6 @@ public class AndroidMessageService {
 				
 				continue;
 			}
-			
 		}
 		
 		// nic nie dopasowalismy, zwrocenie domyslnej odpowiedzi (jesli jakas dopasowala sie)
@@ -107,7 +113,7 @@ public class AndroidMessageService {
 		if (messageFile.exists() == false || messageFile.canRead() == false) {
 			
 			messageFileLastModified = null;
-			androidMessage = null;
+			message = null;
 			
 			return;
 		}
@@ -123,7 +129,7 @@ public class AndroidMessageService {
 		try {
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 			
-			androidMessage = (AndroidMessage)unmarshaller.unmarshal(messageFile);
+			message = (Message)unmarshaller.unmarshal(messageFile);
 			
 			messageFileLastModified = messageFile.lastModified();
 			
@@ -132,7 +138,7 @@ public class AndroidMessageService {
 			logger.error("Błąd podczas wczytywania pliku: " + messageFile, e);
 			
 			messageFileLastModified = null;
-			androidMessage = null;
+			message = null;
 			
 			return;			
 		}
@@ -140,27 +146,78 @@ public class AndroidMessageService {
 
 	//
 
-	@XmlRootElement(name = "AndroidMessage")
+	@XmlRootElement(name = "message")
 	@XmlAccessorType(XmlAccessType.FIELD)
-	public static class AndroidMessage {
-
-		private List<Message> messageList;
-
-		public List<Message> getMessageList() {
-			
-			if (messageList == null) {
-				messageList = new ArrayList<>();
-			}
-			
-			return messageList;
+	public static class Message {
+		
+		@XmlElement(name = "androidMessageList")
+		private AndroidMessageListWrapper androidMessageListWrapper;
+		
+		@XmlElement(name = "webMessageList")
+		private AndroidMessageListWrapper webMessageListWrapper;
+		
+		//
+		
+		public AndroidMessageListWrapper getAndroidMessageListWrapper() {
+			return androidMessageListWrapper;
 		}
 
-		public void setMessageList(List<Message> messageList) {
-			this.messageList = messageList;
+		public AndroidMessageListWrapper getWebMessageListWrapper() {
+			return webMessageListWrapper;
+		}
+
+		public void setAndroidMessageListWrapper(AndroidMessageListWrapper androidMessageListWrapper) {
+			this.androidMessageListWrapper = androidMessageListWrapper;
+		}
+
+		public void setWebMessageListWrapper(AndroidMessageListWrapper webMessageListWrapper) {
+			this.webMessageListWrapper = webMessageListWrapper;
+		}
+		
+		//
+
+		@XmlAccessorType(XmlAccessType.FIELD)
+		public static class AndroidMessageListWrapper {
+			
+			@XmlElement(name = "androidMessage")
+			private List<MessageEntry> androidMessageList;
+
+			public List<MessageEntry> getAndroidMessageList() {
+				
+				if (androidMessageList == null) {
+					androidMessageList = new ArrayList<>();
+				}
+				
+				return androidMessageList;
+			}
+
+			public void setAndroidMessageList(List<MessageEntry> androidMessageList) {
+				this.androidMessageList = androidMessageList;
+			}
 		}
 
 		@XmlAccessorType(XmlAccessType.FIELD)
-		public static class Message {
+		public static class WebMessageListWrapper {
+			
+			@XmlElement(name = "webMessage")
+			private List<MessageEntry> webMessageList;
+
+			public List<MessageEntry> getWebdMessageList() {
+				
+				if (webMessageList == null) {
+					webMessageList = new ArrayList<>();
+				}
+				
+				return webMessageList;
+			}
+
+			public void setWebMessageList(List<MessageEntry> webMessageList) {
+				this.webMessageList = webMessageList;
+			}
+		}
+		
+		@XmlAccessorType(XmlAccessType.FIELD)
+		public static class MessageEntry {
 
 			@XmlElement(name = "userAgentCondition")
 			private String userAgentCondition;
@@ -196,5 +253,4 @@ public class AndroidMessageService {
 			}			
 		}
 	}
-
 }
