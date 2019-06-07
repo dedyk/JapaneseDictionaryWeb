@@ -337,7 +337,7 @@ public class ZinniaManager {
 				}			
 			}
 
-			List<KanjiRecognizerResultItem> recognize = character.recognize(50);
+			List<KanjiRecognizerResultItem> recognize = character.recognize(100);
 			
 			for (KanjiRecognizerResultItem kanjiRecognizerResultItem : recognize) {
 				

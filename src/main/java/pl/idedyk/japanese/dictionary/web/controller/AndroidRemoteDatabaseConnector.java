@@ -595,7 +595,7 @@ public class AndroidRemoteDatabaseConnector {
 				}
 			}
 
-			result = character.recognize(50);
+			result = character.recognize(100);
 						
 		} finally {
 			if (character != null) {

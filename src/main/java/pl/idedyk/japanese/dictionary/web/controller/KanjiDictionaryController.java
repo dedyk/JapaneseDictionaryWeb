@@ -652,7 +652,7 @@ public class KanjiDictionaryController {
 				}			
 			}
 
-			return character.recognize(50);
+			return character.recognize(100);
 						
 		} finally {
 			if (character != null) {
