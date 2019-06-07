@@ -380,6 +380,44 @@ public class AndroidRemoteDatabaseConnector {
 		// zwrocenie wyniku
 		writer.append(gson.toJson(kanjiEntry));
 	}
+
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getKanjiEntryList", method = RequestMethod.POST)
+	public void getKanjiEntryList(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntryList] Parsuję żądanie: " + jsonRequest);
+	
+		// tworzenie wywolania z json'a
+		List<String> kanjiList = gson.fromJson(jsonRequest, new TypeToken<List<String>>(){}.getType());
+		
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntry] Pobierz kanji dla listy kanji: " + kanjiList);
+
+		// szukanie		
+		List<KanjiEntry> kanjiEntryList = dictionaryManager.findKanjiList(kanjiList);
+		
+		if (kanjiEntryList != null) {
+			
+			for (KanjiEntry kanjiEntry : kanjiEntryList) {
+				
+				// logowanie
+				loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
+				
+			}			
+		}
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+
+		// zwrocenie wyniku
+		writer.append(gson.toJson(kanjiEntryList));
+	}
 	
 	@RequestMapping(value = "/android/remoteDatabaseConnector/getAllKanjis", method = RequestMethod.POST)
 	public void getAllKanjis(HttpServletRequest request, HttpServletResponse response, Writer writer,
