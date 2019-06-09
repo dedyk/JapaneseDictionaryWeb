@@ -1100,11 +1100,11 @@ public class LoggerListener {
 		} else if (KanjiDictionaryCatalogLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.KANJI_DICTIONARY_CATALOG;
 		
-		} else if (KanjiDictionaryCatalogLoggerModel.class.isAssignableFrom(clazz) == true) {
-			return GenericLogOperationEnum.KANJI_DICTIONARY_CATALOG;
-		
 		} else if (KanjiDictionaryGetKanjiEntryListLoggerModel.class.isAssignableFrom(clazz) == true) {
-			return GenericLogOperationEnum.KANJI_DICTIONARY_GET_KANJI_ENTRY_LIST;
+		    return GenericLogOperationEnum.KANJI_DICTIONARY_GET_KANJI_ENTRY_LIST;
+			
+		} else if (AndroidSendMissingWordLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.ANDROID_SEND_MISSING_WORD;
 			
 		} else if (AndroidGetSpellCheckerSuggestionLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.ANDROID_GET_SPELL_CHECKER_SUGGESTION;
