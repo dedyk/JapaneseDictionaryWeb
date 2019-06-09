@@ -44,6 +44,7 @@ import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAllKanjisLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryGetKanjiEntryListLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchStrokeCountLoggerModel;
@@ -370,8 +371,7 @@ public class AndroidRemoteDatabaseConnector {
 		
 		if (kanjiEntry != null) {
 			// logowanie
-			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
-			
+			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));			
 		}
 		
 		// typ odpowiedzi
@@ -402,15 +402,8 @@ public class AndroidRemoteDatabaseConnector {
 		// szukanie		
 		List<KanjiEntry> kanjiEntryList = dictionaryManager.findKanjiList(kanjiList);
 		
-		if (kanjiEntryList != null) {
-			
-			for (KanjiEntry kanjiEntry : kanjiEntryList) {
-				
-				// logowanie
-				loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
-				
-			}			
-		}
+		// logowanie
+		loggerSender.sendLog(new KanjiDictionaryGetKanjiEntryListLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntryList));
 		
 		// typ odpowiedzi
 		response.setContentType("application/json");
