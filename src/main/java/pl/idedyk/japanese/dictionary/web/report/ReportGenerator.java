@@ -660,7 +660,51 @@ public class ReportGenerator {
 			}
 		});
 		
+		// statystyki wersji aplikacji
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.version.stat", japaneseAndroidLearnerHelperListStat);
+		
+		
+		// statystyki wersji androida
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.version.stat", groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+			
+			@Override
+			public String getKey(Object o) {
+				
+				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+				
+				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+				
+				return paramsAsMap.get("androidVersion");
+			}
+		}));
+		
+		// statystyki producenta urzadzenia
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.device.manufacturer.stat", groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+			
+			@Override
+			public String getKey(Object o) {
+				
+				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+				
+				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+				
+				return paramsAsMap.get("androidDeviceManufacturer");
+			}
+		}));
+
+		// statystyki modelu urzadzenia
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.device.model.stat", groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+			
+			@Override
+			public String getKey(Object o) {
+				
+				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+				
+				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+				
+				return paramsAsMap.get("androidDeviceModel");
+			}
+		}));
 		
 		// statystyki krajow na podstawie adresu IP
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(0)));
