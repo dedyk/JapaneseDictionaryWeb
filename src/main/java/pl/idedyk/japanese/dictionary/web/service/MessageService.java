@@ -51,7 +51,7 @@ public class MessageService {
 		checkAndReloadMessageFile();
 	}
 	
-	public Message.MessageEntry getMessageForAndroid(String userAgent) {
+	public synchronized Message.MessageEntry getMessageForAndroid(String userAgent) {
 		
 		checkAndReloadMessageFile();
 		
@@ -107,7 +107,7 @@ public class MessageService {
 		return defaultMessage;
 	}
 
-	public Message.MessageEntry getMessageForWeb() {
+	public synchronized Message.MessageEntry getMessageForWeb() {
 		
 		checkAndReloadMessageFile();
 				
