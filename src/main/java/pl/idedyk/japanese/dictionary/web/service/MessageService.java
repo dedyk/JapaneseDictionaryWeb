@@ -18,6 +18,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.AndroidAutocompleteMessageEntry;
+import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.AndroidAutocompleteMessageListWrapper;
 import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.AndroidMessageListWrapper;
 import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.MessageEntry;
 import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.WebMessageListWrapper;
@@ -93,6 +95,63 @@ public class MessageService {
 			
 			try {
 				if (userAgent.matches(messageUserAgentCondition) == true) {
+					return message;
+				}
+				
+			} catch (PatternSyntaxException e) {
+				logger.error("Niepoprawne wyrażenie regularne dla: " + messageUserAgentCondition);
+				
+				continue;
+			}
+		}
+		
+		// nic nie dopasowalismy, zwrocenie domyslnej odpowiedzi (jesli jakas dopasowala sie)
+		return defaultMessage;
+	}
+	
+	public synchronized Message.AndroidAutocompleteMessageEntry getMessageForAndroidAutocomplete(String userAgent, String autocompleteType) {
+		
+		checkAndReloadMessageFile();
+		
+		if (userAgent == null) {
+			return null;
+		}
+		
+		if (message == null) {
+			return null;
+		}
+		
+		// proba znalezienia odpowiedzi
+		AndroidAutocompleteMessageListWrapper androidAutocompleteMessageListWrapper = message.getAndroidAutocompleteMessageListWrapper();
+		
+		if (androidAutocompleteMessageListWrapper == null) {
+			return null;
+		}
+		
+		List<AndroidAutocompleteMessageEntry> androidAutocompleteMessageList = androidAutocompleteMessageListWrapper.getAndroidAutocompleteMessageList();
+		
+		AndroidAutocompleteMessageEntry defaultMessage = null;
+		
+		for (AndroidAutocompleteMessageEntry message : androidAutocompleteMessageList) {
+			
+			String messageUserAgentCondition = message.getUserAgentCondition();
+			String messageTimestamp = message.getTimestamp();
+			String messageAutocompleteType = message.getAutocompleteType();
+			
+			if (messageUserAgentCondition == null || messageTimestamp == null || messageAutocompleteType == null) {
+				continue;
+			}
+			
+			if (autocompleteType.equals(messageAutocompleteType) == true && messageUserAgentCondition.equals("default") == true) {
+				defaultMessage = message;
+				
+				continue;
+			}
+			
+			// mamy pasujaca odpowiedz
+			
+			try {
+				if (autocompleteType.equals(messageAutocompleteType) == true && userAgent.matches(messageUserAgentCondition) == true) {
 					return message;
 				}
 				
@@ -187,6 +246,9 @@ public class MessageService {
 		
 		@XmlElement(name = "androidMessageList")
 		private AndroidMessageListWrapper androidMessageListWrapper;
+
+		@XmlElement(name = "androidAutocompleteList")
+		private AndroidAutocompleteMessageListWrapper androidAutocompleteMessageListWrapper;
 		
 		@XmlElement(name = "webMessageList")
 		private WebMessageListWrapper webMessageListWrapper;
@@ -197,12 +259,20 @@ public class MessageService {
 			return androidMessageListWrapper;
 		}
 
+		public AndroidAutocompleteMessageListWrapper getAndroidAutocompleteMessageListWrapper() {
+			return androidAutocompleteMessageListWrapper;
+		}
+
 		public WebMessageListWrapper getWebMessageListWrapper() {
 			return webMessageListWrapper;
 		}
 
 		public void setAndroidMessageListWrapper(AndroidMessageListWrapper androidMessageListWrapper) {
 			this.androidMessageListWrapper = androidMessageListWrapper;
+		}
+
+		public void setAndroidAutocompleteMessageListWrapper(AndroidAutocompleteMessageListWrapper androidAutocompleteMessageListWrapper) {
+			this.androidAutocompleteMessageListWrapper = androidAutocompleteMessageListWrapper;
 		}
 
 		public void setWebMessageListWrapper(WebMessageListWrapper webMessageListWrapper) {
@@ -252,6 +322,26 @@ public class MessageService {
 		}
 		
 		@XmlAccessorType(XmlAccessType.FIELD)
+		public static class AndroidAutocompleteMessageListWrapper {
+			
+			@XmlElement(name = "androidAutocompleteMessage")
+			private List<AndroidAutocompleteMessageEntry> androidAutocompleteMessageList;
+
+			public List<AndroidAutocompleteMessageEntry> getAndroidAutocompleteMessageList() {
+				
+				if (androidAutocompleteMessageList == null) {
+					androidAutocompleteMessageList = new ArrayList<>();
+				}
+				
+				return androidAutocompleteMessageList;
+			}
+
+			public void setAndroidAutocompleteMessageList(List<AndroidAutocompleteMessageEntry> androidAutocompleteMessageList) {
+				this.androidAutocompleteMessageList = androidAutocompleteMessageList;
+			}			
+		}
+				
+		@XmlAccessorType(XmlAccessType.FIELD)
 		public static class MessageEntry {
 
 			@XmlElement(name = "userAgentCondition")
@@ -285,6 +375,21 @@ public class MessageService {
 
 			public void setMessage(String message) {
 				this.message = message;
+			}			
+		}
+		
+		@XmlAccessorType(XmlAccessType.FIELD)
+		public static class AndroidAutocompleteMessageEntry extends MessageEntry {
+			
+			@XmlElement(name = "autocompleteType")
+			private String autocompleteType;
+
+			public String getAutocompleteType() {
+				return autocompleteType;
+			}
+
+			public void setAutocompleteType(String autocompleteType) {
+				this.autocompleteType = autocompleteType;
 			}			
 		}
 	}

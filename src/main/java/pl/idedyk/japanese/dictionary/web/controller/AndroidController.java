@@ -50,6 +50,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocomplet
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.MessageService;
+import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.AndroidAutocompleteMessageEntry;
 import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.MessageEntry;
 
 @Controller
@@ -228,8 +229,29 @@ public class AndroidController {
 				// logowanie
 				loggerSender.sendLog(new KanjiDictionaryAutocompleteLoggerModel(Utils.createLoggerModelCommon(request), word, autocomplete.size()));
 				
-			}			
+			}
 			
+			// wczytywanie komunikatu dla klienta
+			AndroidAutocompleteMessageEntry androidMessageEntry = messageService.getMessageForAndroidAutocomplete(request.getHeader("User-Agent"), type);
+
+			if (androidMessageEntry != null) { // may komunikat
+				
+				String additionalMessageForAutocomplete = androidMessageEntry.getMessage();
+				
+				if (additionalMessageForAutocomplete != null) {
+					additionalMessageForAutocomplete = additionalMessageForAutocomplete.trim();
+				}
+				
+				if (additionalMessageForAutocomplete != null && additionalMessageForAutocomplete.equals("") == false) {
+										
+					String[] additionalMessageForAutocompleteSplited = additionalMessageForAutocomplete.split("\n");
+					
+					for (int i = 0; i < additionalMessageForAutocompleteSplited.length; ++i) {
+						autocomplete.add(i, additionalMessageForAutocompleteSplited[i]);
+					}					
+				}
+			}
+						
 			JSONArray resultJsonArray = new JSONArray();
 
 			for (String currentWordAutocomplete : autocomplete) {
