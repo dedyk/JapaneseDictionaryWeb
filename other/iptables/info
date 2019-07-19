@@ -1,0 +1,4 @@
+Przekierowanie calego ruchu na 212.91.26.153:80 do localhost'a na port 8080.
+
+$ sysctl -w net.ipv4.conf.all.route_localnet=1
+$ iptables -t nat -A OUTPUT -o wlan0 -p tcp -d 212.91.26.153 --dport 80 -j DNAT --to-destination 127.0.0.1:8080
