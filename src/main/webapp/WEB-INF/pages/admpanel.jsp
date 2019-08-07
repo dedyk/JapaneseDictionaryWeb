@@ -44,10 +44,10 @@
 						</form:select>
 					</td>
 					<td>
-						<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 10px" onclick="selectAllGenericLogOperations(true)"><spring:message code="admin.panel.search.genericLogOperationStringList.selectAll" /></a>
+						<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 10px" onclick="selectAllGenericLogOperations(true); return false;"><spring:message code="admin.panel.search.genericLogOperationStringList.selectAll" /></a>
 					</td>
 					<td>
-						<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 0px" onclick="selectAllGenericLogOperations(false)"><spring:message code="admin.panel.search.genericLogOperationStringList.deselectAll" /></a>
+						<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 0px" onclick="selectAllGenericLogOperations(false); return false;"><spring:message code="admin.panel.search.genericLogOperationStringList.deselectAll" /></a>
 					</td>
 				</tr>
 

@@ -90,7 +90,13 @@
 								<form:option value="${currentAddableDictionaryEntry}" label="${currentAddableDictionaryEntry.name}" />
 							</c:forEach>								
 						</form:select>
-					</td>				
+					</td>
+					<td>
+						<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 10px" onclick="selectAllDictionaryType(true); return false;"><spring:message code="wordDictionary.page.label.dictionaryType.selectAll" /></a>
+					</td>
+					<td>
+						<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 0px" onclick="selectAllDictionaryType(false); return false;"><spring:message code="wordDictionary.page.label.dictionaryType.deselectAll" /></a>
+					</td>
 				</tr>				
 						
 				<tr>
@@ -185,6 +191,15 @@
 			    	}, 1000);
 				</c:if>				
 			});
+			
+			function selectAllDictionaryType(status) {
+								
+				if (status == true) {
+					$('#dictionaryTypeListId').selectpicker('selectAll');
+				} else {
+					$('#dictionaryTypeListId').selectpicker('deselectAll');
+				}
+			}			
 		</script>		
 	</jsp:body>
 </t:template>
