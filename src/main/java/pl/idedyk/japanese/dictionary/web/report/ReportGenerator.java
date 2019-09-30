@@ -27,6 +27,7 @@ import org.springframework.web.util.HtmlUtils;
 import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventOperation;
 import pl.idedyk.japanese.dictionary.web.html.B;
 import pl.idedyk.japanese.dictionary.web.html.Div;
+import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.P;
 import pl.idedyk.japanese.dictionary.web.html.Table;
@@ -124,6 +125,13 @@ public class ReportGenerator {
 
 				reportDiv.addHtmlElement(new Hr());
 				
+				// statystyki ogolne - tytul
+				H statGeneralH1Title = new H(2);
+				
+				statGeneralH1Title.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.general.title", new Object[] { }, Locale.getDefault())));
+				
+				reportDiv.addHtmlElement(statGeneralH1Title);
+				
 				// statystyki operacji
 				List<GenericTextStat> genericLogOperationStatList = groupByStat(genericLogRawList, new IGroupByFunction() {
 
@@ -200,9 +208,10 @@ public class ReportGenerator {
 				List<RemoteClientStat> remoteClientStat = mySQLConnector.getRemoteClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				appendRemoteClientStat(reportDiv, "report.generate.daily.report.remote.client", remoteClientStat);
-				*/
+
+				// statystyki user agentow
+				*/				
 				
-				// statystyki user agentow																						
 				// generowanie statystyk dla aplikacji na androida
 				generateStatForJapanaeseAndroidLearnHelper(reportDiv, splitUserAgentStatByType, androidQueueEventLogList);
 								
@@ -639,9 +648,33 @@ public class ReportGenerator {
 	}
 	
 	private void generateStatForJapanaeseAndroidLearnHelper(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType, List<AndroidQueueEventLog> androidQueueEventLogList) {
-				
+		
+		H androidTitle = new H(2);
+		
+		androidTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.android.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(androidTitle);
+		
+		// statystyki ilosciowe
+		
+		H androidUniqueFalseTitle = new H(3);
+		
+		androidUniqueFalseTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.android.unique.false.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(androidUniqueFalseTitle);
+		
+		//
+		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> japaneseAndroidLearnerHelperList = splitUserAgentStatByType.japaneseAndroidLearnerHelperList;
 		
+		//
+		
+		final Map<Long, ImmutablePair<GenericLog, UserAgentInfo>> genericIdCache = new TreeMap<>();
+		
+		for (ImmutablePair<GenericLog, UserAgentInfo> pair : japaneseAndroidLearnerHelperList) {					
+			genericIdCache.put(pair.getKey().getId(), pair);
+		}
+
 		//
 		
 		List<GenericTextStat> japaneseAndroidLearnerHelperListStat = groupByStat(japaneseAndroidLearnerHelperList, new IGroupByFunction() {
@@ -662,7 +695,6 @@ public class ReportGenerator {
 		
 		// statystyki wersji aplikacji
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.version.stat", japaneseAndroidLearnerHelperListStat);
-		
 		
 		// statystyki wersji androida
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.version.stat", groupByStat(androidQueueEventLogList, new IGroupByFunction() {
@@ -796,10 +828,23 @@ public class ReportGenerator {
 			}
 		});
 		
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.event.stat", androidQueueEventEventStat);			
+		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.event.stat", androidQueueEventEventStat);	
+		
+		// statystyki unikalne
+		
+		
+		
 	}
 	
 	private void generateStatForDesktop(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		H desktopTitle = new H(2);
+		
+		desktopTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.desktop.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(desktopTitle);
+
+		//
 		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> desktopList = splitUserAgentStatByType.desktopList;
 	
@@ -860,6 +905,14 @@ public class ReportGenerator {
 	
 	private void generateStatForPhone(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
+		H phoneTitle = new H(2);
+		
+		phoneTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.phone.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(phoneTitle);
+
+		//
+		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> phoneList = splitUserAgentStatByType.phoneList;
 		
 		//
@@ -918,6 +971,12 @@ public class ReportGenerator {
 	}
 
 	private void generateStatForTablet(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		H tableTitle = new H(2);
+		
+		tableTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.tablet.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(tableTitle);
 		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> tabletList = splitUserAgentStatByType.tableList;
 		
@@ -978,6 +1037,14 @@ public class ReportGenerator {
 	
 	private void generateStatForRobot(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
+		H robotTitle = new H(2);
+		
+		robotTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.robot.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(robotTitle);
+		
+		//
+		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> robotList = splitUserAgentStatByType.robotList;
 		
 		//
@@ -999,6 +1066,14 @@ public class ReportGenerator {
 
 	private void generateStatForOther(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
+		H otherTitle = new H(2);
+		
+		otherTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.other.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(otherTitle);
+		
+		//
+		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> otherList = splitUserAgentStatByType.otherList;
 		
 		//
@@ -1019,6 +1094,14 @@ public class ReportGenerator {
 	}
 
 	private void generateStatForNull(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		H nullTitle = new H(2);
+		
+		nullTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.null.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(nullTitle);
+		
+		//
 		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> nullList = splitUserAgentStatByType.nullList;
 		
