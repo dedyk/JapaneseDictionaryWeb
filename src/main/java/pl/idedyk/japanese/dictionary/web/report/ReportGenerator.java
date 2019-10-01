@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -24,9 +25,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventOperation;
 import pl.idedyk.japanese.dictionary.web.html.B;
 import pl.idedyk.japanese.dictionary.web.html.Div;
+import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.P;
 import pl.idedyk.japanese.dictionary.web.html.Table;
@@ -124,6 +128,13 @@ public class ReportGenerator {
 
 				reportDiv.addHtmlElement(new Hr());
 				
+				// statystyki ogolne - tytul
+				H statGeneralH1Title = new H(2);
+				
+				statGeneralH1Title.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.general.title", new Object[] { }, Locale.getDefault())));
+				
+				reportDiv.addHtmlElement(statGeneralH1Title);
+				
 				// statystyki operacji
 				List<GenericTextStat> genericLogOperationStatList = groupByStat(genericLogRawList, new IGroupByFunction() {
 
@@ -200,9 +211,10 @@ public class ReportGenerator {
 				List<RemoteClientStat> remoteClientStat = mySQLConnector.getRemoteClientStat(dailyLogProcessedMinMaxIds.getMinId(), dailyLogProcessedMinMaxIds.getMaxId());
 				
 				appendRemoteClientStat(reportDiv, "report.generate.daily.report.remote.client", remoteClientStat);
-				*/
+
+				// statystyki user agentow
+				*/				
 				
-				// statystyki user agentow																						
 				// generowanie statystyk dla aplikacji na androida
 				generateStatForJapanaeseAndroidLearnHelper(reportDiv, splitUserAgentStatByType, androidQueueEventLogList);
 								
@@ -639,167 +651,262 @@ public class ReportGenerator {
 	}
 	
 	private void generateStatForJapanaeseAndroidLearnHelper(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType, List<AndroidQueueEventLog> androidQueueEventLogList) {
+		
+		H androidTitle = new H(2);
+		
+		androidTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.android.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(androidTitle);
 				
+		//
+		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> japaneseAndroidLearnerHelperList = splitUserAgentStatByType.japaneseAndroidLearnerHelperList;
 		
 		//
 		
-		List<GenericTextStat> japaneseAndroidLearnerHelperListStat = groupByStat(japaneseAndroidLearnerHelperList, new IGroupByFunction() {
+		// maly cache ogolnych operacji
+		final Map<Long, ImmutablePair<GenericLog, UserAgentInfo>> genericIdCache = new TreeMap<>();
+		
+		for (ImmutablePair<GenericLog, UserAgentInfo> pair : japaneseAndroidLearnerHelperList) {					
+			genericIdCache.put(pair.getKey().getId(), pair);
+		}
+		
+		//
+		
+		// pogrupowanie po identyfikatorze uzytkownika (ostatnia operacja)
+		LinkedTreeMap<String, AndroidQueueEventLog> androidQueueEventLogListGroupByUserId = new LinkedTreeMap<>();
+		
+		for (AndroidQueueEventLog currentAndroidQueueEventLog : androidQueueEventLogList) {			
+			androidQueueEventLogListGroupByUserId.put(currentAndroidQueueEventLog.getUserId(), currentAndroidQueueEventLog);
+		}
+		
+		Collection<AndroidQueueEventLog> androidQueueEventLogListGroupByUserIdAsCollection = androidQueueEventLogListGroupByUserId.values();
+		
+		//
+		
+		for (int i = 0; i < 2; ++i) {
 			
-			@Override
-			public String getKey(Object o) {	
+			final boolean onlyUnique = i == 1;
+			
+			if (onlyUnique == false) {
+				
+				// statystyki ilosciowe		
+				H androidUniqueFalseTitle = new H(3);
+				
+				androidUniqueFalseTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.android.unique.false.title", new Object[] { }, Locale.getDefault())));
+				
+				reportDiv.addHtmlElement(androidUniqueFalseTitle);
+				
+			} else {
+				
+				// statystyki unikalne		
+				H androidUniqueFalseTitle = new H(3);
+				
+				androidUniqueFalseTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.android.unique.true.title", new Object[] { }, Locale.getDefault())));
+				
+				reportDiv.addHtmlElement(androidUniqueFalseTitle);
+			}
+						
+			// statystyki wersji aplikacji
+			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.version.stat", groupByStat(onlyUnique == false ? japaneseAndroidLearnerHelperList : androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
 				
 				@SuppressWarnings("unchecked")
-				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
-				
-				int code = pair.right.getJapaneseAndroidLearnerHelperInfo().getCode();
-				String codeName = pair.right.getJapaneseAndroidLearnerHelperInfo().getCodeName();
-				JapaneseAndroidLearnerHelperInfo.SubType subType = pair.right.getJapaneseAndroidLearnerHelperInfo().getSubType();
-				
-				return code + " - " + codeName + (subType == SubType.FULL ? "" : " (slim)");
-			}
-		});
-		
-		// statystyki wersji aplikacji
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.version.stat", japaneseAndroidLearnerHelperListStat);
-		
-		
-		// statystyki wersji androida
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.version.stat", groupByStat(androidQueueEventLogList, new IGroupByFunction() {
-			
-			@Override
-			public String getKey(Object o) {
-				
-				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
-				
-				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
-				
-				return paramsAsMap.get("androidVersion");
-			}
-		}));
-		
-		// statystyki producenta urzadzenia
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.device.manufacturer.stat", groupByStat(androidQueueEventLogList, new IGroupByFunction() {
-			
-			@Override
-			public String getKey(Object o) {
-				
-				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
-				
-				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
-				
-				return paramsAsMap.get("androidDeviceManufacturer");
-			}
-		}));
-
-		// statystyki modelu urzadzenia
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.device.model.stat", groupByStat(androidQueueEventLogList, new IGroupByFunction() {
-			
-			@Override
-			public String getKey(Object o) {
-				
-				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
-				
-				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
-				
-				return paramsAsMap.get("androidDeviceModel");
-			}
-		}));
-		
-		// statystyki krajow na podstawie adresu IP
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(0)));
-		
-		// statystyki krajow na podstawie jezyka urzadzenia
-		List<GenericTextStat> androidQueueEventLocaleCountryStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
-			
-			@Override
-			public String getKey(Object o) {
-				
-				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
-				
-				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
-				
-				return paramsAsMap.get("localeCountry");
-			}
-		});
-		
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.locale.country", androidQueueEventLocaleCountryStat);	
-
-		// statystyki jezykow na podstawie jezyka urzadzenia
-		List<GenericTextStat> androidQueueEventLocaleLanguageStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
-			
-			@Override
-			public String getKey(Object o) {
-				
-				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
-				
-				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
-				
-				return paramsAsMap.get("localeLanguage");
-			}
-		});
-		
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.locale.language", androidQueueEventLocaleLanguageStat);	
-		
-		// statystyki krajow i miast
-		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.city.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(1)));
-		
-		// statystyki rodzaju operacji na androidzie
-		List<GenericTextStat> androidQueueEventOperationStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
-			
-			@Override
-			public String getKey(Object o) {
-				
-				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
-				
-				return androidQueueEventLog.getOperation().toString();
-			}
-		});
-		
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.stat", androidQueueEventOperationStat);
-		
-		// statystyki ekranow
-		List<GenericTextStat> androidQueueEventScreenStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
-			
-			@Override
-			public String getKey(Object o) {
-				
-				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
-				
-				if (androidQueueEventLog.getOperation() != QueueEventOperation.STAT_LOG_SCREEN_EVENT) {
-					return null;
+				@Override
+				public String getKey(Object o) {
+					
+					ImmutablePair<GenericLog, UserAgentInfo> pair;
+										
+					if (o instanceof ImmutablePair) {
+						
+						pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
+						
+					} else {
+						
+						AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;						
+						
+						pair = genericIdCache.get(androidQueueEventLog.getGenericLogId());							
+					}
+					
+					int code = pair.right.getJapaneseAndroidLearnerHelperInfo().getCode();
+					String codeName = pair.right.getJapaneseAndroidLearnerHelperInfo().getCodeName();
+					JapaneseAndroidLearnerHelperInfo.SubType subType = pair.right.getJapaneseAndroidLearnerHelperInfo().getSubType();
+					
+					return code + " - " + codeName + (subType == SubType.FULL ? "" : " (slim)");
 				}
-				
-				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
-				
-				return paramsAsMap.get("screenName");
-			}
-		});
-		
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.screen.stat", androidQueueEventScreenStat);
-		
-		// statystyki zdarzen
-		List<GenericTextStat> androidQueueEventEventStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+			}));
 			
-			@Override
-			public String getKey(Object o) {
+			// statystyki wersji androida
+			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.version.stat", groupByStat(
+					onlyUnique == false ? androidQueueEventLogList : androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
 				
-				AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
-				
-				if (androidQueueEventLog.getOperation() != QueueEventOperation.STAT_LOG_EVENT_EVENT) {
-					return null;
+				@Override
+				public String getKey(Object o) {
+					
+					AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+					
+					Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+					
+					return paramsAsMap.get("androidVersion");
 				}
+			}));
+			
+			// statystyki producenta urzadzenia
+			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.device.manufacturer.stat", groupByStat(
+					onlyUnique == false ? androidQueueEventLogList : androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
 				
-				Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+				@Override
+				public String getKey(Object o) {
+					
+					AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+					
+					Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+					
+					return paramsAsMap.get("androidDeviceManufacturer");
+				}
+			}));
+
+			// statystyki modelu urzadzenia
+			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.device.model.stat", groupByStat(
+					onlyUnique == false ? androidQueueEventLogList : androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
 				
-				return paramsAsMap.get("actionName");
+				@Override
+				public String getKey(Object o) {
+					
+					AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+					
+					Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+					
+					return paramsAsMap.get("androidDeviceModel");
+				}
+			}));
+			
+			// statystyki krajow na podstawie adresu IP
+			if (onlyUnique == false) {
+				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(0)));
+				
+			} else {
+				
+				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
+					
+					CountryCityGroupBy countryCityGroupBy = new CountryCityGroupBy(0);
+					
+					@Override
+					public String getKey(Object o) {
+						
+						AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;						
+						
+						ImmutablePair<GenericLog, UserAgentInfo> pair = genericIdCache.get(androidQueueEventLog.getGenericLogId());
+
+						return countryCityGroupBy.getKey(pair);
+					}
+				}));
 			}
-		});
-		
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.event.stat", androidQueueEventEventStat);			
+			
+			// statystyki krajow na podstawie jezyka urzadzenia
+			List<GenericTextStat> androidQueueEventLocaleCountryStat = groupByStat(
+					onlyUnique == false ? androidQueueEventLogList : androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
+				
+				@Override
+				public String getKey(Object o) {
+					
+					AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+					
+					Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+					
+					return paramsAsMap.get("localeCountry");
+				}
+			});
+			
+			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.locale.country", androidQueueEventLocaleCountryStat);	
+
+			// statystyki jezykow na podstawie jezyka urzadzenia
+			List<GenericTextStat> androidQueueEventLocaleLanguageStat = groupByStat(
+					onlyUnique == false ? androidQueueEventLogList : androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
+				
+				@Override
+				public String getKey(Object o) {
+					
+					AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+					
+					Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+					
+					return paramsAsMap.get("localeLanguage");
+				}
+			});
+			
+			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.locale.language", androidQueueEventLocaleLanguageStat);	
+			
+			// statystyki krajow i miast
+			// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.city.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(1)));
+			
+			// statystyki rodzaju operacji na androidzie
+			if (onlyUnique == false) {
+			
+				List<GenericTextStat> androidQueueEventOperationStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+					
+					@Override
+					public String getKey(Object o) {
+						
+						AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+						
+						return androidQueueEventLog.getOperation().toString();
+					}
+				});
+				
+				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.stat", androidQueueEventOperationStat);
+				
+				// statystyki ekranow
+				List<GenericTextStat> androidQueueEventScreenStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+					
+					@Override
+					public String getKey(Object o) {
+						
+						AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+						
+						if (androidQueueEventLog.getOperation() != QueueEventOperation.STAT_LOG_SCREEN_EVENT) {
+							return null;
+						}
+						
+						Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+						
+						return paramsAsMap.get("screenName");
+					}
+				});
+				
+				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.screen.stat", androidQueueEventScreenStat);
+				
+				// statystyki zdarzen
+				List<GenericTextStat> androidQueueEventEventStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
+					
+					@Override
+					public String getKey(Object o) {
+						
+						AndroidQueueEventLog androidQueueEventLog = (AndroidQueueEventLog)o;
+						
+						if (androidQueueEventLog.getOperation() != QueueEventOperation.STAT_LOG_EVENT_EVENT) {
+							return null;
+						}
+						
+						Map<String, String> paramsAsMap = androidQueueEventLog.getParamsAsMap();
+						
+						return paramsAsMap.get("actionName");
+					}
+				});
+				
+				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.event.stat", androidQueueEventEventStat);
+			}
+		}		
 	}
 	
 	private void generateStatForDesktop(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		H desktopTitle = new H(2);
+		
+		desktopTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.desktop.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(desktopTitle);
+
+		//
 		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> desktopList = splitUserAgentStatByType.desktopList;
 	
@@ -860,6 +967,14 @@ public class ReportGenerator {
 	
 	private void generateStatForPhone(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
+		H phoneTitle = new H(2);
+		
+		phoneTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.phone.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(phoneTitle);
+
+		//
+		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> phoneList = splitUserAgentStatByType.phoneList;
 		
 		//
@@ -918,6 +1033,12 @@ public class ReportGenerator {
 	}
 
 	private void generateStatForTablet(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		H tableTitle = new H(2);
+		
+		tableTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.tablet.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(tableTitle);
 		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> tabletList = splitUserAgentStatByType.tableList;
 		
@@ -978,6 +1099,14 @@ public class ReportGenerator {
 	
 	private void generateStatForRobot(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
+		H robotTitle = new H(2);
+		
+		robotTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.robot.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(robotTitle);
+		
+		//
+		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> robotList = splitUserAgentStatByType.robotList;
 		
 		//
@@ -999,6 +1128,14 @@ public class ReportGenerator {
 
 	private void generateStatForOther(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
+		H otherTitle = new H(2);
+		
+		otherTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.other.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(otherTitle);
+		
+		//
+		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> otherList = splitUserAgentStatByType.otherList;
 		
 		//
@@ -1019,6 +1156,14 @@ public class ReportGenerator {
 	}
 
 	private void generateStatForNull(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+		
+		H nullTitle = new H(2);
+		
+		nullTitle.addHtmlElement(new Text(messageSource.getMessage("report.generate.daily.stat.null.title", new Object[] { }, Locale.getDefault())));
+		
+		reportDiv.addHtmlElement(nullTitle);
+		
+		//
 		
 		List<ImmutablePair<GenericLog, UserAgentInfo>> nullList = splitUserAgentStatByType.nullList;
 		
@@ -1045,7 +1190,7 @@ public class ReportGenerator {
 		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.null.stat", nullStatList);		
 	}
 	
-	private List<GenericTextStat> groupByStat(List<?> list, IGroupByFunction groupByFunction) {
+	private List<GenericTextStat> groupByStat(Collection<?> list, IGroupByFunction groupByFunction) {
 		
 		Map<String, Long> resultMap = new TreeMap<String, Long>();
 		
