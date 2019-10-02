@@ -30,6 +30,12 @@
 					
 					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.text5"/></p>
 					
+					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.text6"/></p>
+					
+					<p><spring:message code="info.page.body.text7"/></p>
+					
+					<hr/>
+					
 					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention1"/></p>
 					
 					<p>&nbsp;&nbsp;&nbsp;&nbsp;<spring:message code="info.page.body.attention2"/>					

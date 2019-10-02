@@ -26,11 +26,12 @@ public class StartController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
 		
-		logger.info("Wyswietlanie glownej strony");
+		logger.info("Wyswietlanie glownej strony (przekierowanie)");
 				
 		// logowanie
 		loggerSender.sendLog(new StartLoggerModel(Utils.createLoggerModelCommon(request)));
 				
-		return "start";
+		//return "start";
+		return "redirect:/wordDictionary";
 	}
 }
