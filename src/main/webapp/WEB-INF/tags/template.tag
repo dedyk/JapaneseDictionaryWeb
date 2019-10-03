@@ -16,7 +16,7 @@
 	
 	<meta name="keywords" content="<spring:message code="template.keywords"/>" />
 	
-	<meta name="viewport" content="width=device-width, initial-scale=0.6">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	
 	<c:if test="${pageDescription != null}">
 	<meta name="description" content="${pageDescription}" />
@@ -105,7 +105,7 @@
 
 		<div class="row">
 		
-			<div class="row header" style="margin-bottom: 30px;">
+			<div class="header" style="margin-bottom: 30px;">
 
 				<table style="width: 100%">
 					<tr>
@@ -218,7 +218,7 @@
 				<jsp:doBody />
 			</div>
 
-			<div class="row footer col-md-12" style="margin-top: 50px; font-size: 90%">
+			<div class="footer col-md-12" style="margin-top: 50px;">
 				<hr style="margin-bottom: 5px" />
 				
 				<spring:eval var="appVersion" expression="@applicationProperties.getProperty('app.version')" />
@@ -229,7 +229,8 @@
 				<spring:message code="template.footer.author"/>&nbsp;<a style="color: #777777" href="https://plus.google.com/${googlePlusAuthorId}?rel=author"><spring:message code="template.footer.author.name"/></a> <br/>
 								
 				<spring:message code="template.footer.android.version1"/>&nbsp;<a style="color: #777777" href="<spring:message code='template.footer.android.version.link'/>"><spring:message code="template.footer.android.version2"/></a> <br/> <br/>				
-								
+				
+				<%-- 
 				<jdwt:isRobot>
 					<c:set var="wordDictionaryUrl"><c:out value='${pageContext.request.contextPath}' />/wordDictionaryCatalog/1</c:set>
 					<c:set var="wordDictionaryNameUrl"><c:out value='${pageContext.request.contextPath}' />/wordDictionaryNameCatalog/1</c:set>
@@ -238,7 +239,8 @@
 					<a style="color: #777777" href="${wordDictionaryUrl}"><spring:message code="template.footer.catalog.word"/></a> -
 					<a style="color: #777777" href="${wordDictionaryNameUrl}"><spring:message code="template.footer.catalog.wordname"/></a> -
 					<a style="color: #777777" href="${kanjiDictionaryUrl}"><spring:message code="template.footer.catalog.kanji"/></a>				
-				</jdwt:isRobot>				
+				</jdwt:isRobot>	
+				--%>			
 			</div>
 		</div>
 	</div>

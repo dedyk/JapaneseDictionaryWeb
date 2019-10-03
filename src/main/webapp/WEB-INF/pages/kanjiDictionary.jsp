@@ -305,7 +305,7 @@
 										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
-										<th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th>
+										<jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile>
 										<th></th>
 									</tr>
 								</thead>
@@ -389,26 +389,36 @@
 									if (strokeCountCounter == 0) {
 										$('#radicalTableFoundId').append("<tr></tr>");
 									}
+									
+		            				<jdwt:isMobile mobile="false">
+		            					<c:set var="strokeCountCounterCompareValue" value="30" />
+		            					<c:set var="fontSizeValue" value="200" />
+		            				</jdwt:isMobile>
+	
+		            				<jdwt:isMobile mobile="true">
+		            					<c:set var="strokeCountCounterCompareValue" value="10" />
+		            						<c:set var="fontSizeValue" value="150" />
+		            				</jdwt:isMobile>
 
 									if (currentStrokeCount != value.strokeCount) {
-										$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: 200%; text-align: center; border: 1px solid black; background-color: #CCCCCC">' + value.strokeCount + "</td>");
+										$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: <c:out value="${fontSizeValue}"/>%; text-align: center; border: 1px solid black; background-color: #CCCCCC">' + value.strokeCount + "</td>");
 
 										currentStrokeCount = value.strokeCount;
 										strokeCountCounter++;
 									}
-
-									if (strokeCountCounter == 29) {
+									
+									if (strokeCountCounter == <c:out value="${strokeCountCounterCompareValue}" />) {
 										$('#radicalTableFoundId').append("<tr></tr>");
 
 										strokeCountCounter = 0;
 									}
 
-									$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;">' + 
+									$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: <c:out value="${fontSizeValue - 20}"/>%; text-align: center; border: 1px solid black;">' + 
 											'<a href=\'<c:out value="${pageContext.request.contextPath}" />/kanjiDictionaryDetails/' + value.id + '/' + value.kanji + '\'>' + value.kanji + "</a></td>");								
 
 									strokeCountCounter++;
 
-									if (strokeCountCounter == 29) {
+									if (strokeCountCounter == <c:out value="${strokeCountCounterCompareValue}" />) {
 										strokeCountCounter = 0;
 									}									
 							    });
@@ -488,14 +498,24 @@
 	            					<tr>
 	            				</c:if>
 	            				
+	            				<jdwt:isMobile mobile="false">
+	            					<c:set var="strokeCountCounterCompareValue" value="30" />
+	            					<c:set var="fontSizeValue" value="200" />
+	            				</jdwt:isMobile>
+
+	            				<jdwt:isMobile mobile="true">
+	            					<c:set var="strokeCountCounterCompareValue" value="9" />
+	            					<c:set var="fontSizeValue" value="150" />
+	            				</jdwt:isMobile>	            			
+	            				
 								<c:if test="${currentStrokeCount != currentRadical.strokeCount}">
-	            					<td id="strokeCount_${currentRadical.strokeCount}" style="padding: 5px; font-size: 200%; text-align: center; border: 1px solid black; background-color: #CCCCCC">${currentRadical.strokeCount}</td>
+	            					<td id="strokeCount_${currentRadical.strokeCount}" style="padding: 5px; font-size: <c:out value="${fontSizeValue}"/>%; text-align: center; border: 1px solid black; background-color: #CCCCCC">${currentRadical.strokeCount}</td>
 	            					
 	            					<c:set var="currentStrokeCount" value="${currentRadical.strokeCount}" />
 	            					<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />
 	            				</c:if>
-	            				
-	            				<c:if test="${strokeCountCounter == 30}">
+	            					            				
+	            				<c:if test="${strokeCountCounter == strokeCountCounterCompareValue}">
 	            					<c:set var="strokeCountCounter" value="0" />
 	            					</tr>
 	            					<tr>
@@ -503,18 +523,18 @@
 	            				
 								<c:choose>
 							      <c:when test="${currentRadical.image == null}">
-							      	<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">${currentRadical.radical}</td>
+							      	<td style="padding: 5px; font-size: <c:out value="${fontSizeValue}"/>%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">${currentRadical.radical}</td>
 							      </c:when>
 							
 							      <c:otherwise>
-							      	<td style="padding: 5px; font-size: 150%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">
+							      	<td style="padding: 5px; font-size: <c:out value="${fontSizeValue}"/>%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">
 							      	<img src="${staticFilePrefix}/${currentRadical.image}" alt="${currentRadical.radical}" /></td>
 							      </c:otherwise>
 								</c:choose>
 	            				
 	            				<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />
 	            				
-	            				 <c:if test="${strokeCountCounter == 30}">
+	            				 <c:if test="${strokeCountCounter == strokeCountCounterCompareValue}">
 	            					<c:set var="strokeCountCounter" value="0" />
 	            					</tr>
 	            					<tr>
@@ -601,7 +621,7 @@
 										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
-										<th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th>
+										<jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile>
 										<th></th>
 									</tr>
 								</thead>

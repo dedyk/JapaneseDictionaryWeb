@@ -99,6 +99,16 @@
 		<info>Generuje zawartosc tylko dla robotow</info>
 	</tag>
 	<tag>
+		<name>isMobile</name>
+		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.IsMobileTag</tagclass>
+		<info>Generuje zawartosc nie dla użytkowników telefonow</info>
+		<attribute>
+			<name>mobile</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<name>generateSpellCheckerSuggestionList</name>
 		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.GenerateSpellCheckerSuggestionListTag</tagclass>
 		<info>Generuje sugestie podczas wyszukiwania</info>

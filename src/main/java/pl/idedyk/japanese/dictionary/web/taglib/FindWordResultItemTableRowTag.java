@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -16,6 +18,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
@@ -35,6 +38,17 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	public int doStartTag() throws JspException {
 		
 		ServletContext servletContext = pageContext.getServletContext();
+		ServletRequest servletRequest = pageContext.getRequest();
+		
+		String userAgent = null;
+		
+		if (servletRequest instanceof HttpServletRequest) {			
+			HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+			
+			userAgent = httpServletRequest.getHeader("User-Agent");			
+		}
+		
+		//
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
@@ -98,11 +112,14 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	    	}
 	    	
 	    	// info
-	    	Td infoTd = new Td();
-	    	tr.addHtmlElement(infoTd);
-	    	
-	    	if (info != null && info.equals("") == false) {
-	    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, findWordRequest.searchInfo)));
+	    	if (userAgent == null || Utils.isMobile(userAgent) == false) {	    	
+	    		
+		    	Td infoTd = new Td();
+		    	tr.addHtmlElement(infoTd);
+		    	
+		    	if (info != null && info.equals("") == false) {
+		    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, findWordRequest.searchInfo)));
+		    	}
 	    	}
             
             // details link

@@ -6,6 +6,8 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -18,6 +20,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary.web.html.A;
@@ -44,6 +47,17 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	public int doStartTag() throws JspException {
 		
 		ServletContext servletContext = pageContext.getServletContext();
+		ServletRequest servletRequest = pageContext.getRequest();
+		
+		String userAgent = null;
+		
+		if (servletRequest instanceof HttpServletRequest) {			
+			HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+			
+			userAgent = httpServletRequest.getHeader("User-Agent");			
+		}
+		
+		//
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
@@ -132,14 +146,18 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	    	}
 	    	
 	    	// informacje dodatkowe
-	    	String info = resultItem.getInfo();
-	    	
-	    	Td infoTd = new Td();
-	    	tr.addHtmlElement(infoTd);
-	    	
-	    	if (info != null && info.equals("") == false) {
-	    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, true)));
+	    	if (userAgent == null || Utils.isMobile(userAgent) == false) {	    	
+
+		    	String info = resultItem.getInfo();
+		    	
+		    	Td infoTd = new Td();
+		    	tr.addHtmlElement(infoTd);
+		    	
+		    	if (info != null && info.equals("") == false) {
+		    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, true)));
+		    	}
 	    	}
+	    	
 	    	// szczegoly
 	    	Td detailsLinkTd = new Td();
 	    	tr.addHtmlElement(detailsLinkTd);

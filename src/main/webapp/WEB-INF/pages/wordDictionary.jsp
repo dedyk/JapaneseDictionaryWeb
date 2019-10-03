@@ -91,13 +91,27 @@
 							</c:forEach>								
 						</form:select>
 					</td>
-					<td>
-						<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 10px" onclick="selectAllDictionaryType(true); return false;"><spring:message code="wordDictionary.page.label.dictionaryType.selectAll" /></a>
-					</td>
-					<td>
-						<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 0px" onclick="selectAllDictionaryType(false); return false;"><spring:message code="wordDictionary.page.label.dictionaryType.deselectAll" /></a>
-					</td>
-				</tr>				
+					<jdwt:isMobile mobile="false">
+						<td>
+							<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 10px" onclick="selectAllDictionaryType(true); return false;"><spring:message code="wordDictionary.page.label.dictionaryType.selectAll" /></a>
+						</td>
+						<td>
+							<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 0px" onclick="selectAllDictionaryType(false); return false;"><spring:message code="wordDictionary.page.label.dictionaryType.deselectAll" /></a>
+						</td>
+					</jdwt:isMobile>
+				</tr>
+				
+				<jdwt:isMobile mobile="true">
+					<tr>
+						<td></td>
+						<td>
+							<table>
+								<tr><td><a href="#" class="btn btn-default" style="margin: 0px 0px 5px 20px" onclick="selectAllDictionaryType(true); return false;"><spring:message code="wordDictionary.page.label.dictionaryType.selectAll" /></a></td></tr>
+								<tr><td><a href="#" class="btn btn-default" style="margin: 10px 0px 10px 20px" onclick="selectAllDictionaryType(false); return false;"><spring:message code="wordDictionary.page.label.dictionaryType.deselectAll" /></a></td></tr>	
+							</table>						
+						</td>
+					</tr>					
+				</jdwt:isMobile>
 						
 				<tr>
 					<td></td>
@@ -129,7 +143,7 @@
 						<th><spring:message code="wordDictionary.page.search.table.column.kana" /></th>
 						<th><spring:message code="wordDictionary.page.search.table.column.romaji" /></th>
 						<th><spring:message code="wordDictionary.page.search.table.column.translate" /></th>
-						<th><spring:message code="wordDictionary.page.search.table.column.info" /></th>
+						<jdwt:isMobile mobile="false"><th><spring:message code="wordDictionary.page.search.table.column.info" /></th></jdwt:isMobile>						
 						<th></th>
 					</tr>
 				</thead>

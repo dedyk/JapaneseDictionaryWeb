@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
@@ -23,6 +25,7 @@ import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
@@ -58,6 +61,17 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	public int doStartTag() throws JspException {
 				
 		ServletContext servletContext = pageContext.getServletContext();
+		ServletRequest servletRequest = pageContext.getRequest();
+		
+		String userAgent = null;
+		
+		if (servletRequest instanceof HttpServletRequest) {			
+			HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+			
+			userAgent = httpServletRequest.getHeader("User-Agent");			
+		}
+		
+		//
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
@@ -101,7 +115,9 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
             mainContentDiv.addHtmlElement(addSuggestionElements(mainMenu));
 
             // dodaj menu
-            mainContentDiv.addHtmlElement(generateMenu(mainMenu));
+            if (Utils.isMobile(userAgent) == false) {
+	            mainContentDiv.addHtmlElement(generateMenu(mainMenu));
+            }
 
             // renderowanie
             mainContentDiv.render(out);
