@@ -488,12 +488,12 @@
 						}
             		</script>
             		
-            		<center>
+            		<div>
             		
             			<c:set var="currentStrokeCount" value="" />
             			<c:set var="strokeCountCounter" value="0" />
       		
-	            		<table id="radicalTableId">
+	            		<table id="radicalTableId" align="center">
 	            			<c:forEach items="${radicalList}" var="currentRadical">
 	            				
 	            			  	<c:if test="${strokeCountCounter == 0}">
@@ -536,15 +536,15 @@
 	            			
 	            			</tr>
 	            		</table>            		
-					</center>
+					</div>
 					
 					<div id="radicalTableFoundDivId" style="padding-top: 10px;">
 						<h4><spring:message code="kanjiDictionary.page.search.radicals.found" /></h4>
 						
-						<center>
-							<table id="radicalTableFoundId">
+						<div>
+							<table id="radicalTableFoundId" align="center">
 							</table>						
-						</center>					
+						</div>					
 					</div>		
         		</div>
         		
