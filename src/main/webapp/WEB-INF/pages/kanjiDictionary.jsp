@@ -543,7 +543,7 @@
 						
 						<div>
 							<table id="radicalTableFoundId" align="center">
-							</table>						
+							</table>	
 						</div>					
 					</div>		
         		</div>
@@ -552,9 +552,11 @@
         		        			
         		    <form id="detectForm" method="post" action="${pageContext.request.contextPath}/kanjiDictionaryDetectSearch">
         		    	<input id="detectFormStrokes" type="hidden" name="strokes" value="" />
+        		    	<input id="detectFormWidth" type="hidden" name="width" value="" />
+        		    	<input id="detectFormHeight" type="hidden" name="height" value="" />
         		    </form>
         		        			
-        			<div class="col-md-12">
+        			<div>
         				<h4><spring:message code="kanjiDictionary.page.tab.detect.info1" /></h4>
         				<h5><spring:message code="kanjiDictionary.page.tab.detect.info2" /></h5>
         				<hr/>
@@ -566,36 +568,31 @@
         			</div>        			
         			</c:if>
         			
-        			<div class="col-md-12">
-        				<div class="col-md-2">
+        			<div>
+        				<div>
+							<button onclick="detect();" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 160px;">
+								<b><spring:message code="kanjiDictionary.page.tab.detect.detect" /></b>
+							</button>
+							
+							<button onclick="undoStrokeDetect();" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 160px;">
+								<spring:message code="kanjiDictionary.page.tab.detect.undo" />
+							</button>
+							
+							<button onclick="clearDetect();" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 160px;">
+								<spring:message code="kanjiDictionary.page.tab.detect.clear" />
+							</button>        				
         				</div>
-        				<div class="col-md-6">
-        					<canvas id="detectCanvas" width="500" height="500" style="border: 1px solid black;">
+        			
+        				<div>
+        					<jdwt:isMobile mobile="false">
+        						<canvas id="detectCanvas" width="500" height="500" style="border: 1px solid black;">        					
+        						</canvas>
+        					</jdwt:isMobile>
         					
-        					</canvas>
-        				</div>
-        				<div class="col-md-2">
-        					<table>
-        					
-        						<tr><td>
-        							<button onclick="detect();" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 180px;">
-        								<b><spring:message code="kanjiDictionary.page.tab.detect.detect" /></b>
-        							</button>
-        						</td></tr>
-        					
-        					    <tr><td>
-		        					<button onclick="undoStrokeDetect();" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 180px;">
-		        						<spring:message code="kanjiDictionary.page.tab.detect.undo" />
-		        					</button>
-        						</td></tr>
-        					
-        						<tr><td>
-        							<button onclick="clearDetect();" type="button" class="btn btn-default" style="margin-bottom: 10px; width: 180px;">
-        								<spring:message code="kanjiDictionary.page.tab.detect.clear" />
-        							</button>
-        						</td></tr>
-        						
-        					</table>
+        					<jdwt:isMobile mobile="true">        					
+        						<canvas id="detectCanvas" width="10" height="10" style="border: 1px solid black;">        					
+        						</canvas>
+        					</jdwt:isMobile>        					
         				</div>
         			</div>
 
@@ -651,7 +648,9 @@
 								}
 
 								$("#detectFormStrokes").val(detectStrokePathsString);
-								
+								$("#detectFormWidth").val($('#detectCanvas').prop("width"));
+								$("#detectFormHeight").val($('#detectCanvas').prop("height"));
+																
 								$("#detectForm").submit();
 							}
 
@@ -700,7 +699,18 @@
 
 								stage.clear();
 							}
-
+							
+							<jdwt:isMobile mobile="true">
+								var detectCanvasSize = screen.width - 50;
+								
+								if (detectCanvasSize > screen.height - 50) {
+									detectCanvasSize = screen.height - 50;
+								}
+								
+								$('#detectCanvas').prop("width", detectCanvasSize)
+								$('#detectCanvas').prop("height", detectCanvasSize)
+							
+							</jdwt:isMobile>							
         			</script>        			
         		</div>        		
     		</div>

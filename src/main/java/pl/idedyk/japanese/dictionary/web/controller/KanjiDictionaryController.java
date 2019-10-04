@@ -466,7 +466,10 @@ public class KanjiDictionaryController {
 	}
 		
 	@RequestMapping(value = "/kanjiDictionaryDetectSearch", method = RequestMethod.POST)
-	public String detectSearchResult(HttpServletRequest request, HttpSession session, Map<String, Object> model, @RequestParam(value="strokes", required=false) String strokes) throws DictionaryException {
+	public String detectSearchResult(HttpServletRequest request, HttpSession session, Map<String, Object> model,
+			@RequestParam(value="strokes", required=false) String strokes,
+			@RequestParam(value="width", required=false) Integer width,
+			@RequestParam(value="height", required=false) Integer height) throws DictionaryException {
 		
 		logger.info("Rozpoznawanie znakow kanji dla: " + strokes);
 		
@@ -476,7 +479,7 @@ public class KanjiDictionaryController {
 		KanjiDictionaryDrawStroke kanjiDictionaryDrawStroke = new KanjiDictionaryDrawStroke();
 		
 		try {
-			detectKanjiResult = detectKanji(strokes, kanjiDictionaryDrawStroke);
+			detectKanjiResult = detectKanji(strokes, width, height, kanjiDictionaryDrawStroke);
 			
 		} catch (Exception e) {
 			errorMessage = e.getMessage();
@@ -556,7 +559,7 @@ public class KanjiDictionaryController {
 		return "kanjiDictionary";
 	}
 	
-	private List<KanjiRecognizerResultItem> detectKanji(String strokes, KanjiDictionaryDrawStroke kanjiDictionaryDrawStroke) throws Exception {
+	private List<KanjiRecognizerResultItem> detectKanji(String strokes, Integer width, Integer height, KanjiDictionaryDrawStroke kanjiDictionaryDrawStroke) throws Exception {
 		
 		if (strokes == null) {
 			throw new Exception(messageSource.getMessage("kanjiDictionaryDetails.page.title", new Object[] { }, Locale.getDefault()));
@@ -568,8 +571,8 @@ public class KanjiDictionaryController {
 			throw new Exception(messageSource.getMessage("kanjiDictionaryDetails.page.title", new Object[] { }, Locale.getDefault()));
 		}
 		
-		final int maxX = 500;
-		final int maxY = 500;
+		final int maxX = width;
+		final int maxY = height;
 
 		ZinniaManager.Character character = null;
 
