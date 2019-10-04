@@ -27,6 +27,18 @@
   </c:otherwise>
 </c:choose>
 
+<jdwt:isMobile mobile="false">
+	<c:set var="strokeCountMaxElements" value="30" />
+	<c:set var="strokeNumberFontSizeValue" value="200" />
+	<c:set var="strokeFontSizeValue" value="150" />
+</jdwt:isMobile>
+
+<jdwt:isMobile mobile="true">
+	<c:set var="strokeCountMaxElements" value="8" />
+	<c:set var="strokeNumberFontSizeValue" value="180" />
+	<c:set var="strokeFontSizeValue" value="140" />
+</jdwt:isMobile>
+
 <t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
 
 	<jsp:body>
@@ -389,36 +401,26 @@
 									if (strokeCountCounter == 0) {
 										$('#radicalTableFoundId').append("<tr></tr>");
 									}
-									
-		            				<jdwt:isMobile mobile="false">
-		            					<c:set var="strokeCountCounterCompareValue" value="30" />
-		            					<c:set var="fontSizeValue" value="200" />
-		            				</jdwt:isMobile>
-	
-		            				<jdwt:isMobile mobile="true">
-		            					<c:set var="strokeCountCounterCompareValue" value="10" />
-		            						<c:set var="fontSizeValue" value="150" />
-		            				</jdwt:isMobile>
 
 									if (currentStrokeCount != value.strokeCount) {
-										$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: <c:out value="${fontSizeValue}"/>%; text-align: center; border: 1px solid black; background-color: #CCCCCC">' + value.strokeCount + "</td>");
+										$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: ${strokeNumberFontSizeValue}%; text-align: center; border: 1px solid black; background-color: #CCCCCC">' + value.strokeCount + "</td>");
 
 										currentStrokeCount = value.strokeCount;
 										strokeCountCounter++;
 									}
 									
-									if (strokeCountCounter == <c:out value="${strokeCountCounterCompareValue}" />) {
+									if (strokeCountCounter == ${strokeCountMaxElements - 1}) {
 										$('#radicalTableFoundId').append("<tr></tr>");
 
 										strokeCountCounter = 0;
 									}
 
-									$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: <c:out value="${fontSizeValue - 20}"/>%; text-align: center; border: 1px solid black;">' + 
+									$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: ${strokeFontSizeValue}%; text-align: center; border: 1px solid black;">' + 
 											'<a href=\'<c:out value="${pageContext.request.contextPath}" />/kanjiDictionaryDetails/' + value.id + '/' + value.kanji + '\'>' + value.kanji + "</a></td>");								
 
 									strokeCountCounter++;
 
-									if (strokeCountCounter == <c:out value="${strokeCountCounterCompareValue}" />) {
+									if (strokeCountCounter == ${strokeCountMaxElements - 1}) {
 										strokeCountCounter = 0;
 									}									
 							    });
@@ -498,24 +500,14 @@
 	            					<tr>
 	            				</c:if>
 	            				
-	            				<jdwt:isMobile mobile="false">
-	            					<c:set var="strokeCountCounterCompareValue" value="30" />
-	            					<c:set var="fontSizeValue" value="200" />
-	            				</jdwt:isMobile>
-
-	            				<jdwt:isMobile mobile="true">
-	            					<c:set var="strokeCountCounterCompareValue" value="9" />
-	            					<c:set var="fontSizeValue" value="150" />
-	            				</jdwt:isMobile>	            			
-	            				
 								<c:if test="${currentStrokeCount != currentRadical.strokeCount}">
-	            					<td id="strokeCount_${currentRadical.strokeCount}" style="padding: 5px; font-size: <c:out value="${fontSizeValue}"/>%; text-align: center; border: 1px solid black; background-color: #CCCCCC">${currentRadical.strokeCount}</td>
+	            					<td id="strokeCount_${currentRadical.strokeCount}" style="padding: 5px; font-size: ${strokeNumberFontSizeValue}%; text-align: center; border: 1px solid black; background-color: #CCCCCC">${currentRadical.strokeCount}</td>
 	            					
 	            					<c:set var="currentStrokeCount" value="${currentRadical.strokeCount}" />
 	            					<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />
 	            				</c:if>
-	            					            				
-	            				<c:if test="${strokeCountCounter == strokeCountCounterCompareValue}">
+	            				
+	            				<c:if test="${strokeCountCounter == strokeCountMaxElements}">
 	            					<c:set var="strokeCountCounter" value="0" />
 	            					</tr>
 	            					<tr>
@@ -523,18 +515,18 @@
 	            				
 								<c:choose>
 							      <c:when test="${currentRadical.image == null}">
-							      	<td style="padding: 5px; font-size: <c:out value="${fontSizeValue}"/>%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">${currentRadical.radical}</td>
+							      	<td style="padding: 5px; font-size: ${strokeFontSizeValue}%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">${currentRadical.radical}</td>
 							      </c:when>
 							
 							      <c:otherwise>
-							      	<td style="padding: 5px; font-size: <c:out value="${fontSizeValue}"/>%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">
+							      	<td style="padding: 5px; font-size: ${strokeFontSizeValue}%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">
 							      	<img src="${staticFilePrefix}/${currentRadical.image}" alt="${currentRadical.radical}" /></td>
 							      </c:otherwise>
 								</c:choose>
 	            				
 	            				<c:set var="strokeCountCounter" value="${strokeCountCounter + 1}" />
 	            				
-	            				 <c:if test="${strokeCountCounter == strokeCountCounterCompareValue}">
+	            				 <c:if test="${strokeCountCounter == strokeCountMaxElements}">
 	            					<c:set var="strokeCountCounter" value="0" />
 	            					</tr>
 	            					<tr>
