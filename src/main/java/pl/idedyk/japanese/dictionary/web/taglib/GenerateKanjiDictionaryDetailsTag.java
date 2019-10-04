@@ -280,6 +280,8 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		// znaki kanji
 		Tr kanjiKanjiTr = new Tr(null, "font-size: 300%; text-align:center;");
 		
+		kanjiTable.addHtmlElement(kanjiKanjiTr);
+		
 		Td kanjiKanjiTd = new Td();
     	
 		kanjiKanjiTd.addHtmlElement(new Text(kanji));
@@ -307,16 +309,6 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		}
 		
 		// wystapienie znaku w slowniku - guziczek
-		
-		// przerwa
-		kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
-
-		Td kanjiKanjiAppearanceButtonTd = new Td();
-		kanjiKanjiTr.addHtmlElement(kanjiKanjiAppearanceButtonTd);
-		
-		A kanjiKanjiAppearanceButton = new A("btn btn-default");
-		kanjiKanjiAppearanceButtonTd.addHtmlElement(kanjiKanjiAppearanceButton);
-		
 		WordDictionarySearchModel searchModel = new WordDictionarySearchModel();
 		
 		searchModel.setWord(kanjiEntry.getKanji());
@@ -338,15 +330,40 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		}
 		
 		String link = LinkGenerator.generateWordSearchLink(pageContext.getServletContext().getContextPath(), searchModel);
+
+		//		
+		
+		Td kanjiKanjiAppearanceButtonTd = new Td();		
+		
+		A kanjiKanjiAppearanceButton = new A("btn btn-default");
+		kanjiKanjiAppearanceButtonTd.addHtmlElement(kanjiKanjiAppearanceButton);
 		
 		kanjiKanjiAppearanceButton.setHref(link);
 		
 		kanjiKanjiAppearanceButton.addHtmlElement(new Text(getMessage("kanjiDictionaryDetails.page.kanjiEntry.kanji.showKanjiAppearanceInWordDictionary")));
-		
+
 		//
 		
-		kanjiTable.addHtmlElement(kanjiKanjiTr);
+		if (mobile == false) {
+			
+			// przerwa
+			kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
+
+			kanjiKanjiTr.addHtmlElement(kanjiKanjiAppearanceButtonTd);
+			
+		} else {
+			
+			Tr kanjiKanjiTrForMobileSearchIndictionary = new Tr(null, null);
+			
+			kanjiTable.addHtmlElement(kanjiKanjiTrForMobileSearchIndictionary);
+			
+			kanjiKanjiAppearanceButtonTd.setColspan("3");
+
+			kanjiKanjiTrForMobileSearchIndictionary.addHtmlElement(kanjiKanjiAppearanceButtonTd);			
+		}
 		
+		//		
+				
 		kanjiDivBody.addHtmlElement(kanjiTable);
 		row2Div.addHtmlElement(kanjiDivBody);					
 		
