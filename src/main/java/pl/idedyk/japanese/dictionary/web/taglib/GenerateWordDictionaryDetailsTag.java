@@ -76,6 +76,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			userAgent = httpServletRequest.getHeader("User-Agent");			
 		}
 		
+		boolean mobile = Utils.isMobile(userAgent);
+		
 		//
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
@@ -121,7 +123,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             try {
 	         
             	// generowanie informacji podstawowych
-	            contentDiv.addHtmlElement(generateMainInfo(mainMenu));
+	            contentDiv.addHtmlElement(generateMainInfo(mainMenu, mobile));
 	            
 	            // generowanie przykladowych zdan
 	            exampleSentenceDiv = generateExampleSentence(mainMenu);
@@ -155,7 +157,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             mainContentDiv.addHtmlElement(addSuggestionElements(mainMenu));
                         
             // dodaj menu
-            if (Utils.isMobile(userAgent) == false) {
+            if (mobile == false) {
             	mainContentDiv.addHtmlElement(generateMenu(mainMenu));
             }
 
@@ -195,7 +197,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return pageHeader;
 	}
 	
-	private Div generateMainInfo(Menu mainMenu) throws IOException, DictionaryException {
+	private Div generateMainInfo(Menu mainMenu, boolean mobile) throws IOException, DictionaryException {
 		
 		Div panelDiv = new Div("panel panel-default");
 		
@@ -218,7 +220,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Div panelBody = new Div("panel-body");
 		
 		// kanji
-		Div kanjiDiv = generateKanjiSection(mainInfoMenu);
+		Div kanjiDiv = generateKanjiSection(mainInfoMenu, mobile);
 		
 		if (kanjiDiv != null) {
 			panelBody.addHtmlElement(kanjiDiv);	
@@ -235,7 +237,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         }
 		
 		// czytanie
-		Div readingDiv = generateReadingSection(mainInfoMenu);
+		Div readingDiv = generateReadingSection(mainInfoMenu, mobile);
 		panelBody.addHtmlElement(readingDiv);
 		panelBody.addHtmlElement(new Hr());
 		
@@ -272,7 +274,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return panelDiv;
 	}
 	
-	private Div generateKanjiSection(Menu menu) throws IOException, DictionaryException {
+	private Div generateKanjiSection(Menu menu, boolean mobile) throws IOException, DictionaryException {
 		
 		Div kanjiDiv = new Div();
 		
@@ -417,7 +419,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         }
 
         // skrypt otwierajacy okienko
-        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId));
+        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, mobile));
         
         // tworzenie okienka rysowania znaku kanji
         kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, dictionaryEntry.getKanji(), kanjiDrawId));
@@ -426,7 +428,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         return kanjiDiv;
 	}
 	
-	private Div generateReadingSection(Menu menu) throws IOException, DictionaryException {
+	private Div generateReadingSection(Menu menu, boolean mobile) throws IOException, DictionaryException {
 		
 		Div readingDiv = new Div();
 		
@@ -529,7 +531,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         for (IdAndText idAndText : idAndTextList) {
         	        	
             // skrypt otwierajacy okienko
-        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id));
+        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id, mobile));
             
             // tworzenie okienka rysowania znaku kanji
         	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
