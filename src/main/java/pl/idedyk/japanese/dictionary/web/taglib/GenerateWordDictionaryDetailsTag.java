@@ -887,6 +887,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						
 						Td row2TableTrTd2ForMobile = new Td();
 						
+						row2TableTrTd2ForMobile.setColspan("2");
+						
 			    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 60px");
 			    		row2TableTrTd2ForMobile.addHtmlElement(currentTransitivityIntrasitivityH);
 			    		
