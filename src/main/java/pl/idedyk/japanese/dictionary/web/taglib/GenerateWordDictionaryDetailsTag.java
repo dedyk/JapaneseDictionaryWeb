@@ -421,13 +421,19 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         	
         	Div row2Div = new Div("row");
         	
-        	row2Div.addHtmlElement(new Div("col-md-1"));
+        	if (mobile == false) {
+        		row2Div.addHtmlElement(new Div("col-md-1"));
+        	}
+        	
+        	Div kanjiDivBody = new Div("col-md-10");
+        	
+        	row2Div.addHtmlElement(kanjiDivBody);
         	
         	Div kanjiDivText = new Div(null, "font-size: 200%");
         	Text kanjiText = new Text(kanjiSb.toString());
         	
         	kanjiDivText.addHtmlElement(kanjiText);
-        	row2Div.addHtmlElement(kanjiDivText);
+        	kanjiDivBody.addHtmlElement(kanjiDivText);
         	
         	kanjiDiv.addHtmlElement(row2Div);
         }
