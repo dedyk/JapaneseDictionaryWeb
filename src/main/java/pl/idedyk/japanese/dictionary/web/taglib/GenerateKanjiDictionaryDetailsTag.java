@@ -353,13 +353,13 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			
 		} else {
 			
-			Tr kanjiKanjiTrForMobileSearchIndictionary = new Tr(null, null);
+			Tr kanjiKanjiTrForMobileSearchInDictionary = new Tr(null, null);
 			
-			kanjiTable.addHtmlElement(kanjiKanjiTrForMobileSearchIndictionary);
+			kanjiTable.addHtmlElement(kanjiKanjiTrForMobileSearchInDictionary);
 			
 			kanjiKanjiAppearanceButtonTd.setColspan("3");
 
-			kanjiKanjiTrForMobileSearchIndictionary.addHtmlElement(kanjiKanjiAppearanceButtonTd);			
+			kanjiKanjiTrForMobileSearchInDictionary.addHtmlElement(kanjiKanjiAppearanceButtonTd);			
 		}
 		
 		//		

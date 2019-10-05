@@ -369,6 +369,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				// znaki kanji
 				Tr kanjiKanjiTr = new Tr(null, "font-size: 300%; text-align:center;");
 				
+				kanjiTable.addHtmlElement(kanjiKanjiTr);
+				
 				for (int idx = 0; idx < furiganaKanjiParts.size(); ++idx) {
 					
 					String currentKanjiPart = furiganaKanjiParts.get(idx);
@@ -379,9 +381,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					
 					kanjiKanjiTr.addHtmlElement(currentKanjiPartTd);
 				}	
-
-				// przerwa
-				kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
 				
 				// komorka z guziczkiem
 				Td kanjiDrawButtonTd = new Td();
@@ -393,9 +392,24 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
 				kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
 				kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
+				
+				if (mobile == false) {
+					
+					// przerwa
+					kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
 
-				kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
-				kanjiTable.addHtmlElement(kanjiKanjiTr);
+					kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
+										
+				} else {
+					
+					Tr kanjiKanjiForWritingButtonTr = new Tr(null, null);
+					
+					kanjiTable.addHtmlElement(kanjiKanjiForWritingButtonTr);
+					
+					kanjiDrawButtonTd.setColspan(String.valueOf(furiganaKanjiParts.size() + 2));
+
+					kanjiKanjiForWritingButtonTr.addHtmlElement(kanjiDrawButtonTd);			
+				}
 				
 				kanjiDivBody.addHtmlElement(kanjiTable);
 				row2Div.addHtmlElement(kanjiDivBody);					
