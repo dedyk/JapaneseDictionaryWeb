@@ -229,7 +229,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 		
 		// znaczenie znakow kanji
-        Div knownKanjiDiv = generateKnownKanjiDiv(mainInfoMenu);
+        Div knownKanjiDiv = generateKnownKanjiDiv(mainInfoMenu, mobile);
         
         if (knownKanjiDiv != null) {
         	panelBody.addHtmlElement(knownKanjiDiv);
@@ -884,7 +884,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return attributeDiv;		
 	}
 	
-	private Div generateKnownKanjiDiv(Menu menu) throws DictionaryException {
+	private Div generateKnownKanjiDiv(Menu menu, boolean mobile) throws DictionaryException {
 		
 		if (dictionaryEntry.isKanjiExists() == false) {
 			return null;
@@ -964,8 +964,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			row2TableTrPolishTranslateTdH4.addHtmlElement(new Text(currentKnownKanjiPolishTranslatesSb.toString()));
 			
 			// guziczek
-			Td row2TableTrButtonTd = new Td(null, "margin-top: 0px; padding: 0px 50px 5px 0;");
-			row2TableTr.addHtmlElement(row2TableTrButtonTd);
+			Td row2TableTrButtonTd = new Td(null, "margin-top: 0px; padding: 0px 50px 5px 0;");			
 			
 			String link = LinkGenerator.generateKanjiDetailsLink(pageContext.getServletContext().getContextPath(), currentKnownKanjiEntry);
 			
@@ -975,6 +974,20 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			linkButton.setHref(link);
 			
 			linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.knownKanji.kanji.show")));
+			
+			if (mobile == false) {				
+				row2TableTr.addHtmlElement(row2TableTrButtonTd);
+				
+			} else {
+				
+				Tr row2TableTrButton = new Tr();
+				
+				row2Table.addHtmlElement(row2TableTrButton);
+				
+				row2TableTrButtonTd.setColspan("2");
+				
+				row2TableTrButton.addHtmlElement(row2TableTrButtonTd);				
+			}			
 		}
 		
 		return knownKanjiDiv;
