@@ -372,7 +372,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		if (kanjivsEntry != null && kanjivsEntry.getStrokePaths().size() > 0) {
 			
 			// skrypt otwierajacy okienko
-			kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, mobile));
+			kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, 1, mobile));
 
 			// tworzenie okienka rysowania znaku kanji
 			GenerateDrawStrokeDialogParams generateDrawStrokeDialogParams = new GenerateDrawStrokeDialogParams();

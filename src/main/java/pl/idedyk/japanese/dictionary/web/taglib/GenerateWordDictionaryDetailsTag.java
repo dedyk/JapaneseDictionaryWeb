@@ -419,7 +419,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         }
 
         // skrypt otwierajacy okienko
-        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, mobile));
+        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, dictionaryEntry.getKanji().length(), mobile));
         
         // tworzenie okienka rysowania znaku kanji
         kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, dictionaryEntry.getKanji(), kanjiDrawId));
@@ -531,7 +531,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         for (IdAndText idAndText : idAndTextList) {
         	        	
             // skrypt otwierajacy okienko
-        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id, mobile));
+        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id, idAndText.text.length(), mobile));
             
             // tworzenie okienka rysowania znaku kanji
         	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));

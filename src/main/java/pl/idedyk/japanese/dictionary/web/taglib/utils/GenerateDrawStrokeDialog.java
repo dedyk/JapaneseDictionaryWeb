@@ -32,7 +32,7 @@ public class GenerateDrawStrokeDialog {
 		return button;		
 	}
 	
-	public static Script generateDrawStrokeButtonScript(String dialogId, boolean mobile) {
+	public static Script generateDrawStrokeButtonScript(String dialogId, int textLength, boolean mobile) {
 		
 		Script script = new Script();
 		
@@ -41,7 +41,7 @@ public class GenerateDrawStrokeDialog {
 		scriptBody.append("   function show" + dialogId + "Drawing() {\n");
 		scriptBody.append("      $( '#" + dialogId + "Drawing').lazylinepainter('erase');\n");
 		
-		if (mobile == true) {
+		if (mobile == true && textLength < 5) {
 			scriptBody.append("      $( '#" + dialogId + "').attr(\"width\", screen.width - 30);\n");
 			scriptBody.append("      $($( '#" + dialogId + "').children()[0]).css(\"width\", screen.width - 30);\n");
 		}
