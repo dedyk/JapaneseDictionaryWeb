@@ -262,7 +262,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         }
         
         // dodatkowe atrybuty
-		Div additionalAttributeDiv = generateAttribute(mainInfoMenu);
+		Div additionalAttributeDiv = generateAttribute(mainInfoMenu, mobile);
 
         if (additionalAttributeDiv != null) {
         	panelBody.addHtmlElement(new Hr());
@@ -773,7 +773,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return wordTypeDiv;
 	}
 		
-	private Div generateAttribute(Menu menu) throws IOException, DictionaryException {
+	private Div generateAttribute(Menu menu, boolean mobile) throws IOException, DictionaryException {
 		
 		List<Attribute> attributeList = dictionaryEntry.getAttributeList().getAttributeList();
 		
@@ -867,13 +867,33 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					
 					referenceDictionaryEntrySb.append(referenceDictionaryEntryRomaji);
 					
-					Td row2TableTrTd2 = new Td();
-					row2TableTr.addHtmlElement(row2TableTrTd2);
-
-		    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px");
-		    		row2TableTrTd2.addHtmlElement(currentTransitivityIntrasitivityH);
-		    		
-		    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(referenceDictionaryEntrySb.toString()));
+					
+					if (mobile == false) {
+						
+						Td row2TableTrTd2 = new Td();
+						
+			    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px");
+			    		row2TableTrTd2.addHtmlElement(currentTransitivityIntrasitivityH);
+			    		
+			    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(referenceDictionaryEntrySb.toString()));
+						
+						row2TableTr.addHtmlElement(row2TableTrTd2);
+						
+					} else {
+						
+						Tr row2TableTrForMobile = new Tr();
+						
+						row2Table.addHtmlElement(row2TableTrForMobile);
+						
+						Td row2TableTrTd2ForMobile = new Td();
+						
+			    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 60px");
+			    		row2TableTrTd2ForMobile.addHtmlElement(currentTransitivityIntrasitivityH);
+			    		
+			    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(referenceDictionaryEntrySb.toString()));
+						
+			    		row2TableTrForMobile.addHtmlElement(row2TableTrTd2ForMobile);
+					}
 						    		
 		    		// przycisk
 					Td row2TableTrTd3 = new Td();
