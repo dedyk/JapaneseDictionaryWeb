@@ -532,15 +532,29 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		readingTableRomajiTd.addHtmlElement(readingTableRomajiTdH4);
 		
 		readingTableRomajiTdH4.addHtmlElement(new Text(fullRomaji.toString()));
-		
-		Td readingTableButtonTd = new Td(null, "padding: 0 50px 5px 0;");
-		readingTableTr.addHtmlElement(readingTableButtonTd);
-		
+
 		// guzik rysowania
+		Td readingTableButtonTd = new Td(null, "padding: 0 50px 5px 0;");
+		
 		Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
 				getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
-
+		
 		readingTableButtonTd.addHtmlElement(kanaDrawButton);
+		
+		if (mobile == false) {
+			
+			readingTableTr.addHtmlElement(readingTableButtonTd);			
+			
+		} else {
+			
+			Tr readingTableTrForMobile = new Tr();
+			
+			readingTable.addHtmlElement(readingTableTrForMobile);
+			
+			readingTableButtonTd.setColspan("2");
+			
+			readingTableTrForMobile.addHtmlElement(readingTableButtonTd);
+		}
 
         for (IdAndText idAndText : idAndTextList) {
         	        	
