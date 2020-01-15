@@ -53,6 +53,10 @@ public class RobotsController {
 		
 		robotsBody.append("Disallow: /suggestion/sendSuggestion\n\n");
 		
+		robotsBody.append("User-agent: Yandex\n");
+		
+		robotsBody.append("Disallow: /wordDictionaryNameDetails/\n\n");
+		
 		//robotsBody.append("User-agent: MJ12bot\n");
 		
 		//robotsBody.append("Disallow: /\n\n");
