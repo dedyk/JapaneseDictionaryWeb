@@ -1206,7 +1206,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		for (int grammaFormConjugateGroupTypeElementsListIdx = 0; grammaFormConjugateGroupTypeElementsListIdx < grammaFormConjugateGroupTypeElementsList.size(); ++grammaFormConjugateGroupTypeElementsListIdx) {
 			
 			GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateGroupTypeElementsList.get(grammaFormConjugateGroupTypeElementsListIdx);
-						
+			
+			if (currentGrammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().isShow() == false) {
+				continue;
+			}
+			
 			panelBody.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, grammaFormConjugateMenu));
 			
 			if (grammaFormConjugateGroupTypeElementsListIdx != grammaFormConjugateGroupTypeElementsList.size() - 1) {
