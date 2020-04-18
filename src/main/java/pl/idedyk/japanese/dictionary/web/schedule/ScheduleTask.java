@@ -407,6 +407,7 @@ public class ScheduleTask {
 					case METHOD_NOT_ALLOWED_EXCEPTION:
 					case REDIRECT:
 					case ANDROID_GET_MESSAGE:
+					case CLIENT_BLOCK:
 						
 						// noop
 						break;					
