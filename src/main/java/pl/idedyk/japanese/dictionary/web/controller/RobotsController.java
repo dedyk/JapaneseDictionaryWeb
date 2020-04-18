@@ -1,7 +1,11 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -17,6 +21,7 @@ import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.BingSiteAuthGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RobotsGenerateLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 
 @Controller
 public class RobotsController {
@@ -31,6 +36,9 @@ public class RobotsController {
 	
 	@Autowired
 	private LoggerSender loggerSender;
+	
+	@Autowired
+	private ConfigService configService;
 
     @RequestMapping(value = "/robots.txt", method = RequestMethod.GET)
     public void getRobots(HttpServletRequest request, HttpSession session, Writer writer) throws IOException {
@@ -39,7 +47,33 @@ public class RobotsController {
 		
 		// logowanie
 		loggerSender.sendLog(new RobotsGenerateLoggerModel(Utils.createLoggerModelCommon(request)));
+		
+		String robotsBody;
+		
+		// pobranie katalogu z konfiguracja
+		File catalinaConfDir = configService.getCatalinaConfDir();
+		
+		if (catalinaConfDir == null) {
+			robotsBody = getRobotDefaultBody(request);
+			
+		} else {			
+			// sprawdzamy, czy istnieje plik z zawartoscia robots.txt
+			File robotsTxtFile = new File(catalinaConfDir, "robots.txt");
 
+			if (robotsTxtFile.exists() == false) {
+				robotsBody = getRobotDefaultBody(request);
+				
+			} else {
+				// wczytujemy plik robots.txt
+				robotsBody = new String(Files.readAllBytes(Paths.get(robotsTxtFile.getAbsolutePath())), StandardCharsets.UTF_8);
+			}
+		}
+		
+		writer.append(robotsBody.toString());
+    }
+    
+    private String getRobotDefaultBody(HttpServletRequest request) {
+    	
 		StringBuffer robotsBody = new StringBuffer();
     	
 		robotsBody.append("User-agent: *\n");
@@ -85,9 +119,9 @@ public class RobotsController {
 		robotsBody.append("Disallow: /kanjiDictionaryCatalog\n\n");
 		*/
 		
-		robotsBody.append("Sitemap: " + baseServer + request.getContextPath() + "/sitemap.xml\n");
+		robotsBody.append("Sitemap: " + baseServer + request.getContextPath() + "/sitemap.xml\n");    
 		
-		writer.append(robotsBody.toString());
+		return robotsBody.toString();
     }
 
     @RequestMapping(value = "/BingSiteAuth.xml", method = RequestMethod.GET)
