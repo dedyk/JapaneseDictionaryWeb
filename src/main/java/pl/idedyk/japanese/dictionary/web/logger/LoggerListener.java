@@ -381,6 +381,7 @@ public class LoggerListener {
 			
 		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_DETAILS) {
 			
+			/*
 			WordDictionaryDetailsLoggerModel wordDictionaryDetailsLoggerModel = (WordDictionaryDetailsLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
@@ -423,9 +424,11 @@ public class LoggerListener {
 				
 				throw new RuntimeException(e);
 			}
+			*/
 			
 		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_CATALOG) {
 			
+			/*
 			WordDictionaryCatalogLoggerModel wordDictionaryCatalogLoggerModel = (WordDictionaryCatalogLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
@@ -442,9 +445,11 @@ public class LoggerListener {
 				
 				throw new RuntimeException(e);
 			}
+			*/
 			
 		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_NAME_DETAILS) {
 			
+			/*
 			WordDictionaryNameDetailsLoggerModel wordDictionaryNameDetailsLoggerModel = (WordDictionaryNameDetailsLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
@@ -475,9 +480,11 @@ public class LoggerListener {
 				
 				throw new RuntimeException(e);
 			}
+			*/
 			
 		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_NAME_CATALOG) {
 			
+			/*
 			WordDictionaryNameCatalogLoggerModel wordDictionaryNameCatalogLoggerModel = (WordDictionaryNameCatalogLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
@@ -494,6 +501,7 @@ public class LoggerListener {
 				
 				throw new RuntimeException(e);
 			}
+			*/
 			
 		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE) {
 				
@@ -660,6 +668,7 @@ public class LoggerListener {
 			
 		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_DETAILS) {
 			
+			/*
 			KanjiDictionaryDetailsLoggerModel kanjiDictionaryDetailsLoggerModel = (KanjiDictionaryDetailsLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
@@ -696,9 +705,11 @@ public class LoggerListener {
 				
 				throw new RuntimeException(e);
 			}
+			*/
 			
 		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_CATALOG) {
 			
+			/*
 			KanjiDictionaryCatalogLoggerModel kanjiDictionaryCatalogLoggerModel = (KanjiDictionaryCatalogLoggerModel)loggerModelCommon;
 			
 			// utworzenie wpisu do bazy danych
@@ -715,6 +726,7 @@ public class LoggerListener {
 				
 				throw new RuntimeException(e);
 			}
+			*/
 		
 		} else if (operation == GenericLogOperationEnum.ANDROID_SEND_MISSING_WORD) {
 			
