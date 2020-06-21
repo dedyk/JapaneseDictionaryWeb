@@ -70,18 +70,10 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.DailyReportSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GeneralExceptionLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLogOperationEnum;
-import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryAutocompleteLog;
-import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryCatalogLog;
-import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryDetectLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionaryRadicalsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.KanjiDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
-import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryAutocompleteLog;
-import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryCatalogLog;
-import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
-import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLog;
-import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryUniqueSearch;
@@ -142,7 +134,9 @@ public class LoggerListener {
 		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_START) {
 			// noop
 			
-		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE) {
+		}
+		/*
+		else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_AUTOCOMPLETE) {
 			
 			WordDictionaryAutocompleteLoggerModel wordDictionaryAutocompleteLoggerModel = (WordDictionaryAutocompleteLoggerModel)loggerModelCommon;
 			
@@ -174,7 +168,9 @@ public class LoggerListener {
 				throw new RuntimeException(e);
 			}
 			
-		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_SEARCH) {
+		}
+		*/
+		else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_SEARCH) {
 			
 			WordDictionarySearchLoggerModel wordDictionarySearchLoggerModel = (WordDictionarySearchLoggerModel)loggerModelCommon;
 			
@@ -503,7 +499,9 @@ public class LoggerListener {
 			}
 			*/
 			
-		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE) {
+		}
+		/*
+		else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_AUTOCOMPLETE) {
 				
 			KanjiDictionaryAutocompleteLoggerModel kanjiDictionaryAutocompleteLoggerModel = (KanjiDictionaryAutocompleteLoggerModel)loggerModelCommon;
 
@@ -535,7 +533,9 @@ public class LoggerListener {
 				throw new RuntimeException(e);
 			}
 
-		} else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH) {
+		}
+		*/
+		else if (operation == GenericLogOperationEnum.KANJI_DICTIONARY_SEARCH) {
 			
 			KanjiDictionarySearchLoggerModel kanjiDictionarySearchLoggerModel = (KanjiDictionarySearchLoggerModel)loggerModelCommon;
 			
