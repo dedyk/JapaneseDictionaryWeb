@@ -57,8 +57,11 @@ public class SitemapManager {
 			@Override
 			public void run() {
 				
-				try {				
-					generateSitemaps();
+				try {
+					
+					String destDir = System.getProperty("java.io.tmpdir");
+					
+					generateSitemaps(true, destDir, true);
 				
 				} catch (Exception e) {					
 					logger.error("Bład generowania pliku sitemap", e);
@@ -79,14 +82,23 @@ public class SitemapManager {
 		cacheSitemap();
 	}
 	
-	private synchronized void generateSitemaps() throws Exception {
+	public void generateFromMain(DictionaryManager dictionaryManager, String destDir) throws Exception {
+		
+		this.dictionaryManager = dictionaryManager;
+		
+		generateSitemaps(false, destDir, false);
+	}
+	
+	private synchronized void generateSitemaps(boolean wait, String destDir, boolean deleteOnExit) throws Exception {
 				
 		if (initialized == true) {
 			return;
 		}
 		
 		// czekamy 15 minut przed rozpoczeciem generowania
-		Thread.sleep(15 * 60 * 1000);
+		if (wait == true) {
+			Thread.sleep(15 * 60 * 1000);
+		}
 		
 		logger.info("Generowanie pliku sitemap");
 				
@@ -94,12 +106,12 @@ public class SitemapManager {
 		
 		// dodanie statycznych linkow
 		
-		sitemapHelper.createUrl("main", "", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
-		sitemapHelper.createUrl("main", "/wordDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
-		sitemapHelper.createUrl("main", "/wordDictionary/dictionary.pdf", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
-		sitemapHelper.createUrl("main", "/kanjiDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
-		sitemapHelper.createUrl("main", "/suggestion", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
-		sitemapHelper.createUrl("main", "/info", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/wordDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/wordDictionary/dictionary.pdf", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/kanjiDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/suggestion", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/info", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
 				
 		// pobranie ilosci slow
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
@@ -109,7 +121,7 @@ public class SitemapManager {
 			// pobranie slowka
 			DictionaryEntry currentDictionaryEntry = dictionaryManager.getDictionaryEntryById(currentDictionaryEntryIdx);
 			
-			createWordDictionaryLink("wordDictionaryDetails", sitemapHelper, currentDictionaryEntry);
+			createWordDictionaryLink(destDir, deleteOnExit, "wordDictionaryDetails", sitemapHelper, currentDictionaryEntry);
 		}
 		
 		// katalog slow
@@ -121,7 +133,7 @@ public class SitemapManager {
 			
 			String url = "/wordDictionaryCatalog/" + pageNo;
 			
-			sitemapHelper.createUrl("wordDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
+			sitemapHelper.createUrl(destDir, deleteOnExit, "wordDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
 		
 		// pobranie ilosci slow (nazwa)
@@ -132,7 +144,7 @@ public class SitemapManager {
 			// pobranie slowka
 			DictionaryEntry currentDictionaryEntry = dictionaryManager.getDictionaryEntryNameById(currentDictionaryEntryNameIdx);
 			
-			createWordDictionaryLink("wordNameDictionaryDetails", sitemapHelper, currentDictionaryEntry);
+			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, currentDictionaryEntry);
 		}
 
 		// katalog slow(nazwa)
@@ -144,7 +156,7 @@ public class SitemapManager {
 			
 			String url = "/wordDictionaryNameCatalog/" + pageNo;
 			
-			sitemapHelper.createUrl("wordDictionaryNameCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
+			sitemapHelper.createUrl(destDir, deleteOnExit, "wordDictionaryNameCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
 		
 		// pobranie znakow kanji
@@ -156,7 +168,7 @@ public class SitemapManager {
 			String link = LinkGenerator.generateKanjiDetailsLink("", kanjiEntry);
 			
 			// dodanie linku			
-			sitemapHelper.createUrl("kanjiDetails", link, ChangeFreqEnum.weekly, BigDecimal.valueOf(0.6));
+			sitemapHelper.createUrl(destDir, deleteOnExit, "kanjiDetails", link, ChangeFreqEnum.weekly, BigDecimal.valueOf(0.6));
 		}
 		
 		// katalog znakow kanji
@@ -168,15 +180,18 @@ public class SitemapManager {
 			
 			String url = "/kanjiDictionaryCatalog/" + pageNo;
 						
-			sitemapHelper.createUrl("kanjiDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
+			sitemapHelper.createUrl(destDir, deleteOnExit, "kanjiDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
 		
 		// zakonczenie generowania
 		sitemapHelper.end();
 		
 		// generowanie indeksu
-		File indexSitemap = new File(System.getProperty("java.io.tmpdir"), "japaneseDictionaryWeb_sitemap_index.xml");
-		indexSitemap.deleteOnExit();
+		File indexSitemap = new File(destDir, "japaneseDictionaryWeb_sitemap_index.xml");
+		
+		if (deleteOnExit == true) {
+			indexSitemap.deleteOnExit();
+		}
 		
 		sitemapFileIndex = indexSitemap;
 		
@@ -243,13 +258,13 @@ public class SitemapManager {
 		logger.info("Generowanie pliku sitemap zakonczone");
 	}
 	
-	private void createWordDictionaryLink(String groupName, SitemapHelper sitemapHelper, DictionaryEntry currentDictionaryEntry) throws Exception {
+	private void createWordDictionaryLink(String destDir, boolean deleteOnExit, String groupName, SitemapHelper sitemapHelper, DictionaryEntry currentDictionaryEntry) throws Exception {
 		
 		// wygenerowanie linku standardowego
 		String link = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, null);
 		
 		// dodanie linku			
-		sitemapHelper.createUrl(groupName, link, ChangeFreqEnum.weekly, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.8 : 0.6));
+		sitemapHelper.createUrl(destDir, deleteOnExit, groupName, link, ChangeFreqEnum.weekly, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.8 : 0.6));
 		
 		// pobranie listy typow
 		List<DictionaryEntryType> dictionaryEntryTypeList = currentDictionaryEntry.getDictionaryEntryTypeList();
@@ -279,7 +294,7 @@ public class SitemapManager {
 						String linkWithType = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, currentDictionaryEntryType);
 						
 						// dodanie linku z typem
-						sitemapHelper.createUrl(groupName, linkWithType, ChangeFreqEnum.weekly, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.7 : 0.5));							
+						sitemapHelper.createUrl(destDir, deleteOnExit, groupName, linkWithType, ChangeFreqEnum.weekly, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.7 : 0.5));							
 					}
 				}					
 			}				
@@ -350,17 +365,17 @@ public class SitemapManager {
 		
 		private int counter = 0;
 		
-		public void createUrl(String groupName, String link, ChangeFreqEnum changeFreq, BigDecimal priority) throws Exception {
+		public void createUrl(String destDir, boolean deleteOnExit, String groupName, String link, ChangeFreqEnum changeFreq, BigDecimal priority) throws Exception {
 			
 			if (currentSitemapFile == null) {
 				
-				start(groupName);
+				start(destDir, deleteOnExit, groupName);
 				
 			} else if (currentGroupName.endsWith(groupName) == false) {
 				
 				end();
 				
-				start(groupName);				
+				start(destDir, deleteOnExit, groupName);				
 			}
 			
 			xmlStreamWriter.writeStartElement("url"); // url
@@ -386,7 +401,7 @@ public class SitemapManager {
 			xmlStreamWriter.writeEndElement();
 		}
 		
-		public void start(String groupName) throws Exception {
+		public void start(String destDir, boolean deleteOnExit, String groupName) throws Exception {
 			
 			currentGroupName = groupName;
 			
@@ -399,8 +414,11 @@ public class SitemapManager {
 			}			
 			
 			// utworzenie pliku z sitemap
-			currentSitemapFile = new File(System.getProperty("java.io.tmpdir"), "japaneseDictionaryWeb_sitemap_" + currentGroupName + "_" + (groupNameSitemapFiles.size() + 1) + ".xml");		
-			currentSitemapFile.deleteOnExit();
+			currentSitemapFile = new File(destDir, "japaneseDictionaryWeb_sitemap_" + currentGroupName + "_" + (groupNameSitemapFiles.size() + 1) + ".xml");		
+			
+			if (deleteOnExit == true) {
+				currentSitemapFile.deleteOnExit();
+			}
 			
 			// utworzenie zapisywacza
 			sitemapFileWriter = new FileWriter(currentSitemapFile);

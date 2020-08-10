@@ -65,9 +65,20 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	public DictionaryManager() {
 		super();
 	}
-
+	
+	public void initFromMain(String dbDir) {
+		
+		this.dbDir = dbDir; 
+		
+		init(false);
+	}
+	
 	@PostConstruct
-	public void init() {
+	public void initFromServer() {
+		init(true);
+	}
+
+	private void init(boolean initSuggester) {
 		
 		initialized = false;
 		
@@ -87,32 +98,35 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 			throw new RuntimeException(e);
 		}
 		
-		new Thread(new Runnable() {
+		if (initSuggester == true) {
 			
-			@Override
-			public void run() {
+			new Thread(new Runnable() {
 				
-				try {					
-					// czekamy minute przed rozpoczeciem generowania
-					Thread.sleep(60 * 1000);
+				@Override
+				public void run() {
 					
-					logger.info("Inicjalizacja podpowiadacza");
-					luceneDatabase.openSuggester();				
-					logger.info("Zakończono inicjalizację podpowiadacza");
-					
-					//
-					
-					logger.info("Inicjalizacja poprawiacza słów");					
-					luceneDatabase.openSpellChecker();					
-					logger.info("Zakończono inicjalizację poprawiacza słów");
-					
-				} catch (Exception e) {
-					
-					logger.error("Błąd inicjalizacji podpowiadacza lub poprawiacza słów", e);
+					try {					
+						// czekamy minute przed rozpoczeciem generowania
+						Thread.sleep(60 * 1000);
+						
+						logger.info("Inicjalizacja podpowiadacza");
+						luceneDatabase.openSuggester();				
+						logger.info("Zakończono inicjalizację podpowiadacza");
+						
+						//
+						
+						logger.info("Inicjalizacja poprawiacza słów");					
+						luceneDatabase.openSpellChecker();					
+						logger.info("Zakończono inicjalizację poprawiacza słów");
+						
+					} catch (Exception e) {
+						
+						logger.error("Błąd inicjalizacji podpowiadacza lub poprawiacza słów", e);
+					}
 				}
-			}
-		}).start();	
-		
+			}).start();	
+		}
+				
 		logger.info("Inicjalizuje Keigo Helper");
 		keigoHelper = new KeigoHelper();
 		
@@ -174,7 +188,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	}
 	
 	@PreDestroy
-	private void close() throws IOException {
+	public void close() throws IOException {
 		luceneDatabase.close();
 	}
 	
@@ -231,7 +245,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		radicalList = null;
 		transitiveIntransitivePairsList = null;
 		
-		init();		
+		init(true);		
 	}
 	
 	private void readKanaFile(InputStream kanaFileInputStream) throws IOException {
