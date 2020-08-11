@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.xml.stream.XMLOutputFactory;
@@ -57,16 +59,34 @@ public class SitemapManager {
 			@Override
 			public void run() {
 				
-				try {
-					
-					String destDir = System.getProperty("java.io.tmpdir");
-					
-					generateSitemaps(true, destDir, true);
+				// pobranie glownego katalogu z baza danych
+				String dbDir = dictionaryManager.getDbDir();
 				
-				} catch (Exception e) {					
-					logger.error("Bład generowania pliku sitemap", e);
+				File pregeneredSitemapDir = new File(dbDir, "sitemap");
+				
+				if (pregeneredSitemapDir.isDirectory() == false) { // jezeli nie ma wczesniej przegenerowanych plikow sitemap to wygeneruj je do plikow tymczasowych
 					
-					throw new RuntimeException(e);
+					try {					
+						String destDir = System.getProperty("java.io.tmpdir");
+						
+						generateSitemaps(true, destDir, true);
+					
+					} catch (Exception e) {					
+						logger.error("Bład generowania pliku sitemap", e);
+						
+						throw new RuntimeException(e);
+					}
+					
+				} else {
+					
+					try {
+						loadPregeneredSitemap(pregeneredSitemapDir);
+						
+					} catch (Exception e) {					
+						logger.error("Bład wczytywania plikow sitemap", e);
+						
+						throw new RuntimeException(e);
+					}
 				}
 			}
 		}).start();
@@ -96,7 +116,7 @@ public class SitemapManager {
 		}
 		
 		// czekamy 15 minut przed rozpoczeciem generowania
-		if (wait == true) {
+		if (wait == true) {			
 			Thread.sleep(15 * 60 * 1000);
 		}
 		
@@ -299,6 +319,56 @@ public class SitemapManager {
 				}					
 			}				
 		}		
+	}
+	
+	private void loadPregeneredSitemap(File pregeneredSitemapDir) {
+		
+		Pattern sitemapIndexPattern = Pattern.compile("japaneseDictionaryWeb_sitemap_index\\.xml");
+		Pattern sitemapTypeAndIndexPattern = Pattern.compile("japaneseDictionaryWeb\\_sitemap\\_([a-z,A-Z]*)\\_(\\d+)\\.xml");
+		
+		// pobieramy liste plikow
+		File[] pregeneredSitemapList = pregeneredSitemapDir.listFiles();
+		
+		for (File currentSitemapFile : pregeneredSitemapList) {
+			
+			String sitemapFileName = currentSitemapFile.getName();
+			
+			// sprawdzanie, czy jest to indeks
+			boolean isIndex = sitemapIndexPattern.matcher(sitemapFileName).find();
+			
+			if (isIndex == true) {
+				sitemapFileIndex = currentSitemapFile;
+				
+				continue;
+			}
+			
+			Matcher typeAndIndexPattern = sitemapTypeAndIndexPattern.matcher(sitemapFileName);
+			
+			if (typeAndIndexPattern.find() == true) { // jest to typ i indeks
+				
+				String groupName = typeAndIndexPattern.group(1);
+				int index = Integer.parseInt(typeAndIndexPattern.group(2));
+				
+				//
+				
+				Map<Integer, File> groupNameSitemapFiles = sitemapFilesMap.get(groupName);
+				
+				if (groupNameSitemapFiles == null) {
+					groupNameSitemapFiles = Collections.synchronizedMap(new LinkedHashMap<Integer, File>());
+					
+					sitemapFilesMap.put(groupName, groupNameSitemapFiles);
+				}
+				
+				groupNameSitemapFiles.put(index, currentSitemapFile);
+				
+			} else {
+				logger.error("Nieznana nazwa pliku: " + sitemapFileName);
+			}
+		}
+		
+		initialized = true;
+		
+		logger.info("Wczytano pliki sitemap");
 	}
 	
 	public File getIndexSitemap() throws NotInitializedException {

@@ -527,4 +527,8 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	public WordPowerList getWordPowerList() throws DictionaryException {
 		return wordPowerList;
 	}
+	
+	public String getDbDir() {
+		return dbDir;
+	}
 }
