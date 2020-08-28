@@ -585,13 +585,16 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		String kanji = dictionaryEntry.getKanji();
 		
-		boolean special = false;
+		int special = 0;
 		
 		if (kanji != null && isSmTsukiNiKawatteOshiokiYo(kanji) == true) {
-			special = true;
+			special = 1;
+			
+		} else if (kanji != null && isButaMoOdateryaKiNiNoboru(kanji) == true) {
+			special = 2;
 		}
 		
-		if (!(info != null && info.length() > 0) && (special == false)) {
+		if (!(info != null && info.length() > 0) && (special == 0)) {
 			return null;		
 		}	
 		
@@ -635,7 +638,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Td row2TableTrTd1 = new Td();
 		row2TableTr.addHtmlElement(row2TableTrTd1);
 		
-		if (special == false) {
+		if (special == 0) {
 			
 			H additionalInfoTextH4 = new H(4);
 			row2TableTrTd1.addHtmlElement(additionalInfoTextH4);
@@ -647,7 +650,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			Div specialDiv = new Div(null, "font-family:monospace; font-size: 40%");
 			row2TableTrTd1.addHtmlElement(specialDiv);
 			
-			specialDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special")));	
+			if (special == 1) {
+				specialDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special.sm_tsuki_ni_kawatte_oshioki_yo")));
+				
+			} else if (special == 2) {
+				specialDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special.buta_mo_odaterya_ki_ni_noboru")));
+				
+			}				
 		}		
 				
 		return additionalInfoDiv;
@@ -661,6 +670,19 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 
 		if (value.equals("月に代わって、お仕置きよ!") == true) {
+			return true;
+		}
+
+		return false;
+	}
+	
+	private boolean isButaMoOdateryaKiNiNoboru(String value) {
+
+		if (value == null) {
+			return false;
+		}
+
+		if (value.equals("豚もおだてりゃ木に登る") == true || value.equals("ブタもおだてりゃ木に登る") == true || value.equals("豚も煽てりゃ木に登る") == true) {
 			return true;
 		}
 
