@@ -115,6 +115,7 @@ public class LoggerListener {
 			mySQLConnector.insertGenericLog(genericLog);
 		} catch (SQLException e) {
 			logger.error("Błąd podczas zapisu do bazy danych", e);
+			logger.error("SQL State: " + e.getSQLState());
 			
 			throw new RuntimeException(e);
 		}				
@@ -164,6 +165,7 @@ public class LoggerListener {
 
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -226,6 +228,7 @@ public class LoggerListener {
 				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -240,6 +243,7 @@ public class LoggerListener {
 
 				} catch (SQLException e) {
 					logger.error("Błąd podczas dostępu do bazy danych", e);
+					logger.error("SQL State: " + e.getSQLState());
 
 					throw new RuntimeException(e);
 				}
@@ -273,6 +277,7 @@ public class LoggerListener {
 						
 					} catch (SQLException e) {
 						logger.error("Błąd podczas zapisu do bazy danych", e);
+						logger.error("SQL State: " + e.getSQLState());
 						
 						throw new RuntimeException(e);
 					}
@@ -298,6 +303,7 @@ public class LoggerListener {
 						
 					} catch (SQLException e) {
 						logger.error("Błąd podczas zapisu do bazy danych", e);
+						logger.error("SQL State: " + e.getSQLState());
 						
 						throw new RuntimeException(e);
 					}
@@ -318,6 +324,7 @@ public class LoggerListener {
 
 			} catch (SQLException e) {
 				logger.error("Błąd podczas dostępu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 
 				throw new RuntimeException(e);
 			}
@@ -349,6 +356,7 @@ public class LoggerListener {
 					
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
+					logger.error("SQL State: " + e.getSQLState());
 					
 					throw new RuntimeException(e);
 				}
@@ -370,6 +378,7 @@ public class LoggerListener {
 					
 				} catch (SQLException e) {
 					logger.error("Błąd podczas zapisu do bazy danych", e);
+					logger.error("SQL State: " + e.getSQLState());
 					
 					throw new RuntimeException(e);
 				}
@@ -417,6 +426,7 @@ public class LoggerListener {
 				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -438,6 +448,7 @@ public class LoggerListener {
 				mySQLConnector.insertWordDictionaryCatalogLog(wordDictionaryCatalogLog);
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -473,6 +484,7 @@ public class LoggerListener {
 				mySQLConnector.insertWordDictionaryNameDetailsLog(wordDictionaryNameDetailsLog);
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -494,6 +506,7 @@ public class LoggerListener {
 				mySQLConnector.insertWordDictionaryNameCatalogLog(wordDictionaryNameCatalogLog);
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -529,6 +542,7 @@ public class LoggerListener {
 				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 
 				throw new RuntimeException(e);
 			}
@@ -570,6 +584,7 @@ public class LoggerListener {
 				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -612,6 +627,7 @@ public class LoggerListener {
 				mySQLConnector.insertKanjiDictionaryRadicalsLog(kanjiDictionaryRadicalsLog);
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -662,6 +678,7 @@ public class LoggerListener {
 				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -702,6 +719,7 @@ public class LoggerListener {
 				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -723,6 +741,7 @@ public class LoggerListener {
 				mySQLConnector.insertKanjiDictionaryCatalogLog(kanjiDictionaryCatalogLog);
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -756,6 +775,7 @@ public class LoggerListener {
 				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}			
@@ -789,6 +809,7 @@ public class LoggerListener {
 				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}			
@@ -825,6 +846,7 @@ public class LoggerListener {
 				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -861,6 +883,7 @@ public class LoggerListener {
 				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -891,6 +914,7 @@ public class LoggerListener {
 				mySQLConnector.insertDailyReportSendLog(dailyReportSendLog);
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -930,6 +954,7 @@ public class LoggerListener {
 				mySQLConnector.insertAdminRequestLog(adminRequestLog);
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}
@@ -962,6 +987,7 @@ public class LoggerListener {
 	        				mySQLConnector.updateWordDictionarySearchMissingWordQueue(wordDictionarySearchMissingWordQueue);
 	        			} catch (SQLException e) {
 	        				logger.error("Błąd podczas zapisu do bazy danych", e);
+	        				logger.error("SQL State: " + e.getSQLState());
 	        				
 	        				throw new RuntimeException(e);
 	        			}
@@ -1005,6 +1031,7 @@ public class LoggerListener {
 				
 			} catch (SQLException e) {
 				logger.error("Błąd podczas zapisu do bazy danych", e);
+				logger.error("SQL State: " + e.getSQLState());
 				
 				throw new RuntimeException(e);
 			}

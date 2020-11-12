@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 
-import com.mysql.jdbc.MysqlDataTruncation;
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;

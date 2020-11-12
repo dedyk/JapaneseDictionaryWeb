@@ -75,7 +75,8 @@ public class MySQLConnector {
 		logger.info("Inicjalizacja MySQLConnector");
 		
 		try {		
-			Class<?> mysqlJdbcClass = Class.forName("com.mysql.jdbc.Driver");
+			//Class<?> mysqlJdbcClass = Class.forName("com.mysql.jdbc.Driver");
+			Class<?> mysqlJdbcClass = Class.forName("com.mysql.cj.jdbc.Driver");
 			
 			Driver driver = (Driver)mysqlJdbcClass.newInstance();
 			DriverManager.registerDriver(driver);
