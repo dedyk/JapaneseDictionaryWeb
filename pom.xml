@@ -23,7 +23,7 @@
 		<spring.version>4.3.30.RELEASE</spring.version>
 		
 		<!-- spring security version -->
-		<spring.security.version>4.2.20.RELEASE</spring.security.version>
+		<spring.security.version>5.2.10.RELEASE</spring.security.version>
 
 		<!-- lucene version -->
 		<lucene.version>4.7.2</lucene.version>
