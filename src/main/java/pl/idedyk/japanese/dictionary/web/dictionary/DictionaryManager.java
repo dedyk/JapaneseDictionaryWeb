@@ -266,10 +266,10 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 
 			List<KanjivgEntry> strokePaths = new ArrayList<KanjivgEntry>();
 
-			strokePaths.add(new KanjivgEntry(Utils.parseStringIntoList(strokePath1String, false)));
+			strokePaths.add(new KanjivgEntry(Utils.parseStringIntoList(strokePath1String /*, false */)));
 
 			if (strokePath2String == null || strokePath2String.equals("") == false) {
-				strokePaths.add(new KanjivgEntry(Utils.parseStringIntoList(strokePath2String, false)));
+				strokePaths.add(new KanjivgEntry(Utils.parseStringIntoList(strokePath2String /*, false */)));
 			}
 
 			kanaAndStrokePaths.put(kana, strokePaths);
