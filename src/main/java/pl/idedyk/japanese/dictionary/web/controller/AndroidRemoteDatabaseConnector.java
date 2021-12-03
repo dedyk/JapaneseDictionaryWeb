@@ -167,7 +167,7 @@ public class AndroidRemoteDatabaseConnector {
 		if (entry != null) {
 			
 			// logowanie
-			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntry2ById]: Znaleziono słowo: " + entry);
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntry2ById]: Znaleziono słowo: " + entry.getEntryId());
 			
 			loggerSender.sendLog(new WordDictionary2DetailsLoggerModel(Utils.createLoggerModelCommon(request), entry));
 			
