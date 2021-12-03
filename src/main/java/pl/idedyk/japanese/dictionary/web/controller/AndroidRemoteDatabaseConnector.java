@@ -48,6 +48,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryGetKanjiEnt
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchStrokeCountLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionary2DetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntriesNameSizeLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntriesSizeLoggerModel;
@@ -58,6 +59,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetTransitiv
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetWordPowerListLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 
 @Controller
 public class AndroidRemoteDatabaseConnector {
@@ -142,6 +144,44 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(dictionaryEntry));
+	}
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntry2ById", method = RequestMethod.POST)
+	public void getDictionaryEntry2ById(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+				
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntry2ById] Parsuję żądanie: " + jsonRequest);
+		
+		// pobranie id
+		Integer id = gson.fromJson(jsonRequest, Integer.class);
+		
+		// pobranie slowka
+		JMdict.Entry entry = dictionaryManager.getDictionaryEntry2ById(id);
+		
+		if (entry != null) {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntry2ById]: Znaleziono słowo: " + entry);
+			
+			loggerSender.sendLog(new WordDictionary2DetailsLoggerModel(Utils.createLoggerModelCommon(request), entry));
+			
+		} else {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntry2ById]: Nie znaleziono słowa o id: " + id);
+		}
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
+		// zwrocenie wyniku
+		writer.append(gson.toJson(entry));
 	}
 	
 	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntryNameById", method = RequestMethod.POST)

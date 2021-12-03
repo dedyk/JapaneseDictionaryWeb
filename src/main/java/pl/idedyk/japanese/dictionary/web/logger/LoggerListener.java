@@ -45,6 +45,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.StartAppLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.StartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionStartLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionary2DetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
@@ -1106,6 +1107,9 @@ public class LoggerListener {
 
 		} else if (WordDictionaryGetWordPowerListLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.WORD_DICTIONARY_GET_WORD_POWER_LIST;
+
+		} else if (WordDictionary2DetailsLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.WORD_DICTIONARY2_DETAILS;
 			
 		} else if (KanjiDictionaryStartLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.KANJI_DICTIONARY_START;
