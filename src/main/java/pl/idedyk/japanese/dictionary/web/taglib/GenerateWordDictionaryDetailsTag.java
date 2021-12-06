@@ -629,8 +629,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    	
 	    	divTitleH4.setId(titleId);
 	    	
-	    	divTitleH4.addHtmlElement(new Text("FIXME____ " + titleTitle));
-	    	menu.getChildMenu().add(new Menu(divTitleH4.getId(), "FIXME____ " + titleTitle));    	
+	    	divTitleH4.addHtmlElement(new Text(titleTitle));
+	    	menu.getChildMenu().add(new Menu(divTitleH4.getId(), titleTitle));    	
 	    	
 	    	divTitleDiv.addHtmlElement(divTitleH4);
 
@@ -681,11 +681,22 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			    protected List<Gloss> glossList;
 			    */
 				
-				Div senseDiv = new Div("row", "margin: 15px 0 0px 0");
-								
+				Div senseDiv = new Div("row");
+				
+				// numer znaczenia
+				Div senseNoDiv = new Div("col-md-1");
+				
+				H senseNoDivH = new H(4, null, "margin-top: 0px");
+				
+				senseNoDivH.addHtmlElement(new Text("" + (senseIdx + 1)));
+				
+				senseNoDiv.addHtmlElement(senseNoDivH);
+									
+				senseDiv.addHtmlElement(senseNoDiv);
+												
 				//
 				
-				Div glossPolListDiv = new Div();
+				Div glossPolListDiv = new Div("col-md-11");
 				
 				List<Gloss> glossList = sense.getGlossList();
 				List<SenseAdditionalInfo> additionalInfoList = sense.getAdditionalInfoList();
@@ -696,11 +707,29 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				// i informacje dodatkowe
 				Optional<SenseAdditionalInfo> senseAdditionalPolOptional = additionalInfoList.stream().filter(additionalInfo -> (additionalInfo.getLang().equals("pol") == true)).findFirst();				
 				
+				Table table = new Table();
+				
 				for (Gloss currentGlossPol : glossPolList) {
 					
-					Div currentGlossPolDiv = new Div();
+					Tr tr = new Tr();
+					
+					{
+						Td glossPolTd = new Td();
+						
+						H glossPolTdH4 = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+						
+						glossPolTdH4.addHtmlElement(new Text(currentGlossPol.getValue()));
+						
+						glossPolTd.addHtmlElement(glossPolTdH4);
+												
+						tr.addHtmlElement(glossPolTd);
+					}
 										
-					currentGlossPolDiv.addHtmlElement(new Text(currentGlossPol.getGType() + " - " + currentGlossPol.getValue()));
+					table.addHtmlElement(tr);
+					
+					/*
+					currentGlossPolDiv.addHtmlElement(new Text(currentGlossPol.getGType() != null ? currentGlossPol.getGType().toString() : "brak gtype"));
+					currentGlossPolDiv.addHtmlElement(new Text(" - " + ));
 					
 					if (senseAdditionalPolOptional.isPresent() == false) {
 						currentGlossPolDiv.addHtmlElement(new Text("FIXME: Brak informacji dodatkowych"));
@@ -710,11 +739,28 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					}
 					
 					glossPolListDiv.addHtmlElement(currentGlossPolDiv);
+					*/
 				}
+				
+				// przerwa
+				{
+					Tr tr = new Tr();
+					
+					Td td = new Td();
+					
+					H h4 = new H(4, null, "margin-bottom: 15px");
+					
+					td.addHtmlElement(h4);
+					
+					tr.addHtmlElement(td);
+					
+					table.addHtmlElement(tr);
+				}
+				
+				glossPolListDiv.addHtmlElement(table);
 				
 				//
 				
-				tutaj();
 				
 				
 				int a = 0;
