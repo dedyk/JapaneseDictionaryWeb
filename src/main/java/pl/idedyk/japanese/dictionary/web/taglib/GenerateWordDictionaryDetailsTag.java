@@ -686,7 +686,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				// numer znaczenia
 				Div senseNoDiv = new Div("col-md-1");
 				
-				H senseNoDivH = new H(4, null, "margin-top: 0px");
+				H senseNoDivH = new H(4, null, "margin-top: 0px; text-align: right");
 				
 				senseNoDivH.addHtmlElement(new Text("" + (senseIdx + 1)));
 				
