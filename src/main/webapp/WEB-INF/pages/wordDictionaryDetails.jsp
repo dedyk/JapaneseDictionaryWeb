@@ -12,6 +12,7 @@
 			
 		<jdwt:generateWordDictionaryDetails
 			dictionaryEntry="${dictionaryEntry}"
+			dictionaryEntry2="${dictionaryEntry2}"
 			forceDictionaryEntryType="${forceDictionaryEntryType}" />
 				
 	</jsp:body>
