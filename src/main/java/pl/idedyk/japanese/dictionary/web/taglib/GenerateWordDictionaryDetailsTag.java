@@ -742,6 +742,21 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					*/
 				}
 				
+				if (senseAdditionalPolOptional.isPresent() == true) { // czy informacje dodatkowe istnieja
+					
+					String senseAdditionalPolOptionalValue = senseAdditionalPolOptional.get().getValue();
+					
+					Tr tr = new Tr();
+					
+					Td senseAdditionalPolTd = new Td();
+					
+					senseAdditionalPolTd.addHtmlElement(new Text(senseAdditionalPolOptionalValue));
+					
+					tr.addHtmlElement(senseAdditionalPolTd);
+					
+					table.addHtmlElement(tr);
+				}
+				
 				// przerwa
 				{
 					Tr tr = new Tr();
