@@ -732,7 +732,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						
 						Div glossPolGTypeTdDiv = new Div(null, "margin-top: 0px;margin-left: 25px;margin-bottom: 5px");
 						
-						glossPolGTypeTdDiv.addHtmlElement(new Text(currentGlossPol.getGType().toString()));
+						glossPolGTypeTdDiv.addHtmlElement(new Text(Dictionary2HelperCommon.translateToPolishGlossType(currentGlossPol.getGType())));
 						
 						glossPolGTypeTd.addHtmlElement(glossPolGTypeTdDiv);
 						
