@@ -712,18 +712,33 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				for (Gloss currentGlossPol : glossPolList) {
 					
 					Tr tr = new Tr();
+
+					// dodanie pojedynczego znaczenia
+					Td glossPolValueTd = new Td();
 					
-					{
-						Td glossPolTd = new Td();
+					// wyroznienie znaczenia
+					H glossPolTdH4 = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+					
+					glossPolTdH4.addHtmlElement(new Text(currentGlossPol.getValue()));
+					
+					glossPolValueTd.addHtmlElement(glossPolTdH4);
+											
+					tr.addHtmlElement(glossPolValueTd);
+					
+					// sprawdzenie, czy wystepuje dodatkowy typ znaczenia
+					if (currentGlossPol.getGType() != null) {
 						
-						H glossPolTdH4 = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+						Td glossPolGTypeTd = new Td();
 						
-						glossPolTdH4.addHtmlElement(new Text(currentGlossPol.getValue()));
+						Div glossPolGTypeTdDiv = new Div(null, "margin-top: 0px;margin-left: 25px;margin-bottom: 5px");
 						
-						glossPolTd.addHtmlElement(glossPolTdH4);
-												
-						tr.addHtmlElement(glossPolTd);
+						glossPolGTypeTdDiv.addHtmlElement(new Text(currentGlossPol.getGType().toString()));
+						
+						glossPolGTypeTd.addHtmlElement(glossPolGTypeTdDiv);
+						
+						tr.addHtmlElement(glossPolGTypeTd);
 					}
+						
 										
 					table.addHtmlElement(tr);
 					
