@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlValue;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -65,6 +66,8 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.GTypeEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Gloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSource;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSourceLsTypeEnum;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSourceLsWaseiEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.MiscEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.PartOfSpeechEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
@@ -643,42 +646,51 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				
 				Sense sense = kanjiKanaPair.getSenseList().get(senseIdx);
 				
+				List<Gloss> glossList = sense.getGlossList();
+				List<SenseAdditionalInfo> senseAdditionalInfoList = sense.getAdditionalInfoList();
+				List<LanguageSource> senseLanguageSourceList = sense.getLanguageSourceList();
+				List<FieldEnum> senseFieldList = sense.getFieldList();
+				List<MiscEnum> senseMiscList = sense.getMiscList();
+				List<DialectEnum> senseDialectList = sense.getDialectList();
+
+				
 				/*
 			    -- @XmlElement(name = "stagk")
 			    -- protected List<String> restrictedToKanjiList;
 			    
 			    -- @XmlElement(name = "stagr")
 			    --protected List<String> restrictedToKanaList;
+			    
 			    @XmlElement(name = "pos")
 			    @XmlSchemaType(name = "string")
 			    protected List<PartOfSpeechEnum> partOfSpeechList;
 			    
-			    @XmlElement(name = "xref")
-			    protected List<String> referenceToAnotherKanjiKanaList;
+			    -- @XmlElement(name = "xref")
+			    -- protected List<String> referenceToAnotherKanjiKanaList;
 			    
 			    @XmlElement(name = "ant")
 			    protected List<String> antonymList;
 			    
-			    @XmlElement(name = "field")
-			    @XmlSchemaType(name = "string")
-			    protected List<FieldEnum> fieldList;
+			    ++ @XmlElement(name = "field")
+			    ++ @XmlSchemaType(name = "string")
+			    ++ protected List<FieldEnum> fieldList;
 			    
-			    @XmlElement(name = "misc")
-			    @XmlSchemaType(name = "string")
-			    protected List<MiscEnum> miscList;
+			    ++ @XmlElement(name = "misc")
+			    ++ @XmlSchemaType(name = "string")
+			    ++ protected List<MiscEnum> miscList;
 			    
-			    @XmlElement(name = "s_inf")
-			    protected List<SenseAdditionalInfo> additionalInfoList;
+			    ++ @XmlElement(name = "s_inf")
+			    ++ protected List<SenseAdditionalInfo> additionalInfoList;
 			    
-			    @XmlElement(name = "lsource")
-			    protected List<LanguageSource> languageSourceList;
+			    ++ @XmlElement(name = "lsource")
+			    ++ protected List<LanguageSource> languageSourceList;
 			    
-			    @XmlElement(name = "dial")
-			    @XmlSchemaType(name = "string")
-			    protected List<DialectEnum> dialectList;
+			    ++ @XmlElement(name = "dial")
+			    ++ @XmlSchemaType(name = "string")
+			    ++ protected List<DialectEnum> dialectList;
 			    
-			    @XmlElement(name = "gloss")
-			    protected List<Gloss> glossList;
+			    ++ @XmlElement(name = "gloss")
+			    ++ protected List<Gloss> glossList;
 			    */
 				
 				Div senseDiv = new Div("row");
@@ -697,15 +709,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				//
 				
 				Div glossPolListDiv = new Div("col-md-11");
-				
-				List<Gloss> glossList = sense.getGlossList();
-				List<SenseAdditionalInfo> additionalInfoList = sense.getAdditionalInfoList();
-				
+								
 				// pobieramy polskie tlumaczenia
 				List<Gloss> glossPolList = glossList.stream().filter(gloss -> (gloss.getLang().equals("pol") == true)).collect(Collectors.toList());
 				
 				// i informacje dodatkowe
-				Optional<SenseAdditionalInfo> senseAdditionalPolOptional = additionalInfoList.stream().filter(additionalInfo -> (additionalInfo.getLang().equals("pol") == true)).findFirst();				
+				Optional<SenseAdditionalInfo> senseAdditionalPolOptional = senseAdditionalInfoList.stream().filter(additionalInfo -> (additionalInfo.getLang().equals("pol") == true)).findFirst();				
 				
 				Table table = new Table();
 				
@@ -740,32 +749,63 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					}
 						
 										
-					table.addHtmlElement(tr);
-					
-					/*
-					currentGlossPolDiv.addHtmlElement(new Text(currentGlossPol.getGType() != null ? currentGlossPol.getGType().toString() : "brak gtype"));
-					currentGlossPolDiv.addHtmlElement(new Text(" - " + ));
-					
-					if (senseAdditionalPolOptional.isPresent() == false) {
-						currentGlossPolDiv.addHtmlElement(new Text("FIXME: Brak informacji dodatkowych"));
-						
-					} else {
-						currentGlossPolDiv.addHtmlElement(new Text("FIXME: " + senseAdditionalPolOptional.get().getValue()));
-					}
-					
-					glossPolListDiv.addHtmlElement(currentGlossPolDiv);
-					*/
+					table.addHtmlElement(tr);					
+				}
+				
+				// informacje dodatkowe
+				List<String> additionalInfoToAddList = new ArrayList<>();
+				
+				// dziedzina
+				if (senseFieldList.size() > 0) {
+					additionalInfoToAddList.addAll(Dictionary2HelperCommon.translateToPolishFieldEnumList(senseFieldList));						
+				}
+				
+				// rozne informacje
+				if (senseMiscList.size() > 0) {
+					additionalInfoToAddList.addAll(Dictionary2HelperCommon.translateToPolishMiscEnumList(senseMiscList));
+				}
+				
+				// dialekt
+				if (senseDialectList.size() > 0) {
+					additionalInfoToAddList.addAll(Dictionary2HelperCommon.translateToPolishDialectEnumList(senseDialectList));
 				}
 				
 				if (senseAdditionalPolOptional.isPresent() == true) { // czy informacje dodatkowe istnieja
 					
 					String senseAdditionalPolOptionalValue = senseAdditionalPolOptional.get().getValue();
 					
+					additionalInfoToAddList.add(senseAdditionalPolOptionalValue);
+				}
+				
+				// czy sa informacje o zagranicznym pochodzeniu slow
+				if (senseLanguageSourceList != null && senseLanguageSourceList.size() > 0) {
+					
+					for (LanguageSource languageSource : senseLanguageSourceList) {
+												
+						String languageCodeInPolish = Dictionary2HelperCommon.translateToPolishLanguageCode(languageSource.getLang());
+						String languageValue = languageSource.getValue();
+						String languageLsWasei = Dictionary2HelperCommon.translateToPolishLanguageSourceLsWaseiEnum(languageSource.getLsWasei());
+						
+						if (StringUtils.isBlank(languageValue) == false) {
+							additionalInfoToAddList.add(languageCodeInPolish + ": " + languageValue);
+							
+						} else {
+							additionalInfoToAddList.add(Dictionary2HelperCommon.translateToPolishLanguageCodeWithoutValue(languageSource.getLang()));
+						}
+						
+						if (languageLsWasei != null) {
+							additionalInfoToAddList.add(languageLsWasei);
+						}
+					}
+				}
+								
+				if (additionalInfoToAddList.size() > 0) {
+					
 					Tr tr = new Tr();
 					
 					Td senseAdditionalPolTd = new Td();
 					
-					senseAdditionalPolTd.addHtmlElement(new Text(senseAdditionalPolOptionalValue));
+					senseAdditionalPolTd.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(additionalInfoToAddList, "; ")));
 					
 					tr.addHtmlElement(senseAdditionalPolTd);
 					
