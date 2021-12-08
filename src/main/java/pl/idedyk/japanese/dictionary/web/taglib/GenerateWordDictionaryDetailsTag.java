@@ -652,6 +652,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				List<FieldEnum> senseFieldList = sense.getFieldList();
 				List<MiscEnum> senseMiscList = sense.getMiscList();
 				List<DialectEnum> senseDialectList = sense.getDialectList();
+				List<PartOfSpeechEnum> partOfSpeechList = sense.getPartOfSpeechList();
 
 				
 				/*
@@ -661,15 +662,15 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			    -- @XmlElement(name = "stagr")
 			    --protected List<String> restrictedToKanaList;
 			    
-			    @XmlElement(name = "pos")
-			    @XmlSchemaType(name = "string")
-			    protected List<PartOfSpeechEnum> partOfSpeechList;
+			    ++ @XmlElement(name = "pos")
+			    ++ @XmlSchemaType(name = "string")
+			    ++ protected List<PartOfSpeechEnum> partOfSpeechList;
 			    
 			    -- @XmlElement(name = "xref")
 			    -- protected List<String> referenceToAnotherKanjiKanaList;
 			    
-			    @XmlElement(name = "ant")
-			    protected List<String> antonymList;
+			    -- @XmlElement(name = "ant")
+			    -- protected List<String> antonymList;
 			    
 			    ++ @XmlElement(name = "field")
 			    ++ @XmlSchemaType(name = "string")
@@ -698,7 +699,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				// numer znaczenia
 				Div senseNoDiv = new Div("col-md-1");
 				
-				H senseNoDivH = new H(4, null, "margin-top: 0px; text-align: right");
+				H senseNoDivH = new H(4, null, "margin-top: 20px; text-align: right");
 				
 				senseNoDivH.addHtmlElement(new Text("" + (senseIdx + 1)));
 				
@@ -717,6 +718,24 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				Optional<SenseAdditionalInfo> senseAdditionalPolOptional = senseAdditionalInfoList.stream().filter(additionalInfo -> (additionalInfo.getLang().equals("pol") == true)).findFirst();				
 				
 				Table table = new Table();
+				
+				// czesci mowy
+				if (partOfSpeechList.size() > 0) {
+					
+					List<String> translateToPolishPartOfSpeechEnum = Dictionary2HelperCommon.translateToPolishPartOfSpeechEnum(partOfSpeechList);
+					
+					//
+					
+					Tr tr = new Tr();
+					
+					Td translateToPolishPartOfSpeechEnumTd = new Td();
+					
+					translateToPolishPartOfSpeechEnumTd.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(translateToPolishPartOfSpeechEnum, "; ")));
+					
+					tr.addHtmlElement(translateToPolishPartOfSpeechEnumTd);
+					
+					table.addHtmlElement(tr);
+				}				
 				
 				for (Gloss currentGlossPol : glossPolList) {
 					
@@ -1133,7 +1152,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			}
 			
 			if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR || attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR || attributeType == AttributeType.ALTERNATIVE ||
-					attributeType == AttributeType.RELATED) {
+					attributeType == AttributeType.RELATED || attributeType == AttributeType.ANTONYM) {
 				
 				Integer referenceWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
 
