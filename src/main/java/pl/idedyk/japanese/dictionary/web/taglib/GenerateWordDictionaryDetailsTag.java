@@ -14,12 +14,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlValue;
-import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
@@ -62,12 +56,9 @@ import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.KanjiKanaPair;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.DialectEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.FieldEnum;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.GTypeEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Gloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSource;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSourceLsTypeEnum;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSourceLsWaseiEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.MiscEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.PartOfSpeechEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
@@ -653,46 +644,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				List<MiscEnum> senseMiscList = sense.getMiscList();
 				List<DialectEnum> senseDialectList = sense.getDialectList();
 				List<PartOfSpeechEnum> partOfSpeechList = sense.getPartOfSpeechList();
-
-				
-				/*
-			    -- @XmlElement(name = "stagk")
-			    -- protected List<String> restrictedToKanjiList;
-			    
-			    -- @XmlElement(name = "stagr")
-			    --protected List<String> restrictedToKanaList;
-			    
-			    ++ @XmlElement(name = "pos")
-			    ++ @XmlSchemaType(name = "string")
-			    ++ protected List<PartOfSpeechEnum> partOfSpeechList;
-			    
-			    -- @XmlElement(name = "xref")
-			    -- protected List<String> referenceToAnotherKanjiKanaList;
-			    
-			    -- @XmlElement(name = "ant")
-			    -- protected List<String> antonymList;
-			    
-			    ++ @XmlElement(name = "field")
-			    ++ @XmlSchemaType(name = "string")
-			    ++ protected List<FieldEnum> fieldList;
-			    
-			    ++ @XmlElement(name = "misc")
-			    ++ @XmlSchemaType(name = "string")
-			    ++ protected List<MiscEnum> miscList;
-			    
-			    ++ @XmlElement(name = "s_inf")
-			    ++ protected List<SenseAdditionalInfo> additionalInfoList;
-			    
-			    ++ @XmlElement(name = "lsource")
-			    ++ protected List<LanguageSource> languageSourceList;
-			    
-			    ++ @XmlElement(name = "dial")
-			    ++ @XmlSchemaType(name = "string")
-			    ++ protected List<DialectEnum> dialectList;
-			    
-			    ++ @XmlElement(name = "gloss")
-			    ++ protected List<Gloss> glossList;
-			    */
 				
 				Div senseDiv = new Div("row");
 				
@@ -849,13 +800,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				glossPolListDiv.addHtmlElement(table);
 				
 				//
-				
-				
-				
-				int a = 0;
-				
-				a++;
-				
+								
 				senseDiv.addHtmlElement(glossPolListDiv);
 				
 				resultDiv.addHtmlElement(senseDiv);
