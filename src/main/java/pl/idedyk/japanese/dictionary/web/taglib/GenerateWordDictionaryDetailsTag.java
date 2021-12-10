@@ -69,10 +69,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	private static final long serialVersionUID = 1L;
 	
 	private DictionaryEntry dictionaryEntry;
-	private JMdict.Entry dictionaryEntry2;
-	
 	private DictionaryEntryType forceDictionaryEntryType;
-		
+	
+	private JMdict.Entry dictionaryEntry2;
+	private KanjiKanaPair dictionaryEntry2KanjiKanaPair;
+			
 	private MessageSource messageSource;
 	
 	private DictionaryManager dictionaryManager;
@@ -93,6 +94,14 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		boolean mobile = Utils.isMobile(userAgent);
 		
+		//
+		
+		// pobieramy sens dla wybranej pary kanji i kana
+		List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2);
+		
+		// szukamy konkretnego znaczenia dla naszego slowa
+		dictionaryEntry2KanjiKanaPair = Dictionary2HelperCommon.findKanjiKanaPair(kanjiKanaPairList, dictionaryEntry);
+
 		//
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
@@ -595,20 +604,10 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		final String titleTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title");
 		
 		
-		if (dictionaryEntry2 == null) { // generowanie po staremu
+		if (dictionaryEntry2KanjiKanaPair == null) { // generowanie po staremu
 			return generateStandardDivWithStringList(titleId, titleTitle, menu, dictionaryEntry.getTranslates());
 						
 		} else { // generowanie z danych zawartych w dictionaryEntry2
-			
-			// pobieramy sens dla wybranej pary kanji i kana
-			List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2);
-			
-			// szukamy konkretnego znaczenia dla naszego slowa
-			KanjiKanaPair kanjiKanaPair = Dictionary2HelperCommon.findKanjiKanaPair(kanjiKanaPairList, dictionaryEntry);
-			
-			if (kanjiKanaPair == null) { // to raczej nie powinno zdarzyc sie nigdy
-				return generateStandardDivWithStringList(titleId, titleTitle, menu, dictionaryEntry.getTranslates());
-			}
 			
 			// glowny div z zawartoscia
 			Div resultDiv = new Div();
@@ -633,9 +632,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    	//
 			
 			// mamy znaczenia
-			for (int senseIdx = 0; senseIdx < kanjiKanaPair.getSenseList().size(); ++senseIdx) {
+			for (int senseIdx = 0; senseIdx < dictionaryEntry2KanjiKanaPair.getSenseList().size(); ++senseIdx) {
 				
-				Sense sense = kanjiKanaPair.getSenseList().get(senseIdx);
+				Sense sense = dictionaryEntry2KanjiKanaPair.getSenseList().get(senseIdx);
 				
 				List<Gloss> glossList = sense.getGlossList();
 				List<SenseAdditionalInfo> senseAdditionalInfoList = sense.getAdditionalInfoList();
@@ -812,7 +811,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	private Div generateAdditionalInfo(Menu menu) throws IOException {
 		
-		if (dictionaryEntry2 != null) { // dla slownika w formacie drugim nie generuj tej sekcji; informacje te znajda sie w sekcji znaczen
+		if (dictionaryEntry2KanjiKanaPair != null) { // dla slownika w formacie drugim nie generuj tej sekcji; informacje te znajda sie w sekcji znaczen
 			return null;
 		}
 		
