@@ -13,7 +13,8 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ import com.csvreader.CsvReader;
 @Service
 public class DictionaryManager extends DictionaryManagerAbstract {
 
-	private static final Logger logger = Logger.getLogger(DictionaryManager.class);
+	private static final Logger logger = LogManager.getLogger(DictionaryManager.class);
 	
 	private static final String RADICAL_FILE = "radical.csv";
 	private static final String TRANSITIVE_INTRANSTIVE_PAIRS_FILE = "transitive_intransitive_pairs.csv";

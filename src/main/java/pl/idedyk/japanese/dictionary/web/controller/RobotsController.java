@@ -10,7 +10,8 @@ import java.nio.file.Paths;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -26,7 +27,7 @@ import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 @Controller
 public class RobotsController {
 
-	private static final Logger logger = Logger.getLogger(RobotsController.class);
+	private static final Logger logger = LogManager.getLogger(RobotsController.class);
 	
 	@Value("${base.server}")
 	private String baseServer;

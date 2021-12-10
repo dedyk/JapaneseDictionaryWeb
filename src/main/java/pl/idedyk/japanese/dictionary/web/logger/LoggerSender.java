@@ -5,14 +5,15 @@ import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 
 public class LoggerSender {
 
-	private static final Logger logger = Logger.getLogger(LoggerSender.class);
+	private static final Logger logger = LogManager.getLogger(LoggerSender.class);
 	
 	private QueueService queueService;
 	

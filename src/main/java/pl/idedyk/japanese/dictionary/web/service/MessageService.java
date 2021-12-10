@@ -14,7 +14,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.WebMessa
 @Service
 public class MessageService {
 
-	private static final Logger logger = Logger.getLogger(MessageService.class);
+	private static final Logger logger = LogManager.getLogger(MessageService.class);
 
 	@Autowired
 	private ConfigService configService;

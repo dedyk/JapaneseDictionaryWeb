@@ -5,7 +5,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
@@ -81,7 +82,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryUniqueSearch;
 
 public class LoggerListener {
 	
-	private static final Logger logger = Logger.getLogger(LoggerListener.class);
+	private static final Logger logger = LogManager.getLogger(LoggerListener.class);
 
 	@Autowired
 	private MySQLConnector mySQLConnector;

@@ -2,7 +2,8 @@ package pl.idedyk.japanese.dictionary.web.service;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import nl.basjes.parse.useragent.UserAgent;
@@ -13,7 +14,7 @@ import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo;
 @Service
 public class UserAgentService {
 	
-	private static final Logger logger = Logger.getLogger(UserAgentService.class);
+	private static final Logger logger = LogManager.getLogger(UserAgentService.class);
 
 	private UserAgentAnalyzer userAgentAnalyzer;
 	

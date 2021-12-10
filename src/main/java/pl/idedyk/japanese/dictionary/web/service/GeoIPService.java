@@ -6,7 +6,8 @@ import java.net.InetAddress;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import com.maxmind.geoip2.record.Country;
 @Service
 public class GeoIPService {
 	
-	private static final Logger logger = Logger.getLogger(GeoIPService.class);
+	private static final Logger logger = LogManager.getLogger(GeoIPService.class);
 	
 	@Value("${geoip.db.city.path}")
 	private String dbCityPath;

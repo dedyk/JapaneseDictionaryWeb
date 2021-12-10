@@ -9,7 +9,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -23,7 +24,7 @@ public class HandleException extends TagSupport {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static final Logger logger = Logger.getLogger(HandleException.class);
+	private static final Logger logger = LogManager.getLogger(HandleException.class);
 	
 	@Override
 	public int doStartTag() throws JspException {

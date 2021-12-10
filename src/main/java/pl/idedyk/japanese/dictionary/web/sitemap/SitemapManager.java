@@ -16,7 +16,8 @@ import javax.annotation.PostConstruct;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
@@ -28,7 +29,7 @@ import pl.idedyk.japanese.dictionary.web.sitemap.exception.NotInitializedExcepti
 
 public class SitemapManager {
 	
-	private static final Logger logger = Logger.getLogger(SitemapManager.class);
+	private static final Logger logger = LogManager.getLogger(SitemapManager.class);
 		
 	private String baseServer;
 	

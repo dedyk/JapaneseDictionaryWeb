@@ -5,7 +5,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.InfoLoggerModel;
 @Controller
 public class InfoController {
 	
-	private static final Logger logger = Logger.getLogger(InfoController.class);
+	private static final Logger logger = LogManager.getLogger(InfoController.class);
 	
 	@Autowired
 	private LoggerSender loggerSender;
