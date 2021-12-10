@@ -58,6 +58,7 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.DialectEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.FieldEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Gloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSource;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.MiscEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.PartOfSpeechEnum;
@@ -97,10 +98,16 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		//
 		
 		// pobieramy sens dla wybranej pary kanji i kana
-		List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2);
-		
-		// szukamy konkretnego znaczenia dla naszego slowa
-		dictionaryEntry2KanjiKanaPair = Dictionary2HelperCommon.findKanjiKanaPair(kanjiKanaPairList, dictionaryEntry);
+		if (dictionaryEntry2 != null) {
+			
+			List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2);
+			
+			// szukamy konkretnego znaczenia dla naszego slowa
+			dictionaryEntry2KanjiKanaPair = Dictionary2HelperCommon.findKanjiKanaPair(kanjiKanaPairList, dictionaryEntry);
+			
+		} else {
+			dictionaryEntry2KanjiKanaPair = null;
+		}		
 
 		//
 		
@@ -353,7 +360,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	// dodaj wiersz z tytulem
     	kanjiDiv.addHtmlElement(row1Div);
-    	        	        	       		
+    	    	        	        	       		
         List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(dictionaryEntry);
     	            
         if (furiganaEntries != null && furiganaEntries.size() > 0 && addKanjiWrite == true) {
@@ -468,7 +475,29 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         // tworzenie okienka rysowania znaku kanji
         kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, dictionaryEntry.getKanji(), kanjiDrawId));
         
-                
+    	// informacje dodatkowe do kanji
+        if (dictionaryEntry2KanjiKanaPair != null && dictionaryEntry2KanjiKanaPair.getKanjiInfo() != null) {
+        	
+        	List<KanjiAdditionalInfoEnum> kanjiAdditionalInfoList = dictionaryEntry2KanjiKanaPair.getKanjiInfo().getKanjiAdditionalInfoList();
+        	
+        	List<String> kanjiAdditionalInfoListString = Dictionary2HelperCommon.translateToPolishKanjiAdditionalInfoEnum(kanjiAdditionalInfoList);
+        	
+        	if (kanjiAdditionalInfoList != null && kanjiAdditionalInfoList.size() > 0) {
+        		
+            	Div kanjiAdditionalInfoDiv = new Div("row");
+            	
+            	kanjiAdditionalInfoDiv.addHtmlElement(new Div());
+            	
+            	Div kanjiAdditionalInfoDivBody = new Div("col-md-10", "margin-top: 15px");
+            	
+            	kanjiAdditionalInfoDivBody.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(kanjiAdditionalInfoListString, "; ")));
+
+            	kanjiAdditionalInfoDiv.addHtmlElement(kanjiAdditionalInfoDivBody);
+            	
+            	kanjiDiv.addHtmlElement(kanjiAdditionalInfoDiv);
+        	}        	
+        }
+        
         return kanjiDiv;
 	}
 	
