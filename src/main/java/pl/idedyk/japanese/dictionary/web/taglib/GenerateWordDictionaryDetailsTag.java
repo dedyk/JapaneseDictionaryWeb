@@ -62,6 +62,7 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSource;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.MiscEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.PartOfSpeechEnum;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.SenseAdditionalInfo;
 
@@ -623,6 +624,30 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             // tworzenie okienka rysowania znaku kanji
         	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
 		}
+        
+    	// informacje dodatkowe do kanji
+        if (dictionaryEntry2KanjiKanaPair != null && dictionaryEntry2KanjiKanaPair.getReadingInfo() != null) {
+        	
+        	List<ReadingAdditionalInfoEnum> readingAdditionalInfoList = dictionaryEntry2KanjiKanaPair.getReadingInfo().getReadingAdditionalInfoList();
+        	
+        	List<String> readingAdditionalInfoListString = Dictionary2HelperCommon.translateToPolishReadingAdditionalInfoEnum(readingAdditionalInfoList);
+        	
+        	if (readingAdditionalInfoList != null && readingAdditionalInfoList.size() > 0) {
+        		
+            	Div readingAdditionalInfoDiv = new Div("row");
+            	
+            	readingAdditionalInfoDiv.addHtmlElement(new Div());
+            	
+            	Div readingAdditionalInfoDivBody = new Div("col-md-10", "margin-top: 15px");
+            	
+            	readingAdditionalInfoDivBody.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(readingAdditionalInfoListString, "; ")));
+
+            	readingAdditionalInfoDiv.addHtmlElement(readingAdditionalInfoDivBody);
+            	
+            	readingDiv.addHtmlElement(readingAdditionalInfoDiv);
+        	}        	
+        }
+
                 
         return readingDiv;
 	}
