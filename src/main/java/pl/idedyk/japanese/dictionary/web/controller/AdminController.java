@@ -14,7 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -52,7 +53,7 @@ import pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager;
 @Controller
 public class AdminController {
 	
-	private static final Logger logger = Logger.getLogger(AdminController.class);
+	private static final Logger logger = LogManager.getLogger(AdminController.class);
 	
 	private static final int GENERIC_LOG_SIZE = 100;
 

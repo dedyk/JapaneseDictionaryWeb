@@ -15,7 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
 @Controller
 public class KanjiDictionaryController {
 
-	private static final Logger logger = Logger.getLogger(KanjiDictionaryController.class);
+	private static final Logger logger = LogManager.getLogger(KanjiDictionaryController.class);
 
 	@Autowired
 	private DictionaryManager dictionaryManager;

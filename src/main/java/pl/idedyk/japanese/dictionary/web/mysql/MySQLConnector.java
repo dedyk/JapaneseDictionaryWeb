@@ -19,7 +19,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventOperation;
 import pl.idedyk.japanese.dictionary.web.mysql.model.AdminRequestLog;
@@ -53,7 +54,7 @@ import snaq.db.ConnectionPool;
 
 public class MySQLConnector {
 
-	private static final Logger logger = Logger.getLogger(MySQLConnector.class);
+	private static final Logger logger = LogManager.getLogger(MySQLConnector.class);
 	
 	private String url;
 	

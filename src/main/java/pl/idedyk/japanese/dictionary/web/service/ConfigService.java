@@ -2,13 +2,14 @@ package pl.idedyk.japanese.dictionary.web.service;
 
 import java.io.File;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ConfigService {
 	
-	private static final Logger logger = Logger.getLogger(ConfigService.class);
+	private static final Logger logger = LogManager.getLogger(ConfigService.class);
 	
 	private boolean temporaryStopProcessing = false;
 		

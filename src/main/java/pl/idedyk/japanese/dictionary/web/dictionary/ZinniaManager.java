@@ -7,7 +7,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.xdump.android.zinnia.Zinnia;
@@ -24,7 +25,7 @@ import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 @Service
 public class ZinniaManager {
 	
-	private static final Logger logger = Logger.getLogger(ZinniaManager.class);
+	private static final Logger logger = LogManager.getLogger(ZinniaManager.class);
 	
 	private String zinniaArch;
 	

@@ -5,7 +5,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.SuggestionStartLoggerModel
 @Controller
 public class SuggestionController {
 	
-	private static final Logger logger = Logger.getLogger(WordDictionaryController.class);
+	private static final Logger logger = LogManager.getLogger(WordDictionaryController.class);
 	
 	@Autowired
 	private LoggerSender loggerSender;

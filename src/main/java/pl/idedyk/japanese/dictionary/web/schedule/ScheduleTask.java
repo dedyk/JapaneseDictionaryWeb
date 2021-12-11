@@ -12,7 +12,8 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -56,7 +57,7 @@ import pl.idedyk.japanese.dictionary.web.service.SemaphoreService;
 @Service
 public class ScheduleTask {
 	
-	private static final Logger logger = Logger.getLogger(ScheduleTask.class);
+	private static final Logger logger = LogManager.getLogger(ScheduleTask.class);
 
 	@Autowired
 	private MySQLConnector mySQLConnector;

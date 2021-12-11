@@ -18,7 +18,8 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -55,7 +56,7 @@ import pl.idedyk.japanese.dictionary.web.service.dto.UserAgentInfo.PhoneTabletIn
 @Service
 public class ReportGenerator {
 	
-	private static final Logger logger = Logger.getLogger(ReportGenerator.class);
+	private static final Logger logger = LogManager.getLogger(ReportGenerator.class);
 
 	@Autowired
 	private MySQLConnector mySQLConnector;

@@ -32,7 +32,8 @@ import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.QueueItemStatus;
 @Service
 public class QueueService {
 	
-	private static final Logger logger = Logger.getLogger(QueueService.class);
+	private static final Logger logger = LogManager.getLogger(QueueService.class);
 
 	@Autowired
 	private MySQLConnector mySQLConnector;

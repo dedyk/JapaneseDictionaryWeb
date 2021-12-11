@@ -8,7 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -27,7 +28,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLogger
 @ControllerAdvice
 public class ErrorController {
 
-	private static final Logger logger = Logger.getLogger(ErrorController.class);
+	private static final Logger logger = LogManager.getLogger(ErrorController.class);
 	
 	@Autowired
 	private LoggerSender loggerSender;

@@ -16,7 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 @Controller
 public class WordDictionaryController {
 
-	private static final Logger logger = Logger.getLogger(WordDictionaryController.class);
+	private static final Logger logger = LogManager.getLogger(WordDictionaryController.class);
 
 	@Autowired
 	private DictionaryManager dictionaryManager;

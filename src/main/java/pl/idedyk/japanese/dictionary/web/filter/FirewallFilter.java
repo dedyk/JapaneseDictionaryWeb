@@ -12,7 +12,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -22,7 +23,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
 
 public class FirewallFilter implements Filter {
 	
-	private static final Logger logger = Logger.getLogger(FirewallFilter.class);
+	private static final Logger logger = LogManager.getLogger(FirewallFilter.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
