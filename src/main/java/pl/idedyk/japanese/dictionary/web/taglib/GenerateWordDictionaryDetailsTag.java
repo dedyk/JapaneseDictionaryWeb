@@ -625,7 +625,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
 		}
         
-    	// informacje dodatkowe do kanji
+    	// informacje dodatkowe do czytania
         if (dictionaryEntry2KanjiKanaPair != null && dictionaryEntry2KanjiKanaPair.getReadingInfo() != null) {
         	
         	List<ReadingAdditionalInfoEnum> readingAdditionalInfoList = dictionaryEntry2KanjiKanaPair.getReadingInfo().getReadingAdditionalInfoList();
