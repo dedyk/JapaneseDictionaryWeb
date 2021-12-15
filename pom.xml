@@ -26,7 +26,7 @@
 		<spring.security.version>4.2.20.RELEASE</spring.security.version>
 
 		<!-- lucene version -->
-		<lucene.version>4.7.2</lucene.version>
+		<lucene.version>7.1.0</lucene.version>
         
         <!-- log4j version -->
         <log4j.version>2.16.0</log4j.version>
