@@ -36,6 +36,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
+import pl.idedyk.japanese.dictionary.api.dto.Attribute;
+import pl.idedyk.japanese.dictionary.api.dto.AttributeType;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
@@ -58,6 +60,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsL
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryPdfDictionaryLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 
 @Controller
 public class WordDictionaryController {
@@ -347,6 +350,8 @@ public class WordDictionaryController {
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
 		
+		JMdict.Entry dictionaryEntry2 = null;
+		
 		DictionaryEntryType forceDictionaryEntryTypeType = null;
 		
 		if (forceDictionaryEntryType != null) {
@@ -364,6 +369,19 @@ public class WordDictionaryController {
 		
 		// tytul strony
 		if (dictionaryEntry != null) {
+			
+			// sprawdzenie, czy wystepuje slowo w formacie JMdict
+			List<Attribute> jmdictEntryIdAttributeList = dictionaryEntry.getAttributeList().getAttributeList(AttributeType.JMDICT_ENTRY_ID);
+			
+			if (jmdictEntryIdAttributeList != null && jmdictEntryIdAttributeList.size() > 0) { // cos jest
+				
+				// pobieramy entry id
+				Integer entryId = Integer.parseInt(jmdictEntryIdAttributeList.get(0).getAttributeValue().get(0));
+				
+				// pobieramy z bazy danych
+				dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ById(entryId);				
+			}
+			
 			
 			if (forceDictionaryEntryTypeType != null) { // sprawdzamy, czy nie zostal podany zly parametr forceDictionaryEntryTypeType
 				
@@ -425,6 +443,7 @@ public class WordDictionaryController {
 		}
 						
 		model.put("dictionaryEntry", dictionaryEntry);
+		model.put("dictionaryEntry2", dictionaryEntry2);
 		model.put("selectedMenu", "wordDictionary");
 		
 		return "wordDictionaryDetails";

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -49,15 +52,30 @@ import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.KanjiKanaPair;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.DialectEnum;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.FieldEnum;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.Gloss;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSource;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.MiscEnum;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.PartOfSpeechEnum;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.SenseAdditionalInfo;
 
 public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private DictionaryEntry dictionaryEntry;
-	
 	private DictionaryEntryType forceDictionaryEntryType;
-		
+	
+	private JMdict.Entry dictionaryEntry2;
+	private KanjiKanaPair dictionaryEntry2KanjiKanaPair;
+			
 	private MessageSource messageSource;
 	
 	private DictionaryManager dictionaryManager;
@@ -78,6 +96,20 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		boolean mobile = Utils.isMobile(userAgent);
 		
+		//
+		
+		// pobieramy sens dla wybranej pary kanji i kana
+		if (dictionaryEntry2 != null) {
+			
+			List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2);
+			
+			// szukamy konkretnego znaczenia dla naszego slowa
+			dictionaryEntry2KanjiKanaPair = Dictionary2HelperCommon.findKanjiKanaPair(kanjiKanaPairList, dictionaryEntry);
+			
+		} else {
+			dictionaryEntry2KanjiKanaPair = null;
+		}		
+
 		//
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
@@ -329,7 +361,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	// dodaj wiersz z tytulem
     	kanjiDiv.addHtmlElement(row1Div);
-    	        	        	       		
+    	    	        	        	       		
         List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(dictionaryEntry);
     	            
         if (furiganaEntries != null && furiganaEntries.size() > 0 && addKanjiWrite == true) {
@@ -444,7 +476,29 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         // tworzenie okienka rysowania znaku kanji
         kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, dictionaryEntry.getKanji(), kanjiDrawId));
         
-                
+    	// informacje dodatkowe do kanji
+        if (dictionaryEntry2KanjiKanaPair != null && dictionaryEntry2KanjiKanaPair.getKanjiInfo() != null) {
+        	
+        	List<KanjiAdditionalInfoEnum> kanjiAdditionalInfoList = dictionaryEntry2KanjiKanaPair.getKanjiInfo().getKanjiAdditionalInfoList();
+        	
+        	List<String> kanjiAdditionalInfoListString = Dictionary2HelperCommon.translateToPolishKanjiAdditionalInfoEnum(kanjiAdditionalInfoList);
+        	
+        	if (kanjiAdditionalInfoList != null && kanjiAdditionalInfoList.size() > 0) {
+        		
+            	Div kanjiAdditionalInfoDiv = new Div("row");
+            	
+            	kanjiAdditionalInfoDiv.addHtmlElement(new Div());
+            	
+            	Div kanjiAdditionalInfoDivBody = new Div("col-md-10", "margin-top: 15px");
+            	
+            	kanjiAdditionalInfoDivBody.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(kanjiAdditionalInfoListString, "; ")));
+
+            	kanjiAdditionalInfoDiv.addHtmlElement(kanjiAdditionalInfoDivBody);
+            	
+            	kanjiDiv.addHtmlElement(kanjiAdditionalInfoDiv);
+        	}        	
+        }
+        
         return kanjiDiv;
 	}
 	
@@ -570,16 +624,250 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             // tworzenie okienka rysowania znaku kanji
         	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
 		}
+        
+    	// informacje dodatkowe do czytania
+        if (dictionaryEntry2KanjiKanaPair != null && dictionaryEntry2KanjiKanaPair.getReadingInfo() != null) {
+        	
+        	List<ReadingAdditionalInfoEnum> readingAdditionalInfoList = dictionaryEntry2KanjiKanaPair.getReadingInfo().getReadingAdditionalInfoList();
+        	
+        	List<String> readingAdditionalInfoListString = Dictionary2HelperCommon.translateToPolishReadingAdditionalInfoEnum(readingAdditionalInfoList);
+        	
+        	if (readingAdditionalInfoList != null && readingAdditionalInfoList.size() > 0) {
+        		
+            	Div readingAdditionalInfoDiv = new Div("row");
+            	
+            	readingAdditionalInfoDiv.addHtmlElement(new Div());
+            	
+            	Div readingAdditionalInfoDivBody = new Div("col-md-10", "margin-top: 15px");
+            	
+            	readingAdditionalInfoDivBody.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(readingAdditionalInfoListString, "; ")));
+
+            	readingAdditionalInfoDiv.addHtmlElement(readingAdditionalInfoDivBody);
+            	
+            	readingDiv.addHtmlElement(readingAdditionalInfoDiv);
+        	}        	
+        }
+
                 
         return readingDiv;
 	}
 	
 	private Div generateTranslateSection(Menu menu) throws IOException {
 		
-		return generateStandardDivWithStringList("translateId", getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title"), menu, dictionaryEntry.getTranslates());
+		final String titleId = "translateId";
+		final String titleTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title");
+		
+		
+		if (dictionaryEntry2KanjiKanaPair == null) { // generowanie po staremu
+			return generateStandardDivWithStringList(titleId, titleTitle, menu, dictionaryEntry.getTranslates());
+						
+		} else { // generowanie z danych zawartych w dictionaryEntry2
+			
+			// glowny div z zawartoscia
+			Div resultDiv = new Div();
+			
+	    	// wiersz z tytulem
+	    	Div row1Div = new Div("row");
+			
+	    	// tytul
+	    	Div divTitleDiv = new Div("col-md-10");
+			
+	    	H divTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+	    	
+	    	divTitleH4.setId(titleId);
+	    	
+	    	divTitleH4.addHtmlElement(new Text(titleTitle));
+	    	menu.getChildMenu().add(new Menu(divTitleH4.getId(), titleTitle));    	
+	    	
+	    	divTitleDiv.addHtmlElement(divTitleH4);
+
+	    	row1Div.addHtmlElement(divTitleDiv);
+	    	resultDiv.addHtmlElement(row1Div);
+	    	//
+			
+			// mamy znaczenia
+			for (int senseIdx = 0; senseIdx < dictionaryEntry2KanjiKanaPair.getSenseList().size(); ++senseIdx) {
+				
+				Sense sense = dictionaryEntry2KanjiKanaPair.getSenseList().get(senseIdx);
+				
+				List<Gloss> glossList = sense.getGlossList();
+				List<SenseAdditionalInfo> senseAdditionalInfoList = sense.getAdditionalInfoList();
+				List<LanguageSource> senseLanguageSourceList = sense.getLanguageSourceList();
+				List<FieldEnum> senseFieldList = sense.getFieldList();
+				List<MiscEnum> senseMiscList = sense.getMiscList();
+				List<DialectEnum> senseDialectList = sense.getDialectList();
+				List<PartOfSpeechEnum> partOfSpeechList = sense.getPartOfSpeechList();
+				
+				Div senseDiv = new Div("row");
+				
+				// numer znaczenia
+				Div senseNoDiv = new Div("col-md-1");
+				
+				H senseNoDivH = new H(4, null, "margin-top: 20px; text-align: right");
+				
+				senseNoDivH.addHtmlElement(new Text("" + (senseIdx + 1)));
+				
+				senseNoDiv.addHtmlElement(senseNoDivH);
+									
+				senseDiv.addHtmlElement(senseNoDiv);
+												
+				//
+				
+				Div glossPolListDiv = new Div("col-md-11");
+								
+				// pobieramy polskie tlumaczenia
+				List<Gloss> glossPolList = glossList.stream().filter(gloss -> (gloss.getLang().equals("pol") == true)).collect(Collectors.toList());
+				
+				// i informacje dodatkowe
+				Optional<SenseAdditionalInfo> senseAdditionalPolOptional = senseAdditionalInfoList.stream().filter(additionalInfo -> (additionalInfo.getLang().equals("pol") == true)).findFirst();				
+				
+				Table table = new Table();
+				
+				// czesci mowy
+				if (partOfSpeechList.size() > 0) {
+					
+					List<String> translateToPolishPartOfSpeechEnum = Dictionary2HelperCommon.translateToPolishPartOfSpeechEnum(partOfSpeechList);
+					
+					//
+					
+					Tr tr = new Tr();
+					
+					Td translateToPolishPartOfSpeechEnumTd = new Td();
+					
+					translateToPolishPartOfSpeechEnumTd.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(translateToPolishPartOfSpeechEnum, "; ")));
+					
+					tr.addHtmlElement(translateToPolishPartOfSpeechEnumTd);
+					
+					table.addHtmlElement(tr);
+				}				
+				
+				for (Gloss currentGlossPol : glossPolList) {
+					
+					Tr tr = new Tr();
+
+					// dodanie pojedynczego znaczenia
+					Td glossPolValueTd = new Td();
+					
+					// wyroznienie znaczenia
+					H glossPolTdH4 = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+					
+					glossPolTdH4.addHtmlElement(new Text(currentGlossPol.getValue()));
+					
+					glossPolValueTd.addHtmlElement(glossPolTdH4);
+											
+					tr.addHtmlElement(glossPolValueTd);
+					
+					// sprawdzenie, czy wystepuje dodatkowy typ znaczenia
+					if (currentGlossPol.getGType() != null) {
+						
+						Td glossPolGTypeTd = new Td();
+						
+						Div glossPolGTypeTdDiv = new Div(null, "margin-top: 0px;margin-left: 25px;margin-bottom: 5px");
+						
+						glossPolGTypeTdDiv.addHtmlElement(new Text(Dictionary2HelperCommon.translateToPolishGlossType(currentGlossPol.getGType())));
+						
+						glossPolGTypeTd.addHtmlElement(glossPolGTypeTdDiv);
+						
+						tr.addHtmlElement(glossPolGTypeTd);
+					}
+						
+										
+					table.addHtmlElement(tr);					
+				}
+				
+				// informacje dodatkowe
+				List<String> additionalInfoToAddList = new ArrayList<>();
+				
+				// dziedzina
+				if (senseFieldList.size() > 0) {
+					additionalInfoToAddList.addAll(Dictionary2HelperCommon.translateToPolishFieldEnumList(senseFieldList));						
+				}
+				
+				// rozne informacje
+				if (senseMiscList.size() > 0) {
+					additionalInfoToAddList.addAll(Dictionary2HelperCommon.translateToPolishMiscEnumList(senseMiscList));
+				}
+				
+				// dialekt
+				if (senseDialectList.size() > 0) {
+					additionalInfoToAddList.addAll(Dictionary2HelperCommon.translateToPolishDialectEnumList(senseDialectList));
+				}
+				
+				if (senseAdditionalPolOptional.isPresent() == true) { // czy informacje dodatkowe istnieja
+					
+					String senseAdditionalPolOptionalValue = senseAdditionalPolOptional.get().getValue();
+					
+					additionalInfoToAddList.add(senseAdditionalPolOptionalValue);
+				}
+				
+				// czy sa informacje o zagranicznym pochodzeniu slow
+				if (senseLanguageSourceList != null && senseLanguageSourceList.size() > 0) {
+					
+					for (LanguageSource languageSource : senseLanguageSourceList) {
+												
+						String languageCodeInPolish = Dictionary2HelperCommon.translateToPolishLanguageCode(languageSource.getLang());
+						String languageValue = languageSource.getValue();
+						String languageLsWasei = Dictionary2HelperCommon.translateToPolishLanguageSourceLsWaseiEnum(languageSource.getLsWasei());
+						
+						if (StringUtils.isBlank(languageValue) == false) {
+							additionalInfoToAddList.add(languageCodeInPolish + ": " + languageValue);
+							
+						} else {
+							additionalInfoToAddList.add(Dictionary2HelperCommon.translateToPolishLanguageCodeWithoutValue(languageSource.getLang()));
+						}
+						
+						if (languageLsWasei != null) {
+							additionalInfoToAddList.add(languageLsWasei);
+						}
+					}
+				}
+								
+				if (additionalInfoToAddList.size() > 0) {
+					
+					Tr tr = new Tr();
+					
+					Td senseAdditionalPolTd = new Td();
+					
+					senseAdditionalPolTd.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(additionalInfoToAddList, "; ")));
+					
+					tr.addHtmlElement(senseAdditionalPolTd);
+					
+					table.addHtmlElement(tr);
+				}
+				
+				// przerwa
+				{
+					Tr tr = new Tr();
+					
+					Td td = new Td();
+					
+					H h4 = new H(4, null, "margin-bottom: 15px");
+					
+					td.addHtmlElement(h4);
+					
+					tr.addHtmlElement(td);
+					
+					table.addHtmlElement(tr);
+				}
+				
+				glossPolListDiv.addHtmlElement(table);
+				
+				//
+								
+				senseDiv.addHtmlElement(glossPolListDiv);
+				
+				resultDiv.addHtmlElement(senseDiv);
+			}
+						
+			return resultDiv;
+		}
 	}
 	
 	private Div generateAdditionalInfo(Menu menu) throws IOException {
+		
+		if (dictionaryEntry2KanjiKanaPair != null) { // dla slownika w formacie drugim nie generuj tej sekcji; informacje te znajda sie w sekcji znaczen
+			return null;
+		}
 		
 		String info = dictionaryEntry.getInfo();
 		
@@ -862,7 +1150,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			}
 			
 			if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR || attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR || attributeType == AttributeType.ALTERNATIVE ||
-					attributeType == AttributeType.RELATED) {
+					attributeType == AttributeType.RELATED || attributeType == AttributeType.ANTONYM) {
 				
 				Integer referenceWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
 
@@ -1734,6 +2022,14 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
 	public void setDictionaryEntry(DictionaryEntry dictionaryEntry) {
 		this.dictionaryEntry = dictionaryEntry;
+	}
+
+	public JMdict.Entry getDictionaryEntry2() {
+		return dictionaryEntry2;
+	}
+
+	public void setDictionaryEntry2(JMdict.Entry dictionaryEntry2) {
+		this.dictionaryEntry2 = dictionaryEntry2;
 	}
 
 	public DictionaryEntryType getForceDictionaryEntryType() {
