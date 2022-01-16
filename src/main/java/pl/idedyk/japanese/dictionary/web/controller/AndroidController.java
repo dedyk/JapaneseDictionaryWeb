@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
@@ -47,6 +48,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetMessageLoggerMod
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetSpellCheckerSuggestionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidQueueEventLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
@@ -534,8 +536,45 @@ public class AndroidController {
 		// logowanie
 		logger.info("[AndroidController.receiveQueueEvent] Parsuję żądanie: " + jsonRequest);
 	
+		if (jsonRequest == null || StringUtils.isBlank(jsonRequest) == true) {
+			
+			logger.error("[AndroidController.receiveQueueEvent] Puste dane w json request.");
+			
+			response.sendError(400); // Bad request
+			
+			return;
+		}
+		
 		// tworzenie wywolania z json'a
-		QueueEventWrapper queueEventWrapper = gson.fromJson(jsonRequest, QueueEventWrapper.class);
+		QueueEventWrapper queueEventWrapper;
+		
+		try {
+			queueEventWrapper = gson.fromJson(jsonRequest, QueueEventWrapper.class);
+			
+		} catch (Exception e) {
+			
+			logger.error("[AndroidController.receiveQueueEvent] Błąd parsowania obiektu zdarzeia", e);
+			
+			// logowanie
+			GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(Utils.createLoggerModelCommon(request), -1, e);
+
+			loggerSender.sendLog(generalExceptionLoggerModel);
+			
+			//
+			
+			response.sendError(400); // Bad request
+			
+			return;
+		}
+		
+		if (queueEventWrapper == null || queueEventWrapper.getOperation() == null || queueEventWrapper.getCreateDate() == null) {
+			
+			logger.error("[AndroidController.receiveQueueEvent] Nie udało się wczytać obiektu zdarzenia. Otrzymano pusty lub niepełny obiekt.");
+			
+			response.sendError(400); // Bad request
+			
+			return;
+		}
 		
 		//
 		
