@@ -19,7 +19,7 @@
 
 	<jsp:body>
 	
-		<form:form commandName="command2" method="post" id="panelMissingWordsQueueId" action="${pageContext.request.contextPath}/adm/getMissingWordsQueue">
+		<form:form modelAttribute="command2" method="post" id="panelMissingWordsQueueId" action="${pageContext.request.contextPath}/adm/getMissingWordsQueue">
 		
 			<fieldset>
 				<legend><spring:message code="admin.missing.words.queue.panel.form.title" /></legend>			
