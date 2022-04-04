@@ -24,6 +24,7 @@ import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary.web.html.A;
+import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.Img;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
@@ -47,6 +48,8 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	public int doStartTag() throws JspException {
 		
 		ServletContext servletContext = pageContext.getServletContext();
+		
+		/*
 		ServletRequest servletRequest = pageContext.getRequest();
 		
 		String userAgent = null;
@@ -56,6 +59,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 			
 			userAgent = httpServletRequest.getHeader("User-Agent");			
 		}
+		*/
 		
 		//
 		
@@ -143,8 +147,21 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	    	
 	    	if (polishTranslates != null && polishTranslates.size() > 0) {
 	    		translateTd.addHtmlElement(new Text(getStringWithMark(toString(polishTranslates, null, "<br/>"), findWord, true)));
+	    		
+	    		String info = resultItem.getInfo();
+	    		
+	    		// informcje dodatkowe
+	    		if (info != null && info.equals("") == false) {
+	    			
+	    			Div infoDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
+	    			
+	    			infoDiv.addHtmlElement(new Text(getStringWithMark(info, findWord, true)));
+	    			
+	    			translateTd.addHtmlElement(infoDiv);		    			
+	    		}
 	    	}
 	    	
+	    	/*
 	    	// informacje dodatkowe
 	    	if (userAgent == null || Utils.isMobile(userAgent) == false) {	    	
 
@@ -157,6 +174,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 		    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, true)));
 		    	}
 	    	}
+	    	*/
 	    	
 	    	// szczegoly
 	    	Td detailsLinkTd = new Td();
