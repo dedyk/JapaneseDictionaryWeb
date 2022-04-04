@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -18,8 +16,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
-import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.html.A;
+import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
@@ -38,6 +36,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	public int doStartTag() throws JspException {
 		
 		ServletContext servletContext = pageContext.getServletContext();
+		
+		/*
 		ServletRequest servletRequest = pageContext.getRequest();
 		
 		String userAgent = null;
@@ -47,6 +47,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 			
 			userAgent = httpServletRequest.getHeader("User-Agent");			
 		}
+		*/
 		
 		//
 		
@@ -103,15 +104,26 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	    		romajiTd.addHtmlElement(new Text(getStringWithMark(toString(romajiList, tempPrefixRomaji), findWord, findWordRequest.searchRomaji)));
 	    	}
 	    	
-	    	// translates
+	    	// translates i informacje dodatkowe
 	    	Td translateTd = new Td();
 	    	tr.addHtmlElement(translateTd);
 	    	
 	    	if (translates != null && translates.size() > 0) {
 	    		translateTd.addHtmlElement(new Text(getStringWithMark(toString(translates, null), findWord, findWordRequest.searchTranslate)));
+				
+	    		// informcje dodatkowe
+	    		if (info != null && info.equals("") == false) {
+	    			
+	    			Div infoDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
+	    			
+	    			infoDiv.addHtmlElement(new Text(getStringWithMark(info, findWord, findWordRequest.searchInfo)));
+	    			
+	    			translateTd.addHtmlElement(infoDiv);		    			
+	    		}
 	    	}
 	    	
 	    	// info
+	    	/*
 	    	if (userAgent == null || Utils.isMobile(userAgent) == false) {	    	
 	    		
 		    	Td infoTd = new Td();
@@ -121,6 +133,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, findWordRequest.searchInfo)));
 		    	}
 	    	}
+	    	*/
             
             // details link
 	    	Td detailsLinkTd = new Td();

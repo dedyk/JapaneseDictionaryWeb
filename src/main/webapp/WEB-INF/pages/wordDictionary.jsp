@@ -143,7 +143,7 @@
 						<th><spring:message code="wordDictionary.page.search.table.column.kana" /></th>
 						<th><spring:message code="wordDictionary.page.search.table.column.romaji" /></th>
 						<th><spring:message code="wordDictionary.page.search.table.column.translate" /></th>
-						<jdwt:isMobile mobile="false"><th><spring:message code="wordDictionary.page.search.table.column.info" /></th></jdwt:isMobile>						
+						<!-- <jdwt:isMobile mobile="false"><th><spring:message code="wordDictionary.page.search.table.column.info" /></th></jdwt:isMobile> -->
 						<th></th>
 					</tr>
 				</thead>
