@@ -317,7 +317,7 @@
 										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
-										<!-- <jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile> -->
+										<jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile>
 										<th></th>
 									</tr>
 								</thead>
@@ -610,7 +610,7 @@
 										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
-										<!-- <jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile> -->
+										<jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile>
 										<th></th>
 									</tr>
 								</thead>
