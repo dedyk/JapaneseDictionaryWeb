@@ -32,7 +32,7 @@
 						<th><spring:message code="wordDictionary.page.search.table.column.kana" /></th>
 						<th><spring:message code="wordDictionary.page.search.table.column.romaji" /></th>
 						<th><spring:message code="wordDictionary.page.search.table.column.translate" /></th>
-						<th><spring:message code="wordDictionary.page.search.table.column.info" /></th>
+						<!-- <th><spring:message code="wordDictionary.page.search.table.column.info" /></th> -->
 						<th></th>
 					</tr>
 				</thead>
