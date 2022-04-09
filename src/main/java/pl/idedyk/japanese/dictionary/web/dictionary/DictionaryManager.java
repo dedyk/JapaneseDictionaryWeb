@@ -33,8 +33,13 @@ import pl.idedyk.japanese.dictionary.api.tools.KanaHelper;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabase;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 
 import com.csvreader.CsvReader;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 @Service
 public class DictionaryManager extends DictionaryManagerAbstract {
@@ -59,6 +64,8 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	private WordPowerList wordPowerList;
 	
 	private boolean initialized = false;
+	
+	private LoadingCache<Integer, JMdict.Entry> jmdictEntryCache;
 	
 	@Value("${db.dir}")
 	private String dbDir;
@@ -182,6 +189,14 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 
 			throw new RuntimeException(e);
 		}
+		
+		jmdictEntryCache = CacheBuilder.newBuilder().maximumSize(60000).build(new CacheLoader<Integer, JMdict.Entry>() {
+
+			@Override
+			public Entry load(Integer entryId) throws Exception {
+				return databaseConnector.getDictionaryEntry2ById(entryId);
+			}			
+		});
 		
 		initialized = true;
 		
@@ -519,6 +534,22 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		
 		return luceneDatabase.findDictionaryEntries(findWordRequest);
 	}
+	
+	@Override
+	public JMdict.Entry getDictionaryEntry2ById(int id) throws DictionaryException {
+				
+		waitForDatabaseReady();
+		
+		try {
+			return jmdictEntryCache.get(id);
+			
+		} catch (Exception e) {			
+			logger.error("Can't get jmdict entry from cache", e);
+			
+			return databaseConnector.getDictionaryEntry2ById(id);
+		}
+	}
+
 	
 	public File getPdfDictionary() {		
 		return new File(dbDir, "dictionary.pdf");		
