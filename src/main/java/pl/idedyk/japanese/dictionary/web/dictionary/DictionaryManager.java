@@ -261,6 +261,8 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		radicalList = null;
 		transitiveIntransitivePairsList = null;
 		
+		jmdictEntryCache.invalidateAll();
+		
 		init(true);		
 	}
 	
