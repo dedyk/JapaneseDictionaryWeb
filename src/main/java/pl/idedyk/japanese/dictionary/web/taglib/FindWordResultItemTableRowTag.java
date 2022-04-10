@@ -187,10 +187,15 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 										
 					// czesci mowy
 					/*
-					if (printableSenseEntry.getPolishPartOfSpeechValue() != null) {					
-						translateTd.addHtmlElement(new Text(printableSenseEntry.getPolishPartOfSpeechValue() + "<br/>"));
+					if (printableSenseEntry.getPolishPartOfSpeechValue() != null) {		
+						
+						Div polishPartOfSpeechDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
+						
+						polishPartOfSpeechDiv.addHtmlElement(new Text(printableSenseEntry.getPolishPartOfSpeechValue() + "<br/>"));
+		    			
+		    			translateTd.addHtmlElement(polishPartOfSpeechDiv);						
 					}
-					*/				
+					*/
 					
 					for (int currentGlossIdx = 0; currentGlossIdx < printableSenseEntry.getGlossList().size(); ++currentGlossIdx) {
 						
