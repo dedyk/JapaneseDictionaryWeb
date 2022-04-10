@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -15,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -54,17 +51,12 @@ import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.KanjiKanaPair;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.DialectEnum;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.FieldEnum;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.Gloss;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSense;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSenseEntry;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSenseEntryGloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSource;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.MiscEnum;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.PartOfSpeechEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.SenseAdditionalInfo;
 
 public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
 	
@@ -683,21 +675,16 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
 	    	row1Div.addHtmlElement(divTitleDiv);
 	    	resultDiv.addHtmlElement(row1Div);
+	    	
 	    	//
+	    	
+	    	PrintableSense printableSense = Dictionary2HelperCommon.getPrintableSense(dictionaryEntry2KanjiKanaPair);
 			
 			// mamy znaczenia
-			for (int senseIdx = 0; senseIdx < dictionaryEntry2KanjiKanaPair.getSenseList().size(); ++senseIdx) {
+			for (int senseIdx = 0; senseIdx < printableSense.getSenseEntryList().size(); ++senseIdx) {
 				
-				Sense sense = dictionaryEntry2KanjiKanaPair.getSenseList().get(senseIdx);
-				
-				List<Gloss> glossList = sense.getGlossList();
-				List<SenseAdditionalInfo> senseAdditionalInfoList = sense.getAdditionalInfoList();
-				List<LanguageSource> senseLanguageSourceList = sense.getLanguageSourceList();
-				List<FieldEnum> senseFieldList = sense.getFieldList();
-				List<MiscEnum> senseMiscList = sense.getMiscList();
-				List<DialectEnum> senseDialectList = sense.getDialectList();
-				List<PartOfSpeechEnum> partOfSpeechList = sense.getPartOfSpeechList();
-				
+				PrintableSenseEntry printableSenseEntry = printableSense.getSenseEntryList().get(senseIdx);
+								
 				Div senseDiv = new Div("row");
 				
 				// numer znaczenia
@@ -714,34 +701,29 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				//
 				
 				Div glossPolListDiv = new Div("col-md-11");
-								
-				// pobieramy polskie tlumaczenia
-				List<Gloss> glossPolList = glossList.stream().filter(gloss -> (gloss.getLang().equals("pol") == true)).collect(Collectors.toList());
-				
-				// i informacje dodatkowe
-				Optional<SenseAdditionalInfo> senseAdditionalPolOptional = senseAdditionalInfoList.stream().filter(additionalInfo -> (additionalInfo.getLang().equals("pol") == true)).findFirst();				
-				
+												
 				Table table = new Table();
 				
 				// czesci mowy
-				if (partOfSpeechList.size() > 0) {
-					
-					List<String> translateToPolishPartOfSpeechEnum = Dictionary2HelperCommon.translateToPolishPartOfSpeechEnum(partOfSpeechList);
-					
-					//
-					
+				if (printableSenseEntry.getPolishPartOfSpeechValue() != null) {					
 					Tr tr = new Tr();
 					
 					Td translateToPolishPartOfSpeechEnumTd = new Td();
 					
-					translateToPolishPartOfSpeechEnumTd.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(translateToPolishPartOfSpeechEnum, "; ")));
+					translateToPolishPartOfSpeechEnumTd.addHtmlElement(new Text(printableSenseEntry.getPolishPartOfSpeechValue()));
 					
 					tr.addHtmlElement(translateToPolishPartOfSpeechEnumTd);
 					
 					table.addHtmlElement(tr);
 				}				
 				
-				for (Gloss currentGlossPol : glossPolList) {
+				for (int currentGlossIdx = 0; currentGlossIdx < printableSenseEntry.getGlossList().size(); ++currentGlossIdx) {
+					
+					PrintableSenseEntryGloss printableSenseEntryGloss = printableSenseEntry.getGlossList().get(currentGlossIdx);
+					
+					//
+					
+					int marginBottom = currentGlossIdx != printableSenseEntry.getGlossList().size() - 1 ? 5 : 0; 
 					
 					Tr tr = new Tr();
 
@@ -749,86 +731,37 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					Td glossPolValueTd = new Td();
 					
 					// wyroznienie znaczenia
-					H glossPolTdH4 = new H(4, null, "margin-top: 0px;margin-bottom: 5px");
+					H glossPolTdH4 = new H(4, null, "margin-top: 0px;margin-bottom: " + marginBottom + "px");
 					
-					glossPolTdH4.addHtmlElement(new Text(currentGlossPol.getValue()));
+					glossPolTdH4.addHtmlElement(new Text(printableSenseEntryGloss.getGlossValue()));
 					
 					glossPolValueTd.addHtmlElement(glossPolTdH4);
 											
 					tr.addHtmlElement(glossPolValueTd);
 					
 					// sprawdzenie, czy wystepuje dodatkowy typ znaczenia
-					if (currentGlossPol.getGType() != null) {
-						
+					if (printableSenseEntryGloss.getGlossValueGType() != null) {						
 						Td glossPolGTypeTd = new Td();
 						
-						Div glossPolGTypeTdDiv = new Div(null, "margin-top: 0px;margin-left: 25px;margin-bottom: 5px");
+						Div glossPolGTypeTdDiv = new Div(null, "margin-top: 0px;margin-left: 25px;margin-bottom: " + marginBottom + "px");
 						
-						glossPolGTypeTdDiv.addHtmlElement(new Text(Dictionary2HelperCommon.translateToPolishGlossType(currentGlossPol.getGType())));
+						glossPolGTypeTdDiv.addHtmlElement(new Text(printableSenseEntryGloss.getGlossValueGType()));
 						
 						glossPolGTypeTd.addHtmlElement(glossPolGTypeTdDiv);
 						
 						tr.addHtmlElement(glossPolGTypeTd);
-					}
-						
+					}					
 										
 					table.addHtmlElement(tr);					
 				}
 				
-				// informacje dodatkowe
-				List<String> additionalInfoToAddList = new ArrayList<>();
-				
-				// dziedzina
-				if (senseFieldList.size() > 0) {
-					additionalInfoToAddList.addAll(Dictionary2HelperCommon.translateToPolishFieldEnumList(senseFieldList));						
-				}
-				
-				// rozne informacje
-				if (senseMiscList.size() > 0) {
-					additionalInfoToAddList.addAll(Dictionary2HelperCommon.translateToPolishMiscEnumList(senseMiscList));
-				}
-				
-				// dialekt
-				if (senseDialectList.size() > 0) {
-					additionalInfoToAddList.addAll(Dictionary2HelperCommon.translateToPolishDialectEnumList(senseDialectList));
-				}
-				
-				if (senseAdditionalPolOptional.isPresent() == true) { // czy informacje dodatkowe istnieja
-					
-					String senseAdditionalPolOptionalValue = senseAdditionalPolOptional.get().getValue();
-					
-					additionalInfoToAddList.add(senseAdditionalPolOptionalValue);
-				}
-				
-				// czy sa informacje o zagranicznym pochodzeniu slow
-				if (senseLanguageSourceList != null && senseLanguageSourceList.size() > 0) {
-					
-					for (LanguageSource languageSource : senseLanguageSourceList) {
-												
-						String languageCodeInPolish = Dictionary2HelperCommon.translateToPolishLanguageCode(languageSource.getLang());
-						String languageValue = languageSource.getValue();
-						String languageLsWasei = Dictionary2HelperCommon.translateToPolishLanguageSourceLsWaseiEnum(languageSource.getLsWasei());
-						
-						if (StringUtils.isBlank(languageValue) == false) {
-							additionalInfoToAddList.add(languageCodeInPolish + ": " + languageValue);
-							
-						} else {
-							additionalInfoToAddList.add(Dictionary2HelperCommon.translateToPolishLanguageCodeWithoutValue(languageSource.getLang()));
-						}
-						
-						if (languageLsWasei != null) {
-							additionalInfoToAddList.add(languageLsWasei);
-						}
-					}
-				}
-								
-				if (additionalInfoToAddList.size() > 0) {
-					
+				// informacje dodatkowe												
+				if (printableSenseEntry.getAdditionalInfoValue() != null) {					
 					Tr tr = new Tr();
 					
 					Td senseAdditionalPolTd = new Td();
 					
-					senseAdditionalPolTd.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(additionalInfoToAddList, "; ")));
+					senseAdditionalPolTd.addHtmlElement(new Text(printableSenseEntry.getAdditionalInfoValue()));
 					
 					tr.addHtmlElement(senseAdditionalPolTd);
 					
