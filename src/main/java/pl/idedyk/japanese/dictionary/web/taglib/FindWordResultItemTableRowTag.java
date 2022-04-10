@@ -21,9 +21,16 @@ import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
+import pl.idedyk.japanese.dictionary.web.html.H;
+import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.KanjiKanaPair;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSense;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSenseEntry;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSenseEntryGloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 
 public class FindWordResultItemTableRowTag extends TagSupport {
@@ -164,9 +171,54 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 
 	    	} else { // sa dane w nowym formacie
 	    		
-	    		int fixme = 1; // !!!!!!!!!!!!!!!!!!
-	    		
-	    		
+				List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2);
+				
+				// szukamy konkretnego znaczenia dla naszego slowa
+				KanjiKanaPair dictionaryEntry2KanjiKanaPair = Dictionary2HelperCommon.findKanjiKanaPair(kanjiKanaPairList, resultItem.getDictionaryEntry());
+
+				//
+				
+		    	PrintableSense printableSense = Dictionary2HelperCommon.getPrintableSense(dictionaryEntry2KanjiKanaPair);
+				
+				// mamy znaczenia
+				for (int senseIdx = 0; senseIdx < printableSense.getSenseEntryList().size(); ++senseIdx) {
+					
+					PrintableSenseEntry printableSenseEntry = printableSense.getSenseEntryList().get(senseIdx);
+										
+					// czesci mowy
+					/*
+					if (printableSenseEntry.getPolishPartOfSpeechValue() != null) {					
+						translateTd.addHtmlElement(new Text(printableSenseEntry.getPolishPartOfSpeechValue() + "<br/>"));
+					}
+					*/				
+					
+					for (int currentGlossIdx = 0; currentGlossIdx < printableSenseEntry.getGlossList().size(); ++currentGlossIdx) {
+						
+						PrintableSenseEntryGloss printableSenseEntryGloss = printableSenseEntry.getGlossList().get(currentGlossIdx);
+												
+						translateTd.addHtmlElement(new Text(getStringWithMark(
+								printableSenseEntryGloss.getGlossValue(), findWord, findWordRequest.searchTranslate) + 
+								(printableSenseEntryGloss.getGlossValueGType() != null ? " (" + printableSenseEntryGloss.getGlossValueGType() + ")" : "") + 
+								(currentGlossIdx != printableSenseEntry.getGlossList().size() - 1 ? "<br/>" : "")));						
+					}					
+					
+					// informacje dodatkowe												
+					if (printableSenseEntry.getAdditionalInfoValue() != null) {					
+						Div infoDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
+						
+		    			infoDiv.addHtmlElement(new Text(getStringWithMark(printableSenseEntry.getAdditionalInfoValue(), findWord, findWordRequest.searchInfo)));
+		    			
+		    			translateTd.addHtmlElement(infoDiv);						
+					}
+					
+					// przerwa
+					if (senseIdx != printableSense.getSenseEntryList().size() - 1) {
+						
+						Div marginDiv = new Div(null, "margin-bottom: 12px;");
+						
+						translateTd.addHtmlElement(marginDiv);						
+					}
+				}
 	    	}	    	
             
             // details link
