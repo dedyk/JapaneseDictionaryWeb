@@ -6,8 +6,6 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -20,7 +18,6 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
-import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary.web.html.A;

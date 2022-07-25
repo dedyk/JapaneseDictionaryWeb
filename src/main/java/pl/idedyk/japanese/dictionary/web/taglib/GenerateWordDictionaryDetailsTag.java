@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -43,6 +44,7 @@ import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
+import pl.idedyk.japanese.dictionary.web.html.Img;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
@@ -71,6 +73,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	private MessageSource messageSource;
 	
 	private DictionaryManager dictionaryManager;
+	private Properties applicationProperties;
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -108,6 +111,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
 		this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
+		this.applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
 		
 		try {
             JspWriter out = pageContext.getOut();
@@ -813,6 +817,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			
 		} else if (kanji != null && isButaMoOdateryaKiNiNoboru(kanji) == true) {
 			special = 2;
+			
+		} else if (kanji != null && isTakakoOkamura(kanji) == true) {
+			special = 3;
 		}
 		
 		if (!(info != null && info.length() > 0) && (special == 0)) {
@@ -877,7 +884,18 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			} else if (special == 2) {
 				specialDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special.buta_mo_odaterya_ki_ni_noboru")));
 				
-			}				
+			} else if (special == 3) {
+				
+				String staticPrefix = LinkGenerator.getStaticPrefix(pageContext.getServletContext().getContextPath(), applicationProperties);
+				
+				Img takakoOkamuraImg = new Img();
+				
+				takakoOkamuraImg.setSrc(staticPrefix + "/img/takako_okamura.webp");
+				takakoOkamuraImg.setWidthImg("80%");
+				takakoOkamuraImg.setAlt("Takako Okamura");
+				
+				specialDiv.addHtmlElement(takakoOkamuraImg);
+			}
 		}		
 				
 		return additionalInfoDiv;
@@ -904,6 +922,19 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 
 		if (value.equals("豚もおだてりゃ木に登る") == true || value.equals("ブタもおだてりゃ木に登る") == true || value.equals("豚も煽てりゃ木に登る") == true) {
+			return true;
+		}
+
+		return false;
+	}
+	
+	private boolean isTakakoOkamura(String value) {
+
+		if (value == null) {
+			return false;
+		}
+
+		if (value.equals("岡村孝子") == true) {
 			return true;
 		}
 
