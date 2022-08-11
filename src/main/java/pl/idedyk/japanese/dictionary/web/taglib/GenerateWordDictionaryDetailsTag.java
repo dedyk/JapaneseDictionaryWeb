@@ -866,14 +866,15 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Td row2TableTrTd1 = new Td();
 		row2TableTr.addHtmlElement(row2TableTrTd1);
 		
-		if (special == 0) {
+		if (special == 0 || special == 3) {
 			
 			H additionalInfoTextH4 = new H(4);
 			row2TableTrTd1.addHtmlElement(additionalInfoTextH4);
 			
-			additionalInfoTextH4.addHtmlElement(new Text(info));
-						
-		} else {
+			additionalInfoTextH4.addHtmlElement(new Text(info));						
+		}
+		
+		if (special > 0) {
 			
 			Div specialDiv = new Div(null, "font-family:monospace; font-size: 40%");
 			row2TableTrTd1.addHtmlElement(specialDiv);
