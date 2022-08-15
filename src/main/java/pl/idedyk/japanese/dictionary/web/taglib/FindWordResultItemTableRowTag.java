@@ -1,6 +1,5 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -21,8 +20,6 @@ import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
-import pl.idedyk.japanese.dictionary.web.html.H;
-import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
