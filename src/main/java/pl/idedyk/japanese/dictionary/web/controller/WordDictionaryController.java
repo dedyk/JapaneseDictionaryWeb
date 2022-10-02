@@ -371,17 +371,13 @@ public class WordDictionaryController {
 		if (dictionaryEntry != null) {
 			
 			// sprawdzenie, czy wystepuje slowo w formacie JMdict
-			List<Attribute> jmdictEntryIdAttributeList = dictionaryEntry.getAttributeList().getAttributeList(AttributeType.JMDICT_ENTRY_ID);
+			// pobieramy entry id
+			Integer entryId = dictionaryEntry.getJmdictEntryId();
 			
-			if (jmdictEntryIdAttributeList != null && jmdictEntryIdAttributeList.size() > 0) { // cos jest
-				
-				// pobieramy entry id
-				Integer entryId = Integer.parseInt(jmdictEntryIdAttributeList.get(0).getAttributeValue().get(0));
-				
+			if (entryId != null) {
 				// pobieramy z bazy danych
-				dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ById(entryId);				
-			}
-			
+				dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ById(entryId);
+			}			
 			
 			if (forceDictionaryEntryTypeType != null) { // sprawdzamy, czy nie zostal podany zly parametr forceDictionaryEntryTypeType
 				

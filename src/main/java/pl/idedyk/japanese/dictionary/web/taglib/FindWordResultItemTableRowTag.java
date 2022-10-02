@@ -123,17 +123,14 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	    	JMdict.Entry dictionaryEntry2 = null;
 	    	
 	    	if (resultItem.getDictionaryEntry() != null && resultItem.getDictionaryEntry().isName() == false) {
-	    			    		
-				List<Attribute> jmdictEntryIdAttributeList = resultItem.getDictionaryEntry().getAttributeList().getAttributeList(AttributeType.JMDICT_ENTRY_ID);
-				
-				if (jmdictEntryIdAttributeList != null && jmdictEntryIdAttributeList.size() > 0) { // cos jest
-					
-					// pobieramy entry id
-					Integer entryId = Integer.parseInt(jmdictEntryIdAttributeList.get(0).getAttributeValue().get(0));
-					
+	    		
+				// pobieramy entry id
+				Integer entryId = resultItem.getDictionaryEntry().getJmdictEntryId();
+
+				if (entryId != null) {
 					// pobieramy z bazy danych
 					dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ById(entryId);				
-				}
+				}	    		
 	    	}
 	    	
 	    	// nie ma danych w nowym formacie, generujemy po staremu
