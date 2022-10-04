@@ -146,6 +146,45 @@ public class AndroidRemoteDatabaseConnector {
 		// zwrocenie wyniku
 		writer.append(gson.toJson(dictionaryEntry));
 	}
+
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntryByUniqueKey", method = RequestMethod.POST)
+	public void getDictionaryEntryByUniqueKey(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryByUniqueKey] Parsuję żądanie: " + jsonRequest);
+		
+		// pobranie uniqueKey
+		String uniqueKey = gson.fromJson(jsonRequest, String.class);
+		
+		// pobranie slowka
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryByUniqueKey(uniqueKey);
+		
+		if (dictionaryEntry != null) {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryByUniqueKey]: Znaleziono słowo: " + dictionaryEntry);
+			
+			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
+			
+		} else {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryByUniqueKey]: Nie znaleziono słowa o uniqueKey: " + uniqueKey);
+		}
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
+		// zwrocenie wyniku
+		writer.append(gson.toJson(dictionaryEntry));
+	}
+
 	
 	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntry2ById", method = RequestMethod.POST)
 	public void getDictionaryEntry2ById(HttpServletRequest request, HttpServletResponse response, Writer writer,
@@ -222,6 +261,44 @@ public class AndroidRemoteDatabaseConnector {
 		// zwrocenie wyniku
 		writer.append(gson.toJson(dictionaryEntry));
 	}
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntryNameByUniqueKey", method = RequestMethod.POST)
+	public void getDictionaryEntryNameByUniqueKey(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameByUniqueKey] Parsuję żądanie: " + jsonRequest);
+		
+		// pobranie uniqueKey
+		String uniqueKey = gson.fromJson(jsonRequest, String.class);
+		
+		// pobranie slowka
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameByUniqueKey(uniqueKey);
+		
+		if (dictionaryEntry != null) {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameByUniqueKey]: Znaleziono słowo: " + dictionaryEntry);
+			
+			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
+			
+		} else {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameByUniqueKey]: Nie znaleziono słowa o uniqueKey: " + uniqueKey);
+		}
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
+		// zwrocenie wyniku
+		writer.append(gson.toJson(dictionaryEntry));
+	}	
 		
 	@RequestMapping(value = "/android/remoteDatabaseConnector/findAllAvailableRadicals", method = RequestMethod.POST)
 	public void findAllAvailableRadicals(HttpServletRequest request, HttpServletResponse response, Writer writer,
