@@ -347,6 +347,13 @@ public class WordDictionaryController {
 		
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
+	
+		return showWordDictionaryDetailsCommon(request, response, model, id, kanji, kana, dictionaryEntry, forceDictionaryEntryType, true);
+	}
+	
+	public String showWordDictionaryDetailsCommon(HttpServletRequest request, HttpServletResponse response, Map<String, Object> model, 
+			Integer id, String kanji, String kana, DictionaryEntry dictionaryEntry, String forceDictionaryEntryType, 
+			boolean checkUniqueKey) throws DictionaryException, IOException {
 		
 		JMdict.Entry dictionaryEntry2 = null;
 		
@@ -402,7 +409,9 @@ public class WordDictionaryController {
 			
 			String dictionaryEntryKana = dictionaryEntry.getKana();
 						
-			if (dictionaryEntryKanji.equals(kanji) == false || dictionaryEntryKana.equals(kana) == false) { // przekierowanie na wlasciwa strone o id
+			if (	dictionaryEntryKanji.equals(kanji) == false || 
+					dictionaryEntryKana.equals(kana) == false ||
+					(checkUniqueKey == true && dictionaryEntry.getUniqueKey() != null)) { // przekierowanie na wlasciwa strone o id
 				
 				String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null);
 				
@@ -441,6 +450,20 @@ public class WordDictionaryController {
 		model.put("selectedMenu", "wordDictionary");
 		
 		return "wordDictionaryDetails";
+	}
+	
+	@RequestMapping(value = "/wordDictionaryDetails2/{kanji}/{kana}/{counter}", method = RequestMethod.GET)
+	public String showWordDictionaryDetails2(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
+			@PathVariable("kanji") String kanji, @PathVariable("kana") String kana, @PathVariable("counter") int counter,
+			@RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		// stworzenie unique key
+		String uniqueKey = kanji + "/" + kana + "/" + counter;
+		
+		// pobranie slowa
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryByUniqueKey(uniqueKey);
+	
+		return showWordDictionaryDetailsCommon(request, response, model, null, kanji, kana, dictionaryEntry, forceDictionaryEntryType, false);
 	}
 	
 	@RequestMapping(value = "/wordDictionaryDetails/{id}", method = RequestMethod.GET)
