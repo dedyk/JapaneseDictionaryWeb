@@ -487,7 +487,13 @@ public class WordDictionaryController {
 		
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameById(id);
-						
+		
+		return showWordDictionaryNameDetailsCommon(request, model, id, kanji, kana, dictionaryEntry, true);								
+	}
+	
+	private String showWordDictionaryNameDetailsCommon(HttpServletRequest request, Map<String, Object> model, 
+			Integer id, String kanji, String kana, DictionaryEntry dictionaryEntry, boolean checkUniqueKey) {
+		
 		// tytul strony
 		if (dictionaryEntry != null) {
 			
@@ -500,7 +506,9 @@ public class WordDictionaryController {
 			
 			String dictionaryEntryKana = dictionaryEntry.getKana();
 			
-			if (dictionaryEntryKanji.equals(kanji) == false || dictionaryEntryKana.equals(kana) == false) { // przekierowanie na wlasciwa strone o id
+			if (	dictionaryEntryKanji.equals(kanji) == false || 
+					dictionaryEntryKana.equals(kana) == false || 
+					(checkUniqueKey == true && dictionaryEntry.getUniqueKey() != null)) { // przekierowanie na wlasciwa strone o id
 				
 				String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null);
 				
@@ -509,8 +517,8 @@ public class WordDictionaryController {
 				loggerSender.sendLog(redirectLoggerModel);	
 				
 				return "redirect:" + destinationUrl;			
-			}			
-			
+			}		
+						
 			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa (nazwa): " + dictionaryEntry);
 			
 			// logowanie
@@ -576,6 +584,19 @@ public class WordDictionaryController {
 			
 			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
 		}
+	}
+		
+	@RequestMapping(value = "/wordDictionaryNameDetails2/{kanji}/{kana}/{counter}", method = RequestMethod.GET)
+	public String showWordDictionaryNameDetails2(HttpServletRequest request, HttpSession session, @PathVariable("kanji") String kanji,
+			@PathVariable("kana") String kana, @PathVariable("counter") int counter, Map<String, Object> model) throws DictionaryException {
+		
+		// stworzenie unique key
+		String uniqueKey = kanji + "/" + kana + "/" + counter;
+		
+		// pobranie slowa
+		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameByUniqueKey(uniqueKey);
+		
+		return showWordDictionaryNameDetailsCommon(request, model, null, kanji, kana, dictionaryEntry, false);
 	}
 	
 	private String[] getWordDictionaryDetailsTitleAndDescription(DictionaryEntry dictionaryEntry, DictionaryEntryType forceDictionaryEntryTypeType) {
