@@ -155,7 +155,7 @@
 				
 				<spring:eval var="googlePlusAuthorId" expression="@applicationProperties.getProperty('google.plus.author.id')" />
 				
-				<spring:message code="template.footer.author"/>&nbsp;<a style="color: #777777" href="https://plus.google.com/${googlePlusAuthorId}?rel=author"><spring:message code="template.footer.author.name"/></a> <br/>
+				<spring:message code="template.footer.author"/>&nbsp;<a style="color: #777777" href="https://twitter.com/FryderykMazurek"><spring:message code="template.footer.author.name"/></a> <br/>
 								
 				<spring:message code="template.footer.android.version1"/>&nbsp;<a style="color: #777777" href="<spring:message code='template.footer.android.version.link'/>"><spring:message code="template.footer.android.version2"/></a> <br/> <br/>				
 				
