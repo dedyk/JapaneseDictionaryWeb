@@ -1512,6 +1512,16 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	row1TitleH4.addHtmlElement(new Text(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName()));
     	
+    	String grammaFormConjugateGroupTypeInfo = grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getInfo();
+    	
+    	if (grammaFormConjugateGroupTypeInfo != null) {
+			H infoH5 = new H(5, null, "margin-top: 0px;");
+			
+			infoH5.addHtmlElement(new Text(grammaFormConjugateGroupTypeInfo));
+			
+			row1TitleH4.addHtmlElement(infoH5);			
+    	}
+    	
     	Menu row1Menu = new Menu(row1TitleH4.getId(), grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName());
     	
     	menu.getChildMenu().add(row1Menu);
@@ -1550,7 +1560,30 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		    	
 		    	row1Menu.getChildMenu().add(new Menu(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.getId(), currentGrammaFormConjugateResult.getResultType().getName()));
 		    	
-		    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4);								
+		    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4);
+		    	
+		    	//
+		    	
+		    	// dodatkowe info	 
+				String currentGrammaFormConjugateResultResultTypeInfo = currentGrammaFormConjugateResult.getResultType().getInfo();
+				
+				if (currentGrammaFormConjugateResultResultTypeInfo != null) {
+					
+					Table exampleTable = new Table(null, "width: 100%");
+					sectionBodyDiv.addHtmlElement(exampleTable);
+					
+					Tr sentenceTableTr = new Tr();
+					exampleTable.addHtmlElement(sentenceTableTr);
+					
+					Td sentenceTableTd = new Td();
+					sentenceTableTr.addHtmlElement(sentenceTableTd);
+					
+					H currentExampleResultSectionBodyDivInfoH5 = new H(5, "col-md-11", "margin-top: 0px; margin-left: 0px;");
+					
+					currentExampleResultSectionBodyDivInfoH5.addHtmlElement(new Text(currentGrammaFormConjugateResultResultTypeInfo));
+					
+					sectionBodyDiv.addHtmlElement(currentExampleResultSectionBodyDivInfoH5);
+				}	    	
 			}
 			
 			// sekcja dla grupy odmian
@@ -1579,7 +1612,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 	
 	private void generateGrammaFormConjugateResult(Table table, GrammaFormConjugateResult grammaFormConjugateResult) {
-		
+				
 		Tr tr1 = new Tr();
 		table.addHtmlElement(tr1);
 				
@@ -1651,6 +1684,23 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			romajiTd.addHtmlElement(romajiTdH4);
 			
 			romajiTdH4.addHtmlElement(new Text(grammaFormRomajiSb.toString()));
+		}
+		
+		String info = grammaFormConjugateResult.getInfo();
+		
+		if (info != null) {
+			
+			Tr trInfo = new Tr();
+			table.addHtmlElement(trInfo);
+			
+			Td infoTd = new Td();
+			trInfo.addHtmlElement(infoTd);
+			
+			H infoH5 = new H(5, null, "margin-top: 0px;");
+			
+			infoH5.addHtmlElement(new Text(info));
+			
+			infoTd.addHtmlElement(infoH5);			
 		}
 		
 		GrammaFormConjugateResult alternative = grammaFormConjugateResult.getAlternative();
@@ -1781,6 +1831,17 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	row1TitleDiv.addHtmlElement(row1TitleH4);
     	
     	row1Div.addHtmlElement(row1TitleDiv);
+    	
+    	// dodatkowe info
+    	String exampleGroupTypeElementsInfo = exampleGroupTypeElements.getExampleGroupType().getInfo();
+    	
+    	if (exampleGroupTypeElementsInfo != null) {
+			H infoH5 = new H(5, null, "margin-top: 0px;");
+			
+			infoH5.addHtmlElement(new Text(exampleGroupTypeElementsInfo));
+			
+			row1TitleH4.addHtmlElement(infoH5);			
+    	}
 
     	// dodaj wiersz z tytulem
     	resultDiv.addHtmlElement(row1Div);
@@ -1799,28 +1860,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		for (int idx = 0; idx < exampleResults.size(); ++idx) {
 			
 			ExampleResult currentExampleResult = exampleResults.get(idx);
-			
-	    	// dodatkowe info	 
-			String exampleGroupTypeElementsInfo = exampleGroupTypeElements.getExampleGroupType().getInfo();
-			
-			if (exampleGroupTypeElementsInfo != null) {
-				
-				Table exampleTable = new Table(null, "width: 100%");
-				sectionBodyDiv.addHtmlElement(exampleTable);
-				
-				Tr sentenceTableTr = new Tr();
-				exampleTable.addHtmlElement(sentenceTableTr);
-				
-				Td sentenceTableTd = new Td();
-				sentenceTableTr.addHtmlElement(sentenceTableTd);
-				
-				H currentExampleResultSectionBodyDivInfoH5 = new H(5, "col-md-11", "margin-top: 0px; margin-left: 0px;");
-				
-				currentExampleResultSectionBodyDivInfoH5.addHtmlElement(new Text(exampleGroupTypeElementsInfo));
-				
-				sentenceTableTd.addHtmlElement(currentExampleResultSectionBodyDivInfoH5);
-			}	    	
-			
+						
 			// sekcja dla grupy przykladow
 	    	Div currentExampleResultSectionBodyDiv = new Div("col-md-11");
 	    	sectionBodyDiv.addHtmlElement(currentExampleResultSectionBodyDiv);
@@ -1848,24 +1888,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 
 	private void generateExampleResult(Table table, ExampleResult exampleResult) {
-		
-		String info = exampleResult.getInfo();
-		
-		if (info != null) {
-			
-			Tr tr0 = new Tr();
-			table.addHtmlElement(tr0);
-			
-			Td infoTd = new Td();
-			tr0.addHtmlElement(infoTd);
-			
-			H infoH5 = new H(5, null, "margin-top: 0px;");
-			
-			infoH5.addHtmlElement(new Text(info));
-			
-			infoTd.addHtmlElement(infoH5);			
-		}
-		
+				
 		Tr tr1 = new Tr();
 		table.addHtmlElement(tr1);
 				
@@ -1937,6 +1960,23 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			romajiTd.addHtmlElement(romajiTdH4);
 			
 			romajiTdH4.addHtmlElement(new Text(exampleRomajiSb.toString()));
+		}
+		
+		String info = exampleResult.getInfo();
+		
+		if (info != null) {
+			
+			Tr trInfo = new Tr();
+			table.addHtmlElement(trInfo);
+			
+			Td infoTd = new Td();
+			trInfo.addHtmlElement(infoTd);
+			
+			H infoH5 = new H(5, null, "margin-top: 0px;");
+			
+			infoH5.addHtmlElement(new Text(info));
+			
+			infoTd.addHtmlElement(infoH5);			
 		}
 		
 		ExampleResult alternative = exampleResult.getAlternative();
