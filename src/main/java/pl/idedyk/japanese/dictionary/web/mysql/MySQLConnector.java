@@ -2790,7 +2790,7 @@ public class MySQLConnector {
 			connection = connectionPool.getConnection();
 			
 			preparedStatement = connection.prepareStatement("select id, name, status, host_name, send_timestamp, delivery_count, next_attempt, object from queue where "
-					+ "name = ? and status = ? and next_attempt < current_timestamp and host_name = ? order by next_attempt, send_timestamp, delivery_count desc limit 5"); 
+					+ "name = ? and status = ? and next_attempt < current_timestamp and host_name = ? order by next_attempt, send_timestamp, delivery_count desc limit 100");
 			
 			preparedStatement.setString(1, queueName);
 			preparedStatement.setString(2, QueueItemStatus.WAITING.toString());
