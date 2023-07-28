@@ -369,7 +369,8 @@ public class QueueService {
 				// przenosimy plik do wspolnego archiwum
 				FileSystem archiveFileSystem = null;
 				
-				try {						
+				try {
+					/*
 					// utworzenie nazwy pliku z archiwum					
 					Calendar querySendTimestampCalendar = Calendar.getInstance();
 					
@@ -397,6 +398,7 @@ public class QueueService {
 		            Path queueItemFilePathInArchiveFile = archiveFileSystem.getPath(queueItemFile.getName());
 		            
 		            Files.copy(queueItemFile.toPath(), queueItemFilePathInArchiveFile, StandardCopyOption.REPLACE_EXISTING); 					
+					*/
 					
 				} catch (Exception e) {
 					logger.error("Błąd podczas przenoszenia pliku do archiwum: " + e.getMessage());
