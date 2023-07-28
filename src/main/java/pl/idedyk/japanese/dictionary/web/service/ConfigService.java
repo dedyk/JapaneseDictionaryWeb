@@ -35,6 +35,10 @@ public class ConfigService {
 	}
 	
 	public File getCatalinaConfDir() {
+		return getCatalinaConfDirStatic();
+	}
+	
+	public static File getCatalinaConfDirStatic() {
 		
 		String catalinaBase = System.getProperty("catalina.base");
 		
