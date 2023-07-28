@@ -57,6 +57,8 @@ public class QueueService {
 	
 	private File localDirJobQueryArchiveDirFile;
 	
+	private File newlocalDirJobQueueDirFile;
+	
 	//
 	
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -99,7 +101,13 @@ public class QueueService {
 			
 			throw new RuntimeException();
 		}
+		
+		// tymczasowe
+		newlocalDirJobQueueDirFile = new File(localDirJobQueueDirFile.getParentFile(), localDirJobQueueDirFile.getName() + "_NEW");
 
+		if (newlocalDirJobQueueDirFile.exists() == false) {
+			newlocalDirJobQueueDirFile.mkdirs();
+		}
 	}
 
 	public void sendToQueue(String queueName, byte[] object) throws SQLException {
@@ -152,8 +160,9 @@ public class QueueService {
 		
 		String randomFileName = UUID.randomUUID().toString();
 		
-		File queueItemFileBody = new File(localDirJobQueueDirFile, queueItem.getName() + "_" + dateString + "_" + randomFileName);
-		File queueItemBodyReady = new File(localDirJobQueueDirFile, queueItem.getName() + "_" + dateString + "_" + randomFileName + ".ready");
+		// tymczasowe		
+		File queueItemFileBody = new File(newlocalDirJobQueueDirFile, queueItem.getName() + "_" + dateString + "_" + randomFileName);
+		File queueItemBodyReady = new File(newlocalDirJobQueueDirFile, queueItem.getName() + "_" + dateString + "_" + randomFileName + ".ready");
 		
 		ByteArrayOutputStream bos = null;
 		ObjectOutput objectOutput = null;
