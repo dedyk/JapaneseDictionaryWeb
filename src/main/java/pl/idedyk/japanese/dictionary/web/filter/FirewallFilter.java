@@ -79,6 +79,8 @@ public class FirewallFilter implements Filter {
 			}
 			
 			scanner.close();
+			
+			hostBlockFileLastModified = hostBlockFile.lastModified();
 						
 		} catch (Exception e) {
 			
