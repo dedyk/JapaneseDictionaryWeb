@@ -9,7 +9,6 @@ import java.util.Scanner;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -18,12 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.web.common.Utils;
-import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
-import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 
 public class FirewallFilter implements Filter {
@@ -144,16 +139,16 @@ public class FirewallFilter implements Filter {
 		} else { // blokowanie
 			logger.info("Blokowanie ip/host/user agent: " + ip + " / " + hostName + " / " + userAgent);
 			
-			ServletContext servletContext = request.getServletContext();
+			// ServletContext servletContext = request.getServletContext();
 			
-			WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+			// WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 			
 			// wysylacz
-			LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
+			// LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
 			
-			ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
-			
-			loggerSender.sendLog(clientBlockLoggerModel);
+			// nie bedziemy wysylac zdarzen, gdyz moze to powodowac bardzo duza liczbe zdarzen, ktore pozniej musza byc przetworzone
+			// ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
+			// loggerSender.sendLog(clientBlockLoggerModel);
 			
 			//
 			
