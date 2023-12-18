@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.Random;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -19,7 +20,7 @@ public class LoadTest {
 		final String URL = "https://www.japonski-pomocnik.pl/wordDictionary";
 		final int NUMBER_OF_THREADS = 5;
 		final int NUMBER_OF_CALLS = 5;
-		final int[] SLEEP_RANGE = new int[] { 1000, 2000 };
+		final int[] SLEEP_RANGE = new int[] { 1000, 3001 };
 		
 		Runnable runnable = new Runnable() {
 			
@@ -38,6 +39,8 @@ public class LoadTest {
 			}
 		};
 		
+		long start = System.currentTimeMillis();
+		
 		Thread[] threads = new Thread[NUMBER_OF_THREADS];
 		
 		for (int threadsNo = 0; threadsNo < NUMBER_OF_THREADS; ++threadsNo) {
@@ -51,6 +54,20 @@ public class LoadTest {
 		for (int threadsNo = 0; threadsNo < NUMBER_OF_THREADS; ++threadsNo) {
 			threads[threadsNo].join();
 		}
+		
+		long stop = System.currentTimeMillis();
+		
+		//
+		
+		long testTime = (stop - start) / 1000;
+		
+		float throughput = (float)(NUMBER_OF_CALLS * NUMBER_OF_THREADS) / (float)testTime;
+		
+		System.out.println("Start: " + new Date(start));
+		System.out.println("Stop: " + new Date(stop));
+		System.out.println("Test tiem: " + testTime);
+		System.out.println("Number of calls: " + (NUMBER_OF_CALLS * NUMBER_OF_THREADS));
+		System.out.println("Throughput: " + throughput);
 	}
 	
 	private static void callURL(String urlString, int callNumber) throws Exception {
@@ -98,7 +115,7 @@ public class LoadTest {
 		
 		int statusCode = httpURLConnection.getResponseCode();
 		
-		System.out.println("Thread(" + Thread.currentThread().getName() + "): status code: " + statusCode);
+		System.out.println("Thread(" + Thread.currentThread().getName() + "): status code: " + statusCode + ", call number: " + callNumber);
 
 		if (statusCode == HttpURLConnection.HTTP_OK) {
 			BufferedReader in = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
