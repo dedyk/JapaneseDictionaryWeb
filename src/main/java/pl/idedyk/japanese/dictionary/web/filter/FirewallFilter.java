@@ -164,4 +164,38 @@ public class FirewallFilter implements Filter {
 	public void destroy() {
 		// noop
 	}
+	
+	public static void main(String[] args) throws Exception {
+		/*
+		PassiveExpiringMap<String, String> passiveExpiringMap = new PassiveExpiringMap<>(4, TimeUnit.SECONDS);
+		
+		String key1 = "KEY1";
+		String value1 = passiveExpiringMap.get(key1);
+		
+		System.out.println("Value 1: " + value1);
+		
+		///
+		
+		passiveExpiringMap.put(key1, "Value 1A");
+		value1 = passiveExpiringMap.get(key1);
+
+		System.out.println("Value 1A: " + value1);
+		
+		Thread.sleep(3000);
+		
+		value1 = passiveExpiringMap.get(key1);
+		System.out.println("Value 1B: " + value1);
+		System.out.println(passiveExpiringMap.size());
+		passiveExpiringMap.put(key1, "Value 1B");
+		
+		Thread.sleep(1000);
+
+		value1 = passiveExpiringMap.get(key1);
+		System.out.println("Value 1C: " + value1);
+		System.out.println(passiveExpiringMap.size());
+		*/
+		
+		
+		
+	}
 }
