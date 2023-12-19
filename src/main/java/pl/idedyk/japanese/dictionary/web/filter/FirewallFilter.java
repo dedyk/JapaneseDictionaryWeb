@@ -2,9 +2,14 @@ package pl.idedyk.japanese.dictionary.web.filter;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -15,6 +20,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,6 +35,14 @@ public class FirewallFilter implements Filter {
 	private Long hostBlockFileLastModified = null;
 
 	private List<String> hostBlockRegexList = null;
+	
+	// parametry do sprawdzania limitu wywolan
+	private static final int CLIENT_REMEMBER_SECONDS = 180;
+	private static final int CLIENT_REMEMBER_CALLS_SECONDS = 30;
+	private static final int CLIENT_MIN_ENLISTMENT_TIME = 5;
+	private static final float CLIENT_RATE_THRESHOLD = 5.0f;
+	
+	private PassiveExpiringMap<String, ClientIP> clientRateMemoryMap = new PassiveExpiringMap<>(CLIENT_REMEMBER_SECONDS, TimeUnit.SECONDS);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -133,10 +147,7 @@ public class FirewallFilter implements Filter {
 			}	
 		} 
 		
-		if (doBlock == false) { // normalne wywolanie
-			chain.doFilter(request, response);
-			
-		} else { // blokowanie
+		if (doBlock == true) { // blokowanie
 			logger.info("Blokowanie ip/host/user agent: " + ip + " / " + hostName + " / " + userAgent);
 			
 			// ServletContext servletContext = request.getServletContext();
@@ -157,7 +168,27 @@ public class FirewallFilter implements Filter {
 	        
 	        // zrobienie commit'a
 	        response.flushBuffer();
+	        
+	        return;
 		}
+		
+		// sprawdzanie, czy ten klient nie przekracza limitu jednoczesnych wywolan
+		boolean isClientRateExceeded = isClientRateExceeded(ip, hostName);
+		
+		if (isClientRateExceeded == true) { // przekroczono liczbe wywolan
+			logger.info("Przekroczono liczbę jednoczesnych wywolan ip/host/user agen: " + ip + " / " + hostName + " / " + userAgent);
+			
+			// wysylamy brak dostepu
+			httpServletResponse.setStatus(429);
+	        
+	        // zrobienie commit'a
+	        response.flushBuffer();
+	        
+	        return;
+		}
+		
+		// normalne wywolanie		
+		chain.doFilter(request, response);
 	}
 
 	@Override
@@ -165,37 +196,91 @@ public class FirewallFilter implements Filter {
 		// noop
 	}
 	
-	public static void main(String[] args) throws Exception {
-		/*
-		PassiveExpiringMap<String, String> passiveExpiringMap = new PassiveExpiringMap<>(4, TimeUnit.SECONDS);
+	private boolean isClientRateExceeded(String ip, String hostName) {
 		
-		String key1 = "KEY1";
-		String value1 = passiveExpiringMap.get(key1);
+		// FIXME: ignorowanie /android, podpowiadacza
 		
-		System.out.println("Value 1: " + value1);
+		ClientIP clientIP;
 		
-		///
+		synchronized (clientRateMemoryMap) {
+			// szukamy klienta
+			clientIP = clientRateMemoryMap.get(ip);
+			
+			// nie znaleziono, wiec tworzymy
+			if (clientIP == null) {
+				clientIP = new ClientIP(ip, hostName);
+			}
+			
+			// dodajemy raz jeszcze, aby zaktualizowac date wygasniecia
+			clientRateMemoryMap.put(ip, clientIP);
+		}
 		
-		passiveExpiringMap.put(key1, "Value 1A");
-		value1 = passiveExpiringMap.get(key1);
-
-		System.out.println("Value 1A: " + value1);
+		// dodajemy do klienta to wywolanie i sprawdzamy, czy nie przekroczylismy limitu		
+		return clientIP.addClientCall();
+	}
+	
+	private static class ClientIP {
+		@SuppressWarnings("unused")
+		private String ip;
 		
-		Thread.sleep(3000);
+		@SuppressWarnings("unused")
+		private String hostName;
+				
+		private List<LocalDateTime> callTimestampList = new LinkedList<>();
 		
-		value1 = passiveExpiringMap.get(key1);
-		System.out.println("Value 1B: " + value1);
-		System.out.println(passiveExpiringMap.size());
-		passiveExpiringMap.put(key1, "Value 1B");
+		public ClientIP(String ip, String hostName) {
+			this.ip = ip;
+			this.hostName = hostName;
+		}
 		
-		Thread.sleep(1000);
-
-		value1 = passiveExpiringMap.get(key1);
-		System.out.println("Value 1C: " + value1);
-		System.out.println(passiveExpiringMap.size());
-		*/
-		
-		
+		public synchronized boolean addClientCall() {
+			// dodajemy to wywolanie
+			callTimestampList.add(LocalDateTime.now());
+			
+			Iterator<LocalDateTime> callTimestampListIterator = callTimestampList.iterator();
+			
+			LocalDateTime firstLocalDateTime = null;
+			LocalDateTime lastLocalDateTime = null;
+			
+			while (callTimestampListIterator.hasNext()) {
+				LocalDateTime callTimestamp = callTimestampListIterator.next();
+				
+				if (callTimestamp.plusSeconds(CLIENT_REMEMBER_CALLS_SECONDS).isBefore(LocalDateTime.now()) == true) { // usuwamy stare wpisy
+					callTimestampListIterator.remove();
+				}
+				
+				if (firstLocalDateTime == null) {
+					firstLocalDateTime = callTimestamp;
+				}
+				
+				lastLocalDateTime = callTimestamp;
+			}
+			
+			// za malo danych lub jest tylko jeden wpis
+			if (firstLocalDateTime == null || lastLocalDateTime == null || firstLocalDateTime == lastLocalDateTime) {
+				return false;
+			}
+			
+			// wyliczamy liczbe sekund miedzy pierwszym, a ostatnim wywolaniem
+			long secondsBetweenStartAndLastDateTime = ChronoUnit.SECONDS.between(firstLocalDateTime, lastLocalDateTime);
+			
+			if (secondsBetweenStartAndLastDateTime < CLIENT_MIN_ENLISTMENT_TIME) { // sprawdzamy, czy mamy minimalny czas pozyskiwania danych
+				return false;
+			}
+			
+			// wyliczamy liczbe wywolan na sekunde
+			float callRate = (float)callTimestampList.size() / (float)secondsBetweenStartAndLastDateTime;
+			
+			logger.info("Exceed call rate: " + callRate);
+			
+			if (callRate >= CLIENT_RATE_THRESHOLD) {
+				logger.info("Exceed call rate: " + callRate);
+				return true;
+			}			
+			
+			// nie ma przekroczenia
+			return false;
+		}
 		
 	}
 }

@@ -17,10 +17,10 @@ public class LoadTest {
 	public static void main(String[] args) throws Exception {
 		// 
 
-		final String URL = "https://www.japonski-pomocnik.pl/wordDictionary";
+		final String URL = "https://localhost:8443/wordDictionary";
 		final int NUMBER_OF_THREADS = 5;
-		final int NUMBER_OF_CALLS = 5;
-		final int[] SLEEP_RANGE = new int[] { 1000, 3001 };
+		final int NUMBER_OF_CALLS = 100;
+		final int[] SLEEP_RANGE = new int[] { 500, 600 };
 		
 		Runnable runnable = new Runnable() {
 			
@@ -83,11 +83,9 @@ public class LoadTest {
 			        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
 			            return null;
 			        }
-			        public void checkClientTrusted(
-			            java.security.cert.X509Certificate[] certs, String authType) {
+			        public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
 			        }
-			        public void checkServerTrusted(
-			            java.security.cert.X509Certificate[] certs, String authType) {
+			        public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
 			        }
 			    }
 			};
