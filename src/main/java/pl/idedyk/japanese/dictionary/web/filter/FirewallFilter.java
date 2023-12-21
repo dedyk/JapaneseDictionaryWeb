@@ -38,8 +38,8 @@ public class FirewallFilter implements Filter {
 	
 	// parametry do sprawdzania limitu wywolan
 	private static final int CLIENT_RATE_REMEMBER_SECONDS = 180;
-	private static final int CLIENT_RATE_REMEMBER_CALLS_SECONDS = 30;
-	private static final int CLIENT_RATE_MIN_ENLISTMENT_TIME = 5;
+	private static final int CLIENT_RATE_REMEMBER_CALLS_SECONDS = 20;
+	private static final int CLIENT_RATE_MIN_ENLISTMENT_TIME = 10;
 	private static final float CLIENT_RATE_THRESHOLD = 5.0f;
 	private static final String[] CLIENT_RATE_URL_FILTER = new String[] {
 			"/android/", "/wordDictionary/autocomplete", "/kanjiDictionary/autocomplete"
@@ -190,6 +190,10 @@ public class FirewallFilter implements Filter {
 	        response.flushBuffer();
 	        
 	        return;
+	        
+		} else {
+			//logger.info("Lczbę jednoczesnych wywolan, ip {}, host name: {}, user agent: {}, url: {}, call rate: {} ",
+			//		ip, hostName, userAgent, url, isClientRateExceededResult.callRate);
 		}
 		
 		// normalne wywolanie		
@@ -238,17 +242,21 @@ public class FirewallFilter implements Filter {
 		
 		public synchronized IsClientRateExceededResult addClientCall(String url) {
 			
-			// filtrujemy kilka rodzajow wywolan
+			// czy wywolanie jest filtrowane
+			boolean isFiltered = false;
+			
 			for (String currentUrlFilter : CLIENT_RATE_URL_FILTER) {
 				if (url.startsWith(currentUrlFilter) == true) {
-					return new IsClientRateExceededResult(false, Float.NaN);
+					isFiltered = true;
 				}
 			}
 			
 			// dodajemy to wywolanie
-			callList.add(new CallInfo(url, LocalDateTime.now()));
+			callList.add(new CallInfo(url, LocalDateTime.now(), isFiltered));
 			
 			Iterator<CallInfo> callListIterator = callList.iterator();
+			
+			int callNumbers = 0;
 			
 			LocalDateTime firstLocalDateTime = null;
 			LocalDateTime lastLocalDateTime = null;
@@ -260,7 +268,14 @@ public class FirewallFilter implements Filter {
 				
 				if (callTimestamp.plusSeconds(CLIENT_RATE_REMEMBER_CALLS_SECONDS).isBefore(LocalDateTime.now()) == true) { // usuwamy stare wpisy
 					callListIterator.remove();
+					continue;
 				}
+				
+				if (callInfo.isFiltered == true) {
+					continue;
+				}
+				
+				callNumbers++;
 				
 				if (firstLocalDateTime == null) {
 					firstLocalDateTime = callTimestamp;
@@ -282,7 +297,7 @@ public class FirewallFilter implements Filter {
 			}
 			
 			// wyliczamy liczbe wywolan na sekunde
-			float callRate = (float)callList.size() / (float)secondsBetweenStartAndLastDateTime;
+			float callRate = (float)callNumbers / (float)secondsBetweenStartAndLastDateTime;
 						
 			// czy przekroczono limit
 			if (callRate >= CLIENT_RATE_THRESHOLD) {
@@ -296,12 +311,14 @@ public class FirewallFilter implements Filter {
 	
 	private static class CallInfo {
 		@SuppressWarnings("unused")
-		private String url;		
+		private String url;
 		private LocalDateTime timestamp;
+		private boolean isFiltered;
 		
-		public CallInfo(String url, LocalDateTime timestamp) {
+		public CallInfo(String url, LocalDateTime timestamp, boolean isFiltered) {
 			this.url = url;
 			this.timestamp = timestamp;
+			this.isFiltered = isFiltered;
 		}
 	}
 	
