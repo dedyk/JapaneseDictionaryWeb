@@ -37,12 +37,15 @@ public class FirewallFilter implements Filter {
 	private List<String> hostBlockRegexList = null;
 	
 	// parametry do sprawdzania limitu wywolan
-	private static final int CLIENT_REMEMBER_SECONDS = 180;
-	private static final int CLIENT_REMEMBER_CALLS_SECONDS = 30;
-	private static final int CLIENT_MIN_ENLISTMENT_TIME = 5;
+	private static final int CLIENT_RATE_REMEMBER_SECONDS = 180;
+	private static final int CLIENT_RATE_REMEMBER_CALLS_SECONDS = 30;
+	private static final int CLIENT_RATE_MIN_ENLISTMENT_TIME = 5;
 	private static final float CLIENT_RATE_THRESHOLD = 5.0f;
+	private static final String[] CLIENT_RATE_URL_FILTER = new String[] {
+			"/android/", "/wordDictionary/autocomplete", "/kanjiDictionary/autocomplete"
+	};
 	
-	private PassiveExpiringMap<String, ClientIP> clientRateMemoryMap = new PassiveExpiringMap<>(CLIENT_REMEMBER_SECONDS, TimeUnit.SECONDS);
+	private PassiveExpiringMap<String, ClientIP> clientRateMemoryMap = new PassiveExpiringMap<>(CLIENT_RATE_REMEMBER_SECONDS, TimeUnit.SECONDS);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -135,6 +138,7 @@ public class FirewallFilter implements Filter {
 		String ip = Utils.getRemoteIp(httpServletRequest);
 		String hostName = Utils.getHostname(ip);
 		String userAgent = httpServletRequest.getHeader("User-Agent");	
+		String url = httpServletRequest.getRequestURI();
 		
 		// sprawdzanie, czy nalezy zablokowac ip/host
 		doBlock = isIpHostBlocked(ip, hostName);
@@ -173,10 +177,11 @@ public class FirewallFilter implements Filter {
 		}
 		
 		// sprawdzanie, czy ten klient nie przekracza limitu jednoczesnych wywolan
-		boolean isClientRateExceeded = isClientRateExceeded(ip, hostName);
-		
-		if (isClientRateExceeded == true) { // przekroczono liczbe wywolan
-			logger.info("Przekroczono liczbę jednoczesnych wywolan ip/host/user agen: " + ip + " / " + hostName + " / " + userAgent);
+		IsClientRateExceededResult isClientRateExceededResult = isClientRateExceeded(ip, hostName, url);
+				
+		if (isClientRateExceededResult.isClientRateExceeded == true) { // przekroczono liczbe wywolan
+			logger.info("Przekroczono liczbę jednoczesnych wywolan, ip {}, host name: {}, user agent: {}, url: {}, call rate: {} ",
+					ip, hostName, userAgent, url, isClientRateExceededResult.callRate);
 			
 			// wysylamy brak dostepu
 			httpServletResponse.setStatus(429);
@@ -196,10 +201,8 @@ public class FirewallFilter implements Filter {
 		// noop
 	}
 	
-	private boolean isClientRateExceeded(String ip, String hostName) {
-		
-		// FIXME: ignorowanie /android, podpowiadacza
-		
+	private IsClientRateExceededResult isClientRateExceeded(String ip, String hostName, String url) {
+				
 		ClientIP clientIP;
 		
 		synchronized (clientRateMemoryMap) {
@@ -216,7 +219,7 @@ public class FirewallFilter implements Filter {
 		}
 		
 		// dodajemy do klienta to wywolanie i sprawdzamy, czy nie przekroczylismy limitu		
-		return clientIP.addClientCall();
+		return clientIP.addClientCall(url);
 	}
 	
 	private static class ClientIP {
@@ -226,27 +229,37 @@ public class FirewallFilter implements Filter {
 		@SuppressWarnings("unused")
 		private String hostName;
 				
-		private List<LocalDateTime> callTimestampList = new LinkedList<>();
+		private List<CallInfo> callList = new LinkedList<>();
 		
 		public ClientIP(String ip, String hostName) {
 			this.ip = ip;
 			this.hostName = hostName;
 		}
 		
-		public synchronized boolean addClientCall() {
-			// dodajemy to wywolanie
-			callTimestampList.add(LocalDateTime.now());
+		public synchronized IsClientRateExceededResult addClientCall(String url) {
 			
-			Iterator<LocalDateTime> callTimestampListIterator = callTimestampList.iterator();
+			// filtrujemy kilka rodzajow wywolan
+			for (String currentUrlFilter : CLIENT_RATE_URL_FILTER) {
+				if (url.startsWith(currentUrlFilter) == true) {
+					return new IsClientRateExceededResult(false, Float.NaN);
+				}
+			}
+			
+			// dodajemy to wywolanie
+			callList.add(new CallInfo(url, LocalDateTime.now()));
+			
+			Iterator<CallInfo> callListIterator = callList.iterator();
 			
 			LocalDateTime firstLocalDateTime = null;
 			LocalDateTime lastLocalDateTime = null;
 			
-			while (callTimestampListIterator.hasNext()) {
-				LocalDateTime callTimestamp = callTimestampListIterator.next();
+			while (callListIterator.hasNext()) {
+				CallInfo callInfo = callListIterator.next();
 				
-				if (callTimestamp.plusSeconds(CLIENT_REMEMBER_CALLS_SECONDS).isBefore(LocalDateTime.now()) == true) { // usuwamy stare wpisy
-					callTimestampListIterator.remove();
+				LocalDateTime callTimestamp = callInfo.timestamp;
+				
+				if (callTimestamp.plusSeconds(CLIENT_RATE_REMEMBER_CALLS_SECONDS).isBefore(LocalDateTime.now()) == true) { // usuwamy stare wpisy
+					callListIterator.remove();
 				}
 				
 				if (firstLocalDateTime == null) {
@@ -258,29 +271,47 @@ public class FirewallFilter implements Filter {
 			
 			// za malo danych lub jest tylko jeden wpis
 			if (firstLocalDateTime == null || lastLocalDateTime == null || firstLocalDateTime == lastLocalDateTime) {
-				return false;
+				return new IsClientRateExceededResult(false, Float.NaN);
 			}
 			
 			// wyliczamy liczbe sekund miedzy pierwszym, a ostatnim wywolaniem
 			long secondsBetweenStartAndLastDateTime = ChronoUnit.SECONDS.between(firstLocalDateTime, lastLocalDateTime);
 			
-			if (secondsBetweenStartAndLastDateTime < CLIENT_MIN_ENLISTMENT_TIME) { // sprawdzamy, czy mamy minimalny czas pozyskiwania danych
-				return false;
+			if (secondsBetweenStartAndLastDateTime < CLIENT_RATE_MIN_ENLISTMENT_TIME) { // sprawdzamy, czy mamy minimalny czas pozyskiwania danych
+				return new IsClientRateExceededResult(false, Float.NaN);
 			}
 			
 			// wyliczamy liczbe wywolan na sekunde
-			float callRate = (float)callTimestampList.size() / (float)secondsBetweenStartAndLastDateTime;
-			
-			logger.info("Exceed call rate: " + callRate);
-			
+			float callRate = (float)callList.size() / (float)secondsBetweenStartAndLastDateTime;
+						
+			// czy przekroczono limit
 			if (callRate >= CLIENT_RATE_THRESHOLD) {
-				logger.info("Exceed call rate: " + callRate);
-				return true;
-			}			
-			
-			// nie ma przekroczenia
-			return false;
+				return new IsClientRateExceededResult(true, callRate);
+				
+			} else {
+				return new IsClientRateExceededResult(false, callRate);
+			}
 		}
+	}
+	
+	private static class CallInfo {
+		@SuppressWarnings("unused")
+		private String url;		
+		private LocalDateTime timestamp;
 		
+		public CallInfo(String url, LocalDateTime timestamp) {
+			this.url = url;
+			this.timestamp = timestamp;
+		}
+	}
+	
+	private static class IsClientRateExceededResult {
+		private boolean isClientRateExceeded;
+		private float callRate;
+		
+		public IsClientRateExceededResult(boolean isClientRateExceeded, float callRate) {
+			this.isClientRateExceeded = isClientRateExceeded;
+			this.callRate = callRate;
+		}
 	}
 }
