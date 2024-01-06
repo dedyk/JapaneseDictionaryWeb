@@ -922,6 +922,7 @@ public class LoggerListener {
 			}
 
 			// wysylanie mail'a
+			/*
 			try {
 				mailSender.sendDailyReport(dailyReportSendLog);
 			} catch (Exception e) {
@@ -929,6 +930,7 @@ public class LoggerListener {
 				
 				throw new RuntimeException(e);
 			}
+			*/
 			
 		} else if (operation == GenericLogOperationEnum.REDIRECT) {
 			
