@@ -11,10 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.gson.Gson;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import pl.idedyk.japanese.dictionary.api.android.queue.event.IQueueEvent;
 import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventWrapper;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;

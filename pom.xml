@@ -13,17 +13,19 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- maven-compiler-plugin -->
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		
+		<maven.war.plugin.version>3.4.0</maven.war.plugin.version>
 
 		<!-- other plugin versions -->
-		<version.compiler.plugin>3.1</version.compiler.plugin>
+		<version.compiler.plugin>3.13.0</version.compiler.plugin>
 
 		<!-- spring version -->
-		<spring.version>5.3.27</spring.version>
+		<spring.version>6.1.5</spring.version>
 		
 		<!-- spring security version -->
-		<spring.security.version>5.6.12</spring.security.version>
+		<spring.security.version>6.1.8</spring.security.version>
 
 		<!-- lucene version -->
 		<lucene.version>4.7.2</lucene.version>
@@ -135,13 +137,35 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>${spring.security.version}</version>
 		</dependency>
- 
+
+		 
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
+		    <groupId>jakarta.servlet</groupId>
+		    <artifactId>jakarta.servlet-api</artifactId>
+		    <version>6.0.0</version>
+		    <scope>provided</scope>
 		</dependency>
+
+		<dependency>
+		    <groupId>jakarta.servlet.jsp</groupId>
+		    <artifactId>jakarta.servlet.jsp-api</artifactId>
+		    <version>3.1.1</version>
+		    <scope>provided</scope>
+		</dependency>
+
+		<dependency>
+		    <groupId>jakarta.xml.bind</groupId>
+		    <artifactId>jakarta.xml.bind-api</artifactId>
+		    <version>4.0.2</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>jakarta.annotation</groupId>
+		    <artifactId>jakarta.annotation-api</artifactId>
+		    <version>2.1.1</version>
+		</dependency>
+
+		<!--
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
@@ -154,6 +178,7 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
+		-->
 
 		<dependency>
 			<groupId>pl.idedyk.japanese</groupId>
@@ -234,10 +259,11 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>1.1.0.Final</version>
+		    <groupId>jakarta.validation</groupId>
+		    <artifactId>jakarta.validation-api</artifactId>
+		    <version>3.0.2</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -245,13 +271,15 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<!--
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-web-api</artifactId>
-			<version>6.0</version>
+			<version>8.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-
+		-->
+		
 		<dependency>
 			<groupId>net.snaq</groupId>
 			<artifactId>dbpool</artifactId>
@@ -373,6 +401,12 @@
 					<target>${maven.compiler.target}</target>
 				</configuration>
 			</plugin>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-war-plugin</artifactId>
+			    <version>${maven.war.plugin.version}</version>
+			</plugin>
+
 		</plugins>
 	</build>
 

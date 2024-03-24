@@ -1,6 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.service;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

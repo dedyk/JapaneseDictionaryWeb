@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +13,8 @@ import com.maxmind.db.CHMCache;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.record.Country;
+
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class GeoIPService {

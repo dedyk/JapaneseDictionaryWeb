@@ -3,7 +3,7 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.jsp.tagext.TagSupport;
+import jakarta.servlet.jsp.tagext.TagSupport;
 
 import org.springframework.context.MessageSource;
 
