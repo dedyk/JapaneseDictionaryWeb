@@ -9,7 +9,29 @@
 	<http auto-config="true">        	
 
 		<custom-filter position="CHANNEL_FILTER" ref="channelProcessingFilter"/>
+		
+		<intercept-url pattern="/" access="hasRole('ROLE_ANONYMOUS')" />
 					
+		<intercept-url pattern="/word*" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/word*/**" access="hasRole('ROLE_ANONYMOUS')" />
+
+		<intercept-url pattern="/kanji*" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/kanji*/**" access="hasRole('ROLE_ANONYMOUS')" />
+		
+		<intercept-url pattern="/info" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/info*" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/info*/**" access="hasRole('ROLE_ANONYMOUS')" />
+		
+		<intercept-url pattern="/suggestion" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/suggestion*/**" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/suggestion*/**" access="hasRole('ROLE_ANONYMOUS')" />
+		
+		<intercept-url pattern="/info" access="hasRole('ROLE_ANONYMOUS')" />
+
+		<intercept-url pattern="/css/**" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/img/**" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/js/**" access="hasRole('ROLE_ANONYMOUS')" />
+		
 		<intercept-url pattern="/adm/**" access="hasRole('ROLE_ADMIN')" />
 		
 		<form-login 
