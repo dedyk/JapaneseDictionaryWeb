@@ -10,27 +10,39 @@
 
 		<custom-filter position="CHANNEL_FILTER" ref="channelProcessingFilter"/>
 		
-		<intercept-url pattern="/" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
 					
-		<intercept-url pattern="/word*" access="hasRole('ROLE_ANONYMOUS')" />
-		<intercept-url pattern="/word*/**" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/word*" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/word*/**" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
 
-		<intercept-url pattern="/kanji*" access="hasRole('ROLE_ANONYMOUS')" />
-		<intercept-url pattern="/kanji*/**" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/kanji*" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/kanji*/**" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
 		
-		<intercept-url pattern="/info" access="hasRole('ROLE_ANONYMOUS')" />
-		<intercept-url pattern="/info*" access="hasRole('ROLE_ANONYMOUS')" />
-		<intercept-url pattern="/info*/**" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/info" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/info*" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/info*/**" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
 		
-		<intercept-url pattern="/suggestion" access="hasRole('ROLE_ANONYMOUS')" />
-		<intercept-url pattern="/suggestion*/**" access="hasRole('ROLE_ANONYMOUS')" />
-		<intercept-url pattern="/suggestion*/**" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/suggestion" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/suggestion*/**" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/suggestion*/**" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
 		
-		<intercept-url pattern="/info" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/info" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
 
-		<intercept-url pattern="/css/**" access="hasRole('ROLE_ANONYMOUS')" />
-		<intercept-url pattern="/img/**" access="hasRole('ROLE_ANONYMOUS')" />
-		<intercept-url pattern="/js/**" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/android/**" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		
+		<intercept-url pattern="/sitemap*" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/sitemap/**" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+
+		<intercept-url pattern="/favicon.ico" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/robots.txt" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/BingSiteAuth.xml" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+
+		<intercept-url pattern="/css/**" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/img/**" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+		<intercept-url pattern="/js/**" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />
+				
+		<intercept-url pattern="/admlogin" access="hasRole('ROLE_ANONYMOUS')" />
+		<intercept-url pattern="/admAccessDenied" access="hasAnyRole('ROLE_ANONYMOUS', 'ROLE_ADMIN')" />		
 		
 		<intercept-url pattern="/adm/**" access="hasRole('ROLE_ADMIN')" />
 		
