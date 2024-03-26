@@ -122,7 +122,7 @@ public class AdminController {
 		return "admlogin";
 	}
 	
-	@RequestMapping(value = "/admAccessDenied", method = RequestMethod.GET)
+	@RequestMapping(value = "/accessDenied", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.FORBIDDEN)
 	public String handleForbidden(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
 		return "page403";

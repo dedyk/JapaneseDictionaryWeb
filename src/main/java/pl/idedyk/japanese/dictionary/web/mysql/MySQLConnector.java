@@ -79,7 +79,7 @@ public class MySQLConnector {
 			//Class<?> mysqlJdbcClass = Class.forName("com.mysql.jdbc.Driver");
 			Class<?> mysqlJdbcClass = Class.forName("com.mysql.cj.jdbc.Driver");
 			
-			Driver driver = (Driver)mysqlJdbcClass.newInstance();
+			Driver driver = (Driver)mysqlJdbcClass.getDeclaredConstructor().newInstance();
 			DriverManager.registerDriver(driver);
 			
 			connectionPool = new ConnectionPool( "mysql",  minPool, maxPool, maxSize, idleTimeout, url, user, password);

@@ -173,7 +173,7 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
 		loggerSender.sendLog(adminLoggerModel);
 
 		// przekierowanie na strone bledu
-		redirect(request, response, "/admAccessDenied");
+		redirect(request, response, "/accessDenied");
 	}
 
 	@Override
