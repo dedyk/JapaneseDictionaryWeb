@@ -17,4 +17,4 @@ CLASSPATH=$CLASSPATH:$HOME/.m2/repository/log4j/log4j/1.2.17/log4j-1.2.17.jar
 
 echo $CLASSPATH
 
-java -cp $CLASSPATH pl.idedyk.japanese.dictionary.web.sitemap.SitemapGenerator $1
+$JAVA_HOME/bin/java -cp $CLASSPATH pl.idedyk.japanese.dictionary.web.sitemap.SitemapGenerator $1
