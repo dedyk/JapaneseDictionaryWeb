@@ -37,22 +37,12 @@
 			
 			<bean id="responseCachingFilter"
 				class="org.springframework.web.servlet.mvc.WebContentInterceptor">
-				<property name="cacheSeconds" value="604801" /> <!-- tydzien i jedna sekunda -->
-				<property name="useExpiresHeader" value="true" />
-				<property name="useCacheControlHeader" value="true" />
-				<property name="useCacheControlNoStore" value="false" />
-				<property name="alwaysMustRevalidate" value="true" />
-<!--  				<property name="cacheMappings">
-					<props>
-						< ! - - cache for one month - - >
-						<prop key="/js/**">2592000</prop>
-					</props>
-				</property>
--->
+				
+				<property name="cacheControl" ref="japaneseDictionaryCacheControl" />
 			</bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
-	
+		
 	<bean id="propertyConfigurer"
 		class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
 		<property name="locations">

@@ -93,6 +93,13 @@ public class HandleException extends TagSupport {
 			return SKIP_BODY;
 		}
 		
+		// wyjątek: Wyjątek: class org.apache.catalina.connector.ClientAbortException:ClientAbortException: java.io.IOException: Connection reset by peer jest ignorowany
+		if (throwable.getClass().getName().equals("org.apache.catalina.connector.ClientAbortException") && ExceptionUtils.getMessage(throwable).indexOf("java.io.IOException: Connection reset by peer") != -1) {
+			logger.error("Błędy 'class org.apache.catalina.connector.ClientAbortException:ClientAbortException: java.io.IOException: Connection reset by peer' są ignorowane!");
+			
+			return SKIP_BODY;
+		}
+		
 		logger.error("Bład podczas wyświetlania strony", throwable);
 		
 		LoggerModelCommon loggerModelCommon = LoggerModelCommon.createLoggerModelCommon(

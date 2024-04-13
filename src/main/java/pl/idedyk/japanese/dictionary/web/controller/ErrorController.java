@@ -60,6 +60,13 @@ public class ErrorController {
 			
 			return new ModelAndView();
 		}
+
+		// wyjątek: Wyjątek: class org.apache.catalina.connector.ClientAbortException:ClientAbortException: java.io.IOException: Connection reset by peer jest ignorowany
+		if (ex.getClass().getName().equals("org.apache.catalina.connector.ClientAbortException") && ExceptionUtils.getMessage(ex).indexOf("java.io.IOException: Connection reset by peer") != -1) {
+			logger.error("Błędy 'class org.apache.catalina.connector.ClientAbortException:ClientAbortException: java.io.IOException: Connection reset by peer' są ignorowane!");
+			
+			return new ModelAndView();
+		}
 		
 		logger.error("Błąd podczas działania kontrolera", ex);
 		
