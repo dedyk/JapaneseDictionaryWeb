@@ -359,8 +359,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	kanjiDiv.addHtmlElement(row1Div);
     	    	        	        	       		
         List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(dictionaryEntry);
+        
+        // sprawdzenie, czy mamy dane do pisania wszystkich znakow
+        boolean isAllCharactersStrokePathsAvailableForWord = dictionaryManager.isAllCharactersStrokePathsAvailableForWord(dictionaryEntry.getKanji());
     	            
-        if (furiganaEntries != null && furiganaEntries.size() > 0 && addKanjiWrite == true) {
+        if (furiganaEntries != null && furiganaEntries.size() > 0 && addKanjiWrite == true && isAllCharactersStrokePathsAvailableForWord == true) {
         	
         	for (FuriganaEntry currentFuriganaEntry : furiganaEntries) {
         		
