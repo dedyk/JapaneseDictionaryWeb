@@ -886,11 +886,31 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			row2TableTrTd1.addHtmlElement(specialDiv);
 			
 			if (special == 1) {
-				specialDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special.sm_tsuki_ni_kawatte_oshioki_yo")));
+				// specialDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special.sm_tsuki_ni_kawatte_oshioki_yo")));
+				
+				String staticPrefix = LinkGenerator.getStaticPrefix(pageContext.getServletContext().getContextPath(), applicationProperties);
+				
+				Img smTsukiNiKawatteOshiokiYoImg = new Img();
+				
+				smTsukiNiKawatteOshiokiYoImg.setSrc(staticPrefix + "/img/sm_tsuki_ni_kawatte_oshioki_yo.jpg");
+				smTsukiNiKawatteOshiokiYoImg.setWidthImg("100%");
+				smTsukiNiKawatteOshiokiYoImg.setAlt("Tsuki ni kawatte oshioki yo");
+				
+				specialDiv.addHtmlElement(smTsukiNiKawatteOshiokiYoImg);
 				
 			} else if (special == 2) {
-				specialDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special.buta_mo_odaterya_ki_ni_noboru")));
+				// specialDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.info.special.buta_mo_odaterya_ki_ni_noboru")));
 				
+				String staticPrefix = LinkGenerator.getStaticPrefix(pageContext.getServletContext().getContextPath(), applicationProperties);
+				
+				Img smTsukiNiKawatteOshiokiYoImg = new Img();
+				
+				smTsukiNiKawatteOshiokiYoImg.setSrc(staticPrefix + "/img/buta_mo_odaterya_ki_ni_noboru.jpg");
+				smTsukiNiKawatteOshiokiYoImg.setWidthImg("100%");
+				smTsukiNiKawatteOshiokiYoImg.setAlt("Buta mo odaterya ki ni noboru");
+				
+				specialDiv.addHtmlElement(smTsukiNiKawatteOshiokiYoImg);
+
 			} else if (special == 3) {
 				
 				String staticPrefix = LinkGenerator.getStaticPrefix(pageContext.getServletContext().getContextPath(), applicationProperties);
