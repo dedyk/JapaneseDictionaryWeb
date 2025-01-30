@@ -840,6 +840,12 @@ public class WordDictionaryController {
 			
 			copyStream(sitemapFileInputStream, outputStream);
 			
+		} catch (Exception e) {
+			// INFO: czasami uzytkownik przerywa pobieranie PDF-a i to powoduje wyjatek po stronie serwera z komunikatem:
+			// org.springframework.web.context.request.async.AsyncRequestNotUsableException: ServletOutputStream failed to write: java.io.IOException: Broken pipe
+			// wiec wyjatki ignorujemy
+			logger.error("Error during sending PDF", e);
+
 		} finally {
 			
 			if (sitemapFileInputStream != null) {

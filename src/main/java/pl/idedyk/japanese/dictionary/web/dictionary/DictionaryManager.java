@@ -12,6 +12,8 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -98,6 +100,9 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 			databaseConnector = luceneDatabase = new LuceneDatabase(new File(dbDir, LUCENE_DB_DIR).getPath());
 
 			luceneDatabase.open();
+			
+			// zwiekszamy ilosc maxClauseCount w BooleanQuery
+			BooleanQuery.setMaxClauseCount(2048);
 
 		} catch (IOException e) {
 
