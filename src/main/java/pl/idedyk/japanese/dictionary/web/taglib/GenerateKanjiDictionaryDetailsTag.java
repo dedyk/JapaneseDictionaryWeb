@@ -209,6 +209,15 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			panelBody.addHtmlElement(onYomiDiv);
 		}
 		
+		// czytanie nanori		
+		Div nanoriYomiDiv = generateNanoriYomiSection(mainInfoMenu);
+
+		if (nanoriYomiDiv != null) {
+			panelBody.addHtmlElement(new Hr());
+			
+			panelBody.addHtmlElement(nanoriYomiDiv);
+		}		
+		
 		// tlumaczenie
 		Div translateDiv = generateTranslateSection(mainInfoMenu);
 		
@@ -523,6 +532,23 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		return generateStandardDivWithStringList("onReadingId", getMessage("kanjiDictionaryDetails.page.kanjiEntry.onReading.title"), menu, onReading);
 	}
+	
+	private Div generateNanoriYomiSection(Menu menu) {
+		
+		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
+		
+		if (kanjiDic2Entry == null) {
+			return null;
+		}
+		
+		List<String> nanoriReading = kanjiDic2Entry.getNanoriReading();
+		
+		if (nanoriReading == null || nanoriReading.size() == 0) {
+			return null;
+		}
+		
+		return generateStandardDivWithStringList("nanoriReadingId", getMessage("kanjiDictionaryDetails.page.kanjiEntry.nanoriReading.title"), menu, nanoriReading);
+	}	
 	
 	private Div generateTranslateSection(Menu menu) {
 				
