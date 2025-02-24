@@ -7,10 +7,10 @@ import java.util.Properties;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
-import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class LinkGenerator {
 
@@ -86,16 +86,16 @@ public class LinkGenerator {
 		}
 	}
 	
-	public static String generateKanjiDetailsLink(String contextPath, KanjiEntry kanjiEntry) {
+	public static String generateKanjiDetailsLink(String contextPath, KanjiCharacterInfo kanjiCharacterInfo) {
 		
 		try {
 			// UWAGA: Jesli tu zmieniasz, zmien rowniez w pliku kanjiDictionary.jsp
 			
 			String linkTemplate = contextPath + "/kanjiDictionaryDetails/%ID%/%KANJI%";
 	
-			String kanji = kanjiEntry.getKanji();
+			String kanji = kanjiCharacterInfo.getKanji();
 			
-			return linkTemplate.replaceAll("%ID%", String.valueOf(kanjiEntry.getId())).
+			return linkTemplate.replaceAll("%ID%", String.valueOf(kanjiCharacterInfo.getId())).
 	        		replaceAll("%KANJI%", kanji != null ? URLEncoder.encode(kanji, "UTF-8") : "-");
 			
 		} catch (UnsupportedEncodingException e) {

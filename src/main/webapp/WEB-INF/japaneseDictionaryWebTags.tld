@@ -56,9 +56,9 @@
 	<tag>
 		<name>generateKanjiDictionaryDetails</name>
 		<tagclass>pl.idedyk.japanese.dictionary.web.taglib.GenerateKanjiDictionaryDetailsTag</tagclass>
-		<info>Generuje szczegoly slowa</info>
+		<info>Generuje szczegoly kanji</info>
 		<attribute>
-			<name>kanjiEntry</name>
+			<name>kanjiCharacterInfo</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

@@ -30,7 +30,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocomplet
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryDetectLoggerModel;
-import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryGetKanjiEntryListLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryGetKanjiCharacterInfoListLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchStrokeCountLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
@@ -1147,8 +1147,8 @@ public class LoggerListener {
 		} else if (KanjiDictionaryCatalogLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.KANJI_DICTIONARY_CATALOG;
 		
-		} else if (KanjiDictionaryGetKanjiEntryListLoggerModel.class.isAssignableFrom(clazz) == true) {
-		    return GenericLogOperationEnum.KANJI_DICTIONARY_GET_KANJI_ENTRY_LIST;
+		} else if (KanjiDictionaryGetKanjiCharacterInfoListLoggerModel.class.isAssignableFrom(clazz) == true) {
+		    return GenericLogOperationEnum.KANJI_DICTIONARY_GET_KANJI_CHARACTER_INFO_LIST;
 			
 		} else if (AndroidSendMissingWordLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.ANDROID_SEND_MISSING_WORD;
