@@ -19,6 +19,10 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
+import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
@@ -40,16 +44,12 @@ import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog.GenerateDrawStrokeDialogParams;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
-import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
-import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.Misc2Info;
-import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.Misc2InfoGroup;
-import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.MiscInfo;
 
 public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private KanjiCharacterInfo kanjiCharacterInfo;
+	private KanjiEntry kanjiEntry;
 			
 	private MessageSource messageSource;
 	
@@ -84,7 +84,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		try {
             JspWriter out = pageContext.getOut();
 
-            if (kanjiCharacterInfo == null) {
+            if (kanjiEntry == null) {
             	
             	Div errorDiv = new Div("alert alert-danger");
             	
@@ -139,7 +139,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		B kanjiBold = new B();
 		
-		kanjiBold.addHtmlElement(new Text(kanjiCharacterInfo.getKanji()));
+		kanjiBold.addHtmlElement(new Text(kanjiEntry.getKanji()));
 		
 		pageHeader.addHtmlElement(kanjiBold);
 		
@@ -253,7 +253,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		final String kanjiDrawId = "kanjiDrawId";
 		
-		String kanji = kanjiCharacterInfo.getKanji();
+		String kanji = kanjiEntry.getKanji();
 		        	
     	// wiersz z tytulem
     	Div row1Div = new Div("row");
@@ -296,10 +296,10 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		kanjiKanjiTd.addHtmlElement(new Text(kanji));
 		kanjiKanjiTr.addHtmlElement(kanjiKanjiTd);
 		
-		List<String> strokePaths = kanjiCharacterInfo.getMisc2().getStrokePaths();
+		final KanjivgEntry kanjivsEntry = kanjiEntry.getKanjivgEntry();
 		
 		// komorka z guziczkiem
-		if (strokePaths != null && strokePaths.size() > 0) {
+		if (kanjivsEntry != null && kanjivsEntry.getStrokePaths().size() > 0) {
 			
 			// przerwa
 			kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
@@ -320,7 +320,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		// wystapienie znaku w slowniku - guziczek
 		WordDictionarySearchModel searchModel = new WordDictionarySearchModel();
 		
-		searchModel.setWord(kanjiCharacterInfo.getKanji());
+		searchModel.setWord(kanjiEntry.getKanji());
 		searchModel.setWordPlace(WordPlaceSearch.ANY_PLACE.toString());
 		
 		List<String> searchIn = new ArrayList<String>();
@@ -378,7 +378,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		kanjiDiv.addHtmlElement(row2Div);
 
-		if (strokePaths != null && strokePaths.size() > 0) {
+		if (kanjivsEntry != null && kanjivsEntry.getStrokePaths().size() > 0) {
 			
 			// skrypt otwierajacy okienko
 			kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, 1, mobile));
@@ -399,25 +399,25 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	
 	private Div generateStrokeCountSection(Menu menu) {
 		
-		MiscInfo kanjiCharacterInfoMiscInfo = kanjiCharacterInfo.getMisc();
+		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
 		
-		if (kanjiCharacterInfoMiscInfo == null || kanjiCharacterInfoMiscInfo.getStrokeCountList() == null || kanjiCharacterInfoMiscInfo.getStrokeCountList().size() == 0) {
+		if (kanjiDic2Entry == null) {
 			return null;
 		}
 				
 		return generateStandardDivWithStringList("strokeCountId", getMessage("kanjiDictionaryDetails.page.kanjiEntry.strokeCount.title"), 
-				menu, Arrays.asList(new String [] { String.valueOf(kanjiCharacterInfoMiscInfo.getStrokeCountList().get(0)) }));
+				menu, Arrays.asList(new String [] { String.valueOf(kanjiDic2Entry.getStrokeCount()) }));
 	}
 	
 	private Div generateRadicalsSection(Menu menu) throws IOException {
 		
-		Misc2Info misc2Info = kanjiCharacterInfo.getMisc2();
+		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
 		
-		if (misc2Info == null) {
+		if (kanjiDic2Entry == null) {
 			return null;
 		}
 		
-		List<String> radicals = misc2Info.getRadicals();
+		List<String> radicals = kanjiDic2Entry.getRadicals();
 		
 		if (radicals == null || radicals.size() == 0) {
 			return null;
@@ -500,8 +500,14 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	}
 	
 	private Div generateKunYomiSection(Menu menu) {
-				
-		List<String> kunReading = pl.idedyk.japanese.dictionary.api.dictionary.Utils.getKunReading(kanjiCharacterInfo);
+		
+		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
+		
+		if (kanjiDic2Entry == null) {
+			return null;
+		}
+		
+		List<String> kunReading = kanjiDic2Entry.getKunReading();
 		
 		if (kunReading == null || kunReading.size() == 0) {
 			return null;
@@ -511,8 +517,14 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	}
 	
 	private Div generateOnYomiSection(Menu menu) {
-				
-		List<String> onReading = pl.idedyk.japanese.dictionary.api.dictionary.Utils.getOnReading(kanjiCharacterInfo);
+		
+		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
+		
+		if (kanjiDic2Entry == null) {
+			return null;
+		}
+		
+		List<String> onReading = kanjiDic2Entry.getOnReading();
 		
 		if (onReading == null || onReading.size() == 0) {
 			return null;
@@ -522,8 +534,14 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	}
 	
 	private Div generateNanoriYomiSection(Menu menu) {
-				
-		List<String> nanoriReading = pl.idedyk.japanese.dictionary.api.dictionary.Utils.getNanoriReading(kanjiCharacterInfo);
+		
+		KanjiDic2Entry kanjiDic2Entry = kanjiEntry.getKanjiDic2Entry();
+		
+		if (kanjiDic2Entry == null) {
+			return null;
+		}
+		
+		List<String> nanoriReading = kanjiDic2Entry.getNanoriReading();
 		
 		if (nanoriReading == null || nanoriReading.size() == 0) {
 			return null;
@@ -534,14 +552,14 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	
 	private Div generateTranslateSection(Menu menu) {
 				
-		List<String> translate = pl.idedyk.japanese.dictionary.api.dictionary.Utils.getPolishTranslates(kanjiCharacterInfo);
+		List<String> translate = kanjiEntry.getPolishTranslates();
 		
 		return generateStandardDivWithStringList("translateId", getMessage("kanjiDictionaryDetails.page.kanjiEntry.translate.title"), menu, translate);
 	}
 	
 	private Div generateInfoSection(Menu menu) {
 		
-		String info = pl.idedyk.japanese.dictionary.api.dictionary.Utils.getPolishAdditionalInfo(kanjiCharacterInfo);
+		String info = kanjiEntry.getInfo();
 		
 		if (info == null || info.length() <= 0) {
 			return null;
@@ -553,7 +571,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	private Div generateKanjiGroupsSection(Menu menu) {
 		
 		// kanji groups
-		List<Misc2InfoGroup> groups = kanjiCharacterInfo.getMisc2().getGroups();
+		List<GroupEnum> groups = kanjiEntry.getGroups();
 		
 		if (groups == null || groups.size() == 0) {
 			return null;
@@ -561,8 +579,8 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		List<String> groupsStringList = new ArrayList<String>();
 		
-		for (Misc2InfoGroup misc2InfoGroup : groups) {
-			groupsStringList.add(misc2InfoGroup.value());
+		for (GroupEnum groupEnum : groups) {
+			groupsStringList.add(groupEnum.getValue());
 		}		
 		
 		return generateStandardDivWithStringList("kanjiGroupsId", getMessage("kanjiDictionaryDetails.page.kanjiEntry.groups.title"), menu, groupsStringList);
@@ -572,8 +590,8 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
         addSuggestionMenuPos(mainMenu, messageSource);
         
-        int id = kanjiCharacterInfo.getId();
-        String kanji = kanjiCharacterInfo.getKanji();
+        int id = kanjiEntry.getId();
+        String kanji = kanjiEntry.getKanji();
 
 		String defaultSuggestion = messageSource.getMessage("kanjiDictionaryDetails.page.suggestion.default", 
 				new Object[] { kanji, String.valueOf(id) }, Locale.getDefault());
@@ -586,11 +604,11 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		return messageSource.getMessage(code, null, Locale.getDefault());
 	}
 	
-	public KanjiCharacterInfo getKanjiCharacterInfo() {
-		return kanjiCharacterInfo;
+	public KanjiEntry getKanjiEntry() {
+		return kanjiEntry;
 	}
 
-	public void setKanjiCharacterInfo(KanjiCharacterInfo kanjiCharacterInfo) {				
-		this.kanjiCharacterInfo = kanjiCharacterInfo;
+	public void setKanjiEntry(KanjiEntry kanjiEntry) {				
+		this.kanjiEntry = kanjiEntry;
 	}	
 }

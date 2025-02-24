@@ -13,7 +13,7 @@
 	<jsp:body>
 			
 		<jdwt:generateKanjiDictionaryDetails
-			kanjiCharacterInfo="${kanjiCharacterInfo}" />
+			kanjiEntry="${kanjiEntry}" />
 				
 	</jsp:body>
 </t:template>

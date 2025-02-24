@@ -24,6 +24,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
 import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.TatoebaSentence;
 import pl.idedyk.japanese.dictionary.api.example.ExampleManager;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupTypeElements;
@@ -58,7 +59,6 @@ import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.Printab
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
-import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
 	
@@ -1233,7 +1233,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			return null;
 		}
 		
-		List<KanjiCharacterInfo> knownKanji = dictionaryManager.findKnownKanji(dictionaryEntry.getKanji());
+		List<KanjiEntry> knownKanji = dictionaryManager.findKnownKanji(dictionaryEntry.getKanji());
 		
 		if (knownKanji == null || knownKanji.size() == 0) {
 			return null;
@@ -1273,7 +1273,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	Table row2Table = new Table();
     	knownKanjiBodyDiv.addHtmlElement(row2Table);
 
-		for (KanjiCharacterInfo currentKanjiCharacterInfo : knownKanji) {
+		for (KanjiEntry currentKnownKanjiEntry : knownKanji) {
 			
 			Tr row2TableTr = new Tr();
 			row2Table.addHtmlElement(row2TableTr);
@@ -1282,10 +1282,10 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			Td row2TableTrKanjiTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
 			row2TableTr.addHtmlElement(row2TableTrKanjiTd);
 			
-			row2TableTrKanjiTd.addHtmlElement(new Text(currentKanjiCharacterInfo.getKanji()));
+			row2TableTrKanjiTd.addHtmlElement(new Text(currentKnownKanjiEntry.getKanji()));
 			
 			// znaczenie
-			List<String> currentKnownKanjiPolishTranslates = pl.idedyk.japanese.dictionary.api.dictionary.Utils.getPolishTranslates(currentKanjiCharacterInfo);
+			List<String> currentKnownKanjiPolishTranslates = currentKnownKanjiEntry.getPolishTranslates();
 			
 			StringBuffer currentKnownKanjiPolishTranslatesSb = new StringBuffer();
 			
@@ -1309,7 +1309,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			// guziczek
 			Td row2TableTrButtonTd = new Td(null, "margin-top: 0px; padding: 0px 50px 5px 0;");			
 			
-			String link = LinkGenerator.generateKanjiDetailsLink(pageContext.getServletContext().getContextPath(), currentKanjiCharacterInfo);
+			String link = LinkGenerator.generateKanjiDetailsLink(pageContext.getServletContext().getContextPath(), currentKnownKanjiEntry);
 			
 			A linkButton = new A("btn btn-default");
 			row2TableTrButtonTd.addHtmlElement(linkButton);

@@ -1,30 +1,30 @@
 package pl.idedyk.japanese.dictionary.web.logger.model;
 
-import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 
 public class KanjiDictionaryDetailsLoggerModel extends LoggerModelCommon {
 
 	private static final long serialVersionUID = 1L;
 
-	private KanjiCharacterInfo kanjiCharacterInfo;
+	private KanjiEntry kanjiEntry;
 		
-	public KanjiDictionaryDetailsLoggerModel(LoggerModelCommon loggerModelCommon, KanjiCharacterInfo kanjiCharacterInfo) {
+	public KanjiDictionaryDetailsLoggerModel(LoggerModelCommon loggerModelCommon, KanjiEntry kanjiEntry) {
 		
 		super(loggerModelCommon);
 		
-		this.kanjiCharacterInfo = kanjiCharacterInfo;
+		this.kanjiEntry = kanjiEntry;
 	}
 
-	public KanjiCharacterInfo getKanjiCharacterInfo() {
-		return kanjiCharacterInfo;
+	public KanjiEntry getKanjiEntry() {
+		return kanjiEntry;
 	}
 
-	public void setKanjiCharacterInfo(KanjiCharacterInfo kanjiCharacterInfo) {
-		this.kanjiCharacterInfo = kanjiCharacterInfo;
+	public void setKanjiEntry(KanjiEntry kanjiEntry) {
+		this.kanjiEntry = kanjiEntry;
 	}
 
 	@Override
 	public String toString() {
-		return "KanjiDictionaryDetailsLoggerModel [kanjiCharacterInfo=" + kanjiCharacterInfo + "]";
+		return "KanjiDictionaryDetailsLoggerModel [kanjiEntry=" + kanjiEntry + "]";
 	}	
 }

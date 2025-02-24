@@ -14,8 +14,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import pl.idedyk.japanese.dictionary.api.dictionary.Utils;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
@@ -25,7 +26,6 @@ import pl.idedyk.japanese.dictionary.web.html.Img;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
-import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class FindKanjiResultItemTableRowTag extends TagSupport {
 
@@ -33,7 +33,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	
 	private FindKanjiRequest findKanjiRequest;
 	
-	private KanjiCharacterInfo resultItem;
+	private KanjiEntry resultItem;
 
 	private MessageSource messageSource;
 	
@@ -92,9 +92,11 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	    	// elementy podstawowe
 	    	Td radicalsTd = new Td();
 	    	tr.addHtmlElement(radicalsTd);
+
+	    	KanjiDic2Entry kanjiDic2Entry = resultItem.getKanjiDic2Entry();
 	    	
-	    	{
-	    		List<String> radicals = resultItem.getMisc2().getRadicals();
+	    	if (kanjiDic2Entry != null) {
+	    		List<String> radicals = kanjiDic2Entry.getRadicals();
 	    		
 	    		if (radicals != null) {
 	    			
@@ -130,12 +132,12 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	    	Td strokeCountTd = new Td();
 	    	tr.addHtmlElement(strokeCountTd);
 	    	
-	    	if (resultItem.getMisc2().getStrokePaths() != null && resultItem.getMisc2().getStrokePaths().size() > 0) {
-	    		strokeCountTd.addHtmlElement(new Text(String.valueOf(resultItem.getMisc2().getStrokePaths().get(0))));	    		
+	    	if (kanjiDic2Entry != null) {
+	    		strokeCountTd.addHtmlElement(new Text(String.valueOf(kanjiDic2Entry.getStrokeCount())));	    		
 	    	}
 	    	
 	    	// tlumaczenie
-	    	List<String> polishTranslates = Utils.getPolishTranslates(resultItem);
+	    	List<String> polishTranslates = resultItem.getPolishTranslates();
 	    	
 	    	Td translateTd = new Td();
 	    	tr.addHtmlElement(translateTd);
@@ -143,7 +145,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	    	if (polishTranslates != null && polishTranslates.size() > 0) {
 	    		translateTd.addHtmlElement(new Text(getStringWithMark(toString(polishTranslates, null, "<br/>"), findWord, true)));
 	    		
-	    		String info = Utils.getPolishAdditionalInfo(resultItem);
+	    		String info = resultItem.getInfo();
 	    		
 	    		// informcje dodatkowe
 	    		if (info != null && info.equals("") == false) {
@@ -257,11 +259,11 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 		this.findKanjiRequest = findKanjiRequest;
 	}
 
-	public KanjiCharacterInfo getResultItem() {
+	public KanjiEntry getResultItem() {
 		return resultItem;
 	}
 
-	public void setResultItem(KanjiCharacterInfo resultItem) {
+	public void setResultItem(KanjiEntry resultItem) {
 		this.resultItem = resultItem;
 	}
 }

@@ -6,7 +6,7 @@ public class KanjiDictionaryDetailsLog {
 	
 	private Long genericLogId;
 
-	private Integer kanjiId;
+	private Integer kanjiEntryId;
 	
 	private String kanjiEntryKanji;
 	

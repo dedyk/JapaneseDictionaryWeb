@@ -22,10 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.sitemap.exception.NotInitializedException;
-import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class SitemapManager {
 	
@@ -181,9 +181,9 @@ public class SitemapManager {
 		}
 		
 		// pobranie znakow kanji
-		List<KanjiCharacterInfo> allKanjis = dictionaryManager.getAllKanjis(false);
+		List<KanjiEntry> allKanjis = dictionaryManager.getAllKanjis(false, false);
 		
-		for (KanjiCharacterInfo kanjiEntry : allKanjis) {
+		for (KanjiEntry kanjiEntry : allKanjis) {
 			
 			// wygenerowanie linku
 			String link = LinkGenerator.generateKanjiDetailsLink("", kanjiEntry);
