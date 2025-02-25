@@ -34,8 +34,6 @@ import jakarta.validation.Valid;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
-import pl.idedyk.japanese.dictionary.api.dto.KanjiDic2Entry;
-import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
@@ -60,6 +58,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLogger
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
+import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 @Controller
 public class KanjiDictionaryController {
@@ -169,28 +168,27 @@ public class KanjiDictionaryController {
 		// jesli nic nie znaleziono, proba pobrania znakow z napisu
 		if (findKanjiResult.getResult().size() == 0 && findKanjiRequest.word != null && findKanjiRequest.word.trim().equals("") == false) {
 			
-			List<KanjiEntry> findKnownKanjiResult = dictionaryManager.findKnownKanji(findKanjiRequest.word);
+			List<KanjiCharacterInfo> findKnownKanjiResult = dictionaryManager.findKnownKanji(findKanjiRequest.word);
 			
 			if (findKnownKanjiResult.size() > 0) { // gdy cos znajdziemy
 				
-				List<KanjiEntry> filteredFindKnownKanjiResult = new ArrayList<KanjiEntry>();
+				List<KanjiCharacterInfo> filteredFindKnownKanjiResult = new ArrayList<KanjiCharacterInfo>();
 				
-				for (KanjiEntry currentKanjiEntry : findKnownKanjiResult) {
+				for (KanjiCharacterInfo currentKanjiEntry : findKnownKanjiResult) {
 					
 					if (findKanjiRequest.strokeCountFrom == null && findKanjiRequest.strokeCountTo == null) {
-
 						filteredFindKnownKanjiResult.add(currentKanjiEntry);
 						
 						continue;
 					}
 					
-					KanjiDic2Entry currentKanjiDic2Entry = currentKanjiEntry.getKanjiDic2Entry();
-					
-					if (currentKanjiDic2Entry == null) {
+					List<Integer> strokeCountList = currentKanjiEntry.getMisc().getStrokeCountList();
+										
+					if (strokeCountList == null || strokeCountList.size() == 0) {
 						continue;
 					}
 					
-					int currentKanjiStrokeCount = currentKanjiDic2Entry.getStrokeCount();
+					int currentKanjiStrokeCount = strokeCountList.get(0);
 					
 					if (findKanjiRequest.strokeCountFrom != null && currentKanjiStrokeCount < findKanjiRequest.strokeCountFrom) {
 						continue;
@@ -347,7 +345,7 @@ public class KanjiDictionaryController {
 
 		Set<String> allAvailableRadicals = dictionaryManager.findAllAvailableRadicals(selectedRadicals);
 		
-		List<KanjiEntry> findKnownKanjiFromRadicalsResult = dictionaryManager.findKnownKanjiFromRadicals(selectedRadicals);
+		List<KanjiCharacterInfo> findKnownKanjiFromRadicalsResult = dictionaryManager.findKnownKanjiFromRadicals(selectedRadicals);
 		
 		// logowanie
 		if (selectedRadicals.length > 0) {
@@ -360,35 +358,38 @@ public class KanjiDictionaryController {
 				
 		JSONArray kanjiFromRadicalsJSON = new JSONArray();
 		
-		Collections.sort(findKnownKanjiFromRadicalsResult, new Comparator<KanjiEntry>() {
+		Collections.sort(findKnownKanjiFromRadicalsResult, new Comparator<KanjiCharacterInfo>() {
 
 			@Override
-			public int compare(KanjiEntry k1, KanjiEntry k2) {
+			public int compare(KanjiCharacterInfo k1, KanjiCharacterInfo k2) {
 				
-				KanjiDic2Entry k1Dic2Entry = k1.getKanjiDic2Entry();
-				KanjiDic2Entry k2Dic2Entry = k2.getKanjiDic2Entry();
-				
-				if (k1Dic2Entry == null) {
+				List<Integer> k1StrokeCountList = k1.getMisc().getStrokeCountList();
+				List<Integer> k2StrokeCountList = k2.getMisc().getStrokeCountList();
+								
+				if (k1StrokeCountList == null) {
 					return -1;
 				}
 
-				if (k2Dic2Entry == null) {
+				if (k2StrokeCountList == null) {
 					return 1;
 				}
 				
-				return k1Dic2Entry.getStrokeCount() < k2Dic2Entry.getStrokeCount() ? -1 : k1Dic2Entry.getStrokeCount() > k2Dic2Entry.getStrokeCount() ? 1 : 0;
+				Integer k1StrokeCount =  k1StrokeCountList.get(0);
+				Integer k2StrokeCount =  k2StrokeCountList.get(0);				
+				
+				return k1StrokeCount < k2StrokeCount ? -1 : k1StrokeCount > k2StrokeCount ? 1 : 0;
 			}
 		});
 		
 		if (findKnownKanjiFromRadicalsResult != null) {
 			
-			for (KanjiEntry currentKanjiEntry : findKnownKanjiFromRadicalsResult) {
+			for (KanjiCharacterInfo currentKanjiEntry : findKnownKanjiFromRadicalsResult) {
 				
 				JSONObject currentKanjiFromRadicalJSON = new JSONObject();
 				
 				currentKanjiFromRadicalJSON.put("id", currentKanjiEntry.getId());
 				currentKanjiFromRadicalJSON.put("kanji", currentKanjiEntry.getKanji());
-				currentKanjiFromRadicalJSON.put("strokeCount", currentKanjiEntry.getKanjiDic2Entry() != null ? currentKanjiEntry.getKanjiDic2Entry().getStrokeCount() : 0);
+				currentKanjiFromRadicalJSON.put("strokeCount", currentKanjiEntry.getMisc().getStrokeCountList() != null ? currentKanjiEntry.getMisc().getStrokeCountList().get(0) : 0);
 				
 				kanjiFromRadicalsJSON.put(currentKanjiFromRadicalJSON);		
 			}
@@ -405,7 +406,7 @@ public class KanjiDictionaryController {
 	public String showKanjiDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji, Map<String, Object> model) throws DictionaryException {
 		
 		// pobranie kanji entry
-		KanjiEntry kanjiEntry = dictionaryManager.findKanji(kanji);
+		KanjiCharacterInfo kanjiEntry = dictionaryManager.findKanji(kanji);
 						
 		// tytul strony
 		if (kanjiEntry != null) {
@@ -444,7 +445,7 @@ public class KanjiDictionaryController {
 	public void showKanjiDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id) throws IOException, DictionaryException {
 
 		// pobranie znaku
-		KanjiEntry kanjiEntry = dictionaryManager.getKanjiEntryById(id);
+		KanjiCharacterInfo kanjiEntry = dictionaryManager.getKanjiEntryById(id);
 
 		if (kanjiEntry != null) {
 			
@@ -519,7 +520,7 @@ public class KanjiDictionaryController {
 			loggerSender.sendLog(new KanjiDictionaryDetectLoggerModel(Utils.createLoggerModelCommon(request), strokes, detectKanjiResult));
 			
 			findKanjiDetectResult = new FindKanjiResult();
-			findKanjiDetectResult.setResult(new ArrayList<KanjiEntry>());
+			findKanjiDetectResult.setResult(new ArrayList<KanjiCharacterInfo>());
 			
 			for (KanjiRecognizerResultItem kanjiRecognizerResultItem : detectKanjiResult) {
 				findKanjiDetectResult.getResult().add(dictionaryManager.findKanji(kanjiRecognizerResultItem.getKanji()));
@@ -678,9 +679,9 @@ public class KanjiDictionaryController {
 		logger.info("Wyświetlanie katalogu znakow kanji dla strony: " + pageNo);
 		
 		// szukanie	
-		List<KanjiEntry> allKanjis = dictionaryManager.getAllKanjis(false, false);
+		List<KanjiCharacterInfo> allKanjis = dictionaryManager.getAllKanjis(/*false, */false);
 		
-		List<KanjiEntry> resultList = new ArrayList<KanjiEntry>(); 
+		List<KanjiCharacterInfo> resultList = new ArrayList<KanjiCharacterInfo>(); 
 		
 		for (int kanjiIdx = (pageNo - 1) * pageSize; kanjiIdx < allKanjis.size() && kanjiIdx < ((pageNo) * pageSize); ++kanjiIdx) {
 			resultList.add(allKanjis.get(kanjiIdx));

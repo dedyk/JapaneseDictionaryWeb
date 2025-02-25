@@ -32,7 +32,6 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPowerList;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
-import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerRequest;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.api.dto.TransitiveIntransitivePairWithDictionaryEntry;
@@ -60,6 +59,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetWordPower
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
+import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 @Controller
 public class AndroidRemoteDatabaseConnector {
@@ -322,7 +322,7 @@ public class AndroidRemoteDatabaseConnector {
 
 		Set<String> allAvailableRadicals = dictionaryManager.findAllAvailableRadicals(radicals);
 		
-		List<KanjiEntry> findKnownKanjiFromRadicalsResult = dictionaryManager.findKnownKanjiFromRadicals(radicals);
+		List<KanjiCharacterInfo> findKnownKanjiFromRadicalsResult = dictionaryManager.findKnownKanjiFromRadicals(radicals);
 
 		// logowanie
 		if (radicals.length > 0) {
@@ -357,7 +357,7 @@ public class AndroidRemoteDatabaseConnector {
 		
 		logger.info("[AndroidRemoteDatabaseConnector.findKanjiFromRadicals] Pokaż znaki kanji dla elementow podstawowych: " + Arrays.toString(radicals));
 		
-		List<KanjiEntry> findKnownKanjiFromRadicalsResult = dictionaryManager.findKnownKanjiFromRadicals(radicals);
+		List<KanjiCharacterInfo> findKnownKanjiFromRadicalsResult = dictionaryManager.findKnownKanjiFromRadicals(radicals);
 
 		// logowanie
 		if (radicals.length > 0) {
@@ -450,7 +450,7 @@ public class AndroidRemoteDatabaseConnector {
 		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntryById] Pobierz kanji dla id: " + id);
 
 		// pobranie		
-		KanjiEntry kanjiEntry = dictionaryManager.getKanjiEntryById(id);
+		KanjiCharacterInfo kanjiEntry = dictionaryManager.getKanjiEntryById(id);
 		
 		if (kanjiEntry != null) {
 			// logowanie
@@ -484,7 +484,7 @@ public class AndroidRemoteDatabaseConnector {
 		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntry] Pobierz kanji dla kanji: " + kanji);
 
 		// szukanie		
-		KanjiEntry kanjiEntry = dictionaryManager.findKanji(kanji);
+		KanjiCharacterInfo kanjiEntry = dictionaryManager.findKanji(kanji);
 		
 		if (kanjiEntry != null) {
 			// logowanie
@@ -517,7 +517,7 @@ public class AndroidRemoteDatabaseConnector {
 		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntry] Pobierz kanji dla listy kanji: " + kanjiList);
 
 		// szukanie		
-		List<KanjiEntry> kanjiEntryList = dictionaryManager.findKanjiList(kanjiList);
+		List<KanjiCharacterInfo> kanjiEntryList = dictionaryManager.findKanjiList(kanjiList);
 		
 		// logowanie
 		loggerSender.sendLog(new KanjiDictionaryGetKanjiEntryListLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntryList));
@@ -548,7 +548,7 @@ public class AndroidRemoteDatabaseConnector {
 		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntry] Pobierz wszystkie kanji dla withDetails: " + getAllKanjisWrapperRequest.isWithDetails() + " - onlyUsed" + getAllKanjisWrapperRequest.isOnlyUsed());
 
 		// pobranie		
-		List<KanjiEntry> kanjiEntryList = dictionaryManager.getAllKanjis(getAllKanjisWrapperRequest.isWithDetails(), getAllKanjisWrapperRequest.isOnlyUsed());
+		List<KanjiCharacterInfo> kanjiEntryList = dictionaryManager.getAllKanjis(/*getAllKanjisWrapperRequest.isWithDetails(), */ getAllKanjisWrapperRequest.isOnlyUsed());
 		
 		// logowanie
 		loggerSender.sendLog(new KanjiDictionaryAllKanjisLoggerModel(Utils.createLoggerModelCommon(request), getAllKanjisWrapperRequest.isWithDetails(), getAllKanjisWrapperRequest.isOnlyUsed()));

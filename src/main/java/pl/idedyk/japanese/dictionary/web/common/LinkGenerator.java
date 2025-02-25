@@ -7,10 +7,10 @@ import java.util.Properties;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
-import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class LinkGenerator {
 
@@ -86,7 +86,7 @@ public class LinkGenerator {
 		}
 	}
 	
-	public static String generateKanjiDetailsLink(String contextPath, KanjiEntry kanjiEntry) {
+	public static String generateKanjiDetailsLink(String contextPath, KanjiCharacterInfo kanjiEntry) {
 		
 		try {
 			// UWAGA: Jesli tu zmieniasz, zmien rowniez w pliku kanjiDictionary.jsp

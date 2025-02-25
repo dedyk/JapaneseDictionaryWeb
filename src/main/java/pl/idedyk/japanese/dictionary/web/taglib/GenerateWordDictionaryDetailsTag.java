@@ -24,7 +24,6 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
 import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
-import pl.idedyk.japanese.dictionary.api.dto.KanjiEntry;
 import pl.idedyk.japanese.dictionary.api.dto.TatoebaSentence;
 import pl.idedyk.japanese.dictionary.api.example.ExampleManager;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupTypeElements;
@@ -59,6 +58,7 @@ import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.Printab
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
+import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
 	
@@ -1233,7 +1233,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			return null;
 		}
 		
-		List<KanjiEntry> knownKanji = dictionaryManager.findKnownKanji(dictionaryEntry.getKanji());
+		List<KanjiCharacterInfo> knownKanji = dictionaryManager.findKnownKanji(dictionaryEntry.getKanji());
 		
 		if (knownKanji == null || knownKanji.size() == 0) {
 			return null;
@@ -1273,7 +1273,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	Table row2Table = new Table();
     	knownKanjiBodyDiv.addHtmlElement(row2Table);
 
-		for (KanjiEntry currentKnownKanjiEntry : knownKanji) {
+		for (KanjiCharacterInfo currentKnownKanjiEntry : knownKanji) {
 			
 			Tr row2TableTr = new Tr();
 			row2Table.addHtmlElement(row2TableTr);
@@ -1285,7 +1285,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			row2TableTrKanjiTd.addHtmlElement(new Text(currentKnownKanjiEntry.getKanji()));
 			
 			// znaczenie
-			List<String> currentKnownKanjiPolishTranslates = currentKnownKanjiEntry.getPolishTranslates();
+			List<String> currentKnownKanjiPolishTranslates = pl.idedyk.japanese.dictionary.api.dictionary.Utils.getPolishTranslates(currentKnownKanjiEntry);
 			
 			StringBuffer currentKnownKanjiPolishTranslatesSb = new StringBuffer();
 			
