@@ -32,7 +32,7 @@
 						<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
 						<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
 						<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
-						<th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th>
+						<!-- <th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th> -->
 						<th></th>
 					</tr>
 				</thead>

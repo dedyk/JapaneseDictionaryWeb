@@ -130,8 +130,8 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	    	Td strokeCountTd = new Td();
 	    	tr.addHtmlElement(strokeCountTd);
 	    	
-	    	if (resultItem.getMisc2().getStrokePaths() != null && resultItem.getMisc2().getStrokePaths().size() > 0) {
-	    		strokeCountTd.addHtmlElement(new Text(String.valueOf(resultItem.getMisc2().getStrokePaths().get(0))));	    		
+	    	if (resultItem.getMisc().getStrokeCountList() != null && resultItem.getMisc().getStrokeCountList().size() > 0) {
+	    		strokeCountTd.addHtmlElement(new Text(String.valueOf(resultItem.getMisc().getStrokeCountList().get(0))));	    		
 	    	}
 	    	
 	    	// tlumaczenie
