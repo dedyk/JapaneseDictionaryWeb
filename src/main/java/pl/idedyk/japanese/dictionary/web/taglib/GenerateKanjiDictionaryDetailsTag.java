@@ -19,6 +19,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
@@ -42,7 +43,6 @@ import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog.G
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.Misc2Info;
-import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.Misc2InfoGroup;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.MiscInfo;
 
 public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
@@ -553,7 +553,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	private Div generateKanjiGroupsSection(Menu menu) {
 		
 		// kanji groups
-		List<Misc2InfoGroup> groups = kanjiEntry.getMisc2().getGroups();
+		List<GroupEnum> groups = kanjiEntry.getMisc2().getGroups();
 		
 		if (groups == null || groups.size() == 0) {
 			return null;
@@ -561,8 +561,8 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		List<String> groupsStringList = new ArrayList<String>();
 		
-		for (Misc2InfoGroup misc2InfoGroup : groups) {
-			groupsStringList.add(misc2InfoGroup.value());
+		for (GroupEnum groupEnum : groups) {
+			groupsStringList.add(groupEnum.getValue());
 		}		
 		
 		return generateStandardDivWithStringList("kanjiGroupsId", getMessage("kanjiDictionaryDetails.page.kanjiEntry.groups.title"), menu, groupsStringList);
