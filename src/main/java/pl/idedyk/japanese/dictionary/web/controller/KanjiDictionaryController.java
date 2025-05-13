@@ -679,7 +679,7 @@ public class KanjiDictionaryController {
 		logger.info("Wyświetlanie katalogu znakow kanji dla strony: " + pageNo);
 		
 		// szukanie	
-		List<KanjiCharacterInfo> allKanjis = dictionaryManager.getAllKanjis(/*false, */false);
+		List<KanjiCharacterInfo> allKanjis = dictionaryManager.getAllKanjis(false, false);
 		
 		List<KanjiCharacterInfo> resultList = new ArrayList<KanjiCharacterInfo>(); 
 		

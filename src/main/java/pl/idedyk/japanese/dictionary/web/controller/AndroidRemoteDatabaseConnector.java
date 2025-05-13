@@ -548,7 +548,7 @@ public class AndroidRemoteDatabaseConnector {
 		logger.info("[AndroidRemoteDatabaseConnector.getKanjiEntry] Pobierz wszystkie kanji dla withDetails: " + getAllKanjisWrapperRequest.isWithDetails() + " - onlyUsed" + getAllKanjisWrapperRequest.isOnlyUsed());
 
 		// pobranie		
-		List<KanjiCharacterInfo> kanjiEntryList = dictionaryManager.getAllKanjis(/*getAllKanjisWrapperRequest.isWithDetails(), */ getAllKanjisWrapperRequest.isOnlyUsed());
+		List<KanjiCharacterInfo> kanjiEntryList = dictionaryManager.getAllKanjis(getAllKanjisWrapperRequest.isWithDetails(), getAllKanjisWrapperRequest.isOnlyUsed());
 		
 		// logowanie
 		loggerSender.sendLog(new KanjiDictionaryAllKanjisLoggerModel(Utils.createLoggerModelCommon(request), getAllKanjisWrapperRequest.isWithDetails(), getAllKanjisWrapperRequest.isOnlyUsed()));

@@ -181,7 +181,7 @@ public class SitemapManager {
 		}
 		
 		// pobranie znakow kanji
-		List<KanjiCharacterInfo> allKanjis = dictionaryManager.getAllKanjis(/*false, */ false);
+		List<KanjiCharacterInfo> allKanjis = dictionaryManager.getAllKanjis(false, false);
 		
 		for (KanjiCharacterInfo kanjiEntry : allKanjis) {
 			
