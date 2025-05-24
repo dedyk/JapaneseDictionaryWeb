@@ -203,7 +203,11 @@
 					$('html, body').animate({
 			        	scrollTop: $("#findWordResultHrId").offset().top
 			    	}, 1000);
-				</c:if>				
+				</c:if>		
+				
+				<c:if test="${findWordResult == null}">
+					$( "#word").focus();
+				</c:if>
 			});
 			
 			function selectAllDictionaryType(status) {

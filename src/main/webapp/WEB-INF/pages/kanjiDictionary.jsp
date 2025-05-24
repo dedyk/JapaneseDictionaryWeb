@@ -176,20 +176,22 @@
 
 				// zmiana zakladki
 				$("#meaningTabLiId").on("click", function(e) {
-
 					saveCurrectTab('meaningTabLiId');
+					
+					// automatyczne ustawienie focusu
+					setFocusIfNeeded(true);
 				});		
 
 				$("#radicalsTabLiId").on("click", function(e) {
-
 					saveCurrectTab('radicalsTabLiId');
 				});		
 
 				$("#detectTabLiId").on("click", function(e) {
-
 					saveCurrectTab('detectTabLiId');
-				});		
+				});
 				
+				// automatyczne ustawienie focusu
+				setFocusIfNeeded(false);
 			});
 
 	        function handleMouseDown(event) {
@@ -237,6 +239,24 @@
 
 	        	$.get( "${pageContext.request.contextPath}/kanjiDictionary/saveCurrectTab", { tabId: tabId } );
 		    }
+	        
+	        function setFocusIfNeeded(fromTab) {
+	        	if (fromTab == true) {
+					<c:if test="${findKanjiResult == null}">
+						setTimeout(function() { 
+								$( "#word").focus();
+							}, 200);						
+					</c:if>
+	        	} else {
+					<c:if test="${selectTab == null && findKanjiResult == null}">
+						$( "#word").focus();
+					</c:if>				
+					
+					<c:if test="${selectTab != null && selectTab == 'meaningTabLiId' && findKanjiResult == null}">
+						$( "#word").focus();
+					</c:if>
+	        	}
+	        }
 
 		</script>
 			
