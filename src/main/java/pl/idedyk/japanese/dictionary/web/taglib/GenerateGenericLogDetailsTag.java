@@ -84,7 +84,7 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
             	
             	Div errorDiv = new Div("alert alert-danger");
             	
-            	errorDiv.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.null")));
+            	errorDiv.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.null"), true));
             	
             	errorDiv.render(out);
             	
@@ -163,7 +163,7 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		
 		H pageHeader = new H(4);
 				
-		pageHeader.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.title")));
+		pageHeader.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.title"), true));
 				
 		return pageHeader;
 	}
@@ -178,7 +178,7 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		H h3Title = new H(3, "panel-title");
 		h3Title.setId("mainInfoId");
 		
-		h3Title.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo")));
+		h3Title.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo"), true));
 				
 		panelHeading.addHtmlElement(h3Title);
 		
@@ -218,7 +218,8 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
         	A requestUrlLink = new A();
         	
         	requestUrlLink.setHref(requestURL);
-        	requestUrlLink.addHtmlElement(new Text(requestURL));            	
+        	requestUrlLink.setEscapeHref(true);
+        	requestUrlLink.addHtmlElement(new Text(requestURL, true));            	
 
         	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.requestUrl"), requestUrlLink);
         }        
@@ -235,7 +236,8 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
         	A refererUrlLink = new A();
         	
         	refererUrlLink.setHref(refererURL);
-        	refererUrlLink.addHtmlElement(new Text(refererURL));            	
+        	refererUrlLink.setEscapeHref(true);
+        	refererUrlLink.addHtmlElement(new Text(refererURL, true));            	
 
         	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.refererUrl"), refererUrlLink);
         }        
@@ -263,7 +265,7 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		H h3Title = new H(3, "panel-title");
 		h3Title.setId("additionalInfoId");
 		
-		h3Title.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo")));
+		h3Title.addHtmlElement(new Text(getMessage("admin.panel.genericLogDetails.page.genericLog.additionalInfo"), true));
 				
 		panelHeading.addHtmlElement(h3Title);
 		
@@ -800,7 +802,7 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 			value = "";
 		}		
 		
-		addRowToTable(table, label, new Text(value));
+		addRowToTable(table, label, new Text(value, true));
 	}
 	
 	private void addRowToTable(Table table, String label, IHtmlElement valueHtmlElement) {
@@ -811,7 +813,7 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		
 		Label td1Label = new Label();
 		
-		td1Label.addHtmlElement(new Text(label));
+		td1Label.addHtmlElement(new Text(label, true));
 		
 		td1.addHtmlElement(td1Label);
 		tr.addHtmlElement(td1);

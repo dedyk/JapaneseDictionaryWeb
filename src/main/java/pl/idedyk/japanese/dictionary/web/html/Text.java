@@ -4,13 +4,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 public class Text implements IHtmlElement {
 	
 	private String text;
+	private boolean addEscape;
 
 	public Text(String text) {
+		this(text, false);
+	}
+		
+	public Text(String text, boolean addEscape) {
 		super();
 		this.text = text;
+		this.addEscape = addEscape;
 	}
 
 	@Override
@@ -25,6 +33,8 @@ public class Text implements IHtmlElement {
 			printWriter = (PrintWriter)out;
 		}
 		
-		printWriter.println(text);		
+		String resultValue = addEscape == false ? text : StringEscapeUtils.escapeHtml4(text);
+		
+		printWriter.println(resultValue);
 	}
 }

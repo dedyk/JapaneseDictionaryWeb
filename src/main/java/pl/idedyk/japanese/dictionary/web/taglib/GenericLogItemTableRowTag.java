@@ -112,7 +112,7 @@ public class GenericLogItemTableRowTag extends TagSupport {
             linkButton.setHref(link);
             
             linkButton.addHtmlElement(new Text(messageSource.getMessage(
-            		"admin.panel.genericlog.column.detailsButton", null, Locale.getDefault())));
+            		"admin.panel.genericlog.column.detailsButton", null, Locale.getDefault()), true));
             
             tr.render(out);
             
@@ -132,7 +132,7 @@ public class GenericLogItemTableRowTag extends TagSupport {
         Td td = new Td();
         tr.addHtmlElement(td);
         
-        td.addHtmlElement(new Text(value));		
+        td.addHtmlElement(new Text(value, true));
 	}
 	
 	/*

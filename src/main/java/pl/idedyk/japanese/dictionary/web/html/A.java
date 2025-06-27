@@ -3,12 +3,14 @@ package pl.idedyk.japanese.dictionary.web.html;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 
 public class A extends HtmlElementCommon {
 	
 	private String href;
-	
 	private String onClick;
+	private boolean escapeHref;
 		
 	public A() { 
 		super();
@@ -38,7 +40,7 @@ public class A extends HtmlElementCommon {
 		List<String[]> additionalTagAttributes = new ArrayList<String[]>();
 
 		if (href != null) {
-			additionalTagAttributes.add(new String[] { "href", href });
+			additionalTagAttributes.add(new String[] { "href", escapeHref == false ? href : StringEscapeUtils.escapeHtml4(href) });
 		}
 		
 		if (onClick != null) {
@@ -54,6 +56,10 @@ public class A extends HtmlElementCommon {
 
 	public void setHref(String href) {
 		this.href = href;
+	}
+	
+	public void setEscapeHref(boolean escapeHref) {
+		this.escapeHref = escapeHref;
 	}
 
 	public String getOnClick() {
