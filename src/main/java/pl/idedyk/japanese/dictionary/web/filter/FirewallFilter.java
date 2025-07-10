@@ -145,7 +145,7 @@ public class FirewallFilter implements Filter {
 		if (userAgent != null) {
 			
 			// sprawdzamy, czy zalezy zablokowac tego user agenta
-			if (userAgent.contains("AspiegelBot") == true) {
+			if (userAgent.contains("AspiegelBot") == true || userAgent.contains("RecordedFuture") == true) { // RecordedFuture-ASI
 				doBlock = true;
 			}	
 		} 
