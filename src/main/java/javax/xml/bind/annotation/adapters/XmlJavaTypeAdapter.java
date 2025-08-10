@@ -10,12 +10,11 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.PACKAGE;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-
 // mock
 @Retention(RUNTIME) @Target({PACKAGE,FIELD,METHOD,TYPE,PARAMETER})
+@SuppressWarnings("rawtypes")
 public @interface XmlJavaTypeAdapter {
-    Class<? extends XmlAdapter> value();
+	Class<? extends XmlAdapter> value();
 
     Class type() default DEFAULT.class;
 

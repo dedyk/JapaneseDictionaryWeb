@@ -15,7 +15,8 @@ public @interface XmlType {
 
     String namespace() default "##default" ;
 
-    Class factoryClass() default DEFAULT.class;
+    @SuppressWarnings("rawtypes")
+	Class factoryClass() default DEFAULT.class;
 
     static final class DEFAULT {}
 
