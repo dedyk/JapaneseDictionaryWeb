@@ -86,6 +86,7 @@
 	            stage.update();	
 
 	            // tabelki
+	            <%-- FM_FIXME: do usuniecia, poprawy
 				$('#kanjiDictionaryFindKanjiResult').dataTable({
 					language: {
 						url: '${pageContext.request.contextPath}/js/datatables/polish.json'
@@ -96,7 +97,9 @@
 					"bLengthChange": false,
 					"bPaginate": false
 				});
-
+				--%>
+				
+	            <%-- FM_FIXME: do usuniecia, poprawy
 				$('#kanjiDictionaryFindKanjiDetectResult').dataTable({
 					language: {
 						url: '${pageContext.request.contextPath}/js/datatables/polish.json'
@@ -107,6 +110,7 @@
 					"bLengthChange": false,
 					"bPaginate": false
 				});
+				--%>
 
 				// zaznaczenie wybranych elementow podstawowych
 				<c:if test="${sessionScope.selectedRadicals != null}">
@@ -329,7 +333,17 @@
 							<c:if test="${kanjiDictionaryEntrySpellCheckerSuggestionList != null}">				
 								<jdwt:generateSpellCheckerSuggestionList id="kanjiDictionaryEntrySpellCheckerSuggestionListId" spellCheckerSuggestionList="${kanjiDictionaryEntrySpellCheckerSuggestionList}" type="kanjiDictionaryEntry" />
 							</c:if>
-														
+							
+							<table>
+								<c:forEach items="${findKanjiResult.result}" var="currentResult">
+									<jdwt:findKanjiResultItemTableRow
+										findKanjiRequest="${findKanjiRequest}"
+										resultItem="${currentResult}" />
+								</c:forEach>							
+							</table>
+							
+							
+							<%-- FM_FIXME: do usuniecia poprawy 							
 							<table id="kanjiDictionaryFindKanjiResult" class="table table-striped" style="font-size: 120%;">
 								<thead>
 									<tr>
@@ -349,7 +363,8 @@
 									</c:forEach>
 								</tfood>
 								
-							</table>							
+							</table>
+							--%>							
 						</div>
 					</c:if>
             		         		          		           		
@@ -623,6 +638,7 @@
 						
 							<p class="text-left"><h4><spring:message code="kanjiDictionary.page.search.table.caption" /></h4></p>
 						
+							<%-- FM_FIXME: do usuniecia, poprawy
 							<table id="kanjiDictionaryFindKanjiDetectResult" class="table table-striped" style="font-size: 120%;">
 								<thead>
 									<tr>
@@ -641,7 +657,8 @@
 									</c:forEach>
 								</tfood>
 								
-							</table>							
+							</table>
+							--%>
 						</div>
 					</c:if>
         			

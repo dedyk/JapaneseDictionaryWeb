@@ -21,7 +21,9 @@ import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
+import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Img;
+import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
@@ -71,23 +73,80 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 		try {
             JspWriter out = pageContext.getOut();
             
-            Tr tr = new Tr();    
+            // nowy wiersz
+            Tr tr = new Tr();
             
             // pobranie danych
-            
             String findWord = null;
             
             if (findKanjiRequest != null) {
             	findWord = findKanjiRequest.word;
-            }            
-
-            String kanji = resultItem.getKanji();
+            }
             
             // kanji
-	    	Td kanjiTd = new Td(null, "font-size: 150%");
-	    	tr.addHtmlElement(kanjiTd);
+            {
+                String kanji = resultItem.getKanji();
+                
+    	    	Td kanjiTd = new Td(null, "font-size: 300%; padding-right: 30px;");
+    	    	tr.addHtmlElement(kanjiTd);
+                
+    	    	kanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, true)));
+            }
+
+	    	// szczegolwy
+            {
+    	    	Td kanjiDetailsTd = new Td();
+    	    	kanjiDetailsTd.setStyle("vertical-align: top;");    	    	
+    	    	
+    	    	// FM_FIXME: nie umie tego lepiej zrobic :-(
+    	    	Table kanjiDetailsTdTable = new Table();
+    	    	
+    	    	{
+    	    		Tr kanjiDetailsTdTableTr = new Tr();
+    	    		
+    	    		// elementy podstawowe
+    	    		{
+    	    			// FM_FIXME: do poprawy    	    			
+    	    		}    
+    	    		
+    	    		// liczba kresek
+    	    		{
+    	    			// FM_FIXME: do poprawy    
+    	    			Td strokeCountTitle = new Td();    	    			
+    	    			strokeCountTitle.setStyle("padding-right: 15px; font-weight:bold;");
+    	    	    	     	    	    	
+    	    	    	strokeCountTitle.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.strokeCount", new Object[] { }, Locale.getDefault())));
+    	    	    	
+    	    	    	//
+    	    	    	
+    	    			Td strokeCountTd = new Td();
+    	    	    	
+    	    	    	if (resultItem.getMisc().getStrokeCountList() != null && resultItem.getMisc().getStrokeCountList().size() > 0) {
+    	    	    		strokeCountTd.addHtmlElement(new Text(String.valueOf(resultItem.getMisc().getStrokeCountList().get(0))));	    		
+    	    	    	}
+    	    	    	
+    	    	    	kanjiDetailsTdTableTr.addHtmlElement(strokeCountTitle);
+    	    	    	kanjiDetailsTdTableTr.addHtmlElement(strokeCountTd);
+    	    		}
+    	    		
+    	    		//
+    	    		
+    	    		kanjiDetailsTdTable.addHtmlElement(kanjiDetailsTdTableTr);
+    	    	}    	    	
+    	    	
+    	    	kanjiDetailsTd.addHtmlElement(kanjiDetailsTdTable);
+    	    	tr.addHtmlElement(kanjiDetailsTd);            	
+            }
             
-	    	kanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, true)));
+            
+	    	
+	    	tr.render(out);
+            
+            // FM_FIXME: do poprawy,
+            /*
+            
+
+            
 	    	
 	    	// elementy podstawowe
 	    	Td radicalsTd = new Td();
@@ -125,15 +184,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 					}
 	    		}
 	    	}
-	    	
-	    	// liczba kresek
-	    	Td strokeCountTd = new Td();
-	    	tr.addHtmlElement(strokeCountTd);
-	    	
-	    	if (resultItem.getMisc().getStrokeCountList() != null && resultItem.getMisc().getStrokeCountList().size() > 0) {
-	    		strokeCountTd.addHtmlElement(new Text(String.valueOf(resultItem.getMisc().getStrokeCountList().get(0))));	    		
-	    	}
-	    	
+	    		    	
 	    	// tlumaczenie
 	    	List<String> polishTranslates = Utils.getPolishTranslates(resultItem);
 	    	
@@ -156,7 +207,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	    		}
 	    	}
 	    	
-	    	/*
+	    	/ *
 	    	// informacje dodatkowe
 	    	if (userAgent == null || Utils.isMobile(userAgent) == false) {	    	
 
@@ -169,7 +220,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 		    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, true)));
 		    	}
 	    	}
-	    	*/
+	    	* /
 	    	
 	    	// szczegoly
 	    	Td detailsLinkTd = new Td();
@@ -186,10 +237,11 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
             linkButton.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.details.value", null, Locale.getDefault())));
             
             tr.render(out);
+            */
             
             return SKIP_BODY;
  
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 	}
