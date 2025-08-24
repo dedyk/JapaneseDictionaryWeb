@@ -69,8 +69,10 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             
             Tr tr = new Tr();            
             
+            // FM_FIXME: do poprawy, zakomentowan
             // pobranie danych
             //
+            /*
             String findWord = findWordRequest.word;
             
 	    	String kanji = resultItem.getKanji();
@@ -149,7 +151,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		    	}
 		    	
 		    	// info
-		    	/*
+		    	/ *
 		    	if (userAgent == null || Utils.isMobile(userAgent) == false) {	    	
 		    		
 			    	Td infoTd = new Td();
@@ -159,7 +161,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 			    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, findWordRequest.searchInfo)));
 			    	}
 		    	}
-		    	*/
+		    	* /
 
 	    	} else { // sa dane w nowym formacie
 	    		
@@ -178,7 +180,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 					PrintableSenseEntry printableSenseEntry = printableSense.getSenseEntryList().get(senseIdx);
 										
 					// czesci mowy
-					/*
+					/ *
 					if (printableSenseEntry.getPolishPartOfSpeechValue() != null) {		
 						
 						Div polishPartOfSpeechDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
@@ -187,7 +189,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		    			
 		    			translateTd.addHtmlElement(polishPartOfSpeechDiv);						
 					}
-					*/
+					* /
 					
 					for (int currentGlossIdx = 0; currentGlossIdx < printableSenseEntry.getGlossList().size(); ++currentGlossIdx) {
 						
@@ -233,6 +235,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             		"wordDictionary.page.search.table.column.details.value", null, Locale.getDefault())));
             
             tr.render(out);
+            // FM_FIXME: do poprawy - end
+            */
             
             return SKIP_BODY;
  

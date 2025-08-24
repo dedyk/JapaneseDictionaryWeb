@@ -710,7 +710,8 @@ public class WordDictionaryController {
 		List<FindWordResult.ResultItem> resultItemList = new ArrayList<FindWordResult.ResultItem>();
 		
 		for (DictionaryEntry dictionaryEntry : dictionaryEntryList) {
-			resultItemList.add(new FindWordResult.ResultItem(dictionaryEntry));
+			// FM_FIXME: do poprawy, zakomentowano
+			// resultItemList.add(new FindWordResult.ResultItem(dictionaryEntry));
 		}
 
 		findWordResult.setResult(resultItemList);
@@ -772,7 +773,8 @@ public class WordDictionaryController {
 		List<FindWordResult.ResultItem> resultItemList = new ArrayList<FindWordResult.ResultItem>();
 		
 		for (DictionaryEntry dictionaryEntry : dictionaryEntryList) {
-			resultItemList.add(new FindWordResult.ResultItem(dictionaryEntry));
+			// FM_FIXME: do poprawy, zakomentowano
+			// resultItemList.add(new FindWordResult.ResultItem(dictionaryEntry));
 		}
 
 		findWordResult.setResult(resultItemList);

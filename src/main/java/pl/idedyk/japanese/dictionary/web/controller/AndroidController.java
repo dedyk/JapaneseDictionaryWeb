@@ -443,7 +443,8 @@ public class AndroidController {
 		
 		for (ResultItem resultItem : result) {
 			
-			DictionaryEntry resultItemDictionaryEntry = resultItem.getDictionaryEntry();
+			// FM_FIXME: do poprawy
+			DictionaryEntry resultItemDictionaryEntry = null; // resultItem.getDictionaryEntry(); <- tymczasowo zakomentowano
 			
 			JSONObject resultItemDictionaryEntryJSONObject = new JSONObject();
 									

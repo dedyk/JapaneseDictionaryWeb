@@ -1464,9 +1464,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	private Div generateGrammaFormConjugate(Menu mainMenu, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) throws IOException {
 		
+		// FM_FIXME: do poprawy, zakomentowano
 		// wylicz odmiany gramatyczne
-		List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = 
+		List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = null; /* 
 				GrammaConjugaterManager.getGrammaConjufateResult(dictionaryManager.getKeigoHelper(), dictionaryEntry, grammaFormCache, forceDictionaryEntryType, false);
+		*/
 		
 		if (grammaFormConjugateGroupTypeElementsList == null || grammaFormConjugateGroupTypeElementsList.size() == 0) {
 			return null;
@@ -1746,8 +1748,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	private Div generateExample(Menu mainMenu, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) throws IOException {
 		
-		List<ExampleGroupTypeElements> exampleGroupTypeElementsList = ExampleManager.getExamples(
-				dictionaryManager.getKeigoHelper(), dictionaryEntry, grammaFormCache, forceDictionaryEntryType, false);
+		// FM_FIXME: do poprawy, zakomentowano
+		List<ExampleGroupTypeElements> exampleGroupTypeElementsList = null; /*ExampleManager.getExamples(
+				dictionaryManager.getKeigoHelper(), dictionaryEntry, grammaFormCache, forceDictionaryEntryType, false); */
 		
 		if (exampleGroupTypeElementsList == null || exampleGroupTypeElementsList.size() == 0) {
 			return null;
