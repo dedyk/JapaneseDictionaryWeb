@@ -334,14 +334,18 @@
 								<jdwt:generateSpellCheckerSuggestionList id="kanjiDictionaryEntrySpellCheckerSuggestionListId" spellCheckerSuggestionList="${kanjiDictionaryEntrySpellCheckerSuggestionList}" type="kanjiDictionaryEntry" />
 							</c:if>
 							
-							<table>
+							<table style="width: 100%">
+								<c:set var="findKanjiResultIndex" value="0" />
+								
 								<c:forEach items="${findKanjiResult.result}" var="currentResult">
 									<jdwt:findKanjiResultItemTableRow
 										findKanjiRequest="${findKanjiRequest}"
-										resultItem="${currentResult}" />
+										resultItem="${currentResult}"
+										resultItemIndex="${findKanjiResultIndex}" />
+										
+									<c:set var="findKanjiResultIndex" value="${findKanjiResultIndex + 1}" />
 								</c:forEach>							
-							</table>
-							
+							</table>							
 							
 							<%-- FM_FIXME: do usuniecia poprawy 							
 							<table id="kanjiDictionaryFindKanjiResult" class="table table-striped" style="font-size: 120%;">
