@@ -1,6 +1,5 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -18,13 +17,11 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.Utils;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
-import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Img;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
@@ -255,24 +252,16 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
             
 	    	// gdy jest to normalna strona to daj guzik po lewej stronie
 	    	if (mobile == false) {
+	    		detailsLinkTd.setStyle(detailsLinkTd.getStyle() + "; padding-left: 20px");
+	    		
 	    		tr.addHtmlElement(detailsLinkTd);	    		
 	    	}            
 
             //            
 	    	
 	    	tr.render(out);
-            
-            // FM_FIXME: do poprawy,
-            /*
-            
-
-            
-	    	
-
-	    		    	
-	    	// tlumaczenie
-	    	
-	    	/ *
+            	    	
+	    	/* stary kod
 	    	// informacje dodatkowe
 	    	if (userAgent == null || Utils.isMobile(userAgent) == false) {	    	
 
@@ -285,10 +274,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 		    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, true)));
 		    	}
 	    	}
-	    	* /
-	    	            
-            tr.render(out);
-            */
+	    	*/
             
             return SKIP_BODY;
  
