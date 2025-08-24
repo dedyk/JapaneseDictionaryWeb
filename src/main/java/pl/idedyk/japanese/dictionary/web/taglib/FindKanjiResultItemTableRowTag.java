@@ -6,6 +6,8 @@ import java.util.Locale;
 import java.util.Properties;
 
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.JspWriter;
 import jakarta.servlet.jsp.tagext.TagSupport;
@@ -48,9 +50,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	@Override
 	public int doStartTag() throws JspException {
 		
-		ServletContext servletContext = pageContext.getServletContext();
-		
-		/*
+		ServletContext servletContext = pageContext.getServletContext();		
 		ServletRequest servletRequest = pageContext.getRequest();
 		
 		String userAgent = null;
@@ -60,7 +60,6 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 			
 			userAgent = httpServletRequest.getHeader("User-Agent");			
 		}
-		*/
 		
 		//
 		
@@ -70,6 +69,14 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 		this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);		
 		this.applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
 		
+		if (servletRequest instanceof HttpServletRequest) {			
+			HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+			
+			userAgent = httpServletRequest.getHeader("User-Agent");			
+		}
+    	
+    	boolean mobile = pl.idedyk.japanese.dictionary.web.common.Utils.isMobile(userAgent);
+	
 		try {
             JspWriter out = pageContext.getOut();
             
@@ -84,23 +91,37 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
             	findWord = findKanjiRequest.word;
             }
             
+	    	// guzik do szczegolow - przygotowanie
+	    	Td detailsLinkTd = new Td();
+	    	detailsLinkTd.setStyle("width: 50%");
+	    	            
+            String link = LinkGenerator.generateKanjiDetailsLink(pageContext.getServletContext().getContextPath(), resultItem);
+            
+            A linkButton = new A();
+            detailsLinkTd.addHtmlElement(linkButton);
+            
+            linkButton.setClazz("btn btn-default");
+            linkButton.setHref(link);
+            
+            linkButton.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.details.value", null, Locale.getDefault())));
+
+            //
+            
             // kanji
             {
                 String kanji = resultItem.getKanji();
                 
-    	    	Td kanjiTd = new Td(null, "font-size: 300%; padding-right: 30px; vertical-align: top;");
-    	    	tr.addHtmlElement(kanjiTd);
+    	    	Td kanjiTd = new Td(null, "font-size: 300%; padding-right: 30px; vertical-align: top; width: 10%");
                 
     	    	kanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, true)));
+    	    	tr.addHtmlElement(kanjiTd);
             }
 
 	    	// szczegoly
             {
     	    	Td kanjiDetailsTd = new Td();
-    	    	kanjiDetailsTd.setStyle("vertical-align: top;");    	    	
+    	    	kanjiDetailsTd.setStyle("vertical-align: top; width: 40%");    	    	
     	    	
-    	    	// FM_FIXME: nie umie tego lepiej zrobic :-(
-    	    	// FM_FIXME: do dalszych ulepszen, rozmiary !!!!
     	    	Table kanjiDetailsTdTable = new Table();
     	    	
     	    	{    	    		
@@ -217,27 +238,25 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
     	    	    	
     	    	    	kanjiDetailsTdTable.addHtmlElement(kanjiDetailsTdTableTr);
     	    		}
-
+    	    		
+    	    		// guzik do szczegolow - tylko dla wersji mobilnej
+    	    		if (mobile == true) {
+    	    			detailsLinkTd.setStyle(detailsLinkTd.getStyle() + "; padding-bottom: 20px");
+    	    			
+    	    			kanjiDetailsTdTable.addHtmlElement(detailsLinkTd);	    		
+    		    	} 
     	    	}    	    	
     	    	
     	    	kanjiDetailsTd.addHtmlElement(kanjiDetailsTdTable);
     	    	tr.addHtmlElement(kanjiDetailsTd);            	
             }
             
-	    	// guzik do szczegolow
-	    	Td detailsLinkTd = new Td();
-	    	
-	    	tr.addHtmlElement(detailsLinkTd);
+            // guzik do szczegolow
             
-            String link = LinkGenerator.generateKanjiDetailsLink(pageContext.getServletContext().getContextPath(), resultItem);
-            
-            A linkButton = new A();
-            detailsLinkTd.addHtmlElement(linkButton);
-            
-            linkButton.setClazz("btn btn-default");
-            linkButton.setHref(link);
-            
-            linkButton.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.details.value", null, Locale.getDefault())));
+	    	// gdy jest to normalna strona to daj guzik po lewej stronie
+	    	if (mobile == false) {
+	    		tr.addHtmlElement(detailsLinkTd);	    		
+	    	}            
 
             //            
 	    	
