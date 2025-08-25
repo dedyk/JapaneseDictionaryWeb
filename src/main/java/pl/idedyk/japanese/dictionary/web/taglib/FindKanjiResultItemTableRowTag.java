@@ -120,6 +120,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
     	    	kanjiDetailsTd.setStyle("vertical-align: top; width: 40%");    	    	
     	    	
     	    	Table kanjiDetailsTdTable = new Table();
+    	    	kanjiDetailsTdTable.setStyle("width: 100%");
     	    	
     	    	{    	    		
     	    		// liczba kresek
@@ -128,7 +129,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
     	    			
     	    			// tytul
     	    			Td strokeCountTitleTd = new Td();    	    			
-    	    			strokeCountTitleTd.setStyle("padding-right: 15px; font-weight:bold; font-size: 120%; vertical-align: top;");
+    	    			strokeCountTitleTd.setStyle("padding-right: 15px; font-weight:bold; font-size: 120%; vertical-align: top; width: 50%");
     	    	    	     	    	    	
     	    			strokeCountTitleTd.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.strokeCount", new Object[] { }, Locale.getDefault())));
     	    	    	
@@ -154,7 +155,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
     	    			Td radicalsTitleTd = new Td();
     	    			
     	    			// tytul
-    	    			radicalsTitleTd.setStyle("padding-right: 15px; font-weight:bold; font-size: 120%; vertical-align: top;");    	    	    	
+    	    			radicalsTitleTd.setStyle("padding-right: 15px; font-weight:bold; font-size: 120%; vertical-align: top; width: 50%");    	    	    	
     	    			radicalsTitleTd.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.radicals", new Object[] { }, Locale.getDefault())));
     	    			
     	    			// wartosc
@@ -204,7 +205,7 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
     	    			
     	    			// tytul
     	    			Td translateTitleTd = new Td();    	    			
-    	    			translateTitleTd.setStyle("padding-right: 15px; font-weight:bold; font-size: 120%; vertical-align: top;");
+    	    			translateTitleTd.setStyle("padding-right: 15px; font-weight:bold; font-size: 120%; vertical-align: top; width: 50%");
     	    	    	     	    	    	
     	    			translateTitleTd.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.translate", new Object[] { }, Locale.getDefault())));
     	    	    	
