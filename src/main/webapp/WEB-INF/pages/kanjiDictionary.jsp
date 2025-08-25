@@ -84,34 +84,7 @@
 
 	            stage.addChild(drawingCanvas);
 	            stage.update();	
-
-	            // tabelki
-	            <%-- FM_FIXME: do usuniecia, poprawy
-				$('#kanjiDictionaryFindKanjiResult').dataTable({
-					language: {
-						url: '${pageContext.request.contextPath}/js/datatables/polish.json'
-					},
-					"bStateSave": true,
-					"aaSorting": [],
-					"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-					"bLengthChange": false,
-					"bPaginate": false
-				});
-				--%>
 				
-	            <%-- FM_FIXME: do usuniecia, poprawy
-				$('#kanjiDictionaryFindKanjiDetectResult').dataTable({
-					language: {
-						url: '${pageContext.request.contextPath}/js/datatables/polish.json'
-					},
-					"bStateSave": true,
-					"aaSorting": [],
-					"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
-					"bLengthChange": false,
-					"bPaginate": false
-				});
-				--%>
-
 				// zaznaczenie wybranych elementow podstawowych
 				<c:if test="${sessionScope.selectedRadicals != null}">
 					selectedRadicals = [];
@@ -346,29 +319,6 @@
 									<c:set var="findKanjiResultIndex" value="${findKanjiResultIndex + 1}" />
 								</c:forEach>							
 							</table>							
-							
-							<%-- FM_FIXME: do usuniecia poprawy 							
-							<table id="kanjiDictionaryFindKanjiResult" class="table table-striped" style="font-size: 120%;">
-								<thead>
-									<tr>
-										<th><spring:message code="kanjiDictionary.page.search.table.column.kanji" /></th>
-										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
-										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
-										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
-										<!-- <jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile> -->
-										<th></th>
-									</tr>
-								</thead>
-								<tfood>
-									<c:forEach items="${findKanjiResult.result}" var="currentResult">
-										<jdwt:findKanjiResultItemTableRow
-											findKanjiRequest="${findKanjiRequest}"
-											resultItem="${currentResult}" />
-									</c:forEach>
-								</tfood>
-								
-							</table>
-							--%>							
 						</div>
 					</c:if>
             		         		          		           		
@@ -642,27 +592,18 @@
 						
 							<p class="text-left"><h4><spring:message code="kanjiDictionary.page.search.table.caption" /></h4></p>
 						
-							<%-- FM_FIXME: do usuniecia, poprawy
-							<table id="kanjiDictionaryFindKanjiDetectResult" class="table table-striped" style="font-size: 120%;">
-								<thead>
-									<tr>
-										<th><spring:message code="kanjiDictionary.page.search.table.column.kanji" /></th>
-										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
-										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
-										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
-										<!-- <jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile> -->
-										<th></th>
-									</tr>
-								</thead>
-								<tfood>
-									<c:forEach items="${findKanjiDetectResult.result}" var="currentResult">
-										<jdwt:findKanjiResultItemTableRow
-											resultItem="${currentResult}" />
-									</c:forEach>
-								</tfood>
+							<table style="width: 100%">
+								<c:set var="findKanjiResultIndex" value="0" />
 								
+								<c:forEach items="${findKanjiDetectResult.result}" var="currentResult">
+									<jdwt:findKanjiResultItemTableRow
+										findKanjiRequest="${findKanjiRequest}"
+										resultItem="${currentResult}"
+										resultItemIndex="${findKanjiResultIndex}" />
+										
+									<c:set var="findKanjiResultIndex" value="${findKanjiResultIndex + 1}" />
+								</c:forEach>							
 							</table>
-							--%>
 						</div>
 					</c:if>
         			
