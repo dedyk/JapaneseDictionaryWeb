@@ -35,6 +35,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	private FindWordRequest findWordRequest;
 	
 	private FindWordResult.ResultItem resultItem;
+	private int resultItemIndex;
 	
 	private MessageSource messageSource;
 	
@@ -67,9 +68,30 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		try {
             JspWriter out = pageContext.getOut();
             
-            Tr tr = new Tr();            
+            // nowy wiersz
+            Tr tr = new Tr();
+            tr.setStyle("padding-bottom: 50px; " + (resultItemIndex % 2 == 0 ? "background-color: #f9f9f9" : ""));
+
+            // pobranie danych
+            Td td = new Td();
+            
+            td.addHtmlElement(new Text("AAAAAAAAAAAAAAAAAA"));
+            tr.addHtmlElement(td);
+            
+            
+            //            
+	    	
+	    	tr.render(out);
+	    	
+	    	// stary kod
+	    	//////////////////
+	    	//////////////////
+	    	//////////////////
+	    	
             
             // FM_FIXME: do poprawy, zakomentowan
+            // Tr tr = new Tr();
+            
             // pobranie danych
             //
             /*
@@ -314,5 +336,9 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 
 	public void setFindWordRequest(FindWordRequest findWordRequest) {
 		this.findWordRequest = findWordRequest;
+	}
+	
+	public void setResultItemIndex(int resultItemIndex) {
+		this.resultItemIndex = resultItemIndex;
 	}
 }

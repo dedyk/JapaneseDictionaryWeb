@@ -25,6 +25,7 @@
 		
 			<p class="text-left"><h4><spring:message code="wordDictionaryName.catalog.page.table.caption" /></h4></p>
 		
+			<!-- FM_FIXME: do poprawy -->
 			<table id="wordDictionaryNameFindWordResult" class="table table-striped" style="font-size: 120%;">
 				<thead>
 					<tr>
