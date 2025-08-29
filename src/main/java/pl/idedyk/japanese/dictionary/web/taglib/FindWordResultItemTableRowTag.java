@@ -20,6 +20,7 @@ import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
+import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
@@ -114,7 +115,9 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             	
             	// pokazanie wszystkich slow
                 {
-                	Td readingTd = new Td(null, "font-size: 125%; padding-right: 30px; vertical-align: top; width: 30%");
+                	Td readingTd = new Td(null, "font-size: 125%; padding-right: 30px; vertical-align: top; width: 50%");
+                	
+                	Table readingTdTable = new Table(null, "width: auto");
                 	
                 	for (KanjiKanaPair kanjiKanaPair : kanjiKanaPairList) {
                     	
@@ -123,6 +126,31 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                     	String kana = kanjiKanaPair.getKana();
                     	String romaji = kanjiKanaPair.getRomaji();
                     	
+                    	Tr readingTdTableTr = new Tr();
+                    	
+                    	// kanji
+                    	Td readingTdTableTrKanjiTd = new Td(null, "width: auto; padding-right: 15px");
+                    	
+                    	if (kanji != null) {
+                    		readingTdTableTrKanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));
+                    	}
+                    	
+                    	// kana
+                    	Td readingTdTableTrKanaTd = new Td(null, "width: auto; padding-right: 15px");
+                    	readingTdTableTrKanaTd.addHtmlElement(new Text(getStringWithMark(kana, findWord, findWordRequest.searchKana)));
+                    	
+                    	// romaji
+                    	Td readingTdTableTrRomajiTd = new Td(null, "width: auto; padding-right: 15px");
+                    	readingTdTableTrRomajiTd.addHtmlElement(new Text(getStringWithMark(romaji, findWord, findWordRequest.searchRomaji)));
+                    	
+                    	// dodanie elementow                    	
+                    	readingTdTableTr.addHtmlElement(readingTdTableTrKanjiTd);
+                    	readingTdTableTr.addHtmlElement(readingTdTableTrKanaTd);
+                    	readingTdTableTr.addHtmlElement(readingTdTableTrRomajiTd);
+                    	
+                    	readingTdTable.addHtmlElement(readingTdTableTr);
+                    	
+                    	/*
                     	// laczymy w jeden napis
                     	StringBuffer fullWord = new StringBuffer();
                     	
@@ -133,13 +161,17 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                     	fullWord.append(kana).append(" (").append(romaji).append(")");
                     	                        
             	    	readingTd.addHtmlElement(new Text(getStringWithMark(fullWord.toString(), findWord, true) + "<br/>"));
+            	    	*/
 					}
+
                 	
+                	readingTd.addHtmlElement(readingTdTable);
+                	                	
                 	tr.addHtmlElement(readingTd);
                 }
                 
                 // pokazywanie znaczen
-    	    	Td translateTd = new Td(null, "font-size: 125%; width: 70%");    	    	
+    	    	Td translateTd = new Td(null, "font-size: 125%; width: 50%");    	    	
 
                 
                 // FM_FIXME: zaznaczanie, ktore znaczenia sa dla pewnych elementow
