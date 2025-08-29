@@ -80,6 +80,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		try {
             JspWriter out = pageContext.getOut();
             
+            // FM_FIXME: przerobic, jedno pod drugim !!!
+            
             // nowy wiersz
             Tr tr = new Tr();
             tr.setStyle("padding-bottom: 50px; " + (resultItemIndex % 2 == 0 ? "background-color: #f9f9f9" : ""));
