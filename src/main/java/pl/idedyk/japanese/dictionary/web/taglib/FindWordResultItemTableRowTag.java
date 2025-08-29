@@ -129,18 +129,18 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                     	Tr readingTdTableTr = new Tr();
                     	
                     	// kanji
-                    	Td readingTdTableTrKanjiTd = new Td(null, "width: auto; padding-right: 15px");
+                    	Td readingTdTableTrKanjiTd = new Td(null, "width: auto; padding-right: 15px; padding-bottom: 15px");
                     	
                     	if (kanji != null) {
                     		readingTdTableTrKanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));
                     	}
                     	
                     	// kana
-                    	Td readingTdTableTrKanaTd = new Td(null, "width: auto; padding-right: 15px");
+                    	Td readingTdTableTrKanaTd = new Td(null, "width: auto; padding-right: 15px; padding-bottom: 15px");
                     	readingTdTableTrKanaTd.addHtmlElement(new Text(getStringWithMark(kana, findWord, findWordRequest.searchKana)));
                     	
                     	// romaji
-                    	Td readingTdTableTrRomajiTd = new Td(null, "width: auto; padding-right: 15px");
+                    	Td readingTdTableTrRomajiTd = new Td(null, "width: auto; padding-right: 15px; padding-bottom: 15px");
                     	readingTdTableTrRomajiTd.addHtmlElement(new Text(getStringWithMark(romaji, findWord, findWordRequest.searchRomaji)));
                     	
                     	// dodanie elementow                    	
