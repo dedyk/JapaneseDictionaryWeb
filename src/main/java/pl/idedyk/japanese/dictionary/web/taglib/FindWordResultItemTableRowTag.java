@@ -2,7 +2,6 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.jsp.JspException;
@@ -15,13 +14,10 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
-import pl.idedyk.japanese.dictionary.web.html.Span;
-import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
@@ -30,16 +26,7 @@ import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.KanjiKa
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSense;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSenseEntry;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSenseEntryGloss;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.Gloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiInfo;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfo;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKanaType;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.SenseAdditionalInfo;
 
 public class FindWordResultItemTableRowTag extends TagSupport {
 
@@ -48,7 +35,6 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	private FindWordRequest findWordRequest;
 	
 	private FindWordResult.ResultItem resultItem;
-	private int resultItemIndex;
 	
 	private MessageSource messageSource;
 	
@@ -81,255 +67,11 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		try {
             JspWriter out = pageContext.getOut();
             
-            // FM_FIXME: przerobic, jedno pod drugim !!!
-            
-            // pobranie danych
-            String findWord = findWordRequest.word;
-                        
-            // tylko jeden z nich bedzie wypelniony
-            Entry entry = resultItem.getEntry();
-            DictionaryEntry oldDictionaryEntry = resultItem.getOldDictionaryEntry(); // tylko dla slowek ze slownika nazw, FM_FIXME: obsluga tego elementu
-            
-            if (entry != null) {
-            	// wygenerowanie wszystkich kombinacji
-            	List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(entry);
-            	
-            	// przefiltrowanie, aby nie pokazywac elementow, ktore sluza jedynie do wyszukiwania
-            	kanjiKanaPairList = kanjiKanaPairList.stream().filter(kanjiKanaPair -> {
-            		KanjiInfo kanjiInfo = kanjiKanaPair.getKanjiInfo();
-            		
-            		if (kanjiInfo != null && kanjiInfo.getKanjiAdditionalInfoList().contains(KanjiAdditionalInfoEnum.SEARCH_ONLY_KANJI_FORM) == true) {
-            			return false;
-            		}
-            		
-            		ReadingInfo readingInfo = kanjiKanaPair.getReadingInfo();
-            		
-            		if (readingInfo.getReadingAdditionalInfoList().contains(ReadingAdditionalInfoEnum.SEARCH_ONLY_KANA_FORM) == true) {
-            			return false;
-            		}            		
-            		
-            		return true;
-            		
-            	}).collect(Collectors.toList());
-
-            	// wiersz ze slowami
-                Tr tr = new Tr();
-                tr.setStyle("padding-bottom: 50px; " + (resultItemIndex % 2 == 0 ? "background-color: #f9f9f9" : ""));
-            	            	
-            	// pokazanie wszystkich slow
-                {    			
-	    			// tytul
-	    			Td readingTitleTd = new Td();    	    			
-	    			readingTitleTd.setStyle("padding-right: 30px; font-weight:bold; font-size: 120%; vertical-align: top; width: auto");
-	    	    	     	    	    	
-	    			readingTitleTd.addHtmlElement(new Text(messageSource.getMessage("wordDictionary.page.search.table.column.word", new Object[] { }, Locale.getDefault())));
-                	
-	    			tr.addHtmlElement(readingTitleTd);
-	    			
-	    			//                	
-                	
-                	Td readingTd = new Td(null, "font-size: 125%; padding-right: 30px; vertical-align: top; width: 100%");
-                	
-                	// Table readingTdTable = new Table(null, "width: 50%");
-                	
-                	for (KanjiKanaPair kanjiKanaPair : kanjiKanaPairList) {
-                    	
-                    	// pobieramy wszystkie skladniki slowa
-                    	String kanji = kanjiKanaPair.getKanji();
-                    	String kana = kanjiKanaPair.getKana();
-                    	String romaji = kanjiKanaPair.getRomaji();
-                    	
-                    	// Tr readingTdTableTr = new Tr();
-                    	
-                    	// kanji
-                    	/*
-                    	Td readingTdTableTrKanjiTd = new Td(null, "font-size: 125%; width: 20%; padding-right: 45px; padding-bottom: 15px");
-                    	
-                    	if (kanji != null) {
-                    		readingTdTableTrKanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));
-                    	}
-                    	
-                    	// kana
-                    	Td readingTdTableTrKanaTd = new Td(null, "font-size: 125%; width: 20%; padding-right: 45px; padding-bottom: 15px");
-                    	readingTdTableTrKanaTd.addHtmlElement(new Text(getStringWithMark(kana, findWord, findWordRequest.searchKana)));
-                    	
-                    	// romaji
-                    	Td readingTdTableTrRomajiTd = new Td(null, "font-size: 125%; width: 20%; padding-right: 45px; padding-bottom: 15px");
-                    	readingTdTableTrRomajiTd.addHtmlElement(new Text(getStringWithMark(romaji, findWord, findWordRequest.searchRomaji)));
-                    	
-                    	// dodanie elementow                    	
-                    	readingTdTableTr.addHtmlElement(readingTdTableTrKanjiTd);
-                    	readingTdTableTr.addHtmlElement(readingTdTableTrKanaTd);
-                    	readingTdTableTr.addHtmlElement(readingTdTableTrRomajiTd);
-                    	
-                    	readingTdTable.addHtmlElement(readingTdTableTr);
-                    	*/
-                    	
-                    	Div singleReadingDiv = new Div(null, "padding-bottom: 10px");
-                    	                   
-                    	// kanji
-                    	if (kanji != null) {
-                    		Span singleReadingKanjiSpan = new Span(null, "padding-right: 40px");
-                    		
-                    		singleReadingKanjiSpan.addHtmlElement(new Text(getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));                    		
-                    		singleReadingDiv.addHtmlElement(singleReadingKanjiSpan);
-                    	}
-                    	
-                    	// kana
-                    	Span singleReadingKanaSpan = new Span(null, "padding-right: 40px");
-                    	
-                    	singleReadingKanaSpan.addHtmlElement(new Text(getStringWithMark(kana, findWord, findWordRequest.searchKana)));                    		
-                		singleReadingDiv.addHtmlElement(singleReadingKanaSpan);
-
-                		// romaji
-                		Span singleReadingRomajiSpan = new Span(null, "padding-right: 40px");
-                    	
-                    	singleReadingRomajiSpan.addHtmlElement(new Text(getStringWithMark(romaji, findWord, findWordRequest.searchRomaji)));                    		
-                		singleReadingDiv.addHtmlElement(singleReadingRomajiSpan);
-                    	                    	
-                    	// fullWord.append(kana).append(" (").append(romaji).append(")");
-                    	                        
-                    	// singleReadingTd.addHtmlElement(new Text(getStringWithMark(fullWord.toString(), findWord, true)));
-            	    	
-            	    	readingTd.addHtmlElement(singleReadingDiv);
-					}
-                	
-                	// readingTd.addHtmlElement(readingTdTable);
-                	                	
-                	tr.addHtmlElement(readingTd);
-                }
-                
-                // renderowanie slow
-                tr.render(out);
-                
-            	// wiersz ze znaczeniem
-                tr = new Tr();
-                tr.setStyle("padding-bottom: 50px; " + (resultItemIndex % 2 == 0 ? "background-color: #f9f9f9" : ""));
-                
-                // znaczenie
-                {
-	    			// tytul
-	    			Td translateTitleTd = new Td();    	    			
-	    			translateTitleTd.setStyle("padding-right: 30px; font-weight:bold; font-size: 120%; vertical-align: top; width: auto");
-	    	    	     	    	    	
-	    			translateTitleTd.addHtmlElement(new Text(messageSource.getMessage("wordDictionary.page.search.table.column.translate", new Object[] { }, Locale.getDefault())));
-                	
-	    			tr.addHtmlElement(translateTitleTd);
-	    			
-	    			//
-	    			
-	    			Td translateTd = new Td(null, "font-size: 125%; width: 50%");  
-	    			tr.addHtmlElement(translateTd);
-	    				    			
-	                for (int senseIdx = 0; senseIdx < entry.getSenseList().size(); ++senseIdx) {
-	                	
-	                	Sense sense = entry.getSenseList().get(senseIdx);
-	                	                
-	                	// znaczenia
-	                	List<Gloss> polishGlossList = Dictionary2HelperCommon.getPolishGlossList(sense.getGlossList());
-	                	SenseAdditionalInfo polishAdditionalInfo = Dictionary2HelperCommon.findFirstPolishAdditionalInfo(sense.getAdditionalInfoList());
-	                	
-	                	//                	
-	                	                	
-	    				for (int currentGlossIdx = 0; currentGlossIdx < polishGlossList.size(); ++currentGlossIdx) {
-	    					
-	    					Gloss gloss = polishGlossList.get(currentGlossIdx);
-	    											
-	    					translateTd.addHtmlElement(new Text(getStringWithMark(
-	    							gloss.getValue(), findWord, true) + 
-	    							(gloss.getGType() != null ? " (" + gloss.getGType() + ")" : "") + 
-	    							(currentGlossIdx != sense.getGlossList().size() - 1 ? "<br/>" : "")));						
-	    				}
-	    				    				
-	    				// informacje dodatkowe												
-	    				if (polishAdditionalInfo != null) {					
-	    					Div infoDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
-	    					
-	    	    			infoDiv.addHtmlElement(new Text(getStringWithMark(polishAdditionalInfo.getValue(), findWord, true)));
-	    	    			
-	    	    			translateTd.addHtmlElement(infoDiv);						
-	    				}
-	    				
-	    				// przerwa
-	    				if (senseIdx != entry.getSenseList().size() - 1) {
-	    					
-	    					Div marginDiv = new Div(null, "margin-bottom: 12px;");
-	    					
-	    					translateTd.addHtmlElement(marginDiv);						
-	    				}
-					}
-                	
-                }
-                
-                // renderowanie znaczenia
-                tr.render(out);
-
-                
-                
-                /* 
-                // pokazywanie znaczen
-    	    	  	    	
-
-                
-                // FM_FIXME: zaznaczanie, ktore znaczenia sa dla pewnych elementow
-                
-                
-                
-                
-                
-                / *
-                 * FM_FIXME: obsluga tych pol
-                 * 
-                "restrictedToKanjiList",
-                "restrictedToKanaList",
-                "partOfSpeechList",
-                "referenceToAnotherKanjiKanaList",
-                "antonymList",
-                "fieldList",
-                "miscList",
-                "additionalInfoList",
-                "languageSourceList",
-                "dialectList",
-                "glossList"	
-                * /
-                                
-
-                            	
-                tr.addHtmlElement(translateTd);
-                */
-            }
-            
-            // renderuj glowny wiersz
-            
-            
-            // dodanie rozpychacza
-            Tr tr = new Tr();
-            tr.setStyle((resultItemIndex % 2 == 0 ? "background-color: #f9f9f9" : ""));
-            
-            Td spacerTd = new Td();
-            
-            spacerTd.setStyle("padding-bottom: 20px");            
-            tr.addHtmlElement(spacerTd);
-                
-            tr.render(out);
-            
-            //            
-	    	
-	    	
-	    	
-	    	// stary kod
-	    	//////////////////
-	    	//////////////////
-	    	//////////////////
-	    	
-            
-            // FM_FIXME: do poprawy, zakomentowan
-            // Tr tr = new Tr();
+            Tr tr = new Tr();            
             
             // pobranie danych
             //
-            /*
-            
+            String findWord = findWordRequest.word;
             
 	    	String kanji = resultItem.getKanji();
 	    	String prefixKana = resultItem.getPrefixKana();
@@ -341,22 +83,20 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 
 	    	String tempPrefixKana = prefixKana != null && prefixKana.equals("") == false ? prefixKana : null;
 	    	String tempPrefixRomaji = prefixRomaji != null && prefixRomaji.equals("") == false ? prefixRomaji : null;
-            	    	        
-			/*
-	        // kanji
+            	    	
+            // kanji
 	    	Td kanjiTd = new Td();
 	    	tr.addHtmlElement(kanjiTd);
-	        
+            
 	    	if (resultItem.isKanjiExists() == true) {
-	
+
 	    		if (tempPrefixKana != null) {
 	    			kanjiTd.addHtmlElement(new Text("(" + getStringWithMark(tempPrefixKana, findWord, false) + ") "));
 	    		}
-	
+
 	    		kanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));
 	    	}
-	
-            	    	            
+            
 	    	// kana
 	    	Td kanaTd = new Td();
 	    	tr.addHtmlElement(kanaTd);
@@ -374,6 +114,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	    	}
 	    	
 	    	// translates i informacje dodatkowe
+	    	Td translateTd = new Td();
+	    	tr.addHtmlElement(translateTd);
 	    	
 	    	// sprawdzenie czy wystepuja dane w nowym formacie
 	    	JMdict.Entry dictionaryEntry2 = null;
@@ -407,7 +149,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		    	}
 		    	
 		    	// info
-		    	/ *
+		    	/*
 		    	if (userAgent == null || Utils.isMobile(userAgent) == false) {	    	
 		    		
 			    	Td infoTd = new Td();
@@ -417,7 +159,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 			    		infoTd.addHtmlElement(new Text(getStringWithMark(info, findWord, findWordRequest.searchInfo)));
 			    	}
 		    	}
-		    	* /
+		    	*/
 
 	    	} else { // sa dane w nowym formacie
 	    		
@@ -436,7 +178,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 					PrintableSenseEntry printableSenseEntry = printableSense.getSenseEntryList().get(senseIdx);
 										
 					// czesci mowy
-					/ *
+					/*
 					if (printableSenseEntry.getPolishPartOfSpeechValue() != null) {		
 						
 						Div polishPartOfSpeechDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
@@ -445,9 +187,34 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		    			
 		    			translateTd.addHtmlElement(polishPartOfSpeechDiv);						
 					}
-					* /
+					*/
 					
-
+					for (int currentGlossIdx = 0; currentGlossIdx < printableSenseEntry.getGlossList().size(); ++currentGlossIdx) {
+						
+						PrintableSenseEntryGloss printableSenseEntryGloss = printableSenseEntry.getGlossList().get(currentGlossIdx);
+												
+						translateTd.addHtmlElement(new Text(getStringWithMark(
+								printableSenseEntryGloss.getGlossValue(), findWord, findWordRequest.searchTranslate) + 
+								(printableSenseEntryGloss.getGlossValueGType() != null ? " (" + printableSenseEntryGloss.getGlossValueGType() + ")" : "") + 
+								(currentGlossIdx != printableSenseEntry.getGlossList().size() - 1 ? "<br/>" : "")));						
+					}					
+					
+					// informacje dodatkowe												
+					if (printableSenseEntry.getAdditionalInfoValue() != null) {					
+						Div infoDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
+						
+		    			infoDiv.addHtmlElement(new Text(getStringWithMark(printableSenseEntry.getAdditionalInfoValue(), findWord, findWordRequest.searchInfo)));
+		    			
+		    			translateTd.addHtmlElement(infoDiv);						
+					}
+					
+					// przerwa
+					if (senseIdx != printableSense.getSenseEntryList().size() - 1) {
+						
+						Div marginDiv = new Div(null, "margin-bottom: 12px;");
+						
+						translateTd.addHtmlElement(marginDiv);						
+					}
 				}
 	    	}	    	
             
@@ -466,8 +233,6 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             		"wordDictionary.page.search.table.column.details.value", null, Locale.getDefault())));
             
             tr.render(out);
-            // FM_FIXME: do poprawy - end
-            */
             
             return SKIP_BODY;
  
@@ -545,9 +310,5 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 
 	public void setFindWordRequest(FindWordRequest findWordRequest) {
 		this.findWordRequest = findWordRequest;
-	}
-	
-	public void setResultItemIndex(int resultItemIndex) {
-		this.resultItemIndex = resultItemIndex;
 	}
 }

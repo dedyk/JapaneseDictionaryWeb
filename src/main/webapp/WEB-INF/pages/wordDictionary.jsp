@@ -136,24 +136,6 @@
 				<jdwt:generateSpellCheckerSuggestionList id="wordDictionaryEntrySpellCheckerSuggestionListId" spellCheckerSuggestionList="${wordDictionaryEntrySpellCheckerSuggestionList}" type="wordDictionaryEntry" />
 			</c:if>
 
-			<!-- FM_FIXME: do poprawy -->			
-			<div class="col-md-12">
-			
-				<table style="width: 100%">
-					<c:set var="findWordResultIndex" value="0" />
-												
-					<c:forEach items="${findWordResult.result}" var="currentResult">
-						<jdwt:findWordResultItemTableRow
-							findWordRequest="${findWordRequest}"
-							resultItem="${currentResult}"
-							resultItemIndex="${findWordResultIndex}" />
-							
-						<c:set var="findWordResultIndex" value="${findWordResultIndex + 1}" />
-					</c:forEach>
-				</table>
-			</div>
-						
-			<%-- FM_FIXME: stare !!!! <- do usuniecia
 			<table id="wordDictionaryFindWordResult" class="table table-striped" style="font-size: 120%;">
 				<thead>
 					<tr>
@@ -171,9 +153,9 @@
 							findWordRequest="${findWordRequest}"
 							resultItem="${currentResult}" />
 					</c:forEach>
-				</tfood>				
+				</tfood>
+				
 			</table>
-			--%>
 			
 			<script>
 				$(document).ready(function() {
