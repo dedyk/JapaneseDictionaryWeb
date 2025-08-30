@@ -1,12 +1,11 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.JspWriter;
 import jakarta.servlet.jsp.tagext.TagSupport;
@@ -23,7 +22,6 @@ import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.Img;
-import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
@@ -36,7 +34,6 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	private FindKanjiRequest findKanjiRequest;
 	
 	private KanjiCharacterInfo resultItem;
-	private int resultItemIndex;
 
 	private MessageSource messageSource;
 	
@@ -47,7 +44,9 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 	@Override
 	public int doStartTag() throws JspException {
 		
-		ServletContext servletContext = pageContext.getServletContext();		
+		ServletContext servletContext = pageContext.getServletContext();
+		
+		/*
 		ServletRequest servletRequest = pageContext.getRequest();
 		
 		String userAgent = null;
@@ -57,212 +56,107 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 			
 			userAgent = httpServletRequest.getHeader("User-Agent");			
 		}
+		*/
 		
 		//
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
-		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");		
-		this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);		
+		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
+		
+		this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
+		
 		this.applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
 		
-		if (servletRequest instanceof HttpServletRequest) {			
-			HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
-			
-			userAgent = httpServletRequest.getHeader("User-Agent");			
-		}
-    	
-    	boolean mobile = pl.idedyk.japanese.dictionary.web.common.Utils.isMobile(userAgent);
-	
 		try {
             JspWriter out = pageContext.getOut();
             
-            // nowy wiersz
-            Tr tr = new Tr();
-            tr.setStyle("padding-bottom: 50px; " + (resultItemIndex % 2 == 0 ? "background-color: #f9f9f9" : ""));
+            Tr tr = new Tr();    
             
             // pobranie danych
+            
             String findWord = null;
             
             if (findKanjiRequest != null) {
             	findWord = findKanjiRequest.word;
-            }
-            
-	    	// guzik do szczegolow - przygotowanie
-	    	Td detailsLinkTd = new Td();
-	    	detailsLinkTd.setStyle("width: 50%");
-	    	            
-            String link = LinkGenerator.generateKanjiDetailsLink(pageContext.getServletContext().getContextPath(), resultItem);
-            
-            A linkButton = new A();
-            detailsLinkTd.addHtmlElement(linkButton);
-            
-            linkButton.setClazz("btn btn-default");
-            linkButton.setHref(link);
-            
-            linkButton.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.details.value", null, Locale.getDefault())));
+            }            
 
-            //
+            String kanji = resultItem.getKanji();
             
             // kanji
-            {
-                String kanji = resultItem.getKanji();
-                
-    	    	Td kanjiTd = new Td(null, "font-size: 300%; padding-right: 30px; vertical-align: top; width: 10%");
-                
-    	    	kanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, true)));
-    	    	tr.addHtmlElement(kanjiTd);
-            }
-
-	    	// szczegoly
-            {
-    	    	Td kanjiDetailsTd = new Td();
-    	    	kanjiDetailsTd.setStyle("vertical-align: top; width: 40%");    	    	
-    	    	
-    	    	Table kanjiDetailsTdTable = new Table();
-    	    	kanjiDetailsTdTable.setStyle("width: 100%");
-    	    	
-    	    	{    	    		
-    	    		// liczba kresek
-    	    		{
-    	    			Tr kanjiDetailsTdTableTr = new Tr();
-    	    			
-    	    			// tytul
-    	    			Td strokeCountTitleTd = new Td();    	    			
-    	    			strokeCountTitleTd.setStyle("padding-right: 15px; font-weight:bold; font-size: 120%; vertical-align: top; width: 50%");
-    	    	    	     	    	    	
-    	    			strokeCountTitleTd.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.strokeCount", new Object[] { }, Locale.getDefault())));
-    	    	    	
-    	    	    	// wartosc    	    	    	
-    	    			Td strokeCountValueTd = new Td();
-    	    			strokeCountValueTd.setStyle("font-size: 120%;");
-    	    	    	
-    	    	    	if (resultItem.getMisc().getStrokeCountList() != null && resultItem.getMisc().getStrokeCountList().size() > 0) {
-    	    	    		strokeCountValueTd.addHtmlElement(new Text(String.valueOf(resultItem.getMisc().getStrokeCountList().get(0))));	    		
-    	    	    	}
-    	    	    	
-    	    	    	kanjiDetailsTdTableTr.addHtmlElement(strokeCountTitleTd);
-    	    	    	kanjiDetailsTdTableTr.addHtmlElement(strokeCountValueTd);
-    	    	    	
-    	    	    	kanjiDetailsTdTable.addHtmlElement(kanjiDetailsTdTableTr);
-    	    		}
-    	    		
-    	    		// elementy podstawowe
-    	    		{    	    			
-        	    		Tr kanjiDetailsTdTableTr = new Tr();
-    	    			
-    	    	    	// elementy podstawowe    	    	    	
-    	    			Td radicalsTitleTd = new Td();
-    	    			
-    	    			// tytul
-    	    			radicalsTitleTd.setStyle("padding-right: 15px; font-weight:bold; font-size: 120%; vertical-align: top; width: 50%");    	    	    	
-    	    			radicalsTitleTd.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.radicals", new Object[] { }, Locale.getDefault())));
-    	    			
-    	    			// wartosc
-    	    			Td radicalsValueTd = new Td();
-    	    			radicalsValueTd.setStyle("font-size: 120%;");
-    	    			
-	    	    		List<String> radicals = resultItem.getMisc2().getRadicals();
-	    	    		
-	    	    		if (radicals != null) {
-	    	    			
-	    	    			for (String currentRadical : radicals) {
-	    	    				
-	    	    				WebRadicalInfo webRadicalInfo = dictionaryManager.getWebRadicalInfo(currentRadical);
-	    	    				
-	    	    				String webRadicalInfoImage = null;
-	    	    				
-	    	    				if (webRadicalInfo != null) {
-	    	    					webRadicalInfoImage = webRadicalInfo.getImage();
-	    	    					
-	    	    				}
-	    	    				
-	    	    				if (webRadicalInfoImage == null) {
-	    	    					radicalsValueTd.addHtmlElement(new Text(currentRadical + " "));
-	    	    					
-	    	    				} else {	    					
-	    	    					String staticPrefix = LinkGenerator.getStaticPrefix(pageContext.getServletContext().getContextPath(), applicationProperties);
-	    	    					
-	    	    					Img currentRadicalImg = new Img();
-	    	    					
-	    	    					currentRadicalImg.setSrc(staticPrefix + "/" + webRadicalInfoImage);
-	    	    					currentRadicalImg.setAlt(currentRadical);
-	    	    					
-	    	    					radicalsValueTd.addHtmlElement(currentRadicalImg);
-	    	    				}
-	    					}
-	    	    		}
-    	    			
-    	    			kanjiDetailsTdTableTr.addHtmlElement(radicalsTitleTd);    	    			
-    	    			kanjiDetailsTdTableTr.addHtmlElement(radicalsValueTd);
-    	    	    	
-    	    			kanjiDetailsTdTable.addHtmlElement(kanjiDetailsTdTableTr);
-    	    		}
-    	    		
-    	    		// znaczenie
-    	    		{
-    	    			Tr kanjiDetailsTdTableTr = new Tr();
-    	    			
-    	    			// tytul
-    	    			Td translateTitleTd = new Td();    	    			
-    	    			translateTitleTd.setStyle("padding-right: 15px; font-weight:bold; font-size: 120%; vertical-align: top; width: 50%");
-    	    	    	     	    	    	
-    	    			translateTitleTd.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.translate", new Object[] { }, Locale.getDefault())));
-    	    	    	
-    	    	    	// wartosc    	    	    	
-    	    			Td translateValueTd = new Td();
-    	    			translateValueTd.setStyle("font-size: 120%; padding-bottom: 20px");
-    	    	    	    	    			
-    	    	    	List<String> polishTranslates = Utils.getPolishTranslates(resultItem);
-    	    	    	    	    	    	
-    	    	    	if (polishTranslates != null && polishTranslates.size() > 0) {
-    	    	    		translateValueTd.addHtmlElement(new Text(getStringWithMark(toString(polishTranslates, null, "<br/>"), findWord, true)));
-    	    	    		
-    	    	    		String info = Utils.getPolishAdditionalInfo(resultItem);
-    	    	    		
-    	    	    		// informcje dodatkowe
-    	    	    		if (info != null && info.equals("") == false) {
-    	    	    			
-    	    	    			Div infoDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
-    	    	    			
-    	    	    			infoDiv.addHtmlElement(new Text(getStringWithMark(info, findWord, true)));
-    	    	    			
-    	    	    			translateValueTd.addHtmlElement(infoDiv);		    			
-    	    	    		}
-    	    	    	}
-    	    	    	
-    	    	    	kanjiDetailsTdTableTr.addHtmlElement(translateTitleTd);
-    	    	    	kanjiDetailsTdTableTr.addHtmlElement(translateValueTd);
-    	    	    	
-    	    	    	kanjiDetailsTdTable.addHtmlElement(kanjiDetailsTdTableTr);
-    	    		}
-    	    		
-    	    		// guzik do szczegolow - tylko dla wersji mobilnej
-    	    		if (mobile == true) {
-    	    			detailsLinkTd.setStyle(detailsLinkTd.getStyle() + "; padding-bottom: 20px");
-    	    			
-    	    			kanjiDetailsTdTable.addHtmlElement(detailsLinkTd);	    		
-    		    	} 
-    	    	}    	    	
-    	    	
-    	    	kanjiDetailsTd.addHtmlElement(kanjiDetailsTdTable);
-    	    	tr.addHtmlElement(kanjiDetailsTd);            	
-            }
+	    	Td kanjiTd = new Td(null, "font-size: 150%");
+	    	tr.addHtmlElement(kanjiTd);
             
-            // guzik do szczegolow
-            
-	    	// gdy jest to normalna strona to daj guzik po lewej stronie
-	    	if (mobile == false) {
-	    		detailsLinkTd.setStyle(detailsLinkTd.getStyle() + "; padding-left: 20px");
-	    		
-	    		tr.addHtmlElement(detailsLinkTd);	    		
-	    	}            
-
-            //            
+	    	kanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, true)));
 	    	
-	    	tr.render(out);
-            	    	
-	    	/* stary kod
+	    	// elementy podstawowe
+	    	Td radicalsTd = new Td();
+	    	tr.addHtmlElement(radicalsTd);
+	    	
+	    	{
+	    		List<String> radicals = resultItem.getMisc2().getRadicals();
+	    		
+	    		if (radicals != null) {
+	    			
+	    			for (String currentRadical : radicals) {
+	    				
+	    				WebRadicalInfo webRadicalInfo = dictionaryManager.getWebRadicalInfo(currentRadical);
+	    				
+	    				String webRadicalInfoImage = null;
+	    				
+	    				if (webRadicalInfo != null) {
+	    					webRadicalInfoImage = webRadicalInfo.getImage();
+	    					
+	    				}
+	    				
+	    				if (webRadicalInfoImage == null) {
+	    					radicalsTd.addHtmlElement(new Text(currentRadical + " "));
+	    					
+	    				} else {	    					
+	    					String staticPrefix = LinkGenerator.getStaticPrefix(pageContext.getServletContext().getContextPath(), applicationProperties);
+	    					
+	    					Img currentRadicalImg = new Img();
+	    					
+	    					currentRadicalImg.setSrc(staticPrefix + "/" + webRadicalInfoImage);
+	    					currentRadicalImg.setAlt(currentRadical);
+	    					
+	    					radicalsTd.addHtmlElement(currentRadicalImg);
+	    				}
+					}
+	    		}
+	    	}
+	    	
+	    	// liczba kresek
+	    	Td strokeCountTd = new Td();
+	    	tr.addHtmlElement(strokeCountTd);
+	    	
+	    	if (resultItem.getMisc().getStrokeCountList() != null && resultItem.getMisc().getStrokeCountList().size() > 0) {
+	    		strokeCountTd.addHtmlElement(new Text(String.valueOf(resultItem.getMisc().getStrokeCountList().get(0))));	    		
+	    	}
+	    	
+	    	// tlumaczenie
+	    	List<String> polishTranslates = Utils.getPolishTranslates(resultItem);
+	    	
+	    	Td translateTd = new Td();
+	    	tr.addHtmlElement(translateTd);
+	    	
+	    	if (polishTranslates != null && polishTranslates.size() > 0) {
+	    		translateTd.addHtmlElement(new Text(getStringWithMark(toString(polishTranslates, null, "<br/>"), findWord, true)));
+	    		
+	    		String info = Utils.getPolishAdditionalInfo(resultItem);
+	    		
+	    		// informcje dodatkowe
+	    		if (info != null && info.equals("") == false) {
+	    			
+	    			Div infoDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
+	    			
+	    			infoDiv.addHtmlElement(new Text(getStringWithMark(info, findWord, true)));
+	    			
+	    			translateTd.addHtmlElement(infoDiv);		    			
+	    		}
+	    	}
+	    	
+	    	/*
 	    	// informacje dodatkowe
 	    	if (userAgent == null || Utils.isMobile(userAgent) == false) {	    	
 
@@ -276,10 +170,26 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 		    	}
 	    	}
 	    	*/
+	    	
+	    	// szczegoly
+	    	Td detailsLinkTd = new Td();
+	    	tr.addHtmlElement(detailsLinkTd);
+            
+            String link = LinkGenerator.generateKanjiDetailsLink(pageContext.getServletContext().getContextPath(), resultItem);
+            
+            A linkButton = new A();
+            detailsLinkTd.addHtmlElement(linkButton);
+            
+            linkButton.setClazz("btn btn-default");
+            linkButton.setHref(link);
+            
+            linkButton.addHtmlElement(new Text(messageSource.getMessage("kanjiDictionary.page.search.table.column.details.value", null, Locale.getDefault())));
+            
+            tr.render(out);
             
             return SKIP_BODY;
  
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 	}
@@ -353,9 +263,5 @@ public class FindKanjiResultItemTableRowTag extends TagSupport {
 
 	public void setResultItem(KanjiCharacterInfo resultItem) {
 		this.resultItem = resultItem;
-	}
-
-	public void setResultItemIndex(int resultItemIndex) {
-		this.resultItemIndex = resultItemIndex;
 	}
 }

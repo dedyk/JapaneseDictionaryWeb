@@ -84,7 +84,30 @@
 
 	            stage.addChild(drawingCanvas);
 	            stage.update();	
-				
+
+	            // tabelki
+				$('#kanjiDictionaryFindKanjiResult').dataTable({
+					language: {
+						url: '${pageContext.request.contextPath}/js/datatables/polish.json'
+					},
+					"bStateSave": true,
+					"aaSorting": [],
+					"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+					"bLengthChange": false,
+					"bPaginate": false
+				});
+
+				$('#kanjiDictionaryFindKanjiDetectResult').dataTable({
+					language: {
+						url: '${pageContext.request.contextPath}/js/datatables/polish.json'
+					},
+					"bStateSave": true,
+					"aaSorting": [],
+					"sDom": "<'row'<'col-xs-12'f><'col-xs-6'l><'col-xs-6'p>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+					"bLengthChange": false,
+					"bPaginate": false
+				});
+
 				// zaznaczenie wybranych elementow podstawowych
 				<c:if test="${sessionScope.selectedRadicals != null}">
 					selectedRadicals = [];
@@ -306,18 +329,26 @@
 							<c:if test="${kanjiDictionaryEntrySpellCheckerSuggestionList != null}">				
 								<jdwt:generateSpellCheckerSuggestionList id="kanjiDictionaryEntrySpellCheckerSuggestionListId" spellCheckerSuggestionList="${kanjiDictionaryEntrySpellCheckerSuggestionList}" type="kanjiDictionaryEntry" />
 							</c:if>
-							
-							<table style="width: 100%">
-								<c:set var="findKanjiResultIndex" value="0" />
+														
+							<table id="kanjiDictionaryFindKanjiResult" class="table table-striped" style="font-size: 120%;">
+								<thead>
+									<tr>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.kanji" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
+										<!-- <jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile> -->
+										<th></th>
+									</tr>
+								</thead>
+								<tfood>
+									<c:forEach items="${findKanjiResult.result}" var="currentResult">
+										<jdwt:findKanjiResultItemTableRow
+											findKanjiRequest="${findKanjiRequest}"
+											resultItem="${currentResult}" />
+									</c:forEach>
+								</tfood>
 								
-								<c:forEach items="${findKanjiResult.result}" var="currentResult">
-									<jdwt:findKanjiResultItemTableRow
-										findKanjiRequest="${findKanjiRequest}"
-										resultItem="${currentResult}"
-										resultItemIndex="${findKanjiResultIndex}" />
-										
-									<c:set var="findKanjiResultIndex" value="${findKanjiResultIndex + 1}" />
-								</c:forEach>							
 							</table>							
 						</div>
 					</c:if>
@@ -592,18 +623,25 @@
 						
 							<p class="text-left"><h4><spring:message code="kanjiDictionary.page.search.table.caption" /></h4></p>
 						
-							<table style="width: 100%">
-								<c:set var="findKanjiResultIndex" value="0" />
+							<table id="kanjiDictionaryFindKanjiDetectResult" class="table table-striped" style="font-size: 120%;">
+								<thead>
+									<tr>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.kanji" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
+										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
+										<!-- <jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile> -->
+										<th></th>
+									</tr>
+								</thead>
+								<tfood>
+									<c:forEach items="${findKanjiDetectResult.result}" var="currentResult">
+										<jdwt:findKanjiResultItemTableRow
+											resultItem="${currentResult}" />
+									</c:forEach>
+								</tfood>
 								
-								<c:forEach items="${findKanjiDetectResult.result}" var="currentResult">
-									<jdwt:findKanjiResultItemTableRow
-										findKanjiRequest="${findKanjiRequest}"
-										resultItem="${currentResult}"
-										resultItemIndex="${findKanjiResultIndex}" />
-										
-									<c:set var="findKanjiResultIndex" value="${findKanjiResultIndex + 1}" />
-								</c:forEach>							
-							</table>
+							</table>							
 						</div>
 					</c:if>
         			
