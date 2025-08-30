@@ -20,6 +20,7 @@ import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
+import pl.idedyk.japanese.dictionary.web.html.Span;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
@@ -82,10 +83,6 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             
             // FM_FIXME: przerobic, jedno pod drugim !!!
             
-            // nowy wiersz
-            Tr tr = new Tr();
-            tr.setStyle("padding-bottom: 50px; " + (resultItemIndex % 2 == 0 ? "background-color: #f9f9f9" : ""));
-
             // pobranie danych
             String findWord = findWordRequest.word;
                         
@@ -114,12 +111,26 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             		return true;
             		
             	}).collect(Collectors.toList());
-            	
+
+            	// wiersz ze slowami
+                Tr tr = new Tr();
+                tr.setStyle("padding-bottom: 50px; " + (resultItemIndex % 2 == 0 ? "background-color: #f9f9f9" : ""));
+            	            	
             	// pokazanie wszystkich slow
-                {
-                	Td readingTd = new Td(null, "font-size: 125%; padding-right: 30px; vertical-align: top; width: 50%");
+                {    			
+	    			// tytul
+	    			Td readingTitleTd = new Td();    	    			
+	    			readingTitleTd.setStyle("padding-right: 30px; font-weight:bold; font-size: 120%; vertical-align: top; width: auto");
+	    	    	     	    	    	
+	    			readingTitleTd.addHtmlElement(new Text(messageSource.getMessage("wordDictionary.page.search.table.column.word", new Object[] { }, Locale.getDefault())));
                 	
-                	Table readingTdTable = new Table(null, "width: auto");
+	    			tr.addHtmlElement(readingTitleTd);
+	    			
+	    			//                	
+                	
+                	Td readingTd = new Td(null, "font-size: 125%; padding-right: 30px; vertical-align: top; width: 100%");
+                	
+                	// Table readingTdTable = new Table(null, "width: 50%");
                 	
                 	for (KanjiKanaPair kanjiKanaPair : kanjiKanaPairList) {
                     	
@@ -128,21 +139,22 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                     	String kana = kanjiKanaPair.getKana();
                     	String romaji = kanjiKanaPair.getRomaji();
                     	
-                    	Tr readingTdTableTr = new Tr();
+                    	// Tr readingTdTableTr = new Tr();
                     	
                     	// kanji
-                    	Td readingTdTableTrKanjiTd = new Td(null, "width: auto; padding-right: 15px; padding-bottom: 15px");
+                    	/*
+                    	Td readingTdTableTrKanjiTd = new Td(null, "font-size: 125%; width: 20%; padding-right: 45px; padding-bottom: 15px");
                     	
                     	if (kanji != null) {
                     		readingTdTableTrKanjiTd.addHtmlElement(new Text(getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));
                     	}
                     	
                     	// kana
-                    	Td readingTdTableTrKanaTd = new Td(null, "width: auto; padding-right: 15px; padding-bottom: 15px");
+                    	Td readingTdTableTrKanaTd = new Td(null, "font-size: 125%; width: 20%; padding-right: 45px; padding-bottom: 15px");
                     	readingTdTableTrKanaTd.addHtmlElement(new Text(getStringWithMark(kana, findWord, findWordRequest.searchKana)));
                     	
                     	// romaji
-                    	Td readingTdTableTrRomajiTd = new Td(null, "width: auto; padding-right: 15px; padding-bottom: 15px");
+                    	Td readingTdTableTrRomajiTd = new Td(null, "font-size: 125%; width: 20%; padding-right: 45px; padding-bottom: 15px");
                     	readingTdTableTrRomajiTd.addHtmlElement(new Text(getStringWithMark(romaji, findWord, findWordRequest.searchRomaji)));
                     	
                     	// dodanie elementow                    	
@@ -151,38 +163,121 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                     	readingTdTableTr.addHtmlElement(readingTdTableTrRomajiTd);
                     	
                     	readingTdTable.addHtmlElement(readingTdTableTr);
+                    	*/
                     	
-                    	/*
-                    	// laczymy w jeden napis
-                    	StringBuffer fullWord = new StringBuffer();
-                    	
+                    	Div singleReadingDiv = new Div(null, "padding-bottom: 10px");
+                    	                   
+                    	// kanji
                     	if (kanji != null) {
-                    		fullWord.append(kanji).append(" - ");
+                    		Span singleReadingKanjiSpan = new Span(null, "padding-right: 40px");
+                    		
+                    		singleReadingKanjiSpan.addHtmlElement(new Text(getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));                    		
+                    		singleReadingDiv.addHtmlElement(singleReadingKanjiSpan);
                     	}
                     	
-                    	fullWord.append(kana).append(" (").append(romaji).append(")");
-                    	                        
-            	    	readingTd.addHtmlElement(new Text(getStringWithMark(fullWord.toString(), findWord, true) + "<br/>"));
-            	    	*/
-					}
+                    	// kana
+                    	Span singleReadingKanaSpan = new Span(null, "padding-right: 40px");
+                    	
+                    	singleReadingKanaSpan.addHtmlElement(new Text(getStringWithMark(kana, findWord, findWordRequest.searchKana)));                    		
+                		singleReadingDiv.addHtmlElement(singleReadingKanaSpan);
 
+                		// romaji
+                		Span singleReadingRomajiSpan = new Span(null, "padding-right: 40px");
+                    	
+                    	singleReadingRomajiSpan.addHtmlElement(new Text(getStringWithMark(romaji, findWord, findWordRequest.searchRomaji)));                    		
+                		singleReadingDiv.addHtmlElement(singleReadingRomajiSpan);
+                    	                    	
+                    	// fullWord.append(kana).append(" (").append(romaji).append(")");
+                    	                        
+                    	// singleReadingTd.addHtmlElement(new Text(getStringWithMark(fullWord.toString(), findWord, true)));
+            	    	
+            	    	readingTd.addHtmlElement(singleReadingDiv);
+					}
                 	
-                	readingTd.addHtmlElement(readingTdTable);
+                	// readingTd.addHtmlElement(readingTdTable);
                 	                	
                 	tr.addHtmlElement(readingTd);
                 }
                 
+                // renderowanie slow
+                tr.render(out);
+                
+            	// wiersz ze znaczeniem
+                tr = new Tr();
+                tr.setStyle("padding-bottom: 50px; " + (resultItemIndex % 2 == 0 ? "background-color: #f9f9f9" : ""));
+                
+                // znaczenie
+                {
+	    			// tytul
+	    			Td translateTitleTd = new Td();    	    			
+	    			translateTitleTd.setStyle("padding-right: 30px; font-weight:bold; font-size: 120%; vertical-align: top; width: auto");
+	    	    	     	    	    	
+	    			translateTitleTd.addHtmlElement(new Text(messageSource.getMessage("wordDictionary.page.search.table.column.translate", new Object[] { }, Locale.getDefault())));
+                	
+	    			tr.addHtmlElement(translateTitleTd);
+	    			
+	    			//
+	    			
+	    			Td translateTd = new Td(null, "font-size: 125%; width: 50%");  
+	    			tr.addHtmlElement(translateTd);
+	    				    			
+	                for (int senseIdx = 0; senseIdx < entry.getSenseList().size(); ++senseIdx) {
+	                	
+	                	Sense sense = entry.getSenseList().get(senseIdx);
+	                	                
+	                	// znaczenia
+	                	List<Gloss> polishGlossList = Dictionary2HelperCommon.getPolishGlossList(sense.getGlossList());
+	                	SenseAdditionalInfo polishAdditionalInfo = Dictionary2HelperCommon.findFirstPolishAdditionalInfo(sense.getAdditionalInfoList());
+	                	
+	                	//                	
+	                	                	
+	    				for (int currentGlossIdx = 0; currentGlossIdx < polishGlossList.size(); ++currentGlossIdx) {
+	    					
+	    					Gloss gloss = polishGlossList.get(currentGlossIdx);
+	    											
+	    					translateTd.addHtmlElement(new Text(getStringWithMark(
+	    							gloss.getValue(), findWord, true) + 
+	    							(gloss.getGType() != null ? " (" + gloss.getGType() + ")" : "") + 
+	    							(currentGlossIdx != sense.getGlossList().size() - 1 ? "<br/>" : "")));						
+	    				}
+	    				    				
+	    				// informacje dodatkowe												
+	    				if (polishAdditionalInfo != null) {					
+	    					Div infoDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
+	    					
+	    	    			infoDiv.addHtmlElement(new Text(getStringWithMark(polishAdditionalInfo.getValue(), findWord, true)));
+	    	    			
+	    	    			translateTd.addHtmlElement(infoDiv);						
+	    				}
+	    				
+	    				// przerwa
+	    				if (senseIdx != entry.getSenseList().size() - 1) {
+	    					
+	    					Div marginDiv = new Div(null, "margin-bottom: 12px;");
+	    					
+	    					translateTd.addHtmlElement(marginDiv);						
+	    				}
+					}
+                	
+                }
+                
+                // renderowanie znaczenia
+                tr.render(out);
+
+                
+                
+                /* 
                 // pokazywanie znaczen
-    	    	Td translateTd = new Td(null, "font-size: 125%; width: 50%");    	    	
+    	    	  	    	
 
                 
                 // FM_FIXME: zaznaczanie, ktore znaczenia sa dla pewnych elementow
                 
-                List<Sense> senseList = entry.getSenseList();
                 
                 
                 
-                /*
+                
+                / *
                  * FM_FIXME: obsluga tych pol
                  * 
                 "restrictedToKanjiList",
@@ -196,65 +291,26 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                 "languageSourceList",
                 "dialectList",
                 "glossList"	
-                */
-                
-                /*
+                * /
+                                
 
-				*/
-                
-                for (int senseIdx = 0; senseIdx < entry.getSenseList().size(); ++senseIdx) {
-                	
-                	Sense sense = entry.getSenseList().get(senseIdx);
-                	                
-                	// znaczenia
-                	List<Gloss> polishGlossList = Dictionary2HelperCommon.getPolishGlossList(sense.getGlossList());
-                	SenseAdditionalInfo polishAdditionalInfo = Dictionary2HelperCommon.findFirstPolishAdditionalInfo(sense.getAdditionalInfoList());
-                	
-                	//                	
-                	                	
-    				for (int currentGlossIdx = 0; currentGlossIdx < polishGlossList.size(); ++currentGlossIdx) {
-    					
-    					Gloss gloss = polishGlossList.get(currentGlossIdx);
-    											
-    					translateTd.addHtmlElement(new Text(getStringWithMark(
-    							gloss.getValue(), findWord, true) + 
-    							(gloss.getGType() != null ? " (" + gloss.getGType() + ")" : "") + 
-    							(currentGlossIdx != sense.getGlossList().size() - 1 ? "<br/>" : "")));						
-    				}
-    				    				
-    				// informacje dodatkowe												
-    				if (polishAdditionalInfo != null) {					
-    					Div infoDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
-    					
-    	    			infoDiv.addHtmlElement(new Text(getStringWithMark(polishAdditionalInfo.getValue(), findWord, true)));
-    	    			
-    	    			translateTd.addHtmlElement(infoDiv);						
-    				}
-    				
-    				// przerwa
-    				if (senseIdx != entry.getSenseList().size() - 1) {
-    					
-    					Div marginDiv = new Div(null, "margin-bottom: 12px;");
-    					
-    					translateTd.addHtmlElement(marginDiv);						
-    				}
-				}
                             	
                 tr.addHtmlElement(translateTd);
+                */
             }
             
             // renderuj glowny wiersz
-            tr.render(out);
+            
             
             // dodanie rozpychacza
-            tr = new Tr();
+            Tr tr = new Tr();
             tr.setStyle((resultItemIndex % 2 == 0 ? "background-color: #f9f9f9" : ""));
             
             Td spacerTd = new Td();
             
             spacerTd.setStyle("padding-bottom: 20px");            
             tr.addHtmlElement(spacerTd);
-            
+                
             tr.render(out);
             
             //            
