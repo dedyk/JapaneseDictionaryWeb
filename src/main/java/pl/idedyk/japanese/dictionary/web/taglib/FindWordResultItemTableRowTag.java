@@ -36,6 +36,8 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiInfo;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSource;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSourceLsWaseiEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
@@ -73,23 +75,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		//
 		
         // FM_FIXME: zaznaczanie, ktore znaczenia sa dla pewnych elementow
-                
-        /*
-         * FM_FIXME: obsluga tych pol
-         * 
-        ++ "restrictedToKanjiList",
-        ++ "restrictedToKanaList",
-        ++ "partOfSpeechList",
-        -- "referenceToAnotherKanjiKanaList",
-        -- "antonymList",
-        "fieldList",
-        "miscList",
-        "additionalInfoList",
-        "languageSourceList",
-        "dialectList",
-        "glossList"	
-        */
-		
+        
 		// FM_FIXME: wersja na telefon
 		
 		
@@ -182,19 +168,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                 for (int senseIdx = 0; senseIdx < entry.getSenseList().size(); ++senseIdx) {
                 	
                 	Sense sense = entry.getSenseList().get(senseIdx);
-										
-					// czesci mowy
-					if (sense.getPartOfSpeechList().size() > 0) { 
-						Div polishPartOfSpeechDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
-						
-						// zamiana na przetlumaczona postac
-						String translatedToPolishPartOfSpeechEnum = String.join(", ", Dictionary2HelperCommon.translateToPolishPartOfSpeechEnum(sense.getPartOfSpeechList()));
-												
-						polishPartOfSpeechDiv.addHtmlElement(new Text(translatedToPolishPartOfSpeechEnum + "<br/>"));
-		    			
-		    			translateTd.addHtmlElement(polishPartOfSpeechDiv);						
-					}
-					
+                	
 					// ograniczone do kanji/kana					
 					if (sense.getRestrictedToKanjiList().size() > 0 || sense.getRestrictedToKanaList().size() > 0) {
 						List<String> restrictedToKanjiKanaList = new ArrayList<>();
@@ -205,13 +179,96 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 						Div restrictedToKanjiKanaDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
 												
 						// zamiana na przetlumaczona postac
-						String restrictedToKanjiKanaString = messageSource.getMessage("wordDictionary.page.search.table.column.details.restrictedKanjiKana", null, Locale.getDefault()) + " " + String.join(", ", restrictedToKanjiKanaList);
+						String restrictedToKanjiKanaString = "・" + messageSource.getMessage("wordDictionary.page.search.table.column.details.restrictedKanjiKana", null, Locale.getDefault()) + " " + String.join("; ", restrictedToKanjiKanaList);
 												
 						restrictedToKanjiKanaDiv.addHtmlElement(new Text(restrictedToKanjiKanaString + "<br/>"));
 		    			
 		    			translateTd.addHtmlElement(restrictedToKanjiKanaDiv);
-					}					
+					}
+										
+					// czesci mowy
+					if (sense.getPartOfSpeechList().size() > 0) { 
+						Div polishPartOfSpeechDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+						
+						// zamiana na przetlumaczona postac
+						String translatedToPolishPartOfSpeechEnum = "・" + String.join("; ", Dictionary2HelperCommon.translateToPolishPartOfSpeechEnum(sense.getPartOfSpeechList()));
+												
+						polishPartOfSpeechDiv.addHtmlElement(new Text(translatedToPolishPartOfSpeechEnum + "<br/>"));
+		    			
+		    			translateTd.addHtmlElement(polishPartOfSpeechDiv);						
+					}
 					
+					// kategoria slowa
+					if (sense.getFieldList().size() > 0) {
+						Div fieldsDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+						
+						// zamiana na przetlumaczona postac
+						String translatedfieldEnum = "・" + String.join("; ", Dictionary2HelperCommon.translateToPolishFieldEnumList(sense.getFieldList()));
+												
+						fieldsDiv.addHtmlElement(new Text(translatedfieldEnum + "<br/>"));
+		    			
+		    			translateTd.addHtmlElement(fieldsDiv);						
+					}
+					
+					// roznosci
+					if (sense.getMiscList().size() > 0) {
+						Div miscDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+						
+						// zamiana na przetlumaczona postac
+						String translatedMiscEnum = "・" + String.join("; ", Dictionary2HelperCommon.translateToPolishMiscEnumList(sense.getMiscList()));
+												
+						miscDiv.addHtmlElement(new Text(translatedMiscEnum + "<br/>"));
+		    			
+		    			translateTd.addHtmlElement(miscDiv);						
+					}	
+					
+					// dialekt
+					if (sense.getDialectList().size() > 0) {
+						Div dialectDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+						
+						// zamiana na przetlumaczona postac
+						String translatedDialectEnum = "・" + String.join("; ", Dictionary2HelperCommon.translateToPolishDialectEnumList(sense.getDialectList()));
+												
+						dialectDiv.addHtmlElement(new Text(translatedDialectEnum + "<br/>"));
+		    			
+		    			translateTd.addHtmlElement(dialectDiv);						
+					}	
+					
+					// zagraniczne pochodzenie slowa
+					if (sense.getLanguageSourceList().size() > 0) {
+						Div languageSourceDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+						
+						// zamiana na przetlumaczona postac
+						List<String> singleLanguageSourceList = new ArrayList<>();
+						
+						for (LanguageSource languageSource : sense.getLanguageSourceList()) {
+														
+							StringBuffer singleLanguageSource = new StringBuffer();
+							
+							String languageCodeInPolish = Dictionary2HelperCommon.translateToPolishLanguageCode(languageSource.getLang());
+							String languageValue = languageSource.getValue();
+							String languageLsWasei = Dictionary2HelperCommon.translateToPolishLanguageSourceLsWaseiEnum(languageSource.getLsWasei());
+							
+							if (languageValue != null) {
+								singleLanguageSource.append(languageCodeInPolish + ": " + languageValue);
+								
+							} else {
+								singleLanguageSource.append(Dictionary2HelperCommon.translateToPolishLanguageCodeWithoutValue(languageSource.getLang()));
+							}
+							
+							if (languageLsWasei != null) {
+								singleLanguageSource.append(", ").append(languageLsWasei);
+							}
+
+							singleLanguageSourceList.add(singleLanguageSource.toString());							
+						}
+														
+						String joinedLanguageSource = "・" + String.join("; ", singleLanguageSourceList);
+												
+						languageSourceDiv.addHtmlElement(new Text(joinedLanguageSource + "<br/>"));
+		    			
+		    			translateTd.addHtmlElement(languageSourceDiv);						
+					}
 					
 					// znaczenie
                 	List<Gloss> polishGlossList = Dictionary2HelperCommon.getPolishGlossList(sense.getGlossList());
@@ -241,7 +298,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     				// przerwa
     				if (senseIdx != entry.getSenseList().size() - 1) {
     					
-    					Div marginDiv = new Div(null, "margin-bottom: 12px;");
+    					Div marginDiv = new Div(null, "margin-bottom: 17px;");
     					
     					translateTd.addHtmlElement(marginDiv);						
     				}
