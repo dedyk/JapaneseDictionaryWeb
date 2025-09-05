@@ -135,8 +135,6 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             	// slowo
     	    	Td wordTd = new Td();    	    	
     	    	tr.addHtmlElement(wordTd);
-
-    	    	///////////////////
     	    	
     	    	Div wordDiv = new Div(null, "width: 100%");
     	    	wordTd.addHtmlElement(wordDiv);
@@ -174,15 +172,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                 	
                 	wordDiv.addHtmlElement(singleWordDiv);
 				}
-            	
-    	    	
-    	    	
-    	    	
-    	    	
-    	    	
-    	    	////////////////
-            	
-            	
+            	            	
             	// znaczenie
     	    	Td translateTd = new Td(null, "padding-top: 10px");
     	    	tr.addHtmlElement(translateTd);
@@ -193,16 +183,14 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                 	Sense sense = entry.getSenseList().get(senseIdx);
 										
 					// czesci mowy
-					/*
-					if (printableSenseEntry.getPolishPartOfSpeechValue() != null) {		
-						
+					if (sense.getPartOfSpeechList().size() > 0) {
+						// FM_FIXME: do poprawy 
 						Div polishPartOfSpeechDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
 						
-						polishPartOfSpeechDiv.addHtmlElement(new Text(printableSenseEntry.getPolishPartOfSpeechValue() + "<br/>"));
+						polishPartOfSpeechDiv.addHtmlElement(new Text(sense.getPartOfSpeechList() + "<br/>"));
 		    			
 		    			translateTd.addHtmlElement(polishPartOfSpeechDiv);						
 					}
-					*/
 					
                 	List<Gloss> polishGlossList = Dictionary2HelperCommon.getPolishGlossList(sense.getGlossList());
                 	SenseAdditionalInfo polishAdditionalInfo = Dictionary2HelperCommon.findFirstPolishAdditionalInfo(sense.getAdditionalInfoList());
@@ -215,7 +203,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     											
     					translateTd.addHtmlElement(new Text(getStringWithMark(
     							gloss.getValue(), findWord, true) + 
-    							(gloss.getGType() != null ? " (" + gloss.getGType() + ")" : "") + 
+    							(gloss.getGType() != null ? " (" + Dictionary2HelperCommon.translateToPolishGlossType(gloss.getGType()) + ")" : "") + 
     							(currentGlossIdx != sense.getGlossList().size() - 1 ? "<br/>" : "")));						
     				}
     				    				
