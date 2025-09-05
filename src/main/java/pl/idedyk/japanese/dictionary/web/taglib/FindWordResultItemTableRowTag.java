@@ -78,7 +78,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
          * 
         "restrictedToKanjiList",
         "restrictedToKanaList",
-        "partOfSpeechList",
+        ++ "partOfSpeechList",
         "referenceToAnotherKanjiKanaList",
         "antonymList",
         "fieldList",
@@ -183,11 +183,13 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                 	Sense sense = entry.getSenseList().get(senseIdx);
 										
 					// czesci mowy
-					if (sense.getPartOfSpeechList().size() > 0) {
-						// FM_FIXME: do poprawy 
-						Div polishPartOfSpeechDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify");
+					if (sense.getPartOfSpeechList().size() > 0) { 
+						Div polishPartOfSpeechDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
 						
-						polishPartOfSpeechDiv.addHtmlElement(new Text(sense.getPartOfSpeechList() + "<br/>"));
+						// zamiana na przetlumaczona postac
+						String translatedToPolishPartOfSpeechEnum = String.join(", ", Dictionary2HelperCommon.translateToPolishPartOfSpeechEnum(sense.getPartOfSpeechList()));
+												
+						polishPartOfSpeechDiv.addHtmlElement(new Text(translatedToPolishPartOfSpeechEnum + "<br/>"));
 		    			
 		    			translateTd.addHtmlElement(polishPartOfSpeechDiv);						
 					}
