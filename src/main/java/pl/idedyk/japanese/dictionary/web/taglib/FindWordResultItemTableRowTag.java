@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -76,11 +77,11 @@ public class FindWordResultItemTableRowTag extends TagSupport {
         /*
          * FM_FIXME: obsluga tych pol
          * 
-        "restrictedToKanjiList",
-        "restrictedToKanaList",
+        ++ "restrictedToKanjiList",
+        ++ "restrictedToKanaList",
         ++ "partOfSpeechList",
-        "referenceToAnotherKanjiKanaList",
-        "antonymList",
+        -- "referenceToAnotherKanjiKanaList",
+        -- "antonymList",
         "fieldList",
         "miscList",
         "additionalInfoList",
@@ -194,6 +195,25 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		    			translateTd.addHtmlElement(polishPartOfSpeechDiv);						
 					}
 					
+					// ograniczone do kanji/kana					
+					if (sense.getRestrictedToKanjiList().size() > 0 || sense.getRestrictedToKanaList().size() > 0) {
+						List<String> restrictedToKanjiKanaList = new ArrayList<>();
+						
+						restrictedToKanjiKanaList.addAll(sense.getRestrictedToKanjiList());
+						restrictedToKanjiKanaList.addAll(sense.getRestrictedToKanaList());
+						
+						Div restrictedToKanjiKanaDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+												
+						// zamiana na przetlumaczona postac
+						String restrictedToKanjiKanaString = messageSource.getMessage("wordDictionary.page.search.table.column.details.restrictedKanjiKana", null, Locale.getDefault()) + " " + String.join(", ", restrictedToKanjiKanaList);
+												
+						restrictedToKanjiKanaDiv.addHtmlElement(new Text(restrictedToKanjiKanaString + "<br/>"));
+		    			
+		    			translateTd.addHtmlElement(restrictedToKanjiKanaDiv);
+					}					
+					
+					
+					// znaczenie
                 	List<Gloss> polishGlossList = Dictionary2HelperCommon.getPolishGlossList(sense.getGlossList());
                 	SenseAdditionalInfo polishAdditionalInfo = Dictionary2HelperCommon.findFirstPolishAdditionalInfo(sense.getAdditionalInfoList());
                 	
