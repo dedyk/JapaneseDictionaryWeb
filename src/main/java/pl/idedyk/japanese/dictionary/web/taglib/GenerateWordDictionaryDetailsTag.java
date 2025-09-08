@@ -96,7 +96,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		// pobieramy sens dla wybranej pary kanji i kana
 		if (dictionaryEntry2 != null) {
 			
-			List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2);
+			// FM_FIXME: to poprawy false -> true
+			List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2, false);
 			
 			// szukamy konkretnego znaczenia dla naszego slowa
 			dictionaryEntry2KanjiKanaPair = Dictionary2HelperCommon.findKanjiKanaPair(kanjiKanaPairList, dictionaryEntry);

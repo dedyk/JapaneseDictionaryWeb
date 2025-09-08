@@ -772,8 +772,7 @@ public class WordDictionaryController {
 		List<FindWordResult.ResultItem> resultItemList = new ArrayList<FindWordResult.ResultItem>();
 		
 		for (DictionaryEntry dictionaryEntry : dictionaryEntryList) {
-			// FM_FIXME: do poprawy, zakomentowano
-			// resultItemList.add(new FindWordResult.ResultItem(dictionaryEntry));
+			resultItemList.add(new FindWordResult.ResultItem(dictionaryEntry, true, false));
 		}
 
 		findWordResult.setResult(resultItemList);

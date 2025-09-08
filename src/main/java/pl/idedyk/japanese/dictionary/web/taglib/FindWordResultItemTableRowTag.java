@@ -93,7 +93,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 
             if (entry != null) {
             	// wygenerowanie wszystkich kombinacji
-            	List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(entry);
+            	List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(entry, true);
             	            	
             	// slowo
     	    	Td wordTd = new Td();    	    	
@@ -366,18 +366,18 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		Div singleWordDiv = new Div(null, "display: flex; width: 100%; ");
 		    	                	
     	// kanji
-    	Span singleWordKanjiSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px");
+    	Span singleWordKanjiSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word;");
     	
     	if (kanji != null) {
     		singleWordKanjiSpan.addHtmlElement(new Text(getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));
     	}
     	
     	// kana
-    	Span singleWordKanaSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px");
+    	Span singleWordKanaSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word;");
     	singleWordKanaSpan.addHtmlElement(new Text(getStringWithMark(kana, findWord, findWordRequest.searchKana)));
     	
     	// romaji
-    	Span singleWordRomajiSpan = new Span(null, "width: 33%; padding: 5px 0px 10px 0px");
+    	Span singleWordRomajiSpan = new Span(null, "width: 33%; padding: 5px 0px 10px 0px; overflow-wrap: break-word;");
     	singleWordRomajiSpan.addHtmlElement(new Text(getStringWithMark(romaji, findWord, findWordRequest.searchRomaji)));
     	
     	// dodanie elementow                    	
