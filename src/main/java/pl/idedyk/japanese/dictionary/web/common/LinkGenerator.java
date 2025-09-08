@@ -16,7 +16,9 @@ public class LinkGenerator {
 
 	public static String generateDictionaryEntryDetailsLink(String contextPath, DictionaryEntry dictionaryEntry, 
 			DictionaryEntryType forceDictionaryEntryType) {
-				
+		
+		// FM_FIXME: to bedzie do zmiany
+		
 		try {
 			boolean name = dictionaryEntry.isName();
 			

@@ -135,6 +135,8 @@ public class SitemapManager {
 		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/info", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
 				
 		// pobranie ilosci slow
+		// FM_FIXME: do zmiany
+		
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
 		
 		for (int currentDictionaryEntryIdx = 1; currentDictionaryEntryIdx <= dictionaryEntriesSize; ++currentDictionaryEntryIdx) {
