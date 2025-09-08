@@ -94,25 +94,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             if (entry != null) {
             	// wygenerowanie wszystkich kombinacji
             	List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(entry);
-            	
-            	// przefiltrowanie, aby nie pokazywac elementow, ktore sluza jedynie do wyszukiwania
-            	kanjiKanaPairList = kanjiKanaPairList.stream().filter(kanjiKanaPair -> {
-            		KanjiInfo kanjiInfo = kanjiKanaPair.getKanjiInfo();
-            		
-            		if (kanjiInfo != null && kanjiInfo.getKanjiAdditionalInfoList().contains(KanjiAdditionalInfoEnum.SEARCH_ONLY_KANJI_FORM) == true) {
-            			return false;
-            		}
-            		
-            		ReadingInfo readingInfo = kanjiKanaPair.getReadingInfo();
-            		
-            		if (readingInfo.getReadingAdditionalInfoList().contains(ReadingAdditionalInfoEnum.SEARCH_ONLY_KANA_FORM) == true) {
-            			return false;
-            		}            		
-            		
-            		return true;
-            		
-            	}).collect(Collectors.toList());
-            	
+            	            	
             	// slowo
     	    	Td wordTd = new Td();    	    	
     	    	tr.addHtmlElement(wordTd);
@@ -124,10 +106,35 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    		
     	    		KanjiKanaPair kanjiKanaPair = kanjiKanaPairList.get(kanjiKanaPairIdx);
                 	
+    	    		KanjiInfo kanjiInfo = kanjiKanaPair.getKanjiInfo();
+    	    		ReadingInfo readingInfo = kanjiKanaPair.getReadingInfo();
+    	    		
+    	    		boolean isKanjiSearchOnly = kanjiInfo != null && kanjiInfo.getKanjiAdditionalInfoList().contains(KanjiAdditionalInfoEnum.SEARCH_ONLY_KANJI_FORM) == true;
+    	    		boolean isKanaSearchOnly = readingInfo.getReadingAdditionalInfoList().contains(ReadingAdditionalInfoEnum.SEARCH_ONLY_KANA_FORM) == true;
+    	    		
+    	    		// czy ten element zawiera kanji i kana tylko do wyszukiwania
+    	    		if (isKanjiSearchOnly == true && isKanaSearchOnly == true) {
+    	    			continue;
+    	    		}
+    	    		
+    	    		// gdy kana jest tylko do wyszukiwania to nie pokazuj
+    	    		if (isKanaSearchOnly == true) {
+    	    			continue;
+    	    		}    	    		
+    	    		
     	    		// pobieramy wszystkie skladniki slowa
-    	        	String kanji = kanjiKanaPair.getKanji();
-    	        	String kana = kanjiKanaPair.getKana();
-    	        	String romaji = kanjiKanaPair.getRomaji();
+    	    		String kanji = null;
+    	    		String kana = null;
+    	        	String romaji = null;
+    	    		
+    	    		if (isKanjiSearchOnly == false) {
+    	    			kanji = kanjiKanaPair.getKanji();	
+    	    		}
+    	    		
+    	    		if (isKanaSearchOnly == false) {
+        	        	kana = kanjiKanaPair.getKana();
+        	        	romaji = kanjiKanaPair.getRomaji();    	    			
+    	    		}    	        	
     	        	
             		Div singleWordDiv = createWordColumn(findWordRequest, findWord, kanji, kana, romaji);
             		                	

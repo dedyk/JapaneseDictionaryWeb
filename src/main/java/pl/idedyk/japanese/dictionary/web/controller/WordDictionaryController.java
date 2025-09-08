@@ -694,10 +694,10 @@ public class WordDictionaryController {
 				
 		logger.info("Wyświetlanie katalogu słów dla strony: " + pageNo);
 		
-		// szukanie		
-		List<DictionaryEntry> dictionaryEntryList = dictionaryManager.getWordsGroup(pageSize, pageNo - 1);
-		
+		// szukanie
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
+		
+		List<JMdict.Entry> entryList = dictionaryManager.getWordsGroup(dictionaryEntriesSize, pageSize, pageNo - 1);		
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo));
@@ -709,9 +709,8 @@ public class WordDictionaryController {
 		
 		List<FindWordResult.ResultItem> resultItemList = new ArrayList<FindWordResult.ResultItem>();
 		
-		for (DictionaryEntry dictionaryEntry : dictionaryEntryList) {
-			// FM_FIXME: do poprawy, zakomentowano
-			// resultItemList.add(new FindWordResult.ResultItem(dictionaryEntry));
+		for (JMdict.Entry entry : entryList) {
+			resultItemList.add(new FindWordResult.ResultItem(entry, false, false));
 		}
 
 		findWordResult.setResult(resultItemList);
@@ -733,10 +732,10 @@ public class WordDictionaryController {
 		model.put("metaRobots", "noindex, follow");
 		
 		String pageTitle = messageSource.getMessage("wordDictionary.catalog.page.title", 
-				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + dictionaryEntryList.size() - 1) }, Locale.getDefault());
+				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + entryList.size() - 1) }, Locale.getDefault());
 		
 		String pageDescription = messageSource.getMessage("wordDictionary.catalog.page.pageDescription", 
-				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + dictionaryEntryList.size() - 1) }, Locale.getDefault());
+				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + entryList.size() - 1) }, Locale.getDefault());
 		
 		model.put("pageTitle", pageTitle);
 		model.put("pageDescription", pageDescription);
