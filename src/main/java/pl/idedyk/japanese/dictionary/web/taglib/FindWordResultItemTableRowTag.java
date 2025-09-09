@@ -73,6 +73,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		
 		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
 		
+		String link;
+		
 		try {
             JspWriter out = pageContext.getOut();
             
@@ -278,6 +280,9 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     					translateTd.addHtmlElement(marginDiv);						
     				}
 				}   
+                
+                // link
+                link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), entry);
                                 
             } else if (oldDictionaryEntry != null) { // obsluga starego formatu
             	
@@ -330,6 +335,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		    	}
 		    	*/
 		    	
+		    	link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), oldDictionaryEntry, null);
+		    	
             } else { // to nigdy nie powinno wydarzyc sie
             	throw new RuntimeException();
             }
@@ -338,7 +345,6 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	    	Td detailsLinkTd = new Td();
 	    	tr.addHtmlElement(detailsLinkTd);
 	    	
-            String link = ""; // FM_FIXME: do poprawy: LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), resultItem.getDictionaryEntry(), null);
             A linkButton = new A();
             detailsLinkTd.addHtmlElement(linkButton);
             

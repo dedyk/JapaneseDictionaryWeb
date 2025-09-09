@@ -25,6 +25,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.sitemap.exception.NotInitializedException;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class SitemapManager {
@@ -134,23 +135,17 @@ public class SitemapManager {
 		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/suggestion", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
 		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/info", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
 				
-		// pobranie ilosci slow
-		// FM_FIXME: do zmiany
-		
+		// pobranie ilosci slow		
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
 		
-		// FM_FIXME: do naprawy - start
-		/*
 		for (int currentDictionaryEntryIdx = 1; currentDictionaryEntryIdx <= dictionaryEntriesSize; ++currentDictionaryEntryIdx) {
 			
 			// pobranie slowka
-			DictionaryEntry currentDictionaryEntry = dictionaryManager.getDictionaryEntryById(currentDictionaryEntryIdx);
+			JMdict.Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ByCounter(currentDictionaryEntryIdx);
 			
-			createWordDictionaryLink(destDir, deleteOnExit, "wordDictionaryDetails", sitemapHelper, currentDictionaryEntry);
+			createWordDictionaryLink(destDir, deleteOnExit, "wordDictionaryDetails", sitemapHelper, null, dictionaryEntry2);
 		}
-		*/
-		// FM_FIXME: do naprawy - stop
-		
+				
 		// katalog slow
 		final int wordPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
 		
@@ -171,7 +166,7 @@ public class SitemapManager {
 			// pobranie slowka
 			DictionaryEntry currentDictionaryEntry = dictionaryManager.getDictionaryEntryNameById(currentDictionaryEntryNameIdx);
 			
-			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, currentDictionaryEntry);
+			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, currentDictionaryEntry, null);
 		}
 
 		// katalog slow(nazwa)
@@ -285,47 +280,63 @@ public class SitemapManager {
 		logger.info("Generowanie pliku sitemap zakonczone");
 	}
 	
-	private void createWordDictionaryLink(String destDir, boolean deleteOnExit, String groupName, SitemapHelper sitemapHelper, DictionaryEntry currentDictionaryEntry) throws Exception {
-		
-		// wygenerowanie linku standardowego
-		String link = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, null);
-		
-		// dodanie linku			
-		sitemapHelper.createUrl(destDir, deleteOnExit, groupName, link, ChangeFreqEnum.weekly, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.8 : 0.6));
-		
-		// pobranie listy typow
-		List<DictionaryEntryType> dictionaryEntryTypeList = currentDictionaryEntry.getDictionaryEntryTypeList();
-		
-		if (dictionaryEntryTypeList != null && currentDictionaryEntry.isName() == false) {
-			
-			int addableDictionaryEntryTypeInfoCounter = 0;
-
-			for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
-
-				boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
-
-				if (addableDictionaryEntryTypeInfo == true) {
-					addableDictionaryEntryTypeInfoCounter++;
-				}
-			}
-			
-			if (addableDictionaryEntryTypeInfoCounter > 1) { // jesli wiecej niz jeden
+	private void createWordDictionaryLink(String destDir, boolean deleteOnExit, String groupName, SitemapHelper sitemapHelper, DictionaryEntry currentDictionaryEntry, JMdict.Entry dictionaryEntry2) throws Exception {
 				
+		// wygenerowanie linku standardowego
+		String link; 
+		boolean isName = false;
+		
+		if (dictionaryEntry2 != null && currentDictionaryEntry == null) {
+			link = LinkGenerator.generateDictionaryEntryDetailsLink("", dictionaryEntry2);
+			isName = false;
+			
+		} else if (dictionaryEntry2 == null && currentDictionaryEntry != null) {
+			link = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, null);
+			isName = currentDictionaryEntry.isName();
+			
+		} else {
+			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
+		}
+				
+		// dodanie linku			
+		sitemapHelper.createUrl(destDir, deleteOnExit, groupName, link, ChangeFreqEnum.weekly, BigDecimal.valueOf(isName == false ? 0.8 : 0.6));
+		
+		if (currentDictionaryEntry != null) {
+			
+			// pobranie listy typow
+			List<DictionaryEntryType> dictionaryEntryTypeList = currentDictionaryEntry.getDictionaryEntryTypeList();
+			
+			if (dictionaryEntryTypeList != null && currentDictionaryEntry.isName() == false) {
+				
+				int addableDictionaryEntryTypeInfoCounter = 0;
+
 				for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
 
 					boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
 
 					if (addableDictionaryEntryTypeInfo == true) {
-						
-						// wygenerowanie linku z typem
-						String linkWithType = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, currentDictionaryEntryType);
-						
-						// dodanie linku z typem
-						sitemapHelper.createUrl(destDir, deleteOnExit, groupName, linkWithType, ChangeFreqEnum.weekly, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.7 : 0.5));							
+						addableDictionaryEntryTypeInfoCounter++;
 					}
-				}					
-			}				
-		}		
+				}
+				
+				if (addableDictionaryEntryTypeInfoCounter > 1) { // jesli wiecej niz jeden
+					
+					for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
+
+						boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
+
+						if (addableDictionaryEntryTypeInfo == true) {
+							
+							// wygenerowanie linku z typem
+							String linkWithType = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, currentDictionaryEntryType);
+							
+							// dodanie linku z typem
+							sitemapHelper.createUrl(destDir, deleteOnExit, groupName, linkWithType, ChangeFreqEnum.weekly, BigDecimal.valueOf(currentDictionaryEntry.isName() == false ? 0.7 : 0.5));							
+						}
+					}					
+				}				
+			}
+		}
 	}
 	
 	private void loadPregeneredSitemap(File pregeneredSitemapDir) {

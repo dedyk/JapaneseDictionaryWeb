@@ -1068,6 +1068,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					A linkButton = new A("btn btn-default");
 					row3TableTrTd2Div.addHtmlElement(linkButton);
 					
+					// FM_FIXME: do poprawy
+					
 		            String link = LinkGenerator.generateDictionaryEntryDetailsLink(
 		            		pageContext.getServletContext().getContextPath(), dictionaryEntry, currentDictionaryEntryType);
 
@@ -1212,7 +1214,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					
 					Div row2TableTrTd3Div = new Div(null, "margin: 0 0 5px 50px");
 					row2TableTrTd3.addHtmlElement(row2TableTrTd3Div);
-										
+					
+					// FM_FIXME: do poprawy
+					
 		            String link = LinkGenerator.generateDictionaryEntryDetailsLink(
 		            		pageContext.getServletContext().getContextPath(), referenceDictionaryEntry, null);
 		            

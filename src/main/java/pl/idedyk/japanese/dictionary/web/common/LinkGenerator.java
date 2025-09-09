@@ -22,63 +22,11 @@ public class LinkGenerator {
 		try {
 			String pathPrefix = "wordDictionaryDetails3";
 			
-			// wygenerowanie unikalnej listy kanji i kana
-			Set<String> kanjiUnique = new LinkedHashSet<>();
-			Set<String> kanaUnique = new LinkedHashSet<>();
+			String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%";
 			
-			
-			
-			String kanji = dictionaryEntry.getKanji();
-			String kana = dictionaryEntry.getKana();
-			
-			String uniqueKey = dictionaryEntry.getUniqueKey();
-			
-			if (uniqueKey == null) { // stary sposob generowania linku
-				
-				if (forceDictionaryEntryType == null) {
-					
-					String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%";
-					
-		            return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
-		            		replaceAll("%KANJI%", kanji != null ? URLEncoder.encode(kanji, "UTF-8") : "-").
-		            		replaceAll("%KANA%", URLEncoder.encode(kana, "UTF-8"));
-					
-				} else {
-					
-					String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%?forceDictionaryEntryType=%FORCEDICTIONARYENTRYTYPE%";
-					
-		            return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
-		            		replaceAll("%KANJI%", kanji != null ? URLEncoder.encode(kanji, "UTF-8") : "-").
-		            		replaceAll("%KANA%", URLEncoder.encode(kana, "UTF-8")).
-		            		replaceAll("%FORCEDICTIONARYENTRYTYPE%", forceDictionaryEntryType.toString());			
-				}				
-				
-			} else { // nowy sposob generowania linku
-				
-				String[] uniqueKeySplited = uniqueKey.split("/");
-				StringBuffer uniqueKeySb = new StringBuffer();
-				
-				for (int i = 0; i < uniqueKeySplited.length; ++i) {
-					uniqueKeySb.append(URLEncoder.encode(uniqueKeySplited[i], "UTF-8"));
-							
-					if (i != uniqueKeySplited.length - 1) {
-						uniqueKeySb.append("/");
-					}
-				}				
-				
-				if (forceDictionaryEntryType == null) {
-					
-					String linkTemplate = contextPath + "/" + pathPrefix + "2/" + uniqueKeySb.toString();
-					
-					return linkTemplate;
-
-				} else {
-					
-					String linkTemplate = contextPath + "/" + pathPrefix + "2/" + uniqueKeySb.toString() + "?forceDictionaryEntryType=%FORCEDICTIONARYENTRYTYPE%";
-					
-		            return linkTemplate.replaceAll("%FORCEDICTIONARYENTRYTYPE%", forceDictionaryEntryType.toString());								
-				}			
-			}
+            return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry2.getEntryId())).
+            		replaceAll("%KANJI%", URLEncoder.encode(dictionaryEntry2.getMisc().getUniqueKanjiKey(), "UTF-8")).
+            		replaceAll("%KANA%", URLEncoder.encode(dictionaryEntry2.getMisc().getUniqueKanaKey(), "UTF-8"));
 			
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
