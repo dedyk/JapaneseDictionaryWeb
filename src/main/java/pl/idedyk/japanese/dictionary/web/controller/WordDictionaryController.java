@@ -339,23 +339,66 @@ public class WordDictionaryController {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	@RequestMapping(value = "/wordDictionaryDetails/{id}", method = RequestMethod.GET)
+	public void showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
+			@PathVariable("id") int id) throws IOException, DictionaryException {
+				
+		// pobranie slowa - INFO: id to bedzie stare id ze starego slownika
+		JMdict.Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ByOldPolishJapaneseDictionaryId(id);
+		
+		processWordDictionaryDetailsRedirectForOldDictionary(request, response, dictionaryEntry2);
+	}
+
+	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}", method = RequestMethod.GET)
+	public void showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
+			@PathVariable("id") int id, @PathVariable("kanji") String kanji) throws IOException, DictionaryException {
+		
+		// pobranie slowa - INFO: id to bedzie stare id ze starego slownika
+		JMdict.Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ByOldPolishJapaneseDictionaryId(id);
+		
+		processWordDictionaryDetailsRedirectForOldDictionary(request, response, dictionaryEntry2);
+	}
 		
 	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
-	public String showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
+	public void showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
 			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) throws IOException, DictionaryException {
 		
-		// pobranie slowa
+		// return showWordDictionaryDetailsCommon(request, response, model, id, kanji, kana, dictionaryEntry2, forceDictionaryEntryType, true);
+		
+		// pobranie slowa - INFO: id to bedzie stare id ze starego slownika
 		JMdict.Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ByOldPolishJapaneseDictionaryId(id);
-	
-		return showWordDictionaryDetailsCommon(request, response, model, id, kanji, kana, dictionaryEntry2, forceDictionaryEntryType, true);
+		
+		processWordDictionaryDetailsRedirectForOldDictionary(request, response, dictionaryEntry2);
 	}
 	
-	public String showWordDictionaryDetailsCommon(HttpServletRequest request, HttpServletResponse response, Map<String, Object> model, 
-			Integer id, String kanji, String kana, JMdict.Entry dictionaryEntry2, String forceDictionaryEntryType, 
-			boolean checkUniqueKey) throws DictionaryException, IOException {
+	@RequestMapping(value = "/wordDictionaryDetails2/{kanji}/{kana}/{counter}", method = RequestMethod.GET)
+	public void showWordDictionaryDetails2(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
+			@PathVariable("kanji") String kanji, @PathVariable("kana") String kana, @PathVariable("counter") int counter,
+			@RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) throws IOException, DictionaryException {
+
+		// return showWordDictionaryDetailsCommon(request, response, model, null, kanji, kana, dictionaryEntry, forceDictionaryEntryType, false);
+		
+		// stworzenie unique key ze starego slownika
+		String uniqueKey = kanji + "/" + kana + "/" + counter;
+		
+		// pobranie slowa na podstawie starego uniqueKey
+		JMdict.Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ByOldPolishJapaneseDictionaryUniqueKey(uniqueKey);	
+
+		processWordDictionaryDetailsRedirectForOldDictionary(request, response, dictionaryEntry2);
+	}
+	
+	@RequestMapping(value = "/wordDictionaryDetails3/{entryId}/{uniqueKanjiKey}/{uniqueKanaKey}", method = RequestMethod.GET)
+	public String showWordDictionaryDetails3(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
+			@PathVariable("entryId") int entryId, @PathVariable("uniqueKanjiKey") String uniqueKanjiKey, @PathVariable("uniqueKanaKey") String uniqueKanaKey,
+			Map<String, Object> model) throws IOException, DictionaryException {
+		
+		
+		// FM_FIXME: aaaaa
+		return "";
 		
 		// FM_FIXME: to naprawy
-		throw new DictionaryException("FM_FIXME");
+		//throw new DictionaryException("FM_FIXME");
 		
 		/*
 		JMdict.Entry dictionaryEntry2 = null;
@@ -455,51 +498,12 @@ public class WordDictionaryController {
 		return "wordDictionaryDetails";
 		*/
 	}
-	
-	@RequestMapping(value = "/wordDictionaryDetails2/{kanji}/{kana}/{counter}", method = RequestMethod.GET)
-	public String showWordDictionaryDetails2(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
-			@PathVariable("kanji") String kanji, @PathVariable("kana") String kana, @PathVariable("counter") int counter,
-			@RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) throws IOException, DictionaryException {
-		
-		// FM_FIXME: to naprawy
-		throw new DictionaryException("FM_FIXME");
-
-		/*
-		// stworzenie unique key
-		String uniqueKey = kanji + "/" + kana + "/" + counter;
-		
-		// pobranie slowa
-		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryByUniqueKey(uniqueKey);
-	
-		return showWordDictionaryDetailsCommon(request, response, model, null, kanji, kana, dictionaryEntry, forceDictionaryEntryType, false);
-		*/
-	}
-	
-	@RequestMapping(value = "/wordDictionaryDetails/{id}", method = RequestMethod.GET)
-	public void showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
-			@PathVariable("id") int id) throws IOException, DictionaryException {
-		
-		processWordDictionaryDetailsRedirect(request, response, id);
-	}
-
-	@RequestMapping(value = "/wordDictionaryDetails/{id}/{kanji}", method = RequestMethod.GET)
-	public void showWordDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
-			@PathVariable("id") int id, @PathVariable("kanji") String kanji) throws IOException, DictionaryException {
-		
-		processWordDictionaryDetailsRedirect(request, response, id);
-	}
-
-	private void processWordDictionaryDetailsRedirect(HttpServletRequest request, HttpServletResponse response, int id) throws IOException, DictionaryException {
-		
-		// FM_FIXME: do naprawy
-		
-		/*
-		// pobranie slowa
-		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
-
-		if (dictionaryEntry != null) {
 			
-			String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null);
+	private void processWordDictionaryDetailsRedirectForOldDictionary(HttpServletRequest request, HttpServletResponse response, JMdict.Entry dictionaryEntry2) throws IOException, DictionaryException {
+		
+		if (dictionaryEntry2 != null) {
+			
+			String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry2);
 			
 			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
 			
@@ -514,7 +518,7 @@ public class WordDictionaryController {
 			
 			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
 		}
-		*/		
+				
 	}
 	
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)

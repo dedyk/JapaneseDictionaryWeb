@@ -80,6 +80,7 @@ public class AndroidRemoteDatabaseConnector {
 	// FM_FIXME: trzeba bedzie dodac nastepujace metody
 	// public JMdict.Entry getDictionaryEntry2ByCounter(int counter) throws DictionaryException;
 	// public JMdict.Entry getDictionaryEntry2ByOldPolishJapaneseDictionaryId(long oldPolishJapaneseDictionaryId) throws DictionaryException;
+	// public JMdict.Entry getDictionaryEntry2ByOldPolishJapaneseDictionaryUniqueKey(String uniqueKey) throws DictionaryException
 	
 	@RequestMapping(value = "/android/remoteDatabaseConnector/findDictionaryEntries", method = RequestMethod.POST)
 	public void findDictionaryEntries(HttpServletRequest request, HttpServletResponse response, Writer writer,
