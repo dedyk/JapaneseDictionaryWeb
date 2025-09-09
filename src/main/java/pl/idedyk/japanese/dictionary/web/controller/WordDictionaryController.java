@@ -58,6 +58,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryPdfDictionar
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 
 @Controller
 public class WordDictionaryController {
@@ -393,16 +394,10 @@ public class WordDictionaryController {
 			@PathVariable("entryId") int entryId, @PathVariable("uniqueKanjiKey") String uniqueKanjiKey, @PathVariable("uniqueKanaKey") String uniqueKanaKey,
 			Map<String, Object> model) throws IOException, DictionaryException {
 		
-		
-		// FM_FIXME: aaaaa
-		return "";
-		
-		// FM_FIXME: to naprawy
-		//throw new DictionaryException("FM_FIXME");
-		
+		// pobranie dictionaryEntry2 na podstawie entryId
+		Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ById(entryId);
+				
 		/*
-		JMdict.Entry dictionaryEntry2 = null;
-		
 		DictionaryEntryType forceDictionaryEntryTypeType = null;
 		
 		if (forceDictionaryEntryType != null) {
@@ -417,19 +412,12 @@ public class WordDictionaryController {
 				logger.info("Niepoprawna wartość parametru 'forceDictionaryEntryType' = " + forceDictionaryEntryType);				
 			}
 		}
+		*/
 		
 		// tytul strony
-		if (dictionaryEntry != null) {
-			
-			// sprawdzenie, czy wystepuje slowo w formacie JMdict
-			// pobieramy entry id
-			Integer entryId = dictionaryEntry.getJmdictEntryId();
-			
-			if (entryId != null) {
-				// pobieramy z bazy danych
-				dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ById(entryId);
-			}			
-			
+		if (dictionaryEntry2 != null) {
+						
+			/*
 			if (forceDictionaryEntryTypeType != null) { // sprawdzamy, czy nie zostal podany zly parametr forceDictionaryEntryTypeType
 				
 				List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
@@ -445,33 +433,30 @@ public class WordDictionaryController {
 					return null;
 				}
 			}
+			*/
 			
-			// sprawdzenie, czy nie odwolujemy sie do innej strony
-			String dictionaryEntryKanji = "-";
-			
-			if (dictionaryEntry.isKanjiExists() == true) {
-				dictionaryEntryKanji = dictionaryEntry.getKanji();
-			}
-			
-			String dictionaryEntryKana = dictionaryEntry.getKana();
-						
-			if (	dictionaryEntryKanji.equals(kanji) == false || 
-					dictionaryEntryKana.equals(kana) == false ||
-					(checkUniqueKey == true && dictionaryEntry.getUniqueKey() != null)) { // przekierowanie na wlasciwa strone o id
+			// sprawdzenie, czy nie odwolujemy sie dokladnie do tej strony
+			if (	uniqueKanjiKey.equals(dictionaryEntry2.getMisc().getUniqueKanjiKey()) == false ||
+					uniqueKanaKey.equals(dictionaryEntry2.getMisc().getUniqueKanaKey()) == false) {
 				
-				String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null);
+				// wysylamy przekierowanie do wlasciwej strony
+				String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry2);
 				
 				RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
 				
 				loggerSender.sendLog(redirectLoggerModel);	
 				
-				return "redirect:" + destinationUrl;			
-			}			
+				return "redirect:" + destinationUrl;				
+			}
 			
+			// przygotowanie danych do wyswietlenia
+						
 			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
 			
 			// logowanie
-			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
+			// FM_FIXME: do poprawki - start
+			/*
+			// loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry)); <- FM_FIXME: tymczasowo zakomentowano
 
 			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry, forceDictionaryEntryTypeType);
 						
@@ -481,9 +466,12 @@ public class WordDictionaryController {
 			model.put("pageTitle", pageTitle);
 			model.put("pageDescription", pageDescription);
 			
+			- stop
+			*/
+			
 		} else {
 			
-			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa: " + id + " / " + kanji + " / " + kana);
+			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa: " + entryId + " / " + uniqueKanjiKey + " / " + uniqueKanaKey);
 			
 			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType",
 					new Object[] { "-", "-", "-" }, Locale.getDefault());
@@ -491,12 +479,11 @@ public class WordDictionaryController {
 			model.put("pageTitle", pageTitle);
 		}
 						
-		model.put("dictionaryEntry", dictionaryEntry);
+		// model.put("dictionaryEntry", dictionaryEntry);
 		model.put("dictionaryEntry2", dictionaryEntry2);
 		model.put("selectedMenu", "wordDictionary");
 		
 		return "wordDictionaryDetails";
-		*/
 	}
 			
 	private void processWordDictionaryDetailsRedirectForOldDictionary(HttpServletRequest request, HttpServletResponse response, JMdict.Entry dictionaryEntry2) throws IOException, DictionaryException {
