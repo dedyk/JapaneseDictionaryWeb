@@ -483,7 +483,11 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	@Override
 	public List<TransitiveIntransitivePairWithDictionaryEntry> getTransitiveIntransitivePairsList()
 			throws DictionaryException {
+		
+		// FM_FIXME: do naprawy
+		throw new DictionaryException("FM_FIXME");
 
+		/*
 		waitForDatabaseReady();
 
 		List<TransitiveIntransitivePairWithDictionaryEntry> result = new ArrayList<>();
@@ -511,6 +515,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		}
 
 		return result;
+		*/
 	}
 
 	public boolean isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource source) {

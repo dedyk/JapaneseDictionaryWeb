@@ -345,15 +345,19 @@ public class WordDictionaryController {
 			@PathVariable("kana") String kana, @RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) throws IOException, DictionaryException {
 		
 		// pobranie slowa
-		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
+		JMdict.Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ByOldPolishJapaneseDictionaryId(id);
 	
-		return showWordDictionaryDetailsCommon(request, response, model, id, kanji, kana, dictionaryEntry, forceDictionaryEntryType, true);
+		return showWordDictionaryDetailsCommon(request, response, model, id, kanji, kana, dictionaryEntry2, forceDictionaryEntryType, true);
 	}
 	
 	public String showWordDictionaryDetailsCommon(HttpServletRequest request, HttpServletResponse response, Map<String, Object> model, 
-			Integer id, String kanji, String kana, DictionaryEntry dictionaryEntry, String forceDictionaryEntryType, 
+			Integer id, String kanji, String kana, JMdict.Entry dictionaryEntry2, String forceDictionaryEntryType, 
 			boolean checkUniqueKey) throws DictionaryException, IOException {
 		
+		// FM_FIXME: to naprawy
+		throw new DictionaryException("FM_FIXME");
+		
+		/*
 		JMdict.Entry dictionaryEntry2 = null;
 		
 		DictionaryEntryType forceDictionaryEntryTypeType = null;
@@ -449,6 +453,7 @@ public class WordDictionaryController {
 		model.put("selectedMenu", "wordDictionary");
 		
 		return "wordDictionaryDetails";
+		*/
 	}
 	
 	@RequestMapping(value = "/wordDictionaryDetails2/{kanji}/{kana}/{counter}", method = RequestMethod.GET)
@@ -456,6 +461,10 @@ public class WordDictionaryController {
 			@PathVariable("kanji") String kanji, @PathVariable("kana") String kana, @PathVariable("counter") int counter,
 			@RequestParam(value = "forceDictionaryEntryType", required = false) String forceDictionaryEntryType, Map<String, Object> model) throws IOException, DictionaryException {
 		
+		// FM_FIXME: to naprawy
+		throw new DictionaryException("FM_FIXME");
+
+		/*
 		// stworzenie unique key
 		String uniqueKey = kanji + "/" + kana + "/" + counter;
 		
@@ -463,6 +472,7 @@ public class WordDictionaryController {
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryByUniqueKey(uniqueKey);
 	
 		return showWordDictionaryDetailsCommon(request, response, model, null, kanji, kana, dictionaryEntry, forceDictionaryEntryType, false);
+		*/
 	}
 	
 	@RequestMapping(value = "/wordDictionaryDetails/{id}", method = RequestMethod.GET)
@@ -480,7 +490,10 @@ public class WordDictionaryController {
 	}
 
 	private void processWordDictionaryDetailsRedirect(HttpServletRequest request, HttpServletResponse response, int id) throws IOException, DictionaryException {
-				
+		
+		// FM_FIXME: do naprawy
+		
+		/*
 		// pobranie slowa
 		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryById(id);
 
@@ -500,7 +513,8 @@ public class WordDictionaryController {
 			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
 			
 			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
-		}		
+		}
+		*/		
 	}
 	
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)

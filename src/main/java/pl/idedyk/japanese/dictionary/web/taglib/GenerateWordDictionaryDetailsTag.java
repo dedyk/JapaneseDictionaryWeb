@@ -1146,7 +1146,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				
 				Integer referenceWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
 
-				final DictionaryEntry referenceDictionaryEntry = dictionaryManager.getDictionaryEntryById(referenceWordId);
+				// FM_FIXME: do naprawy
+				final DictionaryEntry referenceDictionaryEntry = null; // dictionaryManager.getDictionaryEntryById(referenceWordId);
 
 				if (referenceDictionaryEntry != null) {
 					

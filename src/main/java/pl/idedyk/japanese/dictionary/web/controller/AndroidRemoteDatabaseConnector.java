@@ -77,6 +77,10 @@ public class AndroidRemoteDatabaseConnector {
 
 	//
 	
+	// FM_FIXME: trzeba bedzie dodac nastepujace metody
+	// public JMdict.Entry getDictionaryEntry2ByCounter(int counter) throws DictionaryException;
+	// public JMdict.Entry getDictionaryEntry2ByOldPolishJapaneseDictionaryId(long oldPolishJapaneseDictionaryId) throws DictionaryException;
+	
 	@RequestMapping(value = "/android/remoteDatabaseConnector/findDictionaryEntries", method = RequestMethod.POST)
 	public void findDictionaryEntries(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
@@ -112,6 +116,10 @@ public class AndroidRemoteDatabaseConnector {
 	public void getDictionaryEntryById(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
 		
+		// FM_FIXME: do usuniecia
+		throw new DictionaryException("FM_FIXME");
+		
+		/*
 		Gson gson = new Gson();
 		
 		// pobranie wejscia
@@ -144,12 +152,17 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(dictionaryEntry));
+		*/
 	}
 
 	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntryByUniqueKey", method = RequestMethod.POST)
 	public void getDictionaryEntryByUniqueKey(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
 		
+		// FM_FIXME: do usuniecia
+		throw new DictionaryException("FM_FIXME");
+
+		/*
 		Gson gson = new Gson();
 		
 		// pobranie wejscia
@@ -182,6 +195,7 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(dictionaryEntry));
+		*/
 	}
 
 	

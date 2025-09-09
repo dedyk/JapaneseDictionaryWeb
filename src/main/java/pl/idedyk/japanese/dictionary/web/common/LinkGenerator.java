@@ -2,20 +2,93 @@ package pl.idedyk.japanese.dictionary.web.common;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class LinkGenerator {
 
+	public static String generateDictionaryEntryDetailsLink(String contextPath, JMdict.Entry dictionaryEntry2) {
+		
+		try {
+			String pathPrefix = "wordDictionaryDetails3";
+			
+			// wygenerowanie unikalnej listy kanji i kana
+			Set<String> kanjiUnique = new LinkedHashSet<>();
+			Set<String> kanaUnique = new LinkedHashSet<>();
+			
+			
+			
+			String kanji = dictionaryEntry.getKanji();
+			String kana = dictionaryEntry.getKana();
+			
+			String uniqueKey = dictionaryEntry.getUniqueKey();
+			
+			if (uniqueKey == null) { // stary sposob generowania linku
+				
+				if (forceDictionaryEntryType == null) {
+					
+					String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%";
+					
+		            return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
+		            		replaceAll("%KANJI%", kanji != null ? URLEncoder.encode(kanji, "UTF-8") : "-").
+		            		replaceAll("%KANA%", URLEncoder.encode(kana, "UTF-8"));
+					
+				} else {
+					
+					String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%?forceDictionaryEntryType=%FORCEDICTIONARYENTRYTYPE%";
+					
+		            return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry.getId())).
+		            		replaceAll("%KANJI%", kanji != null ? URLEncoder.encode(kanji, "UTF-8") : "-").
+		            		replaceAll("%KANA%", URLEncoder.encode(kana, "UTF-8")).
+		            		replaceAll("%FORCEDICTIONARYENTRYTYPE%", forceDictionaryEntryType.toString());			
+				}				
+				
+			} else { // nowy sposob generowania linku
+				
+				String[] uniqueKeySplited = uniqueKey.split("/");
+				StringBuffer uniqueKeySb = new StringBuffer();
+				
+				for (int i = 0; i < uniqueKeySplited.length; ++i) {
+					uniqueKeySb.append(URLEncoder.encode(uniqueKeySplited[i], "UTF-8"));
+							
+					if (i != uniqueKeySplited.length - 1) {
+						uniqueKeySb.append("/");
+					}
+				}				
+				
+				if (forceDictionaryEntryType == null) {
+					
+					String linkTemplate = contextPath + "/" + pathPrefix + "2/" + uniqueKeySb.toString();
+					
+					return linkTemplate;
+
+				} else {
+					
+					String linkTemplate = contextPath + "/" + pathPrefix + "2/" + uniqueKeySb.toString() + "?forceDictionaryEntryType=%FORCEDICTIONARYENTRYTYPE%";
+					
+		            return linkTemplate.replaceAll("%FORCEDICTIONARYENTRYTYPE%", forceDictionaryEntryType.toString());								
+				}			
+			}
+			
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}			
+	}
+	
 	public static String generateDictionaryEntryDetailsLink(String contextPath, DictionaryEntry dictionaryEntry, 
 			DictionaryEntryType forceDictionaryEntryType) {
+		
+		// INFO: to bedzie uzywane tylko dla slownika nazw
 		
 		// FM_FIXME: to bedzie do zmiany
 		

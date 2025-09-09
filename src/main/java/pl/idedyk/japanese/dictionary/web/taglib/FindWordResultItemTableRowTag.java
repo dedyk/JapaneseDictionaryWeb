@@ -3,7 +3,6 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.jsp.JspException;
@@ -18,7 +17,6 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
-import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.Span;
@@ -46,8 +44,6 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	private FindWordResult.ResultItem resultItem;
 	
 	private MessageSource messageSource;
-	
-	private DictionaryManager dictionaryManager;
 		
 	@Override
 	public int doStartTag() throws JspException {
@@ -76,7 +72,6 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
 		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
-		this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
 		
 		try {
             JspWriter out = pageContext.getOut();

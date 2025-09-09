@@ -139,6 +139,8 @@ public class SitemapManager {
 		
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
 		
+		// FM_FIXME: do naprawy - start
+		/*
 		for (int currentDictionaryEntryIdx = 1; currentDictionaryEntryIdx <= dictionaryEntriesSize; ++currentDictionaryEntryIdx) {
 			
 			// pobranie slowka
@@ -146,6 +148,8 @@ public class SitemapManager {
 			
 			createWordDictionaryLink(destDir, deleteOnExit, "wordDictionaryDetails", sitemapHelper, currentDictionaryEntry);
 		}
+		*/
+		// FM_FIXME: do naprawy - stop
 		
 		// katalog slow
 		final int wordPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
