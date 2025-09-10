@@ -68,6 +68,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	private DictionaryEntryType forceDictionaryEntryType;
 	
 	private JMdict.Entry dictionaryEntry2;
+	private List<KanjiKanaPair> kanjiKanaPairList;
+	
+	// FM_FIXME: do usuniecia
 	private KanjiKanaPair dictionaryEntry2KanjiKanaPair;
 			
 	private MessageSource messageSource;
@@ -93,17 +96,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		//
 		
-		// pobieramy sens dla wybranej pary kanji i kana
-		if (dictionaryEntry2 != null) {
-			
-			// FM_FIXME: to poprawy false -> true
-			List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2, false);
-			
-			// szukamy konkretnego znaczenia dla naszego slowa
-			dictionaryEntry2KanjiKanaPair = Dictionary2HelperCommon.findKanjiKanaPair(kanjiKanaPairList, dictionaryEntry);
-			
+		// pobieramy pary slowek do wyswietlenia
+		if (dictionaryEntry2 != null) {			
+			kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2, true);
+						
 		} else {
-			dictionaryEntry2KanjiKanaPair = null;
+			kanjiKanaPairList = null;
 		}		
 
 		//
@@ -117,8 +115,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		try {
             JspWriter out = pageContext.getOut();
 
-            if (dictionaryEntry == null) {
-            	
+            if (dictionaryEntry == null && dictionaryEntry2 == null) {            	
             	Div errorDiv = new Div("alert alert-danger");
             	
             	errorDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.null")));
@@ -130,8 +127,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
             Div mainContentDiv = new Div();
             
-            if (dictionaryEntry.isName() == true) {
-            	
+            if (dictionaryEntry != null && dictionaryEntry.isName() == true) {            	
             	Div infoDiv = new Div("alert alert-info");
             	
             	infoDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.name.info")));
@@ -147,6 +143,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             Div contentDiv = new Div("col-md-10");
             mainContentDiv.addHtmlElement(contentDiv);
             
+            /* FM_FIXME: do poprawy - start
             Div exampleSentenceDiv = null;
             
             try {
@@ -189,6 +186,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             if (mobile == false) {
             	mainContentDiv.addHtmlElement(generateMenu(mainMenu));
             }
+            // FM_FIXME: do poprawy - end */
 
             // renderowanie
             mainContentDiv.render(out);
@@ -201,27 +199,52 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 
 	private H generateTitle() throws IOException {
-			
+				
 		H pageHeader = new H(4);
 				
 		pageHeader.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.title")));
-		
-		if (dictionaryEntry.isKanjiExists() == true) {
+				
+		if (dictionaryEntry != null) {
 			
-			B kanjiBold = new B();
+			if (dictionaryEntry.isKanjiExists() == true) {				
+				B kanjiBold = new B();
+				
+				kanjiBold.addHtmlElement(new Text(dictionaryEntry.getKanji()));
+				
+				pageHeader.addHtmlElement(kanjiBold);
+				pageHeader.addHtmlElement(new Text(" | "));
+			}
 			
-			kanjiBold.addHtmlElement(new Text(dictionaryEntry.getKanji()));
+			String kana = dictionaryEntry.getKana();
+				
+			B kanaBold = new B();
 			
-			pageHeader.addHtmlElement(kanjiBold);
-			pageHeader.addHtmlElement(new Text(" | "));
+			kanaBold.addHtmlElement(new Text(kana));
+			pageHeader.addHtmlElement(kanaBold);
+			
+		} else if (dictionaryEntry2 != null) {
+			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2);
+			
+			String kanji = uniqueKanjiKanaRomajiSetWithoutSearchOnly[0].replaceAll(",", ", ");
+			String kana = uniqueKanjiKanaRomajiSetWithoutSearchOnly[1].replaceAll(",", ", ");
+			
+			if (kanji.equals("-") == false) { // czy kanji istnieje
+				B kanjiBold = new B();
+				
+				kanjiBold.addHtmlElement(new Text(kanji));
+				
+				pageHeader.addHtmlElement(kanjiBold);
+				pageHeader.addHtmlElement(new Text(" | "));
+			}
+						
+			B kanaBold = new B();
+			
+			kanaBold.addHtmlElement(new Text(kana));
+			pageHeader.addHtmlElement(kanaBold);			
+			
+		} else {
+			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
 		}
-		
-		String kana = dictionaryEntry.getKana();
-			
-		B kanaBold = new B();
-		
-		kanaBold.addHtmlElement(new Text(kana));
-		pageHeader.addHtmlElement(kanaBold);
 		
 		return pageHeader;
 	}
