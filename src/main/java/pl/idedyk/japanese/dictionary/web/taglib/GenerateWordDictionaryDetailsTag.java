@@ -44,6 +44,7 @@ import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Img;
+import pl.idedyk.japanese.dictionary.web.html.Span;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
@@ -57,7 +58,9 @@ import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.Printab
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSenseEntryGloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfo;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
@@ -80,6 +83,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	@Override
 	public int doStartTag() throws JspException {
+		
+		// FM_FIXME: sprawdzic, jak to zachowuje sie w wersji mobilnej
+		// FM_FIXME: wyswietlic wszystkie informacjie z KanjiInfo, ReadingInfo, Sense 
 		
 		ServletContext servletContext = pageContext.getServletContext();
 		ServletRequest servletRequest = pageContext.getRequest();
@@ -143,11 +149,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             Div contentDiv = new Div("col-md-10");
             mainContentDiv.addHtmlElement(contentDiv);
             
-            /* FM_FIXME: do poprawy - start
             Div exampleSentenceDiv = null;
             
-            try {
-	         
+            try {	         
             	// generowanie informacji podstawowych
 	            contentDiv.addHtmlElement(generateMainInfo(mainMenu, mobile));
 	            
@@ -157,12 +161,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             } catch (DictionaryException e) {
             	throw new JspException(e);
             }
-            
-            
+                        
             if (exampleSentenceDiv != null) {
             	contentDiv.addHtmlElement(exampleSentenceDiv);
             }
             
+            /* FM_FIXME: do poprawy - start
             // odmiany gramatyczne
     		Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache = new HashMap<GrammaFormConjugateResultType, GrammaFormConjugateResult>();
             
@@ -183,6 +187,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             mainContentDiv.addHtmlElement(addSuggestionElements(mainMenu));
                         
             // dodaj menu
+            // FM_FIXME: sprawdzic, czy menu dziala po zmianach
             if (mobile == false) {
             	mainContentDiv.addHtmlElement(generateMenu(mainMenu));
             }
@@ -271,12 +276,18 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		// zawartosc sekcji
 		Div panelBody = new Div("panel-body");
 		
+		// slowa
+		Div wordDiv = generateWordsSection(mainInfoMenu, mobile);
+		
+		panelBody.addHtmlElement(wordDiv);
+		panelBody.addHtmlElement(new Hr());
+		
+		/* FM_FIXME: do poprawy - start
 		// kanji
 		Div kanjiDiv = generateKanjiSection(mainInfoMenu, mobile);
 		
 		if (kanjiDiv != null) {
-			panelBody.addHtmlElement(kanjiDiv);	
-			
+			panelBody.addHtmlElement(kanjiDiv);				
 			panelBody.addHtmlElement(new Hr());
 		}
 		
@@ -320,12 +331,97 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         	panelBody.addHtmlElement(new Hr());
         	panelBody.addHtmlElement(additionalAttributeDiv);
         }
+        
+        FM_FIXME: do poprawy - koniec */
         		
 		panelDiv.addHtmlElement(panelBody);
 		
 		return panelDiv;
 	}
 	
+	private Div generateWordsSection(Menu menu, boolean mobile) {
+		Div wordsDiv = new Div();
+		
+    	// wiersz z tytulem
+    	Div wordsTitleRowDiv = new Div("row");
+		
+    	// slowo - tytul
+    	Div wordsiTitleDiv = new Div("col-md-1");
+    	
+    	H kanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	kanjiTitleH4.setId("wordsiTitleId");
+    	
+    	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.words.title")));
+    	menu.getChildMenu().add(new Menu(kanjiTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.words.title")));
+    	
+    	wordsiTitleDiv.addHtmlElement(kanjiTitleH4);
+    	
+    	wordsTitleRowDiv.addHtmlElement(wordsiTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	wordsDiv.addHtmlElement(wordsTitleRowDiv);
+		
+    	// pokazywanie kolejnych slow
+    	// FM_FIXME: pokazywanie wszystkie elementow z KanjiInfo i ReadingInfo
+    	// FM_FIXME: obsluga starego dictionaryEntry !!!!!!!!
+    	
+    	for (int kanjiKanaPairIdx = 0; kanjiKanaPairIdx < kanjiKanaPairList.size(); ++kanjiKanaPairIdx) {
+        	
+    		// FM_FIXME: do poprawy !!!!!!! to jest tylko skopiowane z wyszukiwania
+    		
+    	    Div wordDiv = new Div("row");
+    		wordsDiv.addHtmlElement(wordDiv);
+    		
+    		wordDiv.addHtmlElement(new Div("col-md-1")); // przerwa
+    		
+    		KanjiKanaPair kanjiKanaPair = kanjiKanaPairList.get(kanjiKanaPairIdx);
+        	
+    		KanjiInfo kanjiInfo = kanjiKanaPair.getKanjiInfo();
+    		ReadingInfo readingInfo = kanjiKanaPair.getReadingInfo();
+    		    	    		   	    		
+    		// pobieramy wszystkie skladniki slowa
+    		String kanji = kanjiKanaPair.getKanji();
+    		String kana = kanjiKanaPair.getKana();
+        	String romaji = kanjiKanaPair.getRomaji();
+    		    	        	
+    		Div singleWordDiv = createWordColumn(kanji, kana, romaji);
+    		                	
+        	wordDiv.addHtmlElement(singleWordDiv);
+		}
+    	
+		return wordsDiv;
+	}
+	
+	private Div createWordColumn(String kanji, String kana, String romaji) {
+		
+		// FM_FIXME: do poprawy, to jest tylko skopiowane z wyszukiwania
+		
+		Div singleWordDiv = new Div("col-md-10", "display: flex;");
+		    	                	
+    	// kanji
+    	Span singleWordKanjiSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word;");
+    	
+    	if (kanji != null) {
+    		singleWordKanjiSpan.addHtmlElement(new Text(kanji));
+    	}
+    	
+    	// kana
+    	Span singleWordKanaSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word;");
+    	singleWordKanaSpan.addHtmlElement(new Text(kana));
+    	
+    	// romaji
+    	Span singleWordRomajiSpan = new Span(null, "width: 33%; padding: 5px 0px 10px 0px; overflow-wrap: break-word;");
+    	singleWordRomajiSpan.addHtmlElement(new Text(romaji));
+    	
+    	// dodanie elementow                    	
+    	singleWordDiv.addHtmlElement(singleWordKanjiSpan);
+    	singleWordDiv.addHtmlElement(singleWordKanaSpan);
+    	singleWordDiv.addHtmlElement(singleWordRomajiSpan);
+    	
+    	return singleWordDiv;		
+	}
+
 	private Div generateKanjiSection(Menu menu, boolean mobile) throws IOException, DictionaryException {
 		
 		Div kanjiDiv = new Div();
@@ -362,25 +458,25 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         	return null;
         }
         	
-    	// wiersz z tytulem
-    	Div row1Div = new Div("row");
-    	
-    	// kanji - tytul
-    	Div kanjiTitleDiv = new Div("col-md-1");
-    	
-    	H kanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
-    	
-    	kanjiTitleH4.setId("kanjiTitleId");
-    	
-    	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
-    	menu.getChildMenu().add(new Menu(kanjiTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
-    	
-    	kanjiTitleDiv.addHtmlElement(kanjiTitleH4);
-    	
-    	row1Div.addHtmlElement(kanjiTitleDiv);
-    	
-    	// dodaj wiersz z tytulem
-    	kanjiDiv.addHtmlElement(row1Div);
+//    	// wiersz z tytulem
+//    	Div row1Div = new Div("row");
+//    	
+//    	// kanji - tytul
+//    	Div kanjiTitleDiv = new Div("col-md-1");
+//    	
+//    	H kanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+//    	
+//    	kanjiTitleH4.setId("kanjiTitleId");
+//    	
+//    	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
+//    	menu.getChildMenu().add(new Menu(kanjiTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
+//    	
+//    	kanjiTitleDiv.addHtmlElement(kanjiTitleH4);
+//    	
+//    	row1Div.addHtmlElement(kanjiTitleDiv);
+//    	
+//    	// dodaj wiersz z tytulem
+//    	kanjiDiv.addHtmlElement(row1Div);
     	    	        	        	       		
         List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(dictionaryEntry);
         
@@ -397,7 +493,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				// wiersz ze znakiem kanji
 	        	Div row2Div = new Div("row");
 	        	
-	        	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+//	        	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
 				
 	        	// komorka ze znakiem kanji
 	        	Div kanjiDivBody = new Div("col-md-10");
@@ -1366,6 +1462,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 	
 	private Div generateExampleSentence(Menu mainMenu) throws DictionaryException {
+		
+		// FM_FIXME: do poprawy
+		if (1 == 1) {
+			return null;
+		}
 
 		List<String> exampleSentenceGroupIdsList = dictionaryEntry.getExampleSentenceGroupIdsList();
 		

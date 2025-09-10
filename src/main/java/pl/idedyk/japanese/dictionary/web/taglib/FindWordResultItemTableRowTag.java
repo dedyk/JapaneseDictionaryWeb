@@ -105,34 +105,12 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                 	
     	    		KanjiInfo kanjiInfo = kanjiKanaPair.getKanjiInfo();
     	    		ReadingInfo readingInfo = kanjiKanaPair.getReadingInfo();
-    	    		
-    	    		boolean isKanjiSearchOnly = kanjiInfo != null && kanjiInfo.getKanjiAdditionalInfoList().contains(KanjiAdditionalInfoEnum.SEARCH_ONLY_KANJI_FORM) == true;
-    	    		boolean isKanaSearchOnly = readingInfo.getReadingAdditionalInfoList().contains(ReadingAdditionalInfoEnum.SEARCH_ONLY_KANA_FORM) == true;
-    	    		
-    	    		// czy ten element zawiera kanji i kana tylko do wyszukiwania
-    	    		if (isKanjiSearchOnly == true && isKanaSearchOnly == true) {
-    	    			continue;
-    	    		}
-    	    		
-    	    		// gdy kana jest tylko do wyszukiwania to nie pokazuj
-    	    		if (isKanaSearchOnly == true) {
-    	    			continue;
-    	    		}    	    		
-    	    		
+    	    		    	    		   	    		
     	    		// pobieramy wszystkie skladniki slowa
-    	    		String kanji = null;
-    	    		String kana = null;
-    	        	String romaji = null;
-    	    		
-    	    		if (isKanjiSearchOnly == false) {
-    	    			kanji = kanjiKanaPair.getKanji();	
-    	    		}
-    	    		
-    	    		if (isKanaSearchOnly == false) {
-        	        	kana = kanjiKanaPair.getKana();
-        	        	romaji = kanjiKanaPair.getRomaji();    	    			
-    	    		}    	        	
-    	        	
+    	    		String kanji = kanjiKanaPair.getKanji();
+    	    		String kana = kanjiKanaPair.getKana();
+    	        	String romaji = kanjiKanaPair.getRomaji();
+    	    		    	        	
             		Div singleWordDiv = createWordColumn(findWordRequest, findWord, kanji, kana, romaji);
             		                	
                 	wordDiv.addHtmlElement(singleWordDiv);
