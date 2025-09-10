@@ -388,6 +388,8 @@ public class LoggerListener {
 			
 		} else if (operation == GenericLogOperationEnum.WORD_DICTIONARY_DETAILS) {
 			
+			// INFO: gdyby w przyszlosci istniala koniecznosc odkomentowania tego to nalezy dodac obsluge JMDict.Entry
+			
 			/*
 			WordDictionaryDetailsLoggerModel wordDictionaryDetailsLoggerModel = (WordDictionaryDetailsLoggerModel)loggerModelCommon;
 			

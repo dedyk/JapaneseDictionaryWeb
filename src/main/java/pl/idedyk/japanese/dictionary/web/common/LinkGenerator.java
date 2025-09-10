@@ -2,16 +2,15 @@ package pl.idedyk.japanese.dictionary.web.common;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
@@ -19,14 +18,16 @@ public class LinkGenerator {
 
 	public static String generateDictionaryEntryDetailsLink(String contextPath, JMdict.Entry dictionaryEntry2) {
 		
+		String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2);
+		
 		try {
 			String pathPrefix = "wordDictionaryDetails3";
 			
 			String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%";
 			
             return linkTemplate.replaceAll("%ID%", String.valueOf(dictionaryEntry2.getEntryId())).
-            		replaceAll("%KANJI%", URLEncoder.encode(dictionaryEntry2.getMisc().getUniqueKanjiKey(), "UTF-8")).
-            		replaceAll("%KANA%", URLEncoder.encode(dictionaryEntry2.getMisc().getUniqueKanaKey(), "UTF-8"));
+            		replaceAll("%KANJI%", URLEncoder.encode(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0], "UTF-8")).
+            		replaceAll("%KANA%", URLEncoder.encode(uniqueKanjiKanaRomajiSetWithoutSearchOnly[1], "UTF-8"));
 			
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);

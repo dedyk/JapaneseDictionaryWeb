@@ -57,6 +57,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsL
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryPdfDictionaryLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 
@@ -435,9 +436,11 @@ public class WordDictionaryController {
 			}
 			*/
 			
+			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2);
+			
 			// sprawdzenie, czy nie odwolujemy sie dokladnie do tej strony
-			if (	uniqueKanjiKey.equals(dictionaryEntry2.getMisc().getUniqueKanjiKey()) == false ||
-					uniqueKanaKey.equals(dictionaryEntry2.getMisc().getUniqueKanaKey()) == false) {
+			if (	uniqueKanjiKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0]) == false ||
+					uniqueKanaKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[1]) == false) {
 				
 				// wysylamy przekierowanie do wlasciwej strony
 				String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry2);
@@ -454,21 +457,16 @@ public class WordDictionaryController {
 			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
 			
 			// logowanie
-			// FM_FIXME: do poprawki - start
-			/*
-			// loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry)); <- FM_FIXME: tymczasowo zakomentowano
+			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), null, dictionaryEntry2));
 
-			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry, forceDictionaryEntryTypeType);
+			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(null, null, dictionaryEntry2);
 						
 			String pageTitle = wordDictionaryDetailsTitleAndDescription[0];
 			String pageDescription = wordDictionaryDetailsTitleAndDescription[1];
 			
 			model.put("pageTitle", pageTitle);
 			model.put("pageDescription", pageDescription);
-			
-			- stop
-			*/
-			
+						
 		} else {
 			
 			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa: " + entryId + " / " + uniqueKanjiKey + " / " + uniqueKanaKey);
@@ -551,7 +549,7 @@ public class WordDictionaryController {
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
 
-			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry, null);
+			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry, null, null);
 						
 			String pageTitle = wordDictionaryDetailsTitleAndDescription[0];
 			String pageDescription = wordDictionaryDetailsTitleAndDescription[1];
@@ -626,62 +624,80 @@ public class WordDictionaryController {
 		return showWordDictionaryNameDetailsCommon(request, model, null, kanji, kana, dictionaryEntry, false);
 	}
 	
-	private String[] getWordDictionaryDetailsTitleAndDescription(DictionaryEntry dictionaryEntry, DictionaryEntryType forceDictionaryEntryTypeType) {
+	private String[] getWordDictionaryDetailsTitleAndDescription(DictionaryEntry dictionaryEntry, DictionaryEntryType forceDictionaryEntryTypeType, JMdict.Entry dictionaryEntry2) {
 		
-		String dictionaryEntryKanji = dictionaryEntry.getKanji();
-		String dictionaryEntryKana = dictionaryEntry.getKana();
-		String dictionaryEntryRomaji = dictionaryEntry.getRomaji();
-
-		boolean withKanji = dictionaryEntryKanji != null ? true : false;
+		String pageTitle;
+		String pageDescription;
 		
-		String pageTitle = null;
-		String pageDescription = null;
-		
-		if (forceDictionaryEntryTypeType == null) {
+		if (dictionaryEntry != null) {
 			
-			if (withKanji == true) {
+			String dictionaryEntryKanji = dictionaryEntry.getKanji();
+			String dictionaryEntryKana = dictionaryEntry.getKana();
+			String dictionaryEntryRomaji = dictionaryEntry.getRomaji();
+
+			boolean withKanji = dictionaryEntryKanji != null ? true : false;
+						
+			if (forceDictionaryEntryTypeType == null) {
 				
-				pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType", 
-						new Object[] { dictionaryEntryKanji, dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());
-				
-				pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.with.kanji.without.forceDictionaryEntryTypeType", 
-						new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
-								dictionaryEntryKana,
-								dictionaryEntryRomaji,
-						}, Locale.getDefault());
+				if (withKanji == true) {
+					
+					pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType", 
+							new Object[] { dictionaryEntryKanji, dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());
+					
+					pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.with.kanji.without.forceDictionaryEntryTypeType", 
+							new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
+									dictionaryEntryKana,
+									dictionaryEntryRomaji,
+							}, Locale.getDefault());
+					
+				} else {
+					
+					pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.without.kanji.without.forceDictionaryEntryTypeType", 
+							new Object[] { dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());
+					
+					pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.without.kanji.without.forceDictionaryEntryTypeType", 
+							new Object[] { dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());			
+				}
 				
 			} else {
-				
-				pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.without.kanji.without.forceDictionaryEntryTypeType", 
-						new Object[] { dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());
-				
-				pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.without.kanji.without.forceDictionaryEntryTypeType", 
-						new Object[] { dictionaryEntryKana, dictionaryEntryRomaji }, Locale.getDefault());			
+
+				if (withKanji == true) {
+					
+					pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.with.forceDictionaryEntryTypeType", 
+							new Object[] { dictionaryEntryKanji, dictionaryEntryKana, dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName() }, Locale.getDefault());
+					
+					pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.with.kanji.with.forceDictionaryEntryTypeType", 
+							new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
+									dictionaryEntryKana,
+									dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName()
+							}, Locale.getDefault());
+					
+				} else {
+					
+					pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.without.kanji.with.forceDictionaryEntryTypeType", 
+							new Object[] { dictionaryEntryKana, dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName() }, Locale.getDefault());
+					
+					pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.without.kanji.with.forceDictionaryEntryTypeType", 
+							new Object[] { dictionaryEntryKana, dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName() }, Locale.getDefault());			
+				}			
 			}
 			
+		} else if (dictionaryEntry2 != null) {
+			
+			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2);
+			
+			pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType", 
+					new Object[] { uniqueKanjiKanaRomajiSetWithoutSearchOnly[0], uniqueKanjiKanaRomajiSetWithoutSearchOnly[1], uniqueKanjiKanaRomajiSetWithoutSearchOnly[2] }, Locale.getDefault());
+			
+			pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.with.kanji.without.forceDictionaryEntryTypeType", 
+					new Object[] { uniqueKanjiKanaRomajiSetWithoutSearchOnly[0],
+							uniqueKanjiKanaRomajiSetWithoutSearchOnly[1],
+							uniqueKanjiKanaRomajiSetWithoutSearchOnly[2],
+					}, Locale.getDefault());
+			
 		} else {
-
-			if (withKanji == true) {
-				
-				pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.with.forceDictionaryEntryTypeType", 
-						new Object[] { dictionaryEntryKanji, dictionaryEntryKana, dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName() }, Locale.getDefault());
-				
-				pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.with.kanji.with.forceDictionaryEntryTypeType", 
-						new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
-								dictionaryEntryKana,
-								dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName()
-						}, Locale.getDefault());
-				
-			} else {
-				
-				pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.without.kanji.with.forceDictionaryEntryTypeType", 
-						new Object[] { dictionaryEntryKana, dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName() }, Locale.getDefault());
-				
-				pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.without.kanji.with.forceDictionaryEntryTypeType", 
-						new Object[] { dictionaryEntryKana, dictionaryEntryRomaji, forceDictionaryEntryTypeType.getName() }, Locale.getDefault());			
-			}			
-		}
-		
+			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
+		}		
 		
 		return new String[] { pageTitle, pageDescription };		
 	}
