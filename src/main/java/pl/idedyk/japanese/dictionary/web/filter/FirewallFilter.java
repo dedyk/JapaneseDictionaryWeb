@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -25,6 +27,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
+import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
 
 public class FirewallFilter implements Filter {
 	
@@ -56,6 +59,14 @@ public class FirewallFilter implements Filter {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// noop
+	}
+	
+	private synchronized GeoIPService getGeoIPService(ServletRequest request) {
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+		
+		GeoIPService geoIPService = webApplicationContext.getBean(GeoIPService.class);
+		
+		return geoIPService;		
 	}
 	
 	private synchronized void checkAndReloadHostBlockFile() {
@@ -93,7 +104,7 @@ public class FirewallFilter implements Filter {
 					continue;
 				}
 				
-				hostBlockRegexList.add(line);
+				hostBlockRegexList.add(line.trim());
 			}
 			
 			scanner.close();
@@ -111,13 +122,29 @@ public class FirewallFilter implements Filter {
 		}
 	}
 	
-	private synchronized boolean isIpHostBlocked(String ip, String hostName) {
+	private synchronized boolean isIpHostBlocked(GeoIPService geoIPService, String ip, String hostName) {
 		// sprawdzenie, czy zmienila sie konfiguracja blokowania ip lub nazwy hosta
 		checkAndReloadHostBlockFile();
 
+		String country = null;
+		
+		try {
+			// pobranie kraju na podstawie adresu ip
+			if (geoIPService != null && ip != null) {
+				country = geoIPService.getCountry(ip);
+			}
+		} catch (Exception e) {
+			logger.error("Błąd podczas pobierania nazwy kraju z adresu ip", e);
+		}
+		
 		// sprawdzamy, czy adres ip lub nzwa hosta jest na tej liscie
 		if (hostBlockRegexList != null) {
 			for (String currentHostBlockMatcher : hostBlockRegexList) {
+				
+				// sprawdzenie, czy nalezy blokowac dany kraj
+				if (geoIPService != null && ip != null && country != null && currentHostBlockMatcher.equals("COUNTRY:" + country) == true) {
+					return true;
+				}
 				
 				try {
 					if ((ip != null && ip.matches(currentHostBlockMatcher) == true) || (hostName != null && hostName.matches(currentHostBlockMatcher) == true)) {
@@ -141,6 +168,8 @@ public class FirewallFilter implements Filter {
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 		
+		GeoIPService geoIPService = getGeoIPService(request);
+				
 		String ip = Utils.getRemoteIp(httpServletRequest);
 		String hostName = Utils.getHostname(ip);
 		String userAgent = httpServletRequest.getHeader("User-Agent");	
@@ -149,7 +178,7 @@ public class FirewallFilter implements Filter {
 		String fullUrl = Utils.getRequestURL(httpServletRequest);
 				
 		// sprawdzanie, czy nalezy zablokowac ip/host
-		doBlock = isIpHostBlocked(ip, hostName);
+		doBlock = isIpHostBlocked(geoIPService, ip, hostName);
 		
 		if (userAgent != null) {
 			
