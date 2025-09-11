@@ -409,7 +409,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     		
             // sprawdzenie, czy mamy dane do pisania wszystkich znakow
             boolean isAllCharactersStrokePathsAvailableForWord = dictionaryManager.isAllCharactersStrokePathsAvailableForWord(kanji);
-            
+                        
             if (furiganaEntries != null && furiganaEntries.size() > 0) {
             	
             	for (FuriganaEntry currentFuriganaEntry : furiganaEntries) {
@@ -453,15 +453,19 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     					
     					final String kanjiDrawId = "kanjiDrawId" + wordNo;
     					
-    					Td kanjiDrawButtonTd = new Td();
-    					
-    					Div kanjiDrawButtonDivBody = new Div("col-md-1");
+    					Div singleWordKanjiDivbutton = new Div(null, "display: inline-block; font-size: 150%; width: 20%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
     					
     					Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
     							getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
 
-    					kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
-    					kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
+				        // skrypt otwierajacy okienko
+    					singleWordKanjiDivbutton.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, kanji.length(), mobile));
+				        
+				        // tworzenie okienka rysowania znaku kanji
+    					singleWordKanjiDivbutton.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId));
+    					
+    					singleWordKanjiDivbutton.addHtmlElement(kanjiDrawButton);
+    					singleWordDiv.addHtmlElement(singleWordKanjiDivbutton);
 
     					// FM_FIXME: do przeanalizowania
     					/*
@@ -476,72 +480,49 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     					*/
     						
 						// kanjiDrawButtonTd.setColspan(String.valueOf(furiganaKanjiParts.size() + 2));
-						kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);		
-						
-				        // skrypt otwierajacy okienko
-						singleWordDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, kanji.length(), mobile));
-				        
-				        // tworzenie okienka rysowania znaku kanji
-						singleWordDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId));
+						// kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);		
     				}
-    				
-    				// FM_FIXME: do usuniecia
-    				/*
-    				kanjiDivBody.addHtmlElement(kanjiTable);
-    				row2Div.addHtmlElement(kanjiDivBody);					
-    				
-    				kanjiDiv.addHtmlElement(row2Div);
-    				*/
-    				
+    				    				
     				singleWordKanjiDiv.addHtmlElement(kanjiTable);
             	}
             	
             } else {
             	
-            	Div kanjiDivText = new Div(null, "font-size: 300%");
+            	Div kanjiDivText = new Div(null, "font-size: 200%");
             	Text kanjiText = new Text(kanji);
             	
             	kanjiDivText.addHtmlElement(kanjiText);
             	singleWordKanjiDiv.addHtmlElement(kanjiDivText);
-
-            	
-            	// FM_FIXME: do usuniecia
-            	/*
-            	Div row2Div = new Div("row");
-            	
-            	if (mobile == false) {
-            		row2Div.addHtmlElement(new Div("col-md-1"));
-            	}
-            	
-            	Div kanjiDivBody = new Div("col-md-10");
-            	
-            	row2Div.addHtmlElement(kanjiDivBody);
-            	
-            	
-            	kanjiDiv.addHtmlElement(row2Div);
-            	*/
-            	
-            	///////
-            	
-                // FM_FIXME: tymczasowy kod
-        		// singleWordKanjiSpan.addHtmlElement(new Text(kanji));    		
-
             }
             
         	singleWordDiv.addHtmlElement(singleWordKanjiDiv);
     	}
     	
     	// kana
-    	// display: inline-block; height: 100px; line-height: 100px; border: 1px solid red;
-    	
-    	// FM_FIXME: kana !!!!!!
-    	Div singleWordKanaDiv = new Div(null, "font-size: 150%; width: 100%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
-    	// Div singleWordKanaSpanDiv = new Div(null, "display: flex; align-items: center; height: 100%");
-    	
-    	singleWordKanaDiv.addHtmlElement(new Text(kana));
-    	singleWordDiv.addHtmlElement(singleWordKanaDiv);
-    	
-    	// singleWordKanaSpan.addHtmlElement(singleWordKanaSpanDiv);
+    	{
+        	Div singleWordKanaDiv = new Div(null, "display: inline-block; font-size: 150%; width: 80%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
+        	
+        	// tekst kana
+        	singleWordKanaDiv.addHtmlElement(new Text(kana));    		
+        	singleWordDiv.addHtmlElement(singleWordKanaDiv);
+        	
+    		// guzik rysowania kana
+        	Div singleWordKanaDivbutton = new Div(null, "display: inline-block; width: 20%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
+        	
+        	final String kanaDrawId = "kanaDrawId" + wordNo;
+    		
+    		Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
+    				getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
+
+            // skrypt otwierajacy okienko
+    		singleWordKanaDivbutton.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanaDrawId, kana.length(), mobile));
+            
+            // tworzenie okienka rysowania znaku kanji
+    		singleWordKanaDivbutton.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kana, kanaDrawId));
+    		
+    		singleWordKanaDivbutton.addHtmlElement(kanaDrawButton);   
+    		singleWordKanaDiv.addHtmlElement(singleWordKanaDivbutton);
+    	}
 
     	
     	/*
@@ -830,7 +811,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         Table readingTable = new Table();
         readingBodyDiv.addHtmlElement(readingTable);
         	
-    	final String kanaDrawId = "kanaDrawId";
+//    	final String kanaDrawId = "kanaDrawId";
     	
 		StringBuffer fullKana = new StringBuffer();
 		StringBuffer fullRomaji = new StringBuffer();
@@ -855,7 +836,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 //					
 //		readingTableKanaTd.addHtmlElement(new Text(fullKana.toString()));
 					
-		idAndTextList.add(new IdAndText(kanaDrawId, fullKana.toString()));
+//		idAndTextList.add(new IdAndText(kanaDrawId, fullKana.toString()));
 		
 		Td readingTableRomajiTd = new Td(null, "margin-top: 0px; margin-bottom: 5px; padding: 5px 50px 5px 0;");
 		readingTableTr.addHtmlElement(readingTableRomajiTd);
@@ -865,37 +846,37 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		readingTableRomajiTdH4.addHtmlElement(new Text(fullRomaji.toString()));
 
-		// guzik rysowania
-		Td readingTableButtonTd = new Td(null, "padding: 0 50px 5px 0;");
+//		// guzik rysowania
+//		Td readingTableButtonTd = new Td(null, "padding: 0 50px 5px 0;");
+//		
+//		Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
+//				getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
+//		
+//		readingTableButtonTd.addHtmlElement(kanaDrawButton);
 		
-		Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
-				getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
-		
-		readingTableButtonTd.addHtmlElement(kanaDrawButton);
-		
-		if (mobile == false) {
-			
-			readingTableTr.addHtmlElement(readingTableButtonTd);			
-			
-		} else {
-			
-			Tr readingTableTrForMobile = new Tr();
-			
-			readingTable.addHtmlElement(readingTableTrForMobile);
-			
-			readingTableButtonTd.setColspan("2");
-			
-			readingTableTrForMobile.addHtmlElement(readingTableButtonTd);
-		}
+//		if (mobile == false) {
+//			
+//			readingTableTr.addHtmlElement(readingTableButtonTd);			
+//			
+//		} else {
+//			
+//			Tr readingTableTrForMobile = new Tr();
+//			
+//			readingTable.addHtmlElement(readingTableTrForMobile);
+//			
+//			readingTableButtonTd.setColspan("2");
+//			
+//			readingTableTrForMobile.addHtmlElement(readingTableButtonTd);
+//		}
 
-        for (IdAndText idAndText : idAndTextList) {
-        	        	
-            // skrypt otwierajacy okienko
-        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id, idAndText.text.length(), mobile));
-            
-            // tworzenie okienka rysowania znaku kanji
-        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
-		}
+//        for (IdAndText idAndText : idAndTextList) {
+//        	        	
+//            // skrypt otwierajacy okienko
+//        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id, idAndText.text.length(), mobile));
+//            
+//            // tworzenie okienka rysowania znaku kanji
+//        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
+//		}
         
     	// informacje dodatkowe do czytania
         if (dictionaryEntry2KanjiKanaPair != null && dictionaryEntry2KanjiKanaPair.getReadingInfo() != null) {
