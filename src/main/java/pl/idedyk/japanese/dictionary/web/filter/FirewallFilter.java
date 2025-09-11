@@ -30,10 +30,17 @@ public class FirewallFilter implements Filter {
 	
 	private static final Logger logger = LogManager.getLogger(FirewallFilter.class);
 		
+	// zmienne dla blokowania host-ow
 	private File hostBlockFile = null;
 	private Long hostBlockFileLastModified = null;
-
+	
 	private List<String> hostBlockRegexList = null;
+	
+	// zmienne dla blokowania wzorcow wywolan
+	private File fullUrlBlockFile = null;
+	private Long fullUrlBlockFileLastModified = null;
+	
+	private List<String> fullUrlBlockRegexList = null;	
 	
 	// parametry do sprawdzania limitu wywolan
 	private static final int CLIENT_RATE_REMEMBER_SECONDS = 180;
@@ -139,6 +146,8 @@ public class FirewallFilter implements Filter {
 		String userAgent = httpServletRequest.getHeader("User-Agent");	
 		String url = httpServletRequest.getRequestURI();
 		
+		String fullUrl = Utils.getRequestURL(httpServletRequest);
+				
 		// sprawdzanie, czy nalezy zablokowac ip/host
 		doBlock = isIpHostBlocked(ip, hostName);
 		
@@ -148,7 +157,12 @@ public class FirewallFilter implements Filter {
 			if (userAgent.contains("AspiegelBot") == true || userAgent.contains("RecordedFuture") == true) { // RecordedFuture-ASI
 				doBlock = true;
 			}	
-		} 
+		}
+		
+		// sprawdzenie, czy dany fullURL nalezy zablokowac
+		if (doBlock == false) {
+			doBlock = isFullUrlBlocked(fullUrl);			
+		}
 		
 		if (doBlock == true) { // blokowanie
 			logger.info("Blokowanie ip/host/user agent: " + ip + " / " + hostName + " / " + userAgent);
@@ -203,6 +217,82 @@ public class FirewallFilter implements Filter {
 	public void destroy() {
 		// noop
 	}
+	
+	private synchronized void checkAndReloadFullUrlBlockFile() {
+		
+		if (fullUrlBlockFile == null) {
+			fullUrlBlockFile = new File(ConfigService.getCatalinaConfDirStatic(), "configService.fullUrlBlock");
+		}
+		
+		// nie ma pliku lub nie mozna go przeczytac
+		if (fullUrlBlockFile.exists() == false || fullUrlBlockFile.canRead() == false) {
+			
+			fullUrlBlockFileLastModified = null;
+			fullUrlBlockRegexList = null;
+			
+			return;
+		}
+		
+		// plik nie zmienil sie
+		if (fullUrlBlockFileLastModified != null && fullUrlBlockFileLastModified.longValue() == fullUrlBlockFile.lastModified()) {
+			return;
+		}
+		
+		// probujemy wczytac plik
+		logger.info("Wczytywanie pliku: " + fullUrlBlockFile);
+		
+		fullUrlBlockRegexList = new ArrayList<>();
+				
+		try {
+			Scanner scanner = new Scanner(fullUrlBlockFile);
+
+			while (scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				
+				if (line.startsWith("#") == true) {
+					continue;
+				}
+				
+				fullUrlBlockRegexList.add(line);
+			}
+			
+			scanner.close();
+			
+			fullUrlBlockFileLastModified = fullUrlBlockFile.lastModified();
+						
+		} catch (Exception e) {
+			
+			logger.error("Błąd podczas wczytywania pliku: " + fullUrlBlockFile, e);
+			
+			fullUrlBlockFileLastModified = null;
+			fullUrlBlockRegexList = null;
+			
+			return;			
+		}
+	}
+
+	
+	private boolean isFullUrlBlocked(String fullUrl) {
+		// sprawdzenie, czy zmienila sie konfiguracja blokowania ip lub nazwy hosta
+		checkAndReloadFullUrlBlockFile();
+
+		// sprawdzamy, czy adres ip lub nzwa hosta jest na tej liscie
+		if (fullUrlBlockRegexList != null) {
+			for (String currentFullUrlMatcher : fullUrlBlockRegexList) {
+				
+				try {
+					if (fullUrl != null && fullUrl.matches(currentFullUrlMatcher) == true) {
+						return true;
+					}					
+				} catch (Exception e) {
+					logger.error("Błąd podczas sprawdzania blokady full url", e);
+				}
+			}
+		}
+		
+		return false;
+	}
+
 	
 	private IsClientRateExceededResult isClientRateExceeded(String ip, String hostName, String url) {
 				
@@ -307,7 +397,7 @@ public class FirewallFilter implements Filter {
 			}
 		}
 	}
-	
+		
 	private static class CallInfo {
 		@SuppressWarnings("unused")
 		private String url;
