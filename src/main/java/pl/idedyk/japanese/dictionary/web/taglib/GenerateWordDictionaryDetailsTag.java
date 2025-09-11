@@ -399,12 +399,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		// FM_FIXME: do poprawy, to jest tylko skopiowane z wyszukiwania
 		
-		Div singleWordDiv = new Div("col-md-10", "display: flex;");
+		Div singleWordDiv = new Div("col-md-10");
 		    	                	
-    	// kanji
-    	Span singleWordKanjiSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word;");
-    	
+    	// kanji    	
     	if (kanji != null) {
+    		Div singleWordKanjiDiv = new Div(null, "width: 100%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
+    		
     		List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(null, kanjiKanaPair);
     		
             // sprawdzenie, czy mamy dane do pisania wszystkich znakow
@@ -435,7 +435,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     				kanjiTable.addHtmlElement(kanaPartTr);
     							
     				// znaki kanji
-    				Tr kanjiKanjiTr = new Tr(null, "font-size: 300%; text-align:center;");
+    				Tr kanjiKanjiTr = new Tr(null, "font-size: 200%; text-align:center;");
     				
     				kanjiTable.addHtmlElement(kanjiKanjiTr);
     				
@@ -475,11 +475,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     					} else {
     					*/
     						
-						Tr kanjiKanjiForWritingButtonTr = new Tr(null, null);
-						
-						kanjiTable.addHtmlElement(kanjiKanjiForWritingButtonTr);    						
-						kanjiDrawButtonTd.setColspan(String.valueOf(furiganaKanjiParts.size() + 2));
-						kanjiKanjiForWritingButtonTr.addHtmlElement(kanjiDrawButtonTd);		
+						// kanjiDrawButtonTd.setColspan(String.valueOf(furiganaKanjiParts.size() + 2));
+						kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);		
 						
 				        // skrypt otwierajacy okienko
 						singleWordDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, kanji.length(), mobile));
@@ -496,7 +493,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     				kanjiDiv.addHtmlElement(row2Div);
     				*/
     				
-    				singleWordKanjiSpan.addHtmlElement(kanjiTable);
+    				singleWordKanjiDiv.addHtmlElement(kanjiTable);
             	}
             	
             } else {
@@ -505,7 +502,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             	Text kanjiText = new Text(kanji);
             	
             	kanjiDivText.addHtmlElement(kanjiText);
-            	singleWordKanjiSpan.addHtmlElement(kanjiDivText);
+            	singleWordKanjiDiv.addHtmlElement(kanjiDivText);
 
             	
             	// FM_FIXME: do usuniecia
@@ -530,21 +527,22 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         		// singleWordKanjiSpan.addHtmlElement(new Text(kanji));    		
 
             }
-                		
-    		////////////////
-    		////////////////
-    		////////////////
-            // FM_FIXME: stary kod
-    		/*
-
-            */
+            
+        	singleWordDiv.addHtmlElement(singleWordKanjiDiv);
     	}
     	
     	// kana
     	// display: inline-block; height: 100px; line-height: 100px; border: 1px solid red;
     	
-    	Span singleWordKanaSpan = new Span(null, "font-size: 150%; width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word;");
-    	Div singleWordKanaSpanDiv = new Div(null, "display: flex; align-items: center; height: 100%");
+    	// FM_FIXME: kana !!!!!!
+    	Div singleWordKanaDiv = new Div(null, "font-size: 150%; width: 100%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
+    	// Div singleWordKanaSpanDiv = new Div(null, "display: flex; align-items: center; height: 100%");
+    	
+    	singleWordKanaDiv.addHtmlElement(new Text(kana));
+    	singleWordDiv.addHtmlElement(singleWordKanaDiv);
+    	
+    	// singleWordKanaSpan.addHtmlElement(singleWordKanaSpanDiv);
+
     	
     	/*
     	<div style="display: flex; align-items: center; height: 100%; border: 1px solid black;">
@@ -552,9 +550,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	</div>
     	*/
     	
-    	singleWordKanaSpanDiv.addHtmlElement(new Text(kana));
-    	singleWordKanaSpan.addHtmlElement(singleWordKanaSpanDiv);
-    	
+    	/* FM_FIXME: kana !!!!!!
+    	*/
 
     	// FM_FIXME: do usuniecia
 		// Td readingTableKanaTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
@@ -564,13 +561,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	
     	// romaji
-    	Span singleWordRomajiSpan = new Span(null, "width: 33%; padding: 5px 0px 10px 0px; overflow-wrap: break-word;");
-    	singleWordRomajiSpan.addHtmlElement(new Text(romaji));
+    	Div singleWordRomajiDiv = new Div(null, "font-size: 150%; width: 100%; padding: 5px 0px 30px 0px; overflow-wrap: break-word;");
+    	singleWordRomajiDiv.addHtmlElement(new Text(romaji));
+    	singleWordDiv.addHtmlElement(singleWordRomajiDiv);
     	
     	// dodanie elementow                    	
-    	singleWordDiv.addHtmlElement(singleWordKanjiSpan);
-    	singleWordDiv.addHtmlElement(singleWordKanaSpan);
-    	singleWordDiv.addHtmlElement(singleWordRomajiSpan);
+    	
+    	
     	
     	return singleWordDiv;		
 	}
