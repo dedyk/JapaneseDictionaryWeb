@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -25,15 +27,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
+import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
 
 public class FirewallFilter implements Filter {
 	
 	private static final Logger logger = LogManager.getLogger(FirewallFilter.class);
 		
+	// zmienne dla blokowania host-ow
 	private File hostBlockFile = null;
 	private Long hostBlockFileLastModified = null;
-
+	
 	private List<String> hostBlockRegexList = null;
+	
+	// zmienne dla blokowania wzorcow wywolan
+	private File fullUrlBlockFile = null;
+	private Long fullUrlBlockFileLastModified = null;
+	
+	private List<String> fullUrlBlockRegexList = null;	
 	
 	// parametry do sprawdzania limitu wywolan
 	private static final int CLIENT_RATE_REMEMBER_SECONDS = 180;
@@ -49,6 +59,14 @@ public class FirewallFilter implements Filter {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// noop
+	}
+	
+	private synchronized GeoIPService getGeoIPService(ServletRequest request) {
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+		
+		GeoIPService geoIPService = webApplicationContext.getBean(GeoIPService.class);
+		
+		return geoIPService;		
 	}
 	
 	private synchronized void checkAndReloadHostBlockFile() {
@@ -86,7 +104,7 @@ public class FirewallFilter implements Filter {
 					continue;
 				}
 				
-				hostBlockRegexList.add(line);
+				hostBlockRegexList.add(line.trim());
 			}
 			
 			scanner.close();
@@ -104,13 +122,29 @@ public class FirewallFilter implements Filter {
 		}
 	}
 	
-	private synchronized boolean isIpHostBlocked(String ip, String hostName) {
+	private synchronized boolean isIpHostBlocked(GeoIPService geoIPService, String ip, String hostName) {
 		// sprawdzenie, czy zmienila sie konfiguracja blokowania ip lub nazwy hosta
 		checkAndReloadHostBlockFile();
 
+		String country = null;
+		
+		try {
+			// pobranie kraju na podstawie adresu ip
+			if (geoIPService != null && ip != null) {
+				country = geoIPService.getCountry(ip);
+			}
+		} catch (Exception e) {
+			logger.error("Błąd podczas pobierania nazwy kraju z adresu ip", e);
+		}
+		
 		// sprawdzamy, czy adres ip lub nzwa hosta jest na tej liscie
 		if (hostBlockRegexList != null) {
 			for (String currentHostBlockMatcher : hostBlockRegexList) {
+				
+				// sprawdzenie, czy nalezy blokowac dany kraj
+				if (geoIPService != null && ip != null && country != null && currentHostBlockMatcher.equals("COUNTRY:" + country) == true) {
+					return true;
+				}
 				
 				try {
 					if ((ip != null && ip.matches(currentHostBlockMatcher) == true) || (hostName != null && hostName.matches(currentHostBlockMatcher) == true)) {
@@ -134,13 +168,17 @@ public class FirewallFilter implements Filter {
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 		
+		GeoIPService geoIPService = getGeoIPService(request);
+				
 		String ip = Utils.getRemoteIp(httpServletRequest);
 		String hostName = Utils.getHostname(ip);
 		String userAgent = httpServletRequest.getHeader("User-Agent");	
 		String url = httpServletRequest.getRequestURI();
 		
+		String fullUrl = Utils.getRequestURL(httpServletRequest);
+				
 		// sprawdzanie, czy nalezy zablokowac ip/host
-		doBlock = isIpHostBlocked(ip, hostName);
+		doBlock = isIpHostBlocked(geoIPService, ip, hostName);
 		
 		if (userAgent != null) {
 			
@@ -148,7 +186,12 @@ public class FirewallFilter implements Filter {
 			if (userAgent.contains("AspiegelBot") == true || userAgent.contains("RecordedFuture") == true) { // RecordedFuture-ASI
 				doBlock = true;
 			}	
-		} 
+		}
+		
+		// sprawdzenie, czy dany fullURL nalezy zablokowac
+		if (doBlock == false) {
+			doBlock = isFullUrlBlocked(fullUrl);			
+		}
 		
 		if (doBlock == true) { // blokowanie
 			logger.info("Blokowanie ip/host/user agent: " + ip + " / " + hostName + " / " + userAgent);
@@ -203,6 +246,82 @@ public class FirewallFilter implements Filter {
 	public void destroy() {
 		// noop
 	}
+	
+	private synchronized void checkAndReloadFullUrlBlockFile() {
+		
+		if (fullUrlBlockFile == null) {
+			fullUrlBlockFile = new File(ConfigService.getCatalinaConfDirStatic(), "configService.fullUrlBlock");
+		}
+		
+		// nie ma pliku lub nie mozna go przeczytac
+		if (fullUrlBlockFile.exists() == false || fullUrlBlockFile.canRead() == false) {
+			
+			fullUrlBlockFileLastModified = null;
+			fullUrlBlockRegexList = null;
+			
+			return;
+		}
+		
+		// plik nie zmienil sie
+		if (fullUrlBlockFileLastModified != null && fullUrlBlockFileLastModified.longValue() == fullUrlBlockFile.lastModified()) {
+			return;
+		}
+		
+		// probujemy wczytac plik
+		logger.info("Wczytywanie pliku: " + fullUrlBlockFile);
+		
+		fullUrlBlockRegexList = new ArrayList<>();
+				
+		try {
+			Scanner scanner = new Scanner(fullUrlBlockFile);
+
+			while (scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				
+				if (line.startsWith("#") == true) {
+					continue;
+				}
+				
+				fullUrlBlockRegexList.add(line);
+			}
+			
+			scanner.close();
+			
+			fullUrlBlockFileLastModified = fullUrlBlockFile.lastModified();
+						
+		} catch (Exception e) {
+			
+			logger.error("Błąd podczas wczytywania pliku: " + fullUrlBlockFile, e);
+			
+			fullUrlBlockFileLastModified = null;
+			fullUrlBlockRegexList = null;
+			
+			return;			
+		}
+	}
+
+	
+	private boolean isFullUrlBlocked(String fullUrl) {
+		// sprawdzenie, czy zmienila sie konfiguracja blokowania ip lub nazwy hosta
+		checkAndReloadFullUrlBlockFile();
+
+		// sprawdzamy, czy adres ip lub nzwa hosta jest na tej liscie
+		if (fullUrlBlockRegexList != null) {
+			for (String currentFullUrlMatcher : fullUrlBlockRegexList) {
+				
+				try {
+					if (fullUrl != null && fullUrl.matches(currentFullUrlMatcher) == true) {
+						return true;
+					}					
+				} catch (Exception e) {
+					logger.error("Błąd podczas sprawdzania blokady full url", e);
+				}
+			}
+		}
+		
+		return false;
+	}
+
 	
 	private IsClientRateExceededResult isClientRateExceeded(String ip, String hostName, String url) {
 				
@@ -307,7 +426,7 @@ public class FirewallFilter implements Filter {
 			}
 		}
 	}
-	
+		
 	private static class CallInfo {
 		@SuppressWarnings("unused")
 		private String url;
