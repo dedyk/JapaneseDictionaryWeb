@@ -541,8 +541,27 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	}
     	
     	// kana
-    	Span singleWordKanaSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word;");
-    	singleWordKanaSpan.addHtmlElement(new Text(kana));
+    	// display: inline-block; height: 100px; line-height: 100px; border: 1px solid red;
+    	
+    	Span singleWordKanaSpan = new Span(null, "font-size: 150%; width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word;");
+    	Div singleWordKanaSpanDiv = new Div(null, "display: flex; align-items: center; height: 100%");
+    	
+    	/*
+    	<div style="display: flex; align-items: center; height: 100%; border: 1px solid black;">
+    	  <span>Tekst w pionie wyśrodkowany</span>
+    	</div>
+    	*/
+    	
+    	singleWordKanaSpanDiv.addHtmlElement(new Text(kana));
+    	singleWordKanaSpan.addHtmlElement(singleWordKanaSpanDiv);
+    	
+
+    	// FM_FIXME: do usuniecia
+		// Td readingTableKanaTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
+		// readingTableTr.addHtmlElement(readingTableKanaTd);
+		// readingTableKanaTd.addHtmlElement(new Text(fullKana.toString()));
+    	
+    	
     	
     	// romaji
     	Span singleWordRomajiSpan = new Span(null, "width: 33%; padding: 5px 0px 10px 0px; overflow-wrap: break-word;");
@@ -834,10 +853,10 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Tr readingTableTr = new Tr();
 		readingTable.addHtmlElement(readingTableTr);
 		
-		Td readingTableKanaTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
-		readingTableTr.addHtmlElement(readingTableKanaTd);
-					
-		readingTableKanaTd.addHtmlElement(new Text(fullKana.toString()));
+//		Td readingTableKanaTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
+//		readingTableTr.addHtmlElement(readingTableKanaTd);
+//					
+//		readingTableKanaTd.addHtmlElement(new Text(fullKana.toString()));
 					
 		idAndTextList.add(new IdAndText(kanaDrawId, fullKana.toString()));
 		
