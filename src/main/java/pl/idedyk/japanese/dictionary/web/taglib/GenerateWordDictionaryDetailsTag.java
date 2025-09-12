@@ -366,14 +366,22 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	// FM_FIXME: pokazywanie wszystkie elementow z KanjiInfo i ReadingInfo
     	// FM_FIXME: obsluga starego dictionaryEntry !!!!!!!!
     	
+	    Div wordDiv = new Div("row");
+		wordsDiv.addHtmlElement(wordDiv);
+
+		wordDiv.addHtmlElement(new Div("col-md-1")); // przerwa
+		
+		Div wordMainDiv = new Div("col-md-10");		
+		wordDiv.addHtmlElement(wordMainDiv);
+		
+		Table singleWordTable = new Table();
+		wordMainDiv.addHtmlElement(singleWordTable);
+		
     	for (int kanjiKanaPairIdx = 0; kanjiKanaPairIdx < kanjiKanaPairList.size(); ++kanjiKanaPairIdx) {
         	
     		// FM_FIXME: do poprawy !!!!!!! to jest tylko skopiowane z wyszukiwania
-    		
-    	    Div wordDiv = new Div("row");
-    		wordsDiv.addHtmlElement(wordDiv);
-    		
-    		wordDiv.addHtmlElement(new Div("col-md-1")); // przerwa
+    		   		
+
     		
     		KanjiKanaPair kanjiKanaPair = kanjiKanaPairList.get(kanjiKanaPairIdx);
         	
@@ -381,15 +389,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     		ReadingInfo readingInfo = kanjiKanaPair.getReadingInfo();
     		    	    		   	    		
     		// pobieramy wszystkie skladniki slowa    		    	        	
-    		Div singleWordDiv = createWordColumn(kanjiKanaPair, kanjiKanaPairIdx, mobile);
-    		                	
-        	wordDiv.addHtmlElement(singleWordDiv);
+    		createWordTableTr(singleWordTable, kanjiKanaPair, kanjiKanaPairIdx, mobile);
 		}
     	
 		return wordsDiv;
 	}
 	
-	private Div createWordColumn(KanjiKanaPair kanjiKanaPair, int wordNo, boolean mobile) throws DictionaryException, IOException {
+	private void createWordTableTr(Table singleWordTable, KanjiKanaPair kanjiKanaPair, int wordNo, boolean mobile) throws DictionaryException, IOException {
 
 		// FM_FIXME: obsluga stare dictionaryEntry
 		
@@ -398,12 +404,31 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	String romaji = kanjiKanaPair.getRomaji();
 		
 		// FM_FIXME: do poprawy, to jest tylko skopiowane z wyszukiwania
+		// FM+FIXME: menu !!!!!!!!!!!!!!!!!!!!!
+		// FM_FIXME: Znaczenie znaków kanji  !!!!!!! <- dodac
 		
-		Div singleWordDiv = new Div("col-md-10");
-		    	                	
+				
+		
     	// kanji    	
     	if (kanji != null) {
-    		Div singleWordKanjiDiv = new Div(null, "width: 100%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
+    		Tr singleWordDivTableKanjiTr = new Tr();
+    		singleWordTable.addHtmlElement(singleWordDivTableKanjiTr);
+    		
+    		// tytul
+    		Td singleWordDivTableKanjiTd1 = new Td(null, null);
+    		singleWordDivTableKanjiTr.addHtmlElement(singleWordDivTableKanjiTd1);
+    		
+    		/*
+        	H kanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");        	
+        	kanjiTitleH4.setId("kanjiTitleId");
+        	
+        	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));    		
+    		singleWordDivTableKanjiTd1.addHtmlElement(kanjiTitleH4);
+    		*/
+    		
+    		// czesc glowna
+    		Td singleWordDivTableKanjiTd2 = new Td(null, "padding-right: 25px; padding-bottom: 10px");
+    		singleWordDivTableKanjiTr.addHtmlElement(singleWordDivTableKanjiTd2);
     		
     		List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(null, kanjiKanaPair);
     		
@@ -421,7 +446,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     				Table kanjiTable = new Table();
     				
     				// czytanie
-    				Tr kanaPartTr = new Tr(null, "font-size: 123%; text-align:center;");
+    				Tr kanaPartTr = new Tr(null, "font-size: 123%; text-align:left;");
     							
     				for (int idx = 0; idx < furiganaKanaParts.size(); ++idx) {    					
     					String currentKanaPart = furiganaKanaParts.get(idx);
@@ -435,7 +460,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     				kanjiTable.addHtmlElement(kanaPartTr);
     							
     				// znaki kanji
-    				Tr kanjiKanjiTr = new Tr(null, "font-size: 200%; text-align:center;");
+    				Tr kanjiKanjiTr = new Tr(null, "font-size: 200%; text-align:left;");
     				
     				kanjiTable.addHtmlElement(kanjiKanjiTr);
     				
@@ -448,24 +473,29 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     					kanjiKanjiTr.addHtmlElement(currentKanjiPartTd);
     				}	
     				
+    				singleWordDivTableKanjiTd2.addHtmlElement(kanjiTable);
+    				
     				// komorka z guziczkiem	
     				if (isAllCharactersStrokePathsAvailableForWord == true) {
     					
+    					Td singleWordDivTableKanjiTd3 = new Td(null, null);
+    		    		singleWordDivTableKanjiTr.addHtmlElement(singleWordDivTableKanjiTd3);
+    					
     					final String kanjiDrawId = "kanjiDrawId" + wordNo;
     					
-    					Div singleWordKanjiDivbutton = new Div(null, "display: inline-block; font-size: 150%; width: 20%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
+    					// Div singleWordKanjiDivbutton = new Div(null, "display: inline-block; font-size: 150%; width: 20%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
     					
     					Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
     							getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
 
 				        // skrypt otwierajacy okienko
-    					singleWordKanjiDivbutton.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, kanji.length(), mobile));
+    					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, kanji.length(), mobile));
 				        
 				        // tworzenie okienka rysowania znaku kanji
-    					singleWordKanjiDivbutton.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId));
+    					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId));
     					
-    					singleWordKanjiDivbutton.addHtmlElement(kanjiDrawButton);
-    					singleWordDiv.addHtmlElement(singleWordKanjiDivbutton);
+    					// singleWordKanjiDivbutton.addHtmlElement(kanjiDrawButton);
+    					singleWordDivTableKanjiTd3.addHtmlElement(kanjiDrawButton);
 
     					// FM_FIXME: do przeanalizowania
     					/*
@@ -481,33 +511,59 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     						
 						// kanjiDrawButtonTd.setColspan(String.valueOf(furiganaKanjiParts.size() + 2));
 						// kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);		
-    				}
-    				    				
-    				singleWordKanjiDiv.addHtmlElement(kanjiTable);
+    				}    				
             	}
             	
             } else {
+            	
+            	// FM_FIXME: jeszcze raz sprawdzic
             	
             	Div kanjiDivText = new Div(null, "font-size: 200%");
             	Text kanjiText = new Text(kanji);
             	
             	kanjiDivText.addHtmlElement(kanjiText);
-            	singleWordKanjiDiv.addHtmlElement(kanjiDivText);
+            	
+            	// singleWordKanjiDiv.addHtmlElement(kanjiDivText);
+            	singleWordDivTableKanjiTd2.addHtmlElement(kanjiDivText);
             }
             
-        	singleWordDiv.addHtmlElement(singleWordKanjiDiv);
+        	
     	}
     	
     	// kana
     	{
-        	Div singleWordKanaDiv = new Div(null, "display: inline-block; font-size: 150%; width: 80%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
+        	// Div singleWordKanaDiv = new Div(null, "display: inline-block; font-size: 150%; width: 80%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
         	
+    		Tr singleWordDivTableKanaTr = new Tr();
+    		singleWordTable.addHtmlElement(singleWordDivTableKanaTr);
+
+    		// tytul
+    		Td singleWordDivTableKanaTd1 = new Td(null, null);
+    		singleWordDivTableKanaTr.addHtmlElement(singleWordDivTableKanaTd1);
+    		
+    		/*
+        	H readingTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");        	
+        	readingTitleH4.setId("readingId");
+        	
+        	readingTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title")));
+        	singleWordDivTableKanaTd1.addHtmlElement(readingTitleH4);
+        	*/
+        	
+    		// czesc glowna    		
+    		Td singleWordDivTableKanaTd2 = new Td(null, "font-size: 130%; text-align:left; padding-right: 25px; padding-bottom: 10px");
+    		singleWordDivTableKanaTr.addHtmlElement(singleWordDivTableKanaTd2);
+    		
         	// tekst kana
-        	singleWordKanaDiv.addHtmlElement(new Text(kana));    		
-        	singleWordDiv.addHtmlElement(singleWordKanaDiv);
+    		singleWordDivTableKanaTd2.addHtmlElement(new Text(kana));    		
         	
+    		// singleWordDiv.addHtmlElement(singleWordKanaDiv);
+        	
+    		// guzik do rysowania
+    		Td singleWordDivTableKanaTd3 = new Td();
+    		singleWordDivTableKanaTr.addHtmlElement(singleWordDivTableKanaTd3);
+    		
     		// guzik rysowania kana
-        	Div singleWordKanaDivbutton = new Div(null, "display: inline-block; width: 20%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
+        	// Div singleWordKanaDivbutton = new Div(null, "display: inline-block; width: 20%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
         	
         	final String kanaDrawId = "kanaDrawId" + wordNo;
     		
@@ -515,13 +571,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     				getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
 
             // skrypt otwierajacy okienko
-    		singleWordKanaDivbutton.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanaDrawId, kana.length(), mobile));
+    		singleWordDivTableKanaTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanaDrawId, kana.length(), mobile));
             
             // tworzenie okienka rysowania znaku kanji
-    		singleWordKanaDivbutton.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kana, kanaDrawId));
+    		singleWordDivTableKanaTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kana, kanaDrawId));
     		
-    		singleWordKanaDivbutton.addHtmlElement(kanaDrawButton);   
-    		singleWordKanaDiv.addHtmlElement(singleWordKanaDivbutton);
+    		singleWordDivTableKanaTd3.addHtmlElement(kanaDrawButton);   
+    		// singleWordKanaDiv.addHtmlElement(singleWordKanaDivbutton);
     	}
 
     	
@@ -542,15 +598,33 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	
     	// romaji
+    	{
+    		Tr singleWordDivTableRomajiTr = new Tr();
+    		singleWordTable.addHtmlElement(singleWordDivTableRomajiTr);
+    		
+    		// tytul (pusty)
+    		Td singleWordDivTableRomajiTd1 = new Td(null, "padding-bottom: 40px");
+    		singleWordDivTableRomajiTr.addHtmlElement(singleWordDivTableRomajiTd1);
+    		
+        	// czesc glowna
+    		Td singleWordDivTableRomajiTd2 = new Td(null, "font-size: 130%; text-align:left; padding-right: 25px; padding-bottom: 40px");
+    		singleWordDivTableRomajiTr.addHtmlElement(singleWordDivTableRomajiTd2);
+    		
+    		singleWordDivTableRomajiTd2.addHtmlElement(new Text(romaji));
+
+    	}
+    	
+    	/*
     	Div singleWordRomajiDiv = new Div(null, "font-size: 150%; width: 100%; padding: 5px 0px 30px 0px; overflow-wrap: break-word;");
-    	singleWordRomajiDiv.addHtmlElement(new Text(romaji));
+    	singleWordRomajiDiv.addHtmlElement();
     	singleWordDiv.addHtmlElement(singleWordRomajiDiv);
+    	*/
     	
     	// dodanie elementow                    	
     	
     	
     	
-    	return singleWordDiv;		
+    	// return singleWordDivTable;		
 	}
 
 	private Div generateKanjiSection(Menu menu, boolean mobile) throws IOException, DictionaryException {
