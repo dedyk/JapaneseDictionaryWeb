@@ -122,27 +122,16 @@ public class FirewallFilter implements Filter {
 		}
 	}
 	
-	private synchronized boolean isIpHostBlocked(GeoIPService geoIPService, String ip, String hostName) {
+	private synchronized boolean isIpHostBlocked(String ip, String hostName, String country) {
 		// sprawdzenie, czy zmienila sie konfiguracja blokowania ip lub nazwy hosta
 		checkAndReloadHostBlockFile();
-
-		String country = null;
-		
-		try {
-			// pobranie kraju na podstawie adresu ip
-			if (geoIPService != null && ip != null) {
-				country = geoIPService.getCountry(ip);
-			}
-		} catch (Exception e) {
-			logger.error("Błąd podczas pobierania nazwy kraju z adresu ip", e);
-		}
 		
 		// sprawdzamy, czy adres ip lub nzwa hosta jest na tej liscie
 		if (hostBlockRegexList != null) {
 			for (String currentHostBlockMatcher : hostBlockRegexList) {
 				
 				// sprawdzenie, czy nalezy blokowac dany kraj
-				if (geoIPService != null && ip != null && country != null && currentHostBlockMatcher.equals("COUNTRY:" + country) == true) {
+				if (ip != null && country != null && currentHostBlockMatcher.equals("COUNTRY:" + country) == true) {
 					return true;
 				}
 				
@@ -176,9 +165,20 @@ public class FirewallFilter implements Filter {
 		String url = httpServletRequest.getRequestURI();
 		
 		String fullUrl = Utils.getRequestURL(httpServletRequest);
+		
+		String country = null;
+		
+		try {
+			// pobranie kraju na podstawie adresu ip
+			if (geoIPService != null && ip != null) {
+				country = geoIPService.getCountry(ip);
+			}
+		} catch (Exception e) {
+			logger.error("Błąd podczas pobierania nazwy kraju z adresu ip", e);
+		}
 				
 		// sprawdzanie, czy nalezy zablokowac ip/host
-		doBlock = isIpHostBlocked(geoIPService, ip, hostName);
+		doBlock = isIpHostBlocked(ip, hostName, country);
 		
 		if (userAgent != null) {
 			
@@ -194,7 +194,7 @@ public class FirewallFilter implements Filter {
 		}
 		
 		if (doBlock == true) { // blokowanie
-			logger.info("Blokowanie ip/host/user agent: " + ip + " / " + hostName + " / " + userAgent);
+			logger.info("Blokowanie ip/host/user agent: " + ip + " (" + country + ") / " + hostName + " / " + userAgent);
 			
 			// ServletContext servletContext = request.getServletContext();
 			
