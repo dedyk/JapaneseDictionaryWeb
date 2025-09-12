@@ -77,8 +77,23 @@ public class GeoIPService {
 	
 	private CityResponse getCityResponse(String ip) {
 		
+		if (ip == null) {
+			return null;
+		}
+		
+		// sprawdzanie, czy adres ip jest rozdzielony przecinkiem, jesli tak to pobieramy pierwsza wartosc
+		String[] ipSplited = ip.split(",");
+		
+		if (ipSplited != null && ipSplited.length > 1) {
+			ip = ipSplited[0].trim();
+		}
+		
 		try {
 			InetAddress inetAddress = InetAddress.getByName(ip);
+			
+			if (inetAddress.isLoopbackAddress() == true) { // czy to adres loopback
+				return null;
+			}
 
 			return databaseReader.city(inetAddress);
 		

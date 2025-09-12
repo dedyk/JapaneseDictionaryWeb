@@ -79,6 +79,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryUniqueSearch;
+import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
 
 public class LoggerListener {
 	
@@ -89,6 +90,9 @@ public class LoggerListener {
 	
 	@Autowired
 	private MailSender mailSender;
+	
+	@Autowired
+	private GeoIPService geoIPService;
 		
 	@SuppressWarnings("unchecked")
 	public void onMessage(LoggerModelCommon loggerModelCommon) {
@@ -97,8 +101,11 @@ public class LoggerListener {
 		
 		GenericLog genericLog = null;
 		
+		// pobranie nazwy kraju na podstawie adresu ip
+		String remoteIpCountry = geoIPService.getCountry(loggerModelCommon.getRemoteIp());
+		
 		// ogolna obsluga			
-		logger.info("Przetwarzam zadanie " + operation + " z kolejki od: " + loggerModelCommon.getRemoteIp() + " / " + Utils.getHostname(loggerModelCommon.getRemoteIp()));
+		logger.info("Przetwarzam zadanie " + operation + " z kolejki od: " + loggerModelCommon.getRemoteIp() + " (" + remoteIpCountry + ") / " + Utils.getHostname(loggerModelCommon.getRemoteIp()));
 		
 		// utworzenie wpisu do bazy danych
 		genericLog = new GenericLog();
