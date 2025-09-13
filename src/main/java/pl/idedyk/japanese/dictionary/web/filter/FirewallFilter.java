@@ -181,11 +181,20 @@ public class FirewallFilter implements Filter {
 		// sprawdzanie, czy nalezy zablokowac ip/host
 		doBlock = isIpHostBlocked(ip, hostName, country);
 		
-		if (userAgent != null) {
+		if (doBlock == false && userAgent != null) {
 			// sprawdzamy, czy zalezy zablokowac tego user agenta
 			if (userAgent.contains("AspiegelBot") == true || userAgent.contains("RecordedFuture") == true) { // RecordedFuture-ASI
 				doBlock = true;
 			}	
+			
+			// sprawdzenie, czy mamy do czynienia z robotem, ktory pobiera dane w bardzo agresywny sposob
+			// wszystkie te roboty uzywaja user agent Chrome od 60 do 79, np.
+			// Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0
+			// "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.2759.69 Safari/537.36"
+			// "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3403.143 Safari/537.36"
+			if (userAgent.matches("^Mozilla\\/5.0 \\(Windows NT \\d+\\.\\d; Win64; x64\\) AppleWebKit\\/537.36 \\(KHTML, like Gecko\\) Chrome\\/[6-7][0-9].*$") == true) {
+				doBlock = true;
+			}
 		}
 		
 		// dodatkowe sprawdzenie, czy wywolanie nie pochodzi z aplikacji na Androida, jesli tak to pozwalamy na nie
