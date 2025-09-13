@@ -631,7 +631,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		Div kanjiDiv = new Div();
 		
-//		final String kanjiDrawId = "kanjiDrawId";
+		final String kanjiDrawId = "kanjiDrawId";
 		        
 		String prefixKana = dictionaryEntry.getPrefixKana();
 
@@ -641,167 +641,167 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		final StringBuffer kanjiSb = new StringBuffer();
         
-//		boolean addKanjiWrite = false;
-//		
-//        if (dictionaryEntry.isKanjiExists() == true) {
-//        	
-//			if (prefixKana != null) {
-//				kanjiSb.append("(").append(prefixKana).append(") ");
-//			}
-//
-//			kanjiSb.append(dictionaryEntry.getKanji());
-//
-//			addKanjiWrite = true;
-//        	
-//        } else {
-//			kanjiSb.append("-");
-//
-//			addKanjiWrite = false;
-//		}
-//        
-//        if (addKanjiWrite == false) {
-//        	return null;
-//        }
+		boolean addKanjiWrite = false;
+		
+        if (dictionaryEntry.isKanjiExists() == true) {
         	
-//    	// wiersz z tytulem
-//    	Div row1Div = new Div("row");
-//    	
-//    	// kanji - tytul
-//    	Div kanjiTitleDiv = new Div("col-md-1");
-//    	
-//    	H kanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
-//    	
-//    	kanjiTitleH4.setId("kanjiTitleId");
-//    	
-//    	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
-//    	menu.getChildMenu().add(new Menu(kanjiTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
-//    	
-//    	kanjiTitleDiv.addHtmlElement(kanjiTitleH4);
-//    	
-//    	row1Div.addHtmlElement(kanjiTitleDiv);
-//    	
-//    	// dodaj wiersz z tytulem
-//    	kanjiDiv.addHtmlElement(row1Div);
-    	    	        	        	       		
-//        List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(dictionaryEntry);
-        
-//        // sprawdzenie, czy mamy dane do pisania wszystkich znakow
-//        boolean isAllCharactersStrokePathsAvailableForWord = dictionaryManager.isAllCharactersStrokePathsAvailableForWord(dictionaryEntry.getKanji());
-    	            
-//        if (furiganaEntries != null && furiganaEntries.size() > 0 && addKanjiWrite == true) {
-//        	
-//        	for (FuriganaEntry currentFuriganaEntry : furiganaEntries) {
-//        		
-//				List<String> furiganaKanaParts = currentFuriganaEntry.getKanaPart();
-//				List<String> furiganaKanjiParts = currentFuriganaEntry.getKanjiPart();
-//				
-//				// wiersz ze znakiem kanji
-//	        	Div row2Div = new Div("row");
-//	        	
-////	        	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
-//				
-//	        	// komorka ze znakiem kanji
-//	        	Div kanjiDivBody = new Div("col-md-10");
-//	        	
-//	        	// tabelka ze znakiem kanji
-//				Table kanjiTable = new Table();
-//				
-//				// czytanie
-//				Tr kanaPartTr = new Tr(null, "font-size: 123%; text-align:center;");
-//							
-//				for (int idx = 0; idx < furiganaKanaParts.size(); ++idx) {
-//					
-//					String currentKanaPart = furiganaKanaParts.get(idx);
-//					
-//					Td currentKanaPartTd = new Td();
-//					
-//					currentKanaPartTd.addHtmlElement(new Text(currentKanaPart));
-//					
-//					kanaPartTr.addHtmlElement(currentKanaPartTd);
-//				}
-//				
-//				kanjiTable.addHtmlElement(kanaPartTr);
-//							
-//				// znaki kanji
-//				Tr kanjiKanjiTr = new Tr(null, "font-size: 300%; text-align:center;");
-//				
-//				kanjiTable.addHtmlElement(kanjiKanjiTr);
-//				
-//				for (int idx = 0; idx < furiganaKanjiParts.size(); ++idx) {
-//					
-//					String currentKanjiPart = furiganaKanjiParts.get(idx);
-//					
-//					Td currentKanjiPartTd = new Td();
-//					
-//					currentKanjiPartTd.addHtmlElement(new Text(currentKanjiPart));
-//					
-//					kanjiKanjiTr.addHtmlElement(currentKanjiPartTd);
-//				}	
-//				
-//				// komorka z guziczkiem				
-//				if (isAllCharactersStrokePathsAvailableForWord == true) {
-//					
-//					Td kanjiDrawButtonTd = new Td();
-//					
-//					Div kanjiDrawButtonDivBody = new Div("col-md-1");
-//					
-//					Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
-//							getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
-//
-//					kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
-//					kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
-//					
-//					if (mobile == false) {
-//						
-//						// przerwa
-//						kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
-//
-//						kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
-//											
-//					} else {
-//						
-//						Tr kanjiKanjiForWritingButtonTr = new Tr(null, null);
-//						
-//						kanjiTable.addHtmlElement(kanjiKanjiForWritingButtonTr);
-//						
-//						kanjiDrawButtonTd.setColspan(String.valueOf(furiganaKanjiParts.size() + 2));
-//
-//						kanjiKanjiForWritingButtonTr.addHtmlElement(kanjiDrawButtonTd);			
-//					}
-//				}								
-//								
-//				kanjiDivBody.addHtmlElement(kanjiTable);
-//				row2Div.addHtmlElement(kanjiDivBody);					
-//				
-//				kanjiDiv.addHtmlElement(row2Div);
-//        	}
-//        	
-//        } else {
-//        	
-//        	Div row2Div = new Div("row");
-//        	
-//        	if (mobile == false) {
-//        		row2Div.addHtmlElement(new Div("col-md-1"));
-//        	}
-//        	
-//        	Div kanjiDivBody = new Div("col-md-10");
-//        	
-//        	row2Div.addHtmlElement(kanjiDivBody);
-//        	
-//        	Div kanjiDivText = new Div(null, "font-size: 200%");
-//        	Text kanjiText = new Text(kanjiSb.toString());
-//        	
-//        	kanjiDivText.addHtmlElement(kanjiText);
-//        	kanjiDivBody.addHtmlElement(kanjiDivText);
-//        	
-//        	kanjiDiv.addHtmlElement(row2Div);
-//        }
+			if (prefixKana != null) {
+				kanjiSb.append("(").append(prefixKana).append(") ");
+			}
 
-//        // skrypt otwierajacy okienko
-//        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, dictionaryEntry.getKanji().length(), mobile));
-//        
-//        // tworzenie okienka rysowania znaku kanji
-//        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, dictionaryEntry.getKanji(), kanjiDrawId));
+			kanjiSb.append(dictionaryEntry.getKanji());
+
+			addKanjiWrite = true;
+        	
+        } else {
+			kanjiSb.append("-");
+
+			addKanjiWrite = false;
+		}
+        
+        if (addKanjiWrite == false) {
+        	return null;
+        }
+        	
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+    	
+    	// kanji - tytul
+    	Div kanjiTitleDiv = new Div("col-md-1");
+    	
+    	H kanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	kanjiTitleH4.setId("kanjiTitleId");
+    	
+    	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
+    	menu.getChildMenu().add(new Menu(kanjiTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
+    	
+    	kanjiTitleDiv.addHtmlElement(kanjiTitleH4);
+    	
+    	row1Div.addHtmlElement(kanjiTitleDiv);
+    	
+    	// dodaj wiersz z tytulem
+    	kanjiDiv.addHtmlElement(row1Div);
+    	    	        	        	       		
+        List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(dictionaryEntry);
+        
+        // sprawdzenie, czy mamy dane do pisania wszystkich znakow
+        boolean isAllCharactersStrokePathsAvailableForWord = dictionaryManager.isAllCharactersStrokePathsAvailableForWord(dictionaryEntry.getKanji());
+    	            
+        if (furiganaEntries != null && furiganaEntries.size() > 0 && addKanjiWrite == true) {
+        	
+        	for (FuriganaEntry currentFuriganaEntry : furiganaEntries) {
+        		
+				List<String> furiganaKanaParts = currentFuriganaEntry.getKanaPart();
+				List<String> furiganaKanjiParts = currentFuriganaEntry.getKanjiPart();
+				
+				// wiersz ze znakiem kanji
+	        	Div row2Div = new Div("row");
+	        	
+	        	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
+				
+	        	// komorka ze znakiem kanji
+	        	Div kanjiDivBody = new Div("col-md-10");
+	        	
+	        	// tabelka ze znakiem kanji
+				Table kanjiTable = new Table();
+				
+				// czytanie
+				Tr kanaPartTr = new Tr(null, "font-size: 123%; text-align:center;");
+							
+				for (int idx = 0; idx < furiganaKanaParts.size(); ++idx) {
+					
+					String currentKanaPart = furiganaKanaParts.get(idx);
+					
+					Td currentKanaPartTd = new Td();
+					
+					currentKanaPartTd.addHtmlElement(new Text(currentKanaPart));
+					
+					kanaPartTr.addHtmlElement(currentKanaPartTd);
+				}
+				
+				kanjiTable.addHtmlElement(kanaPartTr);
+							
+				// znaki kanji
+				Tr kanjiKanjiTr = new Tr(null, "font-size: 300%; text-align:center;");
+				
+				kanjiTable.addHtmlElement(kanjiKanjiTr);
+				
+				for (int idx = 0; idx < furiganaKanjiParts.size(); ++idx) {
+					
+					String currentKanjiPart = furiganaKanjiParts.get(idx);
+					
+					Td currentKanjiPartTd = new Td();
+					
+					currentKanjiPartTd.addHtmlElement(new Text(currentKanjiPart));
+					
+					kanjiKanjiTr.addHtmlElement(currentKanjiPartTd);
+				}	
+				
+				// komorka z guziczkiem				
+				if (isAllCharactersStrokePathsAvailableForWord == true) {
+					
+					Td kanjiDrawButtonTd = new Td();
+					
+					Div kanjiDrawButtonDivBody = new Div("col-md-1");
+					
+					Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
+							getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
+
+					kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
+					kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
+					
+					if (mobile == false) {
+						
+						// przerwa
+						kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
+
+						kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
+											
+					} else {
+						
+						Tr kanjiKanjiForWritingButtonTr = new Tr(null, null);
+						
+						kanjiTable.addHtmlElement(kanjiKanjiForWritingButtonTr);
+						
+						kanjiDrawButtonTd.setColspan(String.valueOf(furiganaKanjiParts.size() + 2));
+
+						kanjiKanjiForWritingButtonTr.addHtmlElement(kanjiDrawButtonTd);			
+					}
+				}								
+								
+				kanjiDivBody.addHtmlElement(kanjiTable);
+				row2Div.addHtmlElement(kanjiDivBody);					
+				
+				kanjiDiv.addHtmlElement(row2Div);
+        	}
+        	
+        } else {
+        	
+        	Div row2Div = new Div("row");
+        	
+        	if (mobile == false) {
+        		row2Div.addHtmlElement(new Div("col-md-1"));
+        	}
+        	
+        	Div kanjiDivBody = new Div("col-md-10");
+        	
+        	row2Div.addHtmlElement(kanjiDivBody);
+        	
+        	Div kanjiDivText = new Div(null, "font-size: 200%");
+        	Text kanjiText = new Text(kanjiSb.toString());
+        	
+        	kanjiDivText.addHtmlElement(kanjiText);
+        	kanjiDivBody.addHtmlElement(kanjiDivText);
+        	
+        	kanjiDiv.addHtmlElement(row2Div);
+        }
+
+        // skrypt otwierajacy okienko
+        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, dictionaryEntry.getKanji().length(), mobile));
+        
+        // tworzenie okienka rysowania znaku kanji
+        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, dictionaryEntry.getKanji(), kanjiDrawId));
         
     	// informacje dodatkowe do kanji
         if (dictionaryEntry2KanjiKanaPair != null && dictionaryEntry2KanjiKanaPair.getKanjiInfo() != null) {
@@ -885,7 +885,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         Table readingTable = new Table();
         readingBodyDiv.addHtmlElement(readingTable);
         	
-//    	final String kanaDrawId = "kanaDrawId";
+    	final String kanaDrawId = "kanaDrawId";
     	
 		StringBuffer fullKana = new StringBuffer();
 		StringBuffer fullRomaji = new StringBuffer();
@@ -905,12 +905,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Tr readingTableTr = new Tr();
 		readingTable.addHtmlElement(readingTableTr);
 		
-//		Td readingTableKanaTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
-//		readingTableTr.addHtmlElement(readingTableKanaTd);
-//					
-//		readingTableKanaTd.addHtmlElement(new Text(fullKana.toString()));
+		Td readingTableKanaTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
+		readingTableTr.addHtmlElement(readingTableKanaTd);
 					
-//		idAndTextList.add(new IdAndText(kanaDrawId, fullKana.toString()));
+		readingTableKanaTd.addHtmlElement(new Text(fullKana.toString()));
+					
+		idAndTextList.add(new IdAndText(kanaDrawId, fullKana.toString()));
 		
 		Td readingTableRomajiTd = new Td(null, "margin-top: 0px; margin-bottom: 5px; padding: 5px 50px 5px 0;");
 		readingTableTr.addHtmlElement(readingTableRomajiTd);
@@ -920,37 +920,37 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		readingTableRomajiTdH4.addHtmlElement(new Text(fullRomaji.toString()));
 
-//		// guzik rysowania
-//		Td readingTableButtonTd = new Td(null, "padding: 0 50px 5px 0;");
-//		
-//		Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
-//				getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
-//		
-//		readingTableButtonTd.addHtmlElement(kanaDrawButton);
+		// guzik rysowania
+		Td readingTableButtonTd = new Td(null, "padding: 0 50px 5px 0;");
 		
-//		if (mobile == false) {
-//			
-//			readingTableTr.addHtmlElement(readingTableButtonTd);			
-//			
-//		} else {
-//			
-//			Tr readingTableTrForMobile = new Tr();
-//			
-//			readingTable.addHtmlElement(readingTableTrForMobile);
-//			
-//			readingTableButtonTd.setColspan("2");
-//			
-//			readingTableTrForMobile.addHtmlElement(readingTableButtonTd);
-//		}
+		Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
+				getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
+		
+		readingTableButtonTd.addHtmlElement(kanaDrawButton);
+		
+		if (mobile == false) {
+			
+			readingTableTr.addHtmlElement(readingTableButtonTd);			
+			
+		} else {
+			
+			Tr readingTableTrForMobile = new Tr();
+			
+			readingTable.addHtmlElement(readingTableTrForMobile);
+			
+			readingTableButtonTd.setColspan("2");
+			
+			readingTableTrForMobile.addHtmlElement(readingTableButtonTd);
+		}
 
-//        for (IdAndText idAndText : idAndTextList) {
-//        	        	
-//            // skrypt otwierajacy okienko
-//        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id, idAndText.text.length(), mobile));
-//            
-//            // tworzenie okienka rysowania znaku kanji
-//        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
-//		}
+        for (IdAndText idAndText : idAndTextList) {
+        	        	
+            // skrypt otwierajacy okienko
+        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id, idAndText.text.length(), mobile));
+            
+            // tworzenie okienka rysowania znaku kanji
+        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
+		}
         
     	// informacje dodatkowe do czytania
         if (dictionaryEntry2KanjiKanaPair != null && dictionaryEntry2KanjiKanaPair.getReadingInfo() != null) {
