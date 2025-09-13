@@ -163,6 +163,7 @@ public class FirewallFilter implements Filter {
 		String hostName = Utils.getHostname(ip);
 		String userAgent = httpServletRequest.getHeader("User-Agent");	
 		String url = httpServletRequest.getRequestURI();
+		String httpMethod = httpServletRequest.getMethod();
 		
 		String fullUrl = Utils.getRequestURL(httpServletRequest);
 		
@@ -181,11 +182,15 @@ public class FirewallFilter implements Filter {
 		doBlock = isIpHostBlocked(ip, hostName, country);
 		
 		if (userAgent != null) {
-			
 			// sprawdzamy, czy zalezy zablokowac tego user agenta
 			if (userAgent.contains("AspiegelBot") == true || userAgent.contains("RecordedFuture") == true) { // RecordedFuture-ASI
 				doBlock = true;
 			}	
+		}
+		
+		// dodatkowe sprawdzenie, czy wywolanie nie pochodzi z aplikacji na Androida, jesli tak to pozwalamy na nie
+		if (doBlock == true && httpMethod != null && httpMethod.equals("POST") == true && url.startsWith("/android/") == true && userAgent != null && userAgent.startsWith("JapaneseAndroidLearnHelper/") == true) {
+			doBlock = false;
 		}
 		
 		// sprawdzenie, czy dany fullURL nalezy zablokowac
