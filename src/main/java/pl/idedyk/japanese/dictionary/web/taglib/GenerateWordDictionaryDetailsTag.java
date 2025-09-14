@@ -414,29 +414,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
                 	
                 	singleWordDivTableKanjiAdditionalInfoTrTd.addHtmlElement(new Text(currentKanjiAdditionalInfoListString));
 				}            	
-            	
-            	/*
-            	List<KanjiAdditionalInfoEnum> kanjiAdditionalInfoList = dictionaryEntry2KanjiKanaPair.getKanjiInfo().getKanjiAdditionalInfoList();
-            	
-            	List<String> kanjiAdditionalInfoListString = Dictionary2HelperCommon.translateToPolishKanjiAdditionalInfoEnum(kanjiAdditionalInfoList);
-            	
-            	if (kanjiAdditionalInfoList != null && kanjiAdditionalInfoList.size() > 0) {
-            		
-                	Div kanjiAdditionalInfoDiv = new Div("row");
-                	
-                	kanjiAdditionalInfoDiv.addHtmlElement(new Div());
-                	
-                	Div kanjiAdditionalInfoDivBody = new Div("col-md-10", "margin-top: 15px");
-                	
-                	kanjiAdditionalInfoDivBody.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(kanjiAdditionalInfoListString, "; ")));
-
-                	kanjiAdditionalInfoDiv.addHtmlElement(kanjiAdditionalInfoDivBody);
-                	
-                	kanjiDiv.addHtmlElement(kanjiAdditionalInfoDiv);
-            	} 
-            	*/       	
             }
-
     		
     		Tr singleWordDivTableKanjiTr = new Tr();
     		singleWordTable.addHtmlElement(singleWordDivTableKanjiTr);
@@ -558,6 +536,24 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	// kana
     	{       	
+        	// informacje dodatkowe do kana
+            if (kanjiKanaPair.getReadingInfo().getReadingAdditionalInfoList().size() > 0) {
+            	
+            	List<String> readingReadingAdditionalInfoListString = Dictionary2HelperCommon.translateToPolishReadingAdditionalInfoEnum(kanjiKanaPair.getReadingInfo().getReadingAdditionalInfoList());
+            	
+            	for (String currentReadingAdditionalInfoListString : readingReadingAdditionalInfoListString) {
+            		Tr singleWordDivTableKanaReadingAdditionalInfoTr = new Tr();
+                	singleWordTable.addHtmlElement(singleWordDivTableKanaReadingAdditionalInfoTr);
+                	
+                	Td singleWordDivTableKanaReadingAdditionalInfoTrTd = new Td(null, null);                	
+                	singleWordDivTableKanaReadingAdditionalInfoTr.addHtmlElement(singleWordDivTableKanaReadingAdditionalInfoTrTd);
+                	
+                	singleWordDivTableKanaReadingAdditionalInfoTrTd.setColspan("3");
+                	
+                	singleWordDivTableKanaReadingAdditionalInfoTrTd.addHtmlElement(new Text(currentReadingAdditionalInfoListString));
+				}            	
+            }    		
+    		
     		Tr singleWordDivTableKanaTr = new Tr();
     		singleWordTable.addHtmlElement(singleWordDivTableKanaTr);
 
@@ -617,157 +613,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     		singleWordDivTableRomajiTd2.addHtmlElement(new Text(romaji));
     	}		
 	}
-	
-	private Div generateReadingSection(Menu menu, boolean mobile) throws IOException, DictionaryException {
 		
-		Div readingDiv = new Div();
-		
-//		String prefixKana = dictionaryEntry.getPrefixKana();
-//		String prefixRomaji = dictionaryEntry.getPrefixRomaji();
-//		
-//		String kana = dictionaryEntry.getKana();
-//		String romaji = dictionaryEntry.getRomaji();
-		
-    	// wiersz z tytulem
-//    	Div row1Div = new Div("row");
-//    	
-//    	// kanji - tytul
-//    	Div readingTitleDiv = new Div("col-md-1");
-//    	
-//    	H readingTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
-//    	
-//    	readingTitleH4.setId("readingId");
-//    	
-//    	readingTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title")));
-//    	menu.getChildMenu().add(new Menu(readingTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title")));
-//    	
-//    	readingTitleDiv.addHtmlElement(readingTitleH4);
-//    	
-//    	row1Div.addHtmlElement(readingTitleDiv);
-//    	
-//    	// dodaj wiersz z tytulem
-//    	readingDiv.addHtmlElement(row1Div);
-//
-//		// wiersz ze znakiem kanji
-//    	Div row2Div = new Div("row");
-//    	readingDiv.addHtmlElement(row2Div);
-//		
-//    	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
-    	
-//        class IdAndText {
-//        	
-//        	public String id;
-//        	
-//        	public String text;
-//
-//			public IdAndText(String id, String text) {
-//				this.id = id;
-//				this.text = text;
-//			}        	
-//        }
-        
-//        List<IdAndText> idAndTextList = new ArrayList<IdAndText>();
-        
-//    	Div readingBodyDiv = new Div("col-md-11");
-//    	row2Div.addHtmlElement(readingBodyDiv);
-//
-//        Table readingTable = new Table();
-//        readingBodyDiv.addHtmlElement(readingTable);
-        	
-//    	final String kanaDrawId = "kanaDrawId";
-    	
-//		StringBuffer fullKana = new StringBuffer();
-//		StringBuffer fullRomaji = new StringBuffer();
-		
-//		if (prefixKana != null && prefixKana.equals("") == false) {
-//			fullKana.append("(").append(prefixKana).append(") ");
-//		}
-//
-//		fullKana.append(kana);
-//
-//		if (prefixRomaji != null && prefixRomaji.equals("") == false) {
-//			fullRomaji.append("(").append(prefixRomaji).append(") ");
-//		}
-//
-//		fullRomaji.append(romaji);
-		
-//		Tr readingTableTr = new Tr();
-//		readingTable.addHtmlElement(readingTableTr);
-//		
-//		Td readingTableKanaTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
-//		readingTableTr.addHtmlElement(readingTableKanaTd);
-					
-//		readingTableKanaTd.addHtmlElement(new Text(fullKana.toString()));
-//					
-//		idAndTextList.add(new IdAndText(kanaDrawId, fullKana.toString()));
-//		
-//		Td readingTableRomajiTd = new Td(null, "margin-top: 0px; margin-bottom: 5px; padding: 5px 50px 5px 0;");
-//		readingTableTr.addHtmlElement(readingTableRomajiTd);
-		
-//		H readingTableRomajiTdH4 = new H(4);
-//		readingTableRomajiTd.addHtmlElement(readingTableRomajiTdH4);
-//		
-//		readingTableRomajiTdH4.addHtmlElement(new Text(fullRomaji.toString()));
-
-		// guzik rysowania
-//		Td readingTableButtonTd = new Td(null, "padding: 0 50px 5px 0;");
-//		
-//		Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
-//				getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
-//		
-//		readingTableButtonTd.addHtmlElement(kanaDrawButton);
-		
-//		if (mobile == false) {
-//			
-//			readingTableTr.addHtmlElement(readingTableButtonTd);			
-//			
-//		} else {
-//			
-//			Tr readingTableTrForMobile = new Tr();
-//			
-//			readingTable.addHtmlElement(readingTableTrForMobile);
-//			
-//			readingTableButtonTd.setColspan("2");
-//			
-//			readingTableTrForMobile.addHtmlElement(readingTableButtonTd);
-//		}
-
-//        for (IdAndText idAndText : idAndTextList) {
-//        	        	
-//            // skrypt otwierajacy okienko
-//        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id, idAndText.text.length(), mobile));
-//            
-//            // tworzenie okienka rysowania znaku kanji
-//        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
-//		}
-        
-    	// informacje dodatkowe do czytania
-        if (dictionaryEntry2KanjiKanaPair != null && dictionaryEntry2KanjiKanaPair.getReadingInfo() != null) {
-        	
-        	List<ReadingAdditionalInfoEnum> readingAdditionalInfoList = dictionaryEntry2KanjiKanaPair.getReadingInfo().getReadingAdditionalInfoList();
-        	
-        	List<String> readingAdditionalInfoListString = Dictionary2HelperCommon.translateToPolishReadingAdditionalInfoEnum(readingAdditionalInfoList);
-        	
-        	if (readingAdditionalInfoList != null && readingAdditionalInfoList.size() > 0) {
-        		
-            	Div readingAdditionalInfoDiv = new Div("row");
-            	
-            	readingAdditionalInfoDiv.addHtmlElement(new Div());
-            	
-            	Div readingAdditionalInfoDivBody = new Div("col-md-10", "margin-top: 15px");
-            	
-            	readingAdditionalInfoDivBody.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(readingAdditionalInfoListString, "; ")));
-
-            	readingAdditionalInfoDiv.addHtmlElement(readingAdditionalInfoDivBody);
-            	
-            	readingDiv.addHtmlElement(readingAdditionalInfoDiv);
-        	}        	
-        }
-
-                
-        return readingDiv;
-	}
-	
 	private Div generateTranslateSection(Menu menu) throws IOException {
 		
 		final String titleId = "translateId";
