@@ -3,10 +3,12 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRequest;
@@ -284,8 +286,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		panelBody.addHtmlElement(wordDiv);
 		panelBody.addHtmlElement(new Hr());
-		
-		/* FM_FIXME: do poprawy - start		
+						
 		// znaczenie znakow kanji
         Div knownKanjiDiv = generateKnownKanjiDiv(mainInfoMenu, mobile);
         
@@ -293,7 +294,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         	panelBody.addHtmlElement(knownKanjiDiv);
         	panelBody.addHtmlElement(new Hr());
         }
-				
+		
+        /* FM_FIXME: do poprawy - start
         // tlumaczenie
         Div translate = generateTranslateSection(mainInfoMenu);
         panelBody.addHtmlElement(translate);
@@ -1210,11 +1212,29 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	private Div generateKnownKanjiDiv(Menu menu, boolean mobile) throws DictionaryException {
 		
-		if (dictionaryEntry.isKanjiExists() == false) {
+		Set<String> allKanjis = new LinkedHashSet<String>(); 
+		
+		if (dictionaryEntry != null && dictionaryEntry.isKanjiExists() == true) { // obsluga starego formatu
+			for (int idx = 0; idx < dictionaryEntry.getKanji().length(); ++idx) {
+				allKanjis.add("" + dictionaryEntry.getKanji().charAt(idx));
+			}
+			
+		} else if (kanjiKanaPairList != null) { // nowy format
+			kanjiKanaPairList.stream().filter(f -> f.getKanjiInfo() != null).forEach(c -> {
+				for (int idx = 0; idx < c.getKanji().length(); ++idx) {
+					allKanjis.add("" + c.getKanji().charAt(idx));
+				}	
+			});			
+			
+		} else {
 			return null;
 		}
 		
-		List<KanjiCharacterInfo> knownKanji = dictionaryManager.findKnownKanji(dictionaryEntry.getKanji());
+		if (allKanjis.size() == 0) {
+			return null;
+		}
+		
+		List<KanjiCharacterInfo> knownKanji = dictionaryManager.findKnownKanji(allKanjis.toString());
 		
 		if (knownKanji == null || knownKanji.size() == 0) {
 			return null;
