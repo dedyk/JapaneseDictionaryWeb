@@ -61,6 +61,9 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfo;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKana;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKanaType;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.RelativePriorityEnum;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
@@ -282,15 +285,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		panelBody.addHtmlElement(wordDiv);
 		panelBody.addHtmlElement(new Hr());
 		
-		/* FM_FIXME: do poprawy - start
-		// kanji
-		Div kanjiDiv = generateKanjiSection(mainInfoMenu, mobile);
-		
-		if (kanjiDiv != null) {
-			panelBody.addHtmlElement(kanjiDiv);				
-			panelBody.addHtmlElement(new Hr());
-		}
-		
+		/* FM_FIXME: do poprawy - start		
 		// znaczenie znakow kanji
         Div knownKanjiDiv = generateKnownKanjiDiv(mainInfoMenu, mobile);
         
@@ -298,12 +293,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         	panelBody.addHtmlElement(knownKanjiDiv);
         	panelBody.addHtmlElement(new Hr());
         }
-		
-		// czytanie
-		Div readingDiv = generateReadingSection(mainInfoMenu, mobile);
-		panelBody.addHtmlElement(readingDiv);
-		panelBody.addHtmlElement(new Hr());
-		
+				
         // tlumaczenie
         Div translate = generateTranslateSection(mainInfoMenu);
         panelBody.addHtmlElement(translate);
@@ -377,12 +367,38 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Table singleWordTable = new Table();
 		wordMainDiv.addHtmlElement(singleWordTable);
 		
-    	for (int kanjiKanaPairIdx = 0; kanjiKanaPairIdx < kanjiKanaPairList.size(); ++kanjiKanaPairIdx) {
-    		KanjiKanaPair kanjiKanaPair = kanjiKanaPairList.get(kanjiKanaPairIdx);
-        	    		    	    		   	    		
-    		// pobieramy wszystkie skladniki slowa    		    	        	
-    		createWordTableTr(singleWordTable, kanjiKanaPair, kanjiKanaPairIdx, mobile);
-		}
+		if (kanjiKanaPairList != null) { // nowy format
+			
+	    	for (int kanjiKanaPairIdx = 0; kanjiKanaPairIdx < kanjiKanaPairList.size(); ++kanjiKanaPairIdx) {
+	    		KanjiKanaPair kanjiKanaPair = kanjiKanaPairList.get(kanjiKanaPairIdx);
+	        	    		    	    		   	    		
+	    		// pobieramy wszystkie skladniki slowa    		    	        	
+	    		createWordTableTr(singleWordTable, kanjiKanaPair, kanjiKanaPairIdx, mobile);
+			}
+			
+		} else { // stary format
+			
+			// stworzenie wirtualnego KanjiKanaPair
+			KanjiInfo kanjiInfo = new KanjiInfo();
+			
+			kanjiInfo.setKanji(dictionaryEntry.getKanji());
+			
+			ReadingInfo readingInfo = new ReadingInfo();
+			
+			ReadingInfoKana readingInfoKana = new ReadingInfoKana();
+			readingInfo.setKana(readingInfoKana);
+			
+			if (dictionaryEntry.getWordType() != null) {
+				readingInfoKana.setKanaType(ReadingInfoKanaType.valueOf(dictionaryEntry.getWordType().name()));
+			}
+			
+			readingInfoKana.setValue(dictionaryEntry.getKana());
+			readingInfoKana.setRomaji(dictionaryEntry.getRomaji());
+						
+			KanjiKanaPair virtualKanjiKanaPair = new KanjiKanaPair(null, kanjiInfo, readingInfo);
+			
+			createWordTableTr(singleWordTable, virtualKanjiKanaPair, 0, mobile);			
+		}		
     	
 		return wordsDiv;
 	}
