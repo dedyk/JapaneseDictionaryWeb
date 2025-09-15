@@ -15,8 +15,11 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
+import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
+import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.Span;
@@ -224,6 +227,71 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		    			
 		    			translateTd.addHtmlElement(languageSourceDiv);						
 					}
+					
+					// odnosnic do innego slowa
+					if (sense.getReferenceToAnotherKanjiKanaList().size() > 0) {						
+						List<String> wordsToCreateLinkList = new ArrayList<>();
+												
+						for (String referenceToAnotherKanjiKana : sense.getReferenceToAnotherKanjiKanaList()) {							
+							// wartosc tutaj znajduja sie moze byc w trzech wariantach: kanji, kanji i kana oraz kanji, kana i numer pozycji w tlumaczeniu
+							String[] referenceToAnotherKanjiKanaSplited = referenceToAnotherKanjiKana.split("・");
+														
+							if (referenceToAnotherKanjiKanaSplited.length == 1 || referenceToAnotherKanjiKanaSplited.length == 2) {
+								wordsToCreateLinkList.add(referenceToAnotherKanjiKanaSplited[0]);
+								
+							} else if (referenceToAnotherKanjiKanaSplited.length == 3) {
+								wordsToCreateLinkList.add(referenceToAnotherKanjiKanaSplited[0]);
+								wordsToCreateLinkList.add(referenceToAnotherKanjiKanaSplited[1]);								
+							}							
+						}
+						
+						if (wordsToCreateLinkList.size() > 0) {
+							Div referenceToAnotherKanjiKanaDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+							
+							referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text("・" + messageSource.getMessage("wordDictionary.page.search.table.column.details.referenceToAnotherKanjiKana", null, Locale.getDefault()) + " "));
+							
+							for (int wordsToCreateLinkListIdx = 0; wordsToCreateLinkListIdx < wordsToCreateLinkList.size(); ++wordsToCreateLinkListIdx) {
+								String currentWordsToCreateLink = wordsToCreateLinkList.get(wordsToCreateLinkListIdx);
+								
+								// tworzymy link-i
+			            		WordDictionarySearchModel searchModel = new WordDictionarySearchModel();
+			            		
+			            		searchModel.setWord(currentWordsToCreateLink);
+			            		searchModel.setWordPlace(WordPlaceSearch.EXACT.toString());
+			            		
+			            		List<String> searchIn = new ArrayList<String>();
+			            		
+			            		searchIn.add("KANJI");
+			            		searchIn.add("KANA");
+			            		searchIn.add("ROMAJI");
+			            		searchIn.add("TRANSLATE");
+			            		searchIn.add("INFO");
+			            		searchIn.add("GRAMMA_FORM_AND_EXAMPLES");
+			            		searchIn.add("NAMES");
+			            				
+			            		searchModel.setSearchIn(searchIn);
+			            		
+			            		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
+			            		
+			            		for (DictionaryEntryType dictionaryEntryType : addableDictionaryEntryList) {
+			            			searchModel.addDictionaryType(dictionaryEntryType);
+			            		}
+			            		
+			            		A currentWordsToCreateLinkLink = new A();
+			            		
+			            		currentWordsToCreateLinkLink.setHref(LinkGenerator.generateWordSearchLink(pageContext.getServletContext().getContextPath(), searchModel));
+			            		currentWordsToCreateLinkLink.addHtmlElement(new Text(currentWordsToCreateLink));
+			            		
+			            		referenceToAnotherKanjiKanaDiv.addHtmlElement(currentWordsToCreateLinkLink);
+			            		
+			            		if (wordsToCreateLinkListIdx != wordsToCreateLinkList.size() - 1) {
+			            			referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text(", "));
+			            		}
+							}
+																					
+		            		translateTd.addHtmlElement(referenceToAnotherKanjiKanaDiv);	
+						}
+					}					
 					
 					// znaczenie
                 	List<Gloss> polishGlossList = Dictionary2HelperCommon.getPolishGlossList(sense.getGlossList());
