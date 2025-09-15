@@ -230,67 +230,12 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 					
 					// odnosnic do innego slowa
 					if (sense.getReferenceToAnotherKanjiKanaList().size() > 0) {						
-						List<String> wordsToCreateLinkList = new ArrayList<>();
-												
-						for (String referenceToAnotherKanjiKana : sense.getReferenceToAnotherKanjiKanaList()) {							
-							// wartosc tutaj znajduja sie moze byc w trzech wariantach: kanji, kanji i kana oraz kanji, kana i numer pozycji w tlumaczeniu
-							String[] referenceToAnotherKanjiKanaSplited = referenceToAnotherKanjiKana.split("・");
-														
-							if (referenceToAnotherKanjiKanaSplited.length == 1 || referenceToAnotherKanjiKanaSplited.length == 2) {
-								wordsToCreateLinkList.add(referenceToAnotherKanjiKanaSplited[0]);
-								
-							} else if (referenceToAnotherKanjiKanaSplited.length == 3) {
-								wordsToCreateLinkList.add(referenceToAnotherKanjiKanaSplited[0]);
-								wordsToCreateLinkList.add(referenceToAnotherKanjiKanaSplited[1]);								
-							}							
-						}
-						
-						if (wordsToCreateLinkList.size() > 0) {
-							Div referenceToAnotherKanjiKanaDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
-							
-							referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text("・" + messageSource.getMessage("wordDictionary.page.search.table.column.details.referenceToAnotherKanjiKana", null, Locale.getDefault()) + " "));
-							
-							for (int wordsToCreateLinkListIdx = 0; wordsToCreateLinkListIdx < wordsToCreateLinkList.size(); ++wordsToCreateLinkListIdx) {
-								String currentWordsToCreateLink = wordsToCreateLinkList.get(wordsToCreateLinkListIdx);
-								
-								// tworzymy link-i
-			            		WordDictionarySearchModel searchModel = new WordDictionarySearchModel();
-			            		
-			            		searchModel.setWord(currentWordsToCreateLink);
-			            		searchModel.setWordPlace(WordPlaceSearch.EXACT.toString());
-			            		
-			            		List<String> searchIn = new ArrayList<String>();
-			            		
-			            		searchIn.add("KANJI");
-			            		searchIn.add("KANA");
-			            		searchIn.add("ROMAJI");
-			            		searchIn.add("TRANSLATE");
-			            		searchIn.add("INFO");
-			            		searchIn.add("GRAMMA_FORM_AND_EXAMPLES");
-			            		searchIn.add("NAMES");
-			            				
-			            		searchModel.setSearchIn(searchIn);
-			            		
-			            		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
-			            		
-			            		for (DictionaryEntryType dictionaryEntryType : addableDictionaryEntryList) {
-			            			searchModel.addDictionaryType(dictionaryEntryType);
-			            		}
-			            		
-			            		A currentWordsToCreateLinkLink = new A();
-			            		
-			            		currentWordsToCreateLinkLink.setHref(LinkGenerator.generateWordSearchLink(pageContext.getServletContext().getContextPath(), searchModel));
-			            		currentWordsToCreateLinkLink.addHtmlElement(new Text(currentWordsToCreateLink));
-			            		
-			            		referenceToAnotherKanjiKanaDiv.addHtmlElement(currentWordsToCreateLinkLink);
-			            		
-			            		if (wordsToCreateLinkListIdx != wordsToCreateLinkList.size() - 1) {
-			            			referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text(", "));
-			            		}
-							}
-																					
-		            		translateTd.addHtmlElement(referenceToAnotherKanjiKanaDiv);	
-						}
+						createReferenceAntonymToAnotherKanjiKanaDiv(translateTd, sense.getReferenceToAnotherKanjiKanaList(), "wordDictionary.page.search.table.column.details.referenceToAnotherKanjiKana");
+					}
+					
+					// odnosnic do przeciwienstwa
+					if (sense.getAntonymList().size() > 0) {						
+						createReferenceAntonymToAnotherKanjiKanaDiv(translateTd, sense.getAntonymList(), "wordDictionary.page.search.table.column.details.referewnceToAntonymKanjiKana");
 					}					
 					
 					// znaczenie
@@ -407,6 +352,70 @@ public class FindWordResultItemTableRowTag extends TagSupport {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+	}
+	
+	private void createReferenceAntonymToAnotherKanjiKanaDiv(Td translateTd, List<String> wordReference, String messageCode) {
+		List<String> wordsToCreateLinkList = new ArrayList<>();
+		
+		for (String referenceToAnotherKanjiKana : wordReference) {							
+			// wartosc tutaj znajduja sie moze byc w trzech wariantach: kanji, kanji i kana oraz kanji, kana i numer pozycji w tlumaczeniu
+			String[] referenceToAnotherKanjiKanaSplited = referenceToAnotherKanjiKana.split("・");
+										
+			if (referenceToAnotherKanjiKanaSplited.length == 1 || referenceToAnotherKanjiKanaSplited.length == 2) {
+				wordsToCreateLinkList.add(referenceToAnotherKanjiKanaSplited[0]);
+				
+			} else if (referenceToAnotherKanjiKanaSplited.length == 3) {
+				wordsToCreateLinkList.add(referenceToAnotherKanjiKanaSplited[0]);
+				wordsToCreateLinkList.add(referenceToAnotherKanjiKanaSplited[1]);								
+			}							
+		}
+		
+		if (wordsToCreateLinkList.size() > 0) {
+			Div referenceToAnotherKanjiKanaDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+			
+			referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text("・" + messageSource.getMessage(messageCode, null, Locale.getDefault()) + " "));
+			
+			for (int wordsToCreateLinkListIdx = 0; wordsToCreateLinkListIdx < wordsToCreateLinkList.size(); ++wordsToCreateLinkListIdx) {
+				String currentWordsToCreateLink = wordsToCreateLinkList.get(wordsToCreateLinkListIdx);
+				
+				// tworzymy link-i
+        		WordDictionarySearchModel searchModel = new WordDictionarySearchModel();
+        		
+        		searchModel.setWord(currentWordsToCreateLink);
+        		searchModel.setWordPlace(WordPlaceSearch.EXACT.toString());
+        		
+        		List<String> searchIn = new ArrayList<String>();
+        		
+        		searchIn.add("KANJI");
+        		searchIn.add("KANA");
+        		searchIn.add("ROMAJI");
+        		searchIn.add("TRANSLATE");
+        		searchIn.add("INFO");
+        		searchIn.add("GRAMMA_FORM_AND_EXAMPLES");
+        		searchIn.add("NAMES");
+        				
+        		searchModel.setSearchIn(searchIn);
+        		
+        		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
+        		
+        		for (DictionaryEntryType dictionaryEntryType : addableDictionaryEntryList) {
+        			searchModel.addDictionaryType(dictionaryEntryType);
+        		}
+        		
+        		A currentWordsToCreateLinkLink = new A();
+        		
+        		currentWordsToCreateLinkLink.setHref(LinkGenerator.generateWordSearchLink(pageContext.getServletContext().getContextPath(), searchModel));
+        		currentWordsToCreateLinkLink.addHtmlElement(new Text(currentWordsToCreateLink));
+        		
+        		referenceToAnotherKanjiKanaDiv.addHtmlElement(currentWordsToCreateLinkLink);
+        		
+        		if (wordsToCreateLinkListIdx != wordsToCreateLinkList.size() - 1) {
+        			referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text(", "));
+        		}
+			}
+																	
+    		translateTd.addHtmlElement(referenceToAnotherKanjiKanaDiv);	
+		}
 	}
 	
 	private Div createWordColumn(FindWordRequest findWordRequest, String findWord, String kanji, String kana, String romaji) {
