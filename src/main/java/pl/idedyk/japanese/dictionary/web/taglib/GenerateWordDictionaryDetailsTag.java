@@ -2,6 +2,7 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRequest;
@@ -16,17 +18,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.JspWriter;
 
+import org.eclipse.tags.shaded.org.apache.xalan.templates.ElemForEach;
 import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dto.Attribute;
+import pl.idedyk.japanese.dictionary.api.dto.AttributeList;
 import pl.idedyk.japanese.dictionary.api.dto.AttributeType;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
+import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
 import pl.idedyk.japanese.dictionary.api.dto.TatoebaSentence;
+import pl.idedyk.japanese.dictionary.api.dto.WordType;
 import pl.idedyk.japanese.dictionary.api.example.ExampleManager;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupTypeElements;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleResult;
@@ -46,11 +52,13 @@ import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Img;
+import pl.idedyk.japanese.dictionary.web.html.Li;
 import pl.idedyk.japanese.dictionary.web.html.Span;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
+import pl.idedyk.japanese.dictionary.web.html.Ul;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.WordDictionary2SenseUtils;
@@ -62,6 +70,8 @@ import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.Printab
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiInfo;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.OldPolishJapaneseDictionaryInfoAttributeListInfo;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.OldPolishJapaneseDictionaryInfoEntriesInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKana;
@@ -162,6 +172,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	            contentDiv.addHtmlElement(generateMainInfo(mainMenu, mobile));
 	            
 	            // generowanie przykladowych zdan
+	            // FM_FIXME: do przeniesienia
 	            exampleSentenceDiv = generateExampleSentence(mainMenu);
 	            
             } catch (DictionaryException e) {
@@ -171,6 +182,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             if (exampleSentenceDiv != null) {
             	contentDiv.addHtmlElement(exampleSentenceDiv);
             }
+            
+            // wygenerowanie tabow dla poszczegolnych slow
+            contentDiv.addHtmlElement(generateWordsTab(mainMenu, mobile));
             
             /* FM_FIXME: do poprawy - start
             // odmiany gramatyczne
@@ -638,7 +652,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		final String titleId = "translateId";
 		final String titleTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title");
 		
-		
 		if (dictionaryEntry2 == null) { // generowanie po staremu
 			return generateStandardDivWithStringList(titleId, titleTitle, menu, dictionaryEntry.getTranslates());
 						
@@ -859,6 +872,143 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 
 		return false;
+	}
+	
+	private IHtmlElement generateWordsTab(Menu mainMenu, boolean mobile) {
+		
+		// FM_FIXME: dodac menu !!!!!!
+		// FM_FIXME: sprawdzic, jak to zachowuje sie dla nazw
+		
+		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
+		
+		if (dictionaryEntry != null) {
+			dictionaryEntryList.add(dictionaryEntry);
+			
+		} else if (kanjiKanaPairList != null) {
+			// pobranie starych elementow
+			
+			for (KanjiKanaPair kanjiKanaPair : kanjiKanaPairList) {
+				
+				final String kanjiKanaPairKanji = kanjiKanaPair.getKanji() != null ? kanjiKanaPair.getKanji() : "-";
+				final String kanjiKanaPairKana = kanjiKanaPair.getKana();
+								
+				// szukamy starego elementu
+				DictionaryEntry oldDictionaryEntry = dictionaryEntry2.getMisc().getOldPolishJapaneseDictionary().getEntries().stream().filter(oldPolishJapaneseDictionary -> {
+					
+					String oldPolishJapaneseDictionaryKanji = oldPolishJapaneseDictionary.getKanji();
+					String oldPolishJapaneseDictionaryKana = oldPolishJapaneseDictionary.getKana();
+					
+					if (oldPolishJapaneseDictionaryKanji == null) {
+						oldPolishJapaneseDictionaryKanji = "-";
+					}
+					
+					return 	kanjiKanaPairKanji.equals(oldPolishJapaneseDictionaryKanji) == true &&
+							kanjiKanaPairKana.equals(oldPolishJapaneseDictionaryKana) == true;
+					
+				}).map(oldPolishJapaneseDictionary -> {
+					DictionaryEntry oldVirtualDictionaryEntry = new DictionaryEntry();
+					
+					// id
+					oldVirtualDictionaryEntry.setId((int)oldPolishJapaneseDictionary.getId());
+					
+					// dictionaryEntryTypeList
+					oldVirtualDictionaryEntry.setDictionaryEntryTypeList(Arrays.asList(oldPolishJapaneseDictionary.getDictionaryEntryTypeList().split(",")).stream(). 
+						map(m -> DictionaryEntryType.getDictionaryEntryType(m)).collect(Collectors.toList()));
+
+					// attributeList
+					dictionaryEntry2.getMisc().getOldPolishJapaneseDictionary().getAttributeList().stream().forEach(attr -> {
+						if (oldVirtualDictionaryEntry.getAttributeList() == null) {
+							oldVirtualDictionaryEntry.setAttributeList(new AttributeList());
+						}
+						
+						oldVirtualDictionaryEntry.getAttributeList().addAttributeValue(AttributeType.valueOf(attr.getType()), attr.getValue());
+					});
+										
+					// wordType
+					oldVirtualDictionaryEntry.setWordType(WordType.valueOf(kanjiKanaPair.getKanaType().value()));
+					
+					// groups
+					oldVirtualDictionaryEntry.setGroups(dictionaryEntry2.getMisc().getOldPolishJapaneseDictionary().getGroupsList().stream().
+						map(grr -> GroupEnum.valueOf(grr)).collect(Collectors.toList()));
+						
+					// prefixKana, kanji, kana, prefixRomaji, romaji
+					oldVirtualDictionaryEntry.setPrefixKana(oldPolishJapaneseDictionary.getPrefixKana());
+					oldVirtualDictionaryEntry.setPrefixRomaji(oldPolishJapaneseDictionary.getPrefixRomaji());
+					
+					oldVirtualDictionaryEntry.setKanji(oldPolishJapaneseDictionary.getKanji());
+					oldVirtualDictionaryEntry.setKana(oldPolishJapaneseDictionary.getKana());
+					oldVirtualDictionaryEntry.setRomaji(oldPolishJapaneseDictionary.getRomaji());
+					
+					// translates, info, exampleSentenceGroupIdsList, name
+					// tych elementow nie mapujemy
+					
+					//
+					
+					return oldVirtualDictionaryEntry;
+									
+				}).findFirst().orElse(null);
+				
+				if (oldDictionaryEntry != null) {
+					dictionaryEntryList.add(oldDictionaryEntry);
+				}
+			}			
+		}
+		
+		Div mainDiv = new Div();
+		
+		if (dictionaryEntryList.size() > 0) { // dodajemy tab-y z kazdym oddzielnym slowem
+			
+			Ul tabUl = new Ul("nav nav-tabs");
+			mainDiv.addHtmlElement(tabUl);
+			
+			for (int dictionaryEntryIdx = 0; dictionaryEntryIdx < dictionaryEntryList.size(); ++dictionaryEntryIdx) {
+				
+				DictionaryEntry dictionaryEntry = dictionaryEntryList.get(dictionaryEntryIdx);
+				
+				Li dictionaryEntryLi = new Li();				
+				tabUl.addHtmlElement(dictionaryEntryLi);
+				
+				if (dictionaryEntryIdx == 0) {
+					dictionaryEntryLi.setClazz("active");
+				}
+				
+				A tabUlA = new A();
+				dictionaryEntryLi.addHtmlElement(tabUlA);
+				
+				tabUlA.setDataToggle("tab");
+				tabUlA.setHref("#dictionaryEntryIdx" + dictionaryEntryIdx);
+				tabUlA.setId("dictionaryEntryId_" + dictionaryEntryIdx);
+				
+				tabUlA.addHtmlElement(new Text("TEST: " + dictionaryEntry.getKanji() + " - " + dictionaryEntry.getKana()));
+			}
+			
+			Div tabContentDiv = new Div();			
+			mainDiv.addHtmlElement(tabContentDiv);
+			
+			tabContentDiv.setClazz("tab-content");
+			
+			for (int dictionaryEntryIdx = 0; dictionaryEntryIdx < dictionaryEntryList.size(); ++dictionaryEntryIdx) {
+				
+				DictionaryEntry dictionaryEntry = dictionaryEntryList.get(dictionaryEntryIdx);
+				
+				Div divForDictionaryEntry = new Div();
+				tabContentDiv.addHtmlElement(divForDictionaryEntry);
+				
+				divForDictionaryEntry.setId("dictionaryEntryIdx" + dictionaryEntryIdx);
+				
+				if (dictionaryEntryIdx == 0) {
+					divForDictionaryEntry.setClazz("tab-pane fade in active col-md-12");
+				} else {
+					divForDictionaryEntry.setClazz("tab-pane fade col-md-12");
+				}
+				
+				divForDictionaryEntry.addHtmlElement(new Text("TEST: " + dictionaryEntry.getKanji() + " - " + dictionaryEntry.getKana()));
+			}
+			
+			// <div id="meaning" class="tab-pane fade in active col-md-12" style="padding-top: 20px; padding-bottom: 20px">
+		}		
+		
+		return mainDiv;
 	}
 	
 	private Div generateWordType(Menu menu) throws IOException {
