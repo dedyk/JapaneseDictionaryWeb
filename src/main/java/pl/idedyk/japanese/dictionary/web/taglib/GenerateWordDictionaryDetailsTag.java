@@ -300,7 +300,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         Div translate = generateTranslateSection(mainInfoMenu);
         panelBody.addHtmlElement(translate);
 
-        /* FM_FIXME: do poprawy - start
         // generuj informacje dodatkowe
         Div additionalInfo = generateAdditionalInfo(mainInfoMenu);
 
@@ -308,7 +307,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         	panelBody.addHtmlElement(new Hr());
         	panelBody.addHtmlElement(additionalInfo);
         }
-        
+
+        /* FM_FIXME: do poprawy - start
         // czesc mowy
         Div wordTypeDiv = generateWordType(mainInfoMenu);
         
@@ -682,14 +682,29 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	private Div generateAdditionalInfo(Menu menu) throws IOException {
 		
-		if (dictionaryEntry2KanjiKanaPair != null) { // dla slownika w formacie drugim nie generuj tej sekcji; informacje te znajda sie w sekcji znaczen
-			return null;
+		String info = null;	
+		String kanji = null;
+		
+		if (dictionaryEntry != null) {
+			info = dictionaryEntry.getInfo();		
+			kanji = dictionaryEntry.getKanji();			
+			
+		} else if (kanjiKanaPairList != null) {
+			
+			for (KanjiKanaPair kanjiKanaPair : kanjiKanaPairList) {
+				KanjiInfo kanjiInfo = kanjiKanaPair.getKanjiInfo();
+				
+				if (kanjiInfo != null) { // wystarczy badac tylko jeden element
+					kanji = kanjiInfo.getKanji();					
+				}
+			}
+			
+			info = null;
+			
+		} else {
+			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
 		}
-		
-		String info = dictionaryEntry.getInfo();
-		
-		String kanji = dictionaryEntry.getKanji();
-		
+				
 		int special = 0;
 		
 		if (kanji != null && isSmTsukiNiKawatteOshiokiYo(kanji) == true) {
@@ -702,6 +717,10 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			special = 3;
 		}
 		
+		if (special == 0 && kanjiKanaPairList != null) { // dla slownika w formacie drugim nie generuj tej sekcji; informacje te znajda sie w sekcji znaczen
+			return null;
+		}
+				
 		if (!(info != null && info.length() > 0) && (special == 0)) {
 			return null;		
 		}	
@@ -746,7 +765,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Td row2TableTrTd1 = new Td();
 		row2TableTr.addHtmlElement(row2TableTrTd1);
 		
-		if (special == 0 || special == 3) {
+		if (info != null && (special == 0 || special == 3)) {
 			
 			H additionalInfoTextH4 = new H(4);
 			row2TableTrTd1.addHtmlElement(additionalInfoTextH4);
