@@ -53,6 +53,7 @@ import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
+import pl.idedyk.japanese.dictionary.web.taglib.utils.WordDictionary2SenseUtils;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.KanjiKanaPair;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSense;
@@ -295,11 +296,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         	panelBody.addHtmlElement(new Hr());
         }
 		
-        /* FM_FIXME: do poprawy - start
-        // tlumaczenie
+        // znaczenie
         Div translate = generateTranslateSection(mainInfoMenu);
         panelBody.addHtmlElement(translate);
-        
+
+        /* FM_FIXME: do poprawy - start
         // generuj informacje dodatkowe
         Div additionalInfo = generateAdditionalInfo(mainInfoMenu);
 
@@ -638,10 +639,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		final String titleTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title");
 		
 		
-		if (dictionaryEntry2KanjiKanaPair == null) { // generowanie po staremu
+		if (dictionaryEntry2 == null) { // generowanie po staremu
 			return generateStandardDivWithStringList(titleId, titleTitle, menu, dictionaryEntry.getTranslates());
 						
 		} else { // generowanie z danych zawartych w dictionaryEntry2
+			//tutaj();
 			
 			// glowny div z zawartoscia
 			Div resultDiv = new Div();
@@ -666,120 +668,14 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    	
 	    	//
 	    	
-	    	PrintableSense printableSense = Dictionary2HelperCommon.getPrintableSense(dictionaryEntry2KanjiKanaPair);
-			
-			// mamy znaczenia
-			for (int senseIdx = 0; senseIdx < printableSense.getSenseEntryList().size(); ++senseIdx) {
-				
-				PrintableSenseEntry printableSenseEntry = printableSense.getSenseEntryList().get(senseIdx);
-								
-				Div senseDiv = new Div("row");
-				
-				// numer znaczenia
-				Div senseNoDiv = new Div("col-md-1");
-				
-				H senseNoDivH = new H(4, null, "margin-top: 20px; text-align: right");
-				
-				senseNoDivH.addHtmlElement(new Text("" + (senseIdx + 1)));
-				
-				senseNoDiv.addHtmlElement(senseNoDivH);
-									
-				senseDiv.addHtmlElement(senseNoDiv);
-												
-				//
-				
-				Div glossPolListDiv = new Div("col-md-11");
-												
-				Table table = new Table();
-				
-				// czesci mowy
-				if (printableSenseEntry.getPolishPartOfSpeechValue() != null) {					
-					Tr tr = new Tr();
-					
-					Td translateToPolishPartOfSpeechEnumTd = new Td();
-					
-					translateToPolishPartOfSpeechEnumTd.addHtmlElement(new Text(printableSenseEntry.getPolishPartOfSpeechValue()));
-					
-					tr.addHtmlElement(translateToPolishPartOfSpeechEnumTd);
-					
-					table.addHtmlElement(tr);
-				}				
-				
-				for (int currentGlossIdx = 0; currentGlossIdx < printableSenseEntry.getGlossList().size(); ++currentGlossIdx) {
-					
-					PrintableSenseEntryGloss printableSenseEntryGloss = printableSenseEntry.getGlossList().get(currentGlossIdx);
-					
-					//
-					
-					int marginBottom = currentGlossIdx != printableSenseEntry.getGlossList().size() - 1 ? 5 : 0; 
-					
-					Tr tr = new Tr();
-
-					// dodanie pojedynczego znaczenia
-					Td glossPolValueTd = new Td();
-					
-					// wyroznienie znaczenia
-					H glossPolTdH4 = new H(4, null, "margin-top: 0px;margin-bottom: " + marginBottom + "px");
-					
-					glossPolTdH4.addHtmlElement(new Text(printableSenseEntryGloss.getGlossValue()));
-					
-					glossPolValueTd.addHtmlElement(glossPolTdH4);
-											
-					tr.addHtmlElement(glossPolValueTd);
-					
-					// sprawdzenie, czy wystepuje dodatkowy typ znaczenia
-					if (printableSenseEntryGloss.getGlossValueGType() != null) {						
-						Td glossPolGTypeTd = new Td();
-						
-						Div glossPolGTypeTdDiv = new Div(null, "margin-top: 0px;margin-left: 25px;margin-bottom: " + marginBottom + "px");
-						
-						glossPolGTypeTdDiv.addHtmlElement(new Text(printableSenseEntryGloss.getGlossValueGType()));
-						
-						glossPolGTypeTd.addHtmlElement(glossPolGTypeTdDiv);
-						
-						tr.addHtmlElement(glossPolGTypeTd);
-					}					
-										
-					table.addHtmlElement(tr);					
-				}
-				
-				// informacje dodatkowe												
-				if (printableSenseEntry.getAdditionalInfoValue() != null) {					
-					Tr tr = new Tr();
-					
-					Td senseAdditionalPolTd = new Td();
-					
-					senseAdditionalPolTd.addHtmlElement(new Text(printableSenseEntry.getAdditionalInfoValue()));
-					
-					tr.addHtmlElement(senseAdditionalPolTd);
-					
-					table.addHtmlElement(tr);
-				}
-				
-				// przerwa
-				{
-					Tr tr = new Tr();
-					
-					Td td = new Td();
-					
-					H h4 = new H(4, null, "margin-bottom: 15px");
-					
-					td.addHtmlElement(h4);
-					
-					tr.addHtmlElement(td);
-					
-					table.addHtmlElement(tr);
-				}
-				
-				glossPolListDiv.addHtmlElement(table);
-				
-				//
-								
-				senseDiv.addHtmlElement(glossPolListDiv);
-				
-				resultDiv.addHtmlElement(senseDiv);
-			}
-						
+	    	Div senseDiv = new Div("row");
+	    	resultDiv.addHtmlElement(senseDiv);
+	    		    	
+	    	Div senseBodyDiv = new Div("col-md-11", "font-size: 130%");
+	    	senseDiv.addHtmlElement(senseBodyDiv);
+	    	
+	    	WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), dictionaryEntry2, senseBodyDiv, null, true);
+	    							
 			return resultDiv;
 		}
 	}
