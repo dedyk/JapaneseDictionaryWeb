@@ -10,6 +10,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.ServletContext;
@@ -969,7 +972,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			
 			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.specifiedDataWordWord")));		
 			Menu specifiedDataWordWordMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.specifiedDataWordWord"));
-					
+						
 			mainMenu.getChildMenu().add(specifiedDataWordWordMenu);
 			
 			panelHeading.addHtmlElement(h3Title);			
@@ -1001,7 +1004,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				
 				tabUlA.setDataToggle("tab");
 				tabUlA.setHref("#dictionaryEntryIdx" + dictionaryEntryIdx);
-				tabUlA.setId("dictionaryEntryId_" + dictionaryEntryIdx);
+				tabUlA.setId("dictionaryEntryTabId" + dictionaryEntryIdx);
 								
 				tabUlA.addHtmlElement(new Text((dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana()));
 			}
@@ -1027,17 +1030,31 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				} else {
 					divForDictionaryEntry.setClazz("tab-pane fade col-md-12");
 				}
-				
+								
 				// dodanie pozycji do menu
 				Menu menuForDictionaryEntry = new Menu(divForDictionaryEntry.getId(), (dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana());
 				
+				// stworzenie skryptu do wyboru zakladki
+				//String selectTabScriptWithScroll = ;
+				
+				//
+				
+				final int dictionaryEntryIdxAsFinal = dictionaryEntryIdx;
+				
+				Function<String, String> selectTabScriptWithScrollFunction = id -> { return "$('#" + "dictionaryEntryTabId" + dictionaryEntryIdxAsFinal + "').tab('show');"
+						+ "setTimeout(() => { $('html, body').animate({ " 
+						+ "scrollTop: $('#" + id + "').offset().top - 15 " 
+						+ "}, 1000); }, 300); return false; "; };
+				
+				menuForDictionaryEntry.setCustomOnClick(selectTabScriptWithScrollFunction.apply(divForDictionaryEntry.getId()));
+								
 				specifiedDataWordWordMenu.getChildMenu().add(menuForDictionaryEntry);
 								
 				// dodanie krotkiej przerwy do zawartosci
 				divForDictionaryEntry.addHtmlElement(new Div(null, "padding-bottom: 20px"));				
 				
 				// FM_FIXME: test !!!!!
-				Div wordTypeDiv = generateWordType(menuForDictionaryEntry, dictionaryEntry);
+				Div wordTypeDiv = generateWordType(dictionaryEntry, menuForDictionaryEntry, divForDictionaryEntry.getId(), selectTabScriptWithScrollFunction);
 				
 				if (wordTypeDiv != null) {
 					divForDictionaryEntry.addHtmlElement(wordTypeDiv);
@@ -1052,7 +1069,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return mainDiv;
 	}
 	
-	private Div generateWordType(Menu menu, DictionaryEntry dictionaryEntry) throws IOException {
+	private Div generateWordType(DictionaryEntry dictionaryEntry, Menu menu, String menuPrefix, Function<String, String> selectTabScriptWithScrollFunction) throws IOException {
 		
 		List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
 		
@@ -1085,11 +1102,14 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	H wordTypeTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	
-    	wordTypeTitleH4.setId("wordTypeId");
+    	wordTypeTitleH4.setId(menuPrefix + "_" + "wordTypeId");
     	
     	wordTypeTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.title")));
-    	menu.getChildMenu().add(new Menu(wordTypeTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.title")));
     	
+    	Menu menuForDictionaryType = new Menu(wordTypeTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.title"));
+    	menuForDictionaryType.setCustomOnClick(selectTabScriptWithScrollFunction.apply(wordTypeTitleH4.getId()));    	
+    	menu.getChildMenu().add(menuForDictionaryType);
+    	    	
     	wordTypeTitleDiv.addHtmlElement(wordTypeTitleH4);
     	
     	row1Div.addHtmlElement(wordTypeTitleDiv);
