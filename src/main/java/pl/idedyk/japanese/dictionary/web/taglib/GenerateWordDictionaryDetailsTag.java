@@ -959,8 +959,31 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		if (dictionaryEntryList.size() > 0) { // dodajemy tab-y z kazdym oddzielnym slowem
 			
+			Div panelDiv = new Div("panel panel-default");			
+			Div panelHeading = new Div("panel-heading");
+			
+			// tytul sekcji
+			H h3Title = new H(3, "panel-title");
+			
+			h3Title.setId("specifiedDataWordWord");
+			
+			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.specifiedDataWordWord")));		
+			Menu specifiedDataWordWordMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.specifiedDataWordWord"));
+					
+			mainMenu.getChildMenu().add(specifiedDataWordWordMenu);
+			
+			panelHeading.addHtmlElement(h3Title);			
+			panelDiv.addHtmlElement(panelHeading);
+			
+			// zawartosc sekcji
+			Div panelBody = new Div("panel-body");
+			
+			panelDiv.addHtmlElement(panelBody);
+			mainDiv.addHtmlElement(panelDiv);
+			
+			// wygenerowanie zakladek			
 			Ul tabUl = new Ul("nav nav-tabs");
-			mainDiv.addHtmlElement(tabUl);
+			panelBody.addHtmlElement(tabUl);
 			
 			for (int dictionaryEntryIdx = 0; dictionaryEntryIdx < dictionaryEntryList.size(); ++dictionaryEntryIdx) {
 				
@@ -984,7 +1007,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			}
 			
 			Div tabContentDiv = new Div();			
-			mainDiv.addHtmlElement(tabContentDiv);
+			panelBody.addHtmlElement(tabContentDiv);
 			
 			tabContentDiv.setClazz("tab-content");
 			
