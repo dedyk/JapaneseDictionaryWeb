@@ -639,7 +639,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     		singleWordDivTableRomajiTr.addHtmlElement(singleWordDivTableRomajiTd1);
     		
         	// czesc glowna
-    		Td singleWordDivTableRomajiTd2 = new Td(null, wordNo != kanjiKanaPairList.size() - 1 ? 
+    		Td singleWordDivTableRomajiTd2 = new Td(null, kanjiKanaPairList != null && wordNo != kanjiKanaPairList.size() - 1 ? 
     				"font-size: 130%; text-align:left; padding-right: 25px; padding-bottom: 40px" : 
     				"font-size: 130%; text-align:left; padding-right: 25px; padding-bottom: 0px");
     		singleWordDivTableRomajiTr.addHtmlElement(singleWordDivTableRomajiTd2);
@@ -875,7 +875,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return false;
 	}
 	
-	private IHtmlElement generateWordsTab(Menu mainMenu, boolean mobile) {
+	private IHtmlElement generateWordsTab(Menu mainMenu, boolean mobile) throws IOException {
 		
 		// FM_FIXME: dodac menu !!!!!!
 		// FM_FIXME: sprawdzic, jak to zachowuje sie dla nazw
@@ -1002,8 +1002,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				tabUlA.setDataToggle("tab");
 				tabUlA.setHref("#dictionaryEntryIdx" + dictionaryEntryIdx);
 				tabUlA.setId("dictionaryEntryId_" + dictionaryEntryIdx);
-				
-				tabUlA.addHtmlElement(new Text("TEST: " + dictionaryEntry.getKanji() + " - " + dictionaryEntry.getKana()));
+								
+				tabUlA.addHtmlElement(new Text((dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana()));
 			}
 			
 			Div tabContentDiv = new Div();			
@@ -1012,6 +1012,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			tabContentDiv.setClazz("tab-content");
 			
 			for (int dictionaryEntryIdx = 0; dictionaryEntryIdx < dictionaryEntryList.size(); ++dictionaryEntryIdx) {
+				
+				// FM_FIXME: dodac menu
 				
 				DictionaryEntry dictionaryEntry = dictionaryEntryList.get(dictionaryEntryIdx);
 				
@@ -1026,7 +1028,22 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					divForDictionaryEntry.setClazz("tab-pane fade col-md-12");
 				}
 				
-				divForDictionaryEntry.addHtmlElement(new Text("TEST: " + dictionaryEntry.getKanji() + " - " + dictionaryEntry.getKana()));
+				// dodanie pozycji do menu
+				Menu menuForDictionaryEntry = new Menu(divForDictionaryEntry.getId(), (dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana());
+				
+				specifiedDataWordWordMenu.getChildMenu().add(menuForDictionaryEntry);
+								
+				// dodanie krotkiej przerwy do zawartosci
+				divForDictionaryEntry.addHtmlElement(new Div(null, "padding-bottom: 20px"));				
+				
+				// FM_FIXME: test !!!!!
+				Div wordTypeDiv = generateWordType(menuForDictionaryEntry, dictionaryEntry);
+				
+				if (wordTypeDiv != null) {
+					divForDictionaryEntry.addHtmlElement(wordTypeDiv);
+				}
+				
+				//divForDictionaryEntry.addHtmlElement(new Text("TEST: " + dictionaryEntry.getKanji() + " - " + dictionaryEntry.getKana()));
 			}
 			
 			// <div id="meaning" class="tab-pane fade in active col-md-12" style="padding-top: 20px; padding-bottom: 20px">
@@ -1035,7 +1052,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return mainDiv;
 	}
 	
-	private Div generateWordType(Menu menu) throws IOException {
+	private Div generateWordType(Menu menu, DictionaryEntry dictionaryEntry) throws IOException {
 		
 		List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
 		
