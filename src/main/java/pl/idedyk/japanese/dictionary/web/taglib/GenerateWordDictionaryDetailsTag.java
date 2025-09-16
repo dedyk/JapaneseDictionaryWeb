@@ -172,7 +172,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	            contentDiv.addHtmlElement(generateMainInfo(mainMenu, mobile));
 	            
 	            // generowanie przykladowych zdan
-	            // FM_FIXME: do przeniesienia
 	            exampleSentenceDiv = generateExampleSentence(mainMenu);
 	            
             } catch (DictionaryException e) {
@@ -640,7 +639,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     		singleWordDivTableRomajiTr.addHtmlElement(singleWordDivTableRomajiTd1);
     		
         	// czesc glowna
-    		Td singleWordDivTableRomajiTd2 = new Td(null, "font-size: 130%; text-align:left; padding-right: 25px; padding-bottom: 40px");
+    		Td singleWordDivTableRomajiTd2 = new Td(null, wordNo != kanjiKanaPairList.size() - 1 ? 
+    				"font-size: 130%; text-align:left; padding-right: 25px; padding-bottom: 40px" : 
+    				"font-size: 130%; text-align:left; padding-right: 25px; padding-bottom: 0px");
     		singleWordDivTableRomajiTr.addHtmlElement(singleWordDivTableRomajiTd2);
     		
     		singleWordDivTableRomajiTd2.addHtmlElement(new Text(romaji));
@@ -1404,13 +1405,15 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	private Div generateExampleSentence(Menu mainMenu) throws DictionaryException {
 		
-		// FM_FIXME: do poprawy
-		if (1 == 1) {
-			return null;
-		}
-
-		List<String> exampleSentenceGroupIdsList = dictionaryEntry.getExampleSentenceGroupIdsList();
+		List<String> exampleSentenceGroupIdsList = null;
 		
+		if (dictionaryEntry != null) {
+			exampleSentenceGroupIdsList = dictionaryEntry.getExampleSentenceGroupIdsList();
+			
+		} else if (dictionaryEntry2 != null) {
+			exampleSentenceGroupIdsList = dictionaryEntry2.getMisc().getOldPolishJapaneseDictionary().getExampleSentenceGroupIdsList();
+		}
+				
 		if (exampleSentenceGroupIdsList == null || exampleSentenceGroupIdsList.size() == 0) {
 			return null;
 		}
