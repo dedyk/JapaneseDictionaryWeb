@@ -1609,7 +1609,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = 
 						GrammaConjugaterManager.getGrammaConjufateResult(dictionaryManager.getKeigoHelper(), new GrammaFormConjugateRequest(dictionaryEntry), grammaFormCache, dictionaryEntryType, false);
 				
-				if (grammaFormConjugateGroupTypeElementsList != null) { // mamy cos wyliczonego
+				if (grammaFormConjugateGroupTypeElementsList != null && grammaFormConjugateGroupTypeElementsList.size() > 0) { // mamy cos wyliczonego
 					// zapisujemy to do pozniejszego wykorzystania
 					GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = grammaFormConjugateAndExampleEntryMap.computeIfAbsent(dictionaryEntry.getId(), (id) -> {
 						return new GrammaFormConjugateAndExampleEntry(dictionaryEntry);
@@ -1630,7 +1630,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			
 			h3Title.setId("grammaFormConjugateId");
 			
-			Menu grammaFormConjugateMenu = null;
+			Menu grammaFormConjugateMenu;
 			
 			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));			
 			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate"));
@@ -1669,16 +1669,76 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						
 						return (dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana();						
 					},
-					(objectToProcess) -> {
-						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)objectToProcess;
+					(tabObjectToProcessCreateDivWrapper) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)tabObjectToProcessCreateDivWrapper.objectToProcess;						
+						List<GrammaFormConjugateAndExampleEntryForDictionaryType> grammaFormConjugateGroupTypeElementsList = grammaFormConjugateAndExampleEntry.grammaFormConjugateAndExampleEntryForDictionaryTypeList;
 						
-						Div div = new Div();
+						Div tabContent = new Div();
+						
+						// generujemy kolejne tab-y w podziale na rodzaj slowa
+						
+						// FM_FIXME: menu !!!!!!
+						createTabs(tabObjectToProcessCreateDivWrapper.menu, tabContent,
+								grammaFormConjugateGroupTypeElementsList.size(),
+								(tabIdx2) -> grammaFormConjugateGroupTypeElementsList.get(tabIdx2),
+								(tabIdx2) -> "grammaFormConjugateEntry" + tabIdx2 + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
+								(tabIdx2) -> "grammaFormConjugateContentEntry" + tabIdx2 + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
+								(objectToProcess2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)objectToProcess2;						
+									
+									return grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName();						
+								},
+								(tabObjectToProcessCreateDivWrapper2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)tabObjectToProcessCreateDivWrapper2.objectToProcess;
+									
+									Div div = new Div();
+									
+									div.addHtmlElement(new Text("FM_FIXME: " + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType));
+									
+									return div;
+								},
+								(tabIdx2) -> {
+									
+									/*
+									return "$('#" + "grammaFormConjugateEntry" + tabIdx + "').tab('show');"
+											+ "setTimeout(() => { $('html, body').animate({ " 
+											+ "scrollTop: $('#" + id + "').offset().top - 15 " 
+											+ "}, 1000); }, 300); return false; ";						
+									*/
+									
+									return "alert('BBBBB');";
+								}								
+							);
+						
+						/*
+						for (int grammaFormConjugateGroupTypeElementsListIdx = 0; grammaFormConjugateGroupTypeElementsListIdx < grammaFormConjugateGroupTypeElementsList.size(); ++grammaFormConjugateGroupTypeElementsListIdx) {
+							
+							GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateGroupTypeElementsList.get(grammaFormConjugateGroupTypeElementsListIdx);
+							
+							if (currentGrammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().isShow() == false) {
+								continue;
+							}
+							
+							div.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, grammaFormConjugateMenu));
+							
+							if (grammaFormConjugateGroupTypeElementsListIdx != grammaFormConjugateGroupTypeElementsList.size() - 1) {
+								div.addHtmlElement(new Hr());
+							}
+						}
+
 						
 						// FM_FIXME: dokonczyc !!!!
 						div.addHtmlElement(new Text("FM_FIXME: " + grammaFormConjugateAndExampleEntry.dictionaryEntry.getId()));
+						*/
 						
-						return div;
-					}
+						return tabContent;
+					},
+					(tabIdx) -> {
+						return "$('#" + "grammaFormConjugateEntry" + tabIdx + "').tab('show');"
+								+ "setTimeout(() => { $('html, body').animate({ " 
+								+ "scrollTop: $('#" + "grammaFormConjugateContentEntry" + tabIdx + "').offset().top - 15 " 
+								+ "}, 1000); }, 300); return false; ";						
+					}					
 				);					
 			
 			return panelDiv;
@@ -1704,20 +1764,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			return null;
 		}
 				
-		for (int grammaFormConjugateGroupTypeElementsListIdx = 0; grammaFormConjugateGroupTypeElementsListIdx < grammaFormConjugateGroupTypeElementsList.size(); ++grammaFormConjugateGroupTypeElementsListIdx) {
-			
-			GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateGroupTypeElementsList.get(grammaFormConjugateGroupTypeElementsListIdx);
-			
-			if (currentGrammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().isShow() == false) {
-				continue;
-			}
-			
-			panelBody.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, grammaFormConjugateMenu));
-			
-			if (grammaFormConjugateGroupTypeElementsListIdx != grammaFormConjugateGroupTypeElementsList.size() - 1) {
-				panelBody.addHtmlElement(new Hr());
-			}
-		}
 		
 		return panelDiv;
 		*/
@@ -1728,7 +1774,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			Function<Integer, String> tabIdHrefGetter,
 			Function<Integer, String> tabContentIdHrefGetter,
 			Function<Object, String> tabNameGetter,
-			Function<Object, Div> contentDivGetter) {
+			Function<TabObjectToProcessCreateDivWrapper, Div> contentDivGetter,
+			Function<Integer, String> customOnClickGenerator) {
 		
 		// wygenerowanie zakladek			
 		Ul tabUl = new Ul("nav nav-tabs");
@@ -1780,23 +1827,15 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			// dodanie pozycji do menu
 			Menu menuForObjectToProcess = new Menu(objectToProcessEntryDiv.getId(), tabNameGetter.apply(objectToProcess));
 			
-			// stworzenie skryptu do wyboru zakladki
-			final int tabIdxAsFinal = tabIdx;
-			
-			Function<String, String> selectTabScriptWithScrollFunction = id -> { return "$('#" + tabIdHrefGetter.apply(tabIdxAsFinal) + "').tab('show');"
-					+ "setTimeout(() => { $('html, body').animate({ " 
-					+ "scrollTop: $('#" + id + "').offset().top - 15 " 
-					+ "}, 1000); }, 300); return false; "; };
-			
-			menuForObjectToProcess.setCustomOnClick(selectTabScriptWithScrollFunction.apply(objectToProcessEntryDiv.getId()));
-							
+			// stworzenie skryptu do wyboru zakladki						
+			menuForObjectToProcess.setCustomOnClick(customOnClickGenerator.apply(tabIdx));							
 			menu.getChildMenu().add(menuForObjectToProcess);
 							
 			// dodanie krotkiej przerwy do zawartosci
 			objectToProcessEntryDiv.addHtmlElement(new Div(null, "padding-bottom: 20px"));				
 			
 			// wygenerowanie zawartosci
-			objectToProcessEntryDiv.addHtmlElement(contentDivGetter.apply(objectToProcess));
+			objectToProcessEntryDiv.addHtmlElement(contentDivGetter.apply(new TabObjectToProcessCreateDivWrapper(objectToProcess, menuForObjectToProcess)));
 		}
 	}
 	
@@ -2391,6 +2430,17 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			this.dictionaryEntryType = dictionaryEntryType;
 			
 			this.grammaFormConjugateGroupTypeElementsList = grammaFormConjugateGroupTypeElementsList;
+		}		
+	}
+	
+	private static class TabObjectToProcessCreateDivWrapper {
+		private Object objectToProcess;
+		private Menu menu;
+		
+		public TabObjectToProcessCreateDivWrapper(Object objectToProcess, Menu menu) {
+			super();
+			this.objectToProcess = objectToProcess;
+			this.menu = menu;
 		}		
 	}
 }
