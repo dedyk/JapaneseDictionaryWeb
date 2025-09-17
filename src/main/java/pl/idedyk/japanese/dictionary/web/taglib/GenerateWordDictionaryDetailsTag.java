@@ -1742,27 +1742,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		} else {
 			return null;
 		}
-		
-		
-		//  
-		
-		
-		/*
-		tutaj();
-		
-		// FM_FIXME: do poprawy, zakomentowano
-		// wylicz odmiany gramatyczne
-		List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = null; / * 
-				GrammaConjugaterManager.getGrammaConjufateResult(dictionaryManager.getKeigoHelper(), dictionaryEntry, grammaFormCache, forceDictionaryEntryType, false);
-		* /
-		
-		if (grammaFormConjugateGroupTypeElementsList == null || grammaFormConjugateGroupTypeElementsList.size() == 0) {
-			return null;
-		}
-				
-		
-		return panelDiv;
-		*/
 	}
 	
 	private String createLevel1TabOnclickScrollScript(String tabId, String tab2Id, int tabIdx) {
