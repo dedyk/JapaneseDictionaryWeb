@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -42,6 +44,7 @@ import pl.idedyk.japanese.dictionary.api.example.dto.ExampleResult;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.api.gramma.GrammaConjugaterManager;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateGroupTypeElements;
+import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateRequest;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResult;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResultType;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
@@ -96,6 +99,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	private DictionaryManager dictionaryManager;
 	private Properties applicationProperties;
+	
+	private Map<String, GrammaFormConjugateAndExampleEntry> grammaFormConjugateAndExampleEntryMap = new LinkedHashMap<>();
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -181,16 +186,15 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             	contentDiv.addHtmlElement(exampleSentenceDiv);
             }
                         
-            /* FM_FIXME: do poprawy - start
-            // odmiany gramatyczne
-    		Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache = new HashMap<GrammaFormConjugateResultType, GrammaFormConjugateResult>();
-            
-            Div grammaFormConjugateDiv = generateGrammaFormConjugate(mainMenu, grammaFormCache);
+            // odmiany gramatyczne            
+            Div grammaFormConjugateDiv = generateGrammaFormConjugate(mainMenu);
             
             if (grammaFormConjugateDiv != null) {
             	contentDiv.addHtmlElement(grammaFormConjugateDiv);
             }
-            
+
+            /*
+            FM_FIXME: do poprawy - start
             // przyklady gramatyczne
             Div exampleDiv = generateExample(mainMenu, grammaFormCache);
             
@@ -860,192 +864,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
 		return false;
 	}
-	
-	/*
-	FM_FIXME: do pozniejszego wykorzystania
-	
-	private IHtmlElement generateWordsTab(Menu mainMenu, boolean mobile) throws IOException {
 		
-		// FM_FIXME: dodac menu !!!!!!
-		// FM_FIXME: sprawdzic, jak to zachowuje sie dla nazw
-		
-		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
-		
-		if (dictionaryEntry != null) {
-			dictionaryEntryList.add(dictionaryEntry);
-			
-		} else if (kanjiKanaPairList != null) {
-			// pobranie starych elementow
-			
-			for (KanjiKanaPair kanjiKanaPair : kanjiKanaPairList) {
-				
-				final String kanjiKanaPairKanji = kanjiKanaPair.getKanji() != null ? kanjiKanaPair.getKanji() : "-";
-				final String kanjiKanaPairKana = kanjiKanaPair.getKana();
-								
-				// szukamy starego elementu
-				DictionaryEntry oldDictionaryEntry = dictionaryEntry2.getMisc().getOldPolishJapaneseDictionary().getEntries().stream().filter(oldPolishJapaneseDictionary -> {
-					
-					String oldPolishJapaneseDictionaryKanji = oldPolishJapaneseDictionary.getKanji();
-					String oldPolishJapaneseDictionaryKana = oldPolishJapaneseDictionary.getKana();
-					
-					if (oldPolishJapaneseDictionaryKanji == null) {
-						oldPolishJapaneseDictionaryKanji = "-";
-					}
-					
-					return 	kanjiKanaPairKanji.equals(oldPolishJapaneseDictionaryKanji) == true &&
-							kanjiKanaPairKana.equals(oldPolishJapaneseDictionaryKana) == true;
-					
-				}).map(oldPolishJapaneseDictionary -> {
-					DictionaryEntry oldVirtualDictionaryEntry = new DictionaryEntry();
-					
-					// id
-					oldVirtualDictionaryEntry.setId((int)oldPolishJapaneseDictionary.getId());
-					
-					// dictionaryEntryTypeList
-					oldVirtualDictionaryEntry.setDictionaryEntryTypeList(Arrays.asList(oldPolishJapaneseDictionary.getDictionaryEntryTypeList().split(",")).stream(). 
-						map(m -> DictionaryEntryType.getDictionaryEntryType(m)).collect(Collectors.toList()));
-
-					// attributeList
-					dictionaryEntry2.getMisc().getOldPolishJapaneseDictionary().getAttributeList().stream().forEach(attr -> {
-						if (oldVirtualDictionaryEntry.getAttributeList() == null) {
-							oldVirtualDictionaryEntry.setAttributeList(new AttributeList());
-						}
-						
-						oldVirtualDictionaryEntry.getAttributeList().addAttributeValue(AttributeType.valueOf(attr.getType()), attr.getValue());
-					});
-										
-					// wordType
-					oldVirtualDictionaryEntry.setWordType(WordType.valueOf(kanjiKanaPair.getKanaType().value()));
-					
-					// groups
-					oldVirtualDictionaryEntry.setGroups(dictionaryEntry2.getMisc().getOldPolishJapaneseDictionary().getGroupsList().stream().
-						map(grr -> GroupEnum.valueOf(grr)).collect(Collectors.toList()));
-						
-					// prefixKana, kanji, kana, prefixRomaji, romaji
-					oldVirtualDictionaryEntry.setPrefixKana(oldPolishJapaneseDictionary.getPrefixKana());
-					oldVirtualDictionaryEntry.setPrefixRomaji(oldPolishJapaneseDictionary.getPrefixRomaji());
-					
-					oldVirtualDictionaryEntry.setKanji(oldPolishJapaneseDictionary.getKanji());
-					oldVirtualDictionaryEntry.setKana(oldPolishJapaneseDictionary.getKana());
-					oldVirtualDictionaryEntry.setRomaji(oldPolishJapaneseDictionary.getRomaji());
-					
-					// translates, info, exampleSentenceGroupIdsList, name
-					// tych elementow nie mapujemy
-					
-					//
-					
-					return oldVirtualDictionaryEntry;
-									
-				}).findFirst().orElse(null);
-				
-				if (oldDictionaryEntry != null) {
-					dictionaryEntryList.add(oldDictionaryEntry);
-				}
-			}			
-		}
-		
-		Div mainDiv = new Div();
-		
-		if (dictionaryEntryList.size() > 0) { // dodajemy tab-y z kazdym oddzielnym slowem
-			
-			Div panelDiv = new Div("panel panel-default");			
-			Div panelHeading = new Div("panel-heading");
-			
-			// tytul sekcji
-			H h3Title = new H(3, "panel-title");
-			
-			h3Title.setId("specifiedDataWordWord");
-			
-			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.specifiedDataWordWord")));		
-			Menu specifiedDataWordWordMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.specifiedDataWordWord"));
-						
-			mainMenu.getChildMenu().add(specifiedDataWordWordMenu);
-			
-			panelHeading.addHtmlElement(h3Title);			
-			panelDiv.addHtmlElement(panelHeading);
-			
-			// zawartosc sekcji
-			Div panelBody = new Div("panel-body");
-			
-			panelDiv.addHtmlElement(panelBody);
-			mainDiv.addHtmlElement(panelDiv);
-			
-			// wygenerowanie zakladek			
-			Ul tabUl = new Ul("nav nav-tabs");
-			panelBody.addHtmlElement(tabUl);
-			
-			for (int dictionaryEntryIdx = 0; dictionaryEntryIdx < dictionaryEntryList.size(); ++dictionaryEntryIdx) {
-				
-				DictionaryEntry dictionaryEntry = dictionaryEntryList.get(dictionaryEntryIdx);
-				
-				Li dictionaryEntryLi = new Li();				
-				tabUl.addHtmlElement(dictionaryEntryLi);
-				
-				if (dictionaryEntryIdx == 0) {
-					dictionaryEntryLi.setClazz("active");
-				}
-				
-				A tabUlA = new A();
-				dictionaryEntryLi.addHtmlElement(tabUlA);
-				
-				tabUlA.setDataToggle("tab");
-				tabUlA.setHref("#dictionaryEntryIdx" + dictionaryEntryIdx);
-				tabUlA.setId("dictionaryEntryTabId" + dictionaryEntryIdx);
-								
-				tabUlA.addHtmlElement(new Text((dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana()));
-			}
-			
-			Div tabContentDiv = new Div();			
-			panelBody.addHtmlElement(tabContentDiv);
-			
-			tabContentDiv.setClazz("tab-content");
-			
-			for (int dictionaryEntryIdx = 0; dictionaryEntryIdx < dictionaryEntryList.size(); ++dictionaryEntryIdx) {
-								
-				DictionaryEntry dictionaryEntry = dictionaryEntryList.get(dictionaryEntryIdx);
-				
-				Div divForDictionaryEntry = new Div();
-				tabContentDiv.addHtmlElement(divForDictionaryEntry);
-				
-				divForDictionaryEntry.setId("dictionaryEntryIdx" + dictionaryEntryIdx);
-				
-				if (dictionaryEntryIdx == 0) {
-					divForDictionaryEntry.setClazz("tab-pane fade in active col-md-12");
-				} else {
-					divForDictionaryEntry.setClazz("tab-pane fade col-md-12");
-				}
-								
-				// dodanie pozycji do menu
-				Menu menuForDictionaryEntry = new Menu(divForDictionaryEntry.getId(), (dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana());
-				
-				// stworzenie skryptu do wyboru zakladki				
-				final int dictionaryEntryIdxAsFinal = dictionaryEntryIdx;
-				
-				Function<String, String> selectTabScriptWithScrollFunction = id -> { return "$('#" + "dictionaryEntryTabId" + dictionaryEntryIdxAsFinal + "').tab('show');"
-						+ "setTimeout(() => { $('html, body').animate({ " 
-						+ "scrollTop: $('#" + id + "').offset().top - 15 " 
-						+ "}, 1000); }, 300); return false; "; };
-				
-				menuForDictionaryEntry.setCustomOnClick(selectTabScriptWithScrollFunction.apply(divForDictionaryEntry.getId()));
-								
-				specifiedDataWordWordMenu.getChildMenu().add(menuForDictionaryEntry);
-								
-				// dodanie krotkiej przerwy do zawartosci
-				divForDictionaryEntry.addHtmlElement(new Div(null, "padding-bottom: 20px"));				
-				
-				Div wordTypeDiv = generateWordType(dictionaryEntry, menuForDictionaryEntry, divForDictionaryEntry.getId(), selectTabScriptWithScrollFunction);
-				
-				if (wordTypeDiv != null) {
-					divForDictionaryEntry.addHtmlElement(wordTypeDiv);
-					divForDictionaryEntry.addHtmlElement(new Hr());
-				}
-			}
-		}		
-		
-		return mainDiv;
-	}
-	*/
-	
 	private Div generateWordType(Menu menu, boolean mobile) throws IOException {		
 		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
 		
@@ -1748,13 +1567,63 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return panelDiv;
 	}
 	
-	private Div generateGrammaFormConjugate(Menu mainMenu, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) throws IOException {
+	private Div generateGrammaFormConjugate(Menu mainMenu) throws IOException {
+		
+		// FM_FIXME: zrobic test pobierania wszystkich slow
+		
+		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
+		
+		if (dictionaryEntry != null) {
+			dictionaryEntryList.add(dictionaryEntry);
+			
+		} else if (kanjiKanaPairList != null) {
+			dictionaryEntryList.addAll(convertKanjiKanaPairListDoOldDictionaryEntry(kanjiKanaPairList));
+		}
+		
+		if (dictionaryEntryList.size() == 0) {
+			return null;
+		}
+		
+		// wyliczamy formy gramatyczne dla wszystkich rodzajow slow
+		for (int dictionaryEntryIdx = 0; dictionaryEntryIdx < dictionaryEntryList.size(); ++dictionaryEntryIdx) {
+			
+			DictionaryEntry dictionaryEntry = dictionaryEntryList.get(dictionaryEntryIdx);
+			
+			List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
+			
+			for (DictionaryEntryType dictionaryEntryType : dictionaryEntryTypeList) {
+				Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache = new HashMap<GrammaFormConjugateResultType, GrammaFormConjugateResult>();
+				
+				List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = 
+						GrammaConjugaterManager.getGrammaConjufateResult(dictionaryManager.getKeigoHelper(), new GrammaFormConjugateRequest(dictionaryEntry), grammaFormCache, dictionaryEntryType, false);
+				
+				if (grammaFormConjugateGroupTypeElementsList != null) { // mamy cos wyliczonego
+					// zapisujemy to do pozniejszego wykorzystania
+					grammaFormConjugateAndExampleEntryMap.put(createGrammaFormCacheKey(dictionaryEntry, dictionaryEntryType),
+							new GrammaFormConjugateAndExampleEntry(dictionaryEntry, dictionaryEntryType, grammaFormConjugateGroupTypeElementsList));
+				}
+			}			
+		}
+		
+		if (grammaFormConjugateAndExampleEntryMap.size() > 0) { // jezeli udalo sie cos wyliczyc to pokazujemy to
+			
+			
+			
+		}
+		
+		return null;
+		//tutaj();
+		
+		
+		
+		/*
+		tutaj();
 		
 		// FM_FIXME: do poprawy, zakomentowano
 		// wylicz odmiany gramatyczne
-		List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = null; /* 
+		List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = null; / * 
 				GrammaConjugaterManager.getGrammaConjufateResult(dictionaryManager.getKeigoHelper(), dictionaryEntry, grammaFormCache, forceDictionaryEntryType, false);
-		*/
+		* /
 		
 		if (grammaFormConjugateGroupTypeElementsList == null || grammaFormConjugateGroupTypeElementsList.size() == 0) {
 			return null;
@@ -1808,6 +1677,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 		
 		return panelDiv;
+		*/
+	}
+	
+	private String createGrammaFormCacheKey(DictionaryEntry dictionaryEntry, DictionaryEntryType dictionaryEntryType) {
+		return dictionaryEntry.getId() + "." + dictionaryEntryType;
 	}
 	
 	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements, Menu menu) {
@@ -2376,5 +2250,19 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
 	public void setForceDictionaryEntryType(DictionaryEntryType forceDictionaryEntryType) {
 		this.forceDictionaryEntryType = forceDictionaryEntryType;
+	}
+	
+	private static class GrammaFormConjugateAndExampleEntry {
+		private DictionaryEntry dictionaryEntry;
+		private DictionaryEntryType dictionaryEntryType;
+		
+		private List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList;
+		
+		public GrammaFormConjugateAndExampleEntry(DictionaryEntry dictionaryEntry, DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList) {
+			this.dictionaryEntry = dictionaryEntry;
+			this.dictionaryEntryType = dictionaryEntryType;
+			
+			this.grammaFormConjugateGroupTypeElementsList = grammaFormConjugateGroupTypeElementsList;
+		}
 	}
 }
