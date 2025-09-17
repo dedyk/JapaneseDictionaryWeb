@@ -1611,8 +1611,10 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				
 				if (grammaFormConjugateGroupTypeElementsList != null && grammaFormConjugateGroupTypeElementsList.size() > 0) { // mamy cos wyliczonego
 					// zapisujemy to do pozniejszego wykorzystania
+					final int dictionaryEntryIdxAsfinal = dictionaryEntryIdx;
+					
 					GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = grammaFormConjugateAndExampleEntryMap.computeIfAbsent(dictionaryEntry.getId(), (id) -> {
-						return new GrammaFormConjugateAndExampleEntry(dictionaryEntry);
+						return new GrammaFormConjugateAndExampleEntry(dictionaryEntry, dictionaryEntryIdxAsfinal);
 					});
 					
 					grammaFormConjugateAndExampleEntry.addDictionaryEntryTypeGrammaFormConjugate(dictionaryEntryType, grammaFormConjugateGroupTypeElementsList);
@@ -1675,14 +1677,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						
 						Div tabContent = new Div();
 						
-						// generujemy kolejne tab-y w podziale na rodzaj slowa
-						
+						// generujemy kolejne tab-y w podziale na rodzaj slowa						
 						// FM_FIXME: menu !!!!!!
 						createTabs(tabObjectToProcessCreateDivWrapper.menu, tabContent,
 								grammaFormConjugateGroupTypeElementsList.size(),
 								(tabIdx2) -> grammaFormConjugateGroupTypeElementsList.get(tabIdx2),
-								(tabIdx2) -> "grammaFormConjugateEntry" + tabIdx2 + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
-								(tabIdx2) -> "grammaFormConjugateContentEntry" + tabIdx2 + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
+								(tabIdx2) -> "grammaFormConjugateEntry" + grammaFormConjugateAndExampleEntry.dictionaryEntryIdx + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
+								(tabIdx2) -> "grammaFormConjugateContentEntry" + grammaFormConjugateAndExampleEntry.dictionaryEntryIdx + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
 								(objectToProcess2) -> {
 									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)objectToProcess2;						
 									
@@ -1697,16 +1698,19 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 									
 									return div;
 								},
-								(tabIdx2) -> {
+								(objectToProcess2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)objectToProcess2;
 									
-									/*
-									return "$('#" + "grammaFormConjugateEntry" + tabIdx + "').tab('show');"
+									int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;
+									
+									String tab1LevelId = "grammaFormConjugateEntry" + tabIdx;
+									String tab2LevelId = "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
+									
+									return "$('#" + tab1LevelId + "').tab('show');"
+											+ "$('#" + tab2LevelId + "').tab('show');"
 											+ "setTimeout(() => { $('html, body').animate({ " 
-											+ "scrollTop: $('#" + id + "').offset().top - 15 " 
-											+ "}, 1000); }, 300); return false; ";						
-									*/
-									
-									return "alert('BBBBB');";
+											+ "scrollTop: $('#" + tab2LevelId + "').offset().top - 15 " 
+											+ "}, 1000); }, 300); return false; ";
 								}								
 							);
 						
@@ -1733,7 +1737,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						
 						return tabContent;
 					},
-					(tabIdx) -> {
+					(objectToProcess) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)objectToProcess;
+						
+						int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;
+						
 						return "$('#" + "grammaFormConjugateEntry" + tabIdx + "').tab('show');"
 								+ "setTimeout(() => { $('html, body').animate({ " 
 								+ "scrollTop: $('#" + "grammaFormConjugateContentEntry" + tabIdx + "').offset().top - 15 " 
@@ -1775,7 +1783,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			Function<Integer, String> tabContentIdHrefGetter,
 			Function<Object, String> tabNameGetter,
 			Function<TabObjectToProcessCreateDivWrapper, Div> contentDivGetter,
-			Function<Integer, String> customOnClickGenerator) {
+			Function<Object, String> customOnClickGenerator) {
 		
 		// wygenerowanie zakladek			
 		Ul tabUl = new Ul("nav nav-tabs");
@@ -1828,7 +1836,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			Menu menuForObjectToProcess = new Menu(objectToProcessEntryDiv.getId(), tabNameGetter.apply(objectToProcess));
 			
 			// stworzenie skryptu do wyboru zakladki						
-			menuForObjectToProcess.setCustomOnClick(customOnClickGenerator.apply(tabIdx));							
+			menuForObjectToProcess.setCustomOnClick(customOnClickGenerator.apply(objectToProcess));							
 			menu.getChildMenu().add(menuForObjectToProcess);
 							
 			// dodanie krotkiej przerwy do zawartosci
@@ -2408,25 +2416,29 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 	
 	private static class GrammaFormConjugateAndExampleEntry {
+		private int dictionaryEntryIdx;
 		private DictionaryEntry dictionaryEntry;
 		
 		private List<GrammaFormConjugateAndExampleEntryForDictionaryType> grammaFormConjugateAndExampleEntryForDictionaryTypeList = new ArrayList<>();
 		
-		public GrammaFormConjugateAndExampleEntry(DictionaryEntry dictionaryEntry) {
+		public GrammaFormConjugateAndExampleEntry(DictionaryEntry dictionaryEntry, int dictionaryEntryIdx) {
 			this.dictionaryEntry = dictionaryEntry;
+			this.dictionaryEntryIdx = dictionaryEntryIdx;
 		}
 		
 		public void addDictionaryEntryTypeGrammaFormConjugate(DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList) {
-			grammaFormConjugateAndExampleEntryForDictionaryTypeList.add(new GrammaFormConjugateAndExampleEntryForDictionaryType(dictionaryEntryType, grammaFormConjugateGroupTypeElementsList));
+			grammaFormConjugateAndExampleEntryForDictionaryTypeList.add(new GrammaFormConjugateAndExampleEntryForDictionaryType(dictionaryEntryIdx, dictionaryEntryType, grammaFormConjugateGroupTypeElementsList));
 		}
 	}
 	
 	private static class GrammaFormConjugateAndExampleEntryForDictionaryType {
+		private int dictionaryEntryIdx;		
 		private DictionaryEntryType dictionaryEntryType;
 		
 		private List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList;
 		
-		public GrammaFormConjugateAndExampleEntryForDictionaryType(DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList) {
+		public GrammaFormConjugateAndExampleEntryForDictionaryType(int dictionaryEntryIdx, DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList) {
+			this.dictionaryEntryIdx = dictionaryEntryIdx;
 			this.dictionaryEntryType = dictionaryEntryType;
 			
 			this.grammaFormConjugateGroupTypeElementsList = grammaFormConjugateGroupTypeElementsList;
