@@ -180,11 +180,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             if (exampleSentenceDiv != null) {
             	contentDiv.addHtmlElement(exampleSentenceDiv);
             }
-            
-            // wygenerowanie tabow dla poszczegolnych slow
-            // FM_FIXME: do usuniecia
-            // contentDiv.addHtmlElement(generateWordsTab(mainMenu, mobile));
-            
+                        
             /* FM_FIXME: do poprawy - start
             // odmiany gramatyczne
     		Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache = new HashMap<GrammaFormConjugateResultType, GrammaFormConjugateResult>();
@@ -365,10 +361,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	// dodaj wiersz z tytulem
     	wordsDiv.addHtmlElement(wordsTitleRowDiv);
 		
-    	// pokazywanie kolejnych slow
-    	// FM_FIXME: pokazywanie wszystkie elementow z KanjiInfo i ReadingInfo
-    	// FM_FIXME: obsluga starego dictionaryEntry !!!!!!!!
-    	
+    	// pokazywanie kolejnych slow    	
 	    Div wordDiv = new Div("row");
 		wordsDiv.addHtmlElement(wordDiv);
 
@@ -1053,11 +1046,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 	*/
 	
-	private Div generateWordType(Menu menu, boolean mobile) throws IOException {
-		
-		// FM_FIXME: dodac menu !!!!!!
-		// FM_FIXME: sprawdzic, jak to zachowuje sie dla nazw
-		
+	private Div generateWordType(Menu menu, boolean mobile) throws IOException {		
 		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
 		
 		if (dictionaryEntry != null) {
