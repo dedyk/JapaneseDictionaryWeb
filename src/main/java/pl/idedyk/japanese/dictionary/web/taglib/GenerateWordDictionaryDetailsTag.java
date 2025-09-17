@@ -1677,8 +1677,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						
 						Div tabContent = new Div();
 						
-						// generujemy kolejne tab-y w podziale na rodzaj slowa						
-						// FM_FIXME: menu !!!!!!
+						// generujemy kolejne tab-y w podziale na rodzaj slowa
 						createTabs(tabObjectToProcessCreateDivWrapper.menu, tabContent,
 								grammaFormConjugateGroupTypeElementsList.size(),
 								(tabIdx2) -> grammaFormConjugateGroupTypeElementsList.get(tabIdx2),
@@ -1691,10 +1690,23 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 								},
 								(tabObjectToProcessCreateDivWrapper2) -> {
 									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)tabObjectToProcessCreateDivWrapper2.objectToProcess;
-									
+																		
 									Div div = new Div();
-									
-									div.addHtmlElement(new Text("FM_FIXME: " + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType));
+																		
+									for (int idx = 0; idx < grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormConjugateGroupTypeElementsList.size(); ++idx) {
+										
+										GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormConjugateGroupTypeElementsList.get(idx);
+										
+										if (currentGrammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().isShow() == false) {
+											continue;
+										}
+										
+										div.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, tabObjectToProcessCreateDivWrapper2.menu));
+										
+										if (idx != grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormConjugateGroupTypeElementsList.size() - 1) {
+											div.addHtmlElement(new Hr());
+										}
+									}
 									
 									return div;
 								},
@@ -1713,28 +1725,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 											+ "}, 1000); }, 300); return false; ";
 								}								
 							);
-						
-						/*
-						for (int grammaFormConjugateGroupTypeElementsListIdx = 0; grammaFormConjugateGroupTypeElementsListIdx < grammaFormConjugateGroupTypeElementsList.size(); ++grammaFormConjugateGroupTypeElementsListIdx) {
-							
-							GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateGroupTypeElementsList.get(grammaFormConjugateGroupTypeElementsListIdx);
-							
-							if (currentGrammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().isShow() == false) {
-								continue;
-							}
-							
-							div.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, grammaFormConjugateMenu));
-							
-							if (grammaFormConjugateGroupTypeElementsListIdx != grammaFormConjugateGroupTypeElementsList.size() - 1) {
-								div.addHtmlElement(new Hr());
-							}
-						}
-
-						
-						// FM_FIXME: dokonczyc !!!!
-						div.addHtmlElement(new Text("FM_FIXME: " + grammaFormConjugateAndExampleEntry.dictionaryEntry.getId()));
-						*/
-						
+												
 						return tabContent;
 					},
 					(objectToProcess) -> {
@@ -1847,7 +1838,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 	}
 	
-	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements, Menu menu) {
+	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements, Menu menu__) {
 		
 		Div resultDiv = new Div();
 		
@@ -1874,6 +1865,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	}
     	
     	Menu row1Menu = new Menu(row1TitleH4.getId(), grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName());
+    	tutaj();
     	
     	menu.getChildMenu().add(row1Menu);
     	
@@ -1910,6 +1902,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.addHtmlElement(new Text(currentGrammaFormConjugateResult.getResultType().getName()));
 		    	
 		    	row1Menu.getChildMenu().add(new Menu(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.getId(), currentGrammaFormConjugateResult.getResultType().getName()));
+		    	tutaj();
 		    	
 		    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4);
 		    	
