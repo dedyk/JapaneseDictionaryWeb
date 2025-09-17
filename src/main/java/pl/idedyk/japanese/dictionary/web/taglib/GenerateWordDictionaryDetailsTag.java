@@ -1701,7 +1701,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 											continue;
 										}
 										
-										div.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, tabObjectToProcessCreateDivWrapper2.menu));
+										int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;									
+										String tab2LevelId = "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
+										
+										div.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, tabObjectToProcessCreateDivWrapper2.menu,
+												(id) -> { return "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType + "_" + id; },
+												(id) -> { return createLevel2TabOnclickScrollScript("grammaFormConjugateEntry", tabIdx, tab2LevelId, id); }																								
+											));
 										
 										if (idx != grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormConjugateGroupTypeElementsList.size() - 1) {
 											div.addHtmlElement(new Hr());
@@ -1713,16 +1719,10 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 								(objectToProcess2) -> {
 									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)objectToProcess2;
 									
-									int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;
-									
-									String tab1LevelId = "grammaFormConjugateEntry" + tabIdx;
+									int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;									
 									String tab2LevelId = "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
 									
-									return "$('#" + tab1LevelId + "').tab('show');"
-											+ "$('#" + tab2LevelId + "').tab('show');"
-											+ "setTimeout(() => { $('html, body').animate({ " 
-											+ "scrollTop: $('#" + tab2LevelId + "').offset().top - 15 " 
-											+ "}, 1000); }, 300); return false; ";
+									return createLevel2TabOnclickScrollScript("grammaFormConjugateEntry", tabIdx, tab2LevelId, tab2LevelId);
 								}								
 							);
 												
@@ -1733,10 +1733,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						
 						int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;
 						
-						return "$('#" + "grammaFormConjugateEntry" + tabIdx + "').tab('show');"
-								+ "setTimeout(() => { $('html, body').animate({ " 
-								+ "scrollTop: $('#" + "grammaFormConjugateContentEntry" + tabIdx + "').offset().top - 15 " 
-								+ "}, 1000); }, 300); return false; ";						
+						return createLevel1TabOnclickScrollScript("grammaFormConjugateEntry", "grammaFormConjugateContentEntry", tabIdx);
 					}					
 				);					
 			
@@ -1766,6 +1763,23 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		return panelDiv;
 		*/
+	}
+	
+	private String createLevel1TabOnclickScrollScript(String tabId, String tab2Id, int tabIdx) {
+		return "$('#" + tabId + tabIdx + "').tab('show');"
+				+ "setTimeout(() => { $('html, body').animate({ " 
+				+ "scrollTop: $('#" + tab2Id + tabIdx + "').offset().top - 15 " 
+				+ "}, 1000); }, 300); return false; ";						
+	}
+	
+	private String createLevel2TabOnclickScrollScript(String tabId, int tabIdx, String tab2LevelId, String scrollTargetId) {
+		
+		return "$('#" + tabId + tabIdx + "').tab('show');"
+				+ "$('#" + tab2LevelId + "').tab('show');"
+				+ "setTimeout(() => { $('html, body').animate({ " 
+				+ "scrollTop: $('#" + scrollTargetId + "').offset().top - 15 " 
+				+ "}, 1000); }, 300); return false; ";
+
 	}
 		
 	private void createTabs(Menu menu, Div panelBody, int tabsNumbers,
@@ -1838,7 +1852,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 	}
 	
-	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements, Menu menu__) {
+	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements, Menu menu,
+			Function<String, String> idGenerator,
+			Function<String, String> menuOnClickGenerator) {
 		
 		Div resultDiv = new Div();
 		
@@ -1848,9 +1864,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	// tytul
     	Div row1TitleDiv = new Div("col-md-12");
     	
-    	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
-    	
-    	row1TitleH4.setId(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().toString());  	
+    	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");    	
+    	row1TitleH4.setId(idGenerator.apply(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().toString()));  	
     	
     	row1TitleH4.addHtmlElement(new Text(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName()));
     	
@@ -1865,7 +1880,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	}
     	
     	Menu row1Menu = new Menu(row1TitleH4.getId(), grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName());
-    	tutaj();
+    	row1Menu.setCustomOnClick(menuOnClickGenerator.apply(row1TitleH4.getId()));
     	
     	menu.getChildMenu().add(row1Menu);
     	
@@ -1897,12 +1912,14 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		    	
 		    	String currentGrammaFormConjugateResultId = grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().toString() + "_" + currentGrammaFormConjugateResult.getResultType().toString();
 		    	
-		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.setId(currentGrammaFormConjugateResultId);
+		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.setId(idGenerator.apply(currentGrammaFormConjugateResultId));
 		    	
 		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.addHtmlElement(new Text(currentGrammaFormConjugateResult.getResultType().getName()));
 		    	
-		    	row1Menu.getChildMenu().add(new Menu(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.getId(), currentGrammaFormConjugateResult.getResultType().getName()));
-		    	tutaj();
+		    	Menu nextLeveLMenu = new Menu(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.getId(), currentGrammaFormConjugateResult.getResultType().getName());
+		    	nextLeveLMenu.setCustomOnClick(menuOnClickGenerator.apply(nextLeveLMenu.getId()));
+		    			
+		    	row1Menu.getChildMenu().add(nextLeveLMenu);		    	
 		    	
 		    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4);
 		    	
