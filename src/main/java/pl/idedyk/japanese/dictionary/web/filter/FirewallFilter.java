@@ -196,15 +196,20 @@ public class FirewallFilter implements Filter {
 				doBlock = true;
 			}
 		}
+				
+		// sprawdzenie, czy dany fullURL nalezy zablokowac
+		if (doBlock == false) {
+			doBlock = isFullUrlBlocked(fullUrl);			
+		}
 		
 		// dodatkowe sprawdzenie, czy wywolanie nie pochodzi z aplikacji na Androida, jesli tak to pozwalamy na nie
 		if (doBlock == true && httpMethod != null && httpMethod.equals("POST") == true && url.startsWith("/android/") == true && userAgent != null && userAgent.startsWith("JapaneseAndroidLearnHelper/") == true) {
 			doBlock = false;
 		}
-		
-		// sprawdzenie, czy dany fullURL nalezy zablokowac
-		if (doBlock == false) {
-			doBlock = isFullUrlBlocked(fullUrl);			
+
+		// dostep do pliku robots.txt jest dozwolony
+		if (doBlock == true && httpMethod != null && httpMethod.equals("GET") == true && url.equals("/robots.txt") == true) {
+			doBlock = false;
 		}
 		
 		if (doBlock == true) { // blokowanie
