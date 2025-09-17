@@ -51,37 +51,47 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 	
 	private KanjiCharacterInfo kanjiEntry;
 			
-	private MessageSource messageSource;
-	
+	private MessageSource messageSource;	
 	private DictionaryManager dictionaryManager;
-	
 	private Properties applicationProperties;
 	
 	@Override
+	public int doEndTag() throws JspException {
+		// czyscimy stan
+		kanjiEntry = null;
+		
+		messageSource = null;	
+		dictionaryManager = null;
+		applicationProperties = null;
+		
+		return SKIP_BODY;		
+	}
+	
+	@Override
 	public int doStartTag() throws JspException {
-				
-		ServletContext servletContext = pageContext.getServletContext();
-		ServletRequest servletRequest = pageContext.getRequest();
-		
-		String userAgent = null;
-		
-		if (servletRequest instanceof HttpServletRequest) {			
-			HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
-			
-			userAgent = httpServletRequest.getHeader("User-Agent");			
-		}
-		
-		boolean mobile = Utils.isMobile(userAgent);
-		
-		//
-		
-		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-		
-		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
-		this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
-		this.applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
 		
 		try {
+			ServletContext servletContext = pageContext.getServletContext();
+			ServletRequest servletRequest = pageContext.getRequest();
+			
+			String userAgent = null;
+			
+			if (servletRequest instanceof HttpServletRequest) {			
+				HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+				
+				userAgent = httpServletRequest.getHeader("User-Agent");			
+			}
+			
+			boolean mobile = Utils.isMobile(userAgent);
+			
+			//
+			
+			WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+			
+			this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
+			this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
+			this.applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
+		
             JspWriter out = pageContext.getOut();
 
             if (kanjiEntry == null) {
@@ -128,7 +138,15 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
             
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }		
+            
+        } finally {
+			// czyscimy stan
+			kanjiEntry = null;
+			
+			messageSource = null;	
+			dictionaryManager = null;
+			applicationProperties = null;
+		}	
 	}
 	
 	private H generateTitle() throws IOException {
@@ -581,7 +599,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
         // dodaj okienko z sugestia
         return addSuggestionDialog(messageSource, defaultSuggestion);		
 	}
-		
+			
 	private String getMessage(String code) {
 		return messageSource.getMessage(code, null, Locale.getDefault());
 	}

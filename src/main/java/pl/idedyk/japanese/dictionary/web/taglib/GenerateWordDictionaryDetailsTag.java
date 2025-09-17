@@ -95,50 +95,48 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	private JMdict.Entry dictionaryEntry2;
 	private List<KanjiKanaPair> kanjiKanaPairList;
 				
-	private MessageSource messageSource;
-	
+	private MessageSource messageSource;	
 	private DictionaryManager dictionaryManager;
 	private Properties applicationProperties;
 	
-	private Map<String, GrammaFormConjugateAndExampleEntry> grammaFormConjugateAndExampleEntryMap = new LinkedHashMap<>();
-	
+	private Map<Integer, GrammaFormConjugateAndExampleEntry> grammaFormConjugateAndExampleEntryMap = new LinkedHashMap<>();
+		
 	@Override
 	public int doStartTag() throws JspException {
 		
 		// FM_FIXME: sprawdzic, jak to zachowuje sie w wersji mobilnej
-		
-		ServletContext servletContext = pageContext.getServletContext();
-		ServletRequest servletRequest = pageContext.getRequest();
-		
-		String userAgent = null;
-		
-		if (servletRequest instanceof HttpServletRequest) {			
-			HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+		try {		
+			ServletContext servletContext = pageContext.getServletContext();
+			ServletRequest servletRequest = pageContext.getRequest();
 			
-			userAgent = httpServletRequest.getHeader("User-Agent");			
-		}
+			String userAgent = null;
+			
+			if (servletRequest instanceof HttpServletRequest) {			
+				HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+				
+				userAgent = httpServletRequest.getHeader("User-Agent");			
+			}
+			
+			boolean mobile = Utils.isMobile(userAgent);
+			
+			//
+			
+			// pobieramy pary slowek do wyswietlenia
+			if (dictionaryEntry2 != null) {			
+				kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2, true);
+							
+			} else {
+				kanjiKanaPairList = null;
+			}		
+	
+			//
+			
+			WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+			
+			this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
+			this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
+			this.applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
 		
-		boolean mobile = Utils.isMobile(userAgent);
-		
-		//
-		
-		// pobieramy pary slowek do wyswietlenia
-		if (dictionaryEntry2 != null) {			
-			kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2, true);
-						
-		} else {
-			kanjiKanaPairList = null;
-		}		
-
-		//
-		
-		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-		
-		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
-		this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
-		this.applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
-		
-		try {
             JspWriter out = pageContext.getOut();
 
             if (dictionaryEntry == null && dictionaryEntry2 == null) {            	
@@ -219,6 +217,20 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             
         } catch (IOException e) {
             throw new RuntimeException(e);
+            
+        } finally {
+    		// czyscimy stan
+    		dictionaryEntry = null;
+    		forceDictionaryEntryType = null;
+    		
+    		dictionaryEntry2 = null;
+    		kanjiKanaPairList = null;
+    		
+    		grammaFormConjugateAndExampleEntryMap.clear();
+    		
+    		messageSource = null;	
+    		dictionaryManager = null;
+    		applicationProperties = null;
         }
 	}
 
@@ -1599,21 +1611,84 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				
 				if (grammaFormConjugateGroupTypeElementsList != null) { // mamy cos wyliczonego
 					// zapisujemy to do pozniejszego wykorzystania
-					grammaFormConjugateAndExampleEntryMap.put(createGrammaFormCacheKey(dictionaryEntry, dictionaryEntryType),
-							new GrammaFormConjugateAndExampleEntry(dictionaryEntry, dictionaryEntryType, grammaFormConjugateGroupTypeElementsList));
+					GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = grammaFormConjugateAndExampleEntryMap.computeIfAbsent(dictionaryEntry.getId(), (id) -> {
+						return new GrammaFormConjugateAndExampleEntry(dictionaryEntry);
+					});
+					
+					grammaFormConjugateAndExampleEntry.addDictionaryEntryTypeGrammaFormConjugate(dictionaryEntryType, grammaFormConjugateGroupTypeElementsList);
 				}
 			}			
 		}
 		
 		if (grammaFormConjugateAndExampleEntryMap.size() > 0) { // jezeli udalo sie cos wyliczyc to pokazujemy to
 			
+			Div panelDiv = new Div("panel panel-default");
+			Div panelHeading = new Div("panel-heading");
 			
+			// tytul sekcji
+			H h3Title = new H(3, "panel-title");
 			
+			h3Title.setId("grammaFormConjugateId");
+			
+			Menu grammaFormConjugateMenu = null;
+			
+			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));			
+			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate"));
+			
+			/*
+			if (forceDictionaryEntryType == null) {
+				h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));
+				
+				grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate"));			
+			} else {
+				h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() })));
+				
+				grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() }));
+			}
+			*/	
+			
+			mainMenu.getChildMenu().add(grammaFormConjugateMenu);
+			
+			panelHeading.addHtmlElement(h3Title);			
+			panelDiv.addHtmlElement(panelHeading);
+
+			// zawartosc sekcji
+			Div panelBody = new Div("panel-body");
+			
+			panelDiv.addHtmlElement(panelBody);
+
+			// wygenerowanie zakladek
+			createTabs(grammaFormConjugateMenu, panelBody,
+					grammaFormConjugateAndExampleEntryMap.size(),
+					(tabIdx) -> new ArrayList<>(grammaFormConjugateAndExampleEntryMap.values()).get(tabIdx),
+					(tabIdx) -> "grammaFormConjugateEntry" + tabIdx,
+					(tabIdx) -> "grammaFormConjugateContentEntry" + tabIdx,
+					(objectToProcess) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)objectToProcess;						
+						DictionaryEntry dictionaryEntry = grammaFormConjugateAndExampleEntry.dictionaryEntry;
+						
+						return (dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana();						
+					},
+					(objectToProcess) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)objectToProcess;
+						
+						Div div = new Div();
+						
+						// FM_FIXME: dokonczyc !!!!
+						div.addHtmlElement(new Text("FM_FIXME: " + grammaFormConjugateAndExampleEntry.dictionaryEntry.getId()));
+						
+						return div;
+					}
+				);					
+			
+			return panelDiv;
+			
+		} else {
+			return null;
 		}
 		
-		return null;
-		//tutaj();
 		
+		//  
 		
 		
 		/*
@@ -1628,39 +1703,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		if (grammaFormConjugateGroupTypeElementsList == null || grammaFormConjugateGroupTypeElementsList.size() == 0) {
 			return null;
 		}
-		
-		Div panelDiv = new Div("panel panel-default");
-		
-		Div panelHeading = new Div("panel-heading");
-		
-		// tytul sekcji
-		H h3Title = new H(3, "panel-title");
-		
-		h3Title.setId("grammaFormConjugateId");
-		
-		Menu grammaFormConjugateMenu = null;
-		
-		if (forceDictionaryEntryType == null) {
-			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));
-			
-			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate"));			
-		} else {
-			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() })));
-			
-			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() }));
-		}	
-		
-		mainMenu.getChildMenu().add(grammaFormConjugateMenu);
-		
-		panelHeading.addHtmlElement(h3Title);
-		
-		panelDiv.addHtmlElement(panelHeading);
-		
-		// zawartosc sekcji
-		Div panelBody = new Div("panel-body");
-		
-		panelDiv.addHtmlElement(panelBody);
-		
+				
 		for (int grammaFormConjugateGroupTypeElementsListIdx = 0; grammaFormConjugateGroupTypeElementsListIdx < grammaFormConjugateGroupTypeElementsList.size(); ++grammaFormConjugateGroupTypeElementsListIdx) {
 			
 			GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateGroupTypeElementsList.get(grammaFormConjugateGroupTypeElementsListIdx);
@@ -1679,9 +1722,82 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return panelDiv;
 		*/
 	}
-	
-	private String createGrammaFormCacheKey(DictionaryEntry dictionaryEntry, DictionaryEntryType dictionaryEntryType) {
-		return dictionaryEntry.getId() + "." + dictionaryEntryType;
+		
+	private void createTabs(Menu menu, Div panelBody, int tabsNumbers,
+			Function<Integer,Object> getObjectGetter,
+			Function<Integer, String> tabIdHrefGetter,
+			Function<Integer, String> tabContentIdHrefGetter,
+			Function<Object, String> tabNameGetter,
+			Function<Object, Div> contentDivGetter) {
+		
+		// wygenerowanie zakladek			
+		Ul tabUl = new Ul("nav nav-tabs");
+		panelBody.addHtmlElement(tabUl);
+		
+		for (int tabIdx = 0; tabIdx < tabsNumbers; ++tabIdx) {
+			
+			// pobranie obiektu, ktory wyswietlamy
+			Object objectToProcess = getObjectGetter.apply(tabIdx);
+						
+			Li objectLi = new Li();				
+			tabUl.addHtmlElement(objectLi);
+			
+			if (tabIdx == 0) {
+				objectLi.setClazz("active");
+			}
+			
+			A tabUlA = new A();
+			objectLi.addHtmlElement(tabUlA);
+			
+			tabUlA.setDataToggle("tab");
+			tabUlA.setHref("#" + tabContentIdHrefGetter.apply(tabIdx));
+			tabUlA.setId(tabIdHrefGetter.apply(tabIdx));
+							
+			tabUlA.addHtmlElement(new Text(tabNameGetter.apply(objectToProcess)));
+		}
+		
+		Div tabContentDiv = new Div();			
+		panelBody.addHtmlElement(tabContentDiv);
+		
+		tabContentDiv.setClazz("tab-content");
+
+		for (int tabIdx = 0; tabIdx < tabsNumbers; ++tabIdx) {
+			
+			// pobranie obiektu, ktory wyswietlamy
+			Object objectToProcess = getObjectGetter.apply(tabIdx);
+			
+			Div objectToProcessEntryDiv = new Div();
+			tabContentDiv.addHtmlElement(objectToProcessEntryDiv);
+			
+			objectToProcessEntryDiv.setId(tabContentIdHrefGetter.apply(tabIdx));
+			
+			if (tabIdx == 0) {
+				objectToProcessEntryDiv.setClazz("tab-pane fade in active col-md-12");
+			} else {
+				objectToProcessEntryDiv.setClazz("tab-pane fade col-md-12");
+			}
+							
+			// dodanie pozycji do menu
+			Menu menuForObjectToProcess = new Menu(objectToProcessEntryDiv.getId(), tabNameGetter.apply(objectToProcess));
+			
+			// stworzenie skryptu do wyboru zakladki
+			final int tabIdxAsFinal = tabIdx;
+			
+			Function<String, String> selectTabScriptWithScrollFunction = id -> { return "$('#" + tabIdHrefGetter.apply(tabIdxAsFinal) + "').tab('show');"
+					+ "setTimeout(() => { $('html, body').animate({ " 
+					+ "scrollTop: $('#" + id + "').offset().top - 15 " 
+					+ "}, 1000); }, 300); return false; "; };
+			
+			menuForObjectToProcess.setCustomOnClick(selectTabScriptWithScrollFunction.apply(objectToProcessEntryDiv.getId()));
+							
+			menu.getChildMenu().add(menuForObjectToProcess);
+							
+			// dodanie krotkiej przerwy do zawartosci
+			objectToProcessEntryDiv.addHtmlElement(new Div(null, "padding-bottom: 20px"));				
+			
+			// wygenerowanie zawartosci
+			objectToProcessEntryDiv.addHtmlElement(contentDivGetter.apply(objectToProcess));
+		}
 	}
 	
 	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements, Menu menu) {
@@ -2254,15 +2370,27 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	private static class GrammaFormConjugateAndExampleEntry {
 		private DictionaryEntry dictionaryEntry;
+		
+		private List<GrammaFormConjugateAndExampleEntryForDictionaryType> grammaFormConjugateAndExampleEntryForDictionaryTypeList = new ArrayList<>();
+		
+		public GrammaFormConjugateAndExampleEntry(DictionaryEntry dictionaryEntry) {
+			this.dictionaryEntry = dictionaryEntry;
+		}
+		
+		public void addDictionaryEntryTypeGrammaFormConjugate(DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList) {
+			grammaFormConjugateAndExampleEntryForDictionaryTypeList.add(new GrammaFormConjugateAndExampleEntryForDictionaryType(dictionaryEntryType, grammaFormConjugateGroupTypeElementsList));
+		}
+	}
+	
+	private static class GrammaFormConjugateAndExampleEntryForDictionaryType {
 		private DictionaryEntryType dictionaryEntryType;
 		
 		private List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList;
 		
-		public GrammaFormConjugateAndExampleEntry(DictionaryEntry dictionaryEntry, DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList) {
-			this.dictionaryEntry = dictionaryEntry;
+		public GrammaFormConjugateAndExampleEntryForDictionaryType(DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList) {
 			this.dictionaryEntryType = dictionaryEntryType;
 			
 			this.grammaFormConjugateGroupTypeElementsList = grammaFormConjugateGroupTypeElementsList;
-		}
+		}		
 	}
 }
