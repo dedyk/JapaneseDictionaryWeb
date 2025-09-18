@@ -40,6 +40,7 @@ import pl.idedyk.japanese.dictionary.api.dto.TatoebaSentence;
 import pl.idedyk.japanese.dictionary.api.dto.WordType;
 import pl.idedyk.japanese.dictionary.api.example.ExampleManager;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupTypeElements;
+import pl.idedyk.japanese.dictionary.api.example.dto.ExampleRequest;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleResult;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.api.gramma.GrammaConjugaterManager;
@@ -191,15 +192,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             	contentDiv.addHtmlElement(grammaFormConjugateDiv);
             }
 
-            /*
-            FM_FIXME: do poprawy - start
             // przyklady gramatyczne
-            Div exampleDiv = generateExample(mainMenu, grammaFormCache);
+            Div exampleDiv = generateExample(mainMenu);
             
             if (exampleDiv != null) {
             	contentDiv.addHtmlElement(exampleDiv);
             }
-            */
                         
             // dodaj w menu pozycje do zglaszania sugestii
             mainContentDiv.addHtmlElement(addSuggestionElements(mainMenu));
@@ -884,7 +882,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			dictionaryEntryList.add(dictionaryEntry);
 			
 		} else if (kanjiKanaPairList != null) {
-			dictionaryEntryList.addAll(convertKanjiKanaPairListDoOldDictionaryEntry(kanjiKanaPairList));
+			dictionaryEntryList.addAll(convertKanjiKanaPairListToOldDictionaryEntry(kanjiKanaPairList));
 		}
 		
 		if (dictionaryEntryList.size() == 0) {
@@ -971,7 +969,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return wordTypeDiv;
 	}
 	
-	private List<DictionaryEntry> convertKanjiKanaPairListDoOldDictionaryEntry(List<KanjiKanaPair> kanjiKanaPairList) {
+	private List<DictionaryEntry> convertKanjiKanaPairListToOldDictionaryEntry(List<KanjiKanaPair> kanjiKanaPairList) {
 		
 		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
 		
@@ -1589,7 +1587,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			dictionaryEntryList.add(dictionaryEntry);
 			
 		} else if (kanjiKanaPairList != null) {
-			dictionaryEntryList.addAll(convertKanjiKanaPairListDoOldDictionaryEntry(kanjiKanaPairList));
+			dictionaryEntryList.addAll(convertKanjiKanaPairListToOldDictionaryEntry(kanjiKanaPairList));
 		}
 		
 		if (dictionaryEntryList.size() == 0) {
@@ -1617,7 +1615,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						return new GrammaFormConjugateAndExampleEntry(dictionaryEntry, dictionaryEntryIdxAsfinal);
 					});
 					
-					grammaFormConjugateAndExampleEntry.addDictionaryEntryTypeGrammaFormConjugate(dictionaryEntryType, grammaFormConjugateGroupTypeElementsList);
+					grammaFormConjugateAndExampleEntry.addDictionaryEntryTypeGrammaFormConjugate(dictionaryEntryType, grammaFormConjugateGroupTypeElementsList, grammaFormCache);
 				}
 			}			
 		}
@@ -1631,11 +1629,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			H h3Title = new H(3, "panel-title");
 			
 			h3Title.setId("grammaFormConjugateId");
-			
-			Menu grammaFormConjugateMenu;
-			
+						
 			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));			
-			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate"));
+			
+			// FM_FIXME: tego nie ma w przykladach !!!!!
+			Menu grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate"));
 			
 			/*
 			if (forceDictionaryEntryType == null) {
@@ -1649,6 +1647,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			}
 			*/	
 			
+			// FM_FIXME: tego nie ma w przykladach !!!!!
 			mainMenu.getChildMenu().add(grammaFormConjugateMenu);
 			
 			panelHeading.addHtmlElement(h3Title);			
@@ -1845,7 +1844,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");    	
     	row1TitleH4.setId(idGenerator.apply(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().toString()));  	
-    	
     	row1TitleH4.addHtmlElement(new Text(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName()));
     	
     	String grammaFormConjugateGroupTypeInfo = grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getInfo();
@@ -1864,7 +1862,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	menu.getChildMenu().add(row1Menu);
     	
     	row1TitleDiv.addHtmlElement(row1TitleH4);
-    	
     	row1Div.addHtmlElement(row1TitleDiv);
 
     	// dodaj wiersz z tytulem
@@ -2058,37 +2055,149 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 	}
 	
-	private Div generateExample(Menu mainMenu, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) throws IOException {
+	private Div generateExample(Menu mainMenu) throws IOException {
 		
-		// FM_FIXME: do poprawy, zakomentowano
-		List<ExampleGroupTypeElements> exampleGroupTypeElementsList = null; /*ExampleManager.getExamples(
-				dictionaryManager.getKeigoHelper(), dictionaryEntry, grammaFormCache, forceDictionaryEntryType, false); */
-		
-		if (exampleGroupTypeElementsList == null || exampleGroupTypeElementsList.size() == 0) {
+		// jezeli wczesniej wyliczono odmiany gramatyczne, to przyklady tez powinno dac sie
+		if (grammaFormConjugateAndExampleEntryMap.size() > 0) {
+			
+			// wyliczenie przykladow
+			for (GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry : grammaFormConjugateAndExampleEntryMap.values()) {				
+				for (GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType : grammaFormConjugateAndExampleEntry.grammaFormConjugateAndExampleEntryForDictionaryTypeList) {
+					
+					List<ExampleGroupTypeElements> exampleGroupTypeElementsList =
+							ExampleManager.getExamples(dictionaryManager.getKeigoHelper(), new ExampleRequest(grammaFormConjugateAndExampleEntry.dictionaryEntry), 
+									grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormCache, grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType, false);
+					
+					if (exampleGroupTypeElementsList != null && exampleGroupTypeElementsList.size() > 0) { // mamy cos wyliczonego
+						grammaFormConjugateAndExampleEntryForDictionaryType.setExampleGroupTypeElementsList(exampleGroupTypeElementsList);
+					}
+				}				
+			}
+			
+			// pokazanie przykladow
+			// tutaj();
+			
+			Div panelDiv = new Div("panel panel-default");		
+			Div panelHeading = new Div("panel-heading");
+
+			// tytul sekcji
+			H h3Title = new H(3, "panel-title");
+			
+			h3Title.setId("exampleId");
+			
+			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.example")));
+			
+			// FM_FIXME: test !!!!
+			Menu exampleMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.example"));
+			
+			// FM_FIXME: tego nie ma w przykladach !!!!!
+			mainMenu.getChildMenu().add(exampleMenu);
+
+			
+			final int maxMenuSize = 20;
+			// Menu exampleMenu = null;
+			int menuCounter = 0;
+					
+			panelHeading.addHtmlElement(h3Title);		
+			panelDiv.addHtmlElement(panelHeading);
+
+			// zawartosc sekcji
+			Div panelBody = new Div("panel-body");
+			
+			panelDiv.addHtmlElement(panelBody);		
+			
+			/////////////////
+			
+			// FM_FIXME: tymczasowo
+			Menu tempMenu = new Menu("xxxx", "yyyy");
+			
+			// wygenerowanie zakladek
+			createTabs(exampleMenu, panelBody,
+					grammaFormConjugateAndExampleEntryMap.size(),
+					(tabIdx) -> new ArrayList<>(grammaFormConjugateAndExampleEntryMap.values()).get(tabIdx),
+					(tabIdx) -> "exampleEntry" + tabIdx,
+					(tabIdx) -> "exampleContentEntry" + tabIdx,
+					(objectToProcess) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)objectToProcess;						
+						DictionaryEntry dictionaryEntry = grammaFormConjugateAndExampleEntry.dictionaryEntry;
+						
+						return (dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana();						
+					},
+					(tabObjectToProcessCreateDivWrapper) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)tabObjectToProcessCreateDivWrapper.objectToProcess;						
+						List<GrammaFormConjugateAndExampleEntryForDictionaryType> grammaFormConjugateGroupTypeElementsList = grammaFormConjugateAndExampleEntry.grammaFormConjugateAndExampleEntryForDictionaryTypeList;
+						
+						Div tabContent = new Div();
+						
+						// generujemy kolejne tab-y w podziale na rodzaj slowa
+						createTabs(tabObjectToProcessCreateDivWrapper.menu, tabContent,
+								grammaFormConjugateGroupTypeElementsList.size(),
+								(tabIdx2) -> grammaFormConjugateGroupTypeElementsList.get(tabIdx2),
+								(tabIdx2) -> "exampleEntry" + grammaFormConjugateAndExampleEntry.dictionaryEntryIdx + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
+								(tabIdx2) -> "exampleContentEntry" + grammaFormConjugateAndExampleEntry.dictionaryEntryIdx + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
+								(objectToProcess2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)objectToProcess2;						
+									
+									return grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName();						
+								},
+								(tabObjectToProcessCreateDivWrapper2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)tabObjectToProcessCreateDivWrapper2.objectToProcess;
+																		
+									Div div = new Div();
+									
+									for (int idx = 0; idx < grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList.size(); ++idx) {
+										
+										ExampleGroupTypeElements currentExampleGroupTypeElements = grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList.get(idx);
+										
+										int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;									
+										String tab2LevelId = "exampleEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
+										
+										div.addHtmlElement(generateExampleGroupTypeElements(currentExampleGroupTypeElements, tabObjectToProcessCreateDivWrapper2.menu,
+												(id) -> { return "exampleEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType + "_" + id; },
+												(id) -> { return createLevel2TabOnclickScrollScript("exampleEntry", tabIdx, tab2LevelId, id); }																								
+											));
+										
+										if (idx != grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList.size() - 1) {
+											div.addHtmlElement(new Hr());
+										}
+										
+									}
+																		
+									return div;
+								},
+								(objectToProcess2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)objectToProcess2;
+									
+									int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;									
+									String tab2LevelId = "exampleEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
+									
+									return createLevel2TabOnclickScrollScript("exampleEntry", tabIdx, tab2LevelId, tab2LevelId);
+								}								
+							);
+												
+						return tabContent;
+					},
+					(objectToProcess) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)objectToProcess;
+						
+						int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;
+						
+						return createLevel1TabOnclickScrollScript("exampleEntry", "exampleContentEntry", tabIdx);
+					}					
+				);
+						
+			return panelDiv;
+			
+		} else {
 			return null;
 		}
 		
-		Div panelDiv = new Div("panel panel-default");
+		////////////
 		
-		Div panelHeading = new Div("panel-heading");
 		
-		// tytul sekcji
-		H h3Title = new H(3, "panel-title");
+		// FM_FIXME: zastanowic sie, co zrobic z tym podzialem przykladow gramatycznych na czesci, w kontekscie menu
 		
-		h3Title.setId("exampleId");
-		
-		final int maxMenuSize = 20;
-		Menu exampleMenu = null;
-		int menuCounter = 0;
-				
-		panelHeading.addHtmlElement(h3Title);
-		
-		panelDiv.addHtmlElement(panelHeading);
-		
-		// zawartosc sekcji
-		Div panelBody = new Div("panel-body");
-		
-		panelDiv.addHtmlElement(panelBody);		
+		/*
 		
 		for (int exampleGroupTypeElementsListIdx = 0; exampleGroupTypeElementsListIdx < exampleGroupTypeElementsList.size(); ++exampleGroupTypeElementsListIdx) {
 			
@@ -2145,11 +2254,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				panelBody.addHtmlElement(new Hr());
 			}
 		}
-	
-		return panelDiv;
+		
+		*/
 	}
 	
-	private IHtmlElement generateExampleGroupTypeElements(ExampleGroupTypeElements exampleGroupTypeElements, Menu menu) {
+	private IHtmlElement generateExampleGroupTypeElements(ExampleGroupTypeElements exampleGroupTypeElements, Menu menu,
+			Function<String, String> idGenerator,
+			Function<String, String> menuOnClickGenerator) {
 		
 		Div resultDiv = new Div();
 		
@@ -2161,16 +2272,15 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	
-    	row1TitleH4.setId(exampleGroupTypeElements.getExampleGroupType().toString());  	
-    	
+    	row1TitleH4.setId(idGenerator.apply(exampleGroupTypeElements.getExampleGroupType().toString()));  	
     	row1TitleH4.addHtmlElement(new Text(exampleGroupTypeElements.getExampleGroupType().getName()));
     	
     	Menu row1Menu = new Menu(row1TitleH4.getId(), exampleGroupTypeElements.getExampleGroupType().getName());
+    	row1Menu.setCustomOnClick(menuOnClickGenerator.apply(row1TitleH4.getId()));
     	
     	menu.getChildMenu().add(row1Menu);
     	
     	row1TitleDiv.addHtmlElement(row1TitleH4);
-    	
     	row1Div.addHtmlElement(row1TitleDiv);
     	
     	// dodatkowe info
@@ -2415,8 +2525,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			this.dictionaryEntryIdx = dictionaryEntryIdx;
 		}
 		
-		public void addDictionaryEntryTypeGrammaFormConjugate(DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList) {
-			grammaFormConjugateAndExampleEntryForDictionaryTypeList.add(new GrammaFormConjugateAndExampleEntryForDictionaryType(dictionaryEntryIdx, dictionaryEntryType, grammaFormConjugateGroupTypeElementsList));
+		public void addDictionaryEntryTypeGrammaFormConjugate(DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) {
+			grammaFormConjugateAndExampleEntryForDictionaryTypeList.add(new GrammaFormConjugateAndExampleEntryForDictionaryType(dictionaryEntryIdx, dictionaryEntryType, grammaFormConjugateGroupTypeElementsList, grammaFormCache));
 		}
 	}
 	
@@ -2425,12 +2535,22 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		private DictionaryEntryType dictionaryEntryType;
 		
 		private List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList;
+		private Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache;
 		
-		public GrammaFormConjugateAndExampleEntryForDictionaryType(int dictionaryEntryIdx, DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList) {
+		private List<ExampleGroupTypeElements> exampleGroupTypeElementsList;
+		
+		public GrammaFormConjugateAndExampleEntryForDictionaryType(int dictionaryEntryIdx, DictionaryEntryType dictionaryEntryType, 
+				List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) {
+			
 			this.dictionaryEntryIdx = dictionaryEntryIdx;
 			this.dictionaryEntryType = dictionaryEntryType;
 			
 			this.grammaFormConjugateGroupTypeElementsList = grammaFormConjugateGroupTypeElementsList;
+			this.grammaFormCache = grammaFormCache;
+		}
+
+		public void setExampleGroupTypeElementsList(List<ExampleGroupTypeElements> exampleGroupTypeElementsList) {
+			this.exampleGroupTypeElementsList = exampleGroupTypeElementsList;			
 		}		
 	}
 	
