@@ -11,10 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.ServletContext;
@@ -23,7 +20,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.JspWriter;
 
-import org.eclipse.tags.shaded.org.apache.xalan.templates.ElemForEach;
 import org.springframework.context.MessageSource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -60,7 +56,6 @@ import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Img;
 import pl.idedyk.japanese.dictionary.web.html.Li;
-import pl.idedyk.japanese.dictionary.web.html.Span;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
@@ -71,19 +66,11 @@ import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.WordDictionary2SenseUtils;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.KanjiKanaPair;
-import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSense;
-import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSenseEntry;
-import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSenseEntryGloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiInfo;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.OldPolishJapaneseDictionaryInfoAttributeListInfo;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.OldPolishJapaneseDictionaryInfoEntriesInfo;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKana;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKanaType;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.RelativePriorityEnum;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
@@ -105,7 +92,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	@Override
 	public int doStartTag() throws JspException {
 		
-		// FM_FIXME: sprawdzic, jak to zachowuje sie w wersji mobilnej
 		try {		
 			ServletContext servletContext = pageContext.getServletContext();
 			ServletRequest servletRequest = pageContext.getRequest();
@@ -203,7 +189,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             mainContentDiv.addHtmlElement(addSuggestionElements(mainMenu));
             
             // dodaj menu
-            // FM_FIXME: sprawdzic, czy menu dziala po zmianach
             if (mobile == false) {
             	mainContentDiv.addHtmlElement(generateMenu(mainMenu));
             }
@@ -1578,9 +1563,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 	
 	private Div generateGrammaFormConjugate(Menu mainMenu) throws IOException {
-		
-		// FM_FIXME: zrobic test pobierania wszystkich slow
-		
+				
 		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
 		
 		if (dictionaryEntry != null) {
@@ -1632,8 +1615,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						
 			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));			
 			
-			// FM_FIXME: tego nie ma w przykladach !!!!!
 			Menu grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate"));
+			
+			mainMenu.getChildMenu().add(grammaFormConjugateMenu);
 			
 			/*
 			if (forceDictionaryEntryType == null) {
@@ -1645,10 +1629,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				
 				grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() }));
 			}
-			*/	
-			
-			// FM_FIXME: tego nie ma w przykladach !!!!!
-			mainMenu.getChildMenu().add(grammaFormConjugateMenu);
+			*/
 			
 			panelHeading.addHtmlElement(h3Title);			
 			panelDiv.addHtmlElement(panelHeading);
@@ -2087,16 +2068,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			
 			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.example")));
 			
-			// FM_FIXME: test !!!!
-			Menu exampleMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.example"));
-			
-			// FM_FIXME: tego nie ma w przykladach !!!!!
+			Menu exampleMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.example"));			
 			mainMenu.getChildMenu().add(exampleMenu);
-
 			
-			final int maxMenuSize = 20;
+			// final int maxMenuSize = 20;
 			// Menu exampleMenu = null;
-			int menuCounter = 0;
+			// int menuCounter = 0;
 					
 			panelHeading.addHtmlElement(h3Title);		
 			panelDiv.addHtmlElement(panelHeading);
@@ -2105,12 +2082,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			Div panelBody = new Div("panel-body");
 			
 			panelDiv.addHtmlElement(panelBody);		
-			
-			/////////////////
-			
-			// FM_FIXME: tymczasowo
-			Menu tempMenu = new Menu("xxxx", "yyyy");
-			
+						
 			// wygenerowanie zakladek
 			createTabs(exampleMenu, panelBody,
 					grammaFormConjugateAndExampleEntryMap.size(),
@@ -2160,7 +2132,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 										if (idx != grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList.size() - 1) {
 											div.addHtmlElement(new Hr());
 										}
-										
 									}
 																		
 									return div;
@@ -2192,13 +2163,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			return null;
 		}
 		
-		////////////
-		
-		
-		// FM_FIXME: zastanowic sie, co zrobic z tym podzialem przykladow gramatycznych na czesci, w kontekscie menu
-		
 		/*
-		
+		// stary kod, ale niech zostanie na pamiatke
 		for (int exampleGroupTypeElementsListIdx = 0; exampleGroupTypeElementsListIdx < exampleGroupTypeElementsList.size(); ++exampleGroupTypeElementsListIdx) {
 			
 			if (exampleMenu == null || exampleMenu.getChildMenu().size() >= maxMenuSize) {
@@ -2253,8 +2219,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			if (exampleGroupTypeElementsListIdx != exampleGroupTypeElementsList.size() - 1) {
 				panelBody.addHtmlElement(new Hr());
 			}
-		}
-		
+		}		
 		*/
 	}
 	
@@ -2486,9 +2451,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return messageSource.getMessage(code, null, Locale.getDefault());
 	}
 
+	/*
 	private String getMessage(String code, String[] args) {
 		return messageSource.getMessage(code, args, Locale.getDefault());
 	}
+	*/
 	
 	public DictionaryEntry getDictionaryEntry() {
 		return dictionaryEntry;
@@ -2526,12 +2493,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 		
 		public void addDictionaryEntryTypeGrammaFormConjugate(DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) {
-			grammaFormConjugateAndExampleEntryForDictionaryTypeList.add(new GrammaFormConjugateAndExampleEntryForDictionaryType(dictionaryEntryIdx, dictionaryEntryType, grammaFormConjugateGroupTypeElementsList, grammaFormCache));
+			grammaFormConjugateAndExampleEntryForDictionaryTypeList.add(new GrammaFormConjugateAndExampleEntryForDictionaryType(dictionaryEntryType, grammaFormConjugateGroupTypeElementsList, grammaFormCache));
 		}
 	}
 	
 	private static class GrammaFormConjugateAndExampleEntryForDictionaryType {
-		private int dictionaryEntryIdx;		
 		private DictionaryEntryType dictionaryEntryType;
 		
 		private List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList;
@@ -2539,10 +2505,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		private List<ExampleGroupTypeElements> exampleGroupTypeElementsList;
 		
-		public GrammaFormConjugateAndExampleEntryForDictionaryType(int dictionaryEntryIdx, DictionaryEntryType dictionaryEntryType, 
+		public GrammaFormConjugateAndExampleEntryForDictionaryType(DictionaryEntryType dictionaryEntryType, 
 				List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) {
 			
-			this.dictionaryEntryIdx = dictionaryEntryIdx;
 			this.dictionaryEntryType = dictionaryEntryType;
 			
 			this.grammaFormConjugateGroupTypeElementsList = grammaFormConjugateGroupTypeElementsList;

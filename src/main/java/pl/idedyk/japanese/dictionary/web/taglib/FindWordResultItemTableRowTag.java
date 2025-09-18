@@ -1,6 +1,5 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
