@@ -12,6 +12,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections4.map.PassiveExpiringMap;
+import org.apache.commons.text.RandomStringGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
@@ -153,6 +154,7 @@ public class FirewallFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
 		boolean doBlock = false;
+		boolean doBlockSendRandomData = false;
 		
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
@@ -177,15 +179,12 @@ public class FirewallFilter implements Filter {
 		} catch (Exception e) {
 			logger.error("Błąd podczas pobierania nazwy kraju z adresu ip", e);
 		}
-				
-		// sprawdzanie, czy nalezy zablokowac ip/host
-		doBlock = isIpHostBlocked(ip, hostName, country);
 		
 		if (doBlock == false && userAgent != null) {
 			// sprawdzamy, czy zalezy zablokowac tego user agenta
 			if (userAgent.contains("AspiegelBot") == true || userAgent.contains("RecordedFuture") == true) { // RecordedFuture-ASI
 				doBlock = true;
-			}	
+			}
 			
 			// sprawdzenie, czy mamy do czynienia z robotem, ktory pobiera dane w bardzo agresywny sposob
 			// wszystkie te roboty uzywaja user agent Chrome od 60 do 79, np.
@@ -194,9 +193,15 @@ public class FirewallFilter implements Filter {
 			// "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3403.143 Safari/537.36"
 			if (userAgent.matches("^Mozilla\\/5.0 \\(Windows NT \\d+\\.\\d; Win64; x64\\) AppleWebKit\\/537.36 \\(KHTML, like Gecko\\) Chrome\\/[6-7][0-9].*$") == true) {
 				doBlock = true;
+				doBlockSendRandomData = true;
 			}
 		}
 				
+		// sprawdzanie, czy nalezy zablokowac ip/host
+		if (doBlock == false) {
+			doBlock = isIpHostBlocked(ip, hostName, country);
+		}
+						
 		// sprawdzenie, czy dany fullURL nalezy zablokowac
 		if (doBlock == false) {
 			doBlock = isFullUrlBlocked(fullUrl);			
@@ -213,24 +218,52 @@ public class FirewallFilter implements Filter {
 		}
 		
 		if (doBlock == true) { // blokowanie
-			logger.info("Blokowanie ip/host/user agent: " + ip + " (" + country + ") / " + hostName + " / " + userAgent);
 			
-			// ServletContext servletContext = request.getServletContext();
-			
-			// WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-			
-			// wysylacz
-			// LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
-			
-			// nie bedziemy wysylac zdarzen, gdyz moze to powodowac bardzo duza liczbe zdarzen, ktore pozniej musza byc przetworzone
-			// ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
-			// loggerSender.sendLog(clientBlockLoggerModel);
-			
-			//
-			
-			// wysylamy brak dostepu
-			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-	        
+			if (doBlockSendRandomData == false) { // zwykla blokada
+				logger.info("Blokowanie ip/host/user agent: " + ip + " (" + country + ") / " + hostName + " / " + userAgent);
+				
+				// ServletContext servletContext = request.getServletContext();
+				
+				// WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+				
+				// wysylacz
+				// LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
+				
+				// nie bedziemy wysylac zdarzen, gdyz moze to powodowac bardzo duza liczbe zdarzen, ktore pozniej musza byc przetworzone
+				// ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
+				// loggerSender.sendLog(clientBlockLoggerModel);
+				
+				//
+				
+				// wysylamy brak dostepu
+				httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				
+			} else { // wysylanie losowych danych
+				logger.info("Blokowanie ip/host/user agent i wysylanie losowych danych: " + ip + " (" + country + ") / " + hostName + " / " + userAgent);
+				
+				// tworzenie generatora losowych stringow
+				RandomStringGenerator generator = new RandomStringGenerator.Builder()
+					     .withinRange('a', 'z').build();
+				
+				final String template =	"<!doctype html>\n"
+						+ "<html>\n"
+						+ "  <head>\n"
+						+ "    <title>%s %s %s</title>\n"
+						+ "  </head>\n"
+						+ "  <body>\n"
+						+ "    <p>%s %s %s.</p>\n"
+						+ "  </body>\n"
+						+ "</html>";
+				
+				String randomHtmlDoc = String.format(template, generator.generate(10), generator.generate(12), generator.generate(14),
+						generator.generate(8), generator.generate(16), generator.generate(18));
+				
+				httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+				httpServletResponse.setHeader("Content-Type", "text/html;charset=UTF-8");
+								
+				httpServletResponse.getOutputStream().write(randomHtmlDoc.getBytes());
+			}
+		        
 	        // zrobienie commit'a
 	        response.flushBuffer();
 	        
