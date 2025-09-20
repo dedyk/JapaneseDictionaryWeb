@@ -124,14 +124,14 @@ public class WordDictionary2SenseUtils {
 					String languageValue = languageSource.getValue();
 					String languageLsWasei = Dictionary2HelperCommon.translateToPolishLanguageSourceLsWaseiEnum(languageSource.getLsWasei());
 					
-					if (languageValue != null) {
+					if (languageValue != null && languageValue.equals("") == false) {
 						singleLanguageSource.append(languageCodeInPolish + ": " + languageValue);
 						
 					} else {
 						singleLanguageSource.append(Dictionary2HelperCommon.translateToPolishLanguageCodeWithoutValue(languageSource.getLang()));
 					}
 					
-					if (languageLsWasei != null) {
+					if (languageLsWasei != null && languageLsWasei.equals("") == false) {
 						singleLanguageSource.append(", ").append(languageLsWasei);
 					}
 
