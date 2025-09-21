@@ -220,7 +220,7 @@ public class FirewallFilter implements Filter {
 		if (doBlock == true) { // blokowanie
 			
 			if (doBlockSendRandomData == false) { // zwykla blokada
-				logger.info("Blokowanie ip/host/user agent: " + ip + " (" + country + ") / " + hostName + " / " + userAgent);
+				logger.info("Blokowanie ip/host/user agent/url: " + ip + " (" + country + ") / " + hostName + " / " + userAgent + " / " + fullUrl);
 				
 				// ServletContext servletContext = request.getServletContext();
 				
@@ -239,7 +239,7 @@ public class FirewallFilter implements Filter {
 				httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				
 			} else { // wysylanie losowych danych
-				logger.info("Blokowanie ip/host/user agent i wysylanie losowych danych: " + ip + " (" + country + ") / " + hostName + " / " + userAgent);
+				logger.info("Blokowanie ip/host/user agent/url i wysylanie losowych danych: " + ip + " (" + country + ") / " + hostName + " / " + userAgent + " / " + fullUrl);
 				
 				// tworzenie generatora losowych stringow
 				RandomStringGenerator generator = new RandomStringGenerator.Builder()
