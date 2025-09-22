@@ -122,6 +122,8 @@ public class AndroidController {
 	public void search(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
 		
+		Gson gson = new Gson();
+		
 		BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		
 		String readLine = null;
@@ -153,10 +155,10 @@ public class AndroidController {
 		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult, 1));
 		
 		// przygotowanie odpowiedzi
-		JSONObject jsonObjectFromFindWordResult = createJSONObjectFromFindWordResult(findWordResult);
+		// JSONObject jsonObjectFromFindWordResult = createJSONObjectFromFindWordResult(findWordResult);
 		
 		// zwrocenie wyniku
-		writer.append(jsonObjectFromFindWordResult.toString());		
+		writer.append(gson.toJson(findWordResult));		
 	}
 	
 	@RequestMapping(value = "/android/autocomplete", method = RequestMethod.POST)
@@ -428,6 +430,7 @@ public class AndroidController {
 		return findWordRequest;
 	}
 	
+	/*
 	@SuppressWarnings("deprecation")
 	private JSONObject createJSONObjectFromFindWordResult(FindWordResult findWordResult) {
 		
@@ -523,6 +526,7 @@ public class AndroidController {
 		
 		return result;
 	}
+	*/
 	
 	@RequestMapping(value = "/android/receiveQueueEvent", method = RequestMethod.POST)
 	public void receiveQueueEvent(HttpServletRequest request, HttpServletResponse response, Writer writer,
