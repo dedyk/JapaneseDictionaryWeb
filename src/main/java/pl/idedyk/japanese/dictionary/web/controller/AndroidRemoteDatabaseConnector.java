@@ -113,14 +113,12 @@ public class AndroidRemoteDatabaseConnector {
 		writer.append(gson.toJson(findWordResult));
 	}
 	
+	/*
 	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntryById", method = RequestMethod.POST)
 	public void getDictionaryEntryById(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
 		
-		// FM_FIXME: do usuniecia
-		throw new DictionaryException("FM_FIXME");
 		
-		/*
 		Gson gson = new Gson();
 		
 		// pobranie wejscia
@@ -153,17 +151,12 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(dictionaryEntry));
-		*/
 	}
 
 	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntryByUniqueKey", method = RequestMethod.POST)
 	public void getDictionaryEntryByUniqueKey(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
 		
-		// FM_FIXME: do usuniecia
-		throw new DictionaryException("FM_FIXME");
-
-		/*
 		Gson gson = new Gson();
 		
 		// pobranie wejscia
@@ -196,9 +189,8 @@ public class AndroidRemoteDatabaseConnector {
 		
 		// zwrocenie wyniku
 		writer.append(gson.toJson(dictionaryEntry));
-		*/
 	}
-
+	*/
 	
 	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntry2ById", method = RequestMethod.POST)
 	public void getDictionaryEntry2ById(HttpServletRequest request, HttpServletResponse response, Writer writer,
