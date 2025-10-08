@@ -59,6 +59,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetWordPower
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 @Controller
@@ -598,7 +599,7 @@ public class AndroidRemoteDatabaseConnector {
 		writer.append(gson.toJson(groupWithTatoebaSentenceList));
 	}
 
-	@RequestMapping(value = "/android/remoteDatabaseConnector/getGroupDictionaryEntries", method = RequestMethod.POST)
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getGroupDictionaryEntry2List", method = RequestMethod.POST)
 	public void getGroupDictionaryEntries(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
 		
@@ -617,7 +618,7 @@ public class AndroidRemoteDatabaseConnector {
 		logger.info("[AndroidRemoteDatabaseConnector.getGroupDictionaryEntries] Pobierz słówka dla grupy: " + groupName);
 
 		// pobranie		
-		List<DictionaryEntry> result = dictionaryManager.getGroupDictionaryEntries(groupName);
+		List<Entry> result = dictionaryManager.getGroupDictionaryEntry2List(groupName);
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryGetGroupDictionaryEntriesLoggerModel(Utils.createLoggerModelCommon(request), groupName));
