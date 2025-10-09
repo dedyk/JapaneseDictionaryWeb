@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Locale;
 
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.JspWriter;
 import jakarta.servlet.jsp.tagext.TagSupport;
@@ -16,6 +18,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.Span;
@@ -40,19 +43,18 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	@Override
 	public int doStartTag() throws JspException {
 		
-		ServletContext servletContext = pageContext.getServletContext();
-		
-		/*
+		ServletContext servletContext = pageContext.getServletContext();		
 		ServletRequest servletRequest = pageContext.getRequest();
 		
 		String userAgent = null;
 		
-		if (servletRequest instanceof HttpServletRequest) {			
+		if (servletRequest instanceof HttpServletRequest) {
 			HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
 			
 			userAgent = httpServletRequest.getHeader("User-Agent");			
 		}
-		*/
+		
+		boolean mobile = Utils.isMobile(userAgent);
 				
 		//		
 		
@@ -95,7 +97,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    		String kana = kanjiKanaPair.getKana();
     	        	String romaji = kanjiKanaPair.getRomaji();
     	    		    	        	
-            		Div singleWordDiv = createWordColumn(findWordRequest, findWord, kanji, kana, romaji);
+            		Div singleWordDiv = createWordColumn(findWordRequest, findWord, kanji, kana, romaji, mobile);
             		                	
                 	wordDiv.addHtmlElement(singleWordDiv);
 				}
@@ -122,7 +124,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    	String kana = dictionaryEntry.getKana();
 	        	String romaji = dictionaryEntry.getRomaji();
 	        	
-        		Div singleWordDiv = createWordColumn(findWordRequest, findWord, kanji, kana, romaji);
+        		Div singleWordDiv = createWordColumn(findWordRequest, findWord, kanji, kana, romaji, mobile);
         		                	
             	wordDiv.addHtmlElement(singleWordDiv);
             	
@@ -188,22 +190,31 @@ public class FindWordResultItemTableRowTag extends TagSupport {
         }
 	}
 		
-	private Div createWordColumn(FindWordRequest findWordRequest, String findWord, String kanji, String kana, String romaji) {
+	private Div createWordColumn(FindWordRequest findWordRequest, String findWord, String kanji, String kana, String romaji, boolean mobile) {
 		Div singleWordDiv = new Div(null, "display: flex; width: 100%; ");
+				
+		String breakWordType;
+		
+		if (mobile == false) {
+			breakWordType = "overflow-wrap: break-word;";
+			
+		} else {
+			breakWordType = "white-space: nowrap;";
+		}
 		    	                	
     	// kanji
-    	Span singleWordKanjiSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word;");
+    	Span singleWordKanjiSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; " + breakWordType);
     	
     	if (kanji != null) {
     		singleWordKanjiSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));
     	}
     	
     	// kana
-    	Span singleWordKanaSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word;");
+    	Span singleWordKanaSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; " + breakWordType);
     	singleWordKanaSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(kana, findWord, findWordRequest.searchKana)));
     	
     	// romaji
-    	Span singleWordRomajiSpan = new Span(null, "width: 33%; padding: 5px 0px 10px 0px; overflow-wrap: break-word;");
+    	Span singleWordRomajiSpan = new Span(null, "width: 33%; padding: 5px 0px 10px 0px; " + breakWordType);
     	singleWordRomajiSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(romaji, findWord, findWordRequest.searchRomaji)));
     	
     	// dodanie elementow                    	
