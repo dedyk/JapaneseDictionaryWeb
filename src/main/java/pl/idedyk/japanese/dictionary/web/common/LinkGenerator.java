@@ -38,9 +38,7 @@ public class LinkGenerator {
 			DictionaryEntryType forceDictionaryEntryType) {
 		
 		// INFO: to bedzie uzywane tylko dla slownika nazw
-		
-		// FM_FIXME: to bedzie do zmiany
-		
+				
 		try {
 			boolean name = dictionaryEntry.isName();
 			

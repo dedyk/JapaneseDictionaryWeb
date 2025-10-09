@@ -54,12 +54,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		}
 		*/
 				
-		//
-		
-        // FM_FIXME: zaznaczanie, ktore znaczenia sa dla pewnych elementow
-        
-		// FM_FIXME: wersja na telefon
-		
+		//		
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		

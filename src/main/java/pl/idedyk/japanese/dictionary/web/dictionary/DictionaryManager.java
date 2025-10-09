@@ -32,12 +32,8 @@ import pl.idedyk.japanese.dictionary.lucene.LuceneDatabase;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 
 import com.csvreader.CsvReader;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -472,10 +468,6 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	public List<TransitiveIntransitivePairWithDictionaryEntry> getTransitiveIntransitivePairsList()
 			throws DictionaryException {
 		
-		// FM_FIXME: do naprawy
-		throw new DictionaryException("FM_FIXME");
-
-		/*
 		waitForDatabaseReady();
 
 		List<TransitiveIntransitivePairWithDictionaryEntry> result = new ArrayList<>();
@@ -503,7 +495,6 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		}
 
 		return result;
-		*/
 	}
 
 	public boolean isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource source) {
