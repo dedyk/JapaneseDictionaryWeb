@@ -78,7 +78,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             
             // tylko jeden z nich bedzie wypelniony
             Entry entry = resultItem.getEntry();
-            DictionaryEntry oldDictionaryEntry = resultItem.getOldDictionaryEntry();
+            DictionaryEntry dictionaryEntry = resultItem.getDictionaryEntry();
 
             if (entry != null) {
             	// wygenerowanie wszystkich kombinacji
@@ -114,7 +114,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
                 // link
                 link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), entry);
                                 
-            } else if (oldDictionaryEntry != null) { // obsluga starego formatu
+            } else if (dictionaryEntry != null) { // obsluga starego formatu
             	
             	// slowo
     	    	Td wordTd = new Td();    	    	
@@ -123,9 +123,9 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    	Div wordDiv = new Div(null, "width: 100%");
     	    	wordTd.addHtmlElement(wordDiv);
     	    	
-    	    	String kanji = oldDictionaryEntry.getKanji();
-    	    	String kana = oldDictionaryEntry.getKana();
-	        	String romaji = oldDictionaryEntry.getRomaji();
+    	    	String kanji = dictionaryEntry.getKanji();
+    	    	String kana = dictionaryEntry.getKana();
+	        	String romaji = dictionaryEntry.getRomaji();
 	        	
         		Div singleWordDiv = createWordColumn(findWordRequest, findWord, kanji, kana, romaji);
         		                	
@@ -135,8 +135,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    	Td translateTd = new Td(null, "padding-top: 10px");
     	    	tr.addHtmlElement(translateTd);
             	
-            	List<String> translates = oldDictionaryEntry.getTranslates();
-            	String info = oldDictionaryEntry.getInfo();
+            	List<String> translates = dictionaryEntry.getTranslates();
+            	String info = dictionaryEntry.getInfo();
             	
 		    	if (translates != null && translates.size() > 0) {
 		    		translateTd.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(toString(translates, null), findWord, findWordRequest.searchTranslate)));
@@ -165,7 +165,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		    	}
 		    	*/
 		    	
-		    	link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), oldDictionaryEntry, null);
+		    	link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), dictionaryEntry, null);
 		    	
             } else { // to nigdy nie powinno wydarzyc sie
             	throw new RuntimeException();
