@@ -2,7 +2,6 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -12,7 +11,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRequest;
@@ -25,15 +23,12 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dto.Attribute;
-import pl.idedyk.japanese.dictionary.api.dto.AttributeList;
 import pl.idedyk.japanese.dictionary.api.dto.AttributeType;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
-import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
 import pl.idedyk.japanese.dictionary.api.dto.TatoebaSentence;
-import pl.idedyk.japanese.dictionary.api.dto.WordType;
 import pl.idedyk.japanese.dictionary.api.example.ExampleManager;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupTypeElements;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleRequest;

@@ -48,7 +48,6 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLog
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchStrokeCountLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionary2DetailsLoggerModel;
-import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntriesNameSizeLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntriesSizeLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryGetDictionaryEntryGroupTypesLoggerModel;
