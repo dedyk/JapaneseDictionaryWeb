@@ -233,8 +233,13 @@ public class Utils {
 			
 			try {
 				InetAddress addr = InetAddress.getByName(currentIp);
-			
-				currentAddr = addr.getHostName();
+				
+				if (isPrivateAddress(addr) == false) {
+					currentAddr = addr.getHostName();
+					
+				} else {
+					currentAddr = currentIp;
+				}				
 			
 			} catch (Exception e) {
 				currentAddr = currentIp;
@@ -249,6 +254,43 @@ public class Utils {
 		
 		return result.toString();
 	}
+	
+	public static boolean isPrivateAddress(InetAddress address) {
+		
+        if (address.isAnyLocalAddress() || address.isLoopbackAddress() || address.isLinkLocalAddress()) {
+            return true;
+        }
+
+        if (address.isSiteLocalAddress()) {
+            return true;
+        }
+
+        byte[] addr = address.getAddress();
+
+        // Dodatkowe ręczne sprawdzenie dla IPv4
+        if (addr.length == 4) {
+            int firstOctet = Byte.toUnsignedInt(addr[0]);
+            int secondOctet = Byte.toUnsignedInt(addr[1]);
+
+            // 10.0.0.0 – 10.255.255.255
+            if (firstOctet == 10)
+                return true;
+
+            // 172.16.0.0 – 172.31.255.255
+            if (firstOctet == 172 && (secondOctet >= 16 && secondOctet <= 31))
+                return true;
+
+            // 192.168.0.0 – 192.168.255.255
+            if (firstOctet == 192 && secondOctet == 168)
+                return true;
+
+            // 169.254.0.0/16 (link-local)
+            if (firstOctet == 169 && secondOctet == 254)
+                return true;
+        }
+
+        return false;
+    }
 	
 	public static String getRequestURL(HttpServletRequest request) {
 				
