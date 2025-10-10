@@ -2,6 +2,7 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRequest;
@@ -73,17 +74,19 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             // pobranie danych
             //
             String findWord = findWordRequest.word;
-            
+                        
             // tylko jeden z nich bedzie wypelniony
             Entry entry = resultItem.getEntry();
             DictionaryEntry dictionaryEntry = resultItem.getDictionaryEntry();
 
+            Td translateTd;
+            
             if (entry != null) {
             	// wygenerowanie wszystkich kombinacji
             	List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(entry, true);
             	            	
             	// slowo
-    	    	Td wordTd = new Td();    	    	
+    	    	Td wordTd = new Td();   
     	    	tr.addHtmlElement(wordTd);
     	    	
     	    	Div wordDiv = new Div(null, "width: 100%");
@@ -104,7 +107,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 				}
             	            	
             	// znaczenie
-    	    	Td translateTd = new Td(null, "padding-top: 10px");
+    	    	translateTd = new Td(null, "padding-top: 10px");
     	    	tr.addHtmlElement(translateTd);
     	    	
     	    	WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), entry, translateTd, findWord, false);
@@ -115,7 +118,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             } else if (dictionaryEntry != null) { // obsluga starego formatu
             	
             	// slowo
-    	    	Td wordTd = new Td();    	    	
+    	    	Td wordTd = new Td();
     	    	tr.addHtmlElement(wordTd);
     	    	
     	    	Div wordDiv = new Div(null, "width: 100%");
@@ -130,7 +133,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             	wordDiv.addHtmlElement(singleWordDiv);
             	
             	// znaczenie
-    	    	Td translateTd = new Td(null, "padding-top: 10px");
+    	    	translateTd = new Td(null, "padding-top: 10px");
     	    	tr.addHtmlElement(translateTd);
             	
             	List<String> translates = dictionaryEntry.getTranslates();
@@ -168,22 +171,32 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             } else { // to nigdy nie powinno wydarzyc sie
             	throw new RuntimeException();
             }
-            
+
+
             // details link
-	    	Td detailsLinkTd = new Td();
-	    	tr.addHtmlElement(detailsLinkTd);
-	    	
-            A linkButton = new A();
-            detailsLinkTd.addHtmlElement(linkButton);
+	    	A linkButton = new A();
             
             linkButton.setClazz("btn btn-default");
             linkButton.setHref(link);
             
             linkButton.addHtmlElement(new Text(messageSource.getMessage(
             		"wordDictionary.page.search.table.column.details.value", null, Locale.getDefault())));
-                                    
-            tr.render(out);
             
+            if (mobile == false) {
+    	    	Td detailsLinkTd = new Td();
+                detailsLinkTd.addHtmlElement(linkButton);
+
+		    	tr.addHtmlElement(detailsLinkTd);
+		    	
+            } else {
+            	Div divForLinkButton = new Div(null, "padding: 30px 0px 0px 0px;");
+            	divForLinkButton.addHtmlElement(linkButton);
+            	
+            	translateTd.addHtmlElement(divForLinkButton);
+            }
+            
+            tr.render(out);
+                        
             return SKIP_BODY;
  
         } catch (Exception e) {

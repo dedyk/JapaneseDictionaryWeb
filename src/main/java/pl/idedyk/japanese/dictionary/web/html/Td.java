@@ -5,7 +5,7 @@ import java.util.List;
 
 
 public class Td extends HtmlElementCommon {
-	
+		
 	private String colspan;
 	
 	private String rowspan;
@@ -38,6 +38,14 @@ public class Td extends HtmlElementCommon {
 		this.rowspan = rowspan;
 	}
 
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	@Override
 	protected String getTagName() {
 		return "td";
@@ -52,7 +60,7 @@ public class Td extends HtmlElementCommon {
 	protected List<String[]> getAdditionalTagAttributes() {
 		
 		List<String[]> additionalTagAttributes = new ArrayList<String[]>();
-
+		
 		if (colspan != null) {
 			additionalTagAttributes.add(new String[] { "colspan", colspan });
 		}

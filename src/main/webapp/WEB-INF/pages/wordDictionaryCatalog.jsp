@@ -37,7 +37,9 @@
 						<th width="50%"><spring:message code="wordDictionary.page.search.table.column.word" /></th>
 						<th width="40%"><spring:message code="wordDictionary.page.search.table.column.translate" /></th>
 						<!-- <jdwt:isMobile mobile="false"><th><spring:message code="wordDictionary.page.search.table.column.info" /></th></jdwt:isMobile> -->
+						<jdwt:isMobile mobile="false">
 						<th width="10%"></th>
+						</jdwt:isMobile>
 					</tr>
 				</thead>
 				<tfood>
