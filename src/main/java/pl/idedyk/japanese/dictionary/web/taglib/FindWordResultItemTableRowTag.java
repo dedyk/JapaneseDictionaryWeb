@@ -20,6 +20,7 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.html.A;
+import pl.idedyk.japanese.dictionary.web.html.Br;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.Span;
 import pl.idedyk.japanese.dictionary.web.html.Td;
@@ -191,38 +192,50 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 	}
 		
 	private Div createWordColumn(FindWordRequest findWordRequest, String findWord, String kanji, String kana, String romaji, boolean mobile) {
-		Div singleWordDiv = new Div(null, "display: flex; width: 100%; ");
-				
-		String breakWordType;
-		
+			
 		if (mobile == false) {
-			breakWordType = "overflow-wrap: break-word;";
+			Div singleWordDiv = new Div(null, "display: flex; width: 100%; ");
+			
+	    	// kanji
+	    	Span singleWordKanjiSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word");
+	    	
+	    	if (kanji != null) {
+	    		singleWordKanjiSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));
+	    	}
+	    	
+	    	// kana
+	    	Span singleWordKanaSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; overflow-wrap: break-word;");
+	    	singleWordKanaSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(kana, findWord, findWordRequest.searchKana)));
+	    	
+	    	// romaji
+	    	Span singleWordRomajiSpan = new Span(null, "width: 33%; padding: 5px 0px 10px 0px; overflow-wrap: break-word;");
+	    	singleWordRomajiSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(romaji, findWord, findWordRequest.searchRomaji)));
+	    	
+	    	// dodanie elementow                    	
+	    	singleWordDiv.addHtmlElement(singleWordKanjiSpan);
+	    	singleWordDiv.addHtmlElement(singleWordKanaSpan);
+	    	singleWordDiv.addHtmlElement(singleWordRomajiSpan);
+	    	
+	    	return singleWordDiv;
 			
 		} else {
-			breakWordType = "white-space: nowrap;";
-		}
-		    	                	
-    	// kanji
-    	Span singleWordKanjiSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; " + breakWordType);
-    	
-    	if (kanji != null) {
-    		singleWordKanjiSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));
-    	}
-    	
-    	// kana
-    	Span singleWordKanaSpan = new Span(null, "width: 33%; padding: 5px 15px 10px 0px; " + breakWordType);
-    	singleWordKanaSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(kana, findWord, findWordRequest.searchKana)));
-    	
-    	// romaji
-    	Span singleWordRomajiSpan = new Span(null, "width: 33%; padding: 5px 0px 10px 0px; " + breakWordType);
-    	singleWordRomajiSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(romaji, findWord, findWordRequest.searchRomaji)));
-    	
-    	// dodanie elementow                    	
-    	singleWordDiv.addHtmlElement(singleWordKanjiSpan);
-    	singleWordDiv.addHtmlElement(singleWordKanaSpan);
-    	singleWordDiv.addHtmlElement(singleWordRomajiSpan);
-    	
-    	return singleWordDiv;		
+			Div singleWordDiv = new Div(null, "display: flex; width: 100%; padding: 0px 0px 30px 0px;");
+			
+			Span singleWordSpan = new Span(null, "width: 100%; padding: 5px 15px 10px 0px; overflow-wrap: break-word; line-height: 1.5;");
+			
+			if (kanji != null) {
+				singleWordSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(kanji, findWord, findWordRequest.searchKanji)));
+				singleWordSpan.addHtmlElement(new Br());
+			}
+			
+			singleWordSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(kana, findWord, findWordRequest.searchKana)));
+			singleWordSpan.addHtmlElement(new Br());
+			singleWordSpan.addHtmlElement(new Text(WordDictionary2SenseUtils.getStringWithMark(romaji, findWord, findWordRequest.searchRomaji)));
+			
+			singleWordDiv.addHtmlElement(singleWordSpan);
+			
+			return singleWordDiv;
+		}		    	                		
 	}
 	    
 	private String toString(List<String> listString, String prefix) {
