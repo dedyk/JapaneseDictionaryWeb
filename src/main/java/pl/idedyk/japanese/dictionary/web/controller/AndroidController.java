@@ -30,14 +30,8 @@ import pl.idedyk.japanese.dictionary.api.android.queue.event.IQueueEvent;
 import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventWrapper;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult.ResultItem;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
-import pl.idedyk.japanese.dictionary.api.dto.Attribute;
-import pl.idedyk.japanese.dictionary.api.dto.AttributeList;
-import pl.idedyk.japanese.dictionary.api.dto.AttributeType;
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
-import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
@@ -122,6 +116,8 @@ public class AndroidController {
 	public void search(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
 		
+		Gson gson = new Gson();
+		
 		BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(request.getInputStream()));
 		
 		String readLine = null;
@@ -153,10 +149,10 @@ public class AndroidController {
 		loggerSender.sendLog(new WordDictionarySearchLoggerModel(Utils.createLoggerModelCommon(request), findWordRequest, findWordResult, 1));
 		
 		// przygotowanie odpowiedzi
-		JSONObject jsonObjectFromFindWordResult = createJSONObjectFromFindWordResult(findWordResult);
+		// JSONObject jsonObjectFromFindWordResult = createJSONObjectFromFindWordResult(findWordResult);
 		
 		// zwrocenie wyniku
-		writer.append(jsonObjectFromFindWordResult.toString());		
+		writer.append(gson.toJson(findWordResult));		
 	}
 	
 	@RequestMapping(value = "/android/autocomplete", method = RequestMethod.POST)
@@ -428,6 +424,7 @@ public class AndroidController {
 		return findWordRequest;
 	}
 	
+	/*
 	@SuppressWarnings("deprecation")
 	private JSONObject createJSONObjectFromFindWordResult(FindWordResult findWordResult) {
 		
@@ -522,6 +519,7 @@ public class AndroidController {
 		
 		return result;
 	}
+	*/
 	
 	@RequestMapping(value = "/android/receiveQueueEvent", method = RequestMethod.POST)
 	public void receiveQueueEvent(HttpServletRequest request, HttpServletResponse response, Writer writer,

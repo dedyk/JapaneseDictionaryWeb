@@ -11,6 +11,7 @@ public class A extends HtmlElementCommon {
 	private String href;
 	private String onClick;
 	private boolean escapeHref;
+	private String dataToggle;
 		
 	public A() { 
 		super();
@@ -47,6 +48,10 @@ public class A extends HtmlElementCommon {
 			additionalTagAttributes.add(new String[] { "onclick", onClick });
 		}
 		
+		if (dataToggle != null) {
+			additionalTagAttributes.add(new String[] { "data-toggle", dataToggle });
+		}
+		
 		return additionalTagAttributes;
 	}
 
@@ -68,5 +73,13 @@ public class A extends HtmlElementCommon {
 
 	public void setOnClick(String onClick) {
 		this.onClick = onClick;
+	}
+
+	public String getDataToggle() {
+		return dataToggle;
+	}
+
+	public void setDataToggle(String dataToggle) {
+		this.dataToggle = dataToggle;
 	}
 }

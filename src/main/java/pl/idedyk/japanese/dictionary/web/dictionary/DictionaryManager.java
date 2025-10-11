@@ -32,12 +32,8 @@ import pl.idedyk.japanese.dictionary.lucene.LuceneDatabase;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 
 import com.csvreader.CsvReader;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -65,9 +61,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	private WordPowerList wordPowerList;
 
 	private boolean initialized = false;
-
-	private LoadingCache<Integer, JMdict.Entry> jmdictEntryCache;
-
+	
 	@Value("${db.dir}")
 	private String dbDir;
 
@@ -197,14 +191,6 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 			throw new RuntimeException(e);
 		}
 
-		jmdictEntryCache = CacheBuilder.newBuilder().maximumSize(60000).build(new CacheLoader<Integer, JMdict.Entry>() {
-
-			@Override
-			public Entry load(Integer entryId) throws Exception {
-				return databaseConnector.getDictionaryEntry2ById(entryId);
-			}
-		});
-
 		initialized = true;
 
 		logger.info("Inicjalizacja Dictionary Manager zakończona sukcesem");
@@ -267,8 +253,6 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 
 		radicalList = null;
 		transitiveIntransitivePairsList = null;
-
-		jmdictEntryCache.invalidateAll();
 
 		init(true);
 	}
@@ -483,7 +467,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	@Override
 	public List<TransitiveIntransitivePairWithDictionaryEntry> getTransitiveIntransitivePairsList()
 			throws DictionaryException {
-
+		
 		waitForDatabaseReady();
 
 		List<TransitiveIntransitivePairWithDictionaryEntry> result = new ArrayList<>();
@@ -555,15 +539,8 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	public JMdict.Entry getDictionaryEntry2ById(int id) throws DictionaryException {
 
 		waitForDatabaseReady();
-
-		try {
-			return jmdictEntryCache.get(id);
-
-		} catch (Exception e) {
-			logger.error("Can't get jmdict entry from cache", e);
-
-			return databaseConnector.getDictionaryEntry2ById(id);
-		}
+		
+		return databaseConnector.getDictionaryEntry2ById(id);
 	}
 
 	public File getPdfDictionary() {

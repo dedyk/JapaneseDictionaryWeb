@@ -3,10 +3,14 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.function.Function;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRequest;
@@ -27,10 +31,12 @@ import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
 import pl.idedyk.japanese.dictionary.api.dto.TatoebaSentence;
 import pl.idedyk.japanese.dictionary.api.example.ExampleManager;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupTypeElements;
+import pl.idedyk.japanese.dictionary.api.example.dto.ExampleRequest;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleResult;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.api.gramma.GrammaConjugaterManager;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateGroupTypeElements;
+import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateRequest;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResult;
 import pl.idedyk.japanese.dictionary.api.gramma.dto.GrammaFormConjugateResultType;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
@@ -44,20 +50,22 @@ import pl.idedyk.japanese.dictionary.web.html.H;
 import pl.idedyk.japanese.dictionary.web.html.Hr;
 import pl.idedyk.japanese.dictionary.web.html.IHtmlElement;
 import pl.idedyk.japanese.dictionary.web.html.Img;
+import pl.idedyk.japanese.dictionary.web.html.Li;
 import pl.idedyk.japanese.dictionary.web.html.Table;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
+import pl.idedyk.japanese.dictionary.web.html.Ul;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
+import pl.idedyk.japanese.dictionary.web.taglib.utils.WordDictionary2SenseUtils;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.KanjiKanaPair;
-import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSense;
-import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSenseEntry;
-import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.PrintableSenseEntryGloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiAdditionalInfoEnum;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingAdditionalInfoEnum;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiInfo;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfo;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKana;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKanaType;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
@@ -68,56 +76,52 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	private DictionaryEntryType forceDictionaryEntryType;
 	
 	private JMdict.Entry dictionaryEntry2;
-	private KanjiKanaPair dictionaryEntry2KanjiKanaPair;
-			
-	private MessageSource messageSource;
-	
+	private List<KanjiKanaPair> kanjiKanaPairList;
+				
+	private MessageSource messageSource;	
 	private DictionaryManager dictionaryManager;
 	private Properties applicationProperties;
 	
+	private Map<Integer, GrammaFormConjugateAndExampleEntry> grammaFormConjugateAndExampleEntryMap = new LinkedHashMap<>();
+		
 	@Override
 	public int doStartTag() throws JspException {
 		
-		ServletContext servletContext = pageContext.getServletContext();
-		ServletRequest servletRequest = pageContext.getRequest();
-		
-		String userAgent = null;
-		
-		if (servletRequest instanceof HttpServletRequest) {			
-			HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+		try {		
+			ServletContext servletContext = pageContext.getServletContext();
+			ServletRequest servletRequest = pageContext.getRequest();
 			
-			userAgent = httpServletRequest.getHeader("User-Agent");			
-		}
-		
-		boolean mobile = Utils.isMobile(userAgent);
-		
-		//
-		
-		// pobieramy sens dla wybranej pary kanji i kana
-		if (dictionaryEntry2 != null) {
+			String userAgent = null;
 			
-			List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2);
+			if (servletRequest instanceof HttpServletRequest) {			
+				HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+				
+				userAgent = httpServletRequest.getHeader("User-Agent");			
+			}
 			
-			// szukamy konkretnego znaczenia dla naszego slowa
-			dictionaryEntry2KanjiKanaPair = Dictionary2HelperCommon.findKanjiKanaPair(kanjiKanaPairList, dictionaryEntry);
+			boolean mobile = Utils.isMobile(userAgent);
 			
-		} else {
-			dictionaryEntry2KanjiKanaPair = null;
-		}		
-
-		//
+			//
+			
+			// pobieramy pary slowek do wyswietlenia
+			if (dictionaryEntry2 != null) {			
+				kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2, true);
+							
+			} else {
+				kanjiKanaPairList = null;
+			}		
+	
+			//
+			
+			WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+			
+			this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
+			this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
+			this.applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
 		
-		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-		
-		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
-		this.dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
-		this.applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
-		
-		try {
             JspWriter out = pageContext.getOut();
 
-            if (dictionaryEntry == null) {
-            	
+            if (dictionaryEntry == null && dictionaryEntry2 == null) {            	
             	Div errorDiv = new Div("alert alert-danger");
             	
             	errorDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.null")));
@@ -129,8 +133,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
             Div mainContentDiv = new Div();
             
-            if (dictionaryEntry.isName() == true) {
-            	
+            if (dictionaryEntry != null && dictionaryEntry.isName() == true) {            	
             	Div infoDiv = new Div("alert alert-info");
             	
             	infoDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.name.info")));
@@ -148,8 +151,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             
             Div exampleSentenceDiv = null;
             
-            try {
-	         
+            try {	         
             	// generowanie informacji podstawowych
 	            contentDiv.addHtmlElement(generateMainInfo(mainMenu, mobile));
 	            
@@ -159,23 +161,20 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             } catch (DictionaryException e) {
             	throw new JspException(e);
             }
-            
-            
+                        
             if (exampleSentenceDiv != null) {
             	contentDiv.addHtmlElement(exampleSentenceDiv);
             }
-            
-            // odmiany gramatyczne
-    		Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache = new HashMap<GrammaFormConjugateResultType, GrammaFormConjugateResult>();
-            
-            Div grammaFormConjugateDiv = generateGrammaFormConjugate(mainMenu, grammaFormCache);
+                        
+            // odmiany gramatyczne            
+            Div grammaFormConjugateDiv = generateGrammaFormConjugate(mainMenu);
             
             if (grammaFormConjugateDiv != null) {
             	contentDiv.addHtmlElement(grammaFormConjugateDiv);
             }
-            
+
             // przyklady gramatyczne
-            Div exampleDiv = generateExample(mainMenu, grammaFormCache);
+            Div exampleDiv = generateExample(mainMenu);
             
             if (exampleDiv != null) {
             	contentDiv.addHtmlElement(exampleDiv);
@@ -183,12 +182,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
                         
             // dodaj w menu pozycje do zglaszania sugestii
             mainContentDiv.addHtmlElement(addSuggestionElements(mainMenu));
-                        
+            
             // dodaj menu
             if (mobile == false) {
             	mainContentDiv.addHtmlElement(generateMenu(mainMenu));
             }
-
+            
             // renderowanie
             mainContentDiv.render(out);
             
@@ -196,31 +195,70 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             
         } catch (IOException e) {
             throw new RuntimeException(e);
+            
+        } finally {
+    		// czyscimy stan
+    		dictionaryEntry = null;
+    		forceDictionaryEntryType = null;
+    		
+    		dictionaryEntry2 = null;
+    		kanjiKanaPairList = null;
+    		
+    		grammaFormConjugateAndExampleEntryMap.clear();
+    		
+    		messageSource = null;	
+    		dictionaryManager = null;
+    		applicationProperties = null;
         }
 	}
 
 	private H generateTitle() throws IOException {
-			
+				
 		H pageHeader = new H(4);
 				
 		pageHeader.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.title")));
-		
-		if (dictionaryEntry.isKanjiExists() == true) {
+				
+		if (dictionaryEntry != null) {
 			
-			B kanjiBold = new B();
+			if (dictionaryEntry.isKanjiExists() == true) {				
+				B kanjiBold = new B();
+				
+				kanjiBold.addHtmlElement(new Text(dictionaryEntry.getKanji()));
+				
+				pageHeader.addHtmlElement(kanjiBold);
+				pageHeader.addHtmlElement(new Text(" | "));
+			}
 			
-			kanjiBold.addHtmlElement(new Text(dictionaryEntry.getKanji()));
+			String kana = dictionaryEntry.getKana();
+				
+			B kanaBold = new B();
 			
-			pageHeader.addHtmlElement(kanjiBold);
-			pageHeader.addHtmlElement(new Text(" | "));
+			kanaBold.addHtmlElement(new Text(kana));
+			pageHeader.addHtmlElement(kanaBold);
+			
+		} else if (dictionaryEntry2 != null) {
+			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2);
+			
+			String kanji = uniqueKanjiKanaRomajiSetWithoutSearchOnly[0].replaceAll(",", ", ");
+			String kana = uniqueKanjiKanaRomajiSetWithoutSearchOnly[1].replaceAll(",", ", ");
+			
+			if (kanji.equals("-") == false) { // czy kanji istnieje
+				B kanjiBold = new B();
+				
+				kanjiBold.addHtmlElement(new Text(kanji));
+				
+				pageHeader.addHtmlElement(kanjiBold);
+				pageHeader.addHtmlElement(new Text(" | "));
+			}
+						
+			B kanaBold = new B();
+			
+			kanaBold.addHtmlElement(new Text(kana));
+			pageHeader.addHtmlElement(kanaBold);			
+			
+		} else {
+			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
 		}
-		
-		String kana = dictionaryEntry.getKana();
-			
-		B kanaBold = new B();
-		
-		kanaBold.addHtmlElement(new Text(kana));
-		pageHeader.addHtmlElement(kanaBold);
 		
 		return pageHeader;
 	}
@@ -247,15 +285,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		// zawartosc sekcji
 		Div panelBody = new Div("panel-body");
 		
-		// kanji
-		Div kanjiDiv = generateKanjiSection(mainInfoMenu, mobile);
+		// slowa
+		Div wordDiv = generateWordsSection(mainInfoMenu, mobile);
 		
-		if (kanjiDiv != null) {
-			panelBody.addHtmlElement(kanjiDiv);	
-			
-			panelBody.addHtmlElement(new Hr());
-		}
-		
+		panelBody.addHtmlElement(wordDiv);
+		panelBody.addHtmlElement(new Hr());
+						
 		// znaczenie znakow kanji
         Div knownKanjiDiv = generateKnownKanjiDiv(mainInfoMenu, mobile);
         
@@ -264,29 +299,16 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         	panelBody.addHtmlElement(new Hr());
         }
 		
-		// czytanie
-		Div readingDiv = generateReadingSection(mainInfoMenu, mobile);
-		panelBody.addHtmlElement(readingDiv);
-		panelBody.addHtmlElement(new Hr());
-		
-        // tlumaczenie
+        // znaczenie
         Div translate = generateTranslateSection(mainInfoMenu);
         panelBody.addHtmlElement(translate);
-        
+
         // generuj informacje dodatkowe
         Div additionalInfo = generateAdditionalInfo(mainInfoMenu);
 
         if (additionalInfo != null) {
         	panelBody.addHtmlElement(new Hr());
         	panelBody.addHtmlElement(additionalInfo);
-        }
-        
-        // czesc mowy
-        Div wordTypeDiv = generateWordType(mainInfoMenu);
-        
-        if (wordTypeDiv != null) {
-        	panelBody.addHtmlElement(new Hr());
-        	panelBody.addHtmlElement(wordTypeDiv);
         }
         
         // dodatkowe atrybuty
@@ -296,375 +318,327 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         	panelBody.addHtmlElement(new Hr());
         	panelBody.addHtmlElement(additionalAttributeDiv);
         }
+
+        // czesc mowy
+        Div wordTypeDiv = generateWordType(mainInfoMenu, mobile);
+        
+        if (wordTypeDiv != null) {
+        	panelBody.addHtmlElement(new Hr());
+        	panelBody.addHtmlElement(wordTypeDiv);
+        }        
         		
 		panelDiv.addHtmlElement(panelBody);
 		
 		return panelDiv;
 	}
 	
-	private Div generateKanjiSection(Menu menu, boolean mobile) throws IOException, DictionaryException {
+	private Div generateWordsSection(Menu menu, boolean mobile) throws DictionaryException, IOException {
+		Div wordsDiv = new Div();
 		
-		Div kanjiDiv = new Div();
-		
-		final String kanjiDrawId = "kanjiDrawId";
-		        
-		String prefixKana = dictionaryEntry.getPrefixKana();
-
-		if (prefixKana != null && prefixKana.length() == 0) {
-			prefixKana = null;
-		}
-		
-		final StringBuffer kanjiSb = new StringBuffer();
-        
-		boolean addKanjiWrite = false;
-		
-        if (dictionaryEntry.isKanjiExists() == true) {
-        	
-			if (prefixKana != null) {
-				kanjiSb.append("(").append(prefixKana).append(") ");
-			}
-
-			kanjiSb.append(dictionaryEntry.getKanji());
-
-			addKanjiWrite = true;
-        	
-        } else {
-			kanjiSb.append("-");
-
-			addKanjiWrite = false;
-		}
-        
-        if (addKanjiWrite == false) {
-        	return null;
-        }
-        	
     	// wiersz z tytulem
-    	Div row1Div = new Div("row");
-    	
-    	// kanji - tytul
-    	Div kanjiTitleDiv = new Div("col-md-1");
+    	Div wordsTitleRowDiv = new Div("row");
+		
+    	// slowo - tytul
+    	Div wordsiTitleDiv = new Div("col-md-1");
     	
     	H kanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	
-    	kanjiTitleH4.setId("kanjiTitleId");
+    	kanjiTitleH4.setId("wordsiTitleId");
     	
-    	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
-    	menu.getChildMenu().add(new Menu(kanjiTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));
+    	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.words.title")));
+    	menu.getChildMenu().add(new Menu(kanjiTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.words.title")));
     	
-    	kanjiTitleDiv.addHtmlElement(kanjiTitleH4);
+    	wordsiTitleDiv.addHtmlElement(kanjiTitleH4);
     	
-    	row1Div.addHtmlElement(kanjiTitleDiv);
+    	wordsTitleRowDiv.addHtmlElement(wordsiTitleDiv);
     	
     	// dodaj wiersz z tytulem
-    	kanjiDiv.addHtmlElement(row1Div);
-    	    	        	        	       		
-        List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(dictionaryEntry);
-        
-        // sprawdzenie, czy mamy dane do pisania wszystkich znakow
-        boolean isAllCharactersStrokePathsAvailableForWord = dictionaryManager.isAllCharactersStrokePathsAvailableForWord(dictionaryEntry.getKanji());
-    	            
-        if (furiganaEntries != null && furiganaEntries.size() > 0 && addKanjiWrite == true) {
+    	wordsDiv.addHtmlElement(wordsTitleRowDiv);
+		
+    	// pokazywanie kolejnych slow    	
+	    Div wordDiv = new Div("row");
+		wordsDiv.addHtmlElement(wordDiv);
+
+		wordDiv.addHtmlElement(new Div("col-md-1")); // przerwa
+		
+		Div wordMainDiv = new Div("col-md-10");		
+		wordDiv.addHtmlElement(wordMainDiv);
+		
+		Table singleWordTable = new Table();
+		wordMainDiv.addHtmlElement(singleWordTable);
+		
+		if (kanjiKanaPairList != null) { // nowy format
+			
+	    	for (int kanjiKanaPairIdx = 0; kanjiKanaPairIdx < kanjiKanaPairList.size(); ++kanjiKanaPairIdx) {
+	    		KanjiKanaPair kanjiKanaPair = kanjiKanaPairList.get(kanjiKanaPairIdx);
+	        	    		    	    		   	    		
+	    		// pobieramy wszystkie skladniki slowa    		    	        	
+	    		createWordTableTr(singleWordTable, kanjiKanaPair, kanjiKanaPairIdx, mobile);
+			}
+			
+		} else { // stary format
+			
+			// stworzenie wirtualnego KanjiKanaPair
+			KanjiInfo kanjiInfo = new KanjiInfo();
+			
+			kanjiInfo.setKanji(dictionaryEntry.getKanji());
+			
+			ReadingInfo readingInfo = new ReadingInfo();
+			
+			ReadingInfoKana readingInfoKana = new ReadingInfoKana();
+			readingInfo.setKana(readingInfoKana);
+			
+			if (dictionaryEntry.getWordType() != null) {
+				readingInfoKana.setKanaType(ReadingInfoKanaType.valueOf(dictionaryEntry.getWordType().name()));
+			}
+			
+			readingInfoKana.setValue(dictionaryEntry.getKana());
+			readingInfoKana.setRomaji(dictionaryEntry.getRomaji());
+						
+			KanjiKanaPair virtualKanjiKanaPair = new KanjiKanaPair(null, kanjiInfo, readingInfo);
+			
+			createWordTableTr(singleWordTable, virtualKanjiKanaPair, 0, mobile);			
+		}		
+    	
+		return wordsDiv;
+	}
+	
+	private void createWordTableTr(Table singleWordTable, KanjiKanaPair kanjiKanaPair, int wordNo, boolean mobile) throws DictionaryException, IOException {
+		
+		String kanji = kanjiKanaPair.getKanji();
+		String kana = kanjiKanaPair.getKana();
+    	String romaji = kanjiKanaPair.getRomaji();
+						
+    	// kanji    	
+    	if (kanji != null) {
+
+        	// informacje dodatkowe do kanji
+            if (kanjiKanaPair.getKanjiInfo().getKanjiAdditionalInfoList().size() > 0) {
+            	
+            	List<String> kanjiAdditionalInfoListString = Dictionary2HelperCommon.translateToPolishKanjiAdditionalInfoEnum(kanjiKanaPair.getKanjiInfo().getKanjiAdditionalInfoList());
+            	
+            	for (String currentKanjiAdditionalInfoListString : kanjiAdditionalInfoListString) {
+            		Tr singleWordDivTableKanjiAdditionalInfoTr = new Tr();
+                	singleWordTable.addHtmlElement(singleWordDivTableKanjiAdditionalInfoTr);
+                	
+                	Td singleWordDivTableKanjiAdditionalInfoTrTd = new Td(null, null);                	
+                	singleWordDivTableKanjiAdditionalInfoTr.addHtmlElement(singleWordDivTableKanjiAdditionalInfoTrTd);
+                	
+                	singleWordDivTableKanjiAdditionalInfoTrTd.setColspan("3");
+                	
+                	singleWordDivTableKanjiAdditionalInfoTrTd.addHtmlElement(new Text(currentKanjiAdditionalInfoListString));
+				}            	
+            }
+    		
+    		Tr singleWordDivTableKanjiTr = new Tr();
+    		singleWordTable.addHtmlElement(singleWordDivTableKanjiTr);
+    		
+    		// tytul
+    		Td singleWordDivTableKanjiTd1 = new Td(null, null);
+    		singleWordDivTableKanjiTr.addHtmlElement(singleWordDivTableKanjiTd1);
+    		
+    		/*
+        	H kanjiTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");        	
+        	kanjiTitleH4.setId("kanjiTitleId");
         	
-        	for (FuriganaEntry currentFuriganaEntry : furiganaEntries) {
-        		
-				List<String> furiganaKanaParts = currentFuriganaEntry.getKanaPart();
-				List<String> furiganaKanjiParts = currentFuriganaEntry.getKanjiPart();
-				
-				// wiersz ze znakiem kanji
-	        	Div row2Div = new Div("row");
-	        	
-	        	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
-				
-	        	// komorka ze znakiem kanji
-	        	Div kanjiDivBody = new Div("col-md-10");
-	        	
-	        	// tabelka ze znakiem kanji
-				Table kanjiTable = new Table();
-				
-				// czytanie
-				Tr kanaPartTr = new Tr(null, "font-size: 123%; text-align:center;");
-							
-				for (int idx = 0; idx < furiganaKanaParts.size(); ++idx) {
-					
-					String currentKanaPart = furiganaKanaParts.get(idx);
-					
-					Td currentKanaPartTd = new Td();
-					
-					currentKanaPartTd.addHtmlElement(new Text(currentKanaPart));
-					
-					kanaPartTr.addHtmlElement(currentKanaPartTd);
-				}
-				
-				kanjiTable.addHtmlElement(kanaPartTr);
-							
-				// znaki kanji
-				Tr kanjiKanjiTr = new Tr(null, "font-size: 300%; text-align:center;");
-				
-				kanjiTable.addHtmlElement(kanjiKanjiTr);
-				
-				for (int idx = 0; idx < furiganaKanjiParts.size(); ++idx) {
-					
-					String currentKanjiPart = furiganaKanjiParts.get(idx);
-					
-					Td currentKanjiPartTd = new Td();
-					
-					currentKanjiPartTd.addHtmlElement(new Text(currentKanjiPart));
-					
-					kanjiKanjiTr.addHtmlElement(currentKanjiPartTd);
-				}	
-				
-				// komorka z guziczkiem				
+        	kanjiTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.title")));    		
+    		singleWordDivTableKanjiTd1.addHtmlElement(kanjiTitleH4);
+    		*/
+    		
+    		// czesc glowna
+    		Td singleWordDivTableKanjiTd2 = new Td(null, "padding-right: 25px; padding-bottom: 10px");
+    		singleWordDivTableKanjiTr.addHtmlElement(singleWordDivTableKanjiTd2);
+    		
+    		List<FuriganaEntry> furiganaEntries = dictionaryManager.getFurigana(null, kanjiKanaPair);
+    		    		
+            // sprawdzenie, czy mamy dane do pisania wszystkich znakow
+            boolean isAllCharactersStrokePathsAvailableForWord = dictionaryManager.isAllCharactersStrokePathsAvailableForWord(kanji);
+                        
+            if (furiganaEntries != null && furiganaEntries.size() > 0) {
+            	
+            	for (FuriganaEntry currentFuriganaEntry : furiganaEntries) {
+            		
+    				List<String> furiganaKanaParts = currentFuriganaEntry.getKanaPart();
+    				List<String> furiganaKanjiParts = currentFuriganaEntry.getKanjiPart();
+    				    	        	
+    	        	// tabelka ze znakiem kanji
+    				Table kanjiTable = new Table();
+    				
+    				// czytanie
+    				Tr kanaPartTr = new Tr(null, "font-size: 123%; text-align:left;");
+    							
+    				for (int idx = 0; idx < furiganaKanaParts.size(); ++idx) {    					
+    					String currentKanaPart = furiganaKanaParts.get(idx);
+    					
+    					Td currentKanaPartTd = new Td();
+    					
+    					currentKanaPartTd.addHtmlElement(new Text(currentKanaPart));    					
+    					kanaPartTr.addHtmlElement(currentKanaPartTd);
+    				}
+    				
+    				kanjiTable.addHtmlElement(kanaPartTr);
+    							
+    				// znaki kanji
+    				Tr kanjiKanjiTr = new Tr(null, "font-size: 200%; text-align:left;");
+    				
+    				kanjiTable.addHtmlElement(kanjiKanjiTr);
+    				
+    				for (int idx = 0; idx < furiganaKanjiParts.size(); ++idx) {    					
+    					String currentKanjiPart = furiganaKanjiParts.get(idx);
+    					
+    					Td currentKanjiPartTd = new Td();
+    					
+    					currentKanjiPartTd.addHtmlElement(new Text(currentKanjiPart));    					
+    					kanjiKanjiTr.addHtmlElement(currentKanjiPartTd);
+    				}	
+    				
+    				singleWordDivTableKanjiTd2.addHtmlElement(kanjiTable);
+    				
+    				// komorka z guziczkiem	
+    				if (isAllCharactersStrokePathsAvailableForWord == true) {
+    					
+    					Td singleWordDivTableKanjiTd3 = new Td(null, null);
+    		    		singleWordDivTableKanjiTr.addHtmlElement(singleWordDivTableKanjiTd3);
+    					
+    					final String kanjiDrawId = "kanjiDrawId" + wordNo;
+    					
+    					Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
+    							getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
+
+				        // skrypt otwierajacy okienko
+    					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, kanji.length(), mobile));
+				        
+				        // tworzenie okienka rysowania znaku kanji
+    					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId));
+    					
+    					// singleWordKanjiDivbutton.addHtmlElement(kanjiDrawButton);
+    					singleWordDivTableKanjiTd3.addHtmlElement(kanjiDrawButton);
+    				}    				
+            	}
+            	
+            } else {
+            	// kanji bez furigama
+            	Div kanjiDivText = new Div(null, "font-size: 200%");
+            	Text kanjiText = new Text(kanji);
+            	
+            	kanjiDivText.addHtmlElement(kanjiText);
+            	
+            	singleWordDivTableKanjiTd2.addHtmlElement(kanjiDivText);
+            	
+				// komorka z guziczkiem	
 				if (isAllCharactersStrokePathsAvailableForWord == true) {
 					
-					Td kanjiDrawButtonTd = new Td();
+					Td singleWordDivTableKanjiTd3 = new Td(null, null);
+		    		singleWordDivTableKanjiTr.addHtmlElement(singleWordDivTableKanjiTd3);
 					
-					Div kanjiDrawButtonDivBody = new Div("col-md-1");
+					final String kanjiDrawId = "kanjiDrawId" + wordNo;
 					
 					Button kanjiDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanjiDrawId, 
 							getMessage("wordDictionaryDetails.page.dictionaryEntry.kanji.showKanjiDraw"));
 
-					kanjiDrawButtonDivBody.addHtmlElement(kanjiDrawButton);
-					kanjiDrawButtonTd.addHtmlElement(kanjiDrawButtonDivBody);
+			        // skrypt otwierajacy okienko
+					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, kanji.length(), mobile));
+			        
+			        // tworzenie okienka rysowania znaku kanji
+					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId));
 					
-					if (mobile == false) {
-						
-						// przerwa
-						kanjiKanjiTr.addHtmlElement(new Td("col-md-1"));
-
-						kanjiKanjiTr.addHtmlElement(kanjiDrawButtonTd);
-											
-					} else {
-						
-						Tr kanjiKanjiForWritingButtonTr = new Tr(null, null);
-						
-						kanjiTable.addHtmlElement(kanjiKanjiForWritingButtonTr);
-						
-						kanjiDrawButtonTd.setColspan(String.valueOf(furiganaKanjiParts.size() + 2));
-
-						kanjiKanjiForWritingButtonTr.addHtmlElement(kanjiDrawButtonTd);			
-					}
-				}								
-								
-				kanjiDivBody.addHtmlElement(kanjiTable);
-				row2Div.addHtmlElement(kanjiDivBody);					
-				
-				kanjiDiv.addHtmlElement(row2Div);
-        	}
-        	
-        } else {
-        	
-        	Div row2Div = new Div("row");
-        	
-        	if (mobile == false) {
-        		row2Div.addHtmlElement(new Div("col-md-1"));
-        	}
-        	
-        	Div kanjiDivBody = new Div("col-md-10");
-        	
-        	row2Div.addHtmlElement(kanjiDivBody);
-        	
-        	Div kanjiDivText = new Div(null, "font-size: 200%");
-        	Text kanjiText = new Text(kanjiSb.toString());
-        	
-        	kanjiDivText.addHtmlElement(kanjiText);
-        	kanjiDivBody.addHtmlElement(kanjiDivText);
-        	
-        	kanjiDiv.addHtmlElement(row2Div);
-        }
-
-        // skrypt otwierajacy okienko
-        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, dictionaryEntry.getKanji().length(), mobile));
-        
-        // tworzenie okienka rysowania znaku kanji
-        kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, dictionaryEntry.getKanji(), kanjiDrawId));
-        
-    	// informacje dodatkowe do kanji
-        if (dictionaryEntry2KanjiKanaPair != null && dictionaryEntry2KanjiKanaPair.getKanjiInfo() != null) {
-        	
-        	List<KanjiAdditionalInfoEnum> kanjiAdditionalInfoList = dictionaryEntry2KanjiKanaPair.getKanjiInfo().getKanjiAdditionalInfoList();
-        	
-        	List<String> kanjiAdditionalInfoListString = Dictionary2HelperCommon.translateToPolishKanjiAdditionalInfoEnum(kanjiAdditionalInfoList);
-        	
-        	if (kanjiAdditionalInfoList != null && kanjiAdditionalInfoList.size() > 0) {
-        		
-            	Div kanjiAdditionalInfoDiv = new Div("row");
+					// singleWordKanjiDivbutton.addHtmlElement(kanjiDrawButton);
+					singleWordDivTableKanjiTd3.addHtmlElement(kanjiDrawButton);
+				}
+            }              
+    	}
+    	
+    	// kana
+    	{       	
+        	// informacje dodatkowe do kana
+            if (kanjiKanaPair.getReadingInfo().getReadingAdditionalInfoList().size() > 0) {
             	
-            	kanjiAdditionalInfoDiv.addHtmlElement(new Div());
+            	List<String> readingReadingAdditionalInfoListString = Dictionary2HelperCommon.translateToPolishReadingAdditionalInfoEnum(kanjiKanaPair.getReadingInfo().getReadingAdditionalInfoList());
             	
-            	Div kanjiAdditionalInfoDivBody = new Div("col-md-10", "margin-top: 15px");
-            	
-            	kanjiAdditionalInfoDivBody.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(kanjiAdditionalInfoListString, "; ")));
+            	for (String currentReadingAdditionalInfoListString : readingReadingAdditionalInfoListString) {
+            		Tr singleWordDivTableKanaReadingAdditionalInfoTr = new Tr();
+                	singleWordTable.addHtmlElement(singleWordDivTableKanaReadingAdditionalInfoTr);
+                	
+                	Td singleWordDivTableKanaReadingAdditionalInfoTrTd = new Td(null, null);                	
+                	singleWordDivTableKanaReadingAdditionalInfoTr.addHtmlElement(singleWordDivTableKanaReadingAdditionalInfoTrTd);
+                	
+                	singleWordDivTableKanaReadingAdditionalInfoTrTd.setColspan("3");
+                	
+                	singleWordDivTableKanaReadingAdditionalInfoTrTd.addHtmlElement(new Text(currentReadingAdditionalInfoListString));
+				}            	
+            }    		
+    		
+    		Tr singleWordDivTableKanaTr = new Tr();
+    		singleWordTable.addHtmlElement(singleWordDivTableKanaTr);
 
-            	kanjiAdditionalInfoDiv.addHtmlElement(kanjiAdditionalInfoDivBody);
-            	
-            	kanjiDiv.addHtmlElement(kanjiAdditionalInfoDiv);
-        	}        	
-        }
-        
-        return kanjiDiv;
-	}
-	
-	private Div generateReadingSection(Menu menu, boolean mobile) throws IOException, DictionaryException {
-		
-		Div readingDiv = new Div();
-		
-		String prefixKana = dictionaryEntry.getPrefixKana();
-		String prefixRomaji = dictionaryEntry.getPrefixRomaji();
-		
-		String kana = dictionaryEntry.getKana();
-		String romaji = dictionaryEntry.getRomaji();
-		
-    	// wiersz z tytulem
-    	Div row1Div = new Div("row");
-    	
-    	// kanji - tytul
-    	Div readingTitleDiv = new Div("col-md-1");
-    	
-    	H readingTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
-    	
-    	readingTitleH4.setId("readingId");
-    	
-    	readingTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title")));
-    	menu.getChildMenu().add(new Menu(readingTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title")));
-    	
-    	readingTitleDiv.addHtmlElement(readingTitleH4);
-    	
-    	row1Div.addHtmlElement(readingTitleDiv);
-    	
-    	// dodaj wiersz z tytulem
-    	readingDiv.addHtmlElement(row1Div);
-
-		// wiersz ze znakiem kanji
-    	Div row2Div = new Div("row");
-    	readingDiv.addHtmlElement(row2Div);
-		
-    	row2Div.addHtmlElement(new Div("col-md-1")); // przerwa
-    	
-        class IdAndText {
+    		// tytul
+    		Td singleWordDivTableKanaTd1 = new Td(null, null);
+    		singleWordDivTableKanaTr.addHtmlElement(singleWordDivTableKanaTd1);
+    		
+    		/*
+        	H readingTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");        	
+        	readingTitleH4.setId("readingId");
         	
-        	public String id;
+        	readingTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.title")));
+        	singleWordDivTableKanaTd1.addHtmlElement(readingTitleH4);
+        	*/
         	
-        	public String text;
-
-			public IdAndText(String id, String text) {
-				this.id = id;
-				this.text = text;
-			}        	
-        }
-        
-        List<IdAndText> idAndTextList = new ArrayList<IdAndText>();
-        
-    	Div readingBodyDiv = new Div("col-md-11");
-    	row2Div.addHtmlElement(readingBodyDiv);
-
-        Table readingTable = new Table();
-        readingBodyDiv.addHtmlElement(readingTable);
-        	
-    	final String kanaDrawId = "kanaDrawId";
-    	
-		StringBuffer fullKana = new StringBuffer();
-		StringBuffer fullRomaji = new StringBuffer();
-		
-		if (prefixKana != null && prefixKana.equals("") == false) {
-			fullKana.append("(").append(prefixKana).append(") ");
-		}
-
-		fullKana.append(kana);
-
-		if (prefixRomaji != null && prefixRomaji.equals("") == false) {
-			fullRomaji.append("(").append(prefixRomaji).append(") ");
-		}
-
-		fullRomaji.append(romaji);
-		
-		Tr readingTableTr = new Tr();
-		readingTable.addHtmlElement(readingTableTr);
-		
-		Td readingTableKanaTd = new Td(null, "font-size: 150%; padding: 0 50px 5px 0;");
-		readingTableTr.addHtmlElement(readingTableKanaTd);
-					
-		readingTableKanaTd.addHtmlElement(new Text(fullKana.toString()));
-					
-		idAndTextList.add(new IdAndText(kanaDrawId, fullKana.toString()));
-		
-		Td readingTableRomajiTd = new Td(null, "margin-top: 0px; margin-bottom: 5px; padding: 5px 50px 5px 0;");
-		readingTableTr.addHtmlElement(readingTableRomajiTd);
-		
-		H readingTableRomajiTdH4 = new H(4);
-		readingTableRomajiTd.addHtmlElement(readingTableRomajiTdH4);
-		
-		readingTableRomajiTdH4.addHtmlElement(new Text(fullRomaji.toString()));
-
-		// guzik rysowania
-		Td readingTableButtonTd = new Td(null, "padding: 0 50px 5px 0;");
-		
-		Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
-				getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
-		
-		readingTableButtonTd.addHtmlElement(kanaDrawButton);
-		
-		if (mobile == false) {
-			
-			readingTableTr.addHtmlElement(readingTableButtonTd);			
-			
-		} else {
-			
-			Tr readingTableTrForMobile = new Tr();
-			
-			readingTable.addHtmlElement(readingTableTrForMobile);
-			
-			readingTableButtonTd.setColspan("2");
-			
-			readingTableTrForMobile.addHtmlElement(readingTableButtonTd);
-		}
-
-        for (IdAndText idAndText : idAndTextList) {
+    		// czesc glowna    		
+    		Td singleWordDivTableKanaTd2 = new Td(null, "font-size: 130%; text-align:left; padding-right: 25px; padding-bottom: 10px");
+    		singleWordDivTableKanaTr.addHtmlElement(singleWordDivTableKanaTd2);
+    		
+        	// tekst kana
+    		singleWordDivTableKanaTd2.addHtmlElement(new Text(kana));    		
         	        	
+    		// guzik do rysowania
+    		Td singleWordDivTableKanaTd3 = new Td();
+    		singleWordDivTableKanaTr.addHtmlElement(singleWordDivTableKanaTd3);
+    		
+    		// guzik rysowania kana
+        	// Div singleWordKanaDivbutton = new Div(null, "display: inline-block; width: 20%; padding: 5px 15px 0px 0px; overflow-wrap: break-word;");
+        	
+        	final String kanaDrawId = "kanaDrawId" + wordNo;
+    		
+    		Button kanaDrawButton = GenerateDrawStrokeDialog.generateDrawStrokeButton(kanaDrawId, 
+    				getMessage("wordDictionaryDetails.page.dictionaryEntry.reading.showKanaDraw"));
+
             // skrypt otwierajacy okienko
-        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(idAndText.id, idAndText.text.length(), mobile));
+    		singleWordDivTableKanaTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanaDrawId, kana.length(), mobile));
             
             // tworzenie okienka rysowania znaku kanji
-        	readingDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, idAndText.text, idAndText.id));
-		}
-        
-    	// informacje dodatkowe do czytania
-        if (dictionaryEntry2KanjiKanaPair != null && dictionaryEntry2KanjiKanaPair.getReadingInfo() != null) {
-        	
-        	List<ReadingAdditionalInfoEnum> readingAdditionalInfoList = dictionaryEntry2KanjiKanaPair.getReadingInfo().getReadingAdditionalInfoList();
-        	
-        	List<String> readingAdditionalInfoListString = Dictionary2HelperCommon.translateToPolishReadingAdditionalInfoEnum(readingAdditionalInfoList);
-        	
-        	if (readingAdditionalInfoList != null && readingAdditionalInfoList.size() > 0) {
-        		
-            	Div readingAdditionalInfoDiv = new Div("row");
-            	
-            	readingAdditionalInfoDiv.addHtmlElement(new Div());
-            	
-            	Div readingAdditionalInfoDivBody = new Div("col-md-10", "margin-top: 15px");
-            	
-            	readingAdditionalInfoDivBody.addHtmlElement(new Text(pl.idedyk.japanese.dictionary.api.dictionary.Utils.convertListToString(readingAdditionalInfoListString, "; ")));
-
-            	readingAdditionalInfoDiv.addHtmlElement(readingAdditionalInfoDivBody);
-            	
-            	readingDiv.addHtmlElement(readingAdditionalInfoDiv);
-        	}        	
-        }
-
-                
-        return readingDiv;
+    		singleWordDivTableKanaTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kana, kanaDrawId));
+    		
+    		singleWordDivTableKanaTd3.addHtmlElement(kanaDrawButton);   
+    	}
+    	    	
+    	// romaji
+    	{
+    		Tr singleWordDivTableRomajiTr = new Tr();
+    		singleWordTable.addHtmlElement(singleWordDivTableRomajiTr);
+    		
+    		// tytul (pusty)
+    		Td singleWordDivTableRomajiTd1 = new Td(null, "padding-bottom: 40px");
+    		singleWordDivTableRomajiTr.addHtmlElement(singleWordDivTableRomajiTd1);
+    		
+        	// czesc glowna
+    		Td singleWordDivTableRomajiTd2 = new Td(null, kanjiKanaPairList != null && wordNo != kanjiKanaPairList.size() - 1 ? 
+    				"font-size: 130%; text-align:left; padding-right: 25px; padding-bottom: 40px" : 
+    				"font-size: 130%; text-align:left; padding-right: 25px; padding-bottom: 0px");
+    		singleWordDivTableRomajiTr.addHtmlElement(singleWordDivTableRomajiTd2);
+    		
+    		singleWordDivTableRomajiTd2.addHtmlElement(new Text(romaji));
+    	}		
 	}
-	
+		
 	private Div generateTranslateSection(Menu menu) throws IOException {
 		
 		final String titleId = "translateId";
 		final String titleTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title");
 		
-		
-		if (dictionaryEntry2KanjiKanaPair == null) { // generowanie po staremu
+		if (dictionaryEntry2 == null) { // generowanie po staremu
 			return generateStandardDivWithStringList(titleId, titleTitle, menu, dictionaryEntry.getTranslates());
 						
-		} else { // generowanie z danych zawartych w dictionaryEntry2
-			
+		} else { // generowanie z danych zawartych w dictionaryEntry2			
 			// glowny div z zawartoscia
 			Div resultDiv = new Div();
 			
@@ -688,134 +662,43 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    	
 	    	//
 	    	
-	    	PrintableSense printableSense = Dictionary2HelperCommon.getPrintableSense(dictionaryEntry2KanjiKanaPair);
-			
-			// mamy znaczenia
-			for (int senseIdx = 0; senseIdx < printableSense.getSenseEntryList().size(); ++senseIdx) {
-				
-				PrintableSenseEntry printableSenseEntry = printableSense.getSenseEntryList().get(senseIdx);
-								
-				Div senseDiv = new Div("row");
-				
-				// numer znaczenia
-				Div senseNoDiv = new Div("col-md-1");
-				
-				H senseNoDivH = new H(4, null, "margin-top: 20px; text-align: right");
-				
-				senseNoDivH.addHtmlElement(new Text("" + (senseIdx + 1)));
-				
-				senseNoDiv.addHtmlElement(senseNoDivH);
-									
-				senseDiv.addHtmlElement(senseNoDiv);
-												
-				//
-				
-				Div glossPolListDiv = new Div("col-md-11");
-												
-				Table table = new Table();
-				
-				// czesci mowy
-				if (printableSenseEntry.getPolishPartOfSpeechValue() != null) {					
-					Tr tr = new Tr();
-					
-					Td translateToPolishPartOfSpeechEnumTd = new Td();
-					
-					translateToPolishPartOfSpeechEnumTd.addHtmlElement(new Text(printableSenseEntry.getPolishPartOfSpeechValue()));
-					
-					tr.addHtmlElement(translateToPolishPartOfSpeechEnumTd);
-					
-					table.addHtmlElement(tr);
-				}				
-				
-				for (int currentGlossIdx = 0; currentGlossIdx < printableSenseEntry.getGlossList().size(); ++currentGlossIdx) {
-					
-					PrintableSenseEntryGloss printableSenseEntryGloss = printableSenseEntry.getGlossList().get(currentGlossIdx);
-					
-					//
-					
-					int marginBottom = currentGlossIdx != printableSenseEntry.getGlossList().size() - 1 ? 5 : 0; 
-					
-					Tr tr = new Tr();
-
-					// dodanie pojedynczego znaczenia
-					Td glossPolValueTd = new Td();
-					
-					// wyroznienie znaczenia
-					H glossPolTdH4 = new H(4, null, "margin-top: 0px;margin-bottom: " + marginBottom + "px");
-					
-					glossPolTdH4.addHtmlElement(new Text(printableSenseEntryGloss.getGlossValue()));
-					
-					glossPolValueTd.addHtmlElement(glossPolTdH4);
-											
-					tr.addHtmlElement(glossPolValueTd);
-					
-					// sprawdzenie, czy wystepuje dodatkowy typ znaczenia
-					if (printableSenseEntryGloss.getGlossValueGType() != null) {						
-						Td glossPolGTypeTd = new Td();
-						
-						Div glossPolGTypeTdDiv = new Div(null, "margin-top: 0px;margin-left: 25px;margin-bottom: " + marginBottom + "px");
-						
-						glossPolGTypeTdDiv.addHtmlElement(new Text(printableSenseEntryGloss.getGlossValueGType()));
-						
-						glossPolGTypeTd.addHtmlElement(glossPolGTypeTdDiv);
-						
-						tr.addHtmlElement(glossPolGTypeTd);
-					}					
-										
-					table.addHtmlElement(tr);					
-				}
-				
-				// informacje dodatkowe												
-				if (printableSenseEntry.getAdditionalInfoValue() != null) {					
-					Tr tr = new Tr();
-					
-					Td senseAdditionalPolTd = new Td();
-					
-					senseAdditionalPolTd.addHtmlElement(new Text(printableSenseEntry.getAdditionalInfoValue()));
-					
-					tr.addHtmlElement(senseAdditionalPolTd);
-					
-					table.addHtmlElement(tr);
-				}
-				
-				// przerwa
-				{
-					Tr tr = new Tr();
-					
-					Td td = new Td();
-					
-					H h4 = new H(4, null, "margin-bottom: 15px");
-					
-					td.addHtmlElement(h4);
-					
-					tr.addHtmlElement(td);
-					
-					table.addHtmlElement(tr);
-				}
-				
-				glossPolListDiv.addHtmlElement(table);
-				
-				//
-								
-				senseDiv.addHtmlElement(glossPolListDiv);
-				
-				resultDiv.addHtmlElement(senseDiv);
-			}
-						
+	    	Div senseDiv = new Div("row");
+	    	resultDiv.addHtmlElement(senseDiv);
+	    		    	
+	    	Div senseBodyDiv = new Div("col-md-11", "font-size: 130%");
+	    	senseDiv.addHtmlElement(senseBodyDiv);
+	    	
+	    	WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), dictionaryEntry2, senseBodyDiv, null, true);
+	    							
 			return resultDiv;
 		}
 	}
 	
 	private Div generateAdditionalInfo(Menu menu) throws IOException {
 		
-		if (dictionaryEntry2KanjiKanaPair != null) { // dla slownika w formacie drugim nie generuj tej sekcji; informacje te znajda sie w sekcji znaczen
-			return null;
+		String info = null;	
+		String kanji = null;
+		
+		if (dictionaryEntry != null) {
+			info = dictionaryEntry.getInfo();		
+			kanji = dictionaryEntry.getKanji();			
+			
+		} else if (kanjiKanaPairList != null) {
+			
+			for (KanjiKanaPair kanjiKanaPair : kanjiKanaPairList) {
+				KanjiInfo kanjiInfo = kanjiKanaPair.getKanjiInfo();
+				
+				if (kanjiInfo != null) { // wystarczy badac tylko jeden element
+					kanji = kanjiInfo.getKanji();					
+				}
+			}
+			
+			info = null;
+			
+		} else {
+			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
 		}
-		
-		String info = dictionaryEntry.getInfo();
-		
-		String kanji = dictionaryEntry.getKanji();
-		
+				
 		int special = 0;
 		
 		if (kanji != null && isSmTsukiNiKawatteOshiokiYo(kanji) == true) {
@@ -828,6 +711,10 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			special = 3;
 		}
 		
+		if (special == 0 && kanjiKanaPairList != null) { // dla slownika w formacie drugim nie generuj tej sekcji; informacje te znajda sie w sekcji znaczen
+			return null;
+		}
+				
 		if (!(info != null && info.length() > 0) && (special == 0)) {
 			return null;		
 		}	
@@ -872,7 +759,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Td row2TableTrTd1 = new Td();
 		row2TableTr.addHtmlElement(row2TableTrTd1);
 		
-		if (special == 0 || special == 3) {
+		if (info != null && (special == 0 || special == 3)) {
 			
 			H additionalInfoTextH4 = new H(4);
 			row2TableTrTd1.addHtmlElement(additionalInfoTextH4);
@@ -967,27 +854,18 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
 		return false;
 	}
-	
-	private Div generateWordType(Menu menu) throws IOException {
 		
-		List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
+	private Div generateWordType(Menu menu, boolean mobile) throws IOException {		
+		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
 		
-		if (dictionaryEntryTypeList == null) {
-			return null;
+		if (dictionaryEntry != null) {
+			dictionaryEntryList.add(dictionaryEntry);
+			
+		} else if (kanjiKanaPairList != null) {
+			dictionaryEntryList.addAll(convertKanjiKanaPairListToOldDictionaryEntry(kanjiKanaPairList));
 		}
 		
-		int addableDictionaryEntryTypeInfoCounter = 0;
-
-		for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
-
-			boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
-
-			if (addableDictionaryEntryTypeInfo == true) {
-				addableDictionaryEntryTypeInfoCounter++;
-			}
-		}
-		
-		if (addableDictionaryEntryTypeInfoCounter == 0) {
+		if (dictionaryEntryList.size() == 0) {
 			return null;
 		}
 		
@@ -1012,7 +890,108 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
     	// dodaj wiersz z tytulem
     	wordTypeDiv.addHtmlElement(row1Div);
-    	
+
+		// wygenerowanie zakladek			
+		Ul tabUl = new Ul("nav nav-tabs");
+		wordTypeDiv.addHtmlElement(tabUl);
+		
+		for (int dictionaryEntryIdx = 0; dictionaryEntryIdx < dictionaryEntryList.size(); ++dictionaryEntryIdx) {
+			
+			DictionaryEntry dictionaryEntry = dictionaryEntryList.get(dictionaryEntryIdx);
+			
+			Li dictionaryEntryLi = new Li();				
+			tabUl.addHtmlElement(dictionaryEntryLi);
+			
+			if (dictionaryEntryIdx == 0) {
+				dictionaryEntryLi.setClazz("active");
+			}
+			
+			A tabUlA = new A();
+			dictionaryEntryLi.addHtmlElement(tabUlA);
+			
+			tabUlA.setDataToggle("tab");
+			tabUlA.setHref("#dictionaryEntryWordTypeTabContentId" + dictionaryEntryIdx);
+			tabUlA.setId("dictionaryEntryWordTypeTabId" + dictionaryEntryIdx);
+							
+			tabUlA.addHtmlElement(new Text((dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana()));
+		}
+		
+		Div tabContentDiv = new Div();			
+		wordTypeDiv.addHtmlElement(tabContentDiv);
+		
+		tabContentDiv.setClazz("tab-content");
+		
+		for (int dictionaryEntryIdx = 0; dictionaryEntryIdx < dictionaryEntryList.size(); ++dictionaryEntryIdx) {
+							
+			DictionaryEntry dictionaryEntry = dictionaryEntryList.get(dictionaryEntryIdx);
+			
+			Div divForDictionaryEntry = new Div();
+			tabContentDiv.addHtmlElement(divForDictionaryEntry);
+			
+			divForDictionaryEntry.setId("dictionaryEntryWordTypeTabContentId" + dictionaryEntryIdx);
+			
+			if (dictionaryEntryIdx == 0) {
+				divForDictionaryEntry.setClazz("tab-pane fade in active col-md-12");
+			} else {
+				divForDictionaryEntry.setClazz("tab-pane fade col-md-12");
+			}
+			
+			// dodanie krotkiej przerwy do zawartosci
+			divForDictionaryEntry.addHtmlElement(new Div(null, "padding-bottom: 20px"));				
+			
+			Div wordTypeTabContentDiv = generateWordTypeTabContent(dictionaryEntry);
+			
+			if (wordTypeTabContentDiv != null) {
+				divForDictionaryEntry.addHtmlElement(wordTypeTabContentDiv);
+			}
+		}
+				
+		return wordTypeDiv;
+	}
+	
+	private List<DictionaryEntry> convertKanjiKanaPairListToOldDictionaryEntry(List<KanjiKanaPair> kanjiKanaPairList) {
+		
+		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
+		
+		// pobranie starych elementow			
+		for (KanjiKanaPair kanjiKanaPair : kanjiKanaPairList) {
+
+			DictionaryEntry oldDictionaryEntry = Dictionary2HelperCommon.convertKanjiKanaPairToOldDictionaryEntry(kanjiKanaPair);
+			
+			if (oldDictionaryEntry != null) {
+				dictionaryEntryList.add(oldDictionaryEntry);
+			}
+		}
+		
+		return dictionaryEntryList;
+	}
+	
+	private Div generateWordTypeTabContent(DictionaryEntry dictionaryEntry) throws IOException {
+		
+		List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
+		
+		if (dictionaryEntryTypeList == null) {
+			return null;
+		}
+		
+		int addableDictionaryEntryTypeInfoCounter = 0;
+
+		for (DictionaryEntryType currentDictionaryEntryType : dictionaryEntryTypeList) {
+
+			boolean addableDictionaryEntryTypeInfo = DictionaryEntryType.isAddableDictionaryEntryTypeInfo(currentDictionaryEntryType);
+
+			if (addableDictionaryEntryTypeInfo == true) {
+				addableDictionaryEntryTypeInfoCounter++;
+			}
+		}
+		
+		if (addableDictionaryEntryTypeInfoCounter == 0) {
+			return null;
+		}
+		
+		Div wordTypeDiv = new Div();
+		    	
+    	/*
     	if (addableDictionaryEntryTypeInfoCounter > 1 && dictionaryEntry.isName() == false) { // info o odmianach
     		
         	Div row2Div = new Div("row");
@@ -1026,6 +1005,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     		
     		wordTypeInfoH5.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.info")));	
     	}
+    	*/
     	
     	// czesci mowy
     	Div row3Div = new Div("row");
@@ -1056,6 +1036,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    		
 	    		row3TableTrTd1.addHtmlElement(currentWordTypeH);
 	    		
+	    		/*
 	    		if (addableDictionaryEntryTypeInfoCounter > 1 && dictionaryEntry.isName() == false) {
 	    			
 		            Td row3TableTrTd2 = new Td();
@@ -1066,7 +1047,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					
 					A linkButton = new A("btn btn-default");
 					row3TableTrTd2Div.addHtmlElement(linkButton);
-					
+										
 		            String link = LinkGenerator.generateDictionaryEntryDetailsLink(
 		            		pageContext.getServletContext().getContextPath(), dictionaryEntry, currentDictionaryEntryType);
 
@@ -1074,6 +1055,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					
 					linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.dictionaryType.forceDictionaryEntryType.show")));	    			
 	    		}
+	    		*/
 			}
 		}
 		
@@ -1081,8 +1063,27 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 		
 	private Div generateAttribute(Menu menu, boolean mobile) throws IOException, DictionaryException {
+				
+		final List<Attribute> attributeList;
 		
-		List<Attribute> attributeList = dictionaryEntry.getAttributeList().getAttributeList();
+		if (dictionaryEntry != null) {
+			attributeList = dictionaryEntry.getAttributeList().getAttributeList();
+			
+		} else if (dictionaryEntry2 != null) {
+			attributeList = new ArrayList<>();
+			
+			dictionaryEntry2.getMisc().getOldPolishJapaneseDictionary().getAttributeList().stream().forEach(attr -> {
+				Attribute attribute = new Attribute();
+				
+				attribute.setAttributeType(AttributeType.valueOf(attr.getType()));
+				attribute.setSingleAttributeValue(attr.getValue());
+
+				attributeList.add(attribute);
+			});
+			
+		} else {
+			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
+		}		 
 		
 		if (attributeList == null || attributeList.size() == 0) {
 			return null;
@@ -1100,8 +1101,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	attributeTitleH4.setId("attributeId");
     	
-    	attributeTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.title")));
-    	menu.getChildMenu().add(new Menu(attributeTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.title")));
+    	attributeTitleH4.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.attribute.title")));
+    	menu.getChildMenu().add(new Menu(attributeTitleH4.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.attribute.title")));
     	
     	attributeTitleDiv.addHtmlElement(attributeTitleH4);
     	
@@ -1140,100 +1141,130 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    		currentAttributeH.addHtmlElement(new Text(attributeType.getName()));
 			}
 			
-			if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR || attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR || attributeType == AttributeType.ALTERNATIVE ||
-					attributeType == AttributeType.RELATED || attributeType == AttributeType.ANTONYM) {
-				
+			JMdict.Entry referenceDictionaryEntry;
+			
+			// pobieramy powiazane Entry
+			if (attributeType == AttributeType.VERB_TRANSITIVITY_PAIR || attributeType == AttributeType.VERB_INTRANSITIVITY_PAIR) {
 				Integer referenceWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
 
-				final DictionaryEntry referenceDictionaryEntry = dictionaryManager.getDictionaryEntryById(referenceWordId);
-
-				if (referenceDictionaryEntry != null) {
-					
-					Tr row2TableTr = new Tr();
-					row2Table.addHtmlElement(row2TableTr);
-					
-					Td row2TableTrTd1 = new Td();
-					row2TableTr.addHtmlElement(row2TableTrTd1);
-
-		    		H currentAttributeH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 30px");
-		    		row2TableTrTd1.addHtmlElement(currentAttributeH);
-		    		
-		    		currentAttributeH.addHtmlElement(new Text(attributeType.getName()));
-
-		    		// czasownik przechodni / nieprzechodni / alternatywa
-					String referenceDictionaryEntryKana = referenceDictionaryEntry.getKana();
-					String referenceDictionaryEntryRomaji = referenceDictionaryEntry.getRomaji();
-
-					StringBuffer referenceDictionaryEntrySb = new StringBuffer();
-
-					if (referenceDictionaryEntry.isKanjiExists() == true) {
-						referenceDictionaryEntrySb.append(referenceDictionaryEntry.getKanji()).append(", ");
-					}
-
-					referenceDictionaryEntrySb.append(referenceDictionaryEntryKana).append(", ");
-					
-					referenceDictionaryEntrySb.append(referenceDictionaryEntryRomaji);
-					
-					
-					if (mobile == false) {
-						
-						Td row2TableTrTd2 = new Td();
-						
-			    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px");
-			    		row2TableTrTd2.addHtmlElement(currentTransitivityIntrasitivityH);
-			    		
-			    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(referenceDictionaryEntrySb.toString()));
-						
-						row2TableTr.addHtmlElement(row2TableTrTd2);
-						
-					} else {
-						
-						Tr row2TableTrForMobile = new Tr();
-						
-						row2Table.addHtmlElement(row2TableTrForMobile);
-						
-						Td row2TableTrTd2ForMobile = new Td();
-						
-						row2TableTrTd2ForMobile.setColspan("2");
-						
-			    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 60px");
-			    		row2TableTrTd2ForMobile.addHtmlElement(currentTransitivityIntrasitivityH);
-			    		
-			    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(referenceDictionaryEntrySb.toString()));
-						
-			    		row2TableTrForMobile.addHtmlElement(row2TableTrTd2ForMobile);
-					}
-						    		
-		    		// przycisk
-					Td row2TableTrTd3 = new Td();
-					row2TableTr.addHtmlElement(row2TableTrTd3);
-					
-					Div row2TableTrTd3Div = new Div(null, "margin: 0 0 5px 50px");
-					row2TableTrTd3.addHtmlElement(row2TableTrTd3Div);
-										
-		            String link = LinkGenerator.generateDictionaryEntryDetailsLink(
-		            		pageContext.getServletContext().getContextPath(), referenceDictionaryEntry, null);
-		            
-					A linkButton = new A("btn btn-default");
-					row2TableTrTd3Div.addHtmlElement(linkButton);
-
-					linkButton.setHref(link);
-					
-					linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.atribute.referenceDictionaryEntry.show")));			
-				}				
+				referenceDictionaryEntry = dictionaryManager.getDictionaryEntry2ByOldPolishJapaneseDictionaryId(referenceWordId);
+				
+			} else if (attributeType == AttributeType.RELATED || attributeType == AttributeType.ANTONYM) {
+				Integer referenceWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
+				
+				referenceDictionaryEntry = dictionaryManager.getDictionaryEntry2ById(referenceWordId);
+				
+			} else {
+				referenceDictionaryEntry = null;
 			}
-    	}		
+					
+			// if (attributeType == AttributeType.ALTERNATIVE || ) {
+								
+			if (referenceDictionaryEntry != null && (dictionaryEntry2 == null || dictionaryEntry2.getEntryId().intValue() != referenceDictionaryEntry.getEntryId().intValue())) {
+				
+				// pobieramy z powiazanego slowa wszystkie czyatnia
+				List<KanjiKanaPair> referenceDictionaryEntryKanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(referenceDictionaryEntry, true);
+				
+				Tr row2TableTr = new Tr();
+				row2Table.addHtmlElement(row2TableTr);
+				
+				Td row2TableTrTd1 = new Td();
+				row2TableTr.addHtmlElement(row2TableTrTd1);
+
+	    		H currentAttributeH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 30px");
+	    		row2TableTrTd1.addHtmlElement(currentAttributeH);
+	    		
+	    		currentAttributeH.addHtmlElement(new Text(attributeType.getName()));
+
+	    		// czasownik przechodni / nieprzechodni / alternatywa
+				String referenceDictionaryEntryKana = referenceDictionaryEntryKanjiKanaPairList.get(0).getKana();
+				String referenceDictionaryEntryRomaji = referenceDictionaryEntryKanjiKanaPairList.get(0).getRomaji();
+
+				StringBuffer referenceDictionaryEntrySb = new StringBuffer();
+
+				if (referenceDictionaryEntryKanjiKanaPairList.get(0).getKanji() != null) {
+					referenceDictionaryEntrySb.append(referenceDictionaryEntryKanjiKanaPairList.get(0).getKanji()).append(", ");
+				}
+
+				referenceDictionaryEntrySb.append(referenceDictionaryEntryKana).append(", ");					
+				referenceDictionaryEntrySb.append(referenceDictionaryEntryRomaji);					
+				
+				if (mobile == false) {
+					
+					Td row2TableTrTd2 = new Td();
+					
+		    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 50px");
+		    		row2TableTrTd2.addHtmlElement(currentTransitivityIntrasitivityH);
+		    		
+		    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(referenceDictionaryEntrySb.toString()));
+					
+					row2TableTr.addHtmlElement(row2TableTrTd2);
+					
+				} else {
+					
+					Tr row2TableTrForMobile = new Tr();
+					
+					row2Table.addHtmlElement(row2TableTrForMobile);
+					
+					Td row2TableTrTd2ForMobile = new Td();
+					
+					row2TableTrTd2ForMobile.setColspan("2");
+					
+		    		H currentTransitivityIntrasitivityH = new H(4, null, "margin-top: 0px; margin-bottom: 5px; margin-left: 60px");
+		    		row2TableTrTd2ForMobile.addHtmlElement(currentTransitivityIntrasitivityH);
+		    		
+		    		currentTransitivityIntrasitivityH.addHtmlElement(new Text(referenceDictionaryEntrySb.toString()));
+					
+		    		row2TableTrForMobile.addHtmlElement(row2TableTrTd2ForMobile);
+				}
+					    		
+	    		// przycisk
+				Td row2TableTrTd3 = new Td();
+				row2TableTr.addHtmlElement(row2TableTrTd3);
+				
+				Div row2TableTrTd3Div = new Div(null, "margin: 0 0 5px 50px");
+				row2TableTrTd3.addHtmlElement(row2TableTrTd3Div);
+									
+	            String link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), referenceDictionaryEntry);
+	            
+				A linkButton = new A("btn btn-default");
+				row2TableTrTd3Div.addHtmlElement(linkButton);
+
+				linkButton.setHref(link);
+				
+				linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.attribute.referenceDictionaryEntry.show")));			
+			}				
+		}
+    			
 		
 		return attributeDiv;		
 	}
 	
 	private Div generateKnownKanjiDiv(Menu menu, boolean mobile) throws DictionaryException {
 		
-		if (dictionaryEntry.isKanjiExists() == false) {
+		Set<String> allKanjis = new LinkedHashSet<String>(); 
+		
+		if (dictionaryEntry != null && dictionaryEntry.isKanjiExists() == true) { // obsluga starego formatu
+			for (int idx = 0; idx < dictionaryEntry.getKanji().length(); ++idx) {
+				allKanjis.add("" + dictionaryEntry.getKanji().charAt(idx));
+			}
+			
+		} else if (kanjiKanaPairList != null) { // nowy format
+			kanjiKanaPairList.stream().filter(f -> f.getKanjiInfo() != null).forEach(c -> {
+				for (int idx = 0; idx < c.getKanji().length(); ++idx) {
+					allKanjis.add("" + c.getKanji().charAt(idx));
+				}	
+			});			
+			
+		} else {
 			return null;
 		}
 		
-		List<KanjiCharacterInfo> knownKanji = dictionaryManager.findKnownKanji(dictionaryEntry.getKanji());
+		if (allKanjis.size() == 0) {
+			return null;
+		}
+		
+		List<KanjiCharacterInfo> knownKanji = dictionaryManager.findKnownKanji(allKanjis.toString());
 		
 		if (knownKanji == null || knownKanji.size() == 0) {
 			return null;
@@ -1337,9 +1368,16 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 	
 	private Div generateExampleSentence(Menu mainMenu) throws DictionaryException {
-
-		List<String> exampleSentenceGroupIdsList = dictionaryEntry.getExampleSentenceGroupIdsList();
 		
+		List<String> exampleSentenceGroupIdsList = null;
+		
+		if (dictionaryEntry != null) {
+			exampleSentenceGroupIdsList = dictionaryEntry.getExampleSentenceGroupIdsList();
+			
+		} else if (dictionaryEntry2 != null) {
+			exampleSentenceGroupIdsList = dictionaryEntry2.getMisc().getOldPolishJapaneseDictionary().getExampleSentenceGroupIdsList();
+		}
+				
 		if (exampleSentenceGroupIdsList == null || exampleSentenceGroupIdsList.size() == 0) {
 			return null;
 		}
@@ -1462,67 +1500,258 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return panelDiv;
 	}
 	
-	private Div generateGrammaFormConjugate(Menu mainMenu, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) throws IOException {
+	private Div generateGrammaFormConjugate(Menu mainMenu) throws IOException {
+				
+		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
 		
-		// wylicz odmiany gramatyczne
-		List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = 
-				GrammaConjugaterManager.getGrammaConjufateResult(dictionaryManager.getKeigoHelper(), dictionaryEntry, grammaFormCache, forceDictionaryEntryType, false);
+		if (dictionaryEntry != null) {
+			dictionaryEntryList.add(dictionaryEntry);
+			
+		} else if (kanjiKanaPairList != null) {
+			dictionaryEntryList.addAll(convertKanjiKanaPairListToOldDictionaryEntry(kanjiKanaPairList));
+		}
 		
-		if (grammaFormConjugateGroupTypeElementsList == null || grammaFormConjugateGroupTypeElementsList.size() == 0) {
+		if (dictionaryEntryList.size() == 0) {
 			return null;
 		}
 		
-		Div panelDiv = new Div("panel panel-default");
-		
-		Div panelHeading = new Div("panel-heading");
-		
-		// tytul sekcji
-		H h3Title = new H(3, "panel-title");
-		
-		h3Title.setId("grammaFormConjugateId");
-		
-		Menu grammaFormConjugateMenu = null;
-		
-		if (forceDictionaryEntryType == null) {
-			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));
+		// wyliczamy formy gramatyczne dla wszystkich rodzajow slow
+		for (int dictionaryEntryIdx = 0; dictionaryEntryIdx < dictionaryEntryList.size(); ++dictionaryEntryIdx) {
 			
-			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate"));			
-		} else {
-			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() })));
+			DictionaryEntry dictionaryEntry = dictionaryEntryList.get(dictionaryEntryIdx);
 			
-			grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() }));
-		}	
-		
-		mainMenu.getChildMenu().add(grammaFormConjugateMenu);
-		
-		panelHeading.addHtmlElement(h3Title);
-		
-		panelDiv.addHtmlElement(panelHeading);
-		
-		// zawartosc sekcji
-		Div panelBody = new Div("panel-body");
-		
-		panelDiv.addHtmlElement(panelBody);
-		
-		for (int grammaFormConjugateGroupTypeElementsListIdx = 0; grammaFormConjugateGroupTypeElementsListIdx < grammaFormConjugateGroupTypeElementsList.size(); ++grammaFormConjugateGroupTypeElementsListIdx) {
+			List<DictionaryEntryType> dictionaryEntryTypeList = dictionaryEntry.getDictionaryEntryTypeList();
 			
-			GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateGroupTypeElementsList.get(grammaFormConjugateGroupTypeElementsListIdx);
-			
-			if (currentGrammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().isShow() == false) {
-				continue;
-			}
-			
-			panelBody.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, grammaFormConjugateMenu));
-			
-			if (grammaFormConjugateGroupTypeElementsListIdx != grammaFormConjugateGroupTypeElementsList.size() - 1) {
-				panelBody.addHtmlElement(new Hr());
-			}
+			for (DictionaryEntryType dictionaryEntryType : dictionaryEntryTypeList) {
+				Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache = new HashMap<GrammaFormConjugateResultType, GrammaFormConjugateResult>();
+				
+				List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList = 
+						GrammaConjugaterManager.getGrammaConjufateResult(dictionaryManager.getKeigoHelper(), new GrammaFormConjugateRequest(dictionaryEntry), grammaFormCache, dictionaryEntryType, false);
+				
+				if (grammaFormConjugateGroupTypeElementsList != null && grammaFormConjugateGroupTypeElementsList.size() > 0) { // mamy cos wyliczonego
+					// zapisujemy to do pozniejszego wykorzystania
+					final int dictionaryEntryIdxAsfinal = dictionaryEntryIdx;
+					
+					GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = grammaFormConjugateAndExampleEntryMap.computeIfAbsent(dictionaryEntry.getId(), (id) -> {
+						return new GrammaFormConjugateAndExampleEntry(dictionaryEntry, dictionaryEntryIdxAsfinal);
+					});
+					
+					grammaFormConjugateAndExampleEntry.addDictionaryEntryTypeGrammaFormConjugate(dictionaryEntryType, grammaFormConjugateGroupTypeElementsList, grammaFormCache);
+				}
+			}			
 		}
 		
-		return panelDiv;
+		if (grammaFormConjugateAndExampleEntryMap.size() > 0) { // jezeli udalo sie cos wyliczyc to pokazujemy to
+			
+			Div panelDiv = new Div("panel panel-default");
+			Div panelHeading = new Div("panel-heading");
+			
+			// tytul sekcji
+			H h3Title = new H(3, "panel-title");
+			
+			h3Title.setId("grammaFormConjugateId");
+						
+			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));			
+			
+			Menu grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate"));
+			
+			mainMenu.getChildMenu().add(grammaFormConjugateMenu);
+			
+			/*
+			if (forceDictionaryEntryType == null) {
+				h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate")));
+				
+				grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate"));			
+			} else {
+				h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() })));
+				
+				grammaFormConjugateMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugateWithDictionaryEntryType", new String[] { forceDictionaryEntryType.getName() }));
+			}
+			*/
+			
+			panelHeading.addHtmlElement(h3Title);			
+			panelDiv.addHtmlElement(panelHeading);
+
+			// zawartosc sekcji
+			Div panelBody = new Div("panel-body");
+			
+			panelDiv.addHtmlElement(panelBody);
+
+			// wygenerowanie zakladek
+			createTabs(grammaFormConjugateMenu, panelBody,
+					grammaFormConjugateAndExampleEntryMap.size(),
+					(tabIdx) -> new ArrayList<>(grammaFormConjugateAndExampleEntryMap.values()).get(tabIdx),
+					(tabIdx) -> "grammaFormConjugateEntry" + tabIdx,
+					(tabIdx) -> "grammaFormConjugateContentEntry" + tabIdx,
+					(objectToProcess) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)objectToProcess;						
+						DictionaryEntry dictionaryEntry = grammaFormConjugateAndExampleEntry.dictionaryEntry;
+						
+						return (dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana();						
+					},
+					(tabObjectToProcessCreateDivWrapper) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)tabObjectToProcessCreateDivWrapper.objectToProcess;						
+						List<GrammaFormConjugateAndExampleEntryForDictionaryType> grammaFormConjugateGroupTypeElementsList = grammaFormConjugateAndExampleEntry.grammaFormConjugateAndExampleEntryForDictionaryTypeList;
+						
+						Div tabContent = new Div();
+						
+						// generujemy kolejne tab-y w podziale na rodzaj slowa
+						createTabs(tabObjectToProcessCreateDivWrapper.menu, tabContent,
+								grammaFormConjugateGroupTypeElementsList.size(),
+								(tabIdx2) -> grammaFormConjugateGroupTypeElementsList.get(tabIdx2),
+								(tabIdx2) -> "grammaFormConjugateEntry" + grammaFormConjugateAndExampleEntry.dictionaryEntryIdx + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
+								(tabIdx2) -> "grammaFormConjugateContentEntry" + grammaFormConjugateAndExampleEntry.dictionaryEntryIdx + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
+								(objectToProcess2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)objectToProcess2;						
+									
+									return grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName();						
+								},
+								(tabObjectToProcessCreateDivWrapper2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)tabObjectToProcessCreateDivWrapper2.objectToProcess;
+																		
+									Div div = new Div();
+																		
+									for (int idx = 0; idx < grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormConjugateGroupTypeElementsList.size(); ++idx) {
+										
+										GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormConjugateGroupTypeElementsList.get(idx);
+										
+										if (currentGrammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().isShow() == false) {
+											continue;
+										}
+										
+										int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;									
+										String tab2LevelId = "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
+										
+										div.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, tabObjectToProcessCreateDivWrapper2.menu,
+												(id) -> { return "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType + "_" + id; },
+												(id) -> { return createLevel2TabOnclickScrollScript("grammaFormConjugateEntry", tabIdx, tab2LevelId, id); }																								
+											));
+										
+										if (idx != grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormConjugateGroupTypeElementsList.size() - 1) {
+											div.addHtmlElement(new Hr());
+										}
+									}
+									
+									return div;
+								},
+								(objectToProcess2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)objectToProcess2;
+									
+									int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;									
+									String tab2LevelId = "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
+									
+									return createLevel2TabOnclickScrollScript("grammaFormConjugateEntry", tabIdx, tab2LevelId, tab2LevelId);
+								}								
+							);
+												
+						return tabContent;
+					},
+					(objectToProcess) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)objectToProcess;
+						
+						int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;
+						
+						return createLevel1TabOnclickScrollScript("grammaFormConjugateEntry", "grammaFormConjugateContentEntry", tabIdx);
+					}					
+				);					
+			
+			return panelDiv;
+			
+		} else {
+			return null;
+		}
 	}
 	
-	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements, Menu menu) {
+	private String createLevel1TabOnclickScrollScript(String tabId, String tab2Id, int tabIdx) {
+		return "$('#" + tabId + tabIdx + "').tab('show');"
+				+ "setTimeout(() => { $('html, body').animate({ " 
+				+ "scrollTop: $('#" + tab2Id + tabIdx + "').offset().top - 15 " 
+				+ "}, 1000); }, 300); return false; ";						
+	}
+	
+	private String createLevel2TabOnclickScrollScript(String tabId, int tabIdx, String tab2LevelId, String scrollTargetId) {
+		
+		return "$('#" + tabId + tabIdx + "').tab('show');"
+				+ "$('#" + tab2LevelId + "').tab('show');"
+				+ "setTimeout(() => { $('html, body').animate({ " 
+				+ "scrollTop: $('#" + scrollTargetId + "').offset().top - 15 " 
+				+ "}, 1000); }, 300); return false; ";
+
+	}
+		
+	private void createTabs(Menu menu, Div panelBody, int tabsNumbers,
+			Function<Integer,Object> getObjectGetter,
+			Function<Integer, String> tabIdHrefGetter,
+			Function<Integer, String> tabContentIdHrefGetter,
+			Function<Object, String> tabNameGetter,
+			Function<TabObjectToProcessCreateDivWrapper, Div> contentDivGetter,
+			Function<Object, String> customOnClickGenerator) {
+		
+		// wygenerowanie zakladek			
+		Ul tabUl = new Ul("nav nav-tabs");
+		panelBody.addHtmlElement(tabUl);
+		
+		for (int tabIdx = 0; tabIdx < tabsNumbers; ++tabIdx) {
+			
+			// pobranie obiektu, ktory wyswietlamy
+			Object objectToProcess = getObjectGetter.apply(tabIdx);
+						
+			Li objectLi = new Li();				
+			tabUl.addHtmlElement(objectLi);
+			
+			if (tabIdx == 0) {
+				objectLi.setClazz("active");
+			}
+			
+			A tabUlA = new A();
+			objectLi.addHtmlElement(tabUlA);
+			
+			tabUlA.setDataToggle("tab");
+			tabUlA.setHref("#" + tabContentIdHrefGetter.apply(tabIdx));
+			tabUlA.setId(tabIdHrefGetter.apply(tabIdx));
+							
+			tabUlA.addHtmlElement(new Text(tabNameGetter.apply(objectToProcess)));
+		}
+		
+		Div tabContentDiv = new Div();			
+		panelBody.addHtmlElement(tabContentDiv);
+		
+		tabContentDiv.setClazz("tab-content");
+
+		for (int tabIdx = 0; tabIdx < tabsNumbers; ++tabIdx) {
+			
+			// pobranie obiektu, ktory wyswietlamy
+			Object objectToProcess = getObjectGetter.apply(tabIdx);
+			
+			Div objectToProcessEntryDiv = new Div();
+			tabContentDiv.addHtmlElement(objectToProcessEntryDiv);
+			
+			objectToProcessEntryDiv.setId(tabContentIdHrefGetter.apply(tabIdx));
+			
+			if (tabIdx == 0) {
+				objectToProcessEntryDiv.setClazz("tab-pane fade in active col-md-12");
+			} else {
+				objectToProcessEntryDiv.setClazz("tab-pane fade col-md-12");
+			}
+							
+			// dodanie pozycji do menu
+			Menu menuForObjectToProcess = new Menu(objectToProcessEntryDiv.getId(), tabNameGetter.apply(objectToProcess));
+			
+			// stworzenie skryptu do wyboru zakladki						
+			menuForObjectToProcess.setCustomOnClick(customOnClickGenerator.apply(objectToProcess));							
+			menu.getChildMenu().add(menuForObjectToProcess);
+							
+			// dodanie krotkiej przerwy do zawartosci
+			objectToProcessEntryDiv.addHtmlElement(new Div(null, "padding-bottom: 20px"));				
+			
+			// wygenerowanie zawartosci
+			objectToProcessEntryDiv.addHtmlElement(contentDivGetter.apply(new TabObjectToProcessCreateDivWrapper(objectToProcess, menuForObjectToProcess)));
+		}
+	}
+	
+	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements, Menu menu,
+			Function<String, String> idGenerator,
+			Function<String, String> menuOnClickGenerator) {
 		
 		Div resultDiv = new Div();
 		
@@ -1532,10 +1761,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	// tytul
     	Div row1TitleDiv = new Div("col-md-12");
     	
-    	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
-    	
-    	row1TitleH4.setId(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().toString());  	
-    	
+    	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");    	
+    	row1TitleH4.setId(idGenerator.apply(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().toString()));  	
     	row1TitleH4.addHtmlElement(new Text(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName()));
     	
     	String grammaFormConjugateGroupTypeInfo = grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getInfo();
@@ -1549,11 +1776,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	}
     	
     	Menu row1Menu = new Menu(row1TitleH4.getId(), grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName());
+    	row1Menu.setCustomOnClick(menuOnClickGenerator.apply(row1TitleH4.getId()));
     	
     	menu.getChildMenu().add(row1Menu);
     	
     	row1TitleDiv.addHtmlElement(row1TitleH4);
-    	
     	row1Div.addHtmlElement(row1TitleDiv);
 
     	// dodaj wiersz z tytulem
@@ -1580,11 +1807,14 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		    	
 		    	String currentGrammaFormConjugateResultId = grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().toString() + "_" + currentGrammaFormConjugateResult.getResultType().toString();
 		    	
-		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.setId(currentGrammaFormConjugateResultId);
+		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.setId(idGenerator.apply(currentGrammaFormConjugateResultId));
 		    	
 		    	currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.addHtmlElement(new Text(currentGrammaFormConjugateResult.getResultType().getName()));
 		    	
-		    	row1Menu.getChildMenu().add(new Menu(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.getId(), currentGrammaFormConjugateResult.getResultType().getName()));
+		    	Menu nextLeveLMenu = new Menu(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4.getId(), currentGrammaFormConjugateResult.getResultType().getName());
+		    	nextLeveLMenu.setCustomOnClick(menuOnClickGenerator.apply(nextLeveLMenu.getId()));
+		    			
+		    	row1Menu.getChildMenu().add(nextLeveLMenu);		    	
 		    	
 		    	sectionBodyDiv.addHtmlElement(currentGrammaFormConjugateResultSectionBodyDivTitleDivTitleH4);
 		    	
@@ -1744,37 +1974,135 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 	}
 	
-	private Div generateExample(Menu mainMenu, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) throws IOException {
+	private Div generateExample(Menu mainMenu) throws IOException {
 		
-		List<ExampleGroupTypeElements> exampleGroupTypeElementsList = ExampleManager.getExamples(
-				dictionaryManager.getKeigoHelper(), dictionaryEntry, grammaFormCache, forceDictionaryEntryType, false);
-		
-		if (exampleGroupTypeElementsList == null || exampleGroupTypeElementsList.size() == 0) {
+		// jezeli wczesniej wyliczono odmiany gramatyczne, to przyklady tez powinno dac sie
+		if (grammaFormConjugateAndExampleEntryMap.size() > 0) {
+			
+			// wyliczenie przykladow
+			for (GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry : grammaFormConjugateAndExampleEntryMap.values()) {				
+				for (GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType : grammaFormConjugateAndExampleEntry.grammaFormConjugateAndExampleEntryForDictionaryTypeList) {
+					
+					List<ExampleGroupTypeElements> exampleGroupTypeElementsList =
+							ExampleManager.getExamples(dictionaryManager.getKeigoHelper(), new ExampleRequest(grammaFormConjugateAndExampleEntry.dictionaryEntry), 
+									grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormCache, grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType, false);
+					
+					if (exampleGroupTypeElementsList != null && exampleGroupTypeElementsList.size() > 0) { // mamy cos wyliczonego
+						grammaFormConjugateAndExampleEntryForDictionaryType.setExampleGroupTypeElementsList(exampleGroupTypeElementsList);
+					}
+				}				
+			}
+			
+			// pokazanie przykladow
+			// tutaj();
+			
+			Div panelDiv = new Div("panel panel-default");		
+			Div panelHeading = new Div("panel-heading");
+
+			// tytul sekcji
+			H h3Title = new H(3, "panel-title");
+			
+			h3Title.setId("exampleId");
+			
+			h3Title.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.example")));
+			
+			Menu exampleMenu = new Menu(h3Title.getId(), getMessage("wordDictionaryDetails.page.dictionaryEntry.example"));			
+			mainMenu.getChildMenu().add(exampleMenu);
+			
+			// final int maxMenuSize = 20;
+			// Menu exampleMenu = null;
+			// int menuCounter = 0;
+					
+			panelHeading.addHtmlElement(h3Title);		
+			panelDiv.addHtmlElement(panelHeading);
+
+			// zawartosc sekcji
+			Div panelBody = new Div("panel-body");
+			
+			panelDiv.addHtmlElement(panelBody);		
+						
+			// wygenerowanie zakladek
+			createTabs(exampleMenu, panelBody,
+					grammaFormConjugateAndExampleEntryMap.size(),
+					(tabIdx) -> new ArrayList<>(grammaFormConjugateAndExampleEntryMap.values()).get(tabIdx),
+					(tabIdx) -> "exampleEntry" + tabIdx,
+					(tabIdx) -> "exampleContentEntry" + tabIdx,
+					(objectToProcess) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)objectToProcess;						
+						DictionaryEntry dictionaryEntry = grammaFormConjugateAndExampleEntry.dictionaryEntry;
+						
+						return (dictionaryEntry.isKanjiExists() == true ? dictionaryEntry.getKanji()  + ", " : "") + dictionaryEntry.getKana();						
+					},
+					(tabObjectToProcessCreateDivWrapper) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)tabObjectToProcessCreateDivWrapper.objectToProcess;						
+						List<GrammaFormConjugateAndExampleEntryForDictionaryType> grammaFormConjugateGroupTypeElementsList = grammaFormConjugateAndExampleEntry.grammaFormConjugateAndExampleEntryForDictionaryTypeList;
+						
+						Div tabContent = new Div();
+						
+						// generujemy kolejne tab-y w podziale na rodzaj slowa
+						createTabs(tabObjectToProcessCreateDivWrapper.menu, tabContent,
+								grammaFormConjugateGroupTypeElementsList.size(),
+								(tabIdx2) -> grammaFormConjugateGroupTypeElementsList.get(tabIdx2),
+								(tabIdx2) -> "exampleEntry" + grammaFormConjugateAndExampleEntry.dictionaryEntryIdx + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
+								(tabIdx2) -> "exampleContentEntry" + grammaFormConjugateAndExampleEntry.dictionaryEntryIdx + "_" + grammaFormConjugateGroupTypeElementsList.get(tabIdx2).dictionaryEntryType,
+								(objectToProcess2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)objectToProcess2;						
+									
+									return grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName();						
+								},
+								(tabObjectToProcessCreateDivWrapper2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)tabObjectToProcessCreateDivWrapper2.objectToProcess;
+																		
+									Div div = new Div();
+									
+									for (int idx = 0; idx < grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList.size(); ++idx) {
+										
+										ExampleGroupTypeElements currentExampleGroupTypeElements = grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList.get(idx);
+										
+										int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;									
+										String tab2LevelId = "exampleEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
+										
+										div.addHtmlElement(generateExampleGroupTypeElements(currentExampleGroupTypeElements, tabObjectToProcessCreateDivWrapper2.menu,
+												(id) -> { return "exampleEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType + "_" + id; },
+												(id) -> { return createLevel2TabOnclickScrollScript("exampleEntry", tabIdx, tab2LevelId, id); }																								
+											));
+										
+										if (idx != grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList.size() - 1) {
+											div.addHtmlElement(new Hr());
+										}
+									}
+																		
+									return div;
+								},
+								(objectToProcess2) -> {
+									GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = (GrammaFormConjugateAndExampleEntryForDictionaryType)objectToProcess2;
+									
+									int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;									
+									String tab2LevelId = "exampleEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
+									
+									return createLevel2TabOnclickScrollScript("exampleEntry", tabIdx, tab2LevelId, tab2LevelId);
+								}								
+							);
+												
+						return tabContent;
+					},
+					(objectToProcess) -> {
+						GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = (GrammaFormConjugateAndExampleEntry)objectToProcess;
+						
+						int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;
+						
+						return createLevel1TabOnclickScrollScript("exampleEntry", "exampleContentEntry", tabIdx);
+					}					
+				);
+						
+			return panelDiv;
+			
+		} else {
 			return null;
 		}
 		
-		Div panelDiv = new Div("panel panel-default");
-		
-		Div panelHeading = new Div("panel-heading");
-		
-		// tytul sekcji
-		H h3Title = new H(3, "panel-title");
-		
-		h3Title.setId("exampleId");
-		
-		final int maxMenuSize = 20;
-		Menu exampleMenu = null;
-		int menuCounter = 0;
-				
-		panelHeading.addHtmlElement(h3Title);
-		
-		panelDiv.addHtmlElement(panelHeading);
-		
-		// zawartosc sekcji
-		Div panelBody = new Div("panel-body");
-		
-		panelDiv.addHtmlElement(panelBody);		
-		
+		/*
+		// stary kod, ale niech zostanie na pamiatke
 		for (int exampleGroupTypeElementsListIdx = 0; exampleGroupTypeElementsListIdx < exampleGroupTypeElementsList.size(); ++exampleGroupTypeElementsListIdx) {
 			
 			if (exampleMenu == null || exampleMenu.getChildMenu().size() >= maxMenuSize) {
@@ -1829,12 +2157,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			if (exampleGroupTypeElementsListIdx != exampleGroupTypeElementsList.size() - 1) {
 				panelBody.addHtmlElement(new Hr());
 			}
-		}
-	
-		return panelDiv;
+		}		
+		*/
 	}
 	
-	private IHtmlElement generateExampleGroupTypeElements(ExampleGroupTypeElements exampleGroupTypeElements, Menu menu) {
+	private IHtmlElement generateExampleGroupTypeElements(ExampleGroupTypeElements exampleGroupTypeElements, Menu menu,
+			Function<String, String> idGenerator,
+			Function<String, String> menuOnClickGenerator) {
 		
 		Div resultDiv = new Div();
 		
@@ -1846,16 +2175,15 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
     	
-    	row1TitleH4.setId(exampleGroupTypeElements.getExampleGroupType().toString());  	
-    	
+    	row1TitleH4.setId(idGenerator.apply(exampleGroupTypeElements.getExampleGroupType().toString()));  	
     	row1TitleH4.addHtmlElement(new Text(exampleGroupTypeElements.getExampleGroupType().getName()));
     	
     	Menu row1Menu = new Menu(row1TitleH4.getId(), exampleGroupTypeElements.getExampleGroupType().getName());
+    	row1Menu.setCustomOnClick(menuOnClickGenerator.apply(row1TitleH4.getId()));
     	
     	menu.getChildMenu().add(row1Menu);
     	
     	row1TitleDiv.addHtmlElement(row1TitleH4);
-    	
     	row1Div.addHtmlElement(row1TitleDiv);
     	
     	// dodatkowe info
@@ -2024,11 +2352,29 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
         addSuggestionMenuPos(mainMenu, messageSource);
         
-        int id = dictionaryEntry.getId();
-		String dictionaryEntryKanji = dictionaryEntry.getKanji();
-		String dictionaryEntryKana = dictionaryEntry.getKana();
-		String dictionaryEntryRomaji = dictionaryEntry.getRomaji();        
-
+        int id = -1;
+		String dictionaryEntryKanji;
+		String dictionaryEntryKana;
+		String dictionaryEntryRomaji;
+        
+        if (dictionaryEntry != null) {
+            id = dictionaryEntry.getId();
+            
+    		dictionaryEntryKanji = dictionaryEntry.getKanji();
+    		dictionaryEntryKana = dictionaryEntry.getKana();
+    		dictionaryEntryRomaji = dictionaryEntry.getRomaji();        
+        	
+        } else if (kanjiKanaPairList != null) {
+        	id = kanjiKanaPairList.get(0).getEntry().getEntryId();
+        	
+        	dictionaryEntryKanji = kanjiKanaPairList.get(0).getKanji();
+    		dictionaryEntryKana = kanjiKanaPairList.get(0).getKana();
+    		dictionaryEntryRomaji = kanjiKanaPairList.get(0).getRomaji();
+    		
+        } else {
+        	throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
+        }
+        
 		String defaultSuggestion = messageSource.getMessage("wordDictionaryDetails.page.suggestion.default", 
 				new Object[] { dictionaryEntryKanji != null ? dictionaryEntryKanji : "-",
 						dictionaryEntryKana, dictionaryEntryRomaji, String.valueOf(id)
@@ -2043,9 +2389,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return messageSource.getMessage(code, null, Locale.getDefault());
 	}
 
+	/*
 	private String getMessage(String code, String[] args) {
 		return messageSource.getMessage(code, args, Locale.getDefault());
 	}
+	*/
 	
 	public DictionaryEntry getDictionaryEntry() {
 		return dictionaryEntry;
@@ -2069,5 +2417,54 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
 	public void setForceDictionaryEntryType(DictionaryEntryType forceDictionaryEntryType) {
 		this.forceDictionaryEntryType = forceDictionaryEntryType;
+	}
+	
+	private static class GrammaFormConjugateAndExampleEntry {
+		private int dictionaryEntryIdx;
+		private DictionaryEntry dictionaryEntry;
+		
+		private List<GrammaFormConjugateAndExampleEntryForDictionaryType> grammaFormConjugateAndExampleEntryForDictionaryTypeList = new ArrayList<>();
+		
+		public GrammaFormConjugateAndExampleEntry(DictionaryEntry dictionaryEntry, int dictionaryEntryIdx) {
+			this.dictionaryEntry = dictionaryEntry;
+			this.dictionaryEntryIdx = dictionaryEntryIdx;
+		}
+		
+		public void addDictionaryEntryTypeGrammaFormConjugate(DictionaryEntryType dictionaryEntryType, List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) {
+			grammaFormConjugateAndExampleEntryForDictionaryTypeList.add(new GrammaFormConjugateAndExampleEntryForDictionaryType(dictionaryEntryType, grammaFormConjugateGroupTypeElementsList, grammaFormCache));
+		}
+	}
+	
+	private static class GrammaFormConjugateAndExampleEntryForDictionaryType {
+		private DictionaryEntryType dictionaryEntryType;
+		
+		private List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList;
+		private Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache;
+		
+		private List<ExampleGroupTypeElements> exampleGroupTypeElementsList;
+		
+		public GrammaFormConjugateAndExampleEntryForDictionaryType(DictionaryEntryType dictionaryEntryType, 
+				List<GrammaFormConjugateGroupTypeElements> grammaFormConjugateGroupTypeElementsList, Map<GrammaFormConjugateResultType, GrammaFormConjugateResult> grammaFormCache) {
+			
+			this.dictionaryEntryType = dictionaryEntryType;
+			
+			this.grammaFormConjugateGroupTypeElementsList = grammaFormConjugateGroupTypeElementsList;
+			this.grammaFormCache = grammaFormCache;
+		}
+
+		public void setExampleGroupTypeElementsList(List<ExampleGroupTypeElements> exampleGroupTypeElementsList) {
+			this.exampleGroupTypeElementsList = exampleGroupTypeElementsList;			
+		}		
+	}
+	
+	private static class TabObjectToProcessCreateDivWrapper {
+		private Object objectToProcess;
+		private Menu menu;
+		
+		public TabObjectToProcessCreateDivWrapper(Object objectToProcess, Menu menu) {
+			super();
+			this.objectToProcess = objectToProcess;
+			this.menu = menu;
+		}		
 	}
 }

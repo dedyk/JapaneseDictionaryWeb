@@ -15,6 +15,7 @@ import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.record.Country;
 
 import jakarta.annotation.PostConstruct;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
 
 @Service
 public class GeoIPService {
@@ -90,8 +91,8 @@ public class GeoIPService {
 		
 		try {
 			InetAddress inetAddress = InetAddress.getByName(ip);
-			
-			if (inetAddress.isLoopbackAddress() == true) { // czy to adres loopback
+						
+			if (Utils.isPrivateAddress(inetAddress) == true) { // czy to adres prywatny
 				return null;
 			}
 
