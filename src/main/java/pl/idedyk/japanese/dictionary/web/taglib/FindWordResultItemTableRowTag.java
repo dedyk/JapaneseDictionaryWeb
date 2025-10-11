@@ -2,7 +2,6 @@ package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRequest;
