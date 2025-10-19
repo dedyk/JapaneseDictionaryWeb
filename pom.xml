@@ -420,6 +420,36 @@
 			    <artifactId>maven-war-plugin</artifactId>
 			    <version>${maven.war.plugin.version}</version>
 			</plugin>
+            <plugin>                
+				<groupId>org.jvnet.jaxb</groupId>
+				<artifactId>jaxb-maven-plugin</artifactId>
+				<version>4.0.0</version>
+                <configuration>
+                    <strict>false</strict>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>config-generate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <extension>true</extension>
+                            <encoding>UTF-8</encoding>
+                            <bindingDirectory>${basedir}/src/main/resources/xsd</bindingDirectory>
+                            <!--
+                            <bindingIncludes>
+                                <include>binding.xjb</include>
+                            </bindingIncludes>
+                            -->
+                            <schemaDirectory>${basedir}/src/main/resources/xsd</schemaDirectory>
+                            <generatePackage>pl.idedyk.japanese.dictionary.web.config.xsd</generatePackage>
+                            <generateDirectory>${project.build.directory}/generated-sources/config/xsd</generateDirectory>
+                        </configuration>
+                    </execution>
+				</executions>
+			</plugin>
+
 
 		</plugins>
 	</build>
