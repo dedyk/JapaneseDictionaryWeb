@@ -83,7 +83,7 @@ public class FirewallFilter implements Filter {
 						(clientInfo.hostName != null && clientInfo.hostName.matches(address.getValue()) == true)) {
 					
 					clientInfo.doBlock = true;
-					clientInfo.doBlockSendRandomData = address.isRandomDataSend();
+					clientInfo.doBlockSendRandomData = address.isRandomDataSend() != null ? address.isRandomDataSend() : false;
 					
 					return;
 				}
@@ -97,7 +97,7 @@ public class FirewallFilter implements Filter {
 				if (clientInfo.country != null && country.getValue().equals(clientInfo.country) == true) {
 					
 					clientInfo.doBlock = true;
-					clientInfo.doBlockSendRandomData = country.isRandomDataSend();
+					clientInfo.doBlockSendRandomData = country.isRandomDataSend() != null ? country.isRandomDataSend() : false;
 					
 					return;
 				}
@@ -126,7 +126,7 @@ public class FirewallFilter implements Filter {
 				if (clientInfo.userAgent.matches(userAgent.getValue()) == true) {
 					
 					clientInfo.doBlock = true;
-					clientInfo.doBlockSendRandomData = userAgent.isRandomDataSend();
+					clientInfo.doBlockSendRandomData = userAgent.isRandomDataSend() != null ? userAgent.isRandomDataSend() : false;
 					
 					return;						
 				}
@@ -154,7 +154,7 @@ public class FirewallFilter implements Filter {
 				if (clientInfo.fullUrl.matches(fullUrl.getValue()) == true) {
 					
 					clientInfo.doBlock = true;
-					clientInfo.doBlockSendRandomData = fullUrl.isRandomDataSend();
+					clientInfo.doBlockSendRandomData = fullUrl.isRandomDataSend() != null ? fullUrl.isRandomDataSend() : false;
 					
 					return;
 				}
