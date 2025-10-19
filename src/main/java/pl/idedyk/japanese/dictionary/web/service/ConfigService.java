@@ -29,6 +29,12 @@ public class ConfigService {
 	private File configFile = null;
 	private Long configLastModified = null;
 	
+	public ConfigWrapper getConfig() {
+		checkAndReloadConfigFile();
+		
+		return new ConfigWrapper(config, configLastModified);
+	}
+	
 	private synchronized Config checkAndReloadConfigFile() {
 		
 		if (configFile == null) {
@@ -168,5 +174,31 @@ public class ConfigService {
 	
 	public boolean isProcessDBCleanup() {
 		return isStopAllSchedulers() == false;
+	}
+	
+	public static class ConfigWrapper {
+		private Config config;
+		private Long lastModified;
+		
+		public ConfigWrapper(Config config, Long lastModified) {
+			this.config = config;
+			this.lastModified = lastModified;
+		}
+		
+		public Config getConfig() {
+			return config;
+		}
+		
+		public void setConfig(Config config) {
+			this.config = config;
+		}
+		
+		public Long getLastModified() {
+			return lastModified;
+		}
+		
+		public void setLastModified(Long lastModified) {
+			this.lastModified = lastModified;
+		}
 	}
 }

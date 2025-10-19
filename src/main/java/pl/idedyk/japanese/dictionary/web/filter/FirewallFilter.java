@@ -27,19 +27,20 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.Address;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.AddressList;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.Country;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.CountryList;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
+import pl.idedyk.japanese.dictionary.web.service.ConfigService.ConfigWrapper;
 import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
 
 public class FirewallFilter implements Filter {
 	
 	private static final Logger logger = LogManager.getLogger(FirewallFilter.class);
 		
-	// zmienne dla blokowania host-ow
-	private File hostBlockFile = null;
-	private Long hostBlockFileLastModified = null;
-	
-	private List<String> hostBlockRegexList = null;
-	
 	// zmienne dla blokowania wzorcow wywolan
 	private File fullUrlBlockFile = null;
 	private Long fullUrlBlockFileLastModified = null;
@@ -70,116 +71,89 @@ public class FirewallFilter implements Filter {
 		return geoIPService;		
 	}
 	
-	private synchronized void checkAndReloadHostBlockFile() {
+	private synchronized ConfigService getConfigService(ServletRequest request) {
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
 		
-		if (hostBlockFile == null) {
-			hostBlockFile = new File(ConfigService.getCatalinaConfDirStatic(), "configService.hostBlock");
-		}
+		ConfigService configService = webApplicationContext.getBean(ConfigService.class);
 		
-		// nie ma pliku lub nie mozna go przeczytac
-		if (hostBlockFile.exists() == false || hostBlockFile.canRead() == false) {
-			
-			hostBlockFileLastModified = null;
-			hostBlockRegexList = null;
-			
-			return;
-		}
-		
-		// plik nie zmienil sie
-		if (hostBlockFileLastModified != null && hostBlockFileLastModified.longValue() == hostBlockFile.lastModified()) {
-			return;
-		}
-		
-		// probujemy wczytac plik
-		logger.info("Wczytywanie pliku: " + hostBlockFile);
-		
-		hostBlockRegexList = new ArrayList<>();
-				
-		try {
-			Scanner scanner = new Scanner(hostBlockFile);
-
-			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-				
-				if (line.startsWith("#") == true) {
-					continue;
-				}
-				
-				hostBlockRegexList.add(line.trim());
-			}
-			
-			scanner.close();
-			
-			hostBlockFileLastModified = hostBlockFile.lastModified();
-						
-		} catch (Exception e) {
-			
-			logger.error("Błąd podczas wczytywania pliku: " + hostBlockFile, e);
-			
-			hostBlockFileLastModified = null;
-			hostBlockRegexList = null;
-			
-			return;			
-		}
+		return configService;		
 	}
 	
-	private synchronized boolean isIpHostBlocked(String ip, String hostName, String country) {
-		// sprawdzenie, czy zmienila sie konfiguracja blokowania ip lub nazwy hosta
-		checkAndReloadHostBlockFile();
+	private synchronized void isIpHostBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo) {
 		
-		// sprawdzamy, czy adres ip lub nzwa hosta jest na tej liscie
-		if (hostBlockRegexList != null) {
-			for (String currentHostBlockMatcher : hostBlockRegexList) {
+		HostBlock hostBlock = configWrapper.getConfig().getFirewall().getHostBlock();
 				
-				// sprawdzenie, czy nalezy blokowac dany kraj
-				if (ip != null && country != null && currentHostBlockMatcher.equals("COUNTRY:" + country) == true) {
-					return true;
-				}
-				
-				try {
-					if ((ip != null && ip.matches(currentHostBlockMatcher) == true) || (hostName != null && hostName.matches(currentHostBlockMatcher) == true)) {
-						return true;
-					}					
-				} catch (Exception e) {
-					logger.error("Błąd podczas sprawdzania adresu ip lub nazwy hosta", e);
+		try {			
+			// pobranie listy blokad adresow ip i host name
+			List<Address> hostBlockAddressList = hostBlock.getAddressList();
+
+			// sprawdzamy, czy adres ip lub nazwa hosta jest na tej liscie
+			for (Address address : hostBlockAddressList) {
+				if (	(clientInfo.ip != null && clientInfo.ip.matches(address.getValue()) == true) ||
+						(clientInfo.hostName != null && clientInfo.hostName.matches(address.getValue()) == true)) {
+					
+					clientInfo.doBlock = true;
+					clientInfo.sendRandomData = address.isRandomDataSend();
+					
+					return;
 				}
 			}
+			
+			// pobranie listy blokowanych krajow
+			List<Country> countryList = hostBlock.getCountryList();
+			
+			for (Country countryToCheck : countryList) {
+				// sprawdzenie, czy nalezy blokowac dany kraj
+				if (clientInfo.country != null && countryToCheck.getValue().equals(clientInfo.country) == true) {
+					
+					clientInfo.doBlock = true;
+					clientInfo.sendRandomData = countryToCheck.isRandomDataSend();
+					
+					return;
+				}
+			}			
+			
+		} catch (Exception e) {
+			logger.error("Błąd podczas sprawdzania adresu ip lub nazwy hosta", e);
 		}
-		
-		return false;
 	}
 
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		
-		boolean doBlock = false;
-		boolean doBlockSendRandomData = false;
-		
+				
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 		
 		GeoIPService geoIPService = getGeoIPService(request);
-				
-		String ip = Utils.getRemoteIp(httpServletRequest);
-		String hostName = Utils.getHostname(ip);
-		String userAgent = httpServletRequest.getHeader("User-Agent");	
-		String url = httpServletRequest.getRequestURI();
-		String httpMethod = httpServletRequest.getMethod();
+		ConfigService configService = getConfigService(httpServletRequest);
 		
-		String fullUrl = Utils.getRequestURL(httpServletRequest);
+		// pobranie konfiguracji
+		ConfigWrapper configWrapper = configService.getConfig();
 		
-		String country = null;
+		// utworzenie informacji o kliencie
+		ClientInfo clientInfo = new ClientInfo();
+		
+		clientInfo.ip = Utils.getRemoteIp(httpServletRequest);
+		clientInfo.hostName = Utils.getHostname(clientInfo.ip);
+		clientInfo.userAgent = httpServletRequest.getHeader("User-Agent");	
+		clientInfo.url = httpServletRequest.getRequestURI();
+		clientInfo.httpMethod = httpServletRequest.getMethod();
+		
+		clientInfo.fullUrl = Utils.getRequestURL(httpServletRequest);
+		
+		clientInfo.country = null;
 		
 		try {
 			// pobranie kraju na podstawie adresu ip
-			if (geoIPService != null && ip != null) {
-				country = geoIPService.getCountry(ip);
+			if (geoIPService != null && clientInfo.ip != null) {
+				clientInfo.country = geoIPService.getCountry(clientInfo.ip);
 			}
 		} catch (Exception e) {
 			logger.error("Błąd podczas pobierania nazwy kraju z adresu ip", e);
 		}
 		
+		// FM_FIXME: user agent w konfiguracji
 		if (doBlock == false && userAgent != null) {
 			// sprawdzamy, czy zalezy zablokowac tego user agenta
 			if (userAgent.contains("AspiegelBot") == true || userAgent.contains("RecordedFuture") == true) { // RecordedFuture-ASI
@@ -198,22 +172,22 @@ public class FirewallFilter implements Filter {
 		}
 				
 		// sprawdzanie, czy nalezy zablokowac ip/host
-		if (doBlock == false) {
-			doBlock = isIpHostBlocked(ip, hostName, country);
+		if (clientInfo.doBlock == false) {
+			isIpHostBlocked(configWrapper, clientInfo);
 		}
 						
 		// sprawdzenie, czy dany fullURL nalezy zablokowac
-		if (doBlock == false) {
+		if (clientInfo.doBlock == false) {
 			doBlock = isFullUrlBlocked(fullUrl);			
 		}
 		
 		// dodatkowe sprawdzenie, czy wywolanie nie pochodzi z aplikacji na Androida, jesli tak to pozwalamy na nie
-		if (doBlock == true && httpMethod != null && httpMethod.equals("POST") == true && url.startsWith("/android/") == true && userAgent != null && userAgent.startsWith("JapaneseAndroidLearnHelper/") == true) {
+		if (clientInfo.doBlock == true && httpMethod != null && httpMethod.equals("POST") == true && url.startsWith("/android/") == true && userAgent != null && userAgent.startsWith("JapaneseAndroidLearnHelper/") == true) {
 			doBlock = false;
 		}
 
 		// dostep do pliku robots.txt jest dozwolony
-		if (doBlock == true && httpMethod != null && httpMethod.equals("GET") == true && url.equals("/robots.txt") == true) {
+		if (clientInfo.doBlock == true && httpMethod != null && httpMethod.equals("GET") == true && url.equals("/robots.txt") == true) {
 			doBlock = false;
 		}
 		
@@ -477,6 +451,24 @@ public class FirewallFilter implements Filter {
 				return new IsClientRateExceededResult(false, callRate);
 			}
 		}
+	}
+	
+	private static class ClientInfo {
+		private String ip;
+		private String hostName;
+		private String userAgent;	
+		private String url;
+		private String httpMethod;
+		
+		private String fullUrl;
+		
+		private String country;
+
+		private boolean doBlock;
+		private boolean sendRandomData;
+		
+		
+		
 	}
 		
 	private static class CallInfo {
