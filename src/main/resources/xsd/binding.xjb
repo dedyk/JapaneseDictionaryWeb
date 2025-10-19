@@ -5,22 +5,6 @@
 
 	<jxb:bindings schemaLocation="config.xsd">
 		
-		<jxb:bindings node="//xsd:element[@name='address']">
-			<jxb:property name="addressList" />
-		</jxb:bindings>
-
-		<jxb:bindings node="//xsd:element[@name='country']">
-			<jxb:property name="countryList" />
-		</jxb:bindings>
-
-		<jxb:bindings node="//xsd:element[@name='userAgent']">
-			<jxb:property name="userAgentList" />
-		</jxb:bindings>
-		
-		<jxb:bindings node="//xsd:element[@name='fullUrl']">
-			<jxb:property name="fullUrlList" />
-		</jxb:bindings>
-
 	</jxb:bindings>
 
 </jxb:bindings>

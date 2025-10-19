@@ -19,48 +19,71 @@
 							<xsd:element name="hostBlock" minOccurs="1" maxOccurs="1">
 								<xsd:complexType>
 									<xsd:sequence>
-										<xsd:element name="address" minOccurs="0" maxOccurs="unbounded">
+										<xsd:element name="addressList" minOccurs="1" maxOccurs="1">
 											<xsd:complexType>
-												<xsd:simpleContent>
-													<xsd:extension base="xsd:string">
-														<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
-													</xsd:extension>												
-												</xsd:simpleContent>																							
-											</xsd:complexType>										
+												<xsd:sequence>
+													<xsd:element name="address" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:simpleContent>
+																<xsd:extension base="xsd:string">
+																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
+																</xsd:extension>												
+															</xsd:simpleContent>																							
+														</xsd:complexType>										
+													</xsd:element>											
+												</xsd:sequence>										
+											</xsd:complexType>									
 										</xsd:element>
 										
-										<xsd:element name="country" minOccurs="0" maxOccurs="unbounded">
+										<xsd:element name="countryList" minOccurs="1" maxOccurs="1">
 											<xsd:complexType>
-												<xsd:simpleContent>
-													<xsd:extension base="xsd:string">
-														<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
-													</xsd:extension>												
-												</xsd:simpleContent>																							
-											</xsd:complexType>										
+												<xsd:sequence>
+													<xsd:element name="country" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:simpleContent>
+																<xsd:extension base="xsd:string">
+																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
+																</xsd:extension>												
+															</xsd:simpleContent>																							
+														</xsd:complexType>										
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>									
+										</xsd:element>
+		
+										<xsd:element name="fullUrlList" minOccurs="1" maxOccurs="1">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="fullUrl" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:simpleContent>
+																<xsd:extension base="xsd:string">
+																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
+																</xsd:extension>												
+															</xsd:simpleContent>																							
+														</xsd:complexType>										
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
 										</xsd:element>
 										
-										<xsd:element name="userAgent" minOccurs="0" maxOccurs="unbounded">
+										<xsd:element name="userAgentList" minOccurs="1" maxOccurs="1">
 											<xsd:complexType>
-												<xsd:simpleContent>
-													<xsd:extension base="xsd:string">
-														<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
-													</xsd:extension>												
-												</xsd:simpleContent>																							
-											</xsd:complexType>										
+												<xsd:sequence>
+													<xsd:element name="userAgent" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:simpleContent>
+																<xsd:extension base="xsd:string">
+																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
+																</xsd:extension>												
+															</xsd:simpleContent>																							
+														</xsd:complexType>										
+													</xsd:element>
+												</xsd:sequence>
+											</xsd:complexType>
 										</xsd:element>
-										
-										<xsd:element name="fullUrl" minOccurs="0" maxOccurs="unbounded">
-											<xsd:complexType>
-												<xsd:simpleContent>
-													<xsd:extension base="xsd:string">
-														<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
-													</xsd:extension>												
-												</xsd:simpleContent>																							
-											</xsd:complexType>										
-										</xsd:element>
-									</xsd:sequence>
-								</xsd:complexType>							
-							
+									</xsd:sequence>		
+								</xsd:complexType>															
 							</xsd:element>						
 						</xsd:sequence>
 					</xsd:complexType>				

@@ -25,10 +25,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.Address;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.Country;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.FullUrl;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.UserAgent;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.AddressList.Address;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.CountryList.Country;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.FullUrlList.FullUrl;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.UserAgentList.UserAgent;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService.ConfigWrapper;
 import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
@@ -75,7 +75,7 @@ public class FirewallFilter implements Filter {
 				
 		try {			
 			// pobranie listy blokad adresow ip i host name
-			List<Address> hostBlockAddressList = hostBlock.getAddressList();
+			List<Address> hostBlockAddressList = hostBlock.getAddressList().getAddress();
 
 			// sprawdzamy, czy adres ip lub nazwa hosta jest na tej liscie
 			for (Address address : hostBlockAddressList) {
@@ -90,7 +90,7 @@ public class FirewallFilter implements Filter {
 			}
 			
 			// pobranie listy blokowanych krajow
-			List<Country> countryList = hostBlock.getCountryList();
+			List<Country> countryList = hostBlock.getCountryList().getCountry();
 			
 			for (Country country : countryList) {
 				// sprawdzenie, czy nalezy blokowac dany kraj
@@ -118,12 +118,12 @@ public class FirewallFilter implements Filter {
 				
 		try {			
 			// pobranie listy blokowanych user agent
-			List<UserAgent> hostBlockUserAgentList = hostBlock.getUserAgentList();
+			List<UserAgent> hostBlockUserAgentList = hostBlock.getUserAgentList().getUserAgent();
 
 			// sprawdzamy, czy user agent jest na tej liscie
 			for (UserAgent userAgent : hostBlockUserAgentList) {
 				
-				if (userAgent.getValue().matches(clientInfo.userAgent) == true) {
+				if (clientInfo.userAgent.matches(userAgent.getValue()) == true) {
 					
 					clientInfo.doBlock = true;
 					clientInfo.doBlockSendRandomData = userAgent.isRandomDataSend();
@@ -146,12 +146,12 @@ public class FirewallFilter implements Filter {
 		HostBlock hostBlock = configWrapper.getConfig().getFirewall().getHostBlock();
 		
 		try {
-			List<FullUrl> fullUrlList = hostBlock.getFullUrlList();
+			List<FullUrl> fullUrlList = hostBlock.getFullUrlList().getFullUrl();
 			
 			// sprawdzanie, czy dane wywolanie jest zablokowane
 			for (FullUrl fullUrl : fullUrlList) {
 				
-				if (fullUrl.getValue().matches(clientInfo.fullUrl) == true) {
+				if (clientInfo.fullUrl.matches(fullUrl.getValue()) == true) {
 					
 					clientInfo.doBlock = true;
 					clientInfo.doBlockSendRandomData = fullUrl.isRandomDataSend();
@@ -422,8 +422,8 @@ public class FirewallFilter implements Filter {
 		
 		private String country;
 
-		private boolean doBlock;
-		private boolean doBlockSendRandomData;
+		private boolean doBlock = false;
+		private boolean doBlockSendRandomData = false;
 	}
 		
 	private static class CallInfo {
