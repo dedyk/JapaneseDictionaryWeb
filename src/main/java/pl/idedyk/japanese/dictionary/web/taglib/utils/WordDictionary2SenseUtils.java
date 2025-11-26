@@ -24,7 +24,7 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 
 public class WordDictionary2SenseUtils {
 	
-	public static void createSenseHtmlElements(MessageSource messageSource, String servletContextPath, Entry entry, HtmlElementCommon translateTd, String findWord, boolean addSenseNumber) {
+	public static void createSenseHtmlElements(MessageSource messageSource, String servletContextPath, Entry entry, HtmlElementCommon translateTd, String findWord, boolean addSenseNumber, boolean addDetails) {
         for (int senseIdx = 0; senseIdx < entry.getSenseList().size(); ++senseIdx) {
         	
         	Sense sense = entry.getSenseList().get(senseIdx);
@@ -33,7 +33,7 @@ public class WordDictionary2SenseUtils {
 				// numer znaczenia
 				Div senseNoDiv = new Div("col-md-1");
 				
-				H senseNoDivH = new H(4, null, "margin-top: 20px; text-align: right");
+				H senseNoDivH = new H(4, null, "margin-top: 3px; text-align: right");
 				
 				senseNoDivH.addHtmlElement(new Text("" + (senseIdx + 1)));				
 				senseNoDiv.addHtmlElement(senseNoDivH);
@@ -44,117 +44,6 @@ public class WordDictionary2SenseUtils {
         	Div singleSenseDiv = new Div("col-md-11");
         	translateTd.addHtmlElement(singleSenseDiv);
         	
-			// ograniczone do kanji/kana					
-			if (sense.getRestrictedToKanjiList().size() > 0 || sense.getRestrictedToKanaList().size() > 0) {
-				List<String> restrictedToKanjiKanaList = new ArrayList<>();
-				
-				restrictedToKanjiKanaList.addAll(sense.getRestrictedToKanjiList());
-				restrictedToKanjiKanaList.addAll(sense.getRestrictedToKanaList());
-				
-				Div restrictedToKanjiKanaDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
-										
-				// zamiana na przetlumaczona postac
-				String restrictedToKanjiKanaString = "・" + messageSource.getMessage("wordDictionary.page.search.table.column.details.restrictedKanjiKana", null, Locale.getDefault()) + " " + String.join("; ", restrictedToKanjiKanaList);
-										
-				restrictedToKanjiKanaDiv.addHtmlElement(new Text(restrictedToKanjiKanaString + "<br/>"));
-    			
-				singleSenseDiv.addHtmlElement(restrictedToKanjiKanaDiv);
-			}
-								
-			// czesci mowy
-			if (sense.getPartOfSpeechList().size() > 0) { 
-				Div polishPartOfSpeechDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
-				
-				// zamiana na przetlumaczona postac
-				String translatedToPolishPartOfSpeechEnum = "・" + String.join("; ", Dictionary2HelperCommon.translateToPolishPartOfSpeechEnum(sense.getPartOfSpeechList()));
-										
-				polishPartOfSpeechDiv.addHtmlElement(new Text(translatedToPolishPartOfSpeechEnum + "<br/>"));
-    			
-				singleSenseDiv.addHtmlElement(polishPartOfSpeechDiv);						
-			}
-			
-			// kategoria slowa
-			if (sense.getFieldList().size() > 0) {
-				Div fieldsDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
-				
-				// zamiana na przetlumaczona postac
-				String translatedfieldEnum = "・" + String.join("; ", Dictionary2HelperCommon.translateToPolishFieldEnumList(sense.getFieldList()));
-										
-				fieldsDiv.addHtmlElement(new Text(translatedfieldEnum + "<br/>"));
-    			
-				singleSenseDiv.addHtmlElement(fieldsDiv);						
-			}
-			
-			// roznosci
-			if (sense.getMiscList().size() > 0) {
-				Div miscDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
-				
-				// zamiana na przetlumaczona postac
-				String translatedMiscEnum = "・" + String.join("; ", Dictionary2HelperCommon.translateToPolishMiscEnumList(sense.getMiscList()));
-										
-				miscDiv.addHtmlElement(new Text(translatedMiscEnum + "<br/>"));
-    			
-				singleSenseDiv.addHtmlElement(miscDiv);						
-			}	
-			
-			// dialekt
-			if (sense.getDialectList().size() > 0) {
-				Div dialectDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
-				
-				// zamiana na przetlumaczona postac
-				String translatedDialectEnum = "・" + String.join("; ", Dictionary2HelperCommon.translateToPolishDialectEnumList(sense.getDialectList()));
-										
-				dialectDiv.addHtmlElement(new Text(translatedDialectEnum + "<br/>"));
-    			
-				singleSenseDiv.addHtmlElement(dialectDiv);						
-			}	
-			
-			// zagraniczne pochodzenie slowa
-			if (sense.getLanguageSourceList().size() > 0) {
-				Div languageSourceDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
-				
-				// zamiana na przetlumaczona postac
-				List<String> singleLanguageSourceList = new ArrayList<>();
-				
-				for (LanguageSource languageSource : sense.getLanguageSourceList()) {
-												
-					StringBuffer singleLanguageSource = new StringBuffer();
-					
-					String languageCodeInPolish = Dictionary2HelperCommon.translateToPolishLanguageCode(languageSource.getLang());
-					String languageValue = languageSource.getValue();
-					String languageLsWasei = Dictionary2HelperCommon.translateToPolishLanguageSourceLsWaseiEnum(languageSource.getLsWasei());
-					
-					if (languageValue != null && languageValue.equals("") == false) {
-						singleLanguageSource.append(languageCodeInPolish + ": " + languageValue);
-						
-					} else {
-						singleLanguageSource.append(Dictionary2HelperCommon.translateToPolishLanguageCodeWithoutValue(languageSource.getLang()));
-					}
-					
-					if (languageLsWasei != null && languageLsWasei.equals("") == false) {
-						singleLanguageSource.append(", ").append(languageLsWasei);
-					}
-
-					singleLanguageSourceList.add(singleLanguageSource.toString());							
-				}
-												
-				String joinedLanguageSource = "・" + String.join("; ", singleLanguageSourceList);
-										
-				languageSourceDiv.addHtmlElement(new Text(joinedLanguageSource + "<br/>"));
-    			
-				singleSenseDiv.addHtmlElement(languageSourceDiv);						
-			}
-			
-			// odnosnic do innego slowa
-			if (sense.getReferenceToAnotherKanjiKanaList().size() > 0) {						
-				createReferenceAntonymToAnotherKanjiKanaDiv(messageSource, servletContextPath, singleSenseDiv, sense.getReferenceToAnotherKanjiKanaList(), "wordDictionary.page.search.table.column.details.referenceToAnotherKanjiKana");
-			}
-			
-			// odnosnic do przeciwienstwa
-			if (sense.getAntonymList().size() > 0) {						
-				createReferenceAntonymToAnotherKanjiKanaDiv(messageSource, servletContextPath, singleSenseDiv, sense.getAntonymList(), "wordDictionary.page.search.table.column.details.referewnceToAntonymKanjiKana");
-			}					
-			
 			// znaczenie
         	List<Gloss> polishGlossList = Dictionary2HelperCommon.getPolishGlossList(sense.getGlossList());
         	SenseAdditionalInfo polishAdditionalInfo = Dictionary2HelperCommon.findFirstPolishAdditionalInfo(sense.getAdditionalInfoList());
@@ -179,10 +68,124 @@ public class WordDictionary2SenseUtils {
     			
     			singleSenseDiv.addHtmlElement(infoDiv);						
 			}
-			
+        	
+        	if (addDetails == true) {
+        	
+				// ograniczone do kanji/kana					
+				if (sense.getRestrictedToKanjiList().size() > 0 || sense.getRestrictedToKanaList().size() > 0) {
+					List<String> restrictedToKanjiKanaList = new ArrayList<>();
+					
+					restrictedToKanjiKanaList.addAll(sense.getRestrictedToKanjiList());
+					restrictedToKanjiKanaList.addAll(sense.getRestrictedToKanaList());
+					
+					Div restrictedToKanjiKanaDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+											
+					// zamiana na przetlumaczona postac
+					String restrictedToKanjiKanaString = messageSource.getMessage("wordDictionary.page.search.table.column.details.restrictedKanjiKana", null, Locale.getDefault()) + " " + String.join("; ", restrictedToKanjiKanaList);
+											
+					restrictedToKanjiKanaDiv.addHtmlElement(new Text(restrictedToKanjiKanaString + "<br/>"));
+	    			
+					singleSenseDiv.addHtmlElement(restrictedToKanjiKanaDiv);
+				}
+									
+				// czesci mowy
+				if (sense.getPartOfSpeechList().size() > 0) { 
+					Div polishPartOfSpeechDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+					
+					// zamiana na przetlumaczona postac
+					String translatedToPolishPartOfSpeechEnum = String.join("; ", Dictionary2HelperCommon.translateToPolishPartOfSpeechEnum(sense.getPartOfSpeechList()));
+											
+					polishPartOfSpeechDiv.addHtmlElement(new Text(translatedToPolishPartOfSpeechEnum + "<br/>"));
+	    			
+					singleSenseDiv.addHtmlElement(polishPartOfSpeechDiv);						
+				}
+				
+				// kategoria slowa
+				if (sense.getFieldList().size() > 0) {
+					Div fieldsDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+					
+					// zamiana na przetlumaczona postac
+					String translatedfieldEnum = String.join("; ", Dictionary2HelperCommon.translateToPolishFieldEnumList(sense.getFieldList()));
+											
+					fieldsDiv.addHtmlElement(new Text(translatedfieldEnum + "<br/>"));
+	    			
+					singleSenseDiv.addHtmlElement(fieldsDiv);						
+				}
+				
+				// roznosci
+				if (sense.getMiscList().size() > 0) {
+					Div miscDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+					
+					// zamiana na przetlumaczona postac
+					String translatedMiscEnum = String.join("; ", Dictionary2HelperCommon.translateToPolishMiscEnumList(sense.getMiscList()));
+											
+					miscDiv.addHtmlElement(new Text(translatedMiscEnum + "<br/>"));
+	    			
+					singleSenseDiv.addHtmlElement(miscDiv);						
+				}	
+				
+				// dialekt
+				if (sense.getDialectList().size() > 0) {
+					Div dialectDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+					
+					// zamiana na przetlumaczona postac
+					String translatedDialectEnum = String.join("; ", Dictionary2HelperCommon.translateToPolishDialectEnumList(sense.getDialectList()));
+											
+					dialectDiv.addHtmlElement(new Text(translatedDialectEnum + "<br/>"));
+	    			
+					singleSenseDiv.addHtmlElement(dialectDiv);						
+				}	
+				
+				// zagraniczne pochodzenie slowa
+				if (sense.getLanguageSourceList().size() > 0) {
+					Div languageSourceDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+					
+					// zamiana na przetlumaczona postac
+					List<String> singleLanguageSourceList = new ArrayList<>();
+					
+					for (LanguageSource languageSource : sense.getLanguageSourceList()) {
+													
+						StringBuffer singleLanguageSource = new StringBuffer();
+						
+						String languageCodeInPolish = Dictionary2HelperCommon.translateToPolishLanguageCode(languageSource.getLang());
+						String languageValue = languageSource.getValue();
+						String languageLsWasei = Dictionary2HelperCommon.translateToPolishLanguageSourceLsWaseiEnum(languageSource.getLsWasei());
+						
+						if (languageValue != null && languageValue.equals("") == false) {
+							singleLanguageSource.append(languageCodeInPolish + ": " + languageValue);
+							
+						} else {
+							singleLanguageSource.append(Dictionary2HelperCommon.translateToPolishLanguageCodeWithoutValue(languageSource.getLang()));
+						}
+						
+						if (languageLsWasei != null && languageLsWasei.equals("") == false) {
+							singleLanguageSource.append(", ").append(languageLsWasei);
+						}
+	
+						singleLanguageSourceList.add(singleLanguageSource.toString());							
+					}
+													
+					String joinedLanguageSource = String.join("; ", singleLanguageSourceList);
+											
+					languageSourceDiv.addHtmlElement(new Text(joinedLanguageSource + "<br/>"));
+	    			
+					singleSenseDiv.addHtmlElement(languageSourceDiv);						
+				}
+				
+				// odnosnic do innego slowa
+				if (sense.getReferenceToAnotherKanjiKanaList().size() > 0) {						
+					createReferenceAntonymToAnotherKanjiKanaDiv(messageSource, servletContextPath, singleSenseDiv, sense.getReferenceToAnotherKanjiKanaList(), "wordDictionary.page.search.table.column.details.referenceToAnotherKanjiKana");
+				}
+				
+				// odnosnic do przeciwienstwa
+				if (sense.getAntonymList().size() > 0) {						
+					createReferenceAntonymToAnotherKanjiKanaDiv(messageSource, servletContextPath, singleSenseDiv, sense.getAntonymList(), "wordDictionary.page.search.table.column.details.referewnceToAntonymKanjiKana");
+				}
+        	}
+						
 			// przerwa
 			if (senseIdx != entry.getSenseList().size() - 1) {    					
-				Div marginDiv = new Div(null, "margin-bottom: 17px;");
+				Div marginDiv = new Div(null, "margin-bottom: 20px;");
 				
 				singleSenseDiv.addHtmlElement(marginDiv);						
 			}
@@ -208,7 +211,7 @@ public class WordDictionary2SenseUtils {
 		if (wordsToCreateLinkList.size() > 0) {
 			Div referenceToAnotherKanjiKanaDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
 			
-			referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text("・" + messageSource.getMessage(messageCode, null, Locale.getDefault()) + " "));
+			referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text(messageSource.getMessage(messageCode, null, Locale.getDefault()) + " "));
 			
 			for (int wordsToCreateLinkListIdx = 0; wordsToCreateLinkListIdx < wordsToCreateLinkList.size(); ++wordsToCreateLinkListIdx) {
 				String currentWordsToCreateLink = wordsToCreateLinkList.get(wordsToCreateLinkListIdx);

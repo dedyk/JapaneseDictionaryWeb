@@ -668,7 +668,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    	Div senseBodyDiv = new Div("col-md-11", "font-size: 130%");
 	    	senseDiv.addHtmlElement(senseBodyDiv);
 	    	
-	    	WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), dictionaryEntry2, senseBodyDiv, null, true);
+	    	WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), dictionaryEntry2, senseBodyDiv, null, true, true);
 	    							
 			return resultDiv;
 		}
