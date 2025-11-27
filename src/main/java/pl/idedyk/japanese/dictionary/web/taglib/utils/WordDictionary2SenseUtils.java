@@ -50,40 +50,61 @@ public class WordDictionary2SenseUtils {
         	List<Gloss> polishGlossList = Dictionary2HelperCommon.getPolishGlossList(sense.getGlossList());
         	SenseAdditionalInfo polishAdditionalInfo = Dictionary2HelperCommon.findFirstPolishAdditionalInfo(sense.getAdditionalInfoList());
         	
-        	//    
+        	//
         	
-            // dynamiczna przerwa
-            Supplier<String> onetimeBiggerMarginTypGenerator = new Supplier<String>() {
-                    private boolean generatedSpacer = false;
-
-                    @Override
-                    public String get() {
-                            if (generatedSpacer == true) {
-                                    return "3px";
-                            }
-                            
-                            generatedSpacer = true;
-                            
-                            if (polishAdditionalInfo == null) {
-                            	return "3px";
-                            }
-
-                            return "10px";
-                    }
-            };
-        	                	
-			for (int currentGlossIdx = 0; currentGlossIdx < polishGlossList.size(); ++currentGlossIdx) {
-				
-				Gloss gloss = polishGlossList.get(currentGlossIdx);
-										
-				singleSenseDiv.addHtmlElement(new Text(getStringWithMark(
-						gloss.getValue(), findWord, true) + 
-						(gloss.getGType() != null ? " (" + Dictionary2HelperCommon.translateToPolishGlossType(gloss.getGType()) + ")" : "") + 
-						(currentGlossIdx != sense.getGlossList().size() - 1 ? "<br/>" : "")));						
-			}
-			    				
+        	boolean wasAdditionalInfoAllTypes = false;        	        	
+            boolean existsGtypeNull = polishGlossList.stream().filter(f -> f.getGType() == null).count() > 0;
+            
+            if (existsGtypeNull == true) { // jezeli istnieje gType rowne null, wiec pokazujemy tlumaczenia i wszelkie wyjasnienia osobno
+            	
+                // lista tlumaczen - gtype = null
+    			for (int currentGlossIdx = 0; currentGlossIdx < polishGlossList.size(); ++currentGlossIdx) {
+    				
+    				Gloss gloss = polishGlossList.get(currentGlossIdx);
+    				
+    				if (gloss.getGType() == null) {
+    					singleSenseDiv.addHtmlElement(new Text(getStringWithMark(
+    							gloss.getValue(), findWord, true) + 
+    							(gloss.getGType() != null ? " (" + Dictionary2HelperCommon.translateToPolishGlossType(gloss.getGType()) + ")" : "") + 
+    							(currentGlossIdx != sense.getGlossList().size() - 1 ? "<br/>" : "")));
+    				}				
+    			}            	
+            	
+                // lista tlumaczen - gtype != null jako informacje dodatkowe
+    			for (int currentGlossIdx = 0; currentGlossIdx < polishGlossList.size(); ++currentGlossIdx) {
+    				
+    				Gloss gloss = polishGlossList.get(currentGlossIdx);
+    				
+    				if (gloss.getGType() != null) {
+    					wasAdditionalInfoAllTypes = true;
+    					
+    					Div infoDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify; font-size: 90%");
+    					
+    	    			infoDiv.addHtmlElement(new Text(getStringWithMark(gloss.getValue(), findWord, true) + 
+    	    					" (" + Dictionary2HelperCommon.translateToPolishGlossType(gloss.getGType()) + ")"));
+    	    			
+    	    			singleSenseDiv.addHtmlElement(infoDiv);						
+    				}				
+    			}
+            	
+            } else { // jezeli nie ma gType = null, wiec pokazujemy po staremu
+            	
+                // lista tlumaczen
+    			for (int currentGlossIdx = 0; currentGlossIdx < polishGlossList.size(); ++currentGlossIdx) {
+    				
+    				Gloss gloss = polishGlossList.get(currentGlossIdx);
+    				    				
+					singleSenseDiv.addHtmlElement(new Text(getStringWithMark(
+							gloss.getValue(), findWord, true) + 
+							(gloss.getGType() != null ? " (" + Dictionary2HelperCommon.translateToPolishGlossType(gloss.getGType()) + ")" : "") + 
+							(currentGlossIdx != sense.getGlossList().size() - 1 ? "<br/>" : "")));
+    			}
+            }
+            			
 			// informacje dodatkowe												
-			if (polishAdditionalInfo != null) {					
+			if (polishAdditionalInfo != null) {
+				wasAdditionalInfoAllTypes = true;
+				
 				Div infoDiv = new Div(null, "margin-left: 40px; margin-top: 3px; text-align: justify; font-size: 90%");
 				
     			infoDiv.addHtmlElement(new Text(getStringWithMark(polishAdditionalInfo.getValue(), findWord, true)));
@@ -92,6 +113,27 @@ public class WordDictionary2SenseUtils {
 			}
         	
         	if (addDetails == true) {
+        		final boolean wasAdditionalInfoAllTypesAsFinal = wasAdditionalInfoAllTypes;
+        		
+                // dynamiczna przerwa
+                Supplier<String> onetimeBiggerMarginTypGenerator = new Supplier<String>() {
+                        private boolean generatedSpacer = false;
+
+                        @Override
+                        public String get() {
+                                if (generatedSpacer == true) {
+                                        return "3px";
+                                }
+                                
+                                generatedSpacer = true;
+                                
+                                if (wasAdditionalInfoAllTypesAsFinal == false) {
+                                	return "3px";
+                                }
+
+                                return "10px";
+                        }
+                };
         		        	
 				// ograniczone do kanji/kana					
 				if (sense.getRestrictedToKanjiList().size() > 0 || sense.getRestrictedToKanaList().size() > 0) {
