@@ -50,7 +50,27 @@ public class WordDictionary2SenseUtils {
         	List<Gloss> polishGlossList = Dictionary2HelperCommon.getPolishGlossList(sense.getGlossList());
         	SenseAdditionalInfo polishAdditionalInfo = Dictionary2HelperCommon.findFirstPolishAdditionalInfo(sense.getAdditionalInfoList());
         	
-        	//                	
+        	//    
+        	
+            // dynamiczna przerwa
+            Supplier<String> onetimeBiggerMarginTypGenerator = new Supplier<String>() {
+                    private boolean generatedSpacer = false;
+
+                    @Override
+                    public String get() {
+                            if (generatedSpacer == true) {
+                                    return "3px";
+                            }
+                            
+                            generatedSpacer = true;
+                            
+                            if (polishAdditionalInfo == null) {
+                            	return "3px";
+                            }
+
+                            return "10px";
+                    }
+            };
         	                	
 			for (int currentGlossIdx = 0; currentGlossIdx < polishGlossList.size(); ++currentGlossIdx) {
 				
@@ -72,22 +92,7 @@ public class WordDictionary2SenseUtils {
 			}
         	
         	if (addDetails == true) {
-        		
-                // dynamiczna przerwa
-                Supplier<String> onetimeBiggerMarginTypGenerator = new Supplier<String>() {
-                        private boolean generatedSpacer = false;
-
-                        @Override
-                        public String get() {
-                                if (generatedSpacer == true) {
-                                        return "3px";
-                                }
-                                generatedSpacer = true;
-
-                                return "10px";
-                        }
-                };
-        	
+        		        	
 				// ograniczone do kanji/kana					
 				if (sense.getRestrictedToKanjiList().size() > 0 || sense.getRestrictedToKanaList().size() > 0) {
 					List<String> restrictedToKanjiKanaList = new ArrayList<>();
