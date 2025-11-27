@@ -109,7 +109,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    	translateTd = new Td(null, "padding-top: 10px");
     	    	tr.addHtmlElement(translateTd);
     	    	
-    	    	WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), entry, translateTd, findWord, false, false);
+    	    	WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), entry, translateTd, findWord, false, true);
     	    	                
                 // link
                 link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), entry);

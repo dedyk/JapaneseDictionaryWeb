@@ -3,6 +3,8 @@ package pl.idedyk.japanese.dictionary.web.taglib.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.springframework.context.MessageSource;
 
@@ -70,6 +72,21 @@ public class WordDictionary2SenseUtils {
 			}
         	
         	if (addDetails == true) {
+        		
+                // dynamiczna przerwa
+                Supplier<String> onetimeBiggerMarginTypGenerator = new Supplier<String>() {
+                        private boolean generatedSpacer = false;
+
+                        @Override
+                        public String get() {
+                                if (generatedSpacer == true) {
+                                        return "3px";
+                                }
+                                generatedSpacer = true;
+
+                                return "10px";
+                        }
+                };
         	
 				// ograniczone do kanji/kana					
 				if (sense.getRestrictedToKanjiList().size() > 0 || sense.getRestrictedToKanaList().size() > 0) {
@@ -78,7 +95,7 @@ public class WordDictionary2SenseUtils {
 					restrictedToKanjiKanaList.addAll(sense.getRestrictedToKanjiList());
 					restrictedToKanjiKanaList.addAll(sense.getRestrictedToKanaList());
 					
-					Div restrictedToKanjiKanaDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+					Div restrictedToKanjiKanaDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
 											
 					// zamiana na przetlumaczona postac
 					String restrictedToKanjiKanaString = messageSource.getMessage("wordDictionary.page.search.table.column.details.restrictedKanjiKana", null, Locale.getDefault()) + " " + String.join("; ", restrictedToKanjiKanaList);
@@ -90,7 +107,7 @@ public class WordDictionary2SenseUtils {
 									
 				// czesci mowy
 				if (sense.getPartOfSpeechList().size() > 0) { 
-					Div polishPartOfSpeechDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+					Div polishPartOfSpeechDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
 					
 					// zamiana na przetlumaczona postac
 					String translatedToPolishPartOfSpeechEnum = String.join("; ", Dictionary2HelperCommon.translateToPolishPartOfSpeechEnum(sense.getPartOfSpeechList()));
@@ -102,7 +119,7 @@ public class WordDictionary2SenseUtils {
 				
 				// kategoria slowa
 				if (sense.getFieldList().size() > 0) {
-					Div fieldsDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+					Div fieldsDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
 					
 					// zamiana na przetlumaczona postac
 					String translatedfieldEnum = String.join("; ", Dictionary2HelperCommon.translateToPolishFieldEnumList(sense.getFieldList()));
@@ -114,7 +131,7 @@ public class WordDictionary2SenseUtils {
 				
 				// roznosci
 				if (sense.getMiscList().size() > 0) {
-					Div miscDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+					Div miscDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
 					
 					// zamiana na przetlumaczona postac
 					String translatedMiscEnum = String.join("; ", Dictionary2HelperCommon.translateToPolishMiscEnumList(sense.getMiscList()));
@@ -126,7 +143,7 @@ public class WordDictionary2SenseUtils {
 				
 				// dialekt
 				if (sense.getDialectList().size() > 0) {
-					Div dialectDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+					Div dialectDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
 					
 					// zamiana na przetlumaczona postac
 					String translatedDialectEnum = String.join("; ", Dictionary2HelperCommon.translateToPolishDialectEnumList(sense.getDialectList()));
@@ -138,7 +155,7 @@ public class WordDictionary2SenseUtils {
 				
 				// zagraniczne pochodzenie slowa
 				if (sense.getLanguageSourceList().size() > 0) {
-					Div languageSourceDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+					Div languageSourceDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
 					
 					// zamiana na przetlumaczona postac
 					List<String> singleLanguageSourceList = new ArrayList<>();
@@ -174,12 +191,12 @@ public class WordDictionary2SenseUtils {
 				
 				// odnosnic do innego slowa
 				if (sense.getReferenceToAnotherKanjiKanaList().size() > 0) {						
-					createReferenceAntonymToAnotherKanjiKanaDiv(messageSource, servletContextPath, singleSenseDiv, sense.getReferenceToAnotherKanjiKanaList(), "wordDictionary.page.search.table.column.details.referenceToAnotherKanjiKana");
+					createReferenceAntonymToAnotherKanjiKanaDiv(messageSource, servletContextPath, singleSenseDiv, sense.getReferenceToAnotherKanjiKanaList(), "wordDictionary.page.search.table.column.details.referenceToAnotherKanjiKana", onetimeBiggerMarginTypGenerator);
 				}
 				
 				// odnosnic do przeciwienstwa
 				if (sense.getAntonymList().size() > 0) {						
-					createReferenceAntonymToAnotherKanjiKanaDiv(messageSource, servletContextPath, singleSenseDiv, sense.getAntonymList(), "wordDictionary.page.search.table.column.details.referewnceToAntonymKanjiKana");
+					createReferenceAntonymToAnotherKanjiKanaDiv(messageSource, servletContextPath, singleSenseDiv, sense.getAntonymList(), "wordDictionary.page.search.table.column.details.referewnceToAntonymKanjiKana", onetimeBiggerMarginTypGenerator);
 				}
         	}
 						
@@ -192,7 +209,7 @@ public class WordDictionary2SenseUtils {
 		}   
 	}
 	
-	private static void createReferenceAntonymToAnotherKanjiKanaDiv(MessageSource messageSource, String servletContextPath, HtmlElementCommon translateTd, List<String> wordReference, String messageCode) {
+	private static void createReferenceAntonymToAnotherKanjiKanaDiv(MessageSource messageSource, String servletContextPath, HtmlElementCommon translateTd, List<String> wordReference, String messageCode, Supplier<String> onetimeBiggerMarginTypGenerator) {
 		List<String> wordsToCreateLinkList = new ArrayList<>();
 		
 		for (String referenceToAnotherKanjiKana : wordReference) {							
@@ -209,7 +226,7 @@ public class WordDictionary2SenseUtils {
 		}
 		
 		if (wordsToCreateLinkList.size() > 0) {
-			Div referenceToAnotherKanjiKanaDiv = new Div(null, "font-size: 75%; margin-top: 3px; text-align: justify");
+			Div referenceToAnotherKanjiKanaDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
 			
 			referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text(messageSource.getMessage(messageCode, null, Locale.getDefault()) + " "));
 			
