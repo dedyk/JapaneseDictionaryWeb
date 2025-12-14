@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -79,7 +80,7 @@ public class ErrorController {
 		return new ModelAndView("applicationError", model);
 	}
 		
-	@ExceptionHandler(NoHandlerFoundException.class)
+	@ExceptionHandler({NoHandlerFoundException.class, NoResourceFoundException.class})
 	@ResponseStatus(value = HttpStatus.NOT_FOUND)
 	public String handleNotFound(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
 
