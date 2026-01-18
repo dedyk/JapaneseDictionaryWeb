@@ -41,7 +41,9 @@ import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog.GenerateDrawStrokeDialogParams;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
+import pl.idedyk.japanese.dictionary2.api.helper.Kanji2HelperCommon;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
+import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KenteiLevelType;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.Misc2Info;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.MiscInfo;
 
@@ -251,6 +253,15 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			panelBody.addHtmlElement(infoDiv);			
 		}
 		
+		// kanji kentei
+		Div kanjiKenteiDiv = generateKanjiKenteiSection(mainInfoMenu);
+		
+		if (kanjiKenteiDiv != null) {
+			panelBody.addHtmlElement(new Hr());
+			
+			panelBody.addHtmlElement(kanjiKenteiDiv);
+		}
+		
 		// wystepowanie znaku
 		Div kanjiGroups = generateKanjiGroupsSection(mainInfoMenu);
 		
@@ -264,7 +275,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		return panelDiv;
 	}
-	
+
 	private Div generateKanjiSection(Menu menu, boolean mobile) throws IOException, DictionaryException {
 		
 		Div kanjiDiv = new Div();
@@ -566,6 +577,18 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		}
 		
 		return generateStandardDivWithStringList("infoId", getMessage("kanjiDictionaryDetails.page.kanjiEntry.info.title"), menu, Arrays.asList(new String [] { info }));
+	}
+	
+	private Div generateKanjiKenteiSection(Menu menu) {
+		
+		KenteiLevelType kenteiLevel = kanjiEntry.getMisc2().getKenteiLevel();
+		
+		if (kenteiLevel == null) {
+			return null;
+		}
+				
+		return generateStandardDivWithStringList("kanjiKenteiId", getMessage("kanjiDictionaryDetails.page.kanjiEntry.kanjiKentei.title"), menu, 
+				Arrays.asList(new String [] { Kanji2HelperCommon.translateToPolishGlossType(kenteiLevel) }));
 	}
 	
 	private Div generateKanjiGroupsSection(Menu menu) {
