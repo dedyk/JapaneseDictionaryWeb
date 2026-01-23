@@ -10,7 +10,7 @@
 <%@attribute name="pageDescription" required="false"%>
 
 <!doctype html>
-<html lang="pl">
+<html lang="pl" data-theme="dark"> <!--  FM_FIXME: light/dark -->
 <head>
 	<meta charset="utf-8" />
 	

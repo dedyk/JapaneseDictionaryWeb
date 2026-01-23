@@ -2,6 +2,12 @@
 #radicals a:visited { color: black; }
 #radicals a:hover { color: blue; }
 
+/* FM_FIXME: testy !!!!! */
+[data-theme="dark"] {
+  background: #121212;
+  /* color: #e0e0e0; */
+}
+
 /* Cookie warning */
 #cookie-warn {
 	position: fixed;
