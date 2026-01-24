@@ -2,14 +2,13 @@
 #radicals a:visited { color: black; }
 #radicals a:hover { color: blue; }
 
-/* FM_FIXME: testy !!!!! */
 [data-theme="dark"] {
-  background: #121212;
-  /* color: #e0e0e0; */
+  background: #181a1b;
+  color: #c3beb7;
 }
 
 /* Cookie warning */
-#cookie-warn {
+[data-theme="light"] #cookie-warn {
 	position: fixed;
 	bottom: 0;
 	background: #EEE;
@@ -18,6 +17,20 @@
 	width: 90%;
 	display: none;
 	z-index: 99;
+	color: #3e3e3e;
+}
+
+/* Cookie warning */
+[data-theme="dark"] #cookie-warn {
+	position: fixed;
+	bottom: 0;
+	background: #222426;
+	margin: 0;
+	padding: 15px;
+	width: 90%;
+	display: none;
+	z-index: 99;
+	color: #c3beb7;
 }
  
 #cookie-warn a {
@@ -26,7 +39,13 @@
 	padding-right: 20px;
 }
  
-#cookie-warn p {
+[data-theme="light"] #cookie-warn p {
 	font-size: 12px;
 	color: #333;
 }		
+
+[data-theme="dark"] #cookie-warn p {
+	font-size: 12px;
+	color: #9D9488;
+}
+
