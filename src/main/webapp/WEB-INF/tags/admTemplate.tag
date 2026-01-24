@@ -58,7 +58,7 @@
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery-validate/jquery.validate.min.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery-validate/messages_pl.js"></script>
 	
-	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap/bootstrap.min.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap/bootstrap.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap-select/bootstrap-select.min.js"></script>
 	
 	<script src="<c:out value='${staticFilePrefix}' />/js/datatables/jquery.dataTables.min.js"></script>
@@ -77,6 +77,7 @@
 	</style>
 </head>
 
+<!-- FM_FIXME: dark mode -->
 <body>
 	
 	<div class="container">

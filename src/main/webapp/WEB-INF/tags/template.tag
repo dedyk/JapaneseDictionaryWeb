@@ -44,8 +44,15 @@
 	
 	<link href="<c:out value='${staticFilePrefix}' />/css/excite-bike/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
 	
-	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+	<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
+	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap/bootstrap.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
+	</c:if>
+	
+	<c:if test="${sessionScope.theme == 'dark'}">
+	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap/bootstrap-dark.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
+	</c:if>
 	
 	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/jquery.dataTables.min.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet" />
@@ -64,7 +71,7 @@
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery-validate/jquery.validate.min.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery-validate/messages_pl.js"></script>
 	
-	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap/bootstrap.min.js"></script>
+	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap/bootstrap.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/bootstrap-select/bootstrap-select.min.js"></script>
 	
 	<script src="<c:out value='${staticFilePrefix}' />/js/datatables/jquery.dataTables.min.js"></script>
