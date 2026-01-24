@@ -10,6 +10,7 @@ public class SessionListener implements HttpSessionListener {
     @Override
     public void sessionCreated(HttpSessionEvent se) {
     	// FM_FIXME: ustawiamy domyslny motyw strony
+    	// FM_FIXME: trzymac w ciastku
         se.getSession().setAttribute("theme", "dark");
     }
 
