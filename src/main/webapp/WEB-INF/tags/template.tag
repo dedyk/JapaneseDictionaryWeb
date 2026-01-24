@@ -50,7 +50,13 @@
 	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/jquery.dataTables.min.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet" />
 	
+	<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
 	<link href="<c:out value='${staticFilePrefix}' />/css/japanese-dictionary/japanese-dictionary.css" rel="stylesheet" />
+	</c:if>
+	
+	<c:if test="${sessionScope.theme == 'dark'}">
+	<link href="<c:out value='${staticFilePrefix}' />/css/japanese-dictionary/japanese-dictionary-dark.css" rel="stylesheet" />
+	</c:if>
 	
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-1.11.1.min.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-ui-1.10.4.custom.min.js"></script>
@@ -99,7 +105,7 @@
 
 </head>
 
-<body data-theme="light">
+<body class="bodyMain">
 	
 	<div class="container">
 
