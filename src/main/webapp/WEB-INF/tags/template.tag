@@ -48,7 +48,7 @@
 	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap/bootstrap.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet" />
-	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/jquery.dataTables-dark.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/jquery.dataTables.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/japanese-dictionary/japanese-dictionary.css" rel="stylesheet" />
 	</c:if>
 	
