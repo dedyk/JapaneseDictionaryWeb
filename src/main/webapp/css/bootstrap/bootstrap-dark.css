@@ -2049,7 +2049,7 @@ fieldset[disabled] .btn {
 .btn-default.active,
 .open .dropdown-toggle.btn-default {
   color: #c8c3bc;
-  background-color: #ebebeb;
+  background-color: #232628;
   border-color: #adadad;
 }
 .btn-default:active,
@@ -5329,7 +5329,7 @@ button.close {
   font-weight: normal;
   line-height: 18px;
   background-color: #f7f7f7;
-  border-bottom: 1px solid #ebebeb;
+  border-bottom: 1px solid #232628;
   border-radius: 5px 5px 0 0;
 }
 .popover-content {
