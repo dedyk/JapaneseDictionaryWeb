@@ -47,25 +47,20 @@
 	<link href="<c:out value='${staticFilePrefix}' />/css/excite-bike/jquery-ui-1.10.4.custom.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap/bootstrap.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/jquery.dataTables-dark.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/japanese-dictionary/japanese-dictionary.css" rel="stylesheet" />
 	</c:if>
 	
 	<c:if test="${sessionScope.theme == 'dark'}">
 	<link href="<c:out value='${staticFilePrefix}' />/css/excite-bike/jquery-ui-1.10.4.custom-dark.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap/bootstrap-dark.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap-select/bootstrap-select.min.css" rel="stylesheet" />
-	</c:if>
-	
-	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/jquery.dataTables.min.css" rel="stylesheet" />
-	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/dataTables.bootstrap.css" rel="stylesheet" />
-	
-	<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
-	<link href="<c:out value='${staticFilePrefix}' />/css/japanese-dictionary/japanese-dictionary.css" rel="stylesheet" />
-	</c:if>
-	
-	<c:if test="${sessionScope.theme == 'dark'}">
+	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/dataTables.bootstrap-dark.css" rel="stylesheet" />
+	<link href="<c:out value='${staticFilePrefix}' />/css/datatables/jquery.dataTables-dark.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/japanese-dictionary/japanese-dictionary-dark.css" rel="stylesheet" />
 	</c:if>
-	
+		
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-1.11.1.min.js"></script>
 	<script src="<c:out value='${staticFilePrefix}' />/js/jquery/jquery-ui-1.10.4.custom.min.js"></script>
 	
