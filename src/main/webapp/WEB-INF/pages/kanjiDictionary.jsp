@@ -198,7 +198,13 @@
 
 	        	currentPath = [];
 	            
+	        	<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
 	            color = "#000000";
+	            </c:if>
+	            <c:if test="${sessionScope.theme == 'dark'}">
+	            color = "white";
+	            </c:if>
+	            
 	            stroke = 10;
 
 	            oldPt = new createjs.Point(stage.mouseX, stage.mouseY);
@@ -605,13 +611,25 @@
         			
         				<div>
         					<jdwt:isMobile mobile="false">
-        						<canvas id="detectCanvas" width="500" height="500" style="border: 1px solid black;">        					
+        						<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
+        						<canvas id="detectCanvas" width="500" height="500" style="border: 1px solid black;">        						        					
         						</canvas>
+        						</c:if>
+        						<c:if test="${sessionScope.theme == 'dark'}">
+								<canvas id="detectCanvas" width="500" height="500" style="border: 1px solid #3a3e41;">        						        					
+        						</canvas>
+        						</c:if>
         					</jdwt:isMobile>
         					
-        					<jdwt:isMobile mobile="true">        					
+        					<jdwt:isMobile mobile="true">
+        						<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
         						<canvas id="detectCanvas" width="10" height="10" style="border: 1px solid black;">        					
         						</canvas>
+        						</c:if>
+        						<c:if test="${sessionScope.theme == 'dark'}">
+        						<canvas id="detectCanvas" width="10" height="10" style="border: 1px solid #3a3e41;">        					
+        						</canvas>
+        						</c:if>
         					</jdwt:isMobile>        					
         				</div>
         			</div>
@@ -686,8 +704,13 @@
 							function reDrawDetect() {
 
 								stage.clear();
-
+								
+					        	<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
 					            color = "#000000";
+					            </c:if>
+					            <c:if test="${sessionScope.theme == 'dark'}">
+					            color = "white";
+					            </c:if>
 					            stroke = 10;
 								
 								for (var idx = 0; idx < strokePaths.length; ++idx) {
