@@ -8,6 +8,8 @@ import org.springframework.context.MessageSource;
 
 import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.common.Utils.ThemeType;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.Button;
 import pl.idedyk.japanese.dictionary.web.html.Button.ButtonType;
@@ -57,11 +59,13 @@ public class GenerateDrawStrokeDialog {
 		return script;		
 	}
 
+	/*
 	public static Div generateDrawStrokeDialog(DictionaryManager dictionaryManager, MessageSource messageSource,
 			String word, String dialogId) throws IOException, DictionaryException {
 		
 		return generateDrawStrokeDialog(dictionaryManager, messageSource, word, dialogId, new GenerateDrawStrokeDialogParams());		
 	}
+	*/
 	
 	public static Div generateDrawStrokeDialog(DictionaryManager dictionaryManager, MessageSource messageSource,
 			String word, String dialogId, GenerateDrawStrokeDialogParams params) throws IOException, DictionaryException {
@@ -185,8 +189,8 @@ public class GenerateDrawStrokeDialog {
 		
 		scriptDrawingSb.append("		$('#" + dialogId + "Drawing').lazylinepainter({\n");
 		scriptDrawingSb.append("			\"svgData\": pathObj_" + dialogId + ",\n");
-		scriptDrawingSb.append("			\"strokeWidth\": 5,\n");
-		scriptDrawingSb.append("			\"strokeColor\": \"#262213\",\n");
+		scriptDrawingSb.append("			\"strokeWidth\": 5,\n");		
+		scriptDrawingSb.append("			\"strokeColor\": \"" + params.color + "\",\n");
 		scriptDrawingSb.append("	        \"viewBoxX\": 0,\n");
 		scriptDrawingSb.append("	        \"viewBoxY\": 0,\n");
 		scriptDrawingSb.append("	        \"viewBoxWidth\": " + (params.zoomFactory * (params.width - 80)) + ",\n");
@@ -220,5 +224,21 @@ public class GenerateDrawStrokeDialog {
 		public int duration = 400;
 		
 		public boolean addPathNum = false;
+		
+		public String color;
+		
+		public GenerateDrawStrokeDialogParams(Utils.ThemeType theme) {
+			if (theme == null) {
+				theme = ThemeType.LIGHT;
+			}
+			
+			if (theme == ThemeType.LIGHT) {
+				color = "#262213";
+			} else if (theme == ThemeType.DARK) {
+				color = "white";
+			} else {
+				throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie	
+			}			
+		}
 	}
 }

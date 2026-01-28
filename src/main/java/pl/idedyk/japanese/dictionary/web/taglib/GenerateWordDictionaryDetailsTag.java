@@ -59,6 +59,7 @@ import pl.idedyk.japanese.dictionary.web.html.Ul;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.WordDictionary2SenseUtils;
+import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog.GenerateDrawStrokeDialogParams;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.KanjiKanaPair;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
@@ -91,10 +92,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			ServletContext servletContext = pageContext.getServletContext();
 			ServletRequest servletRequest = pageContext.getRequest();
 			
+			HttpServletRequest httpServletRequest = null;
+			
 			String userAgent = null;
 			
 			if (servletRequest instanceof HttpServletRequest) {			
-				HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+				httpServletRequest = (HttpServletRequest)servletRequest;
 				
 				userAgent = httpServletRequest.getHeader("User-Agent");			
 			}
@@ -153,7 +156,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             
             try {	         
             	// generowanie informacji podstawowych
-	            contentDiv.addHtmlElement(generateMainInfo(mainMenu, mobile));
+	            contentDiv.addHtmlElement(generateMainInfo(httpServletRequest, mainMenu, mobile));
 	            
 	            // generowanie przykladowych zdan
 	            exampleSentenceDiv = generateExampleSentence(mainMenu);
@@ -263,7 +266,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return pageHeader;
 	}
 	
-	private Div generateMainInfo(Menu mainMenu, boolean mobile) throws IOException, DictionaryException {
+	private Div generateMainInfo(HttpServletRequest httpServletRequest, Menu mainMenu, boolean mobile) throws IOException, DictionaryException {
 		
 		Div panelDiv = new Div("panel panel-default");
 		
@@ -286,7 +289,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Div panelBody = new Div("panel-body");
 		
 		// slowa
-		Div wordDiv = generateWordsSection(mainInfoMenu, mobile);
+		Div wordDiv = generateWordsSection(httpServletRequest, mainInfoMenu, mobile);
 		
 		panelBody.addHtmlElement(wordDiv);
 		panelBody.addHtmlElement(new Hr());
@@ -332,7 +335,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return panelDiv;
 	}
 	
-	private Div generateWordsSection(Menu menu, boolean mobile) throws DictionaryException, IOException {
+	private Div generateWordsSection(HttpServletRequest httpServletRequest, Menu menu, boolean mobile) throws DictionaryException, IOException {
 		Div wordsDiv = new Div();
 		
     	// wiersz z tytulem
@@ -373,7 +376,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    		KanjiKanaPair kanjiKanaPair = kanjiKanaPairList.get(kanjiKanaPairIdx);
 	        	    		    	    		   	    		
 	    		// pobieramy wszystkie skladniki slowa    		    	        	
-	    		createWordTableTr(singleWordTable, kanjiKanaPair, kanjiKanaPairIdx, mobile);
+	    		createWordTableTr(httpServletRequest, singleWordTable, kanjiKanaPair, kanjiKanaPairIdx, mobile);
 			}
 			
 		} else { // stary format
@@ -397,13 +400,13 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						
 			KanjiKanaPair virtualKanjiKanaPair = new KanjiKanaPair(null, kanjiInfo, readingInfo);
 			
-			createWordTableTr(singleWordTable, virtualKanjiKanaPair, 0, mobile);			
+			createWordTableTr(httpServletRequest, singleWordTable, virtualKanjiKanaPair, 0, mobile);			
 		}		
     	
 		return wordsDiv;
 	}
 	
-	private void createWordTableTr(Table singleWordTable, KanjiKanaPair kanjiKanaPair, int wordNo, boolean mobile) throws DictionaryException, IOException {
+	private void createWordTableTr(HttpServletRequest httpServletRequest, Table singleWordTable, KanjiKanaPair kanjiKanaPair, int wordNo, boolean mobile) throws DictionaryException, IOException {
 		
 		String kanji = kanjiKanaPair.getKanji();
 		String kana = kanjiKanaPair.getKana();
@@ -509,7 +512,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, kanji.length(), mobile));
 				        
 				        // tworzenie okienka rysowania znaku kanji
-    					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId));
+    					GenerateDrawStrokeDialogParams generateDrawStrokeDialogParams = new GenerateDrawStrokeDialogParams(Utils.getTheme(httpServletRequest));
+    					
+    					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId, generateDrawStrokeDialogParams));
     					
     					// singleWordKanjiDivbutton.addHtmlElement(kanjiDrawButton);
     					singleWordDivTableKanjiTd3.addHtmlElement(kanjiDrawButton);
@@ -540,7 +545,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, kanji.length(), mobile));
 			        
 			        // tworzenie okienka rysowania znaku kanji
-					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId));
+					GenerateDrawStrokeDialogParams generateDrawStrokeDialogParams = new GenerateDrawStrokeDialogParams(Utils.getTheme(httpServletRequest));
+					
+					singleWordDivTableKanjiTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kanji, kanjiDrawId, generateDrawStrokeDialogParams));
 					
 					// singleWordKanjiDivbutton.addHtmlElement(kanjiDrawButton);
 					singleWordDivTableKanjiTd3.addHtmlElement(kanjiDrawButton);
@@ -606,7 +613,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     		singleWordDivTableKanaTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanaDrawId, kana.length(), mobile));
             
             // tworzenie okienka rysowania znaku kanji
-    		singleWordDivTableKanaTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kana, kanaDrawId));
+    		GenerateDrawStrokeDialogParams generateDrawStrokeDialogParams = new GenerateDrawStrokeDialogParams(Utils.getTheme(httpServletRequest));
+    		
+    		singleWordDivTableKanaTd3.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeDialog(dictionaryManager, messageSource, kana, kanaDrawId, generateDrawStrokeDialogParams));
     		
     		singleWordDivTableKanaTd3.addHtmlElement(kanaDrawButton);   
     	}
