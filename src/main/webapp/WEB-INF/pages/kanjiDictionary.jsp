@@ -115,7 +115,12 @@
 					<c:forEach items="${sessionScope.selectedRadicals}" var="currentRadical">
 					selectedRadicals.push('<c:out value="${currentRadical}" />');
 
+					<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
 					$('#radicalTableId td').filter(function() { return getRadicalCellKanji($(this)) == '<c:out value="${currentRadical}" />'; }).css("background-color", "yellow");
+					</c:if>
+					<c:if test="${sessionScope.theme == 'dark'}">
+					$('#radicalTableId td').filter(function() { return getRadicalCellKanji($(this)) == '<c:out value="${currentRadical}" />'; }).css("background-color", "#646464");
+					</c:if>
 										
 					</c:forEach>			
 				</c:if>
@@ -436,9 +441,9 @@
 									if (currentStrokeCount != value.strokeCount) {
 										<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
 										$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: ${strokeNumberFontSizeValue}%; text-align: center; border: 1px solid black; background-color: #CCCCCC">' + value.strokeCount + "</td>");
-										<c/if>
+										</c:if>
 										<c:if test="${sessionScope.theme == 'dark'}">
-										$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: ${strokeNumberFontSizeValue}%; text-align: center; border: 1px solid black; background-color: #404040">' + value.strokeCount + "</td>");
+										$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: ${strokeNumberFontSizeValue}%; text-align: center; border: 1px solid #3e4446; background-color: #404040">' + value.strokeCount + "</td>");
 										</c:if>
 										
 										currentStrokeCount = value.strokeCount;
@@ -451,9 +456,14 @@
 										strokeCountCounter = 0;
 									}
 
+									<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
 									$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: ${strokeFontSizeValue}%; text-align: center; border: 1px solid black;">' + 
 											'<a href=\'<c:out value="${pageContext.request.contextPath}" />/kanjiDictionaryDetails/' + value.id + '/' + value.kanji + '\'>' + value.kanji + "</a></td>");								
-
+									</c:if>
+									<c:if test="${sessionScope.theme == 'dark'}">
+									$('#radicalTableFoundId tr:last').append('<td style="padding: 5px; font-size: ${strokeFontSizeValue}%; text-align: center; border: 1px solid #3e4446;">' + 
+											'<a href=\'<c:out value="${pageContext.request.contextPath}" />/kanjiDictionaryDetails/' + value.id + '/' + value.kanji + '\'>' + value.kanji + "</a></td>");
+									</c:if>
 									strokeCountCounter++;
 
 									if (strokeCountCounter == ${strokeCountMaxElements - 1}) {
@@ -546,7 +556,7 @@
 	            					<td id="strokeCount_${currentRadical.strokeCount}" style="padding: 5px; font-size: ${strokeNumberFontSizeValue}%; text-align: center; border: 1px solid black; background-color: #CCCCCC">${currentRadical.strokeCount}</td>
 	            					</c:if>
 	            					<c:if test="${sessionScope.theme == 'dark'}">
-	            					<td id="strokeCount_${currentRadical.strokeCount}" style="padding: 5px; font-size: ${strokeNumberFontSizeValue}%; text-align: center; border: 1px solid black; background-color: #404040">${currentRadical.strokeCount}</td>
+	            					<td id="strokeCount_${currentRadical.strokeCount}" style="padding: 5px; font-size: ${strokeNumberFontSizeValue}%; text-align: center; border: 1px solid #3e4446; background-color: #404040">${currentRadical.strokeCount}</td>
 	            					</c:if>
 	            					
 	            					<c:set var="currentStrokeCount" value="${currentRadical.strokeCount}" />
@@ -561,11 +571,21 @@
 	            				
 								<c:choose>
 							      <c:when test="${currentRadical.image == null}">
+							      	<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
 							      	<td style="padding: 5px; font-size: ${strokeFontSizeValue}%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">${currentRadical.radical}</td>
+							      	</c:if>
+							      	<c:if test="${sessionScope.theme == 'dark'}">
+							      	<td style="padding: 5px; font-size: ${strokeFontSizeValue}%; text-align: center; border: 1px solid #3e4446;" onclick="updateSelectedRadicals(this);">${currentRadical.radical}</td>
+							      	</c:if>
 							      </c:when>
 							
 							      <c:otherwise>
+							      	<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
 							      	<td style="padding: 5px; font-size: ${strokeFontSizeValue}%; text-align: center; border: 1px solid black;" onclick="updateSelectedRadicals(this);">
+							      	</c:if>
+							      	<c:if test="${sessionScope.theme == 'dark'}">
+							      	<td style="padding: 5px; font-size: ${strokeFontSizeValue}%; text-align: center; border: 1px solid #3e4446;" onclick="updateSelectedRadicals(this);">
+							      	</c:if>
 							      	<img src="${staticFilePrefix}/${currentRadical.image}" alt="${currentRadical.radical}" /></td>
 							      </c:otherwise>
 								</c:choose>
