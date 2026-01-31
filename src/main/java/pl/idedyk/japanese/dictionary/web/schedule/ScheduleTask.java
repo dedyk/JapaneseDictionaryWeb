@@ -120,7 +120,7 @@ public class ScheduleTask {
 		
 		// pobranie przedzialu wpisow
 		try {
-			ReportGenerator.DailyReport dailyReport = reportGenerator.generateDailyReportBody();
+			ReportGenerator.DailyReport dailyReport = reportGenerator.generateDailyReportBody(null);
 			
 			if (dailyReport == null) {
 				logger.info("Brak elementow do generowania dziennego raportu");

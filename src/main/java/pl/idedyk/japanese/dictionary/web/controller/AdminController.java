@@ -285,7 +285,7 @@ public class AdminController {
 		// logowanie
 		loggerSender.sendLog(adminLoggerModel);
 		
-		ReportGenerator.DailyReport generateDailyReportBody = reportGenerator.generateDailyReportBody();
+		ReportGenerator.DailyReport generateDailyReportBody = reportGenerator.generateDailyReportBody(request);
 
 		model.put("selectedMenu", "showCurrentDailyReport");
 		
@@ -429,7 +429,7 @@ public class AdminController {
     		
     		//
     		
-    		Report generateMissingWordsQueueReportBody = reportGenerator.generateMissingWordsQueueReportBody(unlockedWordDictionarySearchMissingWordQueue, Long.parseLong(adminPanelMissingWordsQueueModel.getShowMaxSize()));
+    		Report generateMissingWordsQueueReportBody = reportGenerator.generateMissingWordsQueueReportBody(request, unlockedWordDictionarySearchMissingWordQueue, Long.parseLong(adminPanelMissingWordsQueueModel.getShowMaxSize()));
     		
     		model.put("reportBody", generateMissingWordsQueueReportBody.body);
 

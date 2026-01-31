@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Locale;
 
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.jsp.JspException;
 import jakarta.servlet.jsp.JspWriter;
@@ -18,6 +20,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.util.HtmlUtils;
 
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.common.Utils.ThemeType;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke.Point;
 import pl.idedyk.japanese.dictionary.web.html.A;
@@ -71,8 +75,15 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 	public int doStartTag() throws JspException {
 		
 		ServletContext servletContext = pageContext.getServletContext();
+		ServletRequest servletRequest = pageContext.getRequest();
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+				
+		HttpServletRequest httpServletRequest = null;
+				
+		if (servletRequest instanceof HttpServletRequest) {			
+			httpServletRequest = (HttpServletRequest)servletRequest;
+		}
 		
 		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
 		this.mySQLConnector = webApplicationContext.getBean(MySQLConnector.class);
@@ -143,7 +154,7 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
             contentDiv.addHtmlElement(generateMainInfo());
             
             // generowanie informacji dodatkowych
-            IHtmlElement generateAdditionalInfo = generateAdditionalInfo();
+            IHtmlElement generateAdditionalInfo = generateAdditionalInfo(httpServletRequest);
             
             if (generateAdditionalInfo != null) {
             	contentDiv.addHtmlElement(generateAdditionalInfo);
@@ -255,7 +266,7 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		return panelDiv;
 	}
 	
-	private IHtmlElement generateAdditionalInfo() throws SQLException {
+	private IHtmlElement generateAdditionalInfo(HttpServletRequest httpServletRequest) throws SQLException {
 		
 		Div panelDiv = new Div("panel panel-default");
 		
@@ -434,6 +445,8 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 				return null;
 			}
 			
+			Utils.ThemeType theme = Utils.getTheme(httpServletRequest);
+			
 			Div canvasDiv = new Div("col-md-6");
 			
 			Label strokeLabel = new Label();
@@ -568,7 +581,15 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 			
 			scriptSb.append("   stage.clear();\n");
 			scriptSb.append("\n");
-			scriptSb.append("   color = \"#000000\";\n");
+			
+			if (theme == ThemeType.LIGHT) {
+				scriptSb.append("   color = \"#000000\";\n");	
+			} else if (theme == ThemeType.DARK) {
+				scriptSb.append("   color = \"white\";\n");
+			} else {
+				throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
+			}			
+			
 			scriptSb.append("   stroke = 10;\n");
 			scriptSb.append("\n");
 			scriptSb.append("   for (var idx = 0; idx < strokePaths.length; ++idx) {\n");

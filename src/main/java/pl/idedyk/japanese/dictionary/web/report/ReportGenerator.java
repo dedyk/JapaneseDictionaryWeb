@@ -28,7 +28,10 @@ import org.springframework.web.util.HtmlUtils;
 
 import com.google.gson.internal.LinkedTreeMap;
 
+import jakarta.servlet.http.HttpServletRequest;
 import pl.idedyk.japanese.dictionary.api.android.queue.event.QueueEventOperation;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.common.Utils.ThemeType;
 import pl.idedyk.japanese.dictionary.web.html.B;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
@@ -73,7 +76,7 @@ public class ReportGenerator {
 	@Value("${base.server}")
 	private String baseServer;
 	
-	public DailyReport generateDailyReportBody() throws Exception {
+	public DailyReport generateDailyReportBody(HttpServletRequest httpServletRequest) throws Exception {
 		
 		logger.info("Generowanie dziennego raportu");
 		
@@ -153,10 +156,10 @@ public class ReportGenerator {
 
 				//
 
-				appendGenericTextStat(reportDiv, "report.generate.daily.report.operation.stat", genericLogOperationStatList);
+				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.operation.stat", genericLogOperationStatList);
 				
 				// statystyki krajow (bez robotow i innych)		
-				appendGenericTextStat(reportDiv, "report.generate.daily.report.city.stat", groupByStat(splitUserAgentStatByType.getHumanList(), new CountryCityGroupBy(0)));
+				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.city.stat", groupByStat(splitUserAgentStatByType.getHumanList(), new CountryCityGroupBy(0)));
 												
 				//
 								
@@ -217,25 +220,25 @@ public class ReportGenerator {
 				*/				
 				
 				// generowanie statystyk dla aplikacji na androida
-				generateStatForJapanaeseAndroidLearnHelper(reportDiv, splitUserAgentStatByType, androidQueueEventLogList);
+				generateStatForJapanaeseAndroidLearnHelper(httpServletRequest, reportDiv, splitUserAgentStatByType, androidQueueEventLogList);
 								
 				// generowanie statystyk dla komputera (desktop)
-				generateStatForDesktop(reportDiv, splitUserAgentStatByType);
+				generateStatForDesktop(httpServletRequest, reportDiv, splitUserAgentStatByType);
 				
 				// generowanie statystyk dla telefonu
-				generateStatForPhone(reportDiv, splitUserAgentStatByType);
+				generateStatForPhone(httpServletRequest, reportDiv, splitUserAgentStatByType);
 				
 				// generowanie statystyk dla tabletu
-				generateStatForTablet(reportDiv, splitUserAgentStatByType);
+				generateStatForTablet(httpServletRequest, reportDiv, splitUserAgentStatByType);
 				
 				// generowanie statystyk dla robota
-				generateStatForRobot(reportDiv, splitUserAgentStatByType);
+				generateStatForRobot(httpServletRequest, reportDiv, splitUserAgentStatByType);
 				
 				// generowanie statystyk dla innych
-				generateStatForOther(reportDiv, splitUserAgentStatByType);
+				generateStatForOther(httpServletRequest, reportDiv, splitUserAgentStatByType);
 				
 				// generowanie statystyk dla pustych
-				generateStatForNull(reportDiv, splitUserAgentStatByType);
+				generateStatForNull(httpServletRequest, reportDiv, splitUserAgentStatByType);
 				
 				//
 				
@@ -265,7 +268,7 @@ public class ReportGenerator {
 					}
 				});
 				
-				appendGenericTextStat(reportDiv, "report.generate.daily.report.referer.stat", refererStat);				
+				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.referer.stat", refererStat);				
 
 				// statystyki nieznalezionych stron
 				List<GenericTextStat> pageNotFoundStat = groupByStat(genericLogRawList, new IGroupByFunction() {
@@ -283,7 +286,7 @@ public class ReportGenerator {
 					}
 				});
 				
-				appendGenericTextStat(reportDiv, "report.generate.daily.report.page.not.found.stat", pageNotFoundStat);				
+				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.page.not.found.stat", pageNotFoundStat);				
 				
 				// kolejka brakujacych slow
 				/*
@@ -311,21 +314,21 @@ public class ReportGenerator {
 		}
 	}
 	
-	public Report generateMissingWordsQueueReportBody(List<WordDictionarySearchMissingWordQueue> missingWordsQueueList, long showMaxSize) throws Exception {
+	public Report generateMissingWordsQueueReportBody(HttpServletRequest httpServletRequest, List<WordDictionarySearchMissingWordQueue> missingWordsQueueList, long showMaxSize) throws Exception {
 		
 		logger.info("Generowanie raportu z brakujacej listy slow");
 		
 		Div reportDiv = new Div();
 				
 		// obecna kolejka brakujacych slow				
-		appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.queue.part", missingWordsQueueList, null, false);				
+		appendWordDictionarySearchMissingWordQueueStat(httpServletRequest, reportDiv, "report.generate.daily.report.word.dictionary.missing.words.queue.part", missingWordsQueueList, null, false);				
 		
 		// calkowita kolejka brakujacych slow
 		List<WordDictionarySearchMissingWordQueue> allUnlockedWordDictionarySearchMissingWordQueue = mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueue(showMaxSize);
 		
 		long unlockedWordDictionarySearchMissingWordQueueLength = mySQLConnector.getUnlockedWordDictionarySearchMissingWordQueueLength();
 		
-		appendWordDictionarySearchMissingWordQueueStat(reportDiv, "report.generate.daily.report.word.dictionary.missing.words.queue.full", allUnlockedWordDictionarySearchMissingWordQueue, unlockedWordDictionarySearchMissingWordQueueLength, true);
+		appendWordDictionarySearchMissingWordQueueStat(httpServletRequest, reportDiv, "report.generate.daily.report.word.dictionary.missing.words.queue.full", allUnlockedWordDictionarySearchMissingWordQueue, unlockedWordDictionarySearchMissingWordQueueLength, true);
 		
 		// cala zawartosc kolejki
 		// List<WordDictionarySearchMissingWordQueue> allWordDictionarySearchMissingWordQueue = mySQLConnector.getAllWordDictionarySearchMissingWordQueue();
@@ -346,7 +349,7 @@ public class ReportGenerator {
 		return report;
 	}
 	
-	private void appendGenericTextStat(Div reportDiv, String titleCode, List<GenericTextStat> genericTextStatList) {
+	private void appendGenericTextStat(HttpServletRequest httpServletRequest, Div reportDiv, String titleCode, List<GenericTextStat> genericTextStatList) {
 		
 		// liczymy sume
 		
@@ -363,7 +366,7 @@ public class ReportGenerator {
 				
 		titleP.addHtmlElement(new Text(messageSource.getMessage(titleCode, new Object[] { }, Locale.getDefault())));
 		
-		Table table = new Table(null, "border: 1px solid black");
+		Table table = new Table(null, "border: 1px solid " + getBorderColor(httpServletRequest));
 		div.addHtmlElement(table);
 		
 		for (GenericTextStat genericTextStat : genericTextStatList) {
@@ -404,7 +407,7 @@ public class ReportGenerator {
 				
 		titleP.addHtmlElement(new Text(messageSource.getMessage(titleCode, new Object[] { }, Locale.getDefault())));
 		
-		Table table = new Table(null, "border: 1px solid black");
+		Table table = new Table(null, "border: 1px solid " + getBorderColor(httpServletRequest));
 		div.addHtmlElement(table);
 		
 		for (RemoteClientStat remoteClientStat : remoteClientStatList) {
@@ -444,7 +447,7 @@ public class ReportGenerator {
 	}
 	*/
 	
-	private void appendWordDictionarySearchMissingWordQueueStat(Div reportDiv, String titleCode, List<WordDictionarySearchMissingWordQueue> wordDictionarySearchMissingWordQueueList, Long wordDictionarySearchMissingWordQueueListLength, boolean full) {
+	private void appendWordDictionarySearchMissingWordQueueStat(HttpServletRequest httpServletRequest, Div reportDiv, String titleCode, List<WordDictionarySearchMissingWordQueue> wordDictionarySearchMissingWordQueueList, Long wordDictionarySearchMissingWordQueueListLength, boolean full) {
 		
 		Div div = new Div();
 		
@@ -458,7 +461,9 @@ public class ReportGenerator {
 			titleP.addHtmlElement(new Text(messageSource.getMessage(titleCode, new Object[] { }, Locale.getDefault()) + ": " + wordDictionarySearchMissingWordQueueListLength));
 		}
 		
-		Table table = new Table(null, "border: 1px solid black");
+		String borderColor = getBorderColor(httpServletRequest);
+		
+		Table table = new Table(null, "border: 1px solid " + borderColor);
 		div.addHtmlElement(table);
 		
 		int counter = 1;
@@ -474,12 +479,12 @@ public class ReportGenerator {
 				missingWord = "-";
 			}
 			
-			Td td1 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
+			Td td1 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid " + borderColor + "; "));
 			tr.addHtmlElement(td1);
 			
 			td1.addHtmlElement(new Text(HtmlUtils.htmlEscape(missingWord)));
 
-			Td td2 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
+			Td td2 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid " + borderColor + "; "));
 			tr.addHtmlElement(td2);
 			
 			td2.addHtmlElement(new Text("" + wordDictionarySearchMissingWordQueue.getCounter()));
@@ -488,29 +493,29 @@ public class ReportGenerator {
 				
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				
-				Td td3 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
+				Td td3 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid " + borderColor + "; "));
 				tr.addHtmlElement(td3);
 				
 				td3.addHtmlElement(new Text(sdf.format(wordDictionarySearchMissingWordQueue.getFirstAppearanceTimestamp())));
 
-				Td td4 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
+				Td td4 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid " + borderColor + "; "));
 				tr.addHtmlElement(td4);
 				
 				td4.addHtmlElement(new Text(sdf.format(wordDictionarySearchMissingWordQueue.getLastAppearanceTimestamp())));
 				
-				Td td5 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
+				Td td5 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid " + borderColor + "; "));
 				tr.addHtmlElement(td5);
 				
 				if (wordDictionarySearchMissingWordQueue.getLockTimestamp() != null) {
 					td5.addHtmlElement(new Text(sdf.format(wordDictionarySearchMissingWordQueue.getLockTimestamp())));
 				}
 
-				Td td6 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
+				Td td6 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid " + borderColor + "; "));
 				tr.addHtmlElement(td6);
 				
 				td6.addHtmlElement(new Text(String.valueOf(counter)));
 				
-				Td td7 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid black; "));
+				Td td7 = new Td(null, (full == false ? "padding: 5px;" : "padding: 5px; border: 1px solid " + borderColor + "; "));
 				tr.addHtmlElement(td7);
 				
 				td7.addHtmlElement(new Text(String.valueOf(wordDictionarySearchMissingWordQueue.getPriority())));				
@@ -651,7 +656,7 @@ public class ReportGenerator {
 		return result;
 	}
 	
-	private void generateStatForJapanaeseAndroidLearnHelper(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType, List<AndroidQueueEventLog> androidQueueEventLogList) {
+	private void generateStatForJapanaeseAndroidLearnHelper(HttpServletRequest httpServletRequest, Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType, List<AndroidQueueEventLog> androidQueueEventLogList) {
 		
 		H androidTitle = new H(2);
 		
@@ -709,7 +714,7 @@ public class ReportGenerator {
 			}
 						
 			// statystyki wersji aplikacji
-			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.version.stat", groupByStat(onlyUnique == false ? japaneseAndroidLearnerHelperList : androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
+			appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.version.stat", groupByStat(onlyUnique == false ? japaneseAndroidLearnerHelperList : androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
 				
 				@SuppressWarnings("unchecked")
 				@Override
@@ -737,7 +742,7 @@ public class ReportGenerator {
 			}));
 			
 			// statystyki wersji androida
-			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.version.stat", groupByStat(
+			appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.version.stat", groupByStat(
 					onlyUnique == false ? androidQueueEventLogList : androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
 				
 				@Override
@@ -752,7 +757,7 @@ public class ReportGenerator {
 			}));
 			
 			// statystyki producenta urzadzenia
-			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.device.manufacturer.stat", groupByStat(
+			appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.device.manufacturer.stat", groupByStat(
 					onlyUnique == false ? androidQueueEventLogList : androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
 				
 				@Override
@@ -767,7 +772,7 @@ public class ReportGenerator {
 			}));
 
 			// statystyki modelu urzadzenia
-			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.device.model.stat", groupByStat(
+			appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.android.device.model.stat", groupByStat(
 					onlyUnique == false ? androidQueueEventLogList : androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
 				
 				@Override
@@ -783,11 +788,11 @@ public class ReportGenerator {
 			
 			// statystyki krajow na podstawie adresu IP
 			if (onlyUnique == false) {
-				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(0)));
+				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(0)));
 				
 			} else {
 				
-				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
+				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.stat", groupByStat(androidQueueEventLogListGroupByUserIdAsCollection, new IGroupByFunction() {
 					
 					CountryCityGroupBy countryCityGroupBy = new CountryCityGroupBy(0);
 					
@@ -818,7 +823,7 @@ public class ReportGenerator {
 				}
 			});
 			
-			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.locale.country", androidQueueEventLocaleCountryStat);	
+			appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.locale.country", androidQueueEventLocaleCountryStat);	
 
 			// statystyki jezykow na podstawie jezyka urzadzenia
 			List<GenericTextStat> androidQueueEventLocaleLanguageStat = groupByStat(
@@ -835,7 +840,7 @@ public class ReportGenerator {
 				}
 			});
 			
-			appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.locale.language", androidQueueEventLocaleLanguageStat);	
+			appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.locale.language", androidQueueEventLocaleLanguageStat);	
 			
 			// statystyki krajow i miast
 			// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.country.city.stat", groupByStat(japaneseAndroidLearnerHelperList, new CountryCityGroupBy(1)));
@@ -854,7 +859,7 @@ public class ReportGenerator {
 					}
 				});
 				
-				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.stat", androidQueueEventOperationStat);
+				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.stat", androidQueueEventOperationStat);
 				
 				// statystyki ekranow
 				List<GenericTextStat> androidQueueEventScreenStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
@@ -874,7 +879,7 @@ public class ReportGenerator {
 					}
 				});
 				
-				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.screen.stat", androidQueueEventScreenStat);
+				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.screen.stat", androidQueueEventScreenStat);
 				
 				// statystyki zdarzen
 				List<GenericTextStat> androidQueueEventEventStat = groupByStat(androidQueueEventLogList, new IGroupByFunction() {
@@ -894,12 +899,12 @@ public class ReportGenerator {
 					}
 				});
 				
-				appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.event.stat", androidQueueEventEventStat);
+				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.japanese.android.learn.helper.queue.event.operation.event.stat", androidQueueEventEventStat);
 			}
 		}		
 	}
 	
-	private void generateStatForDesktop(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+	private void generateStatForDesktop(HttpServletRequest httpServletRequest, Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
 		H desktopTitle = new H(2);
 		
@@ -956,17 +961,17 @@ public class ReportGenerator {
 		});
 		
 		// statystyki krajow		
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.country.stat", groupByStat(desktopList, new CountryCityGroupBy(0)));
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.desktop.country.stat", groupByStat(desktopList, new CountryCityGroupBy(0)));
 		
 		// statystyki krajow i miast
 		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.country.city.stat", groupByStat(desktopList, new CountryCityGroupBy(1)));
 						
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.desktopType.stat", desktopTypeList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.operationSystem.stat", operationSystemList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.desktop.browserType.stat", browserTypeList);				
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.desktop.desktopType.stat", desktopTypeList);
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.desktop.operationSystem.stat", operationSystemList);
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.desktop.browserType.stat", browserTypeList);				
 	}
 	
-	private void generateStatForPhone(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+	private void generateStatForPhone(HttpServletRequest httpServletRequest, Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
 		H phoneTitle = new H(2);
 		
@@ -1023,17 +1028,17 @@ public class ReportGenerator {
 		});
 		
 		// statystyki krajow		
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.country.stat", groupByStat(phoneList, new CountryCityGroupBy(0)));
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.phone.country.stat", groupByStat(phoneList, new CountryCityGroupBy(0)));
 		
 		// statystyki krajow i miast
 		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.country.city.stat", groupByStat(phoneList, new CountryCityGroupBy(1)));
 						
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.deviceName.stat", deviceNameList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.operationSystem.stat", operationSystemList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.phone.browserType.stat", browserTypeList);		
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.phone.deviceName.stat", deviceNameList);
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.phone.operationSystem.stat", operationSystemList);
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.phone.browserType.stat", browserTypeList);		
 	}
 
-	private void generateStatForTablet(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+	private void generateStatForTablet(HttpServletRequest httpServletRequest, Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
 		H tableTitle = new H(2);
 		
@@ -1088,17 +1093,17 @@ public class ReportGenerator {
 		});
 		
 		// statystyki krajow		
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.country.stat", groupByStat(tabletList, new CountryCityGroupBy(0)));
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.tablet.country.stat", groupByStat(tabletList, new CountryCityGroupBy(0)));
 		
 		// statystyki krajow i miast
 		// appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.country.city.stat", groupByStat(tabletList, new CountryCityGroupBy(1)));
 						
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.deviceName.stat", deviceNameList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.operationSystem.stat", operationSystemList);
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.tablet.browserType.stat", browserTypeList);		
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.tablet.deviceName.stat", deviceNameList);
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.tablet.operationSystem.stat", operationSystemList);
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.tablet.browserType.stat", browserTypeList);		
 	}
 	
-	private void generateStatForRobot(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+	private void generateStatForRobot(HttpServletRequest httpServletRequest, Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
 		H robotTitle = new H(2);
 		
@@ -1124,10 +1129,10 @@ public class ReportGenerator {
 			}
 		});
 				
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.robot.robotName.stat", robotStatList);		
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.robot.robotName.stat", robotStatList);		
 	}
 
-	private void generateStatForOther(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+	private void generateStatForOther(HttpServletRequest httpServletRequest, Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
 		H otherTitle = new H(2);
 		
@@ -1153,10 +1158,10 @@ public class ReportGenerator {
 			}
 		});
 				
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.other.stat", otherStatList);		
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.other.stat", otherStatList);		
 	}
 
-	private void generateStatForNull(Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
+	private void generateStatForNull(HttpServletRequest httpServletRequest, Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {
 		
 		H nullTitle = new H(2);
 		
@@ -1188,7 +1193,7 @@ public class ReportGenerator {
 			}
 		});
 				
-		appendGenericTextStat(reportDiv, "report.generate.daily.report.user.agent.null.stat", nullStatList);		
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.null.stat", nullStatList);		
 	}
 	
 	private List<GenericTextStat> groupByStat(Collection<?> list, IGroupByFunction groupByFunction) {
@@ -1261,6 +1266,18 @@ public class ReportGenerator {
 		});
 		
 		return result;
+	}
+	
+	private String getBorderColor(HttpServletRequest httpServletRequest) {
+		Utils.ThemeType theme = Utils.getTheme(httpServletRequest);
+		
+		if (theme == ThemeType.LIGHT) {
+			return "black";	
+		} else if (theme == ThemeType.DARK) {
+			return "#3a3e41";
+		} else {
+			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
+		}			
 	}
 			
 	private static class SplitUserAgentStatByTypeResult {
