@@ -42,6 +42,8 @@
 	
 	<link rel="icon" type="image/png" href="${staticFilePrefix}/img/favicon.png"/>
 
+	<link href="<c:out value='${staticFilePrefix}' />/css/japanese-dictionary/japanese-dictionary-common.css" rel="stylesheet" />
+	
 	<c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
 	<link href="<c:out value='${staticFilePrefix}' />/css/excite-bike/jquery-ui-1.10.4.custom.css" rel="stylesheet" />
 	<link href="<c:out value='${staticFilePrefix}' />/css/bootstrap/bootstrap.css" rel="stylesheet" />

@@ -497,5 +497,9 @@ public class Utils {
 		ThemeType(String themeValue) {
 			this.themeValue = themeValue;
 		}
+		
+		public String getThemeValue() {
+			return themeValue;
+		}
 	}
 }
