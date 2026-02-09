@@ -100,7 +100,23 @@
 					<tr>
 						<td style="width: 5%"><img src="${staticFilePrefix}/img/japan-flag.png" align="middle" style="margin: 0px 10px 0px 0px" /></td>
 
-						<td style="font-size: 150%; width: 80%"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>						
+						<td style="font-size: 150%; width: 70%"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>						
+
+                        <td style="font-size: 150%; width: 10%">
+                            <div class="switch">
+                                <label class="theme-switch" for="themeCheckbox">
+                                        <c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
+                                    <input type="checkbox" id="themeCheckbox" />
+                                    </c:if>
+                                    <c:if test="${sessionScope.theme == 'dark'}">
+                                    <input type="checkbox" id="themeCheckbox" checked/>
+                                    </c:if>
+                                    
+                                    <div class="slider round"></div>
+                                </label>
+                            </div>                                              
+                        </td>
+
 					</tr>				
 				</table>
 
@@ -185,7 +201,18 @@
 		$( "#nav" ).menu( {position: {at: "left bottom"}});		
 
 		$().ready(function() {
-			
+	        $("#themeCheckbox").on("click", function(e) {
+	                 <c:if test="${sessionScope.theme == null || sessionScope.theme == 'light'}">
+	                 $.get( "${pageContext.request.contextPath}/setTheme/dark", { }, function (data) {
+	                         window.location.reload();
+	                 });
+	                 </c:if>
+	                 <c:if test="${sessionScope.theme == 'dark'}">
+	                 $.get( "${pageContext.request.contextPath}/setTheme/light", { }, function (data) {
+	                         window.location.reload();
+	                 });
+	                 </c:if>
+	         });             
 		});			
 	</script>
 </body>
