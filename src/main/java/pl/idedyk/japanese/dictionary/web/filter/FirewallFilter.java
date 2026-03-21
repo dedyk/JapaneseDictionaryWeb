@@ -196,8 +196,7 @@ public class FirewallFilter implements Filter {
 		// utworzenie informacji o kliencie
 		ClientInfo clientInfo = new ClientInfo();
 		
-		int fixme = 1; // !!!!!!
-		clientInfo.ip = "47.79.194.89"; //Utils.getRemoteIp(httpServletRequest);
+		clientInfo.ip = Utils.getRemoteIp(httpServletRequest);
 		clientInfo.hostName = Utils.getHostname(clientInfo.ip);
 		clientInfo.userAgent = httpServletRequest.getHeader("User-Agent");	
 		clientInfo.url = httpServletRequest.getRequestURI();
