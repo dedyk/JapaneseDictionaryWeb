@@ -19,6 +19,22 @@
 							<xsd:element name="hostBlock" minOccurs="1" maxOccurs="1">
 								<xsd:complexType>
 									<xsd:sequence>
+										<xsd:element name="asnList" minOccurs="1" maxOccurs="1">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="asn" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:simpleContent>
+																<xsd:extension base="xsd:string">
+																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
+																</xsd:extension>												
+															</xsd:simpleContent>																							
+														</xsd:complexType>										
+													</xsd:element>											
+												</xsd:sequence>										
+											</xsd:complexType>									
+										</xsd:element>
+
 										<xsd:element name="addressList" minOccurs="1" maxOccurs="1">
 											<xsd:complexType>
 												<xsd:sequence>

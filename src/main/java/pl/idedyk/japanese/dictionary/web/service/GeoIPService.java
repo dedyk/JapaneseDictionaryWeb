@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.maxmind.db.CHMCache;
 import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.model.AsnResponse;
 import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.record.Country;
 
@@ -24,15 +25,20 @@ public class GeoIPService {
 	
 	@Value("${geoip.db.city.path}")
 	private String dbCityPath;
-	
-	private DatabaseReader databaseReader = null;
+
+	@Value("${geoip.db.asn.path}")
+	private String dbASNPath;
+
+	private DatabaseReader cityDatabaseReader = null;
+	private DatabaseReader asnDatabaseReader = null;
 		
 	@PostConstruct
 	public void init() throws IOException {
 		
 		logger.info("Inicjalizacja GeoIPService");
 		
-		databaseReader = new DatabaseReader.Builder(new File(dbCityPath)).withCache(new CHMCache()).build();
+		cityDatabaseReader = new DatabaseReader.Builder(new File(dbCityPath)).withCache(new CHMCache()).build();
+		asnDatabaseReader = new DatabaseReader.Builder(new File(dbASNPath)).withCache(new CHMCache()).build();
 	}
 	
 	public String getCountry(String ip) {
@@ -76,7 +82,7 @@ public class GeoIPService {
 		return countryName + " / " + cityName;
 	}
 	
-	private CityResponse getCityResponse(String ip) {
+	private InetAddress getInetAddress(String ip) {
 		
 		if (ip == null) {
 			return null;
@@ -96,11 +102,63 @@ public class GeoIPService {
 				return null;
 			}
 
-			return databaseReader.city(inetAddress);
+			return inetAddress;
 		
 		} catch (Exception e) {
+			logger.error("Can't get inet address", e);
 			
+			return null;			
+		}
+	}
+	
+	private CityResponse getCityResponse(String ip) {
+				
+		try {
+			InetAddress inetAddress = getInetAddress(ip);
+			
+			if (inetAddress == null) {
+				return null;
+			}
+
+			return cityDatabaseReader.city(inetAddress);
+		
+		} catch (Exception e) {
 			logger.error("Can't get city response", e);
+			
+			return null;			
+		}
+	}
+	
+	public String getAutonomousSystemNumber(String ip) {
+		
+		AsnResponse autonomousSystem = getAutonomousSystem(ip);
+		
+		if (autonomousSystem == null) {
+			return null;
+		}
+		
+		Long autonomousSystemNumber = autonomousSystem.getAutonomousSystemNumber();
+		
+		if (autonomousSystemNumber == null) {
+			return null;
+		}
+		
+		return "AS" + autonomousSystemNumber;		
+	}
+	
+	private AsnResponse getAutonomousSystem(String ip) {
+		
+		try {
+			InetAddress inetAddress = getInetAddress(ip);
+			
+			if (inetAddress == null) {
+				return null;
+			}
+
+			return asnDatabaseReader.asn(inetAddress);
+		
+		} catch (Exception e) {
+			logger.error("Can't get asn response", e);
 			
 			return null;			
 		}

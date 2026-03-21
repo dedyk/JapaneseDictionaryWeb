@@ -26,6 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.AddressList.Address;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.AsnList.Asn;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.CountryList.Country;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.FullUrlList.FullUrl;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.UserAgentList.UserAgent;
@@ -73,7 +74,22 @@ public class FirewallFilter implements Filter {
 		
 		HostBlock hostBlock = configWrapper.getConfig().getFirewall().getHostBlock();
 				
-		try {			
+		try {	
+			// pobranie listy blokad asn
+			List<Asn> asnList = hostBlock.getAsnList().getAsn();
+			
+			// sprawdzenie, czy dany asn jest zablokowany
+			for (Asn asn : asnList) {
+				// sprawdzenie, czy nalezy blokowac dany asn
+				if (clientInfo.autonomousSystemNumber != null && asn.getValue().equals(clientInfo.autonomousSystemNumber) == true) {
+					
+					clientInfo.doBlock = true;
+					clientInfo.doBlockSendRandomData = asn.isRandomDataSend() != null ? asn.isRandomDataSend() : false;
+					
+					return;
+				}
+			}			
+			
 			// pobranie listy blokad adresow ip i host name
 			List<Address> hostBlockAddressList = hostBlock.getAddressList().getAddress();
 
@@ -180,7 +196,8 @@ public class FirewallFilter implements Filter {
 		// utworzenie informacji o kliencie
 		ClientInfo clientInfo = new ClientInfo();
 		
-		clientInfo.ip = Utils.getRemoteIp(httpServletRequest);
+		int fixme = 1; // !!!!!!
+		clientInfo.ip = "47.79.194.89"; //Utils.getRemoteIp(httpServletRequest);
 		clientInfo.hostName = Utils.getHostname(clientInfo.ip);
 		clientInfo.userAgent = httpServletRequest.getHeader("User-Agent");	
 		clientInfo.url = httpServletRequest.getRequestURI();
@@ -189,11 +206,13 @@ public class FirewallFilter implements Filter {
 		clientInfo.fullUrl = Utils.getRequestURL(httpServletRequest);
 		
 		clientInfo.country = null;
+		clientInfo.autonomousSystemNumber = null;
 		
 		try {
 			// pobranie kraju na podstawie adresu ip
 			if (geoIPService != null && clientInfo.ip != null) {
 				clientInfo.country = geoIPService.getCountry(clientInfo.ip);
+				clientInfo.autonomousSystemNumber = geoIPService.getAutonomousSystemNumber(clientInfo.ip);
 			}
 		} catch (Exception e) {
 			logger.error("Błąd podczas pobierania nazwy kraju z adresu ip", e);
@@ -228,7 +247,7 @@ public class FirewallFilter implements Filter {
 		if (clientInfo.doBlock == true) { // blokowanie
 			
 			if (clientInfo.doBlockSendRandomData == false) { // zwykla blokada
-				logger.info("Blokowanie ip/host/user agent/url: " + clientInfo.ip + " (" + clientInfo.country + ") / " + clientInfo.hostName + " / " + clientInfo.userAgent + " / " + clientInfo.fullUrl);
+				logger.info("Blokowanie ip/host/user agent/url: " + clientInfo.ip + " (" + clientInfo.autonomousSystemNumber + ", " + clientInfo.country + ") / " + clientInfo.hostName + " / " + clientInfo.userAgent + " / " + clientInfo.fullUrl);
 				
 				// ServletContext servletContext = request.getServletContext();
 				
@@ -247,7 +266,7 @@ public class FirewallFilter implements Filter {
 				httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				
 			} else { // wysylanie losowych danych
-				logger.info("Blokowanie ip/host/user agent/url i wysylanie losowych danych: " + clientInfo.ip + " (" + clientInfo.country + ") / " + clientInfo.hostName + " / " + clientInfo.userAgent + " / " + clientInfo.fullUrl);
+				logger.info("Blokowanie ip/host/user agent/url i wysylanie losowych danych: " + clientInfo.ip + " (" + clientInfo.autonomousSystemNumber + ", " + clientInfo.country + ") / " + clientInfo.hostName + " / " + clientInfo.userAgent + " / " + clientInfo.fullUrl);
 				
 				// tworzenie generatora losowych stringow
 				RandomStringGenerator generator = new RandomStringGenerator.Builder()
@@ -420,6 +439,7 @@ public class FirewallFilter implements Filter {
 		
 		private String fullUrl;
 		
+		private String autonomousSystemNumber;
 		private String country;
 
 		private boolean doBlock = false;
