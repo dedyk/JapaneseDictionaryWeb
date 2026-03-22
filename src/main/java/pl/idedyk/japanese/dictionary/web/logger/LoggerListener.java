@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
+import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetMessageLoggerModel;
@@ -79,7 +80,6 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.SuggestionSendLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchMissingWordQueue;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryUniqueSearch;
-import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
 
 public class LoggerListener {
 	
@@ -90,9 +90,6 @@ public class LoggerListener {
 	
 	@Autowired
 	private MailSender mailSender;
-	
-	@Autowired
-	private GeoIPService geoIPService;
 		
 	@SuppressWarnings("unchecked")
 	public void onMessage(LoggerModelCommon loggerModelCommon) {
@@ -102,21 +99,33 @@ public class LoggerListener {
 		GenericLog genericLog = null;
 		
 		// pobranie nazwy kraju na podstawie adresu ip
-		String remoteIpCountry = geoIPService.getCountry(loggerModelCommon.getRemoteIp());
+		ClientInfo clientInfo = loggerModelCommon.getClientInfo();
+
+		String remoteIp = null;
+		String remoteIpHost = null;
+		String remoteIpCountry = null;
+		String remoteIpAsn = null;
+		
+		if (clientInfo != null) {
+			remoteIp = clientInfo.ip;
+			remoteIpHost = Utils.getHostname(remoteIp);
+			remoteIpCountry = clientInfo.country;
+			remoteIpAsn = clientInfo.autonomousSystemNumber;
+		}
 		
 		// ogolna obsluga			
-		logger.info("Przetwarzam zadanie " + operation + " z kolejki od: " + loggerModelCommon.getRemoteIp() + " (" + remoteIpCountry + ") / " + Utils.getHostname(loggerModelCommon.getRemoteIp()));
+		logger.info("Przetwarzam zadanie " + operation + " z kolejki od: " + remoteIp + " (" + remoteIpAsn + ", "  + remoteIpCountry + ") / " + remoteIpHost);
 		
 		// utworzenie wpisu do bazy danych
 		genericLog = new GenericLog();
 		
 		genericLog.setTimestamp(new Timestamp(loggerModelCommon.getDate().getTime()));
 		genericLog.setSessionId(loggerModelCommon.getSessionId());
-		genericLog.setRemoteIp(loggerModelCommon.getRemoteIp());
+		genericLog.setRemoteIp(remoteIp);
 		genericLog.setUserAgent(loggerModelCommon.getUserAgent());
 		genericLog.setRequestURL(loggerModelCommon.getRequestURL());
 		genericLog.setRefererURL(loggerModelCommon.getRefererURL());
-		genericLog.setRemoteHost(Utils.getHostname(loggerModelCommon.getRemoteIp()));
+		genericLog.setRemoteHost(remoteIpHost);
 		genericLog.setOperation(operation);
 		
 		// wstawienie wpisu do bazy danych

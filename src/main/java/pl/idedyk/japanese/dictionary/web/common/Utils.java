@@ -326,7 +326,8 @@ public class Utils {
 				getRemoteIp(request),
 				request.getHeader("User-Agent"),
 				getRequestURL(request),
-				request.getHeader("Referer"));
+				request.getHeader("Referer"),
+				(ClientInfo)request.getAttribute(ClientInfo.REQUEST_ATTRIBUTE));
 		
 		return loggerModelCommon;
 	}	

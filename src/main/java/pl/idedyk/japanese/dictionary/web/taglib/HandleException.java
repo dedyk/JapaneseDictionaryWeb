@@ -15,6 +15,7 @@ import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
@@ -103,7 +104,7 @@ public class HandleException extends TagSupport {
 		logger.error("Bład podczas wyświetlania strony", throwable);
 		
 		LoggerModelCommon loggerModelCommon = LoggerModelCommon.createLoggerModelCommon(
-				sessionId, remoteIp, userAgent, requestURI, refererURL);
+				sessionId, remoteIp, userAgent, requestURI, refererURL, (ClientInfo)request.getAttribute(ClientInfo.REQUEST_ATTRIBUTE));
 		
 		GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(loggerModelCommon, statusCode, throwable);
 

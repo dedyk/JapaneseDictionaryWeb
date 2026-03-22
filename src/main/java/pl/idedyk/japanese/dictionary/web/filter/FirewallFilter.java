@@ -23,6 +23,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.AddressList.Address;
@@ -216,6 +217,9 @@ public class FirewallFilter implements Filter {
 		} catch (Exception e) {
 			logger.error("Błąd podczas pobierania nazwy kraju z adresu ip", e);
 		}
+		
+		// zapisanie clientInfo do request-a
+		request.setAttribute(ClientInfo.REQUEST_ATTRIBUTE, clientInfo);
 						
 		// sprawdzanie, czy nalezy zablokowac ip/host
 		if (clientInfo.doBlock == false) {
@@ -428,23 +432,7 @@ public class FirewallFilter implements Filter {
 			}
 		}
 	}
-	
-	private static class ClientInfo {
-		private String ip;
-		private String hostName;
-		private String userAgent;	
-		private String url;
-		private String httpMethod;
-		
-		private String fullUrl;
-		
-		private String autonomousSystemNumber;
-		private String country;
-
-		private boolean doBlock = false;
-		private boolean doBlockSendRandomData = false;
-	}
-		
+			
 	private static class CallInfo {
 		@SuppressWarnings("unused")
 		private String url;
