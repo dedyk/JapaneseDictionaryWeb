@@ -87,7 +87,6 @@
 	</style>
 </head>
 
-<!-- FM_FIXME: dark mode -->
 <body>
 	
 	<div class="container">
