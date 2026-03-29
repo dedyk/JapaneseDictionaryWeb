@@ -29,7 +29,8 @@ public class AppConfig implements SchedulingConfigurer {
     
     @Bean(name="japaneseDictionaryCacheControl")
     public CacheControl createCacheControl() {
-    	CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(604801)); // tydzien i jedna sekunda
+    	// CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(604801)); // tydzien i jedna sekunda
+    	CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(3600)); // godzina i jedna sekunda
     	
     	cacheControl.mustRevalidate();
     	

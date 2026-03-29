@@ -22,16 +22,16 @@
 		<version.compiler.plugin>3.13.0</version.compiler.plugin>
 
 		<!-- spring version -->
-		<spring.version>6.1.16</spring.version>
+		<spring.version>6.2.17</spring.version>
 		
 		<!-- spring security version -->
-		<spring.security.version>6.2.8</spring.security.version>
+		<spring.security.version>6.5.9</spring.security.version>
 
 		<!-- lucene version -->
 		<lucene.version>4.7.2</lucene.version>
         
         <!-- log4j version -->
-        <log4j.version>2.17.1</log4j.version>
+        <log4j.version>2.25.3</log4j.version>
 	</properties>
 
 	<profiles>
@@ -173,13 +173,13 @@
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-core</artifactId>
-		    <version>2.17.0</version>
+		    <version>2.18.6</version>
 		</dependency>
 
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
-		    <version>2.17.0</version>
+		    <version>2.18.6</version>
 		</dependency>
 
 		<dependency>
@@ -335,7 +335,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.7</version>
+			<version>3.20.0</version>
 		</dependency>
 
 		<dependency>
@@ -420,6 +420,34 @@
 			    <artifactId>maven-war-plugin</artifactId>
 			    <version>${maven.war.plugin.version}</version>
 			</plugin>
+            <plugin>                
+				<groupId>org.jvnet.jaxb</groupId>
+				<artifactId>jaxb-maven-plugin</artifactId>
+				<version>4.0.0</version>
+                <configuration>
+                    <strict>false</strict>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>config-generate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <extension>true</extension>
+                            <encoding>UTF-8</encoding>
+                            <bindingDirectory>${basedir}/src/main/resources/xsd</bindingDirectory>
+                            <bindingIncludes>
+                                <include>binding.xjb</include>
+                            </bindingIncludes>
+                            <schemaDirectory>${basedir}/src/main/resources/xsd</schemaDirectory>
+                            <generatePackage>pl.idedyk.japanese.dictionary.web.config.xsd</generatePackage>
+                            <generateDirectory>${project.build.directory}/generated-sources/config/xsd</generateDirectory>
+                        </configuration>
+                    </execution>
+				</executions>
+			</plugin>
+
 
 		</plugins>
 	</build>

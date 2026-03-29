@@ -41,7 +41,9 @@ import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog.GenerateDrawStrokeDialogParams;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
+import pl.idedyk.japanese.dictionary2.api.helper.Kanji2HelperCommon;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
+import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KenteiLevelType;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.Misc2Info;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.MiscInfo;
 
@@ -74,10 +76,12 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			ServletContext servletContext = pageContext.getServletContext();
 			ServletRequest servletRequest = pageContext.getRequest();
 			
+			HttpServletRequest httpServletRequest = null;
+			
 			String userAgent = null;
 			
 			if (servletRequest instanceof HttpServletRequest) {			
-				HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;
+				httpServletRequest = (HttpServletRequest)servletRequest;
 				
 				userAgent = httpServletRequest.getHeader("User-Agent");			
 			}
@@ -117,7 +121,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
             
             // generowanie informacji podstawowych
             try {
-            	contentDiv.addHtmlElement(generateMainInfo(mainMenu, mobile));
+            	contentDiv.addHtmlElement(generateMainInfo(httpServletRequest, mainMenu, mobile));
             	
             } catch (DictionaryException e) {
             	throw new JspException(e);
@@ -164,7 +168,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		return pageHeader;
 	}
 	
-	private Div generateMainInfo(Menu mainMenu, boolean mobile) throws IOException, DictionaryException {
+	private Div generateMainInfo(HttpServletRequest httpServletRequest, Menu mainMenu, boolean mobile) throws IOException, DictionaryException {
 		
 		Div panelDiv = new Div("panel panel-default");
 		
@@ -187,7 +191,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		Div panelBody = new Div("panel-body");
 
 		// kanji
-		Div kanjiDiv = generateKanjiSection(mainInfoMenu, mobile);
+		Div kanjiDiv = generateKanjiSection(httpServletRequest, mainInfoMenu, mobile);
 
 		panelBody.addHtmlElement(kanjiDiv);
 		
@@ -251,6 +255,15 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			panelBody.addHtmlElement(infoDiv);			
 		}
 		
+		// kanji kentei
+		Div kanjiKenteiDiv = generateKanjiKenteiSection(mainInfoMenu);
+		
+		if (kanjiKenteiDiv != null) {
+			panelBody.addHtmlElement(new Hr());
+			
+			panelBody.addHtmlElement(kanjiKenteiDiv);
+		}
+		
 		// wystepowanie znaku
 		Div kanjiGroups = generateKanjiGroupsSection(mainInfoMenu);
 		
@@ -264,8 +277,8 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		
 		return panelDiv;
 	}
-	
-	private Div generateKanjiSection(Menu menu, boolean mobile) throws IOException, DictionaryException {
+
+	private Div generateKanjiSection(HttpServletRequest httpServletRequest, Menu menu, boolean mobile) throws IOException, DictionaryException {
 		
 		Div kanjiDiv = new Div();
 		
@@ -402,7 +415,7 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 			kanjiDiv.addHtmlElement(GenerateDrawStrokeDialog.generateDrawStrokeButtonScript(kanjiDrawId, 1, mobile));
 
 			// tworzenie okienka rysowania znaku kanji
-			GenerateDrawStrokeDialogParams generateDrawStrokeDialogParams = new GenerateDrawStrokeDialogParams();
+			GenerateDrawStrokeDialogParams generateDrawStrokeDialogParams = new GenerateDrawStrokeDialogParams(Utils.getTheme(httpServletRequest));
 
 			generateDrawStrokeDialogParams.height = 300;
 			generateDrawStrokeDialogParams.zoomFactory = 0.5f;
@@ -566,6 +579,18 @@ public class GenerateKanjiDictionaryDetailsTag extends GenerateDictionaryDetails
 		}
 		
 		return generateStandardDivWithStringList("infoId", getMessage("kanjiDictionaryDetails.page.kanjiEntry.info.title"), menu, Arrays.asList(new String [] { info }));
+	}
+	
+	private Div generateKanjiKenteiSection(Menu menu) {
+		
+		KenteiLevelType kenteiLevel = kanjiEntry.getMisc2().getKenteiLevel();
+		
+		if (kenteiLevel == null) {
+			return null;
+		}
+				
+		return generateStandardDivWithStringList("kanjiKenteiId", getMessage("kanjiDictionaryDetails.page.kanjiEntry.kanjiKentei.title"), menu, 
+				Arrays.asList(new String [] { Kanji2HelperCommon.translateToPolishGlossType(kenteiLevel) }));
 	}
 	
 	private Div generateKanjiGroupsSection(Menu menu) {

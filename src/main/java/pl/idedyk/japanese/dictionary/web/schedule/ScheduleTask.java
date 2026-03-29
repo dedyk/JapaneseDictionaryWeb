@@ -120,7 +120,7 @@ public class ScheduleTask {
 		
 		// pobranie przedzialu wpisow
 		try {
-			ReportGenerator.DailyReport dailyReport = reportGenerator.generateDailyReportBody();
+			ReportGenerator.DailyReport dailyReport = reportGenerator.generateDailyReportBody(null);
 			
 			if (dailyReport == null) {
 				logger.info("Brak elementow do generowania dziennego raportu");
@@ -217,7 +217,7 @@ public class ScheduleTask {
 
 				// przygotowanie info do logger'a
 				GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(
-						LoggerModelCommon.createLoggerModelCommon(null, null, null, null, null), -1, e);
+						LoggerModelCommon.createLoggerModelCommon(null, null, null, null, null, null), -1, e);
 				
 				// wyslanie do logger'a
 				loggerSender.sendLog(generalExceptionLoggerModel);				

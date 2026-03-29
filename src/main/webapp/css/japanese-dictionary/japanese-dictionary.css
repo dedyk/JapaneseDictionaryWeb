@@ -2,6 +2,10 @@
 #radicals a:visited { color: black; }
 #radicals a:hover { color: blue; }
 
+.bodyMain {
+  background: white;
+}
+
 /* Cookie warning */
 #cookie-warn {
 	position: fixed;

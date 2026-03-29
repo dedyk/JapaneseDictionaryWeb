@@ -221,7 +221,7 @@ public class KanjiDictionaryController {
 				
 				// przygotowanie info do logger'a
 				GeneralExceptionLoggerModel generalExceptionLoggerModel = new GeneralExceptionLoggerModel(
-						LoggerModelCommon.createLoggerModelCommon(null, null, null, null, null), -1, e);
+						LoggerModelCommon.createLoggerModelCommon(null, null, null, null, null, null), -1, e);
 				
 				// wyslanie do logger'a
 				loggerSender.sendLog(generalExceptionLoggerModel);

@@ -3,21 +3,22 @@ package pl.idedyk.japanese.dictionary.web.logger.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
+
 public class LoggerModelCommon implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private String sessionId;
 	
-	private String remoteIp;
-	
 	private String userAgent;
 	
 	private String requestURL;
-	
 	private String refererURL;
 	
 	private Date date;
+	
+	private ClientInfo clientInfo;
 	
 	private LoggerModelCommon() {
 	}
@@ -27,29 +28,34 @@ public class LoggerModelCommon implements Serializable {
 		if (loggerModelCommon != null) {
 
 			this.sessionId = loggerModelCommon.sessionId;
-			this.remoteIp = loggerModelCommon.remoteIp;
 			this.userAgent = loggerModelCommon.userAgent;
 			this.requestURL = loggerModelCommon.requestURL;
 			this.refererURL = loggerModelCommon.refererURL;
 			
 			this.date = loggerModelCommon.date;
 			
+			this.clientInfo = loggerModelCommon.clientInfo;
+			
 		} else {
 			this.date = new Date();
 		}
 	}
 
-	public static LoggerModelCommon createLoggerModelCommon(String sessionId, String remoteIp, String userAgent, String requestURL, String refererURL) {
+	public static LoggerModelCommon createLoggerModelCommon(String sessionId,
+			String remoteIp, String userAgent,
+			String requestURL, String refererURL,
+			ClientInfo clientInfo) {
 		
 		LoggerModelCommon loggerModelCommon = new LoggerModelCommon();
 		
 		loggerModelCommon.sessionId = sessionId;
-		loggerModelCommon.remoteIp = remoteIp;
 		loggerModelCommon.userAgent = userAgent;
 		loggerModelCommon.requestURL = requestURL;
 		loggerModelCommon.refererURL = refererURL;
 		
 		loggerModelCommon.date = new Date();
+		
+		loggerModelCommon.clientInfo = clientInfo;
 		
 		return loggerModelCommon;
 	}
@@ -60,14 +66,6 @@ public class LoggerModelCommon implements Serializable {
 
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
-	}
-
-	public String getRemoteIp() {
-		return remoteIp;
-	}
-
-	public void setRemoteIp(String remoteIp) {
-		this.remoteIp = remoteIp;
 	}
 
 	public String getUserAgent() {
@@ -100,5 +98,13 @@ public class LoggerModelCommon implements Serializable {
 
 	public void setRefererURL(String refererURL) {
 		this.refererURL = refererURL;
+	}
+
+	public ClientInfo getClientInfo() {
+		return clientInfo;
+	}
+
+	public void setClientInfo(ClientInfo clientInfo) {
+		this.clientInfo = clientInfo;
 	}
 }
