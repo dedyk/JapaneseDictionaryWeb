@@ -12,6 +12,7 @@ import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchMo
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class LinkGenerator {
@@ -34,10 +35,11 @@ public class LinkGenerator {
 		}			
 	}
 	
-	public static String generateDictionaryEntryDetailsLink(String contextPath, DictionaryEntry dictionaryEntry, 
-			DictionaryEntryType forceDictionaryEntryType) {
+	public static String generateNameDictionaryEntryDetailsLink(String contextPath, JMnedict.Entry nameDictionaryEntry2) {
 		
 		// INFO: to bedzie uzywane tylko dla slownika nazw
+		
+		// FM_FIXME: do naprawy
 				
 		try {
 			boolean name = dictionaryEntry.isName();

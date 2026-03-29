@@ -1,30 +1,31 @@
 package pl.idedyk.japanese.dictionary.web.logger.model;
 
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 
 public class WordDictionaryNameDetailsLoggerModel extends LoggerModelCommon {
 
 	private static final long serialVersionUID = 1L;
 
-	private DictionaryEntry dictionaryEntry;
+	private JMnedict.Entry nameDictionaryEntry2;
 		
-	public WordDictionaryNameDetailsLoggerModel(LoggerModelCommon loggerModelCommon, DictionaryEntry dictionaryEntry) {
+	public WordDictionaryNameDetailsLoggerModel(LoggerModelCommon loggerModelCommon, JMnedict.Entry nameDictionaryEntry2) {
 		
 		super(loggerModelCommon);
 		
-		this.dictionaryEntry = dictionaryEntry;
+		this.nameDictionaryEntry2 = nameDictionaryEntry2;
+	}
+	
+	public JMnedict.Entry getNameDictionaryEntry2() {
+		return nameDictionaryEntry2;
 	}
 
-	public DictionaryEntry getDictionaryEntry() {
-		return dictionaryEntry;
-	}
-
-	public void setDictionaryEntry(DictionaryEntry dictionaryEntry) {
-		this.dictionaryEntry = dictionaryEntry;
+	public void setNameDictionaryEntry2(JMnedict.Entry nameDictionaryEntry2) {
+		this.nameDictionaryEntry2 = nameDictionaryEntry2;
 	}
 
 	@Override
 	public String toString() {
-		return "WordDictionaryNameDetailsLoggerModel [dictionaryEntry=" + dictionaryEntry + "]";
+		// FM_FIXME: sprawdzic, jak to zachowuje sie
+		return "WordDictionaryNameDetailsLoggerModel [nameDictionaryEntry2=" + nameDictionaryEntry2 + "]";
 	}	
 }

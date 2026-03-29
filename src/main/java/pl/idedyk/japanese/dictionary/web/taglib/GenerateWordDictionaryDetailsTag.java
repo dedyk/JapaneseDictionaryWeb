@@ -67,18 +67,18 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKana;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKanaType;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsTagAbstract {
 	
 	private static final long serialVersionUID = 1L;
-	
-	private DictionaryEntry dictionaryEntry;
-	private DictionaryEntryType forceDictionaryEntryType;
-	
+		
 	private JMdict.Entry dictionaryEntry2;
 	private List<KanjiKanaPair> kanjiKanaPairList;
-				
+	
+	private JMnedict.Entry nameDictionaryEntry2;
+	
 	private MessageSource messageSource;	
 	private DictionaryManager dictionaryManager;
 	private Properties applicationProperties;
