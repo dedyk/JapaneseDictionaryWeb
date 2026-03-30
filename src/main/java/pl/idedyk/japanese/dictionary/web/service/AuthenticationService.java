@@ -33,6 +33,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AdminLoggerModel.Result;
 import pl.idedyk.japanese.dictionary.web.service.exception.BadCredentialsExceptionWithAuthentication;
 
+@SuppressWarnings("removal")
 @Component
 public class AuthenticationService implements AuthenticationProvider, AuthenticationSuccessHandler, AuthenticationFailureHandler, AccessDeniedHandler, LogoutSuccessHandler {
 
@@ -70,8 +71,8 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
 	}
 	
 	private void redirect(HttpServletRequest request, HttpServletResponse response, String redirectUrl) throws IOException {
-				
-        Integer currentPort = Integer.valueOf(portResolver.getServerPort(request));
+		
+		Integer currentPort = Integer.valueOf(portResolver.getServerPort(request));
         Integer redirectPort = portMapper.lookupHttpsPort(currentPort);
 
         if (redirectPort != null) {

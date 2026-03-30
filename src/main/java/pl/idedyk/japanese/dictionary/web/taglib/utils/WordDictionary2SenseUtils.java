@@ -23,9 +23,12 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.SenseAdditionalInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 
-public class WordDictionary2SenseUtils {
+public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 	
 	public static void createSenseHtmlElements(MessageSource messageSource, String servletContextPath, Entry entry, HtmlElementCommon translateTd, String findWord, boolean addSenseNumber, boolean addDetails) {
+		
+		// !!! INFO: jezeli cos tutaj zmieniasz to byc moze trzeba rowniez zmienic w NameDictionary2TranslatationUtils !!!
+		
         for (int senseIdx = 0; senseIdx < entry.getSenseList().size(); ++senseIdx) {
         	
         	Sense sense = entry.getSenseList().get(senseIdx);
@@ -318,41 +321,4 @@ public class WordDictionary2SenseUtils {
     		translateTd.addHtmlElement(referenceToAnotherKanjiKanaDiv);	
 		}
 	}
-	
-    public static String getStringWithMark(String text, String findWord, boolean mark) {
-    	
-    	if (mark == false || findWord == null) {
-    		return text;
-    	}
-    	
-    	String findWordLowerCase = findWord.toLowerCase(Locale.getDefault());
-    	
-		StringBuffer texStringBuffer = new StringBuffer(text);								
-		StringBuffer textLowerCaseStringBuffer = new StringBuffer(text.toLowerCase(Locale.getDefault()));
-										
-		int idxStart = 0;
-		
-		final String fontBegin = "<font color='red'>";
-		final String fontEnd = "</font>";
-		
-		while(true) {
-			
-			int idx1 = textLowerCaseStringBuffer.indexOf(findWordLowerCase, idxStart);
-			
-			if (idx1 == -1) {
-				break;
-			}
-			
-			texStringBuffer.insert(idx1, fontBegin);
-			textLowerCaseStringBuffer.insert(idx1, fontBegin);
-			
-			texStringBuffer.insert(idx1 + findWordLowerCase.length() + fontBegin.length(), fontEnd);
-			textLowerCaseStringBuffer.insert(idx1 + findWordLowerCase.length() + fontBegin.length(), fontEnd);
-
-			idxStart = idx1 + findWordLowerCase.length() + fontBegin.length() + fontEnd.length();
-		}
-		
-		return texStringBuffer.toString();
-    }
-
 }
