@@ -169,7 +169,7 @@ public class SitemapManager {
 			
 			// FM_FIXME: sprawdzic, czy to dziala
 			
-			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails3", sitemapHelper, null, nameDictionaryEntry2);
+			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, null, nameDictionaryEntry2);
 		}
 
 		// katalog slow(nazwa)
