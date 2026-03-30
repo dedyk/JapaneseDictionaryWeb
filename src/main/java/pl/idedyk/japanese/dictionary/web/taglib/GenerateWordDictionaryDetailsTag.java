@@ -58,15 +58,17 @@ import pl.idedyk.japanese.dictionary.web.html.Tr;
 import pl.idedyk.japanese.dictionary.web.html.Ul;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.Menu;
+import pl.idedyk.japanese.dictionary.web.taglib.utils.NameDictionary2TranslatationUtils;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.WordDictionary2SenseUtils;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.GenerateDrawStrokeDialog.GenerateDrawStrokeDialogParams;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.KanjiKanaPair;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2NameHelperCommon;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2NameHelperCommon.NameKanjiKanaPair;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKana;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfoKanaType;
 import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
@@ -78,6 +80,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	private List<KanjiKanaPair> kanjiKanaPairList;
 	
 	private JMnedict.Entry nameDictionaryEntry2;
+	private List<NameKanjiKanaPair> nameKanjiKanaPairList;
 	
 	private MessageSource messageSource;	
 	private DictionaryManager dictionaryManager;
@@ -87,6 +90,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 	@Override
 	public int doStartTag() throws JspException {
+		
+		// FM_FIXME: sprawdzic, czy dziala
 		
 		try {		
 			ServletContext servletContext = pageContext.getServletContext();
@@ -111,7 +116,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2, true);
 							
 			} else {
-				kanjiKanaPairList = null;
+				nameKanjiKanaPairList = Dictionary2NameHelperCommon.getNameKanjiKanaPairListStatic(nameDictionaryEntry2);
 			}		
 	
 			//
@@ -124,7 +129,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
             JspWriter out = pageContext.getOut();
 
-            if (dictionaryEntry == null && dictionaryEntry2 == null) {            	
+            if (dictionaryEntry2 == null && nameKanjiKanaPairList == null) {            	
             	Div errorDiv = new Div("alert alert-danger");
             	
             	errorDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.null")));
@@ -136,7 +141,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
             Div mainContentDiv = new Div();
             
-            if (dictionaryEntry != null && dictionaryEntry.isName() == true) {            	
+            if (nameKanjiKanaPairList != null) {            	
             	Div infoDiv = new Div("alert alert-info");
             	
             	infoDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.name.info")));
@@ -200,12 +205,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             throw new RuntimeException(e);
             
         } finally {
-    		// czyscimy stan
-    		dictionaryEntry = null;
-    		forceDictionaryEntryType = null;
-    		
+    		// czyscimy stan    		
     		dictionaryEntry2 = null;
     		kanjiKanaPairList = null;
+    		
+    		nameDictionaryEntry2 = null;
+    		nameKanjiKanaPairList = null;
     		
     		grammaFormConjugateAndExampleEntryMap.clear();
     		
@@ -220,48 +225,45 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		H pageHeader = new H(4);
 				
 		pageHeader.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.title")));
-				
-		if (dictionaryEntry != null) {
-			
-			if (dictionaryEntry.isKanjiExists() == true) {				
-				B kanjiBold = new B();
-				
-				kanjiBold.addHtmlElement(new Text(dictionaryEntry.getKanji()));
-				
-				pageHeader.addHtmlElement(kanjiBold);
-				pageHeader.addHtmlElement(new Text(" | "));
-			}
-			
-			String kana = dictionaryEntry.getKana();
-				
-			B kanaBold = new B();
-			
-			kanaBold.addHtmlElement(new Text(kana));
-			pageHeader.addHtmlElement(kanaBold);
-			
-		} else if (dictionaryEntry2 != null) {
+		
+		String kanji;
+		String kana;
+		
+		if (dictionaryEntry2 != null) {
 			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2);
 			
-			String kanji = uniqueKanjiKanaRomajiSetWithoutSearchOnly[0].replaceAll(",", ", ");
-			String kana = uniqueKanjiKanaRomajiSetWithoutSearchOnly[1].replaceAll(",", ", ");
-			
-			if (kanji.equals("-") == false) { // czy kanji istnieje
-				B kanjiBold = new B();
-				
-				kanjiBold.addHtmlElement(new Text(kanji));
-				
-				pageHeader.addHtmlElement(kanjiBold);
-				pageHeader.addHtmlElement(new Text(" | "));
-			}
+			kanji = uniqueKanjiKanaRomajiSetWithoutSearchOnly[0].replaceAll(",", ", ");
+			kana = uniqueKanjiKanaRomajiSetWithoutSearchOnly[1].replaceAll(",", ", ");
 						
-			B kanaBold = new B();
+		} else if (nameDictionaryEntry2 != null) {
 			
-			kanaBold.addHtmlElement(new Text(kana));
-			pageHeader.addHtmlElement(kanaBold);			
+			// FM_FIXME: sprawdzic, czy dziala
 			
+			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2);
+			
+			kanji = uniqueKanjiKanaRomajiSetWithoutSearchOnly[0].replaceAll(",", ", ");
+			kana = uniqueKanjiKanaRomajiSetWithoutSearchOnly[1].replaceAll(",", ", ");
+					
 		} else {
 			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
 		}
+		
+		//
+		
+		if (kanji.equals("-") == false) { // czy kanji istnieje
+			B kanjiBold = new B();
+			
+			kanjiBold.addHtmlElement(new Text(kanji));
+			
+			pageHeader.addHtmlElement(kanjiBold);
+			pageHeader.addHtmlElement(new Text(" | "));
+		}
+					
+		B kanaBold = new B();
+		
+		kanaBold.addHtmlElement(new Text(kana));
+		pageHeader.addHtmlElement(kanaBold);			
+
 		
 		return pageHeader;
 	}
@@ -379,28 +381,39 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    		createWordTableTr(httpServletRequest, singleWordTable, kanjiKanaPair, kanjiKanaPairIdx, mobile);
 			}
 			
-		} else { // stary format
+		} else { // name
+			
+			// FM_FIXME: sprawdzic, czy dziala
 			
 			// stworzenie wirtualnego KanjiKanaPair
-			KanjiInfo kanjiInfo = new KanjiInfo();
+			KanjiInfo virtualKanjiInfo = null;
 			
-			kanjiInfo.setKanji(dictionaryEntry.getKanji());
-			
-			ReadingInfo readingInfo = new ReadingInfo();
-			
-			ReadingInfoKana readingInfoKana = new ReadingInfoKana();
-			readingInfo.setKana(readingInfoKana);
-			
-			if (dictionaryEntry.getWordType() != null) {
-				readingInfoKana.setKanaType(ReadingInfoKanaType.valueOf(dictionaryEntry.getWordType().name()));
-			}
-			
-			readingInfoKana.setValue(dictionaryEntry.getKana());
-			readingInfoKana.setRomaji(dictionaryEntry.getRomaji());
+			for (int nameKanjiKanaPairIdx = 0; nameKanjiKanaPairIdx < nameKanjiKanaPairList.size(); ++nameKanjiKanaPairIdx) {
+				
+				NameKanjiKanaPair nameKanjiKanaPair = nameKanjiKanaPairList.get(nameKanjiKanaPairIdx);
+				
+				pl.idedyk.japanese.dictionary2.jmnedict.xsd.KanjiInfo nameKanjiInfo = nameKanjiKanaPair.getKanjiInfo();
+				
+				if (nameKanjiInfo != null) {
+					virtualKanjiInfo = new KanjiInfo();
+					
+					virtualKanjiInfo.setKanji(nameKanjiInfo.getKanji());
+				}
+				
+				ReadingInfo virtualReadingInfo = new ReadingInfo();
+				
+				ReadingInfoKana virtualReadingInfoKana = new ReadingInfoKana();				
+				virtualReadingInfo.setKana(new ReadingInfoKana());
+				
+				virtualReadingInfoKana.setValue(nameKanjiKanaPair.getKana());
+				virtualReadingInfoKana.setRomaji(nameKanjiKanaPair.getRomaji());
+				
 						
-			KanjiKanaPair virtualKanjiKanaPair = new KanjiKanaPair(null, kanjiInfo, readingInfo);
+				KanjiKanaPair virtualKanjiKanaPair = new KanjiKanaPair(null, virtualKanjiInfo, virtualReadingInfo);	
 			
-			createWordTableTr(httpServletRequest, singleWordTable, virtualKanjiKanaPair, 0, mobile);			
+	    		// pobieramy wszystkie skladniki slowa    		    	        	
+	    		createWordTableTr(httpServletRequest, singleWordTable, virtualKanjiKanaPair, nameKanjiKanaPairIdx, mobile);
+			}
 		}		
     	
 		return wordsDiv;
@@ -641,61 +654,72 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 	private Div generateTranslateSection(Menu menu) throws IOException {
 		
+		// FM_FIXME: sprawdzic, czy dziala
+		
 		final String titleId = "translateId";
 		final String titleTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title");
 		
-		if (dictionaryEntry2 == null) { // generowanie po staremu
-			return generateStandardDivWithStringList(titleId, titleTitle, menu, dictionaryEntry.getTranslates());
-						
-		} else { // generowanie z danych zawartych w dictionaryEntry2			
-			// glowny div z zawartoscia
-			Div resultDiv = new Div();
-			
-	    	// wiersz z tytulem
-	    	Div row1Div = new Div("row");
-			
-	    	// tytul
-	    	Div divTitleDiv = new Div("col-md-10");
-			
-	    	H divTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
-	    	
-	    	divTitleH4.setId(titleId);
-	    	
-	    	divTitleH4.addHtmlElement(new Text(titleTitle));
-	    	menu.getChildMenu().add(new Menu(divTitleH4.getId(), titleTitle));    	
-	    	
-	    	divTitleDiv.addHtmlElement(divTitleH4);
+		// glowny div z zawartoscia
+		Div resultDiv = new Div();
+		
+    	// wiersz z tytulem
+    	Div row1Div = new Div("row");
+		
+    	// tytul
+    	Div divTitleDiv = new Div("col-md-10");
+		
+    	H divTitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");
+    	
+    	divTitleH4.setId(titleId);
+    	
+    	divTitleH4.addHtmlElement(new Text(titleTitle));
+    	menu.getChildMenu().add(new Menu(divTitleH4.getId(), titleTitle));    	
+    	
+    	divTitleDiv.addHtmlElement(divTitleH4);
 
-	    	row1Div.addHtmlElement(divTitleDiv);
-	    	resultDiv.addHtmlElement(row1Div);
-	    	
-	    	//
-	    	
-	    	Div senseDiv = new Div("row");
-	    	resultDiv.addHtmlElement(senseDiv);
-	    		    	
-	    	Div senseBodyDiv = new Div("col-md-11", "font-size: 130%");
-	    	senseDiv.addHtmlElement(senseBodyDiv);
-	    	
-	    	WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), dictionaryEntry2, senseBodyDiv, null, true, true);
-	    							
-			return resultDiv;
-		}
+    	row1Div.addHtmlElement(divTitleDiv);
+    	resultDiv.addHtmlElement(row1Div);
+    	
+    	//
+    	
+    	Div senseDiv = new Div("row");
+    	resultDiv.addHtmlElement(senseDiv);
+    		    	
+    	Div senseBodyDiv = new Div("col-md-11", "font-size: 130%");
+    	senseDiv.addHtmlElement(senseBodyDiv);
+    	
+    	if (dictionaryEntry2 != null) {
+    		WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), dictionaryEntry2, senseBodyDiv, null, true, true);	
+    	} else {
+    		NameDictionary2TranslatationUtils.createTranslationHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), nameDictionaryEntry2, senseBodyDiv, null, true, true);
+    	}
+    							
+		return resultDiv;
 	}
 	
 	private Div generateAdditionalInfo(Menu menu) throws IOException {
 		
+		// FM_FIXME: sprawdzic, czy to dziala
+		
 		String info = null;	
 		String kanji = null;
 		
-		if (dictionaryEntry != null) {
-			info = dictionaryEntry.getInfo();		
-			kanji = dictionaryEntry.getKanji();			
-			
-		} else if (kanjiKanaPairList != null) {
+		if (kanjiKanaPairList != null) {
 			
 			for (KanjiKanaPair kanjiKanaPair : kanjiKanaPairList) {
 				KanjiInfo kanjiInfo = kanjiKanaPair.getKanjiInfo();
+				
+				if (kanjiInfo != null) { // wystarczy badac tylko jeden element
+					kanji = kanjiInfo.getKanji();					
+				}
+			}
+			
+			info = null;
+
+		} else if (nameKanjiKanaPairList != null) {
+			
+			for (NameKanjiKanaPair nameKanjiKanaPair : nameKanjiKanaPairList) {
+				pl.idedyk.japanese.dictionary2.jmnedict.xsd.KanjiInfo kanjiInfo = nameKanjiKanaPair.getKanjiInfo();
 				
 				if (kanjiInfo != null) { // wystarczy badac tylko jeden element
 					kanji = kanjiInfo.getKanji();					
@@ -768,6 +792,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Td row2TableTrTd1 = new Td();
 		row2TableTr.addHtmlElement(row2TableTrTd1);
 		
+		/*
 		if (info != null && (special == 0 || special == 3)) {
 			
 			H additionalInfoTextH4 = new H(4);
@@ -775,6 +800,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			
 			additionalInfoTextH4.addHtmlElement(new Text(info));						
 		}
+		*/
 		
 		if (special > 0) {
 			
@@ -867,11 +893,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	private Div generateWordType(Menu menu, boolean mobile) throws IOException {		
 		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
 		
-		if (dictionaryEntry != null) {
-			dictionaryEntryList.add(dictionaryEntry);
-			
-		} else if (kanjiKanaPairList != null) {
+		// FM_FIXME: sprawdzic, czy to dziala
+		
+		if (kanjiKanaPairList != null) {
 			dictionaryEntryList.addAll(convertKanjiKanaPairListToOldDictionaryEntry(kanjiKanaPairList));
+		} else if (nameKanjiKanaPairList != null) {
+			// noop, FM_FIXME: zobaczyc, jak to zachowuje sie
 		}
 		
 		if (dictionaryEntryList.size() == 0) {
@@ -1075,10 +1102,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				
 		final List<Attribute> attributeList;
 		
-		if (dictionaryEntry != null) {
-			attributeList = dictionaryEntry.getAttributeList().getAttributeList();
-			
-		} else if (dictionaryEntry2 != null) {
+		if (dictionaryEntry2 != null) {
 			attributeList = new ArrayList<>();
 			
 			dictionaryEntry2.getMisc().getOldPolishJapaneseDictionary().getAttributeList().stream().forEach(attr -> {
@@ -1089,6 +1113,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
 				attributeList.add(attribute);
 			});
+			
+		} else if (nameDictionaryEntry2 != null) { 
+			// FM_FIXME: zobaczyc, jak to zachowuje sie
+			attributeList = new ArrayList<>();
+			// noop
 			
 		} else {
 			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
@@ -1253,17 +1282,21 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		Set<String> allKanjis = new LinkedHashSet<String>(); 
 		
-		if (dictionaryEntry != null && dictionaryEntry.isKanjiExists() == true) { // obsluga starego formatu
-			for (int idx = 0; idx < dictionaryEntry.getKanji().length(); ++idx) {
-				allKanjis.add("" + dictionaryEntry.getKanji().charAt(idx));
-			}
-			
-		} else if (kanjiKanaPairList != null) { // nowy format
+		if (kanjiKanaPairList != null) { // nowy format
 			kanjiKanaPairList.stream().filter(f -> f.getKanjiInfo() != null).forEach(c -> {
 				for (int idx = 0; idx < c.getKanji().length(); ++idx) {
 					allKanjis.add("" + c.getKanji().charAt(idx));
 				}	
 			});			
+		
+		} else if (nameKanjiKanaPairList != null) {
+			// FM_FIXME: zobaczyc, jak to zachowuje sie
+			
+			nameKanjiKanaPairList.stream().filter(f -> f.getKanjiInfo() != null).forEach(c -> {
+				for (int idx = 0; idx < c.getKanji().length(); ++idx) {
+					allKanjis.add("" + c.getKanji().charAt(idx));
+				}	
+			});
 			
 		} else {
 			return null;
@@ -1380,11 +1413,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
 		List<String> exampleSentenceGroupIdsList = null;
 		
-		if (dictionaryEntry != null) {
-			exampleSentenceGroupIdsList = dictionaryEntry.getExampleSentenceGroupIdsList();
-			
-		} else if (dictionaryEntry2 != null) {
+		if (dictionaryEntry2 != null) {
 			exampleSentenceGroupIdsList = dictionaryEntry2.getMisc().getOldPolishJapaneseDictionary().getExampleSentenceGroupIdsList();
+			
+		} else if (nameDictionaryEntry2 != null) {
+			// FM_FIXME: zobaczyc, jak to zachowuje sie
+			// noop
 		}
 				
 		if (exampleSentenceGroupIdsList == null || exampleSentenceGroupIdsList.size() == 0) {
@@ -1513,11 +1547,12 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				
 		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
 		
-		if (dictionaryEntry != null) {
-			dictionaryEntryList.add(dictionaryEntry);
-			
-		} else if (kanjiKanaPairList != null) {
+		if (kanjiKanaPairList != null) {
 			dictionaryEntryList.addAll(convertKanjiKanaPairListToOldDictionaryEntry(kanjiKanaPairList));
+			
+		} else if (nameKanjiKanaPairList != null) {
+			// FM_FIXME: zobaczyc, jak to zachowuje sie
+			// noop
 		}
 		
 		if (dictionaryEntryList.size() == 0) {
@@ -2366,17 +2401,19 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		String dictionaryEntryKana;
 		String dictionaryEntryRomaji;
         
-        if (dictionaryEntry != null) {
-            id = dictionaryEntry.getId();
-            
-    		dictionaryEntryKanji = dictionaryEntry.getKanji();
-    		dictionaryEntryKana = dictionaryEntry.getKana();
-    		dictionaryEntryRomaji = dictionaryEntry.getRomaji();        
-        	
-        } else if (kanjiKanaPairList != null) {
+        if (kanjiKanaPairList != null) {
         	id = kanjiKanaPairList.get(0).getEntry().getEntryId();
         	
         	dictionaryEntryKanji = kanjiKanaPairList.get(0).getKanji();
+    		dictionaryEntryKana = kanjiKanaPairList.get(0).getKana();
+    		dictionaryEntryRomaji = kanjiKanaPairList.get(0).getRomaji();
+    	
+        } else if (kanjiKanaPairList != null) {
+        	// FM_FIXME: zobaczyc, jak to zachowuje sie
+        	
+        	id = nameKanjiKanaPairList.get(0).getEntry().getEntryId();
+        	
+        	dictionaryEntryKanji = nameKanjiKanaPairList.get(0).getKanji();
     		dictionaryEntryKana = kanjiKanaPairList.get(0).getKana();
     		dictionaryEntryRomaji = kanjiKanaPairList.get(0).getRomaji();
     		
@@ -2404,14 +2441,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 	*/
 	
-	public DictionaryEntry getDictionaryEntry() {
-		return dictionaryEntry;
-	}
-
-	public void setDictionaryEntry(DictionaryEntry dictionaryEntry) {
-		this.dictionaryEntry = dictionaryEntry;
-	}
-
 	public JMdict.Entry getDictionaryEntry2() {
 		return dictionaryEntry2;
 	}
@@ -2419,15 +2448,15 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	public void setDictionaryEntry2(JMdict.Entry dictionaryEntry2) {
 		this.dictionaryEntry2 = dictionaryEntry2;
 	}
-
-	public DictionaryEntryType getForceDictionaryEntryType() {
-		return forceDictionaryEntryType;
-	}
-
-	public void setForceDictionaryEntryType(DictionaryEntryType forceDictionaryEntryType) {
-		this.forceDictionaryEntryType = forceDictionaryEntryType;
-	}
 	
+	public JMnedict.Entry getNameDictionaryEntry2() {
+		return nameDictionaryEntry2;
+	}
+
+	public void setNameDictionaryEntry2(JMnedict.Entry nameDictionaryEntry2) {
+		this.nameDictionaryEntry2 = nameDictionaryEntry2;
+	}
+
 	private static class GrammaFormConjugateAndExampleEntry {
 		private int dictionaryEntryIdx;
 		private DictionaryEntry dictionaryEntry;
