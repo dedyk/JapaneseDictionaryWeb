@@ -149,10 +149,6 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    	translateTd = new Td(null, "padding-top: 10px");
     	    	tr.addHtmlElement(translateTd);
     	    	    	    	
-            	// znaczenie
-    	    	translateTd = new Td(null, "padding-top: 10px");
-    	    	tr.addHtmlElement(translateTd);
-    	    	
     	    	NameDictionary2TranslatationUtils.createTranslationHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), nameEntry, translateTd, findWord, false, true);
     	    	
             	/*

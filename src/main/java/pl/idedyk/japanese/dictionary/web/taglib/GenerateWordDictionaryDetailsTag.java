@@ -403,7 +403,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				ReadingInfo virtualReadingInfo = new ReadingInfo();
 				
 				ReadingInfoKana virtualReadingInfoKana = new ReadingInfoKana();				
-				virtualReadingInfo.setKana(new ReadingInfoKana());
+				virtualReadingInfo.setKana(virtualReadingInfoKana);
 				
 				virtualReadingInfoKana.setValue(nameKanjiKanaPair.getKana());
 				virtualReadingInfoKana.setRomaji(nameKanjiKanaPair.getRomaji());
@@ -2408,14 +2408,14 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     		dictionaryEntryKana = kanjiKanaPairList.get(0).getKana();
     		dictionaryEntryRomaji = kanjiKanaPairList.get(0).getRomaji();
     	
-        } else if (kanjiKanaPairList != null) {
+        } else if (nameKanjiKanaPairList != null) {
         	// FM_FIXME: zobaczyc, jak to zachowuje sie
         	
         	id = nameKanjiKanaPairList.get(0).getEntry().getEntryId();
         	
         	dictionaryEntryKanji = nameKanjiKanaPairList.get(0).getKanji();
-    		dictionaryEntryKana = kanjiKanaPairList.get(0).getKana();
-    		dictionaryEntryRomaji = kanjiKanaPairList.get(0).getRomaji();
+    		dictionaryEntryKana = nameKanjiKanaPairList.get(0).getKana();
+    		dictionaryEntryRomaji = nameKanjiKanaPairList.get(0).getRomaji();
     		
         } else {
         	throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
