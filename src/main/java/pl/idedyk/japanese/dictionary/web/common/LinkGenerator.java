@@ -5,12 +5,11 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Properties;
 
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.mysql.model.GenericLog;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2NameHelperCommon;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
@@ -36,11 +35,27 @@ public class LinkGenerator {
 	}
 	
 	public static String generateNameDictionaryEntryDetailsLink(String contextPath, JMnedict.Entry nameDictionaryEntry2) {
-		
-		// INFO: to bedzie uzywane tylko dla slownika nazw
-		
-		// FM_FIXME: do naprawy
 				
+		// FM_FIXME: sprawdzic, czy to dziala
+		
+		String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2);
+		
+		try {
+			String pathPrefix = "wordDictionaryNameDetails3";
+			
+			String linkTemplate = contextPath + "/" + pathPrefix + "/%ID%/%KANJI%/%KANA%";
+			
+            return linkTemplate.replaceAll("%ID%", String.valueOf(nameDictionaryEntry2.getEntryId())).
+            		replaceAll("%KANJI%", URLEncoder.encode(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0], "UTF-8")).
+            		replaceAll("%KANA%", URLEncoder.encode(uniqueKanjiKanaRomajiSetWithoutSearchOnly[1], "UTF-8"));
+			
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+		
+		/*		
+		// Stary kod
+		
 		try {
 			boolean name = dictionaryEntry.isName();
 			
@@ -108,6 +123,7 @@ public class LinkGenerator {
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
+		*/
 	}
 	
 	public static String generateKanjiDetailsLink(String contextPath, KanjiCharacterInfo kanjiEntry) {
