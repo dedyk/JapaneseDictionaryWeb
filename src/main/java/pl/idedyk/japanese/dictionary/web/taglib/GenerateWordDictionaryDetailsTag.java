@@ -402,7 +402,6 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				virtualReadingInfoKana.setValue(nameKanjiKanaPair.getKana());
 				virtualReadingInfoKana.setRomaji(nameKanjiKanaPair.getRomaji());
 				
-						
 				KanjiKanaPair virtualKanjiKanaPair = new KanjiKanaPair(null, virtualKanjiInfo, virtualReadingInfo);	
 			
 	    		// pobieramy wszystkie skladniki slowa    		    	        	
