@@ -510,11 +510,7 @@ public class WordDictionaryController {
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
 	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
 			@PathVariable("kana") String kana, Map<String, Object> model) throws DictionaryException, IOException {
-		
-		// FM_FIXME: sprawdzic, czy to dziala
-		// FM_FIXME: przekierowanie do Details3
-		// get By Counter
-		
+				
 		// pobranie slowa
 		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByCounter(id);
 		
@@ -525,9 +521,7 @@ public class WordDictionaryController {
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}", method = RequestMethod.GET)
 	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
 			@PathVariable("id") int id) throws IOException, DictionaryException {
-		
-		// FM_FIXME: sprawdzic, czy to dziala
-		
+				
 		// pobranie slowa
 		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByCounter(id);
 		
@@ -537,9 +531,7 @@ public class WordDictionaryController {
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}", method = RequestMethod.GET)
 	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
 			@PathVariable("id") int id, @PathVariable("kanji") String kanji) throws IOException, DictionaryException {
-		
-		// FM_FIXME: sprawdzic, czy to dziala
-		
+				
 		// pobranie slowa
 		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByCounter(id);
 		
@@ -547,9 +539,7 @@ public class WordDictionaryController {
 	}
 	
 	private void processWordDictionaryNameDetailsRedirect(HttpServletRequest request, HttpServletResponse response, JMnedict.Entry nameDictionaryEntry2) throws IOException, DictionaryException {
-		
-		// FM_FIXME: sprawdzic, czy to dziala
-		
+				
 		if (nameDictionaryEntry2 != null) {
 			
 			String destinationUrl = LinkGenerator.generateNameDictionaryEntryDetailsLink(request.getContextPath(), nameDictionaryEntry2);
@@ -572,9 +562,7 @@ public class WordDictionaryController {
 	@RequestMapping(value = "/wordDictionaryNameDetails2/{kanji}/{kana}/{counter}", method = RequestMethod.GET)
 	public void showWordDictionaryNameDetails2(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("kanji") String kanji,
 			@PathVariable("kana") String kana, @PathVariable("counter") int counter, Map<String, Object> model) throws DictionaryException, IOException {
-		
-		// FM_FIXME: sprawdzic, czy to dziala
-		
+				
 		// stworzenie unique key
 		String uniqueKey = kanji + "/" + kana + "/" + counter;
 		
@@ -589,8 +577,6 @@ public class WordDictionaryController {
 	public String showWordDictionaryNameDetails2(HttpServletRequest request, HttpSession session, 
 			@PathVariable("nameEntryId") int nameEntryId, @PathVariable("uniqueKanjiKey") String uniqueKanjiKey, @PathVariable("uniqueKanaKey") String uniqueKanaKey,
 			Map<String, Object> model) throws DictionaryException {
-
-		// FM_FIXME: sprawdzic, czy to dziala
 		
 		// pobranie dictionaryEntry2 na podstawie entryId
 		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ById(nameEntryId);
@@ -642,10 +628,7 @@ public class WordDictionaryController {
 	}
 	
 	private String[] getWordDictionaryDetailsTitleAndDescription(JMdict.Entry dictionaryEntry2, JMnedict.Entry nameDictionaryEntry2) {
-		
-		// FM_FIXME: dostosowac do zmian
-		// FM_FIXME: sprawdzic, czy to dziala
-		
+				
 		String pageTitle;
 		String pageDescription;
 		
@@ -719,7 +702,7 @@ public class WordDictionaryController {
 					}, Locale.getDefault());
 		
 		} else if (nameDictionaryEntry2 != null) {
-			// FM_FIXME: sprawdzic, czy to dziala
+
 			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2);
 			
 			pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType", 
@@ -805,9 +788,7 @@ public class WordDictionaryController {
 	public String wordDictionaryNameCatalog(HttpServletRequest request, HttpSession session, 
 			@PathVariable("page") int pageNo,
 			Map<String, Object> model) throws DictionaryException {
-		
-		// FM_FIXME: sprawdzic, czy to dziala
-		
+				
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
 		if (pageNo < 1) {
