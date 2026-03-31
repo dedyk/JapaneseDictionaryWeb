@@ -349,9 +349,7 @@ public class AndroidRemoteDatabaseConnector {
 	@RequestMapping(value = "/android/remoteDatabaseConnector/getNameDictionaryEntry2ById", method = RequestMethod.POST)
 	public void getNameDictionaryEntry2ById(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
-		
-		// FM_FIXME: sprawdzic, czy dziala
-		
+				
 		Gson gson = new Gson();
 		
 		// pobranie wejscia
@@ -389,9 +387,7 @@ public class AndroidRemoteDatabaseConnector {
 	@RequestMapping(value = "/android/remoteDatabaseConnector/getNameDictionaryEntry2ByCounter", method = RequestMethod.POST)
 	public void getNameDictionaryEntry2ByCounter(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
-		
-		// FM_FIXME: sprawdzic, czy dziala
-				
+						
 		Gson gson = new Gson();
 		
 		// pobranie wejscia
@@ -429,9 +425,7 @@ public class AndroidRemoteDatabaseConnector {
 	@RequestMapping(value = "/android/remoteDatabaseConnector/getNameDictionaryEntry2ByOldPolishJapaneseDictionaryUniqueKey", method = RequestMethod.POST)
 	public void getDictionaryEntryNameByUniqueKey(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
-		
-		// FM_FIXME: sprawdzic, czy dziala
-		
+				
 		Gson gson = new Gson();
 		
 		// pobranie wejscia
