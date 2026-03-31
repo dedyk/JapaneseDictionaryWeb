@@ -111,9 +111,7 @@ public class SitemapManager {
 	}
 	
 	private synchronized void generateSitemaps(boolean wait, String destDir, boolean deleteOnExit) throws Exception {
-		
-		// FM_FIXME: sprawdzic, czy to dziala
-		
+				
 		if (initialized == true) {
 			return;
 		}
@@ -166,9 +164,7 @@ public class SitemapManager {
 			
 			// pobranie slowka
 			JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByCounter(currentDictionaryEntryNameIdx);
-			
-			// FM_FIXME: sprawdzic, czy to dziala
-			
+						
 			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, null, nameDictionaryEntry2);
 		}
 
@@ -284,9 +280,7 @@ public class SitemapManager {
 	}
 	
 	private void createWordDictionaryLink(String destDir, boolean deleteOnExit, String groupName, SitemapHelper sitemapHelper, JMdict.Entry dictionaryEntry2, JMnedict.Entry nameDictionaryEntry2) throws Exception {
-		
-		// FM_FIXME: sprawdzic, czy to dziala
-		
+				
 		// wygenerowanie linku standardowego
 		String link; 
 		boolean isName = false;
