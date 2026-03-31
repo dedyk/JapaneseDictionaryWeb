@@ -61,9 +61,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		boolean mobile = Utils.isMobile(userAgent);
 				
 		//
-		
-		// FM_FIXME: sprawdzic, czy to dziala poprawnie
-		
+				
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
 		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");

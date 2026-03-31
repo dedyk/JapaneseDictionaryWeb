@@ -18,9 +18,7 @@ import pl.idedyk.japanese.dictionary2.jmnedict.xsd.TranslationalInfoTransDetAddi
 public class NameDictionary2TranslatationUtils extends WordNameDictionary2CommonUtils {
 	
 	public static void createTranslationHtmlElements(MessageSource messageSource, String servletContextPath, JMnedict.Entry entry, HtmlElementCommon translateTd, String findWord, boolean addTranslationNumber, boolean addDetails) {
-		
-		// FM_FIXME: sprawdzic, czy to dziala
-		
+				
 		// !!! INFO: jezeli cos tutaj zmieniasz to byc moze trzeba rowniez zmienic w WordDictionary2SenseUtils !!!
 		
         for (int translationIdx = 0; translationIdx < entry.getTranslationInfo().size(); ++translationIdx) {
@@ -45,7 +43,7 @@ public class NameDictionary2TranslatationUtils extends WordNameDictionary2Common
 			// znaczenie
         	List<TranslationalInfoTransDet> translationalInfoTransDetList = Dictionary2NameHelperCommon.getEnglishOrPolishTranslationalInfoTransDet(translationalInfo.getTransDet());        	
         	TranslationalInfoTransDetAdditionalInfo additionalInfo = Dictionary2NameHelperCommon.getFirstEnglishOrPolishTranslationalInfoTransDetAdditionalInfo(translationalInfo.getAddInfo());
-        	
+        	        	
         	//
         	
         	boolean wasAdditionalInfoAllTypes = false;

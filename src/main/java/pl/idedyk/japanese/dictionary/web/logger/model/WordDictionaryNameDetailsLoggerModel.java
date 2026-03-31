@@ -25,7 +25,6 @@ public class WordDictionaryNameDetailsLoggerModel extends LoggerModelCommon {
 
 	@Override
 	public String toString() {
-		// FM_FIXME: sprawdzic, jak to zachowuje sie
 		return "WordDictionaryNameDetailsLoggerModel [nameDictionaryEntry2=" + nameDictionaryEntry2 + "]";
 	}	
 }

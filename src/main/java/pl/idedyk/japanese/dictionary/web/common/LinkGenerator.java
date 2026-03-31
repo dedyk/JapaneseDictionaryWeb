@@ -36,8 +36,6 @@ public class LinkGenerator {
 	
 	public static String generateNameDictionaryEntryDetailsLink(String contextPath, JMnedict.Entry nameDictionaryEntry2) {
 				
-		// FM_FIXME: sprawdzic, czy to dziala
-		
 		String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2);
 		
 		try {
