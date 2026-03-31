@@ -9,11 +9,9 @@
 <t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
 
 	<jsp:body>
-			
+					
 		<jdwt:generateWordDictionaryDetails
-			dictionaryEntry="${dictionaryEntry}"
 			dictionaryEntry2="${dictionaryEntry2}"
-			forceDictionaryEntryType="${forceDictionaryEntryType}" />
-				
+			nameDictionaryEntry2="${nameDictionaryEntry2}"  />	
 	</jsp:body>
 </t:template>

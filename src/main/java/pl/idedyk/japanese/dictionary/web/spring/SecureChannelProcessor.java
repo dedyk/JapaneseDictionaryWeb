@@ -10,6 +10,7 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.util.Assert;
 
+@SuppressWarnings("deprecation")
 public class SecureChannelProcessor extends org.springframework.security.web.access.channel.SecureChannelProcessor {
 
 	@Override

@@ -29,7 +29,6 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPowerList;
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
 import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerRequest;
@@ -59,6 +58,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsL
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 @Controller
@@ -346,68 +346,106 @@ public class AndroidRemoteDatabaseConnector {
 		writer.append(gson.toJson(entry));
 	}
 	
-	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntryNameById", method = RequestMethod.POST)
-	public void getDictionaryEntryNameById(HttpServletRequest request, HttpServletResponse response, Writer writer,
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getNameDictionaryEntry2ById", method = RequestMethod.POST)
+	public void getNameDictionaryEntry2ById(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
-		
+				
 		Gson gson = new Gson();
 		
 		// pobranie wejscia
 		String jsonRequest = getJson(request);
 
 		// logowanie
-		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameById] Parsuję żądanie: " + jsonRequest);
+		logger.info("[AndroidRemoteDatabaseConnector.getNameDictionaryEntry2ById] Parsuję żądanie: " + jsonRequest);
 		
 		// pobranie id
-		String id = gson.fromJson(jsonRequest, String.class);
+		Integer id = gson.fromJson(jsonRequest, Integer.class);
 		
 		// pobranie slowka
-		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameById(Integer.parseInt(id));
+		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ById((id));
 		
-		if (dictionaryEntry != null) {
+		if (nameDictionaryEntry2 != null) {
 			
 			// logowanie
-			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameById]: Znaleziono słowo: " + dictionaryEntry);
+			logger.info("[AndroidRemoteDatabaseConnector.getNameDictionaryEntry2ById]: Znaleziono słowo: " + nameDictionaryEntry2.getEntryId());
 			
-			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
+			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), nameDictionaryEntry2));
 			
 		} else {
 			
 			// logowanie
-			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameById]: Nie znaleziono słowa o id: " + id);
+			logger.info("[AndroidRemoteDatabaseConnector.getNameDictionaryEntry2ById]: Nie znaleziono słowa o id: " + id);
 		}
 		
 		// typ odpowiedzi
 		response.setContentType("application/json");
 		
 		// zwrocenie wyniku
-		writer.append(gson.toJson(dictionaryEntry));
-	}
+		writer.append(gson.toJson(nameDictionaryEntry2));
+	}	
 	
-	@RequestMapping(value = "/android/remoteDatabaseConnector/getDictionaryEntryNameByUniqueKey", method = RequestMethod.POST)
-	public void getDictionaryEntryNameByUniqueKey(HttpServletRequest request, HttpServletResponse response, Writer writer,
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getNameDictionaryEntry2ByCounter", method = RequestMethod.POST)
+	public void getNameDictionaryEntry2ByCounter(HttpServletRequest request, HttpServletResponse response, Writer writer,
 			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
-		
+						
 		Gson gson = new Gson();
 		
 		// pobranie wejscia
 		String jsonRequest = getJson(request);
 
 		// logowanie
-		logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameByUniqueKey] Parsuję żądanie: " + jsonRequest);
+		logger.info("[AndroidRemoteDatabaseConnector.getNameDictionaryEntry2ByCounter] Parsuję żądanie: " + jsonRequest);
+		
+		// pobranie counter
+		Integer counter = gson.fromJson(jsonRequest, Integer.class);
+		
+		// pobranie slowka
+		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByCounter(counter);
+		
+		if (nameDictionaryEntry2 != null) {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getNameDictionaryEntry2ByCounter]: Znaleziono słowo: " + nameDictionaryEntry2.getEntryId());
+			
+			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), nameDictionaryEntry2));
+			
+		} else {
+			
+			// logowanie
+			logger.info("[AndroidRemoteDatabaseConnector.getNameDictionaryEntry2ByCounter]: Nie znaleziono słowa o counter: " + counter);
+		}
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
+		// zwrocenie wyniku
+		writer.append(gson.toJson(nameDictionaryEntry2));
+	}
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getNameDictionaryEntry2ByOldPolishJapaneseDictionaryUniqueKey", method = RequestMethod.POST)
+	public void getDictionaryEntryNameByUniqueKey(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+				
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getNameDictionaryEntry2ByOldPolishJapaneseDictionaryUniqueKey] Parsuję żądanie: " + jsonRequest);
 		
 		// pobranie uniqueKey
 		String uniqueKey = gson.fromJson(jsonRequest, String.class);
 		
 		// pobranie slowka
-		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameByUniqueKey(uniqueKey);
+		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByOldPolishJapaneseDictionaryUniqueKey(uniqueKey);
 		
-		if (dictionaryEntry != null) {
+		if (nameDictionaryEntry2 != null) {
 			
 			// logowanie
-			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameByUniqueKey]: Znaleziono słowo: " + dictionaryEntry);
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameByUniqueKey]: Znaleziono słowo: " + nameDictionaryEntry2.getEntryId());
 			
-			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
+			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), nameDictionaryEntry2));
 			
 		} else {
 			
@@ -419,7 +457,7 @@ public class AndroidRemoteDatabaseConnector {
 		response.setContentType("application/json");
 		
 		// zwrocenie wyniku
-		writer.append(gson.toJson(dictionaryEntry));
+		writer.append(gson.toJson(nameDictionaryEntry2));
 	}	
 		
 	@RequestMapping(value = "/android/remoteDatabaseConnector/findAllAvailableRadicals", method = RequestMethod.POST)

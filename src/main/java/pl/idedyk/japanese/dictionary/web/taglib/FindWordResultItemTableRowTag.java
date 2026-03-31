@@ -16,7 +16,6 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.html.A;
@@ -26,10 +25,14 @@ import pl.idedyk.japanese.dictionary.web.html.Span;
 import pl.idedyk.japanese.dictionary.web.html.Td;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.html.Tr;
+import pl.idedyk.japanese.dictionary.web.taglib.utils.NameDictionary2TranslatationUtils;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.WordDictionary2SenseUtils;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon.KanjiKanaPair;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2NameHelperCommon;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2NameHelperCommon.NameKanjiKanaPair;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 
 public class FindWordResultItemTableRowTag extends TagSupport {
 
@@ -57,8 +60,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		
 		boolean mobile = Utils.isMobile(userAgent);
 				
-		//		
-		
+		//
+				
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 		
 		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
@@ -75,14 +78,14 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             String findWord = findWordRequest.word;
                         
             // tylko jeden z nich bedzie wypelniony
-            Entry entry = resultItem.getEntry();
-            DictionaryEntry dictionaryEntry = resultItem.getDictionaryEntry();
+            JMdict.Entry wordEntry = resultItem.getWordEntry();
+            JMnedict.Entry nameEntry = resultItem.getNameEntry();
 
             Td translateTd;
             
-            if (entry != null) {
+            if (wordEntry != null) {
             	// wygenerowanie wszystkich kombinacji
-            	List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(entry, true);
+            	List<KanjiKanaPair> kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(wordEntry, true);
             	            	
             	// slowo
     	    	Td wordTd = new Td();   
@@ -109,12 +112,12 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    	translateTd = new Td(null, "padding-top: 10px");
     	    	tr.addHtmlElement(translateTd);
     	    	
-    	    	WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), entry, translateTd, findWord, false, true);
+    	    	WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), wordEntry, translateTd, findWord, false, true);
     	    	                
                 // link
-                link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), entry);
+                link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), wordEntry);
                                 
-            } else if (dictionaryEntry != null) { // obsluga starego formatu
+            } else if (nameEntry != null) { // obsluga slownika nazw
             	
             	// slowo
     	    	Td wordTd = new Td();
@@ -123,17 +126,31 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    	Div wordDiv = new Div(null, "width: 100%");
     	    	wordTd.addHtmlElement(wordDiv);
     	    	
-    	    	String kanji = dictionaryEntry.getKanji();
-    	    	String kana = dictionaryEntry.getKana();
-	        	String romaji = dictionaryEntry.getRomaji();
-	        	
-        		Div singleWordDiv = createWordColumn(findWordRequest, findWord, kanji, kana, romaji, mobile);
-        		                	
-            	wordDiv.addHtmlElement(singleWordDiv);
-            	
+    	    	// wygenerowanie wszystkich kombinacji
+            	List<NameKanjiKanaPair> kanjiKanaPairList = Dictionary2NameHelperCommon.getNameKanjiKanaPairListStatic(nameEntry);
+    	    	
+    	    	for (int kanjiKanaPairIdx = 0; kanjiKanaPairIdx < kanjiKanaPairList.size(); ++kanjiKanaPairIdx) {
+    	    		
+    	    		NameKanjiKanaPair kanjiKanaPair = kanjiKanaPairList.get(kanjiKanaPairIdx);
+                	    	    		    	    		   	    		
+    	    		// pobieramy wszystkie skladniki slowa
+    	    		String kanji = kanjiKanaPair.getKanji();
+    	    		String kana = kanjiKanaPair.getKana();
+    	        	String romaji = kanjiKanaPair.getRomaji();
+    	    		    	        	
+            		Div singleWordDiv = createWordColumn(findWordRequest, findWord, kanji, kana, romaji, mobile);
+            		                	
+                	wordDiv.addHtmlElement(singleWordDiv);
+				}
+    	    	
             	// znaczenie
     	    	translateTd = new Td(null, "padding-top: 10px");
     	    	tr.addHtmlElement(translateTd);
+    	    	    	    	
+    	    	NameDictionary2TranslatationUtils.createTranslationHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), nameEntry, translateTd, findWord, false, true);
+    	    	
+            	/*
+            	// stary kod
             	
             	List<String> translates = dictionaryEntry.getTranslates();
             	String info = dictionaryEntry.getInfo();
@@ -151,6 +168,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		    			translateTd.addHtmlElement(infoDiv);		    			
 		    		}
 		    	}
+		    	*/
 		    	
 		    	// info
 		    	/*
@@ -165,7 +183,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 		    	}
 		    	*/
 		    	
-		    	link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), dictionaryEntry, null);
+		    	link = LinkGenerator.generateNameDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), nameEntry);
 		    	
             } else { // to nigdy nie powinno wydarzyc sie
             	throw new RuntimeException();
@@ -249,7 +267,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 			return singleWordDiv;
 		}		    	                		
 	}
-	    
+	  
+	/*
 	private String toString(List<String> listString, String prefix) {
 		
 		StringBuffer sb = new StringBuffer();
@@ -268,6 +287,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
 				
 		return sb.toString();
 	}
+	*/
 
 	public FindWordResult.ResultItem getResultItem() {
 		return resultItem;

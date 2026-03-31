@@ -35,7 +35,6 @@ import jakarta.validation.Valid;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
@@ -58,8 +57,10 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryPdfDictionar
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2NameHelperCommon;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 
 @Controller
 public class WordDictionaryController {
@@ -459,7 +460,7 @@ public class WordDictionaryController {
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), null, dictionaryEntry2));
 
-			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(null, null, dictionaryEntry2);
+			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry2, null);
 						
 			String pageTitle = wordDictionaryDetailsTitleAndDescription[0];
 			String pageDescription = wordDictionaryDetailsTitleAndDescription[1];
@@ -507,94 +508,41 @@ public class WordDictionaryController {
 	}
 	
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
-	public String showWordDictionaryNameDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
-			@PathVariable("kana") String kana, Map<String, Object> model) throws DictionaryException {
-		
+	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji,
+			@PathVariable("kana") String kana, Map<String, Object> model) throws DictionaryException, IOException {
+				
 		// pobranie slowa
-		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameById(id);
+		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByCounter(id);
 		
-		return showWordDictionaryNameDetailsCommon(request, model, id, kanji, kana, dictionaryEntry, true);								
+		// generujemy przekierowanie
+		processWordDictionaryNameDetailsRedirect(request, response, nameDictionaryEntry2);								
 	}
-	
-	private String showWordDictionaryNameDetailsCommon(HttpServletRequest request, Map<String, Object> model, 
-			Integer id, String kanji, String kana, DictionaryEntry dictionaryEntry, boolean checkUniqueKey) {
 		
-		// tytul strony
-		if (dictionaryEntry != null) {
-			
-			// sprawdzenie, czy nie odwolujemy sie do innej strony
-			String dictionaryEntryKanji = "-";
-			
-			if (dictionaryEntry.isKanjiExists() == true) {
-				dictionaryEntryKanji = dictionaryEntry.getKanji();
-			}
-			
-			String dictionaryEntryKana = dictionaryEntry.getKana();
-			
-			if (	dictionaryEntryKanji.equals(kanji) == false || 
-					dictionaryEntryKana.equals(kana) == false || 
-					(checkUniqueKey == true && dictionaryEntry.getUniqueKey() != null)) { // przekierowanie na wlasciwa strone o id
-				
-				String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null);
-				
-				RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
-				
-				loggerSender.sendLog(redirectLoggerModel);	
-				
-				return "redirect:" + destinationUrl;			
-			}		
-						
-			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa (nazwa): " + dictionaryEntry);
-			
-			// logowanie
-			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), dictionaryEntry));
-
-			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(dictionaryEntry, null, null);
-						
-			String pageTitle = wordDictionaryDetailsTitleAndDescription[0];
-			String pageDescription = wordDictionaryDetailsTitleAndDescription[1];
-			
-			model.put("pageTitle", pageTitle);
-			model.put("pageDescription", pageDescription);
-			
-		} else {
-			
-			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa (nazwa): " + id + " / " + kanji + " / " + kana);
-			
-			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType",
-					new Object[] { "-", "-", "-" }, Locale.getDefault());
-			
-			model.put("pageTitle", pageTitle);
-		}
-						
-		model.put("dictionaryEntry", dictionaryEntry);
-		model.put("selectedMenu", "wordDictionary");
-		
-		return "wordDictionaryDetails";
-	}
-	
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}", method = RequestMethod.GET)
 	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
 			@PathVariable("id") int id) throws IOException, DictionaryException {
+				
+		// pobranie slowa
+		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByCounter(id);
 		
-		processWordDictionaryNameDetailsRedirect(request, response, id);
+		processWordDictionaryNameDetailsRedirect(request, response, nameDictionaryEntry2);
 	}
 
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}", method = RequestMethod.GET)
 	public void showWordDictionaryNameDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
 			@PathVariable("id") int id, @PathVariable("kanji") String kanji) throws IOException, DictionaryException {
+				
+		// pobranie slowa
+		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByCounter(id);
 		
-		processWordDictionaryNameDetailsRedirect(request, response, id);
+		processWordDictionaryNameDetailsRedirect(request, response, nameDictionaryEntry2);
 	}
 	
-	private void processWordDictionaryNameDetailsRedirect(HttpServletRequest request, HttpServletResponse response, int id) throws IOException, DictionaryException {
-		
-		// pobranie slowa
-		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameById(id);
-
-		if (dictionaryEntry != null) {
+	private void processWordDictionaryNameDetailsRedirect(HttpServletRequest request, HttpServletResponse response, JMnedict.Entry nameDictionaryEntry2) throws IOException, DictionaryException {
+				
+		if (nameDictionaryEntry2 != null) {
 			
-			String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry, null);
+			String destinationUrl = LinkGenerator.generateNameDictionaryEntryDetailsLink(request.getContextPath(), nameDictionaryEntry2);
 			
 			RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
 			
@@ -612,23 +560,79 @@ public class WordDictionaryController {
 	}
 		
 	@RequestMapping(value = "/wordDictionaryNameDetails2/{kanji}/{kana}/{counter}", method = RequestMethod.GET)
-	public String showWordDictionaryNameDetails2(HttpServletRequest request, HttpSession session, @PathVariable("kanji") String kanji,
-			@PathVariable("kana") String kana, @PathVariable("counter") int counter, Map<String, Object> model) throws DictionaryException {
-		
+	public void showWordDictionaryNameDetails2(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("kanji") String kanji,
+			@PathVariable("kana") String kana, @PathVariable("counter") int counter, Map<String, Object> model) throws DictionaryException, IOException {
+				
 		// stworzenie unique key
 		String uniqueKey = kanji + "/" + kana + "/" + counter;
 		
 		// pobranie slowa
-		DictionaryEntry dictionaryEntry = dictionaryManager.getDictionaryEntryNameByUniqueKey(uniqueKey);
+		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByOldPolishJapaneseDictionaryUniqueKey(uniqueKey);
 		
-		return showWordDictionaryNameDetailsCommon(request, model, null, kanji, kana, dictionaryEntry, false);
+		// generowanie przekierowania
+		processWordDictionaryNameDetailsRedirect(request, response, nameDictionaryEntry2);
 	}
 	
-	private String[] getWordDictionaryDetailsTitleAndDescription(DictionaryEntry dictionaryEntry, DictionaryEntryType forceDictionaryEntryTypeType, JMdict.Entry dictionaryEntry2) {
+	@RequestMapping(value = "/wordDictionaryNameDetails3/{nameEntryId}/{uniqueKanjiKey}/{uniqueKanaKey}", method = RequestMethod.GET)
+	public String showWordDictionaryNameDetails2(HttpServletRequest request, HttpSession session, 
+			@PathVariable("nameEntryId") int nameEntryId, @PathVariable("uniqueKanjiKey") String uniqueKanjiKey, @PathVariable("uniqueKanaKey") String uniqueKanaKey,
+			Map<String, Object> model) throws DictionaryException {
 		
+		// pobranie dictionaryEntry2 na podstawie entryId
+		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ById(nameEntryId);
+		
+		if (nameDictionaryEntry2 != null) {
+			
+			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2);
+									
+			// sprawdzenie, czy nie odwolujemy sie dokladnie do tej strony
+			if (	uniqueKanjiKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0]) == false ||
+					uniqueKanaKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[1]) == false) {
+				
+				String destinationUrl = LinkGenerator.generateNameDictionaryEntryDetailsLink(request.getContextPath(), nameDictionaryEntry2);
+				
+				RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
+				
+				loggerSender.sendLog(redirectLoggerModel);	
+				
+				return "redirect:" + destinationUrl;			
+			}		
+						
+			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa (nazwa): " + dictionaryEntry);
+			
+			// logowanie
+			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), nameDictionaryEntry2));
+
+			String[] wordDictionaryDetailsTitleAndDescription = getWordDictionaryDetailsTitleAndDescription(null, nameDictionaryEntry2);
+						
+			String pageTitle = wordDictionaryDetailsTitleAndDescription[0];
+			String pageDescription = wordDictionaryDetailsTitleAndDescription[1];
+			
+			model.put("pageTitle", pageTitle);
+			model.put("pageDescription", pageDescription);
+			
+		} else {
+			
+			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa (nazwa): " + nameEntryId + " / " + uniqueKanjiKey + " / " + uniqueKanaKey);
+			
+			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType",
+					new Object[] { "-", "-", "-" }, Locale.getDefault());
+			
+			model.put("pageTitle", pageTitle);
+		}
+						
+		model.put("nameDictionaryEntry2", nameDictionaryEntry2);
+		model.put("selectedMenu", "wordDictionary");
+		
+		return "wordDictionaryDetails";
+	}
+	
+	private String[] getWordDictionaryDetailsTitleAndDescription(JMdict.Entry dictionaryEntry2, JMnedict.Entry nameDictionaryEntry2) {
+				
 		String pageTitle;
 		String pageDescription;
 		
+		/*
 		if (dictionaryEntry != null) {
 			
 			String dictionaryEntryKanji = dictionaryEntry.getKanji();
@@ -682,7 +686,9 @@ public class WordDictionaryController {
 				}			
 			}
 			
-		} else if (dictionaryEntry2 != null) {
+		} else
+		*/	
+		if (dictionaryEntry2 != null) {
 			
 			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2);
 			
@@ -694,6 +700,20 @@ public class WordDictionaryController {
 							uniqueKanjiKanaRomajiSetWithoutSearchOnly[1],
 							uniqueKanjiKanaRomajiSetWithoutSearchOnly[2],
 					}, Locale.getDefault());
+		
+		} else if (nameDictionaryEntry2 != null) {
+
+			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2);
+			
+			pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType", 
+					new Object[] { uniqueKanjiKanaRomajiSetWithoutSearchOnly[0], uniqueKanjiKanaRomajiSetWithoutSearchOnly[1], uniqueKanjiKanaRomajiSetWithoutSearchOnly[2] }, Locale.getDefault());
+			
+			pageDescription = messageSource.getMessage("wordDictionaryDetails.page.pageDescription.with.kanji.without.forceDictionaryEntryTypeType", 
+					new Object[] { uniqueKanjiKanaRomajiSetWithoutSearchOnly[0],
+							uniqueKanjiKanaRomajiSetWithoutSearchOnly[1],
+							uniqueKanjiKanaRomajiSetWithoutSearchOnly[2],
+					}, Locale.getDefault());
+			
 			
 		} else {
 			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
@@ -768,7 +788,7 @@ public class WordDictionaryController {
 	public String wordDictionaryNameCatalog(HttpServletRequest request, HttpSession session, 
 			@PathVariable("page") int pageNo,
 			Map<String, Object> model) throws DictionaryException {
-		
+				
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
 		if (pageNo < 1) {
@@ -778,7 +798,7 @@ public class WordDictionaryController {
 		logger.info("Wyświetlanie katalogu słów(nazwa) dla strony: " + pageNo);
 		
 		// szukanie		
-		List<DictionaryEntry> dictionaryEntryList = dictionaryManager.getWordsNameGroup(pageSize, pageNo - 1);
+		List<JMnedict.Entry> nameDictionaryEntry2List = dictionaryManager.getWordsNameGroup(pageSize, pageNo - 1);
 		
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesNameSize();
 		
@@ -792,8 +812,8 @@ public class WordDictionaryController {
 		
 		List<FindWordResult.ResultItem> resultItemList = new ArrayList<FindWordResult.ResultItem>();
 		
-		for (DictionaryEntry dictionaryEntry : dictionaryEntryList) {
-			resultItemList.add(new FindWordResult.ResultItem(dictionaryEntry, true, false));
+		for (JMnedict.Entry nameDictionaryEntry2 : nameDictionaryEntry2List) {
+			resultItemList.add(new FindWordResult.ResultItem(nameDictionaryEntry2, true, false));
 		}
 
 		findWordResult.setResult(resultItemList);
@@ -815,10 +835,10 @@ public class WordDictionaryController {
 		model.put("metaRobots", "noindex, follow");
 		
 		String pageTitle = messageSource.getMessage("wordDictionaryName.catalog.page.title", 
-				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + dictionaryEntryList.size() - 1) }, Locale.getDefault());
+				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + nameDictionaryEntry2List.size() - 1) }, Locale.getDefault());
 		
 		String pageDescription = messageSource.getMessage("wordDictionaryName.catalog.page.pageDescription", 
-				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + dictionaryEntryList.size() - 1) }, Locale.getDefault());
+				new Object[] { String.valueOf((pageNo - 1) * pageSize + 1), String.valueOf(((pageNo - 1) * pageSize + 1) + nameDictionaryEntry2List.size() - 1) }, Locale.getDefault());
 		
 		model.put("pageTitle", pageTitle);
 		model.put("pageDescription", pageDescription);

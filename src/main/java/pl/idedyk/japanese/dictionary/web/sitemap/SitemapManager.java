@@ -20,12 +20,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntry;
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.sitemap.exception.NotInitializedException;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class SitemapManager {
@@ -143,7 +142,7 @@ public class SitemapManager {
 			// pobranie slowka
 			JMdict.Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ByCounter(currentDictionaryEntryIdx);
 			
-			createWordDictionaryLink(destDir, deleteOnExit, "wordDictionaryDetails", sitemapHelper, null, dictionaryEntry2);
+			createWordDictionaryLink(destDir, deleteOnExit, "wordDictionaryDetails", sitemapHelper, dictionaryEntry2, null);
 		}
 				
 		// katalog slow
@@ -164,9 +163,9 @@ public class SitemapManager {
 		for (int currentDictionaryEntryNameIdx = 1; currentDictionaryEntryNameIdx <= dictionaryEntriesNameSize; ++currentDictionaryEntryNameIdx) {
 			
 			// pobranie slowka
-			DictionaryEntry currentDictionaryEntry = dictionaryManager.getDictionaryEntryNameById(currentDictionaryEntryNameIdx);
-			
-			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, currentDictionaryEntry, null);
+			JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByCounter(currentDictionaryEntryNameIdx);
+						
+			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, null, nameDictionaryEntry2);
 		}
 
 		// katalog slow(nazwa)
@@ -280,19 +279,19 @@ public class SitemapManager {
 		logger.info("Generowanie pliku sitemap zakonczone");
 	}
 	
-	private void createWordDictionaryLink(String destDir, boolean deleteOnExit, String groupName, SitemapHelper sitemapHelper, DictionaryEntry currentDictionaryEntry, JMdict.Entry dictionaryEntry2) throws Exception {
+	private void createWordDictionaryLink(String destDir, boolean deleteOnExit, String groupName, SitemapHelper sitemapHelper, JMdict.Entry dictionaryEntry2, JMnedict.Entry nameDictionaryEntry2) throws Exception {
 				
 		// wygenerowanie linku standardowego
 		String link; 
 		boolean isName = false;
 		
-		if (dictionaryEntry2 != null && currentDictionaryEntry == null) {
+		if (dictionaryEntry2 != null && nameDictionaryEntry2 == null) {
 			link = LinkGenerator.generateDictionaryEntryDetailsLink("", dictionaryEntry2);
 			isName = false;
 			
-		} else if (dictionaryEntry2 == null && currentDictionaryEntry != null) {
-			link = LinkGenerator.generateDictionaryEntryDetailsLink("", currentDictionaryEntry, null);
-			isName = currentDictionaryEntry.isName();
+		} else if (dictionaryEntry2 == null && nameDictionaryEntry2 != null) {
+			link = LinkGenerator.generateNameDictionaryEntryDetailsLink("", nameDictionaryEntry2);
+			isName = true;
 			
 		} else {
 			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
@@ -301,6 +300,7 @@ public class SitemapManager {
 		// dodanie linku			
 		sitemapHelper.createUrl(destDir, deleteOnExit, groupName, link, ChangeFreqEnum.weekly, BigDecimal.valueOf(isName == false ? 0.8 : 0.6));
 		
+		/*
 		if (currentDictionaryEntry != null) {
 			
 			// pobranie listy typow
@@ -337,6 +337,7 @@ public class SitemapManager {
 				}				
 			}
 		}
+		*/
 	}
 	
 	private void loadPregeneredSitemap(File pregeneredSitemapDir) {
