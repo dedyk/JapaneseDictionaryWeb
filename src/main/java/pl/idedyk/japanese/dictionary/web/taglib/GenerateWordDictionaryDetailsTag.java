@@ -380,9 +380,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		} else { // name
 						
 			// stworzenie wirtualnego KanjiKanaPair
-			KanjiInfo virtualKanjiInfo = null;
-			
 			for (int nameKanjiKanaPairIdx = 0; nameKanjiKanaPairIdx < nameKanjiKanaPairList.size(); ++nameKanjiKanaPairIdx) {
+				
+				KanjiInfo virtualKanjiInfo = null;
 				
 				NameKanjiKanaPair nameKanjiKanaPair = nameKanjiKanaPairList.get(nameKanjiKanaPairIdx);
 				
