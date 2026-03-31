@@ -113,7 +113,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			if (dictionaryEntry2 != null) {			
 				kanjiKanaPairList = Dictionary2HelperCommon.getKanjiKanaPairListStatic(dictionaryEntry2, true);
 							
-			} else {
+			} else if (nameDictionaryEntry2 != null) {
 				nameKanjiKanaPairList = Dictionary2NameHelperCommon.getNameKanjiKanaPairListStatic(nameDictionaryEntry2);
 			}		
 	
@@ -127,7 +127,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		
             JspWriter out = pageContext.getOut();
 
-            if (dictionaryEntry2 == null && nameKanjiKanaPairList == null) {            	
+            if (dictionaryEntry2 == null && nameDictionaryEntry2 == null) {            	
             	Div errorDiv = new Div("alert alert-danger");
             	
             	errorDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.null")));
@@ -681,7 +681,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	
     	if (dictionaryEntry2 != null) {
     		WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), dictionaryEntry2, senseBodyDiv, null, true, true);	
-    	} else {
+    	} else if (nameDictionaryEntry2 != null) {
     		NameDictionary2TranslatationUtils.createTranslationHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), nameDictionaryEntry2, senseBodyDiv, null, true, true);
     	}
     							
