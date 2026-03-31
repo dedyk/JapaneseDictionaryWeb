@@ -369,7 +369,7 @@ public class AndroidRemoteDatabaseConnector {
 		if (nameDictionaryEntry2 != null) {
 			
 			// logowanie
-			logger.info("[AndroidRemoteDatabaseConnector.getNameDictionaryEntry2ById]: Znaleziono słowo: " + nameDictionaryEntry2);
+			logger.info("[AndroidRemoteDatabaseConnector.getNameDictionaryEntry2ById]: Znaleziono słowo: " + nameDictionaryEntry2.getEntryId());
 			
 			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), nameDictionaryEntry2));
 			
@@ -409,7 +409,7 @@ public class AndroidRemoteDatabaseConnector {
 		if (nameDictionaryEntry2 != null) {
 			
 			// logowanie
-			logger.info("[AndroidRemoteDatabaseConnector.getNameDictionaryEntry2ByCounter]: Znaleziono słowo: " + nameDictionaryEntry2);
+			logger.info("[AndroidRemoteDatabaseConnector.getNameDictionaryEntry2ByCounter]: Znaleziono słowo: " + nameDictionaryEntry2.getEntryId());
 			
 			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), nameDictionaryEntry2));
 			
@@ -449,7 +449,7 @@ public class AndroidRemoteDatabaseConnector {
 		if (nameDictionaryEntry2 != null) {
 			
 			// logowanie
-			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameByUniqueKey]: Znaleziono słowo: " + nameDictionaryEntry2);
+			logger.info("[AndroidRemoteDatabaseConnector.getDictionaryEntryNameByUniqueKey]: Znaleziono słowo: " + nameDictionaryEntry2.getEntryId());
 			
 			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), nameDictionaryEntry2));
 			
