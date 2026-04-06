@@ -32,6 +32,6 @@ public class StartController {
 		loggerSender.sendLog(new StartLoggerModel(Utils.createLoggerModelCommon(request)));
 				
 		//return "start";
-		return "redirect:/wordDictionary";
+		return "redirect301:/wordDictionary";
 	}
 }

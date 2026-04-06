@@ -81,11 +81,14 @@ public class AuthenticationService implements AuthenticationProvider, Authentica
 
             redirectUrl = "https://" + request.getServerName() + ((includePort) ? (":" + redirectPort) : "") + redirectUrl;
             
-            response.sendRedirect(redirectUrl);
+            response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+            response.setHeader("Location", redirectUrl);
             
         } else {
         	
-        	response.sendRedirect(request.getContextPath() + redirectUrl);
+            response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+            response.setHeader("Location", request.getContextPath() + redirectUrl);
+
         }		
 	}
 	

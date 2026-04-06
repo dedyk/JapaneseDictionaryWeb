@@ -450,7 +450,7 @@ public class WordDictionaryController {
 				
 				loggerSender.sendLog(redirectLoggerModel);	
 				
-				return "redirect:" + destinationUrl;				
+				return "redirect301:" + destinationUrl;
 			}
 			
 			// przygotowanie danych do wyswietlenia
@@ -495,7 +495,8 @@ public class WordDictionaryController {
 			
 			loggerSender.sendLog(redirectLoggerModel);	
 			
-			response.sendRedirect(destinationUrl);
+	        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+	        response.setHeader("Location", destinationUrl);
 			
 		} else {			
 			response.sendError(404);
@@ -548,7 +549,9 @@ public class WordDictionaryController {
 			
 			loggerSender.sendLog(redirectLoggerModel);	
 			
-			response.sendRedirect(destinationUrl);
+	        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+	        response.setHeader("Location", destinationUrl);
+
 			
 		} else {			
 			response.sendError(404);
@@ -595,7 +598,7 @@ public class WordDictionaryController {
 				
 				loggerSender.sendLog(redirectLoggerModel);	
 				
-				return "redirect:" + destinationUrl;			
+				return "redirect301:" + destinationUrl;
 			}		
 						
 			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa (nazwa): " + dictionaryEntry);

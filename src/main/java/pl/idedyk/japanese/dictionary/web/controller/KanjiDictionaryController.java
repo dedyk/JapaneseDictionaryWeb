@@ -455,8 +455,9 @@ public class KanjiDictionaryController {
 			
 			loggerSender.sendLog(redirectLoggerModel);	
 			
-			response.sendRedirect(destinationUrl);
-			
+	        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+	        response.setHeader("Location", destinationUrl);
+
 		} else {			
 			response.sendError(404);
 			
