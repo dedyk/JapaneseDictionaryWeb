@@ -3,6 +3,8 @@ package pl.idedyk.japanese.dictionary.web.filter;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -20,6 +22,8 @@ import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
 
 public class RedirectFilter implements Filter {
+	
+	private static final Logger logger = LogManager.getLogger(RedirectFilter.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -100,9 +104,19 @@ public class RedirectFilter implements Filter {
 		String scheme = httpServletRequest.getScheme();
 		
     	String xForwardedProto = httpServletRequest.getHeader("x-forwarded-proto");
+    	String xForwardedPort = httpServletRequest.getHeader("x-forwarded-port");
     	
     	if (xForwardedProto != null) {
     		scheme = xForwardedProto;
+    	}
+    	
+    	if (xForwardedPort != null) {
+    		try {
+    			serverPort = Integer.parseInt(xForwardedPort);
+    			
+    		} catch (NumberFormatException e) {
+    			logger.error("Can't parse x-forwarded-port", e);
+    		}
     	}
     	
         String fullRedirectUrl = scheme + "://" + newServerName + (serverPort != 80 && serverPort != 443 ? (":" + serverPort) : "") + redirectUrl;	

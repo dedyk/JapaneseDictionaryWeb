@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
@@ -24,6 +26,8 @@ import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 public class Utils {
 	
 	private static final String BASE64_PREFIX = "B64: ";
+	
+	private static final Logger logger = LogManager.getLogger(Utils.class);
 	
 	public static List<String> tokenWord(String word) {
 		
@@ -307,9 +311,19 @@ public class Utils {
         //        
 		
     	String xForwardedProto = request.getHeader("x-forwarded-proto");
+    	String xForwardedPort = request.getHeader("x-forwarded-port");
     	
     	if (xForwardedProto != null) {
     		scheme = xForwardedProto;
+    	}
+    	
+    	if (xForwardedPort != null) {
+    		try {
+    			serverPort = Integer.parseInt(xForwardedPort);
+    			
+    		} catch (NumberFormatException e) {
+    			logger.error("Can't parse x-forwarded-port", e);
+    		}
     	}
     	
         String result = scheme + "://" + serverName + (serverPort != 80 && serverPort != 443 ? (":" + serverPort) : "") + requestUrl;	
