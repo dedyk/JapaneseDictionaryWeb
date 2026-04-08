@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -669,12 +671,13 @@ public class KanjiDictionaryController {
 	@RequestMapping(value = "/kanjiDictionaryCatalog/{page}", method = RequestMethod.GET)
 	public String kanjiDictionaryCatalog(HttpServletRequest request, HttpSession session, 
 			@PathVariable("page") int pageNo,
-			Map<String, Object> model) throws DictionaryException {
+			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 		
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
 		if (pageNo < 1) {
-			pageNo = 1;
+			// wysylamy sygnal 404                  
+			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
 		}
 				
 		logger.info("Wyświetlanie katalogu znakow kanji dla strony: " + pageNo);
@@ -687,6 +690,11 @@ public class KanjiDictionaryController {
 		for (int kanjiIdx = (pageNo - 1) * pageSize; kanjiIdx < allKanjis.size() && kanjiIdx < ((pageNo) * pageSize); ++kanjiIdx) {
 			resultList.add(allKanjis.get(kanjiIdx));
 		}
+		
+		if (resultList.size() == 0) { // przekroczenie maksymalnego zakresu, bo nie ma juz danych
+			// wysylamy sygnal 404                  
+			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+		}			               
 				
 		// logowanie
 		loggerSender.sendLog(new KanjiDictionaryCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo));

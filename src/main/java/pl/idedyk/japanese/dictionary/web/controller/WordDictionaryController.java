@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -728,12 +730,13 @@ public class WordDictionaryController {
 	@RequestMapping(value = "/wordDictionaryCatalog/{page}", method = RequestMethod.GET)
 	public String wordDictionaryCatalog(HttpServletRequest request, HttpSession session, 
 			@PathVariable("page") int pageNo,
-			Map<String, Object> model) throws DictionaryException {
+			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 		
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
 		if (pageNo < 1) {
-			pageNo = 1;
+			// wysylamy sygnal 404			
+			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
 		}
 				
 		logger.info("Wyświetlanie katalogu słów dla strony: " + pageNo);
@@ -742,6 +745,11 @@ public class WordDictionaryController {
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
 		
 		List<JMdict.Entry> entryList = dictionaryManager.getWordsGroup(dictionaryEntriesSize, pageSize, pageNo - 1);		
+		
+		if (entryList.size() == 0) { // przekroczenie maksymalnego zakresu, bo nie ma juz danych
+			// wysylamy sygnal 404			
+			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+		}
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo));
@@ -790,18 +798,24 @@ public class WordDictionaryController {
 	@RequestMapping(value = "/wordDictionaryNameCatalog/{page}", method = RequestMethod.GET)
 	public String wordDictionaryNameCatalog(HttpServletRequest request, HttpSession session, 
 			@PathVariable("page") int pageNo,
-			Map<String, Object> model) throws DictionaryException {
+			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 				
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
 		if (pageNo < 1) {
-			pageNo = 1;
+			// wysylamy sygnal 404                  
+			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
 		}
 				
 		logger.info("Wyświetlanie katalogu słów(nazwa) dla strony: " + pageNo);
 		
 		// szukanie		
 		List<JMnedict.Entry> nameDictionaryEntry2List = dictionaryManager.getWordsNameGroup(pageSize, pageNo - 1);
+		
+		if (nameDictionaryEntry2List.size() == 0) { // przekroczenie maksymalnego zakresu, bo nie ma juz danych
+			// wysylamy sygnal 404                  
+			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+		}               
 		
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesNameSize();
 		
