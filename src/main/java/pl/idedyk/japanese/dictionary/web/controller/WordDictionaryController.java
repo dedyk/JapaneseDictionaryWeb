@@ -396,7 +396,7 @@ public class WordDictionaryController {
 	@RequestMapping(value = "/wordDictionaryDetails3/{entryId}/{uniqueKanjiKey}/{uniqueKanaKey}", method = RequestMethod.GET)
 	public String showWordDictionaryDetails3(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
 			@PathVariable("entryId") int entryId, @PathVariable("uniqueKanjiKey") String uniqueKanjiKey, @PathVariable("uniqueKanaKey") String uniqueKanaKey,
-			Map<String, Object> model) throws IOException, DictionaryException {
+			Map<String, Object> model) throws IOException, DictionaryException, NoResourceFoundException {
 		
 		// pobranie dictionaryEntry2 na podstawie entryId
 		Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ById(entryId);
@@ -474,10 +474,15 @@ public class WordDictionaryController {
 			
 			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa: " + entryId + " / " + uniqueKanjiKey + " / " + uniqueKanaKey);
 			
+			// wysylamy sygnal 404			
+			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+			
+			/*
 			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType",
 					new Object[] { "-", "-", "-" }, Locale.getDefault());
 			
 			model.put("pageTitle", pageTitle);
+			*/
 		}
 						
 		// model.put("dictionaryEntry", dictionaryEntry);
@@ -581,7 +586,7 @@ public class WordDictionaryController {
 	@RequestMapping(value = "/wordDictionaryNameDetails3/{nameEntryId}/{uniqueKanjiKey}/{uniqueKanaKey}", method = RequestMethod.GET)
 	public String showWordDictionaryNameDetails2(HttpServletRequest request, HttpSession session, 
 			@PathVariable("nameEntryId") int nameEntryId, @PathVariable("uniqueKanjiKey") String uniqueKanjiKey, @PathVariable("uniqueKanaKey") String uniqueKanaKey,
-			Map<String, Object> model) throws DictionaryException {
+			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 		
 		// pobranie dictionaryEntry2 na podstawie entryId
 		JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ById(nameEntryId);
@@ -620,10 +625,15 @@ public class WordDictionaryController {
 			
 			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa (nazwa): " + nameEntryId + " / " + uniqueKanjiKey + " / " + uniqueKanaKey);
 			
+			// wysylamy sygnal 404			
+			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+
+			/*
 			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType",
 					new Object[] { "-", "-", "-" }, Locale.getDefault());
 			
 			model.put("pageTitle", pageTitle);
+			*/
 		}
 						
 		model.put("nameDictionaryEntry2", nameDictionaryEntry2);

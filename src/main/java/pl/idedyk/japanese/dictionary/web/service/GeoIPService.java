@@ -146,7 +146,7 @@ public class GeoIPService {
 		return "AS" + autonomousSystemNumber;		
 	}
 	
-	private AsnResponse getAutonomousSystem(String ip) {
+	public AsnResponse getAutonomousSystem(String ip) {
 		
 		try {
 			InetAddress inetAddress = getInetAddress(ip);

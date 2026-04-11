@@ -405,7 +405,7 @@ public class KanjiDictionaryController {
 	}
 	
 	@RequestMapping(value = "/kanjiDictionaryDetails/{id}/{kanji}", method = RequestMethod.GET)
-	public String showKanjiDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji, Map<String, Object> model) throws DictionaryException {
+	public String showKanjiDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji, Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 		
 		// pobranie kanji entry
 		KanjiCharacterInfo kanjiEntry = dictionaryManager.findKanji(kanji);
@@ -429,10 +429,15 @@ public class KanjiDictionaryController {
 			
 			logger.info("Nie znaleziono kanji dla zapytania o szczegóły kanji: " + id + " / " + kanji);
 			
+			// wysylamy sygnal 404			
+			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+
+			/*
 			String pageTitle = messageSource.getMessage("kanjiDictionaryDetails.page.title", 
 					new Object[] { "-", "-", "-" }, Locale.getDefault());
 			
 			model.put("pageTitle", pageTitle);
+			*/
 		}
 						
 		model.put("kanjiEntry", kanjiEntry);

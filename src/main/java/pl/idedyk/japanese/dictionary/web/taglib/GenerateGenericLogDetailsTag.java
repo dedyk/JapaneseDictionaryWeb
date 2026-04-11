@@ -19,6 +19,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.util.HtmlUtils;
 
+import com.maxmind.geoip2.model.AsnResponse;
+
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.common.Utils.ThemeType;
@@ -60,6 +62,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameCatalogLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLog;
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
+import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
 
 public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAbstract {
 	
@@ -68,6 +71,8 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 	private GenericLog genericLog;
 	
 	private MySQLConnector mySQLConnector;
+	
+	private GeoIPService geoIPService;
 			
 	private MessageSource messageSource;
 		
@@ -87,6 +92,7 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
 		
 		this.messageSource = (MessageSource)webApplicationContext.getBean("messageSource");
 		this.mySQLConnector = webApplicationContext.getBean(MySQLConnector.class);
+		this.geoIPService = webApplicationContext.getBean(GeoIPService.class);
 		
 		try {
             JspWriter out = pageContext.getOut();
@@ -258,7 +264,19 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
         
         // remote host
         addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteHost"), genericLog.getRemoteHost());
-				
+		
+        // remote ip country        
+        addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpCountry"), geoIPService.getCountry(genericLog.getRemoteIp()));
+        
+        // remote ip asn
+        AsnResponse autonomousSystem = geoIPService.getAutonomousSystem(genericLog.getRemoteIp());
+        
+        if (autonomousSystem != null) {
+        	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpAs"), "AS" + autonomousSystem.getAutonomousSystemNumber() + " (" + autonomousSystem.getAutonomousSystemOrganization() + ")");        	
+        } else {
+        	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpAs"), "Unknown");
+        }
+        
 		panelBody.addHtmlElement(table);
         		
 		panelDiv.addHtmlElement(panelBody);
