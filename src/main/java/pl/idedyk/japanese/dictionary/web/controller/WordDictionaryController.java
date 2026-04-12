@@ -17,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -58,6 +57,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsL
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryPdfDictionaryLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.exception.ResourceGoneException;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2NameHelperCommon;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
@@ -396,7 +396,7 @@ public class WordDictionaryController {
 	@RequestMapping(value = "/wordDictionaryDetails3/{entryId}/{uniqueKanjiKey}/{uniqueKanaKey}", method = RequestMethod.GET)
 	public String showWordDictionaryDetails3(HttpServletRequest request, HttpServletResponse response, HttpSession session, 
 			@PathVariable("entryId") int entryId, @PathVariable("uniqueKanjiKey") String uniqueKanjiKey, @PathVariable("uniqueKanaKey") String uniqueKanaKey,
-			Map<String, Object> model) throws IOException, DictionaryException, NoResourceFoundException {
+			Map<String, Object> model) throws IOException, DictionaryException, NoResourceFoundException, ResourceGoneException {
 		
 		// pobranie dictionaryEntry2 na podstawie entryId
 		Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ById(entryId);
@@ -474,8 +474,8 @@ public class WordDictionaryController {
 			
 			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa: " + entryId + " / " + uniqueKanjiKey + " / " + uniqueKanaKey);
 			
-			// wysylamy sygnal 404			
-			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");
 			
 			/*
 			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType",
@@ -505,14 +505,10 @@ public class WordDictionaryController {
 	        response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
 	        response.setHeader("Location", destinationUrl);
 			
-		} else {			
-			response.sendError(404);
-			
-			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
-			
-			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
+		} else {
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");	
 		}
-				
 	}
 	
 	@RequestMapping(value = "/wordDictionaryNameDetails/{id}/{kanji}/{kana}", method = RequestMethod.GET)
@@ -561,11 +557,8 @@ public class WordDictionaryController {
 
 			
 		} else {			
-			response.sendError(404);
-			
-			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
-			
-			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");	
 		}
 	}
 		
@@ -625,8 +618,8 @@ public class WordDictionaryController {
 			
 			logger.info("Nie znaleziono słówka dla zapytania o szczegóły słowa (nazwa): " + nameEntryId + " / " + uniqueKanjiKey + " / " + uniqueKanaKey);
 			
-			// wysylamy sygnal 404			
-			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");
 
 			/*
 			String pageTitle = messageSource.getMessage("wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType",
@@ -745,8 +738,8 @@ public class WordDictionaryController {
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
 		if (pageNo < 1) {
-			// wysylamy sygnal 404			
-			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");
 		}
 				
 		logger.info("Wyświetlanie katalogu słów dla strony: " + pageNo);
@@ -757,8 +750,8 @@ public class WordDictionaryController {
 		List<JMdict.Entry> entryList = dictionaryManager.getWordsGroup(dictionaryEntriesSize, pageSize, pageNo - 1);		
 		
 		if (entryList.size() == 0) { // przekroczenie maksymalnego zakresu, bo nie ma juz danych
-			// wysylamy sygnal 404			
-			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");
 		}
 		
 		// logowanie
@@ -813,8 +806,8 @@ public class WordDictionaryController {
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
 		if (pageNo < 1) {
-			// wysylamy sygnal 404                  
-			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");
 		}
 				
 		logger.info("Wyświetlanie katalogu słów(nazwa) dla strony: " + pageNo);
@@ -823,8 +816,8 @@ public class WordDictionaryController {
 		List<JMnedict.Entry> nameDictionaryEntry2List = dictionaryManager.getWordsNameGroup(pageSize, pageNo - 1);
 		
 		if (nameDictionaryEntry2List.size() == 0) { // przekroczenie maksymalnego zakresu, bo nie ma juz danych
-			// wysylamy sygnal 404                  
-			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");
 		}               
 		
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesNameSize();

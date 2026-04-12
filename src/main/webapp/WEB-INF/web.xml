@@ -10,6 +10,11 @@
 	</error-page>
 
 	<error-page>
+		<error-code>410</error-code>
+		<location>/WEB-INF/pages/page410.jsp</location>
+	</error-page>
+
+	<error-page>
 		<exception-type>java.lang.Exception</exception-type>
 		<location>/WEB-INF/pages/applicationError2.jsp</location>
 	</error-page>  

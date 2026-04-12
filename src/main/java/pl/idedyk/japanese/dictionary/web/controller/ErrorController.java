@@ -24,6 +24,7 @@ import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.MethodNotAllowedExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.exception.ResourceGoneException;
 
 @ControllerAdvice
 public class ErrorController {
@@ -108,5 +109,19 @@ public class ErrorController {
 		loggerSender.sendLog(methodNotAllowedExceptionLoggerModel);
 
 		return "page405";
+	}
+	
+	@ExceptionHandler(ResourceGoneException.class)
+	@ResponseStatus(value = HttpStatus.GONE)
+	public String handleMethodGone(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
+				
+		logger.error("Strona trwale usunięta: " + Utils.getRequestURL(request));
+		
+		// wysylanie do logger'a
+		PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+		
+		loggerSender.sendLog(pageNoFoundExceptionLoggerModel);
+
+		return "page410";
 	}
 }

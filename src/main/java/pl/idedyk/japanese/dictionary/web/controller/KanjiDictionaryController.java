@@ -16,7 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -58,8 +57,8 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryRadicalsLog
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
-import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.exception.ResourceGoneException;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 @Controller
@@ -429,8 +428,8 @@ public class KanjiDictionaryController {
 			
 			logger.info("Nie znaleziono kanji dla zapytania o szczegóły kanji: " + id + " / " + kanji);
 			
-			// wysylamy sygnal 404			
-			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");
 
 			/*
 			String pageTitle = messageSource.getMessage("kanjiDictionaryDetails.page.title", 
@@ -466,11 +465,8 @@ public class KanjiDictionaryController {
 	        response.setHeader("Location", destinationUrl);
 
 		} else {			
-			response.sendError(404);
-			
-			PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
-			
-			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);	
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");	
 		}		
 	}
 		
@@ -681,8 +677,8 @@ public class KanjiDictionaryController {
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
 		if (pageNo < 1) {
-			// wysylamy sygnal 404                  
-			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");
 		}
 				
 		logger.info("Wyświetlanie katalogu znakow kanji dla strony: " + pageNo);
@@ -697,8 +693,8 @@ public class KanjiDictionaryController {
 		}
 		
 		if (resultList.size() == 0) { // przekroczenie maksymalnego zakresu, bo nie ma juz danych
-			// wysylamy sygnal 404                  
-			throw new NoResourceFoundException(HttpMethod.valueOf(request.getMethod()), request.getRequestURI());
+			// wysylamy sygnal 410	
+			throw new ResourceGoneException("Resource no longer available");
 		}			               
 				
 		// logowanie
