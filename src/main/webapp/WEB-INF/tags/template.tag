@@ -28,7 +28,7 @@
 	</c:if>	
 	
 	<c:if test="${canonicalUrl != null}">
-	<link rel="canonical" content="${canonicalUrl}" />
+	<link rel="canonical" href="${canonicalUrl}" />
 	</c:if>	
 	
 	<title>${pageTitle}</title>
