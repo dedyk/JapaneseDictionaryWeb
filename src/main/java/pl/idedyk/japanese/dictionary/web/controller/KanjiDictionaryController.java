@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -85,6 +86,9 @@ public class KanjiDictionaryController {
 	
 	@Autowired
 	private LoggerSender loggerSender;
+	
+	@Value("${base.server}")
+	private String baseServer;
 
 	@RequestMapping(value = "/kanjiDictionary", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
@@ -443,6 +447,7 @@ public class KanjiDictionaryController {
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
+		model.put("canonicalUrl", baseServer + LinkGenerator.generateKanjiDetailsLink("", kanjiEntry));
 		
 		return "kanjiDictionaryDetails";
 	}

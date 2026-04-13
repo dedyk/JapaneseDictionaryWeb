@@ -8,7 +8,7 @@
 
 <c:set var="pageDescription"> <spring:message code="kanjiDictionaryDetails.page.pageDescription" arguments="${kanjiEntry.kanji}"/> </c:set>
 
-<t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
+<t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}" canonicalUrl="${canonicalUrl}">
 
 	<jsp:body>
 			

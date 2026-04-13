@@ -6,7 +6,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
+<t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}" canonicalUrl="${canonicalUrl}">
 
 	<jsp:body>
 					

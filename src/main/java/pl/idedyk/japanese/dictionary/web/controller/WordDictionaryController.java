@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -86,6 +87,9 @@ public class WordDictionaryController {
 	@Autowired
 	private LoggerSender loggerSender;
 
+	@Value("${base.server}")
+	private String baseServer;
+	
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
 		
@@ -488,6 +492,7 @@ public class WordDictionaryController {
 		// model.put("dictionaryEntry", dictionaryEntry);
 		model.put("dictionaryEntry2", dictionaryEntry2);
 		model.put("selectedMenu", "wordDictionary");
+		model.put("canonicalUrl", baseServer + LinkGenerator.generateDictionaryEntryDetailsLink("", dictionaryEntry2));
 		
 		return "wordDictionaryDetails";
 	}
@@ -631,6 +636,7 @@ public class WordDictionaryController {
 						
 		model.put("nameDictionaryEntry2", nameDictionaryEntry2);
 		model.put("selectedMenu", "wordDictionary");
+		model.put("canonicalUrl", baseServer + LinkGenerator.generateNameDictionaryEntryDetailsLink("", nameDictionaryEntry2));
 		
 		return "wordDictionaryDetails";
 	}

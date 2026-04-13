@@ -8,6 +8,7 @@
 <%@attribute name="footer" fragment="true"%>
 <%@attribute name="pageTitle"%>
 <%@attribute name="pageDescription" required="false"%>
+<%@attribute name="canonicalUrl" required="false"%>
 
 <!doctype html>
 <html lang="pl">
@@ -24,6 +25,10 @@
 	
 	<c:if test="${metaRobots != null}">
 	<meta name="robots" content="${metaRobots}" />
+	</c:if>	
+	
+	<c:if test="${canonicalUrl != null}">
+	<link rel="canonical" content="${canonicalUrl}" />
 	</c:if>	
 	
 	<title>${pageTitle}</title>
