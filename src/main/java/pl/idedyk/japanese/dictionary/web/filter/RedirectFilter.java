@@ -17,11 +17,8 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import pl.idedyk.japanese.dictionary.web.common.Utils;
-import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
-import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
 
-public class RedirectFilter implements Filter {
+public class RedirectFilter extends RedirectCommonFilter implements Filter {
 	
 	private static final Logger logger = LogManager.getLogger(RedirectFilter.class);
 
@@ -69,22 +66,11 @@ public class RedirectFilter implements Filter {
 			
 			return;
 		}
-		
-		String redirectUrl = getRedirectUrl(httpServletRequest, httpServletResponse, newServerName);
 
-		// przekierowanie		
-		LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
+		// przekierowanie na nowy adres serwera
+		String redirectUrl = getRedirectNewServerUrl(httpServletRequest, httpServletResponse, newServerName);
 
-        // dodanie do logowania
-		RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(httpServletRequest), redirectUrl);
-		
-		loggerSender.sendLog(redirectLoggerModel);
-
-		httpServletResponse.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-		httpServletResponse.setHeader("Location", redirectUrl);
-        
-        // zrobienie commit'a
-        response.flushBuffer();		
+		redirectToUrl(webApplicationContext, httpServletRequest, httpServletResponse, redirectUrl);		
 	}
 
 	@Override
@@ -92,7 +78,7 @@ public class RedirectFilter implements Filter {
 		// noop		
 	}
 		
-	private String getRedirectUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, String newServerName) {
+	private String getRedirectNewServerUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, String newServerName) {
 		
         String queryString = httpServletRequest.getQueryString();
         String redirectUrl = httpServletRequest.getRequestURI() + ((queryString == null) ? "" : ("?" + queryString));
