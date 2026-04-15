@@ -130,7 +130,7 @@ public class ErrorController {
 	
 	@ExceptionHandler(HttpNotModifiedException.class)
 	@ResponseStatus(value = HttpStatus.NOT_MODIFIED)
-	public String handleMethodNotModified(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
+	public void handleMethodNotModified(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
 				
 		logger.error("Strona niezmodyfikowana: " + Utils.getRequestURL(request));
 		
@@ -139,6 +139,6 @@ public class ErrorController {
 		
 		loggerSender.sendLog(pageNotModifiedExceptionLoggerModel);
 
-		return "page304";
+		//return "page304";
 	}
 }
