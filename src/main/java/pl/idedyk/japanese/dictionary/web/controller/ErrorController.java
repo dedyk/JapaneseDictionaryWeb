@@ -23,8 +23,11 @@ import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.MethodNotAllowedExceptionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.PageGoneExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
-import pl.idedyk.japanese.dictionary.web.service.exception.ResourceGoneException;
+import pl.idedyk.japanese.dictionary.web.logger.model.PageNotModifiedExceptionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.exception.HttpNotModifiedException;
+import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
 
 @ControllerAdvice
 public class ErrorController {
@@ -111,17 +114,31 @@ public class ErrorController {
 		return "page405";
 	}
 	
-	@ExceptionHandler(ResourceGoneException.class)
+	@ExceptionHandler(HttpResourceGoneException.class)
 	@ResponseStatus(value = HttpStatus.GONE)
 	public String handleMethodGone(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
 				
 		logger.error("Strona trwale usunięta: " + Utils.getRequestURL(request));
 		
 		// wysylanie do logger'a
-		PageNoFoundExceptionLoggerModel pageNoFoundExceptionLoggerModel = new PageNoFoundExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+		PageGoneExceptionLoggerModel pageGoneExceptionLoggerModel = new PageGoneExceptionLoggerModel(Utils.createLoggerModelCommon(request));
 		
-		loggerSender.sendLog(pageNoFoundExceptionLoggerModel);
+		loggerSender.sendLog(pageGoneExceptionLoggerModel);
 
 		return "page410";
+	}
+	
+	@ExceptionHandler(HttpNotModifiedException.class)
+	@ResponseStatus(value = HttpStatus.NOT_MODIFIED)
+	public String handleMethodNotModified(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
+				
+		logger.error("Strona niezmodyfikowana: " + Utils.getRequestURL(request));
+		
+		// wysylanie do logger'a
+		PageNotModifiedExceptionLoggerModel pageNotModifiedExceptionLoggerModel = new PageNotModifiedExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+		
+		loggerSender.sendLog(pageNotModifiedExceptionLoggerModel);
+
+		return "page304";
 	}
 }

@@ -40,6 +40,7 @@ import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
+import pl.idedyk.japanese.dictionary.web.common.ModifiedCheckHelper;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
@@ -59,7 +60,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLogge
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
-import pl.idedyk.japanese.dictionary.web.service.exception.ResourceGoneException;
+import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 @Controller
@@ -408,7 +409,7 @@ public class KanjiDictionaryController {
 	}
 	
 	@RequestMapping(value = "/kanjiDictionaryDetails/{id}/{kanji}", method = RequestMethod.GET)
-	public String showKanjiDictionaryDetails(HttpServletRequest request, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji, Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
+	public String showKanjiDictionaryDetails(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") int id, @PathVariable("kanji") String kanji, Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 		
 		// pobranie kanji entry
 		KanjiCharacterInfo kanjiEntry = dictionaryManager.findKanji(kanji);
@@ -416,7 +417,13 @@ public class KanjiDictionaryController {
 		// tytul strony
 		if (kanjiEntry != null) {
 			
+			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
+			ModifiedCheckHelper.checkETagAndGenerateHttp303NotModified(request, kanjiEntry);
+			
 			//logger.info("Znaleziono kanji dla zapytania o szczegóły kanji: " + kanjiEntry);
+			
+			// wygenerowanie ETag
+			ModifiedCheckHelper.addETagToResponse(response, kanjiEntry);
 			
 			// logowanie
 			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
@@ -433,8 +440,8 @@ public class KanjiDictionaryController {
 			logger.info("Nie znaleziono kanji dla zapytania o szczegóły kanji: " + id + " / " + kanji);
 			
 			// wysylamy sygnal 410	
-			throw new ResourceGoneException("Resource no longer available");
-
+			throw new HttpResourceGoneException("Resource no longer available");
+			
 			/*
 			String pageTitle = messageSource.getMessage("kanjiDictionaryDetails.page.title", 
 					new Object[] { "-", "-", "-" }, Locale.getDefault());
@@ -471,7 +478,7 @@ public class KanjiDictionaryController {
 
 		} else {			
 			// wysylamy sygnal 410	
-			throw new ResourceGoneException("Resource no longer available");	
+			throw new HttpResourceGoneException("Resource no longer available");	
 		}		
 	}
 		
@@ -683,7 +690,7 @@ public class KanjiDictionaryController {
 		
 		if (pageNo < 1) {
 			// wysylamy sygnal 410	
-			throw new ResourceGoneException("Resource no longer available");
+			throw new HttpResourceGoneException("Resource no longer available");
 		}
 				
 		logger.info("Wyświetlanie katalogu znakow kanji dla strony: " + pageNo);
@@ -699,7 +706,7 @@ public class KanjiDictionaryController {
 		
 		if (resultList.size() == 0) { // przekroczenie maksymalnego zakresu, bo nie ma juz danych
 			// wysylamy sygnal 410	
-			throw new ResourceGoneException("Resource no longer available");
+			throw new HttpResourceGoneException("Resource no longer available");
 		}			               
 				
 		// logowanie
