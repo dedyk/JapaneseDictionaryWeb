@@ -35,10 +35,17 @@
 			<mvc:mapping path="/css/**" />
 			<mvc:mapping path="/js/**" />
 			
-			<bean id="responseCachingFilter"
-				class="org.springframework.web.servlet.mvc.WebContentInterceptor">
-				
-				<property name="cacheControl" ref="japaneseDictionaryCacheControl" />
+			<bean id="responseCachingFilter" class="org.springframework.web.servlet.mvc.WebContentInterceptor">				
+				<property name="cacheControl" ref="japaneseDictionaryStaticFileCacheControl" />
+			</bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/wordDictionaryDetails3/**" />
+			<mvc:mapping path="/wordDictionaryNameDetails3/**" />
+			<mvc:mapping path="/kanjiDictionaryDetails/**" />
+						
+			<bean id="responseCachingFilter2" class="org.springframework.web.servlet.mvc.WebContentInterceptor">				
+				<property name="cacheControl" ref="japaneseDictionaryEntryDetailsCacheControl" />
 			</bean>
 		</mvc:interceptor>
 	</mvc:interceptors>

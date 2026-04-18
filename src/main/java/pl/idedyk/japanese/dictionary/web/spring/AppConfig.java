@@ -27,8 +27,8 @@ public class AppConfig implements SchedulingConfigurer {
         taskRegistrar.setTaskScheduler(taskScheduler);
     }
     
-    @Bean(name="japaneseDictionaryCacheControl")
-    public CacheControl createCacheControl() {
+    @Bean(name="japaneseDictionaryStaticFileCacheControl")
+    public CacheControl createJapaneseDictionaryStaticFileCacheControl() {
     	// CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(604801)); // tydzien i jedna sekunda
     	CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(3600)); // godzina i jedna sekunda
     	
@@ -49,6 +49,12 @@ public class AppConfig implements SchedulingConfigurer {
 //			</props>
 //		</property>
 //-->
-
+    }
+    
+    @Bean(name="japaneseDictionaryEntryDetailsCacheControl")
+    public CacheControl createJapaneseDictionaryEntryDetailseCacheControl() {
+    	CacheControl cacheControl = CacheControl.noCache().cachePublic();
+    	    	
+    	return cacheControl;
     }
 }
