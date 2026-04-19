@@ -257,24 +257,21 @@ public class FirewallFilter implements Filter {
 		
 		if (clientInfo.doBlock == true) { // blokowanie
 			
+			// czy wyslac do logow
+			if (clientInfo.doSendToLoggerListener == true) {
+				ServletContext servletContext = request.getServletContext();
+				WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+				
+				LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
+				
+				ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
+				
+				loggerSender.sendLog(clientBlockLoggerModel);
+			}
+			
 			if (clientInfo.doBlockSendRandomData == false) { // zwykla blokada
 				logger.info("Blokowanie ip/host/user agent/url: " + clientInfo.ip + " (" + clientInfo.autonomousSystemNumber + ", " + clientInfo.country + ") / " + clientInfo.hostName + " / " + clientInfo.userAgent + " / " + clientInfo.fullUrl);
-												
-				// wysylacz
-				if (clientInfo.doSendToLoggerListener == true) {
-					ServletContext servletContext = request.getServletContext();
-					WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-					
-					LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
-					
-					// nie bedziemy wysylac zdarzen, gdyz moze to powodowac bardzo duza liczbe zdarzen, ktore pozniej musza byc przetworzone
-					ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
-					
-					loggerSender.sendLog(clientBlockLoggerModel);
-				}				
-				
-				//
-				
+								
 				// wysylamy brak dostepu
 				httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				
