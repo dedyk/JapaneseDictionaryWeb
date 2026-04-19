@@ -18,6 +18,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -31,6 +32,8 @@ import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.As
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.CountryList.Country;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.FullUrlList.FullUrl;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.UserAgentList.UserAgent;
+import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService.ConfigWrapper;
 import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
@@ -86,6 +89,7 @@ public class FirewallFilter implements Filter {
 					
 					clientInfo.doBlock = true;
 					clientInfo.doBlockSendRandomData = asn.isRandomDataSend() != null ? asn.isRandomDataSend() : false;
+					clientInfo.doSendToLoggerListener = asn.isSendToLoggerListener() != null ? asn.isSendToLoggerListener() : false;
 					
 					return;
 				}
@@ -101,6 +105,7 @@ public class FirewallFilter implements Filter {
 					
 					clientInfo.doBlock = true;
 					clientInfo.doBlockSendRandomData = address.isRandomDataSend() != null ? address.isRandomDataSend() : false;
+					clientInfo.doSendToLoggerListener = address.isSendToLoggerListener() != null ? address.isSendToLoggerListener() : false;
 					
 					return;
 				}
@@ -115,6 +120,7 @@ public class FirewallFilter implements Filter {
 					
 					clientInfo.doBlock = true;
 					clientInfo.doBlockSendRandomData = country.isRandomDataSend() != null ? country.isRandomDataSend() : false;
+					clientInfo.doSendToLoggerListener = country.isSendToLoggerListener() != null ? country.isSendToLoggerListener() : false;
 					
 					return;
 				}
@@ -144,6 +150,7 @@ public class FirewallFilter implements Filter {
 					
 					clientInfo.doBlock = true;
 					clientInfo.doBlockSendRandomData = userAgent.isRandomDataSend() != null ? userAgent.isRandomDataSend() : false;
+					clientInfo.doSendToLoggerListener = userAgent.isSendToLoggerListener() != null ? userAgent.isSendToLoggerListener() : false;
 					
 					return;						
 				}
@@ -172,6 +179,7 @@ public class FirewallFilter implements Filter {
 					
 					clientInfo.doBlock = true;
 					clientInfo.doBlockSendRandomData = fullUrl.isRandomDataSend() != null ? fullUrl.isRandomDataSend() : false;
+					clientInfo.doSendToLoggerListener = fullUrl.isSendToLoggerListener() != null ? fullUrl.isSendToLoggerListener() : false;
 					
 					return;
 				}
@@ -251,17 +259,19 @@ public class FirewallFilter implements Filter {
 			
 			if (clientInfo.doBlockSendRandomData == false) { // zwykla blokada
 				logger.info("Blokowanie ip/host/user agent/url: " + clientInfo.ip + " (" + clientInfo.autonomousSystemNumber + ", " + clientInfo.country + ") / " + clientInfo.hostName + " / " + clientInfo.userAgent + " / " + clientInfo.fullUrl);
-				
-				// ServletContext servletContext = request.getServletContext();
-				
-				// WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-				
+												
 				// wysylacz
-				// LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
-				
-				// nie bedziemy wysylac zdarzen, gdyz moze to powodowac bardzo duza liczbe zdarzen, ktore pozniej musza byc przetworzone
-				// ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
-				// loggerSender.sendLog(clientBlockLoggerModel);
+				if (clientInfo.doSendToLoggerListener == true) {
+					ServletContext servletContext = request.getServletContext();
+					WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+					
+					LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
+					
+					// nie bedziemy wysylac zdarzen, gdyz moze to powodowac bardzo duza liczbe zdarzen, ktore pozniej musza byc przetworzone
+					ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
+					
+					loggerSender.sendLog(clientBlockLoggerModel);
+				}				
 				
 				//
 				

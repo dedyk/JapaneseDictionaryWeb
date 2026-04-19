@@ -21,5 +21,6 @@ public class ClientInfo implements Serializable {
 
 	public boolean doBlock = false;
 	public boolean doBlockSendRandomData = false;
+	public boolean doSendToLoggerListener = false;
 }
 

@@ -418,7 +418,7 @@ public class KanjiDictionaryController {
 		if (kanjiEntry != null) {
 			
 			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
-			ModifiedCheckHelper.checkETagAndGenerateHttp303NotModified(request, kanjiEntry);
+			ModifiedCheckHelper.checkETagAndGenerateHttp304NotModified(request, kanjiEntry);
 			
 			//logger.info("Znaleziono kanji dla zapytania o szczegóły kanji: " + kanjiEntry);
 			

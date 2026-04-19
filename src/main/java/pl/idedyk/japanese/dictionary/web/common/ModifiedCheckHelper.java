@@ -14,19 +14,19 @@ import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 public class ModifiedCheckHelper {
 	
-	public static void checkETagAndGenerateHttp303NotModified(HttpServletRequest request, JMdict.Entry dictionaryEntry2) {
-		checkETagAndGenerateHttp303NotModified(request, (Object)dictionaryEntry2);
+	public static void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, JMdict.Entry dictionaryEntry2) {
+		checkETagAndGenerateHttp304NotModified(request, (Object)dictionaryEntry2);
 	}
 	
-	public static void checkETagAndGenerateHttp303NotModified(HttpServletRequest request, JMnedict.Entry nameDictionaryEntry2) {
-		checkETagAndGenerateHttp303NotModified(request, (Object)nameDictionaryEntry2);
+	public static void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, JMnedict.Entry nameDictionaryEntry2) {
+		checkETagAndGenerateHttp304NotModified(request, (Object)nameDictionaryEntry2);
 	}
 	
-	public static void checkETagAndGenerateHttp303NotModified(HttpServletRequest request, KanjiCharacterInfo kanjiCharacterInfo) {
-		checkETagAndGenerateHttp303NotModified(request, (Object)kanjiCharacterInfo);
+	public static void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, KanjiCharacterInfo kanjiCharacterInfo) {
+		checkETagAndGenerateHttp304NotModified(request, (Object)kanjiCharacterInfo);
 	}
 	
-	private static void checkETagAndGenerateHttp303NotModified(HttpServletRequest request, Object object) {
+	private static void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, Object object) {
 		
 		if (object == null) {
 			return;

@@ -461,7 +461,7 @@ public class WordDictionaryController {
 			}
 			
 			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
-			ModifiedCheckHelper.checkETagAndGenerateHttp303NotModified(request, dictionaryEntry2);
+			ModifiedCheckHelper.checkETagAndGenerateHttp304NotModified(request, dictionaryEntry2);
 						
 			// przygotowanie danych do wyswietlenia
 						
@@ -614,7 +614,7 @@ public class WordDictionaryController {
 			}
 			
 			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
-			ModifiedCheckHelper.checkETagAndGenerateHttp303NotModified(request, nameDictionaryEntry2);
+			ModifiedCheckHelper.checkETagAndGenerateHttp304NotModified(request, nameDictionaryEntry2);
 						
 			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa (nazwa): " + dictionaryEntry);
 			

@@ -39,7 +39,8 @@
 														<xsd:complexType>
 															<xsd:simpleContent>
 																<xsd:extension base="xsd:string">
-																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
+																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />
+																	<xsd:attribute name="sendToLoggerListener" use="optional" type="xsd:boolean" />
 																</xsd:extension>												
 															</xsd:simpleContent>																							
 														</xsd:complexType>										
@@ -55,7 +56,8 @@
 														<xsd:complexType>
 															<xsd:simpleContent>
 																<xsd:extension base="xsd:string">
-																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
+																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />
+																	<xsd:attribute name="sendToLoggerListener" use="optional" type="xsd:boolean" />
 																</xsd:extension>												
 															</xsd:simpleContent>																							
 														</xsd:complexType>										
@@ -71,7 +73,8 @@
 														<xsd:complexType>
 															<xsd:simpleContent>
 																<xsd:extension base="xsd:string">
-																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
+																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />
+																	<xsd:attribute name="sendToLoggerListener" use="optional" type="xsd:boolean" />
 																</xsd:extension>												
 															</xsd:simpleContent>																							
 														</xsd:complexType>										
@@ -87,7 +90,8 @@
 														<xsd:complexType>
 															<xsd:simpleContent>
 																<xsd:extension base="xsd:string">
-																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
+																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />
+																	<xsd:attribute name="sendToLoggerListener" use="optional" type="xsd:boolean" />
 																</xsd:extension>												
 															</xsd:simpleContent>																							
 														</xsd:complexType>										
@@ -103,7 +107,8 @@
 														<xsd:complexType>
 															<xsd:simpleContent>
 																<xsd:extension base="xsd:string">
-																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />														
+																	<xsd:attribute name="randomDataSend" use="optional" type="xsd:boolean" />
+																	<xsd:attribute name="sendToLoggerListener" use="optional" type="xsd:boolean" />
 																</xsd:extension>												
 															</xsd:simpleContent>																							
 														</xsd:complexType>										
