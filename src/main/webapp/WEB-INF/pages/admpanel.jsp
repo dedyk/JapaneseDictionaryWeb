@@ -50,6 +50,11 @@
 						<a href="#" class="btn btn-default" style="margin: 0px 10px 10px 0px" onclick="selectAllGenericLogOperations(false); return false;"><spring:message code="admin.panel.search.genericLogOperationStringList.deselectAll" /></a>
 					</td>
 				</tr>
+				
+				<tr>
+					<td><form:label path="filter" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="admin.panel.search.filter"/></form:label></td>
+					<td><form:input cssClass="form-control" cssStyle="margin: 0px 10px 10px 0px" id="filter" path="filter"/></td>					
+				</tr>
 
 				<tr>
 					<td></td>

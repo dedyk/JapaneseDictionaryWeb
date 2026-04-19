@@ -19,6 +19,7 @@ import java.util.List;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -212,7 +213,7 @@ public class MySQLConnector {
 		}		
 	}
 	
-	public List<GenericLog> getGenericLogList(long startPos, int size, List<String> genericLogOperationStringList) throws SQLException {
+	public List<GenericLog> getGenericLogList(long startPos, int size, List<String> genericLogOperationStringList, String filter) throws SQLException {
 		
 		Connection connection = null;
 		
@@ -231,6 +232,8 @@ public class MySQLConnector {
 			
 			StringBuffer sql = new StringBuffer();
 			
+			final String[] columnsToFilter = new String[] {"timestamp", "session_id", "user_agent", "request_url", "referer_url", "remote_ip", "remote_host" };
+			
 			sql.append("select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
 					+ "from generic_log where operation in ( ");
 			
@@ -243,7 +246,29 @@ public class MySQLConnector {
 				}
 			}
 			
-			sql.append(" ) order by id desc limit ?, ?");
+			sql.append(" ) ");
+			
+			boolean doFilter = false;
+			
+			if (StringUtils.isNotBlank(filter) == true) {	
+				doFilter = true;
+				
+				sql.append(" and ( ");
+				
+				for (int columnIdx = 0; columnIdx < columnsToFilter.length; ++columnIdx) {
+					if (columnIdx != 0) {
+						sql.append(" or ");
+					}
+					
+					String currentColumn = columnsToFilter[columnIdx];					
+										
+					sql.append(" " + currentColumn + " like ? ");
+				}
+				
+				sql.append(" ) ");
+			}
+			
+			sql.append(" order by id desc limit ?, ?");
 			
 			preparedStatement = connection.prepareStatement(sql.toString());
 						
@@ -251,9 +276,18 @@ public class MySQLConnector {
 				preparedStatement.setString(idxGenericLogOperationStringList + 1, genericLogOperationStringList.get(idxGenericLogOperationStringList));
 			}
 			
-			preparedStatement.setLong(genericLogOperationStringList.size() + 1, startPos * size);
-			preparedStatement.setLong(genericLogOperationStringList.size() + 2, size);
+			if (doFilter == true) {
+				for (int columnIdx = 0; columnIdx < columnsToFilter.length; ++columnIdx) {
+					preparedStatement.setString(genericLogOperationStringList.size() + 1 + columnIdx, filter);
+				}
+				
+				preparedStatement.setLong(genericLogOperationStringList.size() + 1 + columnsToFilter.length, startPos * size);
+				preparedStatement.setLong(genericLogOperationStringList.size() + 2 + columnsToFilter.length, size);
 
+			} else {
+				preparedStatement.setLong(genericLogOperationStringList.size() + 1, startPos * size);
+				preparedStatement.setLong(genericLogOperationStringList.size() + 2, size);
+			}
 			
 			resultSet = preparedStatement.executeQuery();
 			

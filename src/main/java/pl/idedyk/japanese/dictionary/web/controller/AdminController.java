@@ -149,7 +149,8 @@ public class AdminController {
     	
     	adminLoggerModel.addParam("pageNo", adminPanelModel.getPageNo());
     	adminLoggerModel.addParam("genericLogOperationStringList", adminPanelModel.getGenericLogOperationStringList() == null ? "" : adminPanelModel.getGenericLogOperationStringList().toString());
-		
+    	adminLoggerModel.addParam("filter", adminPanelModel.getFilter());
+    	
 		// logowanie
 		loggerSender.sendLog(adminLoggerModel);
 		
@@ -164,6 +165,7 @@ public class AdminController {
     	if (restoreFromSession == true && adminPanelModelFromSession != null) {
     		adminPanelModel.setPageNo(adminPanelModelFromSession.getPageNo());
     		adminPanelModel.setGenericLogOperationStringList(adminPanelModelFromSession.getGenericLogOperationStringList());
+    		adminPanelModel.setFilter(adminPanelModelFromSession.getFilter());
     	}
 
     	session.setAttribute("adminPanelModel", adminPanelModel);
@@ -181,7 +183,7 @@ public class AdminController {
     	if (validationResult == true) {
     		
     		// pobranie listy operacji
-    		List<GenericLog> genericLogList = mySQLConnector.getGenericLogList(Long.parseLong(adminPanelModel.getPageNo()) - 1, GENERIC_LOG_SIZE, adminPanelModel.getGenericLogOperationStringList());    		
+    		List<GenericLog> genericLogList = mySQLConnector.getGenericLogList(Long.parseLong(adminPanelModel.getPageNo()) - 1, GENERIC_LOG_SIZE, adminPanelModel.getGenericLogOperationStringList(), adminPanelModel.getFilter());    		
     		
     		model.put("genericLogList", genericLogList);
     		session.setAttribute("genericLogList", genericLogList);
@@ -206,6 +208,7 @@ public class AdminController {
     		
     		adminLoggerModel.addParam("pageNo", adminPanelModel.getPageNo());
     		adminLoggerModel.addParam("genericLogOperationStringList", adminPanelModel.getGenericLogOperationStringList() == null ? "" : adminPanelModel.getGenericLogOperationStringList().toString());
+    		adminLoggerModel.addParam("filter", adminPanelModel.getFilter());
     		
     	} else {
     		
@@ -215,6 +218,7 @@ public class AdminController {
     		
     		adminLoggerModel.addParam("pageNo", adminPanelModel.getPageNo());
     		adminLoggerModel.addParam("genericLogOperationStringList", adminPanelModel.getGenericLogOperationStringList() == null ? "" : adminPanelModel.getGenericLogOperationStringList().toString());
+    		adminLoggerModel.addParam("filter", adminPanelModel.getFilter());
     	}
     	
 		// logowanie

@@ -13,6 +13,8 @@ public class AdminPanelModel implements Serializable {
 	private String pageNo = "1";
 	
 	private List<String> genericLogOperationStringList;
+	
+	private String filter;
 
 	public String getPageNo() {
 		return pageNo;
@@ -37,5 +39,13 @@ public class AdminPanelModel implements Serializable {
 		}
 		
 		genericLogOperationStringList.add(genericLogOperationEnum.toString());
+	}
+
+	public String getFilter() {
+		return filter;
+	}
+
+	public void setFilter(String filter) {
+		this.filter = filter;
 	}
 }
