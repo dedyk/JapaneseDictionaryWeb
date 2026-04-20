@@ -468,7 +468,7 @@ public class WordDictionaryController {
 			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
 			
 			// wygenerowanie ETag
-			ModifiedCheckHelper.addETagToResponse(response, dictionaryEntry2);
+			ModifiedCheckHelper.addETagToResponse(request, response, dictionaryEntry2);
 			
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), null, dictionaryEntry2));
@@ -619,7 +619,7 @@ public class WordDictionaryController {
 			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa (nazwa): " + dictionaryEntry);
 			
 			// wygenerowanie ETag
-			ModifiedCheckHelper.addETagToResponse(response, nameDictionaryEntry2);
+			ModifiedCheckHelper.addETagToResponse(request, response, nameDictionaryEntry2);
 			
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), nameDictionaryEntry2));

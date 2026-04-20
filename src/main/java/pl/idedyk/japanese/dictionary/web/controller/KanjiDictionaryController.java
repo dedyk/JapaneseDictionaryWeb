@@ -423,7 +423,7 @@ public class KanjiDictionaryController {
 			//logger.info("Znaleziono kanji dla zapytania o szczegóły kanji: " + kanjiEntry);
 			
 			// wygenerowanie ETag
-			ModifiedCheckHelper.addETagToResponse(response, kanjiEntry);
+			ModifiedCheckHelper.addETagToResponse(request, response, kanjiEntry);
 			
 			// logowanie
 			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));

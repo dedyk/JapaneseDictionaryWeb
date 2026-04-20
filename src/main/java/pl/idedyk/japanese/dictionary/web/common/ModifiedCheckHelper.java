@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import pl.idedyk.japanese.dictionary.web.common.Utils.ThemeType;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpNotModifiedException;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
@@ -41,7 +42,7 @@ public class ModifiedCheckHelper {
 		}
 		
 		// wygenerowanie ETag dla naszego obiektu
-		String objectETag = generateEtag(object);
+		String objectETag = generateEtag(request, object);
 		
 		// jezeli sa identyczne to generujemy 304 Not Modified
 		if (ifNoneMatch.equals(objectETag) == true) {
@@ -49,35 +50,44 @@ public class ModifiedCheckHelper {
 		}
 	}
 	
-	public static void addETagToResponse(HttpServletResponse response, JMdict.Entry dictionaryEntry2) {
-		addETagToResponse(response, (Object)dictionaryEntry2);
+	public static void addETagToResponse(HttpServletRequest request, HttpServletResponse response, JMdict.Entry dictionaryEntry2) {
+		addETagToResponse(request, response, (Object)dictionaryEntry2);
 	}
 	
-	public static void addETagToResponse(HttpServletResponse response, JMnedict.Entry nameDictionaryEntry2) {
-		addETagToResponse(response, (Object)nameDictionaryEntry2);
+	public static void addETagToResponse(HttpServletRequest request, HttpServletResponse response, JMnedict.Entry nameDictionaryEntry2) {
+		addETagToResponse(request, response, (Object)nameDictionaryEntry2);
 	}
 	
-	public static void addETagToResponse(HttpServletResponse response, KanjiCharacterInfo kanjiCharacterInfo) {
-		addETagToResponse(response, (Object)kanjiCharacterInfo);
+	public static void addETagToResponse(HttpServletRequest request, HttpServletResponse response, KanjiCharacterInfo kanjiCharacterInfo) {
+		addETagToResponse(request, response, (Object)kanjiCharacterInfo);
 	}
 	
-	private static void addETagToResponse(HttpServletResponse response, Object object) {
+	private static void addETagToResponse(HttpServletRequest request, HttpServletResponse response, Object object) {
 		
 		if (object == null) {
 			return;
 		}
 		
-		String etag = generateEtag(object);
+		String etag = generateEtag(request, object);
 		
 		response.addHeader(HttpHeaders.ETAG, etag);
 	}
 	
-	private static String generateEtag(Object object) {
+	private static String generateEtag(HttpServletRequest request, Object object) {
 		
 		Gson gson = new Gson();		
 		CRC32 crc32 = new CRC32();
 		
-		crc32.update(gson.toJson(object).getBytes());
+		StringBuffer dataToCount = new StringBuffer(gson.toJson(object));
+		
+		ThemeType theme = Utils.getTheme(request);
+		
+		// musimy pobrac motyw, aby poprawnie dzialalo przelaczanie
+		if (theme != ThemeType.LIGHT) {
+			dataToCount.append(theme);
+		}
+		
+		crc32.update(dataToCount.toString().getBytes());
 		
 		return "\"" + Long.toHexString(crc32.getValue()) + "\"";
 	}
