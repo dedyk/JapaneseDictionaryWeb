@@ -135,6 +135,7 @@ public class WordDictionaryController {
 			model.put("command", searchModel);
 			model.put("wordAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_WEB));
 			model.put("selectedMenu", "wordDictionary");
+			model.put("metaRobots", "noindex, follow");
 			
 			return "wordDictionary";
 		}
@@ -215,6 +216,7 @@ public class WordDictionaryController {
 		model.put("findWordRequest", findWordRequest);
 		model.put("findWordResult", findWordResult);
 		model.put("doNotShowSocialButtons", Boolean.TRUE);
+		model.put("metaRobots", "noindex, follow");
 		
 		if (findWordResult.foundGrammaAndExamples == true) {
 			model.put("searchResultInfo", messageSource.getMessage("wordDictionary.page.search.info.foundGrammaAndExamples", 

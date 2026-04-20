@@ -147,7 +147,7 @@ public class KanjiDictionaryController {
 	@RequestMapping(value = "/kanjiDictionarySearch", method = RequestMethod.GET)
 	public String search(HttpServletRequest request, HttpSession session, @ModelAttribute("command") @Valid KanjiDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) throws DictionaryException {
-
+		
 		// pobierz elementy podstawowe
 		List<WebRadicalInfo> radicalList = dictionaryManager.getWebRadicalList();
 		
@@ -159,6 +159,7 @@ public class KanjiDictionaryController {
 			model.put("tabs", KanjiDictionaryTab.values());
 			model.put("kanjiAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_WEB));
 			model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
+			model.put("metaRobots", "noindex, follow");
 			
 			return "kanjiDictionary";
 		}
@@ -258,6 +259,7 @@ public class KanjiDictionaryController {
 		model.put("findKanjiRequest", findKanjiRequest);
 		model.put("findKanjiResult", findKanjiResult);
 		model.put("doNotShowSocialButtons", Boolean.TRUE);
+		model.put("metaRobots", "noindex, follow");
 		
 		if (kanjiDictionaryEntrySpellCheckerSuggestionList != null) {
 			model.put("kanjiDictionaryEntrySpellCheckerSuggestionList", kanjiDictionaryEntrySpellCheckerSuggestionList);
@@ -572,7 +574,8 @@ public class KanjiDictionaryController {
 		model.put("kanjiDictionaryDrawStroke", kanjiDictionaryDrawStroke);
 		
 		model.put("doNotShowSocialButtons", Boolean.TRUE);
-				
+		model.put("metaRobots", "noindex, follow");
+		
 		return "kanjiDictionary";
 	}
 	
