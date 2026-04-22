@@ -54,7 +54,11 @@ public class AppConfig implements SchedulingConfigurer {
     
     @Bean(name="japaneseDictionaryEntryDetailsCacheControl")
     public CacheControl createJapaneseDictionaryEntryDetailseCacheControl() {
-    	CacheControl cacheControl = CacheControl.noCache().cachePublic();
+    	// CacheControl cacheControl = CacheControl.noCache().cachePublic();
+    	
+    	CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(3600)); // jedna godzina
+    	
+    	cacheControl.cachePublic().mustRevalidate();
     	    	
     	return cacheControl;
     }
