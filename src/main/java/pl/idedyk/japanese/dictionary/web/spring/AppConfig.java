@@ -33,7 +33,7 @@ public class AppConfig implements SchedulingConfigurer {
     	// CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(3600)); // godzina i jedna sekunda
     	CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(86400)); // jeden dzien
     	
-    	cacheControl.cachePublic().immutable();
+    	cacheControl.cachePublic().mustRevalidate();
     	
     	return cacheControl;
 
@@ -54,11 +54,7 @@ public class AppConfig implements SchedulingConfigurer {
     
     @Bean(name="japaneseDictionaryEntryDetailsCacheControl")
     public CacheControl createJapaneseDictionaryEntryDetailseCacheControl() {
-    	// CacheControl cacheControl = CacheControl.noCache().cachePublic();
-    	
-    	CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(86400)); // jeden dzien
-    	
-    	cacheControl.cachePublic().mustRevalidate();
+    	CacheControl cacheControl = CacheControl.noCache().cachePublic();
     	    	
     	return cacheControl;
     }
