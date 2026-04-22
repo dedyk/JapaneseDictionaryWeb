@@ -30,9 +30,10 @@ public class AppConfig implements SchedulingConfigurer {
     @Bean(name="japaneseDictionaryStaticFileCacheControl")
     public CacheControl createJapaneseDictionaryStaticFileCacheControl() {
     	// CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(604801)); // tydzien i jedna sekunda
-    	CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(3600)); // godzina i jedna sekunda
+    	// CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(3600)); // godzina i jedna sekunda
+    	CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(86400)); // jeden dzien
     	
-    	cacheControl.mustRevalidate();
+    	cacheControl.cachePublic().immutable();
     	
     	return cacheControl;
 
@@ -53,7 +54,11 @@ public class AppConfig implements SchedulingConfigurer {
     
     @Bean(name="japaneseDictionaryEntryDetailsCacheControl")
     public CacheControl createJapaneseDictionaryEntryDetailseCacheControl() {
-    	CacheControl cacheControl = CacheControl.noCache().cachePublic();
+    	// CacheControl cacheControl = CacheControl.noCache().cachePublic();
+    	
+    	CacheControl cacheControl = CacheControl.maxAge(Duration.ofSeconds(86400)); // jeden dzien
+    	
+    	cacheControl.cachePublic().mustRevalidate();
     	    	
     	return cacheControl;
     }
