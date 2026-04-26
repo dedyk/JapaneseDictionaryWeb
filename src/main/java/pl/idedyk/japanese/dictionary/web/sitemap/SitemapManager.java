@@ -146,6 +146,7 @@ public class SitemapManager {
 		}
 				
 		// katalog slow
+		/*
 		final int wordPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
 		
 		int dictionaryEntriesSizeLastPageNo = (dictionaryEntriesSize / wordPageSize) + (dictionaryEntriesSize % wordPageSize > 0 ? 1 : 0);
@@ -156,6 +157,7 @@ public class SitemapManager {
 			
 			sitemapHelper.createUrl(destDir, deleteOnExit, "wordDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
+		*/
 		
 		// pobranie ilosci slow (nazwa)
 		int dictionaryEntriesNameSize = dictionaryManager.getDictionaryEntriesNameSize();
@@ -169,6 +171,7 @@ public class SitemapManager {
 		}
 
 		// katalog slow(nazwa)
+		/*
 		final int wordNamePageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
 		
 		int dictionaryEntriesNameSizeLastPageNo = (dictionaryEntriesNameSize / wordNamePageSize) + (dictionaryEntriesNameSize % wordNamePageSize > 0 ? 1 : 0);
@@ -179,6 +182,7 @@ public class SitemapManager {
 			
 			sitemapHelper.createUrl(destDir, deleteOnExit, "wordDictionaryNameCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
+		*/
 		
 		// pobranie znakow kanji
 		List<KanjiCharacterInfo> allKanjis = dictionaryManager.getAllKanjis(false, false);
@@ -193,6 +197,7 @@ public class SitemapManager {
 		}
 		
 		// katalog znakow kanji
+		/*
 		final int kanjiPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w KanjiDictionaryController
 		
 		int allKanjisSizeLastPageNo = (allKanjis.size() / kanjiPageSize) + (allKanjis.size() % kanjiPageSize > 0 ? 1 : 0);
@@ -203,6 +208,7 @@ public class SitemapManager {
 						
 			sitemapHelper.createUrl(destDir, deleteOnExit, "kanjiDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
+		*/
 		
 		// zakonczenie generowania
 		sitemapHelper.end();

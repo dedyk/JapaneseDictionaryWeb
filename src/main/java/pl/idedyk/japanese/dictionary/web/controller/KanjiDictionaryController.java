@@ -689,6 +689,12 @@ public class KanjiDictionaryController {
 			@PathVariable("page") int pageNo,
 			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 		
+		// strona nie bedzie juz istniala
+		if (pageNo == 1 || pageNo != 1) {
+			// wysylamy sygnal 410	
+			throw new HttpResourceGoneException("Resource no longer available");
+		}
+		
 		final int pageSize = 50;  // zmiana tego parametru wiaze sie ze zmiana w SitemapManager
 		
 		if (pageNo < 1) {
