@@ -155,6 +155,7 @@ public class WordDictionaryController {
 
 		// logowanie wyszukiwania, dodatkowe sprawdzenie przez system, aby zalogowac ewentualne brakujace slowa
 		// uruchom w osobnym watku
+		/*
 		new Thread(new Runnable() {
 			
 			@Override
@@ -172,6 +173,7 @@ public class WordDictionaryController {
 				}
 			}
 		}).start();
+		*/
 		
 		// sprawdzanie, czy uruchomic animacje przewijania
 		Integer lastWordDictionarySearchHash = (Integer)session.getAttribute("lastWordDictionarySearchHash");
