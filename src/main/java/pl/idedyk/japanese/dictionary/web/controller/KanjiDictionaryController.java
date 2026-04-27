@@ -117,6 +117,7 @@ public class KanjiDictionaryController {
 		model.put("tabs", KanjiDictionaryTab.values());
 		model.put("kanjiAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_WEB));
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
+		model.put("canonicalUrl", baseServer + "/kanjiDictionary");
 				
 		return "kanjiDictionary";
 	}

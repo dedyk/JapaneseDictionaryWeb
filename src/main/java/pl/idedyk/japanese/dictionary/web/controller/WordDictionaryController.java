@@ -122,6 +122,7 @@ public class WordDictionaryController {
 		model.put("command", wordDictionarySearchModel);
 		model.put("wordAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_WEB));
 		model.put("selectedMenu", "wordDictionary");
+		model.put("canonicalUrl", baseServer + "/wordDictionary");
 		
 		return "wordDictionary";
 	}

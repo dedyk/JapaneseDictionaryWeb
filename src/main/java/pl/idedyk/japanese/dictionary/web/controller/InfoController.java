@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +23,9 @@ public class InfoController {
 	
 	@Autowired
 	private LoggerSender loggerSender;
+	
+	@Value("${base.server}")
+	private String baseServer;
 		
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
@@ -32,6 +36,7 @@ public class InfoController {
 		loggerSender.sendLog(new InfoLoggerModel(Utils.createLoggerModelCommon(request)));
 		
 		model.put("selectedMenu", "info");
+		model.put("canonicalUrl", baseServer + "/info");
 		
 		return "info";
 	}
