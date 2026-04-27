@@ -1,33 +1,42 @@
-package pl.idedyk.japanese.dictionary.web.common;
+package pl.idedyk.japanese.dictionary.web.service;
 
-import java.util.zip.CRC32;
+import java.nio.charset.Charset;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.google.common.hash.Hashing;
 import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.common.Utils.ThemeType;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpNotModifiedException;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
-public class ModifiedCheckHelper {
+@Service
+public class ETagModifiedCheckService {
 	
-	public static void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, JMdict.Entry dictionaryEntry2) {
+	@Value("${app.version}")
+	private String version;
+	
+	public void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, JMdict.Entry dictionaryEntry2) {
 		checkETagAndGenerateHttp304NotModified(request, (Object)dictionaryEntry2);
 	}
 	
-	public static void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, JMnedict.Entry nameDictionaryEntry2) {
+	public void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, JMnedict.Entry nameDictionaryEntry2) {
 		checkETagAndGenerateHttp304NotModified(request, (Object)nameDictionaryEntry2);
 	}
 	
-	public static void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, KanjiCharacterInfo kanjiCharacterInfo) {
+	public void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, KanjiCharacterInfo kanjiCharacterInfo) {
 		checkETagAndGenerateHttp304NotModified(request, (Object)kanjiCharacterInfo);
 	}
 	
-	private static void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, Object object) {
+	private void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, Object object) {
 		
 		if (object == null) {
 			return;
@@ -50,19 +59,19 @@ public class ModifiedCheckHelper {
 		}
 	}
 	
-	public static void addETagToResponse(HttpServletRequest request, HttpServletResponse response, JMdict.Entry dictionaryEntry2) {
+	public void addETagToResponse(HttpServletRequest request, HttpServletResponse response, JMdict.Entry dictionaryEntry2) {
 		addETagToResponse(request, response, (Object)dictionaryEntry2);
 	}
 	
-	public static void addETagToResponse(HttpServletRequest request, HttpServletResponse response, JMnedict.Entry nameDictionaryEntry2) {
+	public void addETagToResponse(HttpServletRequest request, HttpServletResponse response, JMnedict.Entry nameDictionaryEntry2) {
 		addETagToResponse(request, response, (Object)nameDictionaryEntry2);
 	}
 	
-	public static void addETagToResponse(HttpServletRequest request, HttpServletResponse response, KanjiCharacterInfo kanjiCharacterInfo) {
+	public void addETagToResponse(HttpServletRequest request, HttpServletResponse response, KanjiCharacterInfo kanjiCharacterInfo) {
 		addETagToResponse(request, response, (Object)kanjiCharacterInfo);
 	}
 	
-	private static void addETagToResponse(HttpServletRequest request, HttpServletResponse response, Object object) {
+	private void addETagToResponse(HttpServletRequest request, HttpServletResponse response, Object object) {
 		
 		if (object == null) {
 			return;
@@ -73,22 +82,19 @@ public class ModifiedCheckHelper {
 		response.addHeader(HttpHeaders.ETAG, etag);
 	}
 	
-	private static String generateEtag(HttpServletRequest request, Object object) {
+	private String generateEtag(HttpServletRequest request, Object object) {
 		
 		Gson gson = new Gson();		
-		CRC32 crc32 = new CRC32();
 		
-		StringBuffer dataToCount = new StringBuffer(gson.toJson(object));
+		StringBuffer dataToCount = new StringBuffer(4096);
 		
 		ThemeType theme = Utils.getTheme(request);
 		
 		// musimy pobrac motyw, aby poprawnie dzialalo przelaczanie
-		if (theme != ThemeType.LIGHT) {
-			dataToCount.append(theme);
-		}
+		dataToCount.append(version);
+		dataToCount.append("/").append(theme);		
+		dataToCount.append("/").append(gson.toJson(object));
 		
-		crc32.update(dataToCount.toString().getBytes());
-		
-		return "\"" + Long.toHexString(crc32.getValue()) + "\"";
+		return "\"" + Hashing.sha256().hashString(dataToCount.toString(), Charset.defaultCharset()) + "\"";
 	}
 }

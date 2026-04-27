@@ -41,7 +41,6 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
-import pl.idedyk.japanese.dictionary.web.common.ModifiedCheckHelper;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.WordDictionarySearchModelValidator;
@@ -59,6 +58,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsL
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryPdfDictionaryLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.ETagModifiedCheckService;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2NameHelperCommon;
@@ -90,6 +90,9 @@ public class WordDictionaryController {
 
 	@Value("${base.server}")
 	private String baseServer;
+	
+	@Autowired
+	private ETagModifiedCheckService eTagModifiedCheckService;
 	
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
@@ -465,14 +468,14 @@ public class WordDictionaryController {
 			}
 			
 			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
-			ModifiedCheckHelper.checkETagAndGenerateHttp304NotModified(request, dictionaryEntry2);
+			eTagModifiedCheckService.checkETagAndGenerateHttp304NotModified(request, dictionaryEntry2);
 						
 			// przygotowanie danych do wyswietlenia
 						
 			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa: " + dictionaryEntry);
 			
 			// wygenerowanie ETag
-			ModifiedCheckHelper.addETagToResponse(request, response, dictionaryEntry2);
+			eTagModifiedCheckService.addETagToResponse(request, response, dictionaryEntry2);
 			
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), null, dictionaryEntry2));
@@ -618,12 +621,12 @@ public class WordDictionaryController {
 			}
 			
 			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
-			ModifiedCheckHelper.checkETagAndGenerateHttp304NotModified(request, nameDictionaryEntry2);
+			eTagModifiedCheckService.checkETagAndGenerateHttp304NotModified(request, nameDictionaryEntry2);
 						
 			//logger.info("Znaleziono słówko dla zapytania o szczegóły słowa (nazwa): " + dictionaryEntry);
 			
 			// wygenerowanie ETag
-			ModifiedCheckHelper.addETagToResponse(request, response, nameDictionaryEntry2);
+			eTagModifiedCheckService.addETagToResponse(request, response, nameDictionaryEntry2);
 			
 			// logowanie
 			loggerSender.sendLog(new WordDictionaryNameDetailsLoggerModel(Utils.createLoggerModelCommon(request), nameDictionaryEntry2));

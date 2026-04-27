@@ -40,7 +40,6 @@ import pl.idedyk.japanese.dictionary.api.dto.KanjiRecognizerResultItem;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
-import pl.idedyk.japanese.dictionary.web.common.ModifiedCheckHelper;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryDrawStroke;
 import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionarySearchModel;
@@ -60,6 +59,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLogge
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.ETagModifiedCheckService;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
@@ -91,6 +91,9 @@ public class KanjiDictionaryController {
 	@Value("${base.server}")
 	private String baseServer;
 
+	@Autowired
+	private ETagModifiedCheckService eTagModifiedCheckService;
+	
 	@RequestMapping(value = "/kanjiDictionary", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
 						
@@ -420,12 +423,12 @@ public class KanjiDictionaryController {
 		if (kanjiEntry != null) {
 			
 			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
-			ModifiedCheckHelper.checkETagAndGenerateHttp304NotModified(request, kanjiEntry);
+			eTagModifiedCheckService.checkETagAndGenerateHttp304NotModified(request, kanjiEntry);
 			
 			//logger.info("Znaleziono kanji dla zapytania o szczegóły kanji: " + kanjiEntry);
 			
 			// wygenerowanie ETag
-			ModifiedCheckHelper.addETagToResponse(request, response, kanjiEntry);
+			eTagModifiedCheckService.addETagToResponse(request, response, kanjiEntry);
 			
 			// logowanie
 			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
