@@ -84,6 +84,11 @@ public class ETagModifiedCheckService {
 	
 	private String generateEtag(HttpServletRequest request, Object object) {
 		
+		String userAgent = request.getHeader("User-Agent");
+		boolean mobile = Utils.isMobile(userAgent);
+
+		//
+		
 		Gson gson = new Gson();		
 		
 		StringBuffer dataToCount = new StringBuffer(4096);
@@ -92,7 +97,8 @@ public class ETagModifiedCheckService {
 		
 		// musimy pobrac motyw, aby poprawnie dzialalo przelaczanie
 		dataToCount.append(version);
-		dataToCount.append("/").append(theme);		
+		dataToCount.append("/").append(mobile);
+		dataToCount.append("/").append(theme);
 		dataToCount.append("/").append(gson.toJson(object));
 		
 		return "\"" + Hashing.sha256().hashString(dataToCount.toString(), Charset.defaultCharset()) + "\"";
