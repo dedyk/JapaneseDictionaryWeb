@@ -230,13 +230,13 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
         	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.requestUrl"), requestURL);
         	
         } else {
-        	requestURL = URLDecoder.decode(requestURL, "UTF8");            	
+        	String requestURLDecoded = URLDecoder.decode(requestURL, "UTF8");
         	        	
         	A requestUrlLink = new A();
         	
         	requestUrlLink.setHref(requestURL);
-        	requestUrlLink.setEscapeHref(true);
-        	requestUrlLink.addHtmlElement(new Text(requestURL, true));            	
+        	// requestUrlLink.setEscapeHref(true);
+        	requestUrlLink.addHtmlElement(new Text(requestURLDecoded, true));
 
         	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.requestUrl"), requestUrlLink);
         }        
@@ -248,13 +248,13 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
         	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.refererUrl"), refererURL);
         	
         } else {
-        	refererURL = URLDecoder.decode(refererURL, "UTF8");            	
+        	String refererURLDecoded = URLDecoder.decode(refererURL, "UTF8");
         	        	
         	A refererUrlLink = new A();
         	
         	refererUrlLink.setHref(refererURL);
-        	refererUrlLink.setEscapeHref(true);
-        	refererUrlLink.addHtmlElement(new Text(refererURL, true));            	
+        	// refererUrlLink.setEscapeHref(true);
+        	refererUrlLink.addHtmlElement(new Text(refererURLDecoded, true));
 
         	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.refererUrl"), refererUrlLink);
         }        

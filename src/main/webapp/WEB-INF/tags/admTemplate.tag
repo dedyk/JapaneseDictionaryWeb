@@ -139,8 +139,10 @@
 								<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/panel"><spring:message code="admTemplate.menu.panel"/></a></li>
 							</c:otherwise>
 						</c:choose>
-
+						
+						<%-- 
 						<li><a href="<c:out value='${pageContext.request.contextPath}' />/adm/generateDailyReport"><spring:message code="admTemplate.menu.generateDailyReport"/></a></li>
+						--%>
 						
 						<c:choose>
 							<c:when test="${selectedMenu == 'showCurrentDailyReport'}">
