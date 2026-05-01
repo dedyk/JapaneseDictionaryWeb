@@ -452,7 +452,7 @@ public class WordDictionaryController {
 			}
 			*/
 			
-			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2, true);
+			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2);
 			
 			// sprawdzenie, czy nie odwolujemy sie dokladnie do tej strony
 			if (	uniqueKanjiKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0]) == false ||
@@ -606,7 +606,7 @@ public class WordDictionaryController {
 		
 		if (nameDictionaryEntry2 != null) {
 			
-			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2, true);
+			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2);
 									
 			// sprawdzenie, czy nie odwolujemy sie dokladnie do tej strony
 			if (	uniqueKanjiKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0]) == false ||
@@ -725,7 +725,7 @@ public class WordDictionaryController {
 		*/	
 		if (dictionaryEntry2 != null) {
 			
-			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2, false);
+			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2);
 			
 			pageTitle = messageSource.getMessage(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0].equals("-") == false ? "wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType" : "wordDictionaryDetails.page.title.without.kanji.without.forceDictionaryEntryTypeType", 
 					new Object[] { uniqueKanjiKanaRomajiSetWithoutSearchOnly[0], uniqueKanjiKanaRomajiSetWithoutSearchOnly[1], uniqueKanjiKanaRomajiSetWithoutSearchOnly[2] }, Locale.getDefault());
@@ -738,7 +738,7 @@ public class WordDictionaryController {
 		
 		} else if (nameDictionaryEntry2 != null) {
 
-			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2, false);
+			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2);
 			
 			pageTitle = messageSource.getMessage(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0].equals("-") == false ? "wordDictionaryDetails.page.title.with.kanji.without.forceDictionaryEntryTypeType" : "wordDictionaryDetails.page.title.without.kanji.without.forceDictionaryEntryTypeType", 
 					new Object[] { uniqueKanjiKanaRomajiSetWithoutSearchOnly[0], uniqueKanjiKanaRomajiSetWithoutSearchOnly[1], uniqueKanjiKanaRomajiSetWithoutSearchOnly[2] }, Locale.getDefault());

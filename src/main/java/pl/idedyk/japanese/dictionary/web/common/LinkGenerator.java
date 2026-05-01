@@ -18,7 +18,7 @@ public class LinkGenerator {
 
 	public static String generateDictionaryEntryDetailsLink(String contextPath, JMdict.Entry dictionaryEntry2) {
 		
-		String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2, true);
+		String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2);
 		
 		try {
 			String pathPrefix = "wordDictionaryDetails3";
@@ -36,7 +36,7 @@ public class LinkGenerator {
 	
 	public static String generateNameDictionaryEntryDetailsLink(String contextPath, JMnedict.Entry nameDictionaryEntry2) {
 				
-		String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2, true);
+		String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2);
 		
 		try {
 			String pathPrefix = "wordDictionaryNameDetails3";
