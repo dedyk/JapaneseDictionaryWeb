@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.hash.Hashing;
 import com.google.common.net.HttpHeaders;
-import com.google.gson.Gson;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,23 +24,19 @@ public class ETagModifiedCheckService {
 	private String version;
 	
 	public void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, JMdict.Entry dictionaryEntry2) {
-		checkETagAndGenerateHttp304NotModified(request, (Object)dictionaryEntry2);
+		checkETagAndGenerateHttp304NotModified(request, dictionaryEntry2.getClass().getSimpleName(), dictionaryEntry2.getEntryId());
 	}
 	
 	public void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, JMnedict.Entry nameDictionaryEntry2) {
-		checkETagAndGenerateHttp304NotModified(request, (Object)nameDictionaryEntry2);
+		checkETagAndGenerateHttp304NotModified(request, nameDictionaryEntry2.getClass().getSimpleName(), nameDictionaryEntry2.getEntryId());
 	}
 	
 	public void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, KanjiCharacterInfo kanjiCharacterInfo) {
-		checkETagAndGenerateHttp304NotModified(request, (Object)kanjiCharacterInfo);
+		checkETagAndGenerateHttp304NotModified(request, kanjiCharacterInfo.getClass().getSimpleName(), kanjiCharacterInfo.getId());
 	}
 	
-	private void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, Object object) {
-		
-		if (object == null) {
-			return;
-		}
-		
+	private void checkETagAndGenerateHttp304NotModified(HttpServletRequest request, String objectName, Integer id) {
+
 		// pobranie If-None-Match z wywolania
 		String ifNoneMatch = request.getHeader(HttpHeaders.IF_NONE_MATCH);
 		
@@ -51,7 +46,7 @@ public class ETagModifiedCheckService {
 		}
 		
 		// wygenerowanie ETag dla naszego obiektu
-		String objectETag = generateEtag(request, object);
+		String objectETag = generateEtag(request, objectName, id);
 		
 		// jezeli sa identyczne to generujemy 304 Not Modified
 		if (ifNoneMatch.equals(objectETag) == true) {
@@ -60,36 +55,32 @@ public class ETagModifiedCheckService {
 	}
 	
 	public void addETagToResponse(HttpServletRequest request, HttpServletResponse response, JMdict.Entry dictionaryEntry2) {
-		addETagToResponse(request, response, (Object)dictionaryEntry2);
+		addETagToResponse(request, response, dictionaryEntry2.getClass().getSimpleName(), dictionaryEntry2.getEntryId());
 	}
 	
 	public void addETagToResponse(HttpServletRequest request, HttpServletResponse response, JMnedict.Entry nameDictionaryEntry2) {
-		addETagToResponse(request, response, (Object)nameDictionaryEntry2);
+		addETagToResponse(request, response, nameDictionaryEntry2.getClass().getSimpleName(), nameDictionaryEntry2.getEntryId());
 	}
 	
 	public void addETagToResponse(HttpServletRequest request, HttpServletResponse response, KanjiCharacterInfo kanjiCharacterInfo) {
-		addETagToResponse(request, response, (Object)kanjiCharacterInfo);
+		addETagToResponse(request, response, kanjiCharacterInfo.getClass().getSimpleName(), kanjiCharacterInfo.getId());
 	}
 	
-	private void addETagToResponse(HttpServletRequest request, HttpServletResponse response, Object object) {
-		
-		if (object == null) {
-			return;
-		}
-		
-		String etag = generateEtag(request, object);
+	private void addETagToResponse(HttpServletRequest request, HttpServletResponse response, String objectName, Integer id) {
+
+		String etag = generateEtag(request, objectName, id);
 		
 		response.addHeader(HttpHeaders.ETAG, etag);
 	}
 	
-	private String generateEtag(HttpServletRequest request, Object object) {
+	private String generateEtag(HttpServletRequest request, String objectName, Integer id) {
 		
 		String userAgent = request.getHeader("User-Agent");
 		boolean mobile = Utils.isMobile(userAgent);
 
 		//
 		
-		Gson gson = new Gson();		
+		// Gson gson = new Gson();
 		
 		StringBuffer dataToCount = new StringBuffer(4096);
 		
@@ -99,7 +90,9 @@ public class ETagModifiedCheckService {
 		dataToCount.append(version);
 		dataToCount.append("/").append(mobile);
 		dataToCount.append("/").append(theme);
-		dataToCount.append("/").append(gson.toJson(object));
+		//dataToCount.append("/").append(gson.toJson(object));
+		dataToCount.append("/").append(objectName);
+		dataToCount.append("/").append(id);
 		
 		return "\"" + Hashing.sha256().hashString(dataToCount.toString(), Charset.defaultCharset()) + "\"";
 	}
