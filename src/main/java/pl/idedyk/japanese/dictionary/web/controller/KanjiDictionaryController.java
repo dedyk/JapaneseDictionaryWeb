@@ -423,6 +423,17 @@ public class KanjiDictionaryController {
 		// tytul strony
 		if (kanjiEntry != null) {
 			
+			// sprawdzenie, czy nie nalezy wygenerowac przekierowania do wlasciwego adresu
+			String destinationUrl = LinkGenerator.generateKanjiDetailsLink(request.getContextPath(), kanjiEntry);
+			
+			if (request.getRequestURI().equals(destinationUrl) == false) { // generujemy przekierowanie
+				RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
+				
+				loggerSender.sendLog(redirectLoggerModel);
+				
+				return "redirect301:" + destinationUrl;
+			}			
+			
 			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
 			eTagModifiedCheckService.checkETagAndGenerateHttp304NotModified(request, kanjiEntry);
 			

@@ -452,15 +452,17 @@ public class WordDictionaryController {
 			}
 			*/
 			
+			// adres wlasciwej strony
+			String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry2);
+			
 			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2HelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(dictionaryEntry2);
 			
 			// sprawdzenie, czy nie odwolujemy sie dokladnie do tej strony
 			if (	uniqueKanjiKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0]) == false ||
-					uniqueKanaKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[1]) == false) {
+					uniqueKanaKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[1]) == false ||
+					request.getRequestURI().equals(destinationUrl) == false) {
 				
 				// wysylamy przekierowanie do wlasciwej strony
-				String destinationUrl = LinkGenerator.generateDictionaryEntryDetailsLink(request.getContextPath(), dictionaryEntry2);
-				
 				RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
 				
 				loggerSender.sendLog(redirectLoggerModel);	
@@ -606,13 +608,15 @@ public class WordDictionaryController {
 		
 		if (nameDictionaryEntry2 != null) {
 			
+			// adres wlasciwej strony
+			String destinationUrl = LinkGenerator.generateNameDictionaryEntryDetailsLink(request.getContextPath(), nameDictionaryEntry2);
+			
 			String[] uniqueKanjiKanaRomajiSetWithoutSearchOnly = Dictionary2NameHelperCommon.getUniqueKanjiKanaRomajiSetWithoutSearchOnly(nameDictionaryEntry2);
 									
 			// sprawdzenie, czy nie odwolujemy sie dokladnie do tej strony
 			if (	uniqueKanjiKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0]) == false ||
-					uniqueKanaKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[1]) == false) {
-				
-				String destinationUrl = LinkGenerator.generateNameDictionaryEntryDetailsLink(request.getContextPath(), nameDictionaryEntry2);
+					uniqueKanaKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[1]) == false ||
+					request.getRequestURI().equals(destinationUrl) == false) {
 				
 				RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
 				
