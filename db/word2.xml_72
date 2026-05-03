@@ -233,26 +233,6 @@
         </misc>
     </entry>
     <entry>
-        <ent_seq>7207463</ent_seq>
-        <k_ele>
-            <keb>閃光弾</keb>
-        </k_ele>
-        <r_ele>
-            <reb kana_type="HIRAGANA" romaji="senkoudan">せんこうだん</reb>
-        </r_ele>
-        <sense>
-            <pos>noun (common) (futsuumeishi)</pos>
-            <gloss xml:lang="pol">granat ogłuszający</gloss>
-            <gloss xml:lang="pol">granat błyskowy</gloss>
-        </sense>
-        <misc>
-            <oldPolishJapaneseDictionary notExistsInJMdict="true">
-                <entries id="207463" dictionaryEntryTypeList="WORD_NOUN" kanji="閃光弾" kana="せんこうだん" romaji="senkoudan" uniqueKey="閃光弾/せんこうだん/1"/>
-                <groupsList>OTHER</groupsList>
-            </oldPolishJapaneseDictionary>
-        </misc>
-    </entry>
-    <entry>
         <ent_seq>7208186</ent_seq>
         <r_ele>
             <reb kana_type="KATAKANA" romaji="oiru firutaa">オイルフィルター</reb>

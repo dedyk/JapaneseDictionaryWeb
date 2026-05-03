@@ -1421,4 +1421,24 @@
             </oldPolishJapaneseDictionary>
         </misc>
     </entry>
+    <entry>
+        <ent_seq>7322740</ent_seq>
+        <k_ele>
+            <keb>日本丸</keb>
+        </k_ele>
+        <r_ele>
+            <reb kana_type="HIRAGANA" romaji="nippon maru">にっぽんまる</reb>
+        </r_ele>
+        <sense>
+            <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">japoński czteromasztowy żaglowiec szkoleniowy typu bark, zwodowany 1930 roku. Obecnie jest na stałe zacumowany w parku Nippon Maru Memorial w porcie Jokohama jako statek-muzeum. Żaglowiec w latach eksploatacji zyskał przydomek Łabędzia Pacyfiku</s_inf>
+            <gloss xml:lang="pol">Nippon Maru</gloss>
+        </sense>
+        <misc>
+            <oldPolishJapaneseDictionary notExistsInJMdict="true">
+                <entries id="322740" dictionaryEntryTypeList="WORD_NOUN" kanji="日本丸" kana="にっぽんまる" romaji="nippon maru" uniqueKey="日本丸/にっぽんまる/1"/>
+                <groupsList>OTHER</groupsList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
 </JMdict>

@@ -37820,23 +37820,6 @@
         </misc>
     </entry>
     <entry>
-        <ent_seq>7040973</ent_seq>
-        <r_ele>
-            <reb kana_type="KATAKANA" romaji="mantikoa">マンティコア</reb>
-        </r_ele>
-        <sense>
-            <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">legendarny, mityczny potwór podobny do Sfinksa oraz chimery</s_inf>
-            <gloss xml:lang="pol">mantykora</gloss>
-        </sense>
-        <misc>
-            <oldPolishJapaneseDictionary notExistsInJMdict="true">
-                <entries id="40973" dictionaryEntryTypeList="WORD_NOUN" kana="マンティコア" romaji="mantikoa" uniqueKey="-/マンティコア/1"/>
-                <groupsList>OTHER</groupsList>
-            </oldPolishJapaneseDictionary>
-        </misc>
-    </entry>
-    <entry>
         <ent_seq>7041105</ent_seq>
         <r_ele>
             <reb kana_type="KATAKANA" romaji="naiagara">ナイアガラ</reb>
