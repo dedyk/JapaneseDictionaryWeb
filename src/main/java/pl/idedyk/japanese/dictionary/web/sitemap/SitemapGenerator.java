@@ -1,16 +1,12 @@
 package pl.idedyk.japanese.dictionary.web.sitemap;
 
 import java.io.File;
-import java.io.IOException;
-import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.annotation.RegEx;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -26,8 +22,6 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
-import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 
 public class SitemapGenerator {
 	
@@ -35,7 +29,7 @@ public class SitemapGenerator {
 	
 	private static final Logger logger = LogManager.getLogger(SitemapGenerator.class);
 
-	public static void main__OK(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		
 		// inicjalizacja log4j
 		Configurator.initialize(new DefaultConfiguration());
@@ -58,51 +52,20 @@ public class SitemapGenerator {
 		
 		configProperties.load(SitemapGenerator.class.getResourceAsStream("/config/config.properties"));
 		
+		// wczytanie mapy z lista dat zmodyfikowanych stron
+		Map<String, Date> lastmodMap = generateLastmod();
+		
 		// tworzenie manadzera sitemap
 		SitemapManager sitemapManager = new SitemapManager();
 		
 		sitemapManager.setBaseServer(configProperties.getProperty("base.server"));
 		
-		sitemapManager.generateFromMain(dictionaryManager, destDirFile.getAbsolutePath());
+		sitemapManager.generateFromMain(dictionaryManager, destDirFile.getAbsolutePath(), lastmodMap);
 
 		// zamykamy baze danych
 		dictionaryManager.close();
 	}
-	
-	public static void main(String[] args) throws Exception {
-
-		// FM_FIXME: do usuuniecia metoda
-		// inicjalizacja log4j
-		Configurator.initialize(new DefaultConfiguration());
-	    Configurator.setRootLevel(Level.INFO);
-
 		
-		generateLastmod();
-		
-		
-		/*
-		
-		String filePath = "db/word2.xml_13";
-
-        BlameResult result = git.blame()
-                .setFilePath(filePath)
-                .call();
-
-        int lineCount = result.getResultContents().size();
-        for (int i = 0; i < lineCount; i++) {
-            RevCommit commit = result.getSourceCommit(i);
-            Instant whenAsInstant = commit.getAuthorIdent().getWhenAsInstant();
-            String author = commit.getAuthorIdent().getName();
-            String email = commit.getAuthorIdent().getEmailAddress();
-            
-            System.out.printf("Linia %d [%s <%s>]: %s%n", 
-                i + 1, whenAsInstant.toString(), email, result.getResultContents().getString(i));
-        }
-		
-        
-		*/
-	}
-	
 	private static Map<String, Date> generateLastmod() throws DictionaryException{
 		
 		Git git = null;
@@ -129,16 +92,13 @@ public class SitemapGenerator {
 			for (File currentDbFile : dbListFiles) {
 				
 				if (currentDbFile.getName().startsWith("word2.xml") == true) { // obsluga slowa
-					// FM_FIXME: ok !!!!!
-					// generateLastmodForFile(results, "JMdict.Entry", git, currentDbFile, "<entry>", "</entry>", "(^<ent_seq>)(\\d*)(<\\/ent_seq>$)");
+					generateLastmodForFile(results, "JMdict.Entry", git, currentDbFile, "<entry>", "</entry>", "(^<ent_seq>)(\\d*)(<\\/ent_seq>$)");
 					
 				} else if (currentDbFile.getName().startsWith("name2.xml") == true) { // obsluga slowa ze slownika nazw
-					// FM_FIXME: ok !!!!!
-					// generateLastmodForFile(results, "JMnedict.Entry", git, currentDbFile, "<entry>", "</entry>", "(^<ent_seq>)(\\d*)(<\\/ent_seq>$)");
+					generateLastmodForFile(results, "JMnedict.Entry", git, currentDbFile, "<entry>", "</entry>", "(^<ent_seq>)(\\d*)(<\\/ent_seq>$)");
 					
 				} else if (currentDbFile.getName().startsWith("kanji2.xml") == true) { // obsluga slownika kanji
-					// FM_FIXME: ok !!!!!
-					//generateLastmodForFile(results, "KanjiCharacterInfo", git, currentDbFile, "<character>", "</character>", "(^<id>)(\\d*)(<\\/id>$)");
+					generateLastmodForFile(results, "KanjiCharacterInfo", git, currentDbFile, "<character>", "</character>", "(^<id>)(\\d*)(<\\/id>$)");
 				}
 			}
 			
@@ -209,20 +169,22 @@ public class SitemapGenerator {
         		stateMachine = StateMachine.WAITING_FOR_ENTRY_START;        
         		entryId = null;
         		newestDate = null;
-        	} 
-        	
-        	// proba pobrania identyfikatora wpisu
-        	Matcher matcher = entryIdRegexPattern.matcher(lineContent);
-        	
-        	if (matcher.matches() == true) { // mamy identyfikator wpisu
-        		entryId = Integer.parseInt(matcher.group(2));        		
-        	}
-        	
-        	// pobranie daty linijki
-        	Date lineWhen = commit.getAuthorIdent().getWhen();
-        	
-        	if (newestDate == null || newestDate.before(lineWhen) == true) { // ta linijka jest nowsza
-        		newestDate = lineWhen;
+        		
+        	} else if (stateMachine == StateMachine.ENTRY_CONTENT) {
+        		
+            	// proba pobrania identyfikatora wpisu
+            	Matcher matcher = entryIdRegexPattern.matcher(lineContent);
+            	
+            	if (matcher.matches() == true) { // mamy identyfikator wpisu
+            		entryId = Integer.parseInt(matcher.group(2));        		
+            	}
+            	
+            	// pobranie daty linijki
+            	Date lineWhen = commit.getAuthorIdent().getWhen();
+            	
+            	if (newestDate == null || newestDate.before(lineWhen) == true) { // ta linijka jest nowsza
+            		newestDate = lineWhen;
+            	}        		
         	}
         }
 	}

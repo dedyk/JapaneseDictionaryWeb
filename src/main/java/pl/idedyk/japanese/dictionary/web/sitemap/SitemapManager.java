@@ -3,7 +3,11 @@ package pl.idedyk.japanese.dictionary.web.sitemap;
 import java.io.File;
 import java.io.FileWriter;
 import java.math.BigDecimal;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,7 +74,7 @@ public class SitemapManager {
 					try {					
 						String destDir = System.getProperty("java.io.tmpdir");
 						
-						generateSitemaps(true, destDir, true);
+						generateSitemaps(true, destDir, true, null);
 					
 					} catch (Exception e) {					
 						logger.error("Bład generowania pliku sitemap", e);
@@ -103,14 +107,14 @@ public class SitemapManager {
 		cacheSitemap();
 	}
 	
-	public void generateFromMain(DictionaryManager dictionaryManager, String destDir) throws Exception {
+	public void generateFromMain(DictionaryManager dictionaryManager, String destDir, Map<String, Date> lastmodMap) throws Exception {
 		
 		this.dictionaryManager = dictionaryManager;
 		
-		generateSitemaps(false, destDir, false);
+		generateSitemaps(false, destDir, false, lastmodMap);
 	}
 	
-	private synchronized void generateSitemaps(boolean wait, String destDir, boolean deleteOnExit) throws Exception {
+	private synchronized void generateSitemaps(boolean wait, String destDir, boolean deleteOnExit, Map<String, Date> lastmodMap) throws Exception {
 				
 		if (initialized == true) {
 			return;
@@ -127,12 +131,12 @@ public class SitemapManager {
 		
 		// dodanie statycznych linkow
 		
-		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
-		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/wordDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
-		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/wordDictionary/dictionary.pdf", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
-		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/kanjiDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0));
-		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/suggestion", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
-		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/info", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4));
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0), null);
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/wordDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0), null);
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/wordDictionary/dictionary.pdf", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0), null);
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/kanjiDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0), null);
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/suggestion", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4), null);
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/info", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4), null);
 				
 		// pobranie ilosci slow		
 		int dictionaryEntriesSize = dictionaryManager.getDictionaryEntriesSize();
@@ -140,9 +144,16 @@ public class SitemapManager {
 		for (int currentDictionaryEntryIdx = 1; currentDictionaryEntryIdx <= dictionaryEntriesSize; ++currentDictionaryEntryIdx) {
 			
 			// pobranie slowka
-			JMdict.Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ByCounter(currentDictionaryEntryIdx);
+			JMdict.Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ByCounter(currentDictionaryEntryIdx);			
+			Date lastmod = null;
 			
-			createWordDictionaryLink(destDir, deleteOnExit, "wordDictionaryDetails", sitemapHelper, dictionaryEntry2, null);
+			if (lastmodMap != null) { // proba pobrania daty ostatniej modyfikacji
+				String key = "JMdict.Entry_" + dictionaryEntry2.getEntryId();
+				
+				lastmod = lastmodMap.get(key);				
+			}
+			
+			createWordDictionaryLink(destDir, deleteOnExit, "wordDictionaryDetails", sitemapHelper, dictionaryEntry2, null, lastmod);
 		}
 				
 		// katalog slow
@@ -166,8 +177,15 @@ public class SitemapManager {
 			
 			// pobranie slowka
 			JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByCounter(currentDictionaryEntryNameIdx);
-						
-			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, null, nameDictionaryEntry2);
+			Date lastmod = null;
+			
+			if (lastmodMap != null) { // proba pobrania daty ostatniej modyfikacji
+				String key = "JMnedict.Entry_" + nameDictionaryEntry2.getEntryId();
+				
+				lastmod = lastmodMap.get(key);				
+			}			
+			
+			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, null, nameDictionaryEntry2, lastmod);
 		}
 
 		// katalog slow(nazwa)
@@ -190,10 +208,17 @@ public class SitemapManager {
 		for (KanjiCharacterInfo kanjiEntry : allKanjis) {
 			
 			// wygenerowanie linku
-			String link = LinkGenerator.generateKanjiDetailsLink("", kanjiEntry);
+			String link = LinkGenerator.generateKanjiDetailsLink("", kanjiEntry);			
+			Date lastmod = null;
+			
+			if (lastmodMap != null) { // proba pobrania daty ostatniej modyfikacji
+				String key = "KanjiCharacterInfo_" + kanjiEntry.getId();
+				
+				lastmod = lastmodMap.get(key);				
+			}
 			
 			// dodanie linku			
-			sitemapHelper.createUrl(destDir, deleteOnExit, "kanjiDetails", link, ChangeFreqEnum.weekly, BigDecimal.valueOf(0.6));
+			sitemapHelper.createUrl(destDir, deleteOnExit, "kanjiDetails", link, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.6), lastmod);
 		}
 		
 		// katalog znakow kanji
@@ -285,7 +310,8 @@ public class SitemapManager {
 		logger.info("Generowanie pliku sitemap zakonczone");
 	}
 	
-	private void createWordDictionaryLink(String destDir, boolean deleteOnExit, String groupName, SitemapHelper sitemapHelper, JMdict.Entry dictionaryEntry2, JMnedict.Entry nameDictionaryEntry2) throws Exception {
+	private void createWordDictionaryLink(String destDir, boolean deleteOnExit, String groupName, SitemapHelper sitemapHelper, 
+			JMdict.Entry dictionaryEntry2, JMnedict.Entry nameDictionaryEntry2, Date lastmod) throws Exception {
 				
 		// wygenerowanie linku standardowego
 		String link; 
@@ -304,7 +330,7 @@ public class SitemapManager {
 		}
 				
 		// dodanie linku			
-		sitemapHelper.createUrl(destDir, deleteOnExit, groupName, link, ChangeFreqEnum.weekly, BigDecimal.valueOf(isName == false ? 0.8 : 0.6));
+		sitemapHelper.createUrl(destDir, deleteOnExit, groupName, link, ChangeFreqEnum.monthly, BigDecimal.valueOf(isName == false ? 0.8 : 0.6), lastmod);
 		
 		/*
 		if (currentDictionaryEntry != null) {
@@ -460,7 +486,7 @@ public class SitemapManager {
 		
 		private int counter = 0;
 		
-		public void createUrl(String destDir, boolean deleteOnExit, String groupName, String link, ChangeFreqEnum changeFreq, BigDecimal priority) throws Exception {
+		public void createUrl(String destDir, boolean deleteOnExit, String groupName, String link, ChangeFreqEnum changeFreq, BigDecimal priority, Date lastMod) throws Exception {
 			
 			if (currentSitemapFile == null) {
 				
@@ -476,7 +502,13 @@ public class SitemapManager {
 			xmlStreamWriter.writeStartElement("url"); // url
 			
 			addElement("loc", baseServer + link);
-			//addElement("lastmod", lastMod);
+			
+			if (lastMod != null) {
+				ZonedDateTime lastModAsZonedDateTime = lastMod.toInstant().atZone(ZoneId.of("Europe/Warsaw"));
+				
+				addElement("lastmod", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(lastModAsZonedDateTime));
+			}			
+			
 			addElement("changefreq", changeFreq.toString());
 			addElement("priority", priority.toPlainString());			
 			
