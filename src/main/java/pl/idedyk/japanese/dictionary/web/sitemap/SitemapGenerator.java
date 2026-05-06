@@ -27,6 +27,7 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 
 public class SitemapGenerator {
 	
@@ -128,8 +129,17 @@ public class SitemapGenerator {
 			for (File currentDbFile : dbListFiles) {
 				
 				if (currentDbFile.getName().startsWith("word2.xml") == true) { // obsluga slowa
-					//generateLastmodForFile(results, "JMdict.Entry", git, currentDbFile, "<entry>", "</entry>", "(^<ent_seq>)(\\d*)(<\\/ent_seq>$)");		
-				}				
+					// FM_FIXME: ok !!!!!
+					// generateLastmodForFile(results, "JMdict.Entry", git, currentDbFile, "<entry>", "</entry>", "(^<ent_seq>)(\\d*)(<\\/ent_seq>$)");
+					
+				} else if (currentDbFile.getName().startsWith("name2.xml") == true) { // obsluga slowa ze slownika nazw
+					// FM_FIXME: ok !!!!!
+					// generateLastmodForFile(results, "JMnedict.Entry", git, currentDbFile, "<entry>", "</entry>", "(^<ent_seq>)(\\d*)(<\\/ent_seq>$)");
+					
+				} else if (currentDbFile.getName().startsWith("kanji2.xml") == true) { // obsluga slownika kanji
+					// FM_FIXME: ok !!!!!
+					//generateLastmodForFile(results, "KanjiCharacterInfo", git, currentDbFile, "<character>", "</character>", "(^<id>)(\\d*)(<\\/id>$)");
+				}
 			}
 			
 			return results;
