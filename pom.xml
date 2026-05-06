@@ -367,6 +367,13 @@
 	        <artifactId>geoip2</artifactId>
 	        <version>4.4.0</version>
 	    </dependency>
+	    
+		<dependency>
+		    <groupId>org.eclipse.jgit</groupId>
+		    <artifactId>org.eclipse.jgit</artifactId>
+		    <version>7.6.0.202603022253-r</version>
+		    <scope>compile</scope>
+		</dependency>
 		
 	</dependencies>
 
