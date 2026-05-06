@@ -10,6 +10,8 @@ export LUCENE_VERSION=4.7.2
 export GSON_VERSION=2.8.9
 export LOG4J_VERSION=2.17.1
 export GOOGLE_GUAVA=31.1-jre
+export JGIT=7.6.0.202603022253-r
+export SLF4J=2.0.3
 
 cp $HOME/.m2/repository/pl/idedyk/japanese/JapaneseDictionaryAPI/$JAPANESE_DICTIONARY_API_VERSION/JapaneseDictionaryAPI-$JAPANESE_DICTIONARY_API_VERSION.jar $BASE_DIR/lib
 cp $HOME/.m2/repository/pl/idedyk/japanese/JapaneseDictionaryLuceneCommon/$JAPANESE_DICTIONARY_LUCENE_COMMON_VERSION/JapaneseDictionaryLuceneCommon-$JAPANESE_DICTIONARY_LUCENE_COMMON_VERSION.jar $BASE_DIR/lib
@@ -23,6 +25,8 @@ cp $HOME/.m2/repository/org/apache/lucene/lucene-sandbox/$LUCENE_VERSION/lucene-
 cp $HOME/.m2/repository/org/apache/lucene/lucene-suggest/$LUCENE_VERSION/lucene-suggest-$LUCENE_VERSION.jar $BASE_DIR/lib
 cp $HOME/.m2/repository/com/google/code/gson/gson/$GSON_VERSION/gson-$GSON_VERSION.jar $BASE_DIR/lib
 cp $HOME/.m2/repository/com/google/guava/guava/$GOOGLE_GUAVA/guava-$GOOGLE_GUAVA.jar $BASE_DIR/lib
+cp $HOME/.m2/repository/org/eclipse/jgit/org.eclipse.jgit/$JGIT/org.eclipse.jgit-$JGIT.jar $BASE_DIR/lib
+cp $HOME/.m2/repository/org/slf4j/slf4j-api/$SLF4J/slf4j-api-$SLF4J.jar $BASE_DIR/lib
 
 cp $HOME/.m2/repository/org/apache/logging/log4j/log4j-core/$LOG4J_VERSION/log4j-core-$LOG4J_VERSION.jar $BASE_DIR/lib
 cp $HOME/.m2/repository/org/apache/logging/log4j/log4j-api/$LOG4J_VERSION/log4j-api-$LOG4J_VERSION.jar $BASE_DIR/lib
