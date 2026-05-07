@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jakarta.annotation.PostConstruct;
+
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -74,7 +75,7 @@ public class SitemapManager {
 					try {					
 						String destDir = System.getProperty("java.io.tmpdir");
 						
-						generateSitemaps(true, destDir, true, null);
+						generateSitemaps(true, destDir, true);
 					
 					} catch (Exception e) {					
 						logger.error("Bład generowania pliku sitemap", e);
@@ -107,14 +108,14 @@ public class SitemapManager {
 		cacheSitemap();
 	}
 	
-	public void generateFromMain(DictionaryManager dictionaryManager, String destDir, Map<String, Date> lastmodMap) throws Exception {
+	public void generateFromMain(DictionaryManager dictionaryManager, String destDir) throws Exception {
 		
 		this.dictionaryManager = dictionaryManager;
 		
-		generateSitemaps(false, destDir, false, lastmodMap);
+		generateSitemaps(false, destDir, false);
 	}
 	
-	private synchronized void generateSitemaps(boolean wait, String destDir, boolean deleteOnExit, Map<String, Date> lastmodMap) throws Exception {
+	private synchronized void generateSitemaps(boolean wait, String destDir, boolean deleteOnExit) throws Exception {
 				
 		if (initialized == true) {
 			return;
@@ -145,15 +146,8 @@ public class SitemapManager {
 			
 			// pobranie slowka
 			JMdict.Entry dictionaryEntry2 = dictionaryManager.getDictionaryEntry2ByCounter(currentDictionaryEntryIdx);			
-			Date lastmod = null;
 			
-			if (lastmodMap != null) { // proba pobrania daty ostatniej modyfikacji
-				String key = "JMdict.Entry_" + dictionaryEntry2.getEntryId();
-				
-				lastmod = lastmodMap.get(key);				
-			}
-			
-			createWordDictionaryLink(destDir, deleteOnExit, "wordDictionaryDetails", sitemapHelper, dictionaryEntry2, null, lastmod);
+			createWordDictionaryLink(destDir, deleteOnExit, "wordDictionaryDetails", sitemapHelper, dictionaryEntry2, null);
 		}
 				
 		// katalog slow
@@ -177,15 +171,8 @@ public class SitemapManager {
 			
 			// pobranie slowka
 			JMnedict.Entry nameDictionaryEntry2 = dictionaryManager.getNameDictionaryEntry2ByCounter(currentDictionaryEntryNameIdx);
-			Date lastmod = null;
 			
-			if (lastmodMap != null) { // proba pobrania daty ostatniej modyfikacji
-				String key = "JMnedict.Entry_" + nameDictionaryEntry2.getEntryId();
-				
-				lastmod = lastmodMap.get(key);				
-			}			
-			
-			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, null, nameDictionaryEntry2, lastmod);
+			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, null, nameDictionaryEntry2);
 		}
 
 		// katalog slow(nazwa)
@@ -209,12 +196,11 @@ public class SitemapManager {
 			
 			// wygenerowanie linku
 			String link = LinkGenerator.generateKanjiDetailsLink("", kanjiEntry);			
+			
 			Date lastmod = null;
 			
-			if (lastmodMap != null) { // proba pobrania daty ostatniej modyfikacji
-				String key = "KanjiCharacterInfo_" + kanjiEntry.getId();
-				
-				lastmod = lastmodMap.get(key);				
+			if (kanjiEntry.getMisc2().getLastModified() != null) {
+				lastmod = kanjiEntry.getMisc2().getLastModified().toGregorianCalendar().getTime();
 			}
 			
 			// dodanie linku			
@@ -311,19 +297,28 @@ public class SitemapManager {
 	}
 	
 	private void createWordDictionaryLink(String destDir, boolean deleteOnExit, String groupName, SitemapHelper sitemapHelper, 
-			JMdict.Entry dictionaryEntry2, JMnedict.Entry nameDictionaryEntry2, Date lastmod) throws Exception {
+			JMdict.Entry dictionaryEntry2, JMnedict.Entry nameDictionaryEntry2) throws Exception {
 				
 		// wygenerowanie linku standardowego
 		String link; 
 		boolean isName = false;
+		Date lastmod = null;
 		
 		if (dictionaryEntry2 != null && nameDictionaryEntry2 == null) {
 			link = LinkGenerator.generateDictionaryEntryDetailsLink("", dictionaryEntry2);
 			isName = false;
 			
+			if (dictionaryEntry2.getMisc().getLastModified() != null) {
+				lastmod = dictionaryEntry2.getMisc().getLastModified().toGregorianCalendar().getTime();
+			}
+						
 		} else if (dictionaryEntry2 == null && nameDictionaryEntry2 != null) {
 			link = LinkGenerator.generateNameDictionaryEntryDetailsLink("", nameDictionaryEntry2);
 			isName = true;
+			
+			if (nameDictionaryEntry2.getMisc().getLastModified() != null) {
+				lastmod = nameDictionaryEntry2.getMisc().getLastModified().toGregorianCalendar().getTime();
+			}
 			
 		} else {
 			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
