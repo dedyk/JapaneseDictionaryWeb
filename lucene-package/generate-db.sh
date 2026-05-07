@@ -14,7 +14,7 @@ done
 
 echo $CLASSPATH
 
-java -cp $CLASSPATH pl.idedyk.japanese.dictionary.lucene.LuceneDBGenerator web db/word.csv db/sentences.csv db/sentences_groups.csv db/kanji2.xml db/radical.csv db/word2.xml db/name2.xml db-lucene
+java -cp $CLASSPATH pl.idedyk.japanese.dictionary.lucene.LuceneDBGenerator web db/word.csv db/sentences.csv db/sentences_groups.csv db/kanji2.xml db/radical.csv db/word2.xml db/name2.xml db/lastmod db-lucene
 
 mkdir $1
 
