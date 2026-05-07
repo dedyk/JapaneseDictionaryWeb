@@ -16,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.google.common.net.HttpHeaders;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -130,10 +132,18 @@ public class ErrorController {
 	
 	@ExceptionHandler(HttpNotModifiedException.class)
 	@ResponseStatus(value = HttpStatus.NOT_MODIFIED)
-	public void handleMethodNotModified(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
+	public void handleMethodNotModified(HttpServletRequest request, HttpServletResponse response, HttpSession session, HttpNotModifiedException ex) {
 				
 		logger.error("Strona niezmodyfikowana: " + Utils.getRequestURL(request));
 		
+		if (ex.getEtag() != null) {
+			response.addHeader(HttpHeaders.ETAG, ex.getEtag());
+		}
+
+		if (ex.getLastModified() != null) {
+			response.addHeader(HttpHeaders.LAST_MODIFIED, ex.getLastModified());
+		}
+
 		// wysylanie do logger'a
 		PageNotModifiedExceptionLoggerModel pageNotModifiedExceptionLoggerModel = new PageNotModifiedExceptionLoggerModel(Utils.createLoggerModelCommon(request));
 		

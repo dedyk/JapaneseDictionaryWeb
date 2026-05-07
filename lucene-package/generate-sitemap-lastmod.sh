@@ -1,11 +1,5 @@
 #!/bin/bash
 
-if [ "$#" -ne 1 ]; then
-    echo "Niepoprawna liczba argumentow"
-
-    exit 1
-fi
-
 DIR=${0%/*}
 
 for jar in $DIR/lib/*.jar; do

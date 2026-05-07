@@ -59,7 +59,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLogge
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
-import pl.idedyk.japanese.dictionary.web.service.ETagModifiedCheckService;
+import pl.idedyk.japanese.dictionary.web.service.PageModifiedCheckService;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
@@ -92,7 +92,7 @@ public class KanjiDictionaryController {
 	private String baseServer;
 
 	@Autowired
-	private ETagModifiedCheckService eTagModifiedCheckService;
+	private PageModifiedCheckService pageModifiedCheckService;
 	
 	@RequestMapping(value = "/kanjiDictionary", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
@@ -435,12 +435,12 @@ public class KanjiDictionaryController {
 			}			
 			
 			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
-			eTagModifiedCheckService.checkETagAndGenerateHttp304NotModified(request, kanjiEntry);
+			pageModifiedCheckService.checkIfPageIsModifiedAndGenerateHttp304NotModified(request, kanjiEntry);
 			
 			//logger.info("Znaleziono kanji dla zapytania o szczegóły kanji: " + kanjiEntry);
 			
 			// wygenerowanie ETag
-			eTagModifiedCheckService.addETagToResponse(request, response, kanjiEntry);
+			pageModifiedCheckService.addETagLastModifiedToResponse(request, response, kanjiEntry);
 			
 			// logowanie
 			loggerSender.sendLog(new KanjiDictionaryDetailsLoggerModel(Utils.createLoggerModelCommon(request), kanjiEntry));
