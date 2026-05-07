@@ -3,6 +3,7 @@ package pl.idedyk.japanese.dictionary.web.sitemap;
 import java.io.File;
 import java.io.FileWriter;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -44,6 +45,8 @@ public class SitemapManager {
 						
 	@Autowired
 	private DictionaryManager dictionaryManager;
+	
+	private static final SimpleDateFormat lastModifiedSDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 	
 	//@Value("${sitemap.lastmod}")
 	//private String lastMod;
@@ -200,7 +203,7 @@ public class SitemapManager {
 			Date lastmod = null;
 			
 			if (kanjiEntry.getMisc2().getLastModified() != null) {
-				lastmod = kanjiEntry.getMisc2().getLastModified().toGregorianCalendar().getTime();
+				lastmod = lastModifiedSDF.parse(kanjiEntry.getMisc2().getLastModified());
 			}
 			
 			// dodanie linku			
@@ -309,7 +312,7 @@ public class SitemapManager {
 			isName = false;
 			
 			if (dictionaryEntry2.getMisc().getLastModified() != null) {
-				lastmod = dictionaryEntry2.getMisc().getLastModified().toGregorianCalendar().getTime();
+				lastmod = lastModifiedSDF.parse(dictionaryEntry2.getMisc().getLastModified());
 			}
 						
 		} else if (dictionaryEntry2 == null && nameDictionaryEntry2 != null) {
@@ -317,7 +320,7 @@ public class SitemapManager {
 			isName = true;
 			
 			if (nameDictionaryEntry2.getMisc().getLastModified() != null) {
-				lastmod = nameDictionaryEntry2.getMisc().getLastModified().toGregorianCalendar().getTime();
+				lastmod = lastModifiedSDF.parse(nameDictionaryEntry2.getMisc().getLastModified());
 			}
 			
 		} else {
