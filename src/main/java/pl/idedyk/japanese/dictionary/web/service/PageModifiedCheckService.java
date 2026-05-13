@@ -67,7 +67,7 @@ public class PageModifiedCheckService {
 			String realModifiedDateStringInHttpFormat = generateLastModified(realModifiedDateString);
 			
 			// jezeli sa identyczne to generujemy 304 Not Modified
-			if (realModifiedDateStringInHttpFormat.equals(ifModifiedSince) == true) {
+			if (realModifiedDateStringInHttpFormat != null && realModifiedDateStringInHttpFormat.equals(ifModifiedSince) == true) {
 				throw new HttpNotModifiedException("Not modified", generateEtag(request, objectName, id), realModifiedDateStringInHttpFormat);
 			}
 		}
@@ -125,6 +125,10 @@ public class PageModifiedCheckService {
 	}
 	
 	private String generateLastModified(String dateAsString) {
+		
+		if (dateAsString == null) {
+			return null;
+		}
 		
 		SimpleDateFormat lastModifiedSDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 		
