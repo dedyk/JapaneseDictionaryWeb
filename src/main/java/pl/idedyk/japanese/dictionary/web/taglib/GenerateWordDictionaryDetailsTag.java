@@ -1183,7 +1183,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				referenceDictionaryEntry = dictionaryManager.getDictionaryEntry2ById(referenceWordId);
 				*/
 				
-				// FM_INFO: naprawa
+				// FM_INFO: naprawa, ta informacja bedzie w xref
 				// FM_INFO: dodac info
 			
 			} else {
