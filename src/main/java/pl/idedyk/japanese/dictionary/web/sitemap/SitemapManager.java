@@ -41,7 +41,7 @@ public class SitemapManager {
 	
 	private File sitemapFileIndex = null;
 	
-	private Map<String, Map<Integer, File>> sitemapFilesMap = Collections.synchronizedMap(new LinkedHashMap<String, Map<Integer, File>>());
+	private Map<String, Map<Integer, SitemapFile>> sitemapFilesMap = Collections.synchronizedMap(new LinkedHashMap<String, Map<Integer, SitemapFile>>());
 						
 	@Autowired
 	private DictionaryManager dictionaryManager;
@@ -257,7 +257,7 @@ public class SitemapManager {
 			
 			String currentName = sitemapFilesMapKeySetIterator.next();
 			
-			Map<Integer, File> sitemapNameFileMap = sitemapFilesMap.get(currentName);
+			Map<Integer, SitemapFile> sitemapNameFileMap = sitemapFilesMap.get(currentName);
 			
 			Set<Integer> sitemapNameFileMapKeySet = sitemapNameFileMap.keySet();
 			
@@ -266,6 +266,7 @@ public class SitemapManager {
 			while (sitemapNameFileMapKeySetIterator.hasNext() == true) {
 				
 				Integer currentIndex = sitemapNameFileMapKeySetIterator.next();
+				SitemapFile sitemapFile = sitemapNameFileMap.get(currentIndex);
 				
 				xmlStreamWriter.writeStartElement("sitemap"); // sitemap
 				
@@ -273,11 +274,13 @@ public class SitemapManager {
 				xmlStreamWriter.writeCharacters(baseServer + "/sitemap/" + currentName + "/" + currentIndex);			
 				xmlStreamWriter.writeEndElement(); // loc
 
-				/*
-				xmlStreamWriter.writeStartElement("lastmod");		
-				xmlStreamWriter.writeCharacters(lastMod);			
-				xmlStreamWriter.writeEndElement(); // lastmod			
-				*/
+				if (sitemapFile.lastMod != null) {
+					ZonedDateTime lastModAsZonedDateTime = sitemapFile.lastMod.toInstant().atZone(ZoneId.of("Europe/Warsaw"));
+					
+					xmlStreamWriter.writeStartElement("lastmod");		
+					xmlStreamWriter.writeCharacters(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(lastModAsZonedDateTime));
+					xmlStreamWriter.writeEndElement(); // lastmod
+				}
 				
 				xmlStreamWriter.writeEndElement(); // sitemap				
 			}			
@@ -400,15 +403,15 @@ public class SitemapManager {
 				
 				//
 				
-				Map<Integer, File> groupNameSitemapFiles = sitemapFilesMap.get(groupName);
+				Map<Integer, SitemapFile> groupNameSitemapFiles = sitemapFilesMap.get(groupName);
 				
 				if (groupNameSitemapFiles == null) {
-					groupNameSitemapFiles = Collections.synchronizedMap(new LinkedHashMap<Integer, File>());
+					groupNameSitemapFiles = Collections.synchronizedMap(new LinkedHashMap<Integer, SitemapFile>());
 					
 					sitemapFilesMap.put(groupName, groupNameSitemapFiles);
 				}
 				
-				groupNameSitemapFiles.put(index, currentSitemapFile);
+				groupNameSitemapFiles.put(index, new SitemapFile(currentSitemapFile, null));
 				
 			} else {
 				logger.error("Nieznana nazwa pliku: " + sitemapFileName);
@@ -435,7 +438,7 @@ public class SitemapManager {
 			return null;
 		}
 		
-		Map<Integer, File> sitemapNameFileMap = sitemapFilesMap.get(name);
+		Map<Integer, SitemapFile> sitemapNameFileMap = sitemapFilesMap.get(name);
 
 		if (sitemapNameFileMap == null) {
 			
@@ -447,7 +450,7 @@ public class SitemapManager {
 			}			
 		}
 		
-		File sitemapFile = sitemapNameFileMap.get(id);
+		SitemapFile sitemapFile = sitemapNameFileMap.get(id);
 		
 		if (sitemapFile == null) {
 			
@@ -460,7 +463,7 @@ public class SitemapManager {
 
 		}
 		
-		return sitemapFile;
+		return sitemapFile.sitemapFile;
 	}
 
 	public String getBaseServer() {
@@ -473,7 +476,7 @@ public class SitemapManager {
 	
 	public class SitemapHelper {
 		
-		private File currentSitemapFile = null;
+		private File currentSitemapFile= null;
 
 		private String currentGroupName = null;
 		
@@ -483,6 +486,8 @@ public class SitemapManager {
 		private XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
 		
 		private int counter = 0;
+		
+		private Date newestDate = null;
 		
 		public void createUrl(String destDir, boolean deleteOnExit, String groupName, String link, ChangeFreqEnum changeFreq, BigDecimal priority, Date lastMod) throws Exception {
 			
@@ -514,6 +519,13 @@ public class SitemapManager {
 			
 			counter++;
 			
+			// aktualizacja maksymalnej daty
+			if (lastMod != null) {
+				if (newestDate == null || lastMod.after(newestDate) == true) {
+					newestDate = lastMod;
+				}				
+			}
+			
 			if (counter >= 30000) {
 				end();
 			}
@@ -530,10 +542,10 @@ public class SitemapManager {
 			
 			currentGroupName = groupName;
 			
-			Map<Integer, File> groupNameSitemapFiles = sitemapFilesMap.get(currentGroupName);
+			Map<Integer, SitemapFile> groupNameSitemapFiles = sitemapFilesMap.get(currentGroupName);
 			
 			if (groupNameSitemapFiles == null) {
-				groupNameSitemapFiles = Collections.synchronizedMap(new LinkedHashMap<Integer, File>());
+				groupNameSitemapFiles = Collections.synchronizedMap(new LinkedHashMap<Integer, SitemapFile>());
 				
 				sitemapFilesMap.put(currentGroupName, groupNameSitemapFiles);
 			}			
@@ -556,11 +568,13 @@ public class SitemapManager {
 			
 			// utworzenie glownego elementu
 			xmlStreamWriter.writeStartElement("urlset");
-			xmlStreamWriter.writeDefaultNamespace("http://www.sitemaps.org/schemas/sitemap/0.9");						
+			xmlStreamWriter.writeDefaultNamespace("http://www.sitemaps.org/schemas/sitemap/0.9");	
+			
+			newestDate = null;
 		}
 		
 		public void end() throws Exception {
-			
+						
 			if (currentSitemapFile != null) {
 				
 				xmlStreamWriter.writeEndElement(); // urlset
@@ -573,11 +587,11 @@ public class SitemapManager {
 				
 				sitemapFileWriter.close();
 				
-				Map<Integer, File> groupNameSitemapFiles = sitemapFilesMap.get(currentGroupName);
+				Map<Integer, SitemapFile> groupNameSitemapFiles = sitemapFilesMap.get(currentGroupName);
 				
 				int groupNameSitemapFilesSize = groupNameSitemapFiles.size();
 				
-				groupNameSitemapFiles.put(groupNameSitemapFilesSize + 1, currentSitemapFile);
+				groupNameSitemapFiles.put(groupNameSitemapFilesSize + 1, new SitemapFile(currentSitemapFile, newestDate));
 				
 				// czyszczenie
 				currentSitemapFile = null;
@@ -586,9 +600,22 @@ public class SitemapManager {
 				
 				currentGroupName = null;
 				
-				counter = 0;				
+				counter = 0;		
+				
+				newestDate = null;
 			}			
 		}		
+	}
+	
+	private static class SitemapFile {
+		File sitemapFile;
+		
+		Date lastMod;
+
+		public SitemapFile(File sitemapFile, Date lastMod) {
+			this.sitemapFile = sitemapFile;
+			this.lastMod = lastMod;
+		}
 	}
 	
 	public static enum ChangeFreqEnum {
