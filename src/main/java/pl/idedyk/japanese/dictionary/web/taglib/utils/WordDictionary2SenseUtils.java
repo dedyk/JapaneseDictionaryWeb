@@ -202,7 +202,11 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 					singleSenseDiv.addHtmlElement(dialectDiv);						
 				}	
 				
+				// FM_FIXME: dodac info !!!!
+				
 				// zagraniczne pochodzenie slowa
+				// FM_FIXME: naprawa
+				/*
 				if (sense.getLanguageSourceList().size() > 0) {
 					Div languageSourceDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
 					
@@ -237,7 +241,10 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 	    			
 					singleSenseDiv.addHtmlElement(languageSourceDiv);						
 				}
+				*/
 				
+				// FM_FIXME: naprawa !!!!
+				/*
 				// odnosnic do innego slowa
 				if (sense.getReferenceToAnotherKanjiKanaList().size() > 0) {						
 					createReferenceAntonymToAnotherKanjiKanaDiv(messageSource, servletContextPath, singleSenseDiv, sense.getReferenceToAnotherKanjiKanaList(), "wordDictionary.page.search.table.column.details.referenceToAnotherKanjiKana", onetimeBiggerMarginTypGenerator);
@@ -247,6 +254,7 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 				if (sense.getAntonymList().size() > 0) {						
 					createReferenceAntonymToAnotherKanjiKanaDiv(messageSource, servletContextPath, singleSenseDiv, sense.getAntonymList(), "wordDictionary.page.search.table.column.details.referewnceToAntonymKanjiKana", onetimeBiggerMarginTypGenerator);
 				}
+				*/
         	}
 						
 			// przerwa

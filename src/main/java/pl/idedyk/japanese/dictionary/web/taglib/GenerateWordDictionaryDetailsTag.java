@@ -1177,11 +1177,15 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
 				referenceDictionaryEntry = dictionaryManager.getDictionaryEntry2ByOldPolishJapaneseDictionaryId(referenceWordId);
 				
-			} else if (attributeType == AttributeType.RELATED || attributeType == AttributeType.ANTONYM) {
+			/* } else if (attributeType == AttributeType.RELATED || attributeType == AttributeType.ANTONYM) {
 				Integer referenceWordId = Integer.parseInt(currentAttribute.getAttributeValue().get(0));
 				
 				referenceDictionaryEntry = dictionaryManager.getDictionaryEntry2ById(referenceWordId);
+				*/
 				
+				// FM_INFO: naprawa
+				// FM_INFO: dodac info
+			
 			} else {
 				referenceDictionaryEntry = null;
 			}
