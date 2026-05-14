@@ -9,8 +9,10 @@ import org.springframework.context.MessageSource;
 
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
 import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
+import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
+import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.H;
@@ -21,11 +23,12 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.Gloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSource;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.SenseAdditionalInfo;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.Xref;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 
 public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 	
-	public static void createSenseHtmlElements(MessageSource messageSource, String servletContextPath, Entry entry, HtmlElementCommon translateTd, String findWord, boolean addSenseNumber, boolean addDetails) {
+	public static void createSenseHtmlElements(DictionaryManager dictionaryManager, MessageSource messageSource, String servletContextPath, Entry entry, HtmlElementCommon translateTd, String findWord, boolean addSenseNumber, boolean addDetails) throws DictionaryException {
 		
 		// !!! INFO: jezeli cos tutaj zmieniasz to byc moze trzeba rowniez zmienic w NameDictionary2TranslatationUtils !!!
 		
@@ -243,7 +246,6 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 				}
 				*/
 				
-				// FM_FIXME: naprawa !!!!
 				/*
 				// odnosnic do innego slowa
 				if (sense.getReferenceToAnotherKanjiKanaList().size() > 0) {						
@@ -255,6 +257,13 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 					createReferenceAntonymToAnotherKanjiKanaDiv(messageSource, servletContextPath, singleSenseDiv, sense.getAntonymList(), "wordDictionary.page.search.table.column.details.referewnceToAntonymKanjiKana", onetimeBiggerMarginTypGenerator);
 				}
 				*/
+				
+				// odnosniki do innych slow (przejmuje obsluge dwoch elementow powyzej zakomentowanych)
+				List<Xref> referenceToAnotherKanjiKanaList = sense.getReferenceToAnotherKanjiKanaList();
+				
+				if (referenceToAnotherKanjiKanaList.size() > 0) {
+					createReferenceToAnotherKanjiKanaDiv(dictionaryManager, messageSource, servletContextPath, singleSenseDiv, referenceToAnotherKanjiKanaList, onetimeBiggerMarginTypGenerator);
+				}				
         	}
 						
 			// przerwa
@@ -266,7 +275,9 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 		}   
 	}
 	
-	private static void createReferenceAntonymToAnotherKanjiKanaDiv(MessageSource messageSource, String servletContextPath, HtmlElementCommon translateTd, List<String> wordReference, String messageCode, Supplier<String> onetimeBiggerMarginTypGenerator) {
+	private static void createReferenceToAnotherKanjiKanaDiv(DictionaryManager dictionaryManager, MessageSource messageSource, String servletContextPath, HtmlElementCommon translateTd, 
+			List<Xref> referenceToAnotherKanjiKanaList, Supplier<String> onetimeBiggerMarginTypGenerator) throws DictionaryException {
+		/*
 		List<String> wordsToCreateLinkList = new ArrayList<>();
 		
 		for (String referenceToAnotherKanjiKana : wordReference) {							
@@ -281,52 +292,56 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 				wordsToCreateLinkList.add(referenceToAnotherKanjiKanaSplited[1]);								
 			}							
 		}
+		*/
 		
-		if (wordsToCreateLinkList.size() > 0) {
-			Div referenceToAnotherKanjiKanaDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
-			
-			referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text(messageSource.getMessage(messageCode, null, Locale.getDefault()) + " "));
-			
-			for (int wordsToCreateLinkListIdx = 0; wordsToCreateLinkListIdx < wordsToCreateLinkList.size(); ++wordsToCreateLinkListIdx) {
-				String currentWordsToCreateLink = wordsToCreateLinkList.get(wordsToCreateLinkListIdx);
+		if (referenceToAnotherKanjiKanaList.size() > 0) {
+						
+			for (int referenceToAnotherKanjiKanaListIdx = 0; referenceToAnotherKanjiKanaListIdx < referenceToAnotherKanjiKanaList.size(); ++referenceToAnotherKanjiKanaListIdx) {
+				Div referenceToAnotherKanjiKanaDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
 				
-				// tworzymy link-i
-        		WordDictionarySearchModel searchModel = new WordDictionarySearchModel();
-        		
-        		searchModel.setWord(currentWordsToCreateLink);
-        		searchModel.setWordPlace(WordPlaceSearch.EXACT.toString());
-        		
-        		List<String> searchIn = new ArrayList<String>();
-        		
-        		searchIn.add("KANJI");
-        		searchIn.add("KANA");
-        		searchIn.add("ROMAJI");
-        		searchIn.add("TRANSLATE");
-        		searchIn.add("INFO");
-        		searchIn.add("GRAMMA_FORM_AND_EXAMPLES");
-        		searchIn.add("NAMES");
-        				
-        		searchModel.setSearchIn(searchIn);
-        		
-        		List<DictionaryEntryType> addableDictionaryEntryList = DictionaryEntryType.getAddableDictionaryEntryList();
-        		
-        		for (DictionaryEntryType dictionaryEntryType : addableDictionaryEntryList) {
-        			searchModel.addDictionaryType(dictionaryEntryType);
-        		}
-        		
-        		A currentWordsToCreateLinkLink = new A();
-        		
-        		currentWordsToCreateLinkLink.setHref(LinkGenerator.generateWordSearchLink(servletContextPath, searchModel));
-        		currentWordsToCreateLinkLink.addHtmlElement(new Text(currentWordsToCreateLink));
-        		
-        		referenceToAnotherKanjiKanaDiv.addHtmlElement(currentWordsToCreateLinkLink);
-        		
-        		if (wordsToCreateLinkListIdx != wordsToCreateLinkList.size() - 1) {
-        			referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text(", "));
-        		}
+				Xref currentXRef = referenceToAnotherKanjiKanaList.get(referenceToAnotherKanjiKanaListIdx);
+								
+				referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text(Dictionary2HelperCommon.translateXrefType(currentXRef.getType()) + " "));
+								
+				if (currentXRef.getDict() != null) {
+					referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text(currentXRef.getDict() + ": "));
+				}
+				
+				StringBuffer xrefLinkValue = new StringBuffer();
+				
+				if (currentXRef.getXKanji() != null) {
+					xrefLinkValue.append(currentXRef.getXKanji());
+				}
+				
+				if (currentXRef.getXKana() != null) {
+					if (xrefLinkValue.length() > 0) {
+						xrefLinkValue.append(" / ");
+					}
+					xrefLinkValue.append(currentXRef.getXKana());
+				}
+				
+				// pobieramy slowo
+				Entry referencedDictionaryEntry2 = null;
+				
+				if (currentXRef.getSeq() != null) {
+					referencedDictionaryEntry2 = dictionaryManager.getDictionaryEntry2ById(currentXRef.getSeq());
+				}
+				
+				// tworzymy link
+				if (referencedDictionaryEntry2 != null) {
+	        		A referencedDictionaryEntry2Link = new A();
+	        		
+	        		referencedDictionaryEntry2Link.setHref(LinkGenerator.generateDictionaryEntryDetailsLink(servletContextPath, referencedDictionaryEntry2));
+	        		referencedDictionaryEntry2Link.addHtmlElement(new Text(xrefLinkValue.toString()));
+	        		
+	        		referenceToAnotherKanjiKanaDiv.addHtmlElement(referencedDictionaryEntry2Link);
+	        		
+				} else {
+					referenceToAnotherKanjiKanaDiv.addHtmlElement(new Text(xrefLinkValue.toString()));
+				}
+				
+	    		translateTd.addHtmlElement(referenceToAnotherKanjiKanaDiv);	
 			}
-																	
-    		translateTd.addHtmlElement(referenceToAnotherKanjiKanaDiv);	
 		}
 	}
 }

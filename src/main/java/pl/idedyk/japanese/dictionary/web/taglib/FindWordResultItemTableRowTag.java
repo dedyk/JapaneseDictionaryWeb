@@ -18,6 +18,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Br;
 import pl.idedyk.japanese.dictionary.web.html.Div;
@@ -80,6 +81,8 @@ public class FindWordResultItemTableRowTag extends TagSupport {
             // tylko jeden z nich bedzie wypelniony
             JMdict.Entry wordEntry = resultItem.getWordEntry();
             JMnedict.Entry nameEntry = resultItem.getNameEntry();
+            
+            DictionaryManager dictionaryManager = webApplicationContext.getBean(DictionaryManager.class);
 
             Td translateTd;
             
@@ -112,7 +115,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    	translateTd = new Td(null, "padding-top: 10px");
     	    	tr.addHtmlElement(translateTd);
     	    	
-    	    	WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), wordEntry, translateTd, findWord, false, true);
+    	    	WordDictionary2SenseUtils.createSenseHtmlElements(dictionaryManager, messageSource, pageContext.getServletContext().getContextPath(), wordEntry, translateTd, findWord, false, true);
     	    	                
                 // link
                 link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), wordEntry);

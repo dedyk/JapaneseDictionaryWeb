@@ -645,7 +645,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	}		
 	}
 		
-	private Div generateTranslateSection(Menu menu) throws IOException {
+	private Div generateTranslateSection(Menu menu) throws IOException, DictionaryException {
 				
 		final String titleId = "translateId";
 		final String titleTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title");
@@ -680,7 +680,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	senseDiv.addHtmlElement(senseBodyDiv);
     	
     	if (dictionaryEntry2 != null) {
-    		WordDictionary2SenseUtils.createSenseHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), dictionaryEntry2, senseBodyDiv, null, true, true);	
+    		WordDictionary2SenseUtils.createSenseHtmlElements(dictionaryManager, messageSource, pageContext.getServletContext().getContextPath(), dictionaryEntry2, senseBodyDiv, null, true, true);	
     	} else if (nameDictionaryEntry2 != null) {
     		NameDictionary2TranslatationUtils.createTranslationHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), nameDictionaryEntry2, senseBodyDiv, null, true, true);
     	}
@@ -1117,6 +1117,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			return null;
 		}
 		
+		boolean addedItemToShow = false;
+		
 		Div attributeDiv = new Div();
 		
     	// wiersz z tytulem
@@ -1167,6 +1169,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	    		row2TableTrTd1.addHtmlElement(currentAttributeH);
 	    		
 	    		currentAttributeH.addHtmlElement(new Text(attributeType.getName()));
+	    		
+	    		addedItemToShow = true;
 			}
 			
 			JMdict.Entry referenceDictionaryEntry;
@@ -1264,12 +1268,18 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 
 				linkButton.setHref(link);
 				
-				linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.attribute.referenceDictionaryEntry.show")));			
+				linkButton.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.attribute.referenceDictionaryEntry.show")));
+				
+				addedItemToShow = true;
 			}				
 		}
     			
-		
-		return attributeDiv;		
+    	if (addedItemToShow == true) {
+    		return attributeDiv;
+    		
+    	} else {
+    		return null;
+    	}
 	}
 	
 	private Div generateKnownKanjiDiv(Menu menu, boolean mobile) throws DictionaryException {
