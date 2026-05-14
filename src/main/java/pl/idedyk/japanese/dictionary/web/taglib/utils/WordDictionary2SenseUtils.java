@@ -208,15 +208,13 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 				// FM_FIXME: dodac info !!!!
 				
 				// zagraniczne pochodzenie slowa
-				// FM_FIXME: naprawa
-				/*
-				if (sense.getLanguageSourceList().size() > 0) {
+				if (entry.getLanguageSourceList().size() > 0) {
 					Div languageSourceDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
 					
 					// zamiana na przetlumaczona postac
 					List<String> singleLanguageSourceList = new ArrayList<>();
 					
-					for (LanguageSource languageSource : sense.getLanguageSourceList()) {
+					for (LanguageSource languageSource : entry.getLanguageSourceList()) {
 													
 						StringBuffer singleLanguageSource = new StringBuffer();
 						
@@ -244,7 +242,6 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 	    			
 					singleSenseDiv.addHtmlElement(languageSourceDiv);						
 				}
-				*/
 				
 				/*
 				// odnosnic do innego slowa
@@ -273,6 +270,8 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 				singleSenseDiv.addHtmlElement(marginDiv);						
 			}
 		}   
+        
+        
 	}
 	
 	private static void createReferenceToAnotherKanjiKanaDiv(DictionaryManager dictionaryManager, MessageSource messageSource, String servletContextPath, HtmlElementCommon translateTd, 
