@@ -7,11 +7,8 @@ import java.util.function.Supplier;
 
 import org.springframework.context.MessageSource;
 
-import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPlaceSearch;
-import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
-import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.html.A;
 import pl.idedyk.japanese.dictionary.web.html.Div;
@@ -20,7 +17,6 @@ import pl.idedyk.japanese.dictionary.web.html.HtmlElementCommon;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Gloss;
-import pl.idedyk.japanese.dictionary2.jmdict.xsd.Info;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSource;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.SenseAdditionalInfo;
@@ -38,9 +34,7 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
         	
         	Sense sense = entry.getSenseList().get(senseIdx);
         	
-        	if (addSenseNumber == true) {
-        		// INFO: podobny kod jest przy info, jezeli cos zmieniasz tutaj, zmien i tam
-        		
+        	if (addSenseNumber == true) {        		
 				// numer znaczenia
 				Div senseNoDiv = new Div("col-md-1");
 				
@@ -278,41 +272,6 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 				singleSenseDiv.addHtmlElement(marginDiv);						
 			}
 		}
-        
-        // dodanie info
-        List<Info> polishInfoList = Dictionary2HelperCommon.getPolishInfoList(entry.getInfoList());
-        
-        if (polishInfoList.size() > 0) {
-        	boolean wasBiggerTopMargin = false;
-        	
-        	for (Info info : polishInfoList) {
-        		
-            	if (addSenseNumber == true) {
-            		// INFO: podobny kod jest przy sense, jezeli cos zmieniasz tutaj, zmien i tam
-            		
-    				// numer znaczenia
-    				Div senseNoDiv = new Div("col-md-1");
-    				
-    				H senseNoDivH = null;
-    				
-    				if (mobile == false) {
-    					senseNoDivH = new H(4, null, "margin-top: 3px; text-align: right");
-    				} else {
-    					senseNoDivH = new H(4, null, "margin-top: 3px; text-align: left");
-    				}
-    								
-    				senseNoDiv.addHtmlElement(senseNoDivH);				
-    				translateTd.addHtmlElement(senseNoDiv);
-            	}
-        		
-            	Div singleInfoDiv = new Div("col-md-11", "margin-left: 0px; font-size: 100%; margin-top: " + (wasBiggerTopMargin == false ? "25px" : "5px") + "; text-align: justify");      	
-            	            	
-            	singleInfoDiv.addHtmlElement(new Text(getStringWithMark(info.getValue(), findWord, true)));
-            	translateTd.addHtmlElement(singleInfoDiv);
-
-            	wasBiggerTopMargin = true;
-			}
-        }
 	}
 	
 	private static void createReferenceToAnotherKanjiKanaDiv(DictionaryManager dictionaryManager, MessageSource messageSource, String servletContextPath, HtmlElementCommon translateTd, 

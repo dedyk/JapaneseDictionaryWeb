@@ -345,11 +345,15 @@
 								<thead>
 									<tr>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.kanji" /></th>
+										<jdwt:isMobile mobile="false">
 										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
+										</jdwt:isMobile>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
 										<!-- <jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile> -->
-										<th></th>
+										<jdwt:isMobile mobile="false">
+										<th width="10%"></th>
+										</jdwt:isMobile>
 									</tr>
 								</thead>
 								<tfood>
@@ -685,11 +689,15 @@
 								<thead>
 									<tr>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.kanji" /></th>
+										<jdwt:isMobile mobile="false">
 										<th><spring:message code="kanjiDictionary.page.search.table.column.radicals" /></th>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.strokeCount" /></th>
+										</jdwt:isMobile>
 										<th><spring:message code="kanjiDictionary.page.search.table.column.translate" /></th>
 										<!-- <jdwt:isMobile mobile="false"><th><spring:message code="kanjiDictionary.page.search.table.column.info" /></th></jdwt:isMobile> -->
-										<th></th>
+										<jdwt:isMobile mobile="false">
+										<th width="10%"></th>
+										</jdwt:isMobile>
 									</tr>
 								</thead>
 								<tfood>

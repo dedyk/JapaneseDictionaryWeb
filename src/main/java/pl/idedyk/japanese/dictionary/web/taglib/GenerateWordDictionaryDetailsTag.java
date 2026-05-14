@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRequest;
@@ -690,7 +691,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	private Div generateAdditionalInfo(Menu menu) throws IOException {
 				
-		String info = null;	
+		List<String> infoList = null;	
 		String kanji = null;
 		
 		if (kanjiKanaPairList != null) {
@@ -703,7 +704,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				}
 			}
 			
-			info = null;
+			// dodatkowe ogolne informacje
+			infoList = Dictionary2HelperCommon.getPolishInfoList(kanjiKanaPairList.get(0).getEntry().getInfoList()).stream().map(m -> m.getValue()).collect(Collectors.toList());
 
 		} else if (nameKanjiKanaPairList != null) {
 			
@@ -715,7 +717,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				}
 			}
 			
-			info = null;
+			infoList = null;
 			
 		} else {
 			throw new RuntimeException(); // to nigdy nie powinno zdarzyc sie
@@ -733,6 +735,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			special = 3;
 		}
 		
+		if (special == 0 && (infoList == null || infoList.size() == 0)) {
+			return null;
+		}
+		
+		/*
 		if (special == 0 && kanjiKanaPairList != null) { // dla slownika w formacie drugim nie generuj tej sekcji; informacje te znajda sie w sekcji znaczen
 			return null;
 		}
@@ -740,10 +747,11 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		if (special == 0 && nameKanjiKanaPairList != null) { // dla slownika nazw w formacie drugim nie generuj tej sekcji; informacje te znajda sie w sekcji znaczen
 			return null;
 		}
-
+		
 		if (!(info != null && info.length() > 0) && (special == 0)) {
 			return null;		
-		}	
+		}
+		*/	
 		
 		Div additionalInfoDiv = new Div();
 		
@@ -785,15 +793,15 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		Td row2TableTrTd1 = new Td();
 		row2TableTr.addHtmlElement(row2TableTrTd1);
 		
-		/*
-		if (info != null && (special == 0 || special == 3)) {
+		if (infoList != null && special == 0) { // || special == 3)) {
 			
-			H additionalInfoTextH4 = new H(4);
-			row2TableTrTd1.addHtmlElement(additionalInfoTextH4);
-			
-			additionalInfoTextH4.addHtmlElement(new Text(info));						
+			for (String info : infoList) {
+				H additionalInfoTextH4 = new H(4);
+				row2TableTrTd1.addHtmlElement(additionalInfoTextH4);
+				
+				additionalInfoTextH4.addHtmlElement(new Text(info));
+			}			
 		}
-		*/
 		
 		if (special > 0) {
 			
