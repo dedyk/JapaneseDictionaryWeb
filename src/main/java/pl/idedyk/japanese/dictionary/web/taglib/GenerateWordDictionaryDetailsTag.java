@@ -301,7 +301,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
         }
 		
         // znaczenie
-        Div translate = generateTranslateSection(mainInfoMenu);
+        Div translate = generateTranslateSection(mainInfoMenu, mobile);
         panelBody.addHtmlElement(translate);
 
         // generuj informacje dodatkowe
@@ -645,7 +645,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	}		
 	}
 		
-	private Div generateTranslateSection(Menu menu) throws IOException, DictionaryException {
+	private Div generateTranslateSection(Menu menu, boolean mobile) throws IOException, DictionaryException {
 				
 		final String titleId = "translateId";
 		final String titleTitle = getMessage("wordDictionaryDetails.page.dictionaryEntry.translate.title");
@@ -680,9 +680,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	senseDiv.addHtmlElement(senseBodyDiv);
     	
     	if (dictionaryEntry2 != null) {
-    		WordDictionary2SenseUtils.createSenseHtmlElements(dictionaryManager, messageSource, pageContext.getServletContext().getContextPath(), dictionaryEntry2, senseBodyDiv, null, true, true);	
+    		WordDictionary2SenseUtils.createSenseHtmlElements(dictionaryManager, messageSource, pageContext.getServletContext().getContextPath(), dictionaryEntry2, senseBodyDiv, null, true, true, mobile);	
     	} else if (nameDictionaryEntry2 != null) {
-    		NameDictionary2TranslatationUtils.createTranslationHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), nameDictionaryEntry2, senseBodyDiv, null, true, true);
+    		NameDictionary2TranslatationUtils.createTranslationHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), nameDictionaryEntry2, senseBodyDiv, null, true, true, mobile);
     	}
     							
 		return resultDiv;

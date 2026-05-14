@@ -115,7 +115,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    	translateTd = new Td(null, "padding-top: 10px");
     	    	tr.addHtmlElement(translateTd);
     	    	
-    	    	WordDictionary2SenseUtils.createSenseHtmlElements(dictionaryManager, messageSource, pageContext.getServletContext().getContextPath(), wordEntry, translateTd, findWord, false, true);
+    	    	WordDictionary2SenseUtils.createSenseHtmlElements(dictionaryManager, messageSource, pageContext.getServletContext().getContextPath(), wordEntry, translateTd, findWord, false, true, mobile);
     	    	                
                 // link
                 link = LinkGenerator.generateDictionaryEntryDetailsLink(pageContext.getServletContext().getContextPath(), wordEntry);
@@ -150,7 +150,7 @@ public class FindWordResultItemTableRowTag extends TagSupport {
     	    	translateTd = new Td(null, "padding-top: 10px");
     	    	tr.addHtmlElement(translateTd);
     	    	    	    	
-    	    	NameDictionary2TranslatationUtils.createTranslationHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), nameEntry, translateTd, findWord, false, true);
+    	    	NameDictionary2TranslatationUtils.createTranslationHtmlElements(messageSource, pageContext.getServletContext().getContextPath(), nameEntry, translateTd, findWord, false, true, mobile);
     	    	
             	/*
             	// stary kod

@@ -20,6 +20,7 @@ import pl.idedyk.japanese.dictionary.web.html.HtmlElementCommon;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Gloss;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.Info;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.LanguageSource;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.SenseAdditionalInfo;
@@ -28,7 +29,8 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 
 public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 	
-	public static void createSenseHtmlElements(DictionaryManager dictionaryManager, MessageSource messageSource, String servletContextPath, Entry entry, HtmlElementCommon translateTd, String findWord, boolean addSenseNumber, boolean addDetails) throws DictionaryException {
+	public static void createSenseHtmlElements(DictionaryManager dictionaryManager, MessageSource messageSource, String servletContextPath, 
+			Entry entry, HtmlElementCommon translateTd, String findWord, boolean addSenseNumber, boolean addDetails, boolean mobile) throws DictionaryException {
 		
 		// !!! INFO: jezeli cos tutaj zmieniasz to byc moze trzeba rowniez zmienic w NameDictionary2TranslatationUtils !!!
 		
@@ -37,10 +39,18 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
         	Sense sense = entry.getSenseList().get(senseIdx);
         	
         	if (addSenseNumber == true) {
+        		// INFO: podobny kod jest przy info, jezeli cos zmieniasz tutaj, zmien i tam
+        		
 				// numer znaczenia
 				Div senseNoDiv = new Div("col-md-1");
 				
-				H senseNoDivH = new H(4, null, "margin-top: 3px; text-align: right");
+				H senseNoDivH = null;
+				
+				if (mobile == false) {
+					senseNoDivH = new H(4, null, "margin-top: 3px; text-align: right");
+				} else {
+					senseNoDivH = new H(4, null, "margin-top: 3px; text-align: left");
+				}
 				
 				senseNoDivH.addHtmlElement(new Text("" + (senseIdx + 1)));				
 				senseNoDiv.addHtmlElement(senseNoDivH);
@@ -204,9 +214,7 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 	    			
 					singleSenseDiv.addHtmlElement(dialectDiv);						
 				}	
-				
-				// FM_FIXME: dodac info !!!!
-				
+								
 				// zagraniczne pochodzenie slowa
 				if (entry.getLanguageSourceList().size() > 0) {
 					Div languageSourceDiv = new Div(null, "margin-left: 40px; font-size: 75%; margin-top: " + onetimeBiggerMarginTypGenerator.get() + "; text-align: justify");
@@ -269,9 +277,42 @@ public class WordDictionary2SenseUtils extends WordNameDictionary2CommonUtils {
 				
 				singleSenseDiv.addHtmlElement(marginDiv);						
 			}
-		}   
+		}
         
+        // dodanie info
+        List<Info> polishInfoList = Dictionary2HelperCommon.getPolishInfoList(entry.getInfoList());
         
+        if (polishInfoList.size() > 0) {
+        	boolean wasBiggerTopMargin = false;
+        	
+        	for (Info info : polishInfoList) {
+        		
+            	if (addSenseNumber == true) {
+            		// INFO: podobny kod jest przy sense, jezeli cos zmieniasz tutaj, zmien i tam
+            		
+    				// numer znaczenia
+    				Div senseNoDiv = new Div("col-md-1");
+    				
+    				H senseNoDivH = null;
+    				
+    				if (mobile == false) {
+    					senseNoDivH = new H(4, null, "margin-top: 3px; text-align: right");
+    				} else {
+    					senseNoDivH = new H(4, null, "margin-top: 3px; text-align: left");
+    				}
+    								
+    				senseNoDiv.addHtmlElement(senseNoDivH);				
+    				translateTd.addHtmlElement(senseNoDiv);
+            	}
+        		
+            	Div singleInfoDiv = new Div("col-md-11", "margin-left: 0px; font-size: 100%; margin-top: " + (wasBiggerTopMargin == false ? "25px" : "5px") + "; text-align: justify");      	
+            	            	
+            	singleInfoDiv.addHtmlElement(new Text(getStringWithMark(info.getValue(), findWord, true)));
+            	translateTd.addHtmlElement(singleInfoDiv);
+
+            	wasBiggerTopMargin = true;
+			}
+        }
 	}
 	
 	private static void createReferenceToAnotherKanjiKanaDiv(DictionaryManager dictionaryManager, MessageSource messageSource, String servletContextPath, HtmlElementCommon translateTd, 

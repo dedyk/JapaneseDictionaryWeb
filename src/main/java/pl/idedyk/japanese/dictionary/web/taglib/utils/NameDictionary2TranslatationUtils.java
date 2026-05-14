@@ -17,7 +17,8 @@ import pl.idedyk.japanese.dictionary2.jmnedict.xsd.TranslationalInfoTransDetAddi
 
 public class NameDictionary2TranslatationUtils extends WordNameDictionary2CommonUtils {
 	
-	public static void createTranslationHtmlElements(MessageSource messageSource, String servletContextPath, JMnedict.Entry entry, HtmlElementCommon translateTd, String findWord, boolean addTranslationNumber, boolean addDetails) {
+	public static void createTranslationHtmlElements(MessageSource messageSource, String servletContextPath, JMnedict.Entry entry, HtmlElementCommon translateTd, String findWord, 
+			boolean addTranslationNumber, boolean addDetails, boolean mobile) {
 				
 		// !!! INFO: jezeli cos tutaj zmieniasz to byc moze trzeba rowniez zmienic w WordDictionary2SenseUtils !!!
 		
@@ -29,7 +30,13 @@ public class NameDictionary2TranslatationUtils extends WordNameDictionary2Common
 				// numer znaczenia
 				Div senseNoDiv = new Div("col-md-1");
 				
-				H senseNoDivH = new H(4, null, "margin-top: 3px; text-align: right");
+				H senseNoDivH = null;
+				
+				if (mobile == false) {
+					senseNoDivH = new H(4, null, "margin-top: 3px; text-align: right");
+				} else {
+					senseNoDivH = new H(4, null, "margin-top: 3px; text-align: left");
+				}
 				
 				senseNoDivH.addHtmlElement(new Text("" + (translationIdx + 1)));				
 				senseNoDiv.addHtmlElement(senseNoDivH);
