@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.google.common.net.HttpHeaders;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -95,7 +97,7 @@ public class WordDictionaryController {
 	private PageModifiedCheckService pageModifiedCheckService;
 	
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
-	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
+	public String start(HttpServletRequest request, HttpServletResponse response, HttpSession session, Map<String, Object> model) {
 		
 		// utworzenie model szukania
 		WordDictionarySearchModel wordDictionarySearchModel = new WordDictionarySearchModel();
@@ -113,6 +115,9 @@ public class WordDictionaryController {
 			wordDictionarySearchModel.addDictionaryType(dictionaryEntryType);
 		}
 		
+		// ustawienie, ze zawartosc moze roznic sie od tego, czy uzytkownik korzysta z komputera, czy z smartphone-a
+		response.setHeader(HttpHeaders.VARY, "User-Agent");
+		
 		// logowanie
 		logger.info("WordDictionaryController: start");
 		
@@ -128,7 +133,7 @@ public class WordDictionaryController {
 	}
 
 	@RequestMapping(value = "/wordDictionarySearch", method = RequestMethod.GET)
-	public String search(HttpServletRequest request, HttpSession session, @ModelAttribute("command") @Valid final WordDictionarySearchModel searchModel,
+	public String search(HttpServletRequest request, HttpServletResponse response, HttpSession session, @ModelAttribute("command") @Valid final WordDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) throws DictionaryException {
 		
 		// gdy cos bedzie zmieniane trzeba rowniez zmienic w link generatorze
@@ -214,6 +219,9 @@ public class WordDictionaryController {
 			
 			logger.info("Dla słowa: '" + findWordRequest.word + "' znaleziono następujące sugestie: " + wordDictionaryEntrySpellCheckerSuggestionList.toString());
 		}
+		
+		// ustawienie, ze zawartosc moze roznic sie od tego, czy uzytkownik korzysta z komputera, czy z smartphone-a
+		response.setHeader(HttpHeaders.VARY, "User-Agent");
 		
 		model.put("addableDictionaryEntryList", DictionaryEntryType.getAddableDictionaryEntryList());
 		model.put("command", searchModel);
@@ -470,6 +478,9 @@ public class WordDictionaryController {
 				return "redirect301:" + destinationUrl;
 			}
 			
+			// ustawienie, ze zawartosc moze roznic sie od tego, czy uzytkownik korzysta z komputera, czy z smartphone-a
+			response.setHeader(HttpHeaders.VARY, "User-Agent");
+			
 			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
 			pageModifiedCheckService.checkIfPageIsModifiedAndGenerateHttp304NotModified(request, dictionaryEntry2);
 						
@@ -505,7 +516,7 @@ public class WordDictionaryController {
 			model.put("pageTitle", pageTitle);
 			*/
 		}
-						
+								
 		// model.put("dictionaryEntry", dictionaryEntry);
 		model.put("dictionaryEntry2", dictionaryEntry2);
 		model.put("selectedMenu", "wordDictionary");
@@ -625,6 +636,9 @@ public class WordDictionaryController {
 				return "redirect301:" + destinationUrl;
 			}
 			
+			// ustawienie, ze zawartosc moze roznic sie od tego, czy uzytkownik korzysta z komputera, czy z smartphone-a
+			response.setHeader(HttpHeaders.VARY, "User-Agent");
+			
 			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
 			pageModifiedCheckService.checkIfPageIsModifiedAndGenerateHttp304NotModified(request, nameDictionaryEntry2);
 						
@@ -658,7 +672,7 @@ public class WordDictionaryController {
 			model.put("pageTitle", pageTitle);
 			*/
 		}
-						
+								
 		model.put("nameDictionaryEntry2", nameDictionaryEntry2);
 		model.put("selectedMenu", "wordDictionary");
 		model.put("canonicalUrl", baseServer + LinkGenerator.generateNameDictionaryEntryDetailsLink("", nameDictionaryEntry2));

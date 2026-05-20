@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.google.common.net.HttpHeaders;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -95,7 +97,7 @@ public class KanjiDictionaryController {
 	private PageModifiedCheckService pageModifiedCheckService;
 	
 	@RequestMapping(value = "/kanjiDictionary", method = RequestMethod.GET)
-	public String start(HttpServletRequest request, HttpSession session, Map<String, Object> model) {
+	public String start(HttpServletRequest request, HttpServletResponse response, HttpSession session, Map<String, Object> model) {
 						
 		// utworzenie model szukania
 		KanjiDictionarySearchModel kanjiDictionarySearchModel = new KanjiDictionarySearchModel();
@@ -106,6 +108,9 @@ public class KanjiDictionaryController {
 		// pobierz elementy podstawowe
 		List<WebRadicalInfo> radicalList = dictionaryManager.getWebRadicalList();
 
+		// ustawienie, ze zawartosc moze roznic sie od tego, czy uzytkownik korzysta z komputera, czy z smartphone-a
+		response.setHeader(HttpHeaders.VARY, "User-Agent");
+		
 		// logowanie
 		logger.info("KanjiDictionaryController: start");
 		
@@ -149,7 +154,7 @@ public class KanjiDictionaryController {
 	}
 	
 	@RequestMapping(value = "/kanjiDictionarySearch", method = RequestMethod.GET)
-	public String search(HttpServletRequest request, HttpSession session, @ModelAttribute("command") @Valid KanjiDictionarySearchModel searchModel,
+	public String search(HttpServletRequest request, HttpServletResponse response, HttpSession session, @ModelAttribute("command") @Valid KanjiDictionarySearchModel searchModel,
 			BindingResult result, Map<String, Object> model) throws DictionaryException {
 		
 		// pobierz elementy podstawowe
@@ -240,6 +245,9 @@ public class KanjiDictionaryController {
 			
 			logger.info("Dla słowa: '" + findKanjiRequest.word + "' znaleziono następujące sugestie: " + kanjiDictionaryEntrySpellCheckerSuggestionList.toString());
 		}
+		
+		// ustawienie, ze zawartosc moze roznic sie od tego, czy uzytkownik korzysta z komputera, czy z smartphone-a
+		response.setHeader(HttpHeaders.VARY, "User-Agent");
 		
 		// sprawdzanie, czy uruchomic animacje przewijania
 		Integer lastKanjiDictionarySearchHash = (Integer)session.getAttribute("lastKanjiDictionarySearchHash");
@@ -434,6 +442,9 @@ public class KanjiDictionaryController {
 				return "redirect301:" + destinationUrl;
 			}			
 			
+			// ustawienie, ze zawartosc moze roznic sie od tego, czy uzytkownik korzysta z komputera, czy z smartphone-a
+			response.setHeader(HttpHeaders.VARY, "User-Agent");
+			
 			// sprawdzenie, czy nalezy wygenerowac 304 zamiast normalnej odpowiedzi
 			pageModifiedCheckService.checkIfPageIsModifiedAndGenerateHttp304NotModified(request, kanjiEntry);
 			
@@ -466,7 +477,7 @@ public class KanjiDictionaryController {
 			model.put("pageTitle", pageTitle);
 			*/
 		}
-						
+								
 		model.put("kanjiEntry", kanjiEntry);
 		model.put("selectedMenu", "kanjiDictionary");
 		model.put("tabs", KanjiDictionaryTab.values());
@@ -500,7 +511,7 @@ public class KanjiDictionaryController {
 	}
 		
 	@RequestMapping(value = "/kanjiDictionaryDetectSearch", method = RequestMethod.POST)
-	public String detectSearchResult(HttpServletRequest request, HttpSession session, Map<String, Object> model,
+	public String detectSearchResult(HttpServletRequest request, HttpServletResponse response, HttpSession session, Map<String, Object> model,
 			@RequestParam(value="strokes", required=false) String strokes,
 			@RequestParam(value="width", required=false) Integer width,
 			@RequestParam(value="height", required=false) Integer height) throws DictionaryException {
@@ -564,6 +575,9 @@ public class KanjiDictionaryController {
 			
 			kanjiDictionaryDrawStroke = null;
 		}
+		
+		// ustawienie, ze zawartosc moze roznic sie od tego, czy uzytkownik korzysta z komputera, czy z smartphone-a
+		response.setHeader(HttpHeaders.VARY, "User-Agent");
 		
 		// sprawdzanie, czy uruchomic animacje przewijania
 		Integer lastKanjiDetectSearchResultHash = (Integer)session.getAttribute("lastKanjiDetectSearchResultHash");
