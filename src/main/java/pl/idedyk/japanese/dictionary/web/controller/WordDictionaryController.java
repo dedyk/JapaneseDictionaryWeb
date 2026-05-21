@@ -72,6 +72,8 @@ import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 public class WordDictionaryController {
 
 	private static final Logger logger = LogManager.getLogger(WordDictionaryController.class);
+	
+	private static final String autocompleteHistoryKey = "wordDictionarySearch";
 
 	@Autowired
 	private DictionaryManager dictionaryManager;
@@ -148,6 +150,9 @@ public class WordDictionaryController {
 			
 			return "wordDictionary";
 		}
+		
+		// zapisanie do historii autocomplete
+		Utils.addToAutocompleteHistory(request, response, autocompleteHistoryKey, searchModel.getWord());
 		
 		// stworzenie obiektu FindWordRequest
 		FindWordRequest findWordRequest = createFindWordRequest(searchModel);
@@ -349,6 +354,7 @@ public class WordDictionaryController {
 			
 			JSONArray jsonArray = new JSONArray();
 
+			// dodanie do historii wynik podpowiadacza
 			for (String currentWordAutocomplete : wordAutocomplete) {
 
 				JSONObject jsonObject = new JSONObject();
@@ -359,33 +365,32 @@ public class WordDictionaryController {
 				jsonArray.put(jsonObject);
 			}
 			
-			{
-				JSONObject jsonObject = new JSONObject();
-
-				jsonObject.put("label", "--- TEST: Ostatnie wyszukiwania ---");
-				jsonObject.put("value", "--- TEST: Ostatnie wyszukiwania ---");
-				jsonObject.put("disabled", true);
+			// sprawdzenie, czy w historii wyszukiwania cos jest
+			List<String> autocompleHistoryList = Utils.getAutocompleHistoryList(request, autocompleteHistoryKey);
+			
+			// jezeli cos jest to dodajemy to do historii
+			if (autocompleHistoryList != null && autocompleHistoryList.size() > 0) {
+				// dodanie zablokowanego tytulu 
+				String lastSearchTitle = messageSource.getMessage("common.autocomplete.last.search.title", new Object[] { }, Locale.getDefault());
 				
-				jsonArray.put(jsonObject);				
-			}
+				JSONObject lastSearchTitleJsonObject = new JSONObject();
 
-			{
-				JSONObject jsonObject = new JSONObject();
-
-				jsonObject.put("label", "Komputer");
-				jsonObject.put("value", "Komputer");
+				lastSearchTitleJsonObject.put("label", lastSearchTitle);
+				lastSearchTitleJsonObject.put("value", lastSearchTitle);
+				lastSearchTitleJsonObject.put("disabled", true);
 				
-				jsonArray.put(jsonObject);				
-			}
-
-			{
-				JSONObject jsonObject = new JSONObject();
-
-				jsonObject.put("label", "Takako");
-				jsonObject.put("value", "Takako");
+				jsonArray.put(lastSearchTitleJsonObject);
 				
-				jsonArray.put(jsonObject);				
-			}
+				// i kolejne elementy z historii
+				for (String currentAutocompleteHistory : autocompleHistoryList) {
+					JSONObject jsonObject = new JSONObject();
+
+					jsonObject.put("label", currentAutocompleteHistory);
+					jsonObject.put("value", currentAutocompleteHistory);
+					
+					jsonArray.put(jsonObject);	
+				}
+			}			
 
 			return jsonArray.toString();
 

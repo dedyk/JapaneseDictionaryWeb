@@ -60,8 +60,29 @@
 				// wyszukiwanie
 				$( "#word" ).autocomplete({
 				 	source: "${pageContext.request.contextPath}/kanjiDictionary/autocomplete",
+				 	
+				 	focus: function(event, ui) {
+			            // Serwer przysłał "disabled: true", więc blokujemy podświetlenie
+			            if (ui.item.disabled) {
+			                return false;
+			            }
+			        },
+			        select: function(event, ui) {
+			            // Serwer przysłał "disabled: true", więc blokujemy wybór
+			            if (ui.item.disabled) {
+			                return false;
+			            }
+			        },
 				 	minLength: 1
-				});				
+				}).data("ui-autocomplete")._renderItem = function (ul, item) {
+			        if (item.disabled) {
+			            return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
+			        } else {
+			            return $("<li>")
+			            .append("<a>" + item.label + "</a>")
+			            .appendTo(ul);
+			        }
+			    };				
 
 				$( "#searchButton" ).button();
 

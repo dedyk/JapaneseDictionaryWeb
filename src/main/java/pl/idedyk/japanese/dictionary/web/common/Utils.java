@@ -13,6 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import com.google.gson.Gson;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 
 import jakarta.servlet.http.Cookie;
@@ -500,6 +501,76 @@ public class Utils {
 		
 		httpServletResponse.addCookie(cookie);
 		httpSession.setAttribute("theme", themeType.themeValue);
+	}
+	
+	private static String getAutocompleteHistoryKey(String autocompleteName) {
+		return "autocompleteHistory." + autocompleteName;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static List<String> getAutocompleHistoryList(HttpServletRequest httpServletRequest, String autocompleteName) {
+		
+		Gson gson = new Gson();
+		
+		final String autocompleteHistoryKey = getAutocompleteHistoryKey(autocompleteName);
+		
+		// najpierw pobieramy z ciastka aktualna postaci historii
+		Cookie[] cookies = httpServletRequest.getCookies();
+		
+		List<String> autocompleteHistoryList = null;
+		
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals(autocompleteHistoryKey) == true) { // mamy ciastko
+					// proba jego zdekodowania
+					try {
+						String currentCookieValue = cookie.getValue();						
+						byte[] decodeBase64 = Base64.decodeBase64(currentCookieValue);
+						autocompleteHistoryList = gson.fromJson(new String(decodeBase64),  List.class);						
+						
+						break;
+						
+					} catch (Exception e) {
+						// ignorujemy bledy
+						logger.error("addToAutocompleteHistory error: ", e);
+					}					
+				}
+			}
+		}
+
+		return autocompleteHistoryList;
+	}
+	
+	public static void addToAutocompleteHistory(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, String autocompleteName, String value) {
+		
+		Gson gson = new Gson();
+		
+		final String autocompleteHistoryKey = getAutocompleteHistoryKey(autocompleteName);		
+		List<String> autocompleteHistoryList = getAutocompleHistoryList(httpServletRequest, autocompleteName);
+		
+		// jezeli nic nie ma to tworzymy nowy
+		if (autocompleteHistoryList == null) {
+			autocompleteHistoryList = new ArrayList<>();
+		}
+		
+		// sprawdzenie, czy dany element juz wystepuje, jesli tak to usuwamy go (za chwile i tak doda sie raz jeszcze na poczatku)
+		autocompleteHistoryList.remove(value);
+		
+		// dodajemy nowa wartosc
+		autocompleteHistoryList.add(0, value);
+		
+		// jezeli ilosc elementow przekracza maksymalna ilosc to usuwamy ostatni element
+		while (autocompleteHistoryList.size() > 8) {
+			autocompleteHistoryList.remove(autocompleteHistoryList.size() - 1);
+		}
+				
+		// zapisanie tablicy do ciasteczek
+		Cookie cookie = new Cookie(autocompleteHistoryKey, Base64.encodeBase64String(gson.toJson(autocompleteHistoryList).getBytes()));
+		
+		// ustawiamy ciasto na jeden rok
+		cookie.setMaxAge(60 * 60 * 24 * 365);		
+		
+		httpServletResponse.addCookie(cookie);
 	}
 	
 	public static enum ThemeType {
