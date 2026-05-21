@@ -358,6 +358,34 @@ public class WordDictionaryController {
 
 				jsonArray.put(jsonObject);
 			}
+			
+			{
+				JSONObject jsonObject = new JSONObject();
+
+				jsonObject.put("label", "--- TEST: Ostatnie wyszukiwania ---");
+				jsonObject.put("value", "--- TEST: Ostatnie wyszukiwania ---");
+				jsonObject.put("disabled", true);
+				
+				jsonArray.put(jsonObject);				
+			}
+
+			{
+				JSONObject jsonObject = new JSONObject();
+
+				jsonObject.put("label", "Komputer");
+				jsonObject.put("value", "Komputer");
+				
+				jsonArray.put(jsonObject);				
+			}
+
+			{
+				JSONObject jsonObject = new JSONObject();
+
+				jsonObject.put("label", "Takako");
+				jsonObject.put("value", "Takako");
+				
+				jsonArray.put(jsonObject);				
+			}
 
 			return jsonArray.toString();
 
