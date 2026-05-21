@@ -152,7 +152,7 @@ public class WordDictionaryController {
 		}
 		
 		// zapisanie do historii autocomplete
-		Utils.addToAutocompleteHistory(request, response, autocompleteHistoryKey, searchModel.getWord());
+		Utils.addToAutocompleteHistory(request, response, session, autocompleteHistoryKey, searchModel.getWord());
 		
 		// stworzenie obiektu FindWordRequest
 		FindWordRequest findWordRequest = createFindWordRequest(searchModel);
@@ -366,7 +366,7 @@ public class WordDictionaryController {
 			}
 			
 			// sprawdzenie, czy w historii wyszukiwania cos jest
-			List<String> autocompleHistoryList = Utils.getAutocompleHistoryList(request, autocompleteHistoryKey);
+			List<String> autocompleHistoryList = Utils.getAutocompleHistoryList(request, session, autocompleteHistoryKey);
 			
 			// jezeli cos jest to dodajemy to do historii
 			if (autocompleHistoryList != null && autocompleHistoryList.size() > 0) {
