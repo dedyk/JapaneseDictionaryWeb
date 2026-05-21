@@ -69,6 +69,8 @@ import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 public class KanjiDictionaryController {
 
 	private static final Logger logger = LogManager.getLogger(KanjiDictionaryController.class);
+	
+	private static final String autocompleteHistoryKey = "kanjiDictionarySearch";
 
 	@Autowired
 	private DictionaryManager dictionaryManager;
@@ -172,6 +174,9 @@ public class KanjiDictionaryController {
 			
 			return "kanjiDictionary";
 		}
+		
+		// zapisanie do historii autocomplete
+		Utils.addToAutocompleteHistory(request, response, session, autocompleteHistoryKey, searchModel.getWord());
 		
 		// stworzenie obiektu FindKanjiRequest
 		FindKanjiRequest findKanjiRequest = createFindKanjiRequest(searchModel);
@@ -336,6 +341,7 @@ public class KanjiDictionaryController {
 			
 			JSONArray jsonArray = new JSONArray();
 
+			// dodanie do historii wynik podpowiadacza
 			for (String currentWordAutocomplete : kanjiAutocomplete) {
 
 				JSONObject jsonObject = new JSONObject();
@@ -345,6 +351,33 @@ public class KanjiDictionaryController {
 
 				jsonArray.put(jsonObject);
 			}
+			
+			// sprawdzenie, czy w historii wyszukiwania cos jest
+			List<String> autocompleHistoryList = Utils.getAutocompleHistoryList(request, session, autocompleteHistoryKey);
+			
+			// jezeli cos jest to dodajemy to do historii
+			if (autocompleHistoryList != null && autocompleHistoryList.size() > 0) {
+				// dodanie zablokowanego tytulu 
+				String lastSearchTitle = messageSource.getMessage("common.autocomplete.last.search.title", new Object[] { }, Locale.getDefault());
+				
+				JSONObject lastSearchTitleJsonObject = new JSONObject();
+
+				lastSearchTitleJsonObject.put("label", lastSearchTitle);
+				lastSearchTitleJsonObject.put("value", lastSearchTitle);
+				lastSearchTitleJsonObject.put("disabled", true);
+				
+				jsonArray.put(lastSearchTitleJsonObject);
+				
+				// i kolejne elementy z historii
+				for (String currentAutocompleteHistory : autocompleHistoryList) {
+					JSONObject jsonObject = new JSONObject();
+
+					jsonObject.put("label", currentAutocompleteHistory);
+					jsonObject.put("value", currentAutocompleteHistory);
+					
+					jsonArray.put(jsonObject);	
+				}
+			}			
 
 			return jsonArray.toString();
 

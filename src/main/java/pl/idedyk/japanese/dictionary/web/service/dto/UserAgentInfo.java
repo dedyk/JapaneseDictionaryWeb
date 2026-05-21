@@ -178,11 +178,12 @@ public class UserAgentInfo {
 	public static class RobotInfo {
 		
 		private String robotName;
-		
+		private String userAgentString;		
 		private String robotUrl;
 
-		public RobotInfo(String robotName, String robotUrl) {
+		public RobotInfo(String robotName, String userAgentString, String robotUrl) {
 			this.robotName = robotName;
+			this.userAgentString = userAgentString;
 			this.robotUrl = robotUrl;
 		}
 
@@ -190,8 +191,16 @@ public class UserAgentInfo {
 			return robotName;
 		}
 
+		public String getUserAgentString() {
+			return userAgentString;
+		}
+
 		public void setRobotName(String robotName) {
 			this.robotName = robotName;
+		}
+		
+		public void setUserAgentString(String userAgentString) {
+			this.userAgentString = userAgentString;
 		}
 
 		public String getRobotUrl() {

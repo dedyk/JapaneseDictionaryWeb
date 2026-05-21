@@ -1117,7 +1117,8 @@ public class ReportGenerator {
 		
 		//
 		
-		List<GenericTextStat> robotStatList = groupByStat(robotList, new IGroupByFunction() {
+		// generowanie raportu w dwoch wersjach
+		List<GenericTextStat> robotStatList1 = groupByStat(robotList, new IGroupByFunction() {
 			
 			@Override
 			public String getKey(Object o) {
@@ -1128,8 +1129,21 @@ public class ReportGenerator {
 				return pair.right.getRobotInfo().getRobotName() + " - " + pair.right.getRobotInfo().getRobotUrl();		
 			}
 		});
+		
+		List<GenericTextStat> robotStatList2 = groupByStat(robotList, new IGroupByFunction() {
+			
+			@Override
+			public String getKey(Object o) {
 				
-		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.robot.robotName.stat", robotStatList);		
+				@SuppressWarnings("unchecked")
+				ImmutablePair<GenericLog, UserAgentInfo> pair = (ImmutablePair<GenericLog, UserAgentInfo>)o;
+				
+				return pair.right.getRobotInfo().getUserAgentString();
+			}
+		});
+				
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.robot.robotName.stat", robotStatList1);		
+		appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.user.agent.robot.robotName.stat", robotStatList2);
 	}
 
 	private void generateStatForOther(HttpServletRequest httpServletRequest, Div reportDiv, SplitUserAgentStatByTypeResult splitUserAgentStatByType) {

@@ -295,7 +295,7 @@ public class UserAgentService {
 			
 			//
 			
-			userAgentInfo.setRobotInfo(new UserAgentInfo.RobotInfo(deviceName + " / " + agentNameVersionMajor, agentInformationUrl));
+			userAgentInfo.setRobotInfo(new UserAgentInfo.RobotInfo(deviceName + " / " + agentNameVersionMajor, userAgent.getUserAgentString(), agentInformationUrl));
 
 			return userAgentInfo;
 			

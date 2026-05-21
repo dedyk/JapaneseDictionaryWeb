@@ -28,6 +28,9 @@ public class PageModifiedCheckService {
 	@Value("${app.version}")
 	private String version;
 	
+	@Value("${app.minor.version}")
+	private String minorVersion;
+	
 	public void checkIfPageIsModifiedAndGenerateHttp304NotModified(HttpServletRequest request, JMdict.Entry dictionaryEntry2) {
 		checkIfPageIsModifiedAndGenerateHttp304NotModified(request, dictionaryEntry2.getClass().getSimpleName(), dictionaryEntry2.getEntryId(), dictionaryEntry2.getMisc().getLastModified());
 	}
@@ -115,6 +118,7 @@ public class PageModifiedCheckService {
 		
 		// musimy pobrac motyw, aby poprawnie dzialalo przelaczanie
 		dataToCount.append(version);
+		dataToCount.append("/").append(minorVersion);
 		dataToCount.append("/").append(mobile);
 		dataToCount.append("/").append(theme);
 		//dataToCount.append("/").append(gson.toJson(object));
