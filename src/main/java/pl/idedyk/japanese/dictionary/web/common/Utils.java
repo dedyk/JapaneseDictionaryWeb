@@ -507,8 +507,23 @@ public class Utils {
 		return "autocompleteHistory." + autocompleteName;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static List<String> getAutocompleHistoryList(HttpServletRequest httpServletRequest, HttpSession httpSession, String autocompleteName) {
+		
+		List<String> autocompleteHistoryList = getAutocompleHistoryListPriv(httpServletRequest, httpSession, autocompleteName);
+		
+		// jezeli jest w sesji obiekt to zwroc kopie zsynchrozowana z ewentualnym innym watkiem
+		if (autocompleteHistoryList != null) {
+			synchronized (autocompleteHistoryList) {
+				return new ArrayList<>(autocompleteHistoryList);
+			}
+			
+		} else {
+			return null;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static List<String> getAutocompleHistoryListPriv(HttpServletRequest httpServletRequest, HttpSession httpSession, String autocompleteName) {
 				
 		final String autocompleteHistoryKey = getAutocompleteHistoryKey(autocompleteName);
 		
@@ -516,7 +531,7 @@ public class Utils {
 		List<String> autocompleteHistoryList = null;
 		
 		autocompleteHistoryList = (List<String>)httpSession.getAttribute(autocompleteHistoryKey);
-		
+				
 		if (autocompleteHistoryList == null) { // jezeli nie ma w sesji to moze przyszlo z ciasteczkami
 			
 			// najpierw pobieramy z ciastka aktualna postaci historii
@@ -555,31 +570,34 @@ public class Utils {
 		Gson gson = new Gson();
 		
 		final String autocompleteHistoryKey = getAutocompleteHistoryKey(autocompleteName);		
-		List<String> autocompleteHistoryList = getAutocompleHistoryList(httpServletRequest, httpSession, autocompleteName);
+		List<String> autocompleteHistoryList = getAutocompleHistoryListPriv(httpServletRequest, httpSession, autocompleteName);
 		
 		// jezeli nic nie ma to tworzymy nowy
 		if (autocompleteHistoryList == null) {
 			autocompleteHistoryList = new ArrayList<>();
 		}
 		
-		// sprawdzenie, czy dany element juz wystepuje, jesli tak to usuwamy go (za chwile i tak doda sie raz jeszcze na poczatku)
-		autocompleteHistoryList.remove(value);
-		
-		// dodajemy nowa wartosc
-		autocompleteHistoryList.add(0, value);
-		
-		// jezeli ilosc elementow przekracza maksymalna ilosc to usuwamy ostatni element
-		while (autocompleteHistoryList.size() > 8) {
-			autocompleteHistoryList.remove(autocompleteHistoryList.size() - 1);
+		// synchronizacja wielowatkowa
+		synchronized (autocompleteHistoryList) {
+			// sprawdzenie, czy dany element juz wystepuje, jesli tak to usuwamy go (za chwile i tak doda sie raz jeszcze na poczatku)
+			autocompleteHistoryList.remove(value);
+			
+			// dodajemy nowa wartosc
+			autocompleteHistoryList.add(0, value);
+			
+			// jezeli ilosc elementow przekracza maksymalna ilosc to usuwamy ostatni element
+			while (autocompleteHistoryList.size() > 8) {
+				autocompleteHistoryList.remove(autocompleteHistoryList.size() - 1);
+			}					
 		}
-				
+		
 		// zapisanie tablicy do ciasteczek i do sesji
 		Cookie cookie = new Cookie(autocompleteHistoryKey, Base64.encodeBase64String(gson.toJson(autocompleteHistoryList).getBytes()));
 		
 		// ustawiamy ciasto na jeden rok
 		cookie.setMaxAge(60 * 60 * 24 * 365);		
 		
-		httpServletResponse.addCookie(cookie);
+		httpServletResponse.addCookie(cookie);		
 		httpSession.setAttribute(autocompleteHistoryKey, autocompleteHistoryList);
 	}
 	
