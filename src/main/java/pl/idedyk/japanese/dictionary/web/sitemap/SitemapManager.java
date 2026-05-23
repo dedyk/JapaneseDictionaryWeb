@@ -39,7 +39,7 @@ public class SitemapManager {
 		
 	private String baseServer;
 	
-	private File sitemapFileIndex = null;
+	private SitemapFile sitemapFileIndex = null;
 	
 	private Map<String, Map<Integer, SitemapFile>> sitemapFilesMap = Collections.synchronizedMap(new LinkedHashMap<String, Map<Integer, SitemapFile>>());
 						
@@ -234,7 +234,7 @@ public class SitemapManager {
 			indexSitemap.deleteOnExit();
 		}
 		
-		sitemapFileIndex = indexSitemap;
+		sitemapFileIndex = new SitemapFile(indexSitemap);
 		
 		// utworzenie zapisywacza
 		FileWriter sitemapFileWriter = new FileWriter(indexSitemap);
@@ -266,14 +266,16 @@ public class SitemapManager {
 			while (sitemapNameFileMapKeySetIterator.hasNext() == true) {
 				
 				Integer currentIndex = sitemapNameFileMapKeySetIterator.next();
-				SitemapFile sitemapFile = sitemapNameFileMap.get(currentIndex);
+				// SitemapFile sitemapFile = sitemapNameFileMap.get(currentIndex);
 				
 				xmlStreamWriter.writeStartElement("sitemap"); // sitemap
 				
 				xmlStreamWriter.writeStartElement("loc");		
 				xmlStreamWriter.writeCharacters(baseServer + "/sitemap/" + currentName + "/" + currentIndex);			
 				xmlStreamWriter.writeEndElement(); // loc
-
+				
+				/*
+				INFO: nie zapisujemy daty lastmod do indeksu, gdyz moze zdarzyc sie, ze z danego pliku zostanie usunieta pozycja i teoretycznie to nie bedzie wykryte przez mechanizm git blame
 				if (sitemapFile.lastMod != null) {
 					ZonedDateTime lastModAsZonedDateTime = sitemapFile.lastMod.toInstant().atZone(ZoneId.of("Europe/Warsaw"));
 					
@@ -281,6 +283,7 @@ public class SitemapManager {
 					xmlStreamWriter.writeCharacters(DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(lastModAsZonedDateTime));
 					xmlStreamWriter.writeEndElement(); // lastmod
 				}
+				*/
 				
 				xmlStreamWriter.writeEndElement(); // sitemap				
 			}			
@@ -389,7 +392,7 @@ public class SitemapManager {
 			boolean isIndex = sitemapIndexPattern.matcher(sitemapFileName).find();
 			
 			if (isIndex == true) {
-				sitemapFileIndex = currentSitemapFile;
+				sitemapFileIndex = new SitemapFile(currentSitemapFile);
 				
 				continue;
 			}
@@ -411,7 +414,7 @@ public class SitemapManager {
 					sitemapFilesMap.put(groupName, groupNameSitemapFiles);
 				}
 				
-				groupNameSitemapFiles.put(index, new SitemapFile(currentSitemapFile, null));
+				groupNameSitemapFiles.put(index, new SitemapFile(currentSitemapFile));
 				
 			} else {
 				logger.error("Nieznana nazwa pliku: " + sitemapFileName);
@@ -423,7 +426,7 @@ public class SitemapManager {
 		logger.info("Wczytano pliki sitemap");
 	}
 	
-	public File getIndexSitemap() throws NotInitializedException {
+	public SitemapFile getIndexSitemap() throws NotInitializedException {
 		
 		if (initialized == false) {
 			throw new NotInitializedException();
@@ -432,7 +435,7 @@ public class SitemapManager {
 		return sitemapFileIndex;
 	}
 	
-	public File getSitemap(String name, int id) throws NotInitializedException {
+	public SitemapFile getSitemap(String name, int id) throws NotInitializedException {
 				
 		if (name == null) {
 			return null;
@@ -463,7 +466,7 @@ public class SitemapManager {
 
 		}
 		
-		return sitemapFile.sitemapFile;
+		return sitemapFile;
 	}
 
 	public String getBaseServer() {
@@ -585,13 +588,16 @@ public class SitemapManager {
 				xmlStreamWriter.flush();
 				xmlStreamWriter.close();
 				
-				sitemapFileWriter.close();
-				
+				sitemapFileWriter.close();			 
+								
 				Map<Integer, SitemapFile> groupNameSitemapFiles = sitemapFilesMap.get(currentGroupName);
 				
 				int groupNameSitemapFilesSize = groupNameSitemapFiles.size();
 				
-				groupNameSitemapFiles.put(groupNameSitemapFilesSize + 1, new SitemapFile(currentSitemapFile, newestDate));
+				groupNameSitemapFiles.put(groupNameSitemapFilesSize + 1, new SitemapFile(currentSitemapFile));
+				
+				// ustawienie daty pliku				
+				// Files.setLastModifiedTime(currentSitemapFile.toPath(), FileTime.fromMillis(newestDate != null ? newestDate.getTime() : 0));
 				
 				// czyszczenie
 				currentSitemapFile = null;
@@ -607,15 +613,22 @@ public class SitemapManager {
 		}		
 	}
 	
-	private static class SitemapFile {
+	public static class SitemapFile {
 		File sitemapFile;
 		
-		Date lastMod;
-
-		public SitemapFile(File sitemapFile, Date lastMod) {
+		public SitemapFile(File sitemapFile) {
 			this.sitemapFile = sitemapFile;
-			this.lastMod = lastMod;
 		}
+		
+		public File getFile() {
+			return sitemapFile;
+		}
+		
+		/*
+		public Date getLastmod() {
+			return sitemapFile.lastModified() != 0 ? new Date(sitemapFile.lastModified()) : null;
+		}
+		*/
 	}
 	
 	public static enum ChangeFreqEnum {

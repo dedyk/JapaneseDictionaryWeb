@@ -1,6 +1,5 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +22,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLogger
 import pl.idedyk.japanese.dictionary.web.logger.model.ServiceUnavailableExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SitemapGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager;
+import pl.idedyk.japanese.dictionary.web.sitemap.SitemapManager.SitemapFile;
 import pl.idedyk.japanese.dictionary.web.sitemap.exception.NotInitializedException;
 
 @Controller
@@ -46,7 +46,7 @@ public class SitemapController {
 
 		response.setContentType("application/xml");
 		
-		File sitemapFile = null;
+		SitemapFile sitemapFile = null;
 		
 		try {
 			sitemapFile = sitemapManager.getIndexSitemap();
@@ -67,7 +67,7 @@ public class SitemapController {
 			FileInputStream sitemapFileInputStream = null;
 			
 			try {
-				sitemapFileInputStream = new FileInputStream(sitemapFile);
+				sitemapFileInputStream = new FileInputStream(sitemapFile.getFile());
 				
 				copyStream(sitemapFileInputStream, outputStream);
 				
@@ -95,7 +95,7 @@ public class SitemapController {
 		// logowanie
 		loggerSender.sendLog(new SitemapGenerateLoggerModel(Utils.createLoggerModelCommon(request)));
 		
-		File sitemapFile = null;
+		SitemapFile sitemapFile = null;
 				
 		try {
 			sitemapFile = sitemapManager.getSitemap(name, id);
@@ -118,7 +118,7 @@ public class SitemapController {
 			FileInputStream sitemapFileInputStream = null;
 			
 			try {
-				sitemapFileInputStream = new FileInputStream(sitemapFile);
+				sitemapFileInputStream = new FileInputStream(sitemapFile.getFile());
 				
 				copyStream(sitemapFileInputStream, outputStream);
 				
