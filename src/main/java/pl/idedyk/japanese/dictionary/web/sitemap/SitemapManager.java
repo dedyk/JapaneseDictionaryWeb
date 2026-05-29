@@ -137,7 +137,8 @@ public class SitemapManager {
 		
 		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0), null);
 		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/wordDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0), null);
-		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/wordDictionary/dictionary.pdf", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0), null);
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/wordDictionary/dictionary-full.pdf", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0), null);
+		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/wordDictionary/dictionary-common.pdf", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0), null);
 		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/kanjiDictionary", ChangeFreqEnum.weekly, BigDecimal.valueOf(1.0), null);
 		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/suggestion", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4), null);
 		sitemapHelper.createUrl(destDir, deleteOnExit, "main", "/info", ChangeFreqEnum.weekly, BigDecimal.valueOf(0.4), null);

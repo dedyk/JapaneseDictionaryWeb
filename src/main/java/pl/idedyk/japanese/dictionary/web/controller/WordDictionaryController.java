@@ -955,15 +955,44 @@ public class WordDictionaryController {
 				
 		return "wordDictionaryNameCatalog";
 	}
-	
+
 	@RequestMapping(value = "/wordDictionary/dictionary.pdf", method = RequestMethod.GET)
-	public void getWordDictionaryPdf(HttpServletRequest request, HttpServletResponse response, HttpSession session, OutputStream outputStream) throws IOException {
+	public String getWordDictionaryOldPdf(HttpServletRequest request, HttpServletResponse response, HttpSession session, OutputStream outputStream) throws IOException {
+		// przekierowanie do wersji pelnej (zachowanie sgodnosci)
+		String destinationUrl = request.getContextPath() + "/wordDictionary/dictionary-full.pdf";
 		
-		logger.info("Pobieranie słownika w postaci pdf");
-				
+		//		
+		RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
+		
+		loggerSender.sendLog(redirectLoggerModel);
+		
+		return "redirect301:" + destinationUrl;
+	}
+
+	@RequestMapping(value = "/wordDictionary/dictionary-full.pdf", method = RequestMethod.GET)
+	public void getWordDictionaryFullPdf(HttpServletRequest request, HttpServletResponse response, HttpSession session, OutputStream outputStream) throws IOException {
+		
+		logger.info("Pobieranie pełnego słownika w postaci pdf");
+		
 		// pobranie sciezki do pliku ze slownikiem
-		File pdfDictionary = dictionaryManager.getPdfDictionary();
+		File pdfDictionary = dictionaryManager.getFullPdfDictionary();
+
+		getWordDictionaryPdfCommon(request, response, session, outputStream, pdfDictionary);
+	}
+
+	@RequestMapping(value = "/wordDictionary/dictionary-common.pdf", method = RequestMethod.GET)
+	public void getWordDictionaryCommonPdf(HttpServletRequest request, HttpServletResponse response, HttpSession session, OutputStream outputStream) throws IOException {
 		
+		logger.info("Pobieranie tylko powszechne słowa słownika w postaci pdf");
+		
+		// pobranie sciezki do pliku ze slownikiem
+		File pdfDictionary = dictionaryManager.getCommonPdfDictionary();
+
+		getWordDictionaryPdfCommon(request, response, session, outputStream, pdfDictionary);
+	}
+	
+	private void getWordDictionaryPdfCommon(HttpServletRequest request, HttpServletResponse response, HttpSession session, OutputStream outputStream, File pdfDictionary) throws IOException {
+				
 		if (pdfDictionary == null || pdfDictionary.isFile() == false || pdfDictionary.canRead() == false) { // gdy nie mozna odczytac pliku
 			
 			response.sendError(404);

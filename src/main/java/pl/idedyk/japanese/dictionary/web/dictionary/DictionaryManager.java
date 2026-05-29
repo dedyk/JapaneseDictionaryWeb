@@ -543,8 +543,12 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 		return databaseConnector.getDictionaryEntry2ById(id);
 	}
 
-	public File getPdfDictionary() {
-		return new File(dbDir, "dictionary.pdf");
+	public File getFullPdfDictionary() {
+		return new File(dbDir, "dictionary-full.pdf");
+	}
+	
+	public File getCommonPdfDictionary() {
+		return new File(dbDir, "dictionary-common.pdf");
 	}
 
 	@Override
