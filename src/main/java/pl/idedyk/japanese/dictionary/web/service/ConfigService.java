@@ -176,6 +176,14 @@ public class ConfigService {
 		return isStopAllSchedulers() == false;
 	}
 	
+	public boolean isWordDictionaryPdfEnabled() {
+		// pobranie konfiguracji
+		Config config = checkAndReloadConfigFile();
+		
+		// czy zatrzymac wszystkie schedulery
+		return config.getWordDictionary().isPdfEnabled();
+	}
+	
 	public static class ConfigWrapper {
 		private Config config;
 		private Long lastModified;

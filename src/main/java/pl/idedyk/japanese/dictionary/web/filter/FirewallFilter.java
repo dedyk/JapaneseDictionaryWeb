@@ -279,6 +279,7 @@ public class FirewallFilter implements Filter {
 				logger.info("Blokowanie ip/host/user agent/url i wysylanie losowych danych: " + clientInfo.ip + " (" + clientInfo.autonomousSystemNumber + ", " + clientInfo.country + ") / " + clientInfo.hostName + " / " + clientInfo.userAgent + " / " + clientInfo.fullUrl);
 				
 				// tworzenie generatora losowych stringow
+				@SuppressWarnings("deprecation")
 				RandomStringGenerator generator = new RandomStringGenerator.Builder()
 					     .withinRange('a', 'z').build();
 				

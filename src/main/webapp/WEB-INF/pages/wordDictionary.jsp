@@ -179,8 +179,10 @@
 		</c:if>
 		
 		<div style="margin-top: 30px">
-			<a href="<c:out value='${pageContext.request.contextPath}' />/wordDictionary/dictionary-full.pdf"><spring:message code="wordDictionary.page.label.pdf.full.download"/></a> <br/>	
-			<a href="<c:out value='${pageContext.request.contextPath}' />/wordDictionary/dictionary-common.pdf"><spring:message code="wordDictionary.page.label.pdf.common.download"/></a>
+			<c:if test="${showPdfDownloadLinks == true}">
+				<a href="<c:out value='${pageContext.request.contextPath}' />/wordDictionary/dictionary-full.pdf"><spring:message code="wordDictionary.page.label.pdf.full.download"/></a> <br/>	
+				<a href="<c:out value='${pageContext.request.contextPath}' />/wordDictionary/dictionary-common.pdf"><spring:message code="wordDictionary.page.label.pdf.common.download"/></a>
+			</c:if>
 		</div>
 		
 		<script>

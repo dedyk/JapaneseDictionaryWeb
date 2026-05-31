@@ -52,6 +52,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerMode
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.ServiceUnavailableExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryCatalogLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryDetailsLoggerModel;
@@ -60,6 +61,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryNameDetailsL
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryPdfDictionaryLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.PageModifiedCheckService;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
@@ -98,6 +100,9 @@ public class WordDictionaryController {
 	@Autowired
 	private PageModifiedCheckService pageModifiedCheckService;
 	
+	@Autowired
+	private ConfigService configService;
+	
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpServletResponse response, HttpSession session, Map<String, Object> model) {
 		
@@ -130,6 +135,7 @@ public class WordDictionaryController {
 		model.put("wordAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_WEB));
 		model.put("selectedMenu", "wordDictionary");
 		model.put("canonicalUrl", baseServer + "/wordDictionary");
+		model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());
 		
 		return "wordDictionary";
 	}
@@ -147,6 +153,7 @@ public class WordDictionaryController {
 			model.put("wordAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_WEB));
 			model.put("selectedMenu", "wordDictionary");
 			model.put("metaRobots", "noindex, follow");
+			model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());
 			
 			return "wordDictionary";
 		}
@@ -245,6 +252,8 @@ public class WordDictionaryController {
 		if (wordDictionaryEntrySpellCheckerSuggestionList != null) {
 			model.put("wordDictionaryEntrySpellCheckerSuggestionList", wordDictionaryEntrySpellCheckerSuggestionList);
 		}
+		
+		model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());
 		
 		return "wordDictionary";
 	}
@@ -992,7 +1001,18 @@ public class WordDictionaryController {
 	}
 	
 	private void getWordDictionaryPdfCommon(HttpServletRequest request, HttpServletResponse response, HttpSession session, OutputStream outputStream, File pdfDictionary) throws IOException {
-				
+		
+		// najpierw sprawdzamy, czy sciaganie plikow nie jest wylaczone w konfiguracji
+		if (configService.isWordDictionaryPdfEnabled() == false) {
+			response.sendError(503);
+			
+			ServiceUnavailableExceptionLoggerModel serviceUnavailableExceptionLoggerModel = new ServiceUnavailableExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(serviceUnavailableExceptionLoggerModel);
+			
+			return;
+		}		
+		
 		if (pdfDictionary == null || pdfDictionary.isFile() == false || pdfDictionary.canRead() == false) { // gdy nie mozna odczytac pliku
 			
 			response.sendError(404);

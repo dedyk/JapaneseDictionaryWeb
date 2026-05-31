@@ -5,6 +5,14 @@
 	<xsd:element name="config">
 		<xsd:complexType>
 			<xsd:sequence>
+				<xsd:element name="wordDictionary" minOccurs="1" maxOccurs="1">	
+					<xsd:complexType>						
+						<xsd:sequence>
+							<xsd:element name="pdfEnabled" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>						
+						</xsd:sequence>
+					</xsd:complexType>				
+				</xsd:element>
+
 				<xsd:element name="schedulers" minOccurs="1" maxOccurs="1">	
 					<xsd:complexType>						
 						<xsd:sequence>
