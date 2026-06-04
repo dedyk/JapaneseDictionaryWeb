@@ -44,7 +44,7 @@ public class LdJsonService {
 		scriptBody.put("url", baseServer + "/wordDictionary");
 		scriptBody.put("name", messageSource.getMessage("wordDictionary.page.ldJson.name", new Object[] { }, Locale.getDefault()));
 		scriptBody.put("description", messageSource.getMessage("wordDictionary.page.ldJson.description", new Object[] { }, Locale.getDefault()));		
-		scriptBody.put("inLanguage", Arrays.asList("ja", "pl", "en"));
+		scriptBody.put("inLanguage", Arrays.asList("pl", "ja", "en"));
 		
 		return scriptBody.toString();
 	}
