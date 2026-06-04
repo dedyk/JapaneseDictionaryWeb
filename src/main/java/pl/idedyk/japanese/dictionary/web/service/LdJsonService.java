@@ -41,6 +41,7 @@ public class LdJsonService {
 		scriptBody.put("@context", "https://schema.org");
 		scriptBody.put("@type", "DefinedTermSet");
 		scriptBody.put("@id", baseServer + "/wordDictionary");
+		scriptBody.put("url", baseServer + "/wordDictionary");
 		scriptBody.put("name", messageSource.getMessage("wordDictionary.page.ldJson.name", new Object[] { }, Locale.getDefault()));
 		scriptBody.put("description", messageSource.getMessage("wordDictionary.page.ldJson.description", new Object[] { }, Locale.getDefault()));		
 		scriptBody.put("inLanguage", Arrays.asList("ja", "pl", "en"));
@@ -54,9 +55,10 @@ public class LdJsonService {
 		scriptBody.put("@context", "https://schema.org");
 		scriptBody.put("@type", "DefinedTermSet");
 		scriptBody.put("@id", baseServer + "/kanjiDictionary");
+		scriptBody.put("url", baseServer + "/kanjiDictionary");
 		scriptBody.put("name", messageSource.getMessage("kanjiDictionary.page.ldJson.name", new Object[] { }, Locale.getDefault()));
 		scriptBody.put("description", messageSource.getMessage("kanjiDictionary.page.ldJson.description", new Object[] { }, Locale.getDefault()));		
-		scriptBody.put("inLanguage", Arrays.asList("ja", "pl"));
+		scriptBody.put("inLanguage", Arrays.asList("pl", "ja"));
 		
 		return scriptBody.toString();
 	}
@@ -149,19 +151,28 @@ public class LdJsonService {
 		}
 		
 		//
+		
+		JSONObject inDefinedTermSet = new JSONObject();
+		
+		inDefinedTermSet.put("@type", "DefinedTermSet");
+		inDefinedTermSet.put("@id", baseServer + "/wordDictionary");
+		inDefinedTermSet.put("name", messageSource.getMessage("wordDictionary.page.ldJson.name", new Object[] { }, Locale.getDefault()));		
+		
+		//
 				
 		JSONObject scriptBody = new JSONObject();
 		
 		scriptBody.put("@context", "https://schema.org");
 		scriptBody.put("@type", "DefinedTerm");
 		scriptBody.put("@id", baseServer + LinkGenerator.generateDictionaryEntryDetailsLink("", dictionaryEntry2));
+		scriptBody.put("url", baseServer + LinkGenerator.generateDictionaryEntryDetailsLink("", dictionaryEntry2));
 		scriptBody.put("termCode", "" + dictionaryEntry2.getEntryId());
 		scriptBody.put("name", name);
 		scriptBody.put("alternateName", alternativeNameList);
 		scriptBody.put("additionalType", additionalTypeList);
 		scriptBody.put("description", description.toString());
-		scriptBody.put("inLanguage", Arrays.asList("ja", "pl", "en")); // tego nie ma w specyfikacji, ale niech bedzie
-		scriptBody.put("inDefinedTermSet", baseServer + "/wordDictionary");
+		scriptBody.put("inLanguage", Arrays.asList("pl", "ja", "en")); // tego nie ma w specyfikacji, ale niech bedzie
+		scriptBody.put("inDefinedTermSet", inDefinedTermSet);
 		
 		return scriptBody.toString();
 	}
@@ -235,6 +246,14 @@ public class LdJsonService {
 				additionalTypeList.addAll(Dictionary2NameHelperCommon.translateToPolishTranslationalInfoNameTypeList(translationalInfo.getNameType()));
 			}
 		}
+		
+		//
+		
+		JSONObject inDefinedTermSet = new JSONObject();
+		
+		inDefinedTermSet.put("@type", "DefinedTermSet");
+		inDefinedTermSet.put("@id", baseServer + "/wordDictionary");
+		inDefinedTermSet.put("name", messageSource.getMessage("wordDictionary.page.ldJson.name", new Object[] { }, Locale.getDefault()));		
 				
 		//
 				
@@ -243,13 +262,14 @@ public class LdJsonService {
 		scriptBody.put("@context", "https://schema.org");
 		scriptBody.put("@type", "DefinedTerm");
 		scriptBody.put("@id", baseServer + LinkGenerator.generateNameDictionaryEntryDetailsLink("", dictionaryNameEntry2));
+		scriptBody.put("url", baseServer + LinkGenerator.generateNameDictionaryEntryDetailsLink("", dictionaryNameEntry2));
 		scriptBody.put("termCode", "" + dictionaryNameEntry2.getEntryId());
 		scriptBody.put("name", name);
 		scriptBody.put("alternateName", alternativeNameList);
 		scriptBody.put("additionalType", additionalTypeList);
 		scriptBody.put("description", description.toString());
-		scriptBody.put("inLanguage", Arrays.asList("ja", "pl", "en")); // tego nie ma w specyfikacji, ale niech bedzie
-		scriptBody.put("inDefinedTermSet", baseServer + "/wordDictionary");
+		scriptBody.put("inLanguage", Arrays.asList("pl", "ja", "en")); // tego nie ma w specyfikacji, ale niech bedzie
+		scriptBody.put("inDefinedTermSet", inDefinedTermSet);
 		
 		return scriptBody.toString();
 	}
@@ -286,7 +306,15 @@ public class LdJsonService {
 			for (GroupEnum group : kanjiEntry.getMisc2().getGroups()) {
 				additionalTypeList.add(group.getValue());
 			}
-		}				
+		}
+		
+		//
+		
+		JSONObject inDefinedTermSet = new JSONObject();
+		
+		inDefinedTermSet.put("@type", "DefinedTermSet");
+		inDefinedTermSet.put("@id", baseServer + "/kanjiDictionary");
+		inDefinedTermSet.put("name", messageSource.getMessage("kanjiDictionary.page.ldJson.name", new Object[] { }, Locale.getDefault()));		
 		
 		//
 				
@@ -295,12 +323,13 @@ public class LdJsonService {
 		scriptBody.put("@context", "https://schema.org");
 		scriptBody.put("@type", "DefinedTerm");
 		scriptBody.put("@id", baseServer + LinkGenerator.generateKanjiDetailsLink("", kanjiEntry));
+		scriptBody.put("url", baseServer + LinkGenerator.generateKanjiDetailsLink("", kanjiEntry));
 		scriptBody.put("termCode", "" + kanjiEntry.getId());
 		scriptBody.put("name", name);
 		scriptBody.put("additionalType", additionalTypeList);
 		scriptBody.put("description", description.toString());
-		scriptBody.put("inLanguage", Arrays.asList("ja", "pl")); // tego nie ma w specyfikacji, ale niech bedzie
-		scriptBody.put("inDefinedTermSet", baseServer + "/kanjiDictionary");
+		scriptBody.put("inLanguage", Arrays.asList("pl", "ja")); // tego nie ma w specyfikacji, ale niech bedzie
+		scriptBody.put("inDefinedTermSet", inDefinedTermSet);
 		
 		return scriptBody.toString();
 	}
