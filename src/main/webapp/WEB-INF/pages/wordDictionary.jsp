@@ -33,7 +33,7 @@
 
 <c:set var="staticFilePrefix" value="${pageContext.request.contextPath}" />
 
-<t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
+<t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}" scriptLdJson="${scriptLdJson}">
 
 	<jsp:body>
 			

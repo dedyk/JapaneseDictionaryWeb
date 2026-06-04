@@ -62,6 +62,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryPdfDictionar
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
+import pl.idedyk.japanese.dictionary.web.service.LdJsonService;
 import pl.idedyk.japanese.dictionary.web.service.PageModifiedCheckService;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
@@ -103,6 +104,9 @@ public class WordDictionaryController {
 	@Autowired
 	private ConfigService configService;
 	
+	@Autowired
+	private LdJsonService ldJsonService;
+	
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpServletResponse response, HttpSession session, Map<String, Object> model) {
 		
@@ -136,6 +140,7 @@ public class WordDictionaryController {
 		model.put("selectedMenu", "wordDictionary");
 		model.put("canonicalUrl", baseServer + "/wordDictionary");
 		model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());
+		model.put("scriptLdJson", ldJsonService.generateWordDictionaryScript(baseServer));
 		
 		return "wordDictionary";
 	}
@@ -154,6 +159,7 @@ public class WordDictionaryController {
 			model.put("selectedMenu", "wordDictionary");
 			model.put("metaRobots", "noindex, follow");
 			model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());
+			model.put("scriptLdJson", ldJsonService.generateWordDictionaryScript(baseServer));
 			
 			return "wordDictionary";
 		}
@@ -254,6 +260,7 @@ public class WordDictionaryController {
 		}
 		
 		model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());
+		model.put("scriptLdJson", ldJsonService.generateWordDictionaryScript(baseServer));
 		
 		return "wordDictionary";
 	}

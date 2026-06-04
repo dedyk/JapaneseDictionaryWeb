@@ -9,6 +9,7 @@
 <%@attribute name="pageTitle"%>
 <%@attribute name="pageDescription" required="false"%>
 <%@attribute name="canonicalUrl" required="false"%>
+<%@attribute name="scriptLdJson" required="false"%>
 
 <!doctype html>
 <html lang="pl">
@@ -111,6 +112,12 @@
 		</script>
 
 	</c:if>
+	
+	<c:if test="${scriptLdJson != null}">
+	<script type="application/ld+json">
+		${scriptLdJson}
+	</script>
+	</c:if>	
 
 </head>
 
