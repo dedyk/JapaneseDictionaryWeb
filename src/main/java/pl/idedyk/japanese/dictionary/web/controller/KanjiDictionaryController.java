@@ -521,6 +521,7 @@ public class KanjiDictionaryController {
 		model.put("tabs", KanjiDictionaryTab.values());
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 		model.put("canonicalUrl", baseServer + LinkGenerator.generateKanjiDetailsLink("", kanjiEntry));
+		model.put("scriptLdJson", ldJsonService.generateJmdictScript(baseServer, kanjiEntry));
 		
 		return "kanjiDictionaryDetails";
 	}

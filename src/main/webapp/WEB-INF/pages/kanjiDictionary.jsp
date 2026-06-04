@@ -39,7 +39,7 @@
 	<c:set var="strokeFontSizeValue" value="140" />
 </jdwt:isMobile>
 
-<t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
+<t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}" scriptLdJson="${scriptLdJson}">
 
 	<jsp:body>
 

@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2NameHelperCommon;
+import pl.idedyk.japanese.dictionary2.api.helper.Kanji2HelperCommon;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Gloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Info;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
@@ -25,6 +27,7 @@ import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 import pl.idedyk.japanese.dictionary2.jmnedict.xsd.TranslationalInfo;
 import pl.idedyk.japanese.dictionary2.jmnedict.xsd.TranslationalInfoTransDet;
 import pl.idedyk.japanese.dictionary2.jmnedict.xsd.TranslationalInfoTransDetAdditionalInfo;
+import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 @Service
 public class LdJsonService {
@@ -247,6 +250,57 @@ public class LdJsonService {
 		scriptBody.put("description", description.toString());
 		scriptBody.put("inLanguage", Arrays.asList("ja", "pl", "en")); // tego nie ma w specyfikacji, ale niech bedzie
 		scriptBody.put("inDefinedTermSet", baseServer + "/wordDictionary");
+		
+		return scriptBody.toString();
+	}
+	
+	public String generateJmdictScript(String baseServer, KanjiCharacterInfo kanjiEntry) {
+		
+		String name = kanjiEntry.getKanji();
+				
+		//
+		
+		StringBuffer description = new StringBuffer();
+		LinkedHashSet<String> additionalTypeList = new LinkedHashSet<>();
+		
+		// pobranie tlumaczenia
+		List<String> polishTranslatesList = pl.idedyk.japanese.dictionary.api.dictionary.Utils.getPolishTranslates(kanjiEntry);
+		
+		for (String polishTranslate : polishTranslatesList) {
+			description.append(polishTranslate).append("\n");
+		}
+		
+		String info = pl.idedyk.japanese.dictionary.api.dictionary.Utils.getPolishAdditionalInfo(kanjiEntry);
+		
+		if (info != null) {
+			description.append("-- " + info).append("\n");
+		}
+		
+		// poziom Kentei
+		if (kanjiEntry.getMisc2().getKenteiLevel() != null) {
+			additionalTypeList.add(Kanji2HelperCommon.translateToPolishGlossType(kanjiEntry.getMisc2().getKenteiLevel()));
+		}
+		
+		// grupy
+		if (kanjiEntry.getMisc2().getGroups().size() > 0) {
+			for (GroupEnum group : kanjiEntry.getMisc2().getGroups()) {
+				additionalTypeList.add(group.getValue());
+			}
+		}				
+		
+		//
+				
+		JSONObject scriptBody = new JSONObject();
+		
+		scriptBody.put("@context", "https://schema.org");
+		scriptBody.put("@type", "DefinedTerm");
+		scriptBody.put("@id", baseServer + LinkGenerator.generateKanjiDetailsLink("", kanjiEntry));
+		scriptBody.put("termCode", "" + kanjiEntry.getId());
+		scriptBody.put("name", name);
+		scriptBody.put("additionalType", additionalTypeList);
+		scriptBody.put("description", description.toString());
+		scriptBody.put("inLanguage", Arrays.asList("ja", "pl")); // tego nie ma w specyfikacji, ale niech bedzie
+		scriptBody.put("inDefinedTermSet", baseServer + "/kanjiDictionary");
 		
 		return scriptBody.toString();
 	}
