@@ -278,7 +278,7 @@ public class LdJsonService {
 		
 		// poziom Kentei
 		if (kanjiEntry.getMisc2().getKenteiLevel() != null) {
-			additionalTypeList.add(Kanji2HelperCommon.translateToPolishGlossType(kanjiEntry.getMisc2().getKenteiLevel()));
+			additionalTypeList.add("Kentei: " + Kanji2HelperCommon.translateToPolishGlossType(kanjiEntry.getMisc2().getKenteiLevel()));
 		}
 		
 		// grupy
