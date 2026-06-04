@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
+import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2NameHelperCommon;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Gloss;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Info;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
@@ -20,6 +21,10 @@ import pl.idedyk.japanese.dictionary2.jmdict.xsd.KanjiInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.ReadingInfo;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.Sense;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.SenseAdditionalInfo;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.TranslationalInfo;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.TranslationalInfoTransDet;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.TranslationalInfoTransDetAdditionalInfo;
 
 @Service
 public class LdJsonService {
@@ -35,7 +40,7 @@ public class LdJsonService {
 		scriptBody.put("@id", baseServer + "/wordDictionary");
 		scriptBody.put("name", messageSource.getMessage("wordDictionary.page.ldJson.name", new Object[] { }, Locale.getDefault()));
 		scriptBody.put("description", messageSource.getMessage("wordDictionary.page.ldJson.description", new Object[] { }, Locale.getDefault()));		
-		scriptBody.put("inLanguage", Arrays.asList("ja", "pl"));
+		scriptBody.put("inLanguage", Arrays.asList("ja", "pl", "en"));
 		
 		return scriptBody.toString();
 	}
@@ -152,7 +157,95 @@ public class LdJsonService {
 		scriptBody.put("alternateName", alternativeNameList);
 		scriptBody.put("additionalType", additionalTypeList);
 		scriptBody.put("description", description.toString());
-		scriptBody.put("inLanguage", Arrays.asList("ja", "pl")); // tego nie ma w specyfikacji, ale niech bedzie
+		scriptBody.put("inLanguage", Arrays.asList("ja", "pl", "en")); // tego nie ma w specyfikacji, ale niech bedzie
+		scriptBody.put("inDefinedTermSet", baseServer + "/wordDictionary");
+		
+		return scriptBody.toString();
+	}
+	
+	public String generateJmdictScript(String baseServer, JMnedict.Entry dictionaryNameEntry2) {
+		
+		String name = null;
+		List<String> alternativeNameList = new ArrayList<>();
+		
+		List<pl.idedyk.japanese.dictionary2.jmnedict.xsd.KanjiInfo> kanjiInfoList = dictionaryNameEntry2.getKanjiInfoList();
+		List<pl.idedyk.japanese.dictionary2.jmnedict.xsd.ReadingInfo> readingInfoList = dictionaryNameEntry2.getReadingInfoList();
+		
+		for (pl.idedyk.japanese.dictionary2.jmnedict.xsd.KanjiInfo kanjiInfo : kanjiInfoList) {
+			
+			if (name == null) {
+				name = kanjiInfo.getKanji();
+				
+			} else if (alternativeNameList.contains(kanjiInfo.getKanji()) == false) {
+					alternativeNameList.add(kanjiInfo.getKanji());
+			}
+		}
+		
+		for (pl.idedyk.japanese.dictionary2.jmnedict.xsd.ReadingInfo readingInfo : readingInfoList) {
+			
+			if (name == null) {
+				name = readingInfo.getKana();
+				
+				if (alternativeNameList.contains(readingInfo.getRomaji()) == false) {
+					alternativeNameList.add(readingInfo.getRomaji());
+				}
+				
+			} else {
+				if (alternativeNameList.contains(readingInfo.getKana()) == false) {
+					alternativeNameList.add(readingInfo.getKana());
+				}
+				
+				if (alternativeNameList.contains(readingInfo.getRomaji()) == false) {
+					alternativeNameList.add(readingInfo.getRomaji());
+				}
+			}			
+		}
+		
+		//
+		
+		StringBuffer description = new StringBuffer();
+		LinkedHashSet<String> additionalTypeList = new LinkedHashSet<>();
+		
+		for (int translationalInfoNo = 0; translationalInfoNo < dictionaryNameEntry2.getTranslationInfo().size(); ++translationalInfoNo) {
+			TranslationalInfo translationalInfo = dictionaryNameEntry2.getTranslationInfo().get(translationalInfoNo);
+						
+			description.append((translationalInfoNo + 1) + ". ");			
+
+			// pobieramy polskie tlumaczenia lub angielskie
+        	List<TranslationalInfoTransDet> translationalInfoTransDetList = Dictionary2NameHelperCommon.getEnglishOrPolishTranslationalInfoTransDet(translationalInfo.getTransDet());        	
+        	
+			for (TranslationalInfoTransDet translationalInfoTransDet : translationalInfoTransDetList) {
+				description.append(translationalInfoTransDet.getValue()).append("\n");
+			}
+			
+			// i informacje dodatkowe
+			TranslationalInfoTransDetAdditionalInfo additionalInfo = Dictionary2NameHelperCommon.getFirstEnglishOrPolishTranslationalInfoTransDetAdditionalInfo(translationalInfo.getAddInfo());
+			
+			if ( additionalInfo != null) {
+				description.append("- " +  additionalInfo.getValue()).append("\n");
+			}
+			
+			//
+			
+			// typ slowa
+			if (translationalInfo.getNameType().size() > 0) {
+				additionalTypeList.addAll(Dictionary2NameHelperCommon.translateToPolishTranslationalInfoNameTypeList(translationalInfo.getNameType()));
+			}
+		}
+				
+		//
+				
+		JSONObject scriptBody = new JSONObject();
+		
+		scriptBody.put("@context", "https://schema.org");
+		scriptBody.put("@type", "DefinedTerm");
+		scriptBody.put("@id", baseServer + LinkGenerator.generateNameDictionaryEntryDetailsLink("", dictionaryNameEntry2));
+		scriptBody.put("termCode", "" + dictionaryNameEntry2.getEntryId());
+		scriptBody.put("name", name);
+		scriptBody.put("alternateName", alternativeNameList);
+		scriptBody.put("additionalType", additionalTypeList);
+		scriptBody.put("description", description.toString());
+		scriptBody.put("inLanguage", Arrays.asList("ja", "pl", "en")); // tego nie ma w specyfikacji, ale niech bedzie
 		scriptBody.put("inDefinedTermSet", baseServer + "/wordDictionary");
 		
 		return scriptBody.toString();

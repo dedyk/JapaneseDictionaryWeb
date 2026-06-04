@@ -724,6 +724,7 @@ public class WordDictionaryController {
 		model.put("nameDictionaryEntry2", nameDictionaryEntry2);
 		model.put("selectedMenu", "wordDictionary");
 		model.put("canonicalUrl", baseServer + LinkGenerator.generateNameDictionaryEntryDetailsLink("", nameDictionaryEntry2));
+		model.put("scriptLdJson", ldJsonService.generateJmdictScript(baseServer, nameDictionaryEntry2));
 		
 		return "wordDictionaryDetails";
 	}
