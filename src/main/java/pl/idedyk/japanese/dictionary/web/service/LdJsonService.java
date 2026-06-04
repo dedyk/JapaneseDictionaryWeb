@@ -26,4 +26,17 @@ public class LdJsonService {
 		
 		return scriptBody.toString();
 	}
+	
+	public String generateKanjiDictionaryScript(String contextPath) {		
+		JSONObject scriptBody = new JSONObject();
+		
+		scriptBody.put("@context", "https://schema.org");
+		scriptBody.put("@type", "DefinedTermSet");
+		scriptBody.put("@id", contextPath + "/kanjiDictionary");
+		scriptBody.put("name", messageSource.getMessage("kanjiDictionary.page.ldJson.name", new Object[] { }, Locale.getDefault()));
+		scriptBody.put("description", messageSource.getMessage("kanjiDictionary.page.ldJson.description", new Object[] { }, Locale.getDefault()));		
+		scriptBody.put("inLanguage", Arrays.asList("ja", "pl"));
+		
+		return scriptBody.toString();
+	}
 }

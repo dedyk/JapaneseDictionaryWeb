@@ -159,7 +159,6 @@ public class WordDictionaryController {
 			model.put("selectedMenu", "wordDictionary");
 			model.put("metaRobots", "noindex, follow");
 			model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());
-			model.put("scriptLdJson", ldJsonService.generateWordDictionaryScript(baseServer));
 			
 			return "wordDictionary";
 		}
@@ -260,7 +259,6 @@ public class WordDictionaryController {
 		}
 		
 		model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());
-		model.put("scriptLdJson", ldJsonService.generateWordDictionaryScript(baseServer));
 		
 		return "wordDictionary";
 	}

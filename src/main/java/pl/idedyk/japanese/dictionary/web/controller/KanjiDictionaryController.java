@@ -61,6 +61,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLogge
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.LdJsonService;
 import pl.idedyk.japanese.dictionary.web.service.PageModifiedCheckService;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
@@ -98,6 +99,9 @@ public class KanjiDictionaryController {
 	@Autowired
 	private PageModifiedCheckService pageModifiedCheckService;
 	
+	@Autowired
+	private LdJsonService ldJsonService;
+	
 	@RequestMapping(value = "/kanjiDictionary", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpServletResponse response, HttpSession session, Map<String, Object> model) {
 						
@@ -125,6 +129,7 @@ public class KanjiDictionaryController {
 		model.put("kanjiAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_WEB));
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 		model.put("canonicalUrl", baseServer + "/kanjiDictionary");
+		model.put("scriptLdJson", ldJsonService.generateKanjiDictionaryScript(baseServer));
 				
 		return "kanjiDictionary";
 	}
