@@ -44,7 +44,7 @@ public class LdJsonService {
 		scriptBody.put("url", baseServer + "/wordDictionary");
 		scriptBody.put("name", messageSource.getMessage("wordDictionary.page.ldJson.name", new Object[] { }, Locale.getDefault()));
 		scriptBody.put("description", messageSource.getMessage("wordDictionary.page.ldJson.description", new Object[] { }, Locale.getDefault()));		
-		scriptBody.put("inLanguage", Arrays.asList("pl", "ja", "en"));
+		scriptBody.put("inLanguage", Arrays.asList("ja", "pl", "en"));
 		
 		return scriptBody.toString();
 	}
@@ -58,7 +58,7 @@ public class LdJsonService {
 		scriptBody.put("url", baseServer + "/kanjiDictionary");
 		scriptBody.put("name", messageSource.getMessage("kanjiDictionary.page.ldJson.name", new Object[] { }, Locale.getDefault()));
 		scriptBody.put("description", messageSource.getMessage("kanjiDictionary.page.ldJson.description", new Object[] { }, Locale.getDefault()));		
-		scriptBody.put("inLanguage", Arrays.asList("pl", "ja"));
+		scriptBody.put("inLanguage", Arrays.asList("ja", "pl"));
 		
 		return scriptBody.toString();
 	}
@@ -122,7 +122,7 @@ public class LdJsonService {
 			SenseAdditionalInfo senseAdditionalPol = Dictionary2HelperCommon.findFirstPolishAdditionalInfo(sense.getAdditionalInfoList());
 			
 			if (senseAdditionalPol != null) {
-				description.append("- " + senseAdditionalPol.getValue()).append("\n");
+				description.append(senseAdditionalPol.getValue()).append("\n");
 			}
 			
 			//
@@ -147,7 +147,7 @@ public class LdJsonService {
 		List<Info> polishInfoList = Dictionary2HelperCommon.getPolishInfoList(dictionaryEntry2.getInfoList());
 		
 		for (Info info : polishInfoList) {
-			description.append("-- " + info.getValue()).append("\n");
+			description.append(info.getValue()).append("\n");
 		}
 		
 		//
@@ -169,9 +169,9 @@ public class LdJsonService {
 		scriptBody.put("termCode", "" + dictionaryEntry2.getEntryId());
 		scriptBody.put("name", name);
 		scriptBody.put("alternateName", alternativeNameList);
-		scriptBody.put("additionalType", additionalTypeList);
-		scriptBody.put("description", description.toString());
-		scriptBody.put("inLanguage", Arrays.asList("pl", "ja", "en")); // tego nie ma w specyfikacji, ale niech bedzie
+		// scriptBody.put("additionalType", additionalTypeList);
+		scriptBody.put("description", description.toString().replaceAll("\n","; ") + String.join("; ", additionalTypeList));
+		scriptBody.put("inLanguage", Arrays.asList("ja", "pl", "en")); // tego nie ma w specyfikacji, ale niech bedzie
 		scriptBody.put("inDefinedTermSet", inDefinedTermSet);
 		
 		return scriptBody.toString();
@@ -236,7 +236,7 @@ public class LdJsonService {
 			TranslationalInfoTransDetAdditionalInfo additionalInfo = Dictionary2NameHelperCommon.getFirstEnglishOrPolishTranslationalInfoTransDetAdditionalInfo(translationalInfo.getAddInfo());
 			
 			if ( additionalInfo != null) {
-				description.append("- " +  additionalInfo.getValue()).append("\n");
+				description.append(additionalInfo.getValue()).append("\n");
 			}
 			
 			//
@@ -266,9 +266,9 @@ public class LdJsonService {
 		scriptBody.put("termCode", "" + dictionaryNameEntry2.getEntryId());
 		scriptBody.put("name", name);
 		scriptBody.put("alternateName", alternativeNameList);
-		scriptBody.put("additionalType", additionalTypeList);
-		scriptBody.put("description", description.toString());
-		scriptBody.put("inLanguage", Arrays.asList("pl", "ja", "en")); // tego nie ma w specyfikacji, ale niech bedzie
+		// scriptBody.put("additionalType", additionalTypeList);
+		scriptBody.put("description", description.toString().replaceAll("\n","; ") + String.join("; ", additionalTypeList));
+		scriptBody.put("inLanguage", Arrays.asList("ja", "pl", "en")); // tego nie ma w specyfikacji, ale niech bedzie
 		scriptBody.put("inDefinedTermSet", inDefinedTermSet);
 		
 		return scriptBody.toString();
@@ -293,7 +293,7 @@ public class LdJsonService {
 		String info = pl.idedyk.japanese.dictionary.api.dictionary.Utils.getPolishAdditionalInfo(kanjiEntry);
 		
 		if (info != null) {
-			description.append("-- " + info).append("\n");
+			description.append(info).append("\n");
 		}
 		
 		// poziom Kentei
@@ -326,9 +326,9 @@ public class LdJsonService {
 		scriptBody.put("url", baseServer + LinkGenerator.generateKanjiDetailsLink("", kanjiEntry));
 		scriptBody.put("termCode", "" + kanjiEntry.getId());
 		scriptBody.put("name", name);
-		scriptBody.put("additionalType", additionalTypeList);
-		scriptBody.put("description", description.toString());
-		scriptBody.put("inLanguage", Arrays.asList("pl", "ja")); // tego nie ma w specyfikacji, ale niech bedzie
+		// scriptBody.put("additionalType", additionalTypeList);
+		scriptBody.put("description", description.toString().replaceAll("\n","; ") + String.join("; ", additionalTypeList));
+		scriptBody.put("inLanguage", Arrays.asList("ja", "pl")); // tego nie ma w specyfikacji, ale niech bedzie
 		scriptBody.put("inDefinedTermSet", inDefinedTermSet);
 		
 		return scriptBody.toString();
