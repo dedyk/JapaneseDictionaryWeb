@@ -1,11 +1,14 @@
 package pl.idedyk.japanese.dictionary.web.dictionary;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,9 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 
 import jakarta.annotation.PostConstruct;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.DictionaryIndex;
+import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionIndex;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionIndexMetadata;
 
 @Service
@@ -120,6 +125,55 @@ public class DirectoryIndexManager {
 		}
 						
 		return new ArrayList<>(resultList);
+	}
+	
+	public SectionIndex getSectionNameEntries(IndexType indexType, IndexSectionType indexSectionType, String sectionName, int pageNo) {
+		
+		if (indexType == null || indexSectionType == null || sectionName == null) {
+			return null;
+		}
+		
+		// pobieramy metadane sekcji
+		List<SectionIndexMetadata> sectionIndexMetadataList = getSectionIndexMetadata(indexType, indexSectionType);
+		
+		if (sectionIndexMetadataList == null) {
+			return null;
+		}
+
+		// szukamy wlasciwej sekcji i strony
+		SectionIndexMetadata sectionIndexMetadataToLoad = null;
+		
+		for (SectionIndexMetadata sectionIndexMetadata : sectionIndexMetadataList) {
+			if (	sectionIndexMetadata.getSectionName().equals(sectionName) == true &&
+					sectionIndexMetadata.getPartNo().intValue() == pageNo) { // mamy to
+				
+				sectionIndexMetadataToLoad = sectionIndexMetadata;
+			}
+		}
+		
+		if (sectionIndexMetadataToLoad == null) { // jezeli nie znaleslismy
+			return null;
+		}
+		
+		// wczytujemy dany plik
+		File sectionIndexMetadataToLoadFile = new File(directoryindexMainDir, sectionIndexMetadataToLoad.getFileName());
+		
+		if (sectionIndexMetadataToLoadFile.canRead() == false) { // to nigdy nie powinny zdarzyc sie
+			return null;
+		}
+		
+		// mamy automatyczne zamkniecie strumyka
+		try (InputStreamReader inputStreamReader = new InputStreamReader(new GZIPInputStream(new FileInputStream(sectionIndexMetadataToLoadFile)))) {
+			
+			Gson gson = new Gson();
+			
+			SectionIndex sectionIndex = gson.fromJson(inputStreamReader, SectionIndex.class);
+			
+			return sectionIndex;		
+			
+		} catch (Exception e) {
+			throw new RuntimeException("Error during load section entries", e);		
+		}
 	}
 	
 	public IndexSectionType findIndexSectionType(String indexSectionTypeName) {

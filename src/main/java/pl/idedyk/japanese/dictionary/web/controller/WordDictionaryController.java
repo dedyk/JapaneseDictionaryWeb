@@ -70,6 +70,7 @@ import pl.idedyk.japanese.dictionary.web.service.PageModifiedCheckService;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2HelperCommon;
 import pl.idedyk.japanese.dictionary2.api.helper.Dictionary2NameHelperCommon;
+import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionIndex;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict.Entry;
 import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
@@ -859,7 +860,8 @@ public class WordDictionaryController {
 			throw new HttpResourceGoneException("Resource no longer available");
 		}
 		
-		
+		// pobranie zawartosci sekcji
+		SectionIndex sectionIndex = directoryIndexManager.getSectionNameEntries(IndexType.entry, indexSectionType, sectionName, pageNo);
 		
 		
 		// logowanie
