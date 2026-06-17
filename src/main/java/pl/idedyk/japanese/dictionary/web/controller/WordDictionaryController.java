@@ -47,6 +47,9 @@ import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.controller.validator.WordDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager.IndexSectionType;
+import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager.IndexType;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
@@ -106,6 +109,9 @@ public class WordDictionaryController {
 	
 	@Autowired
 	private LdJsonService ldJsonService;
+	
+	@Autowired
+	private DirectoryIndexManager directoryIndexManager;
 	
 	@RequestMapping(value = "/wordDictionary", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpServletResponse response, HttpSession session, Map<String, Object> model) {
@@ -823,11 +829,55 @@ public class WordDictionaryController {
 		
 		return new String[] { pageTitle, pageDescription };		
 	}
+
+	@RequestMapping(value = "/wordDictionaryCatalog2/{sectionType}/{sectionName}/{page}", method = RequestMethod.GET)
+	public String wordDictionaryCatalog2(HttpServletRequest request, HttpSession session,
+			@PathVariable("sectionType") String sectionType,
+			@PathVariable("sectionName") String sectionName,
+			@PathVariable("page") int pageNo,
+			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
+
+		// pobieramy rodzaj sekcji
+		IndexSectionType indexSectionType = directoryIndexManager.findIndexSectionType(sectionType);
+		
+		if (indexSectionType == null) { // zly kod
+			// wysylamy sygnal 410	
+			throw new HttpResourceGoneException("Resource no longer available");
+		}
+		
+		// pobieramy wszystkie nazwy sekcji w ramach tego typu sekcji
+		List<String> sectionNamesList = directoryIndexManager.getSectionNamesList(IndexType.entry, indexSectionType);
+		
+		if (sectionNamesList == null) {
+			// wysylamy sygnal 410	
+			throw new HttpResourceGoneException("Resource no longer available");			
+		}
+		
+		
+		
+		// FM_FIXME: logowanie do loggera, zadanie !!!!!!!!!!!
+		
+		
+		int fixme = 1;
+		String pageTitle = "AAAAAAAAAAAAAAAAAAAAAAAAAAa";
+		String pageDescription = "AAAAAAAAAAAAAAAAAAAAAAAAAAa222222222222";
+		
+		model.put("selectedMenu", "wordDictionary");
+		model.put("pageTitle", pageTitle);
+		model.put("pageDescription", pageDescription);
+		
+		model.put("sectionNamesList", sectionNamesList);
+		
+		return "wordDictionaryCatalog2";
+	}
+	
 	
 	@RequestMapping(value = "/wordDictionaryCatalog/{page}", method = RequestMethod.GET)
 	public String wordDictionaryCatalog(HttpServletRequest request, HttpSession session, 
 			@PathVariable("page") int pageNo,
 			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
+		
+		// INFO: to jest stary katalog juz nie uzywany
 		
 		// strona nie bedzie juz istniala
 		if (pageNo == 1 || pageNo != 1) {

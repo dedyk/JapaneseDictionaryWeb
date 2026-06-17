@@ -3,6 +3,9 @@ package pl.idedyk.japanese.dictionary.web.dictionary;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,11 +16,14 @@ import com.google.gson.Gson;
 
 import jakarta.annotation.PostConstruct;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.DictionaryIndex;
+import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionIndexMetadata;
 
 @Service
 public class DirectoryIndexManager {
 	
 	private static final Logger logger = LogManager.getLogger(DirectoryIndexManager.class);
+	
+	private static final String otherSectionName = "Inne";
 
 	@Autowired
 	private DictionaryManager dictionaryManager;
@@ -80,5 +86,111 @@ public class DirectoryIndexManager {
 		}
 		
 		logger.error("Zakończono inicjalizacje indeksu słownika");
+	}
+	
+	public List<String> getSectionNamesList(IndexType indexType, IndexSectionType indexSectionType) {
+		
+		if (indexType == null || indexSectionType == null) {
+			return null;
+		}
+		
+		// pobieramy metadane sekcji
+		List<SectionIndexMetadata> sectionIndexMetadataList = getSectionIndexMetadata(indexType, indexSectionType);
+		
+		if (sectionIndexMetadataList == null) {
+			return null;
+		}
+		
+		LinkedHashSet<String> resultList = new LinkedHashSet<>();
+		
+		SectionIndexMetadata otherSectionIndexMetadata = null;
+		
+		for (SectionIndexMetadata sectionIndexMetadata : sectionIndexMetadataList) {
+			
+			if (otherSectionName.equals(sectionIndexMetadata.getSectionName()) == true) { // sekcja inne jest na koncu (jezeli istnieje)
+				otherSectionIndexMetadata = sectionIndexMetadata;
+				continue;
+			}
+			
+			resultList.add(sectionIndexMetadata.getSectionName());
+		}
+		
+		if (otherSectionIndexMetadata != null) {
+			resultList.add(otherSectionIndexMetadata.getSectionName());
+		}
+						
+		return new ArrayList<>(resultList);
+	}
+	
+	public IndexSectionType findIndexSectionType(String indexSectionTypeName) {
+		
+		for (IndexSectionType indexSectionType : IndexSectionType.values()) {
+			
+			if (indexSectionType.indexSectionTypeName.equals(indexSectionTypeName) == true) {
+				return indexSectionType; 
+			}			
+		}
+		
+		return null;
+	}
+	
+	private List<SectionIndexMetadata> getSectionIndexMetadata(IndexType indexType, IndexSectionType indexSectionType) {
+		
+		if (indexType == IndexType.entry) {
+			
+			switch (indexSectionType) {
+				case japaneseIndexSection:
+					return dictionaryIndex.getEntryIndex().getJapaneseIndexSectionIndex();
+					
+				case polishIndexSection:
+					return dictionaryIndex.getEntryIndex().getPolishIndexSectionIndex();
+					
+					default:
+						return null;
+			}			
+			
+		} else if (indexType == IndexType.nameEntry) {
+			
+			switch (indexSectionType) {
+				case japaneseIndexSection:
+					return dictionaryIndex.getNameEntryIndex().getJapaneseIndexSectionIndex();
+				
+				
+				default:
+					return null;
+			}
+			
+		} else if (indexType == IndexType.kanji) {
+			
+			switch (indexSectionType) {				
+				case polishIndexSection:
+					return dictionaryIndex.getEntryIndex().getPolishIndexSectionIndex();
+				
+				default:
+					return null;
+			}
+		}
+		
+		return null;
+	}
+	
+	//
+	
+	public static enum IndexType {
+		entry,
+		nameEntry,
+		kanji;
+	}
+	
+	public static enum IndexSectionType {
+				
+		japaneseIndexSection("japaneseIndex"),
+		polishIndexSection("polishIndex");
+		
+		private String indexSectionTypeName;
+		
+		IndexSectionType(String indexSectionTypeName) {
+			this.indexSectionTypeName = indexSectionTypeName;
+		}
 	}
 }
