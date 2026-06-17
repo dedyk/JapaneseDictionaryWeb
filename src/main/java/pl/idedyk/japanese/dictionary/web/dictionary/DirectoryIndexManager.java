@@ -1,15 +1,17 @@
 package pl.idedyk.japanese.dictionary.web.dictionary;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+
 import jakarta.annotation.PostConstruct;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.Unmarshaller;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.DictionaryIndex;
 
 @Service
@@ -41,7 +43,7 @@ public class DirectoryIndexManager {
 		}
 		
 		// wczytanie pliku glownego indeksu
-		File directoryIndexMainFile = new File(directoryindexMainDir, "dictionaryindex.xml");
+		File directoryIndexMainFile = new File(directoryindexMainDir, "dictionaryindex.json");
 		
 		if (directoryIndexMainFile.canRead() == false) {
 			logger.error("Błąd wczytanie głównego indeksu słownika");
@@ -51,21 +53,31 @@ public class DirectoryIndexManager {
 		
 		// parsowanie pliku	
 		DictionaryIndex dictionaryIndex = null;
+		FileReader directoryIndexMainFileReader = null;
 		
 		try {
-			JAXBContext jaxbContext = JAXBContext.newInstance(DictionaryIndex.class);              		
-			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			Gson gson = new Gson();
 			
-			dictionaryIndex = (DictionaryIndex)jaxbUnmarshaller.unmarshal(directoryIndexMainFile);
+			directoryIndexMainFileReader = new FileReader(directoryIndexMainFile);
 			
+			dictionaryIndex = gson.fromJson(directoryIndexMainFileReader, DictionaryIndex.class);
+						
 		} catch (Exception e) {
 			logger.error("Błąd wczytanie głównego indeksu słownika", e);
 			
-			throw new RuntimeException();			
+			throw new RuntimeException();
+			
+		} finally {
+			if (directoryIndexMainFileReader != null) {
+				
+				try {
+					directoryIndexMainFileReader.close();
+				} catch (IOException e) {
+					// noop
+				}
+			}
 		}
 		
-		int a = 0;
-		a++;
 		
 	}
 }
