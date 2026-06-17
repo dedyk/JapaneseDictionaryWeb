@@ -23,6 +23,7 @@ public class DirectoryIndexManager {
 	private DictionaryManager dictionaryManager;
 	
 	private File directoryindexMainDir;
+	private DictionaryIndex dictionaryIndex;
 
 	@PostConstruct
 	public void initialize() {
@@ -52,7 +53,7 @@ public class DirectoryIndexManager {
 		}
 		
 		// parsowanie pliku	
-		DictionaryIndex dictionaryIndex = null;
+		dictionaryIndex = null;
 		FileReader directoryIndexMainFileReader = null;
 		
 		try {
@@ -78,6 +79,6 @@ public class DirectoryIndexManager {
 			}
 		}
 		
-		
+		logger.error("Zakończono inicjalizacje indeksu słownika");
 	}
 }
