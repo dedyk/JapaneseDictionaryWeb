@@ -853,10 +853,17 @@ public class WordDictionaryController {
 			throw new HttpResourceGoneException("Resource no longer available");			
 		}
 		
+		// sprawdzenie, czy sekcja wskazany w adresie znajduje sie na naszej liscie sekcji
+		if (sectionNamesList.contains(sectionName) == false) {
+			// wysylamy sygnal 410	
+			throw new HttpResourceGoneException("Resource no longer available");
+		}
 		
 		
-		// FM_FIXME: logowanie do loggera, zadanie !!!!!!!!!!!
 		
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo));		
 		
 		int fixme = 1;
 		String pageTitle = "AAAAAAAAAAAAAAAAAAAAAAAAAAa";
