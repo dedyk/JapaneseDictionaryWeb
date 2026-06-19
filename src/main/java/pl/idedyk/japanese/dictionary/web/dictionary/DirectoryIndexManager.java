@@ -127,6 +127,31 @@ public class DirectoryIndexManager {
 		return new ArrayList<>(resultList);
 	}
 	
+	public List<Integer> getSectionNamePageList(IndexType indexType, IndexSectionType indexSectionType, String sectionName) {
+		
+		if (indexType == null || indexSectionType == null || sectionName == null) {
+			return null;
+		}
+		
+		// pobieramy metadane sekcji
+		List<SectionIndexMetadata> sectionIndexMetadataList = getSectionIndexMetadata(indexType, indexSectionType);
+		
+		if (sectionIndexMetadataList == null) {
+			return null;
+		}
+		
+		List<Integer> resutList = new ArrayList<>();
+		
+		for (SectionIndexMetadata sectionIndexMetadata : sectionIndexMetadataList) {
+			
+			if (	sectionIndexMetadata.getSectionName().equals(sectionName) == true) { // mamy to
+				resutList.add(sectionIndexMetadata.getPartNo());
+			}
+		}
+		
+		return resutList;
+	}
+	
 	public SectionIndex getSectionNameEntries(IndexType indexType, IndexSectionType indexSectionType, String sectionName, int pageNo) {
 		
 		if (indexType == null || indexSectionType == null || sectionName == null) {

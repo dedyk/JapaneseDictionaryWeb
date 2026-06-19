@@ -860,9 +860,22 @@ public class WordDictionaryController {
 			throw new HttpResourceGoneException("Resource no longer available");
 		}
 		
+		// pobranie listy numerow stron
+		List<Integer> sectionNamePageList = directoryIndexManager.getSectionNamePageList(IndexType.entry, indexSectionType, sectionName);
+		
+		// sprawdzenie, czy wybrana numer strony wystepuje
+		if (sectionNamePageList == null || sectionNamePageList.contains(pageNo) == false) {
+			// wysylamy sygnal 410	
+			throw new HttpResourceGoneException("Resource no longer available");			
+		}
+		
 		// pobranie zawartosci sekcji
 		SectionIndex sectionIndex = directoryIndexManager.getSectionNameEntries(IndexType.entry, indexSectionType, sectionName, pageNo);
 		
+		if (sectionIndex == null) {
+			// wysylamy sygnal 410	
+			throw new HttpResourceGoneException("Resource no longer available");						
+		}
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo));		
