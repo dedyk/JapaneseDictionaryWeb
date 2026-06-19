@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 
 import jakarta.annotation.PostConstruct;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.DictionaryIndex;
@@ -188,7 +186,7 @@ public class DirectoryIndexManager {
 		}
 		
 		// mamy automatyczne zamkniecie strumyka
-		try (InputStreamReader inputStreamReader = new InputStreamReader(new GZIPInputStream(new FileInputStream(sectionIndexMetadataToLoadFile)))) {
+		try (InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(sectionIndexMetadataToLoadFile))) {
 			
 			Gson gson = new Gson();
 			
