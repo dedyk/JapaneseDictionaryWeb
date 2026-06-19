@@ -861,10 +861,10 @@ public class WordDictionaryController {
 		}
 		
 		// pobranie listy numerow stron
-		List<Integer> sectionNamePageList = directoryIndexManager.getSectionNamePageList(IndexType.entry, indexSectionType, sectionName);
+		List<Integer> sectionNamePageNoList = directoryIndexManager.getSectionNamePageList(IndexType.entry, indexSectionType, sectionName);
 		
 		// sprawdzenie, czy wybrana numer strony wystepuje
-		if (sectionNamePageList == null || sectionNamePageList.contains(pageNo) == false) {
+		if (sectionNamePageNoList == null || sectionNamePageNoList.contains(pageNo) == false) {
 			// wysylamy sygnal 410	
 			throw new HttpResourceGoneException("Resource no longer available");			
 		}
@@ -892,9 +892,12 @@ public class WordDictionaryController {
 		model.put("pageDescription", pageDescription);
 		
 		model.put("catalogPageName", "wordDictionaryCatalog2");
+		
 		model.put("selectedSectionType", sectionType);
 		model.put("selectedSectionName", sectionName);
+		model.put("selectedSectionPageNo", pageNo);
 		model.put("sectionNamesList", sectionNamesList);
+		model.put("sectionNamePageNoList", sectionNamePageNoList);		
 		
 		return "wordDictionaryCatalog2";
 	}

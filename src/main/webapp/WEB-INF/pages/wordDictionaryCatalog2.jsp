@@ -37,7 +37,28 @@
 			</c:choose>
 						
 			<a href="/${catalogPageName}/${selectedSectionType}/${currentSectionName}/1" class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionName}' /></span></a>
-		</c:forEach>					
+		</c:forEach>
+		
+		<%--Numery stron --%>
+		<c:if test="${sectionNamePageNoList.size() > 1 }">
+			<h4><spring:message code="wordDictionary.catalog.pageNo.title" /></h4>
+			
+			<c:forEach items="${sectionNamePageNoList}" var="currentSectionNamePageNo">
+				
+				<%-- Wybor klasy dla linku --%>
+				<c:choose>
+					<c:when test="${selectedSectionPageNo == currentSectionNamePageNo}">
+						<c:set var="menuCatalogSectionNameItemClass">menu-catalog-section-name-item menu-catalog-section-name-item-active</c:set>
+					</c:when>
+					
+					<c:otherwise>
+					<c:set var="menuCatalogSectionNameItemClass">menu-catalog-section-name-item menu-catalog-section-name-item-inactive</c:set>
+					</c:otherwise>
+				
+				</c:choose>
+				<a href="/${catalogPageName}/${selectedSectionType}/${selectedSectionName}/${currentSectionNamePageNo}" class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionNamePageNo}' /></span></a>
+			</c:forEach>			
+		</c:if>
 
 		
 		
