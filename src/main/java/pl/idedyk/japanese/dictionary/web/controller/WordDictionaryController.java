@@ -867,10 +867,13 @@ public class WordDictionaryController {
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo));		
 		
-		int fixme = 1;
-		String pageTitle = "AAAAAAAAAAAAAAAAAAAAAAAAAAa";
-		String pageDescription = "AAAAAAAAAAAAAAAAAAAAAAAAAAa222222222222";
+		// nazwa i opis strony
+		String pageTitle = messageSource.getMessage("wordDictionary.catalog." + sectionType + ".page.title", 
+				new Object[] { sectionName, pageNo }, Locale.getDefault());
 		
+		String pageDescription = messageSource.getMessage("wordDictionary.catalog." + sectionType + ".page.pageDescription", 
+				new Object[] { sectionName, pageNo }, Locale.getDefault());
+				
 		model.put("selectedMenu", "wordDictionary");
 		model.put("pageTitle", pageTitle);
 		model.put("pageDescription", pageDescription);

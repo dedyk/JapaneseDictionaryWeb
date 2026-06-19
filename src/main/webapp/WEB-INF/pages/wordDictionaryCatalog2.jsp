@@ -18,6 +18,8 @@
 <t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
 
 	<jsp:body>
+	
+		<h3>${pageTitle}</h3>
 		
 		<%-- Sekcja z nazwami literek --%>
 		<c:forEach items="${sectionNamesList}" var="currentSectionName">
@@ -37,7 +39,7 @@
 			<a href="link" class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionName}' /></span></a>
 		</c:forEach>					
 
-		<h1>FIXME: To jest test !!!</h1>
+		
 		
 	</jsp:body>
 </t:template>
