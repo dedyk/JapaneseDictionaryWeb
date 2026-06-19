@@ -59,6 +59,13 @@
 				<a href="/${catalogPageName}/${selectedSectionType}/${selectedSectionName}/${currentSectionNamePageNo}" class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionNamePageNo}' /></span></a>
 			</c:forEach>			
 		</c:if>
+		
+		<%--Zawartosc spisu --%>
+		<c:forEach items="${sectionIndex.sectionEntry}" var="currentSectionEntry">
+			<h5>${currentSectionEntry.romaji}</h5>
+		
+		</c:forEach>
+
 
 		
 		
