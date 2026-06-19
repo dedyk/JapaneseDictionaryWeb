@@ -875,6 +875,7 @@ public class WordDictionaryController {
 		model.put("pageTitle", pageTitle);
 		model.put("pageDescription", pageDescription);
 		
+		model.put("selectedSectionName", sectionName);
 		model.put("sectionNamesList", sectionNamesList);
 		
 		return "wordDictionaryCatalog2";

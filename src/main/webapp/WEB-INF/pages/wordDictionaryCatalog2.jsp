@@ -18,14 +18,26 @@
 <t:template pageTitle="${pageTitle}" pageDescription="${pageDescription}">
 
 	<jsp:body>
-		FIXME: To jest test !!!
 		
-		Nazwy sekcji: 
+		<%-- Sekcja z nazwami literek --%>
 		<c:forEach items="${sectionNamesList}" var="currentSectionName">
-			<c:out value='${currentSectionName}' /> &nbsp;
-		
+			
+			<%-- Wybor klasy dla linku --%>
+			<c:choose>
+				<c:when test="${selectedSectionName == currentSectionName}">
+					<c:set var="menuCatalogSectionNameItemClass">menu-catalog-section-name-item menu-catalog-section-name-item-active</c:set>
+				</c:when>
+				
+				<c:otherwise>
+				<c:set var="menuCatalogSectionNameItemClass">menu-catalog-section-name-item menu-catalog-section-name-item-inactive</c:set>
+				</c:otherwise>
+			
+			</c:choose>
+						
+			<a href="link" class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionName}' /></span></a>
 		</c:forEach>					
 
+		<h1>FIXME: To jest test !!!</h1>
 		
 	</jsp:body>
 </t:template>
