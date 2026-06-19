@@ -36,7 +36,7 @@
 			
 			</c:choose>
 						
-			<a href="link" class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionName}' /></span></a>
+			<a href="/${catalogPageName}/${selectedSectionType}/${currentSectionName}/1" class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionName}' /></span></a>
 		</c:forEach>					
 
 		

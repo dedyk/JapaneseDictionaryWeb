@@ -878,12 +878,13 @@ public class WordDictionaryController {
 		model.put("pageTitle", pageTitle);
 		model.put("pageDescription", pageDescription);
 		
+		model.put("catalogPageName", "wordDictionaryCatalog2");
+		model.put("selectedSectionType", sectionType);
 		model.put("selectedSectionName", sectionName);
 		model.put("sectionNamesList", sectionNamesList);
 		
 		return "wordDictionaryCatalog2";
 	}
-	
 	
 	@RequestMapping(value = "/wordDictionaryCatalog/{page}", method = RequestMethod.GET)
 	public String wordDictionaryCatalog(HttpServletRequest request, HttpSession session, 
