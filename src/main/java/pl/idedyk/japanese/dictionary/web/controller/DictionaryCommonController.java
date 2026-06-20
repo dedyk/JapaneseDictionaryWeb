@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
+import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager.IndexSectionType;
 import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager.IndexType;
@@ -29,7 +31,7 @@ public abstract class DictionaryCommonController {
 	@Autowired
 	protected LoggerSender loggerSender;
 
-	protected String processDictionaryCatalog(IndexType indexType, String sectionType, String sectionName, int pageNo, 
+	protected String processDictionaryCatalog(HttpServletRequest request, IndexType indexType, String sectionType, String sectionName, int pageNo, 
 			boolean catalogEnabled, Map<String, Object> model, String pageTitleMessageId, String pageDescriptionMessageId,
 			LoggerModelCommon successLoggerObject, String selectedMenu, String catalogPageName) throws DictionaryException, NoResourceFoundException {
 		
@@ -98,6 +100,8 @@ public abstract class DictionaryCommonController {
 		model.put("sectionNamePageNoList", sectionNamePageNoList);
 		
 		model.put("sectionIndex", sectionIndex);
+		
+		model.put("canonicalUrl", LinkGenerator.createCatalogLink(request.getContextPath(), catalogPageName, sectionType, sectionName, Long.valueOf(pageNo)));
 		
 		return catalogPageName;
 	}

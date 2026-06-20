@@ -10,6 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +30,8 @@ import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionEntryIndexEntry
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionIndex;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionIndexMetadata;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
+import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
+import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 @Service
 public class DirectoryIndexManager {
@@ -54,7 +57,7 @@ public class DirectoryIndexManager {
 		String dbDir = dictionaryManager.getDbDir();
 
 		// nazwa katalogu z zawartoscia indeksu
-		directoryindexMainDir = new File(dbDir, MAIN_INDEX_FILE);
+		directoryindexMainDir = new File(dbDir, "directoryindex");
 		
 		if (directoryindexMainDir.isDirectory() == false) {
 			logger.error("Błąd inicjalizacji indeksu słownika");
@@ -63,7 +66,7 @@ public class DirectoryIndexManager {
 		}
 		
 		// wczytanie pliku glownego indeksu
-		File directoryIndexMainFile = new File(directoryindexMainDir, "dictionaryindex.json");
+		File directoryIndexMainFile = new File(directoryindexMainDir, MAIN_INDEX_FILE);
 		
 		if (directoryIndexMainFile.canRead() == false) {
 			logger.error("Błąd wczytanie głównego indeksu słownika");
@@ -304,54 +307,157 @@ public class DirectoryIndexManager {
 		
 		// chodzimy po elementach i uzupelniamy o url
 		EntryIndex entryIndex = dictionaryIndex.getEntryIndex();
+		EntryIndex nameEntryIndex = dictionaryIndex.getNameEntryIndex();
+		EntryIndex kanjiCharacterInfoListIndex = dictionaryIndex.getKanjiCharacterInfoListIndex();
 		
 		if (entryIndex != null) {
-			
-			Map<Integer, JMdict.Entry> cache = new TreeMap<>();
+			Function<Integer, String> urlGetter = new Function<Integer, String>() {
+				
+				Map<Integer, JMdict.Entry> cache = new TreeMap<>();
+				
+				@Override
+				public String apply(Integer entryId) {					
+					// pobieramy slowko po entryId
+					JMdict.Entry dictionaryEntry2 = cache.computeIfAbsent(entryId, (e) -> {
+						try {
+							return dictionaryManager.getDictionaryEntry2ById(e);
+							
+						} catch (DictionaryException e1) {
+							throw new RuntimeException();
+						}
+					});
+					
+					if (dictionaryEntry2 != null) { // tutaj zawsze cos powinno byc
+						System.out.println("entryIndex: " + dictionaryEntry2.getEntryId());
+						
+						// generujemy url-a
+						return LinkGenerator.generateDictionaryEntryDetailsLink(baseServer, dictionaryEntry2);
+					}
+					
+					return null;
+				}
+			};			
 			
 			for (SectionIndexMetadata sectionIndexMetadata : entryIndex.getJapaneseIndexSectionIndex()) {
-				
-				// wczytujemy plik z zawartoscia sekcji
-				File sourceSectionIndexFile = new File(sourcePath, sectionIndexMetadata.getFileName());
-				File destinationSectionIndexFile = new File(destinationPath, sectionIndexMetadata.getFileName());
-				
-				SectionIndex sectionIndex = readSectionIndex(sourceSectionIndexFile);
-				
-				// chodzimy po wszystkich elementach i uzupelniamy w nim url
-				List<SectionEntry> sectionEntryList = sectionIndex.getSectionEntry();
-				
-				for (SectionEntry sectionEntry : sectionEntryList) {
-					
-					List<SectionEntryIndexEntry> sectionEntryEntries = sectionEntry.getEntries();
-					
-					for (SectionEntryIndexEntry sectionEntryIndexEntry : sectionEntryEntries) {
-						
-						// pobieramy slowko po entryId
-						JMdict.Entry dictionaryEntry2 = cache.computeIfAbsent(sectionEntryIndexEntry.getEntryId(), (e) -> {
-							try {
-								return dictionaryManager.getDictionaryEntry2ById(e);
-								
-							} catch (DictionaryException e1) {
-								throw new RuntimeException();
-							}
-						});
-						
-						if (dictionaryEntry2 != null) { // tutaj zawsze cos powinno byc
-							System.out.println(dictionaryEntry2.getEntryId());
-							
-							// generujemy url-a
-							String url = LinkGenerator.generateDictionaryEntryDetailsLink(baseServer, dictionaryEntry2);
-							
-							// ustawiamy go
-							sectionEntryIndexEntry.setUrl(url);
-						}
-					}					
-				}
-				
-				// zapisujemy zmodyfikowany plik w lokalizacji docelowej				
-				Gson gson = new Gson();		
-				Files.write(gson.toJson(sectionIndex).getBytes(), destinationSectionIndexFile);
+				// wyliczamy url
+				processSectionIndexMetadata(sourcePath, destinationPath, sectionIndexMetadata, urlGetter);
+			}
+			
+			for (SectionIndexMetadata sectionIndexMetadata : entryIndex.getPolishIndexSectionIndex()) {
+				// wyliczamy url
+				processSectionIndexMetadata(sourcePath, destinationPath, sectionIndexMetadata, urlGetter);
 			}
 		}
+		
+		//
+		
+		if (nameEntryIndex != null) {
+			Function<Integer, String> urlGetter = new Function<Integer, String>() {
+				
+				Map<Integer, JMnedict.Entry> cache = new TreeMap<>();
+				
+				@Override
+				public String apply(Integer entryId) {					
+					// pobieramy slowko po entryId
+					JMnedict.Entry nameDictionaryEntry2 = cache.computeIfAbsent(entryId, (e) -> {
+						try {
+							return dictionaryManager.getNameDictionaryEntry2ById(e);
+							
+						} catch (DictionaryException e1) {
+							throw new RuntimeException();
+						}
+					});
+					
+					if (nameDictionaryEntry2 != null) { // tutaj zawsze cos powinno byc
+						System.out.println("nameEntryIndex: " + nameDictionaryEntry2.getEntryId());
+						
+						// generujemy url-a
+						return LinkGenerator.generateNameDictionaryEntryDetailsLink(baseServer, nameDictionaryEntry2);
+					}
+					
+					return null;
+				}
+			};			
+			
+			for (SectionIndexMetadata sectionIndexMetadata : nameEntryIndex.getJapaneseIndexSectionIndex()) {
+				// wyliczamy url
+				processSectionIndexMetadata(sourcePath, destinationPath, sectionIndexMetadata, urlGetter);
+			}
+			
+			for (SectionIndexMetadata sectionIndexMetadata : nameEntryIndex.getPolishIndexSectionIndex()) {
+				// wyliczamy url
+				processSectionIndexMetadata(sourcePath, destinationPath, sectionIndexMetadata, urlGetter);
+			}
+		}
+		
+		if (kanjiCharacterInfoListIndex != null) {
+			Function<Integer, String> urlGetter = new Function<Integer, String>() {
+				
+				Map<Integer, KanjiCharacterInfo> cache = new TreeMap<>();
+				
+				@Override
+				public String apply(Integer entryId) {					
+					// pobieramy slowko po entryId
+					KanjiCharacterInfo kanjiCharacterInfo = cache.computeIfAbsent(entryId, (e) -> {
+						try {
+							return dictionaryManager.getKanjiEntryById(e);
+							
+						} catch (DictionaryException e1) {
+							throw new RuntimeException();
+						}
+					});
+					
+					if (kanjiCharacterInfo != null) { // tutaj zawsze cos powinno byc
+						System.out.println("kanjiEntryIndex: " + kanjiCharacterInfo.getId());
+						
+						// generujemy url-a
+						return LinkGenerator.generateKanjiDetailsLink(baseServer, kanjiCharacterInfo);
+					}
+					
+					return null;
+				}
+			};			
+			
+			for (SectionIndexMetadata sectionIndexMetadata : kanjiCharacterInfoListIndex.getJapaneseIndexSectionIndex()) {
+				// wyliczamy url
+				processSectionIndexMetadata(sourcePath, destinationPath, sectionIndexMetadata, urlGetter);
+			}
+			
+			for (SectionIndexMetadata sectionIndexMetadata : kanjiCharacterInfoListIndex.getPolishIndexSectionIndex()) {
+				// wyliczamy url
+				processSectionIndexMetadata(sourcePath, destinationPath, sectionIndexMetadata, urlGetter);
+			}
+		}
+	}
+	
+	private static void processSectionIndexMetadata(String sourcePath, String destinationPath, SectionIndexMetadata sectionIndexMetadata, Function<Integer, String> urlGetter) throws IOException {
+		
+		// wczytujemy plik z zawartoscia sekcji
+		File sourceSectionIndexFile = new File(sourcePath, sectionIndexMetadata.getFileName());
+		File destinationSectionIndexFile = new File(destinationPath, sectionIndexMetadata.getFileName());
+		
+		SectionIndex sectionIndex = readSectionIndex(sourceSectionIndexFile);
+		
+		// chodzimy po wszystkich elementach i uzupelniamy w nim url
+		List<SectionEntry> sectionEntryList = sectionIndex.getSectionEntry();
+		
+		for (SectionEntry sectionEntry : sectionEntryList) {
+			
+			List<SectionEntryIndexEntry> sectionEntryEntries = sectionEntry.getEntries();
+			
+			for (SectionEntryIndexEntry sectionEntryIndexEntry : sectionEntryEntries) {
+				
+				// pobieramy url po entryId
+				String url = urlGetter.apply(sectionEntryIndexEntry.getEntryId());
+				
+				// ustawiamy go
+				sectionEntryIndexEntry.setUrl(url);				
+			}					
+		}
+		
+		// zapisujemy zmodyfikowany plik w lokalizacji docelowej				
+		Gson gson = new Gson();
+		
+		Files.write(gson.toJson(sectionIndex).getBytes(), destinationSectionIndexFile);
 	}
 }

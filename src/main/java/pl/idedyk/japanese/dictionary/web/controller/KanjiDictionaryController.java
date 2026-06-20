@@ -769,7 +769,7 @@ public class KanjiDictionaryController extends DictionaryCommonController {
 			@PathVariable("page") int pageNo,
 			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 		
-		return processDictionaryCatalog(IndexType.kanji,
+		return processDictionaryCatalog(request, IndexType.kanji,
 				sectionType, sectionName, pageNo,
 				configService.isKanjiDictionaryCatalogEnabled(),
 				model,

@@ -830,7 +830,7 @@ public class WordDictionaryController extends DictionaryCommonController {
 			@PathVariable("page") int pageNo,
 			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 		
-		return processDictionaryCatalog(IndexType.entry,
+		return processDictionaryCatalog(request, IndexType.entry,
 				sectionType, sectionName, pageNo,
 				configService.isWordDictionaryCatalogEnabled(),
 				model,
@@ -924,7 +924,7 @@ public class WordDictionaryController extends DictionaryCommonController {
 			@PathVariable("page") int pageNo,
 			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 		
-		return processDictionaryCatalog(IndexType.nameEntry,
+		return processDictionaryCatalog(request, IndexType.nameEntry,
 				sectionType, sectionName, pageNo,
 				configService.isNameDictionaryCatalogEnabled(),
 				model,
