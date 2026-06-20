@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -30,6 +31,9 @@ public abstract class DictionaryCommonController {
 	
 	@Autowired
 	protected LoggerSender loggerSender;
+	
+	@Value("${base.server}")
+	protected String baseServer;
 
 	protected String processDictionaryCatalog(HttpServletRequest request, IndexType indexType, String sectionType, String sectionName, int pageNo, 
 			boolean catalogEnabled, Map<String, Object> model, String pageTitleMessageId, String pageDescriptionMessageId,
@@ -101,7 +105,7 @@ public abstract class DictionaryCommonController {
 		
 		model.put("sectionIndex", sectionIndex);
 		
-		model.put("canonicalUrl", LinkGenerator.createCatalogLink(request.getContextPath(), catalogPageName, sectionType, sectionName, Long.valueOf(pageNo)));
+		model.put("canonicalUrl", LinkGenerator.createCatalogLink(baseServer, catalogPageName, sectionType, sectionName, Long.valueOf(pageNo)));
 		
 		return catalogPageName;
 	}

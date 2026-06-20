@@ -15,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -95,9 +94,6 @@ public class KanjiDictionaryController extends DictionaryCommonController {
 	@Autowired
 	private LoggerSender loggerSender;
 	
-	@Value("${base.server}")
-	private String baseServer;
-
 	@Autowired
 	private PageModifiedCheckService pageModifiedCheckService;
 	

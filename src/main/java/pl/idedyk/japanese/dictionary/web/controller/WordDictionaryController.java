@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -87,10 +86,7 @@ public class WordDictionaryController extends DictionaryCommonController {
 	private void initBinder(WebDataBinder binder) {  
 		binder.setValidator(wordDictionarySearchModelValidator);  
 	}
-	
-	@Value("${base.server}")
-	private String baseServer;
-	
+		
 	@Autowired
 	private PageModifiedCheckService pageModifiedCheckService;
 	
