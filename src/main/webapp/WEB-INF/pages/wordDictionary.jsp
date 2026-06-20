@@ -195,7 +195,7 @@
 		
 		<c:if test="${showNameDictionaryCatalogLinks == true}">
 			<div style="margin-top: 10px">
-				<a href="${LinkGenerator.createCatalogLink(pageContext.request.contextPath, 'nameDictionaryCatalog2', 'japaneseIndex', 'a', 1)}"> <spring:message code="wordNameDictionary.page.label.catalog.japanese"/> </a> <br/>
+				<a href="${LinkGenerator.createCatalogLink(pageContext.request.contextPath, 'wordDictionaryNameCatalog2', 'japaneseIndex', 'a', 1)}"> <spring:message code="wordDictionaryNameCatalog.page.label.catalog.japanese"/> </a> <br/>
 			</div>
 		</c:if>
 		
