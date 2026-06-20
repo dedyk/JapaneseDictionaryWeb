@@ -6,6 +6,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<%@ page import="pl.idedyk.japanese.dictionary.web.common.LinkGenerator" %>
+
 <c:set var="firstPageButton"> <spring:message code="wordDictionary.catalog.page.firstPage"/> </c:set>
 <c:set var="previousPageButton"> <spring:message code="wordDictionary.catalog.page.previousPage"/> </c:set>
 <c:set var="nextPageButton"> <spring:message code="wordDictionary.catalog.page.nextPage"/> </c:set>
@@ -35,8 +37,9 @@
 				</c:otherwise>
 			
 			</c:choose>
-						
-			<a href="/${catalogPageName}/${selectedSectionType}/${currentSectionName}/1" class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionName}' /></span></a>
+			
+			<a href="${LinkGenerator.createCatalogLink(pageContext.request.contextPath, requestScope.catalogPageName, requestScope.selectedSectionType, currentSectionName, 1)}" 
+				class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionName}' /></span></a>
 		</c:forEach>
 		
 		<%--Numery stron --%>
@@ -56,7 +59,9 @@
 					</c:otherwise>
 				
 				</c:choose>
-				<a href="/${catalogPageName}/${selectedSectionType}/${selectedSectionName}/${currentSectionNamePageNo}" class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionNamePageNo}' /></span></a>
+								
+				<a href="${LinkGenerator.createCatalogLink(pageContext.request.contextPath, requestScope.catalogPageName, requestScope.selectedSectionType, requestScope.selectedSectionName, currentSectionNamePageNo)}"
+					class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionNamePageNo}' /></span></a>
 			</c:forEach>			
 		</c:if>
 		

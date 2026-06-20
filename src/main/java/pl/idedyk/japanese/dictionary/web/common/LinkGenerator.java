@@ -253,4 +253,8 @@ public class LinkGenerator {
 			return contextPath;
 		}
 	}
+	
+	public static String createCatalogLink(String contextPath, String catalogPageName, String sectionType, String sectionName, Long pageNo) {		
+		return contextPath + "/" + catalogPageName + "/" + sectionType + "/" + sectionName + "/" + pageNo;
+	}
 }
