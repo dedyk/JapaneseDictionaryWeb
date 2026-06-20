@@ -831,7 +831,9 @@ public class WordDictionaryController extends DictionaryCommonController {
 			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 		
 		return processDictionaryCatalog(IndexType.entry,
-				sectionType, sectionName, pageNo, model,
+				sectionType, sectionName, pageNo,
+				configService.isWordDictionaryCatalogEnabled(),
+				model,
 				"wordDictionary.catalog." + sectionType + ".page.title",
 				"wordDictionary.catalog." + sectionType + ".page.pageDescription",
 				new WordDictionaryCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo), 
@@ -922,10 +924,13 @@ public class WordDictionaryController extends DictionaryCommonController {
 			@PathVariable("page") int pageNo,
 			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
 		
-		return processDictionaryCatalog(IndexType.nameEntry, sectionType, sectionName, pageNo, model,
+		return processDictionaryCatalog(IndexType.nameEntry,
+				sectionType, sectionName, pageNo,
+				configService.isNameDictionaryCatalogEnabled(),
+				model,
 				"wordDictionaryNameCatalog.catalog." + sectionType + ".page.title", 
 				"wordDictionaryNameCatalog.catalog." + sectionType + ".page.pageDescription",
-				new WordDictionaryCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo), 
+				new WordDictionaryNameCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo), 
 				"wordDictionary",
 				"wordDictionaryNameCatalog2");		
 	}

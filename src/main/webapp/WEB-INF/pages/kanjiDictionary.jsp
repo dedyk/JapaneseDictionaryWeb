@@ -5,6 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@page import="pl.idedyk.japanese.dictionary.web.common.LinkGenerator" %>
 
 <c:set var="pageTitle"> <spring:message code="kanjiDictionary.page.title" /> </c:set>
 <c:set var="pageDescription"> <spring:message code="kanjiDictionary.page.pageDescription"/> </c:set>
@@ -386,6 +387,12 @@
 								</tfood>
 								
 							</table>							
+						</div>
+					</c:if>
+					
+					<c:if test="${showKanjiDictionaryCatalogLinks == true}">
+						<div style="margin-top: 30px">
+							<a href="${LinkGenerator.createCatalogLink(pageContext.request.contextPath, 'kanjiDictionaryCatalog2', 'polishIndex', 'a', 1)}"> <spring:message code="kanjiDictionary.page.label.catalog.polish"/> </a>
 						</div>
 					</c:if>
             		         		          		           		

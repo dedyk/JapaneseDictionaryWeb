@@ -241,7 +241,7 @@ public class DirectoryIndexManager {
 			
 			switch (indexSectionType) {				
 				case polishIndexSection:
-					return dictionaryIndex.getEntryIndex().getPolishIndexSectionIndex();
+					return dictionaryIndex.getKanjiCharacterInfoListIndex().getPolishIndexSectionIndex();
 				
 				default:
 					return null;

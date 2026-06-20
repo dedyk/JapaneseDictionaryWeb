@@ -15,6 +15,7 @@ import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager.IndexT
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
+import pl.idedyk.japanese.dictionary.web.service.exception.HttpServiceUnavailableException;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionIndex;
 
 public abstract class DictionaryCommonController {
@@ -29,9 +30,9 @@ public abstract class DictionaryCommonController {
 	protected LoggerSender loggerSender;
 
 	protected String processDictionaryCatalog(IndexType indexType, String sectionType, String sectionName, int pageNo, 
-			Map<String, Object> model, String pageTitleMessageId, String pageDescriptionMessageId,
+			boolean catalogEnabled, Map<String, Object> model, String pageTitleMessageId, String pageDescriptionMessageId,
 			LoggerModelCommon successLoggerObject, String selectedMenu, String catalogPageName) throws DictionaryException, NoResourceFoundException {
-
+		
 		// pobieramy rodzaj sekcji
 		IndexSectionType indexSectionType = directoryIndexManager.findIndexSectionType(sectionType);
 		
@@ -61,6 +62,12 @@ public abstract class DictionaryCommonController {
 		if (sectionNamePageNoList == null || sectionNamePageNoList.contains(pageNo) == false) {
 			// wysylamy sygnal 410	
 			throw new HttpResourceGoneException("Resource no longer available");			
+		}
+		
+		// czy katalog wlaczony
+		if (catalogEnabled == false) {
+			// wysylamy sygnal 503
+			throw new HttpServiceUnavailableException("Service unavailable");
 		}
 		
 		// pobranie zawartosci sekcji

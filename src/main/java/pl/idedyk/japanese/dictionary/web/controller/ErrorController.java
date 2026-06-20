@@ -28,8 +28,10 @@ import pl.idedyk.japanese.dictionary.web.logger.model.MethodNotAllowedExceptionL
 import pl.idedyk.japanese.dictionary.web.logger.model.PageGoneExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNotModifiedExceptionLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.PageServiceUnavailableExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpNotModifiedException;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
+import pl.idedyk.japanese.dictionary.web.service.exception.HttpServiceUnavailableException;
 
 @ControllerAdvice
 public class ErrorController {
@@ -150,5 +152,19 @@ public class ErrorController {
 		loggerSender.sendLog(pageNotModifiedExceptionLoggerModel);
 
 		//return "page304";
+	}
+	
+	@ExceptionHandler(HttpServiceUnavailableException.class)
+	@ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
+	public String handleServiceUnavailableException(HttpServletRequest request, HttpServletResponse response, HttpSession session, Exception ex) {
+				
+		logger.error("Usługa niedostępna: " + Utils.getRequestURL(request));
+		
+		// wysylanie do logger'a
+		PageServiceUnavailableExceptionLoggerModel pageServiceUnavailableExceptionLoggerModel = new PageServiceUnavailableExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+		
+		loggerSender.sendLog(pageServiceUnavailableExceptionLoggerModel);
+
+		return "page503";
 	}
 }

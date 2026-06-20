@@ -49,6 +49,7 @@ import pl.idedyk.japanese.dictionary.web.controller.model.KanjiDictionaryTab;
 import pl.idedyk.japanese.dictionary.web.controller.validator.KanjiDictionarySearchModelValidator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.ZinniaManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager.IndexType;
 import pl.idedyk.japanese.dictionary.web.dictionary.dto.WebRadicalInfo;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
@@ -61,13 +62,14 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionarySearchLogge
 import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.LoggerModelCommon;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.LdJsonService;
 import pl.idedyk.japanese.dictionary.web.service.PageModifiedCheckService;
 import pl.idedyk.japanese.dictionary.web.service.exception.HttpResourceGoneException;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
 
 @Controller
-public class KanjiDictionaryController {
+public class KanjiDictionaryController extends DictionaryCommonController {
 
 	private static final Logger logger = LogManager.getLogger(KanjiDictionaryController.class);
 	
@@ -102,6 +104,9 @@ public class KanjiDictionaryController {
 	@Autowired
 	private LdJsonService ldJsonService;
 	
+	@Autowired
+	private ConfigService configService;
+	
 	@RequestMapping(value = "/kanjiDictionary", method = RequestMethod.GET)
 	public String start(HttpServletRequest request, HttpServletResponse response, HttpSession session, Map<String, Object> model) {
 						
@@ -130,6 +135,7 @@ public class KanjiDictionaryController {
 		model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 		model.put("canonicalUrl", baseServer + "/kanjiDictionary");
 		model.put("scriptLdJson", ldJsonService.generateKanjiDictionaryScript(baseServer));
+		model.put("showKanjiDictionaryCatalogLinks", configService.isKanjiDictionaryCatalogEnabled());
 				
 		return "kanjiDictionary";
 	}
@@ -176,6 +182,7 @@ public class KanjiDictionaryController {
 			model.put("kanjiAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.KANJI_ENTRY_WEB));
 			model.put("selectTab", getSelectTabId(session, KanjiDictionaryTab.MEANING));
 			model.put("metaRobots", "noindex, follow");
+			model.put("showKanjiDictionaryCatalogLinks", configService.isKanjiDictionaryCatalogEnabled());
 			
 			return "kanjiDictionary";
 		}
@@ -286,6 +293,8 @@ public class KanjiDictionaryController {
 		if (kanjiDictionaryEntrySpellCheckerSuggestionList != null) {
 			model.put("kanjiDictionaryEntrySpellCheckerSuggestionList", kanjiDictionaryEntrySpellCheckerSuggestionList);
 		}
+		
+		model.put("showKanjiDictionaryCatalogLinks", configService.isKanjiDictionaryCatalogEnabled());
 		
 		return "kanjiDictionary";
 	}
@@ -643,6 +652,7 @@ public class KanjiDictionaryController {
 		
 		model.put("doNotShowSocialButtons", Boolean.TRUE);
 		model.put("metaRobots", "noindex, follow");
+		model.put("showKanjiDictionaryCatalogLinks", configService.isKanjiDictionaryCatalogEnabled());
 		
 		return "kanjiDictionary";
 	}
@@ -750,6 +760,24 @@ public class KanjiDictionaryController {
 				character.destroy();
 			}
 		}		
+	}
+	
+	@RequestMapping(value = "/kanjiDictionaryCatalog2/{sectionType}/{sectionName}/{page}", method = RequestMethod.GET)
+	public String kanjiDictionaryCatalog2(HttpServletRequest request, HttpSession session,
+			@PathVariable("sectionType") String sectionType,
+			@PathVariable("sectionName") String sectionName,
+			@PathVariable("page") int pageNo,
+			Map<String, Object> model) throws DictionaryException, NoResourceFoundException {
+		
+		return processDictionaryCatalog(IndexType.kanji,
+				sectionType, sectionName, pageNo,
+				configService.isKanjiDictionaryCatalogEnabled(),
+				model,
+				"kanjiDictionary.catalog." + sectionType + ".page.title",
+				"kanjiDictionary.catalog." + sectionType + ".page.pageDescription",
+				new KanjiDictionaryCatalogLoggerModel(Utils.createLoggerModelCommon(request), pageNo), 
+				"kanjiDictionary",
+				"kanjiDictionaryCatalog2");		
 	}
 	
 	@RequestMapping(value = "/kanjiDictionaryCatalog/{page}", method = RequestMethod.GET)
