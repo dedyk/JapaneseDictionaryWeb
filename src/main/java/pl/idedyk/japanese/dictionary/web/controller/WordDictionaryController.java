@@ -146,7 +146,9 @@ public class WordDictionaryController {
 		model.put("wordAutocompleteInitialized", dictionaryManager.isAutocompleteInitialized(LuceneDatabaseSuggesterAndSpellCheckerSource.DICTIONARY_ENTRY_WEB));
 		model.put("selectedMenu", "wordDictionary");
 		model.put("canonicalUrl", baseServer + "/wordDictionary");
-		model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());
+		model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());		
+		model.put("showWordDictionaryCatalogLinks", configService.isWordDictionaryCatalogEnabled());
+		model.put("showNameDictionaryCatalogLinks", configService.isNameDictionaryCatalogEnabled());		
 		model.put("scriptLdJson", ldJsonService.generateWordDictionaryScript(baseServer));
 		
 		return "wordDictionary";
@@ -166,6 +168,8 @@ public class WordDictionaryController {
 			model.put("selectedMenu", "wordDictionary");
 			model.put("metaRobots", "noindex, follow");
 			model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());
+			model.put("showWordDictionaryCatalogLinks", configService.isWordDictionaryCatalogEnabled());
+			model.put("showNameDictionaryCatalogLinks", configService.isNameDictionaryCatalogEnabled());
 			
 			return "wordDictionary";
 		}
@@ -266,6 +270,8 @@ public class WordDictionaryController {
 		}
 		
 		model.put("showPdfDownloadLinks", configService.isWordDictionaryPdfEnabled());
+		model.put("showWordDictionaryCatalogLinks", configService.isWordDictionaryCatalogEnabled());
+		model.put("showNameDictionaryCatalogLinks", configService.isNameDictionaryCatalogEnabled());
 		
 		return "wordDictionary";
 	}

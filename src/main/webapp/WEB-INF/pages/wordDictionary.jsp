@@ -5,6 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@page import="pl.idedyk.japanese.dictionary.web.common.LinkGenerator" %>
 
 <c:set var="pageTitle"> <spring:message code="wordDictionary.page.title"/> </c:set>
 <c:set var="pageDescription"> <spring:message code="wordDictionary.page.pageDescription"/> </c:set>
@@ -184,6 +185,19 @@
 				<a href="<c:out value='${pageContext.request.contextPath}' />/wordDictionary/dictionary-common.pdf"><spring:message code="wordDictionary.page.label.pdf.common.download"/></a>
 			</c:if>
 		</div>
+		
+		<c:if test="${showWordDictionaryCatalogLinks == true}">
+			<div style="margin-top: 10px">
+				<a href="${LinkGenerator.createCatalogLink(pageContext.request.contextPath, 'wordDictionaryCatalog2', 'japaneseIndex', 'a', 1)}"> <spring:message code="wordDictionary.page.label.catalog.japanese"/> </a> <br/>
+				<a href="${LinkGenerator.createCatalogLink(pageContext.request.contextPath, 'wordDictionaryCatalog2', 'polishIndex', 'a', 1)}"> <spring:message code="wordDictionary.page.label.catalog.polish"/> </a>
+			</div>
+		</c:if>		
+		
+		<c:if test="${showNameDictionaryCatalogLinks == true}">
+			<div style="margin-top: 10px">
+				<a href="${LinkGenerator.createCatalogLink(pageContext.request.contextPath, 'nameDictionaryCatalog2', 'japaneseIndex', 'a', 1)}"> <spring:message code="wordNameDictionary.page.label.catalog.japanese"/> </a> <br/>
+			</div>
+		</c:if>
 		
 		<script>
 			$(document).ready(function() {

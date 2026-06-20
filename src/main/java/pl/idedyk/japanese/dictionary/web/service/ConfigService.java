@@ -180,10 +180,34 @@ public class ConfigService {
 		// pobranie konfiguracji
 		Config config = checkAndReloadConfigFile();
 		
-		// czy zatrzymac wszystkie schedulery
+		// czy pokazac PDF-a
 		return config.getWordDictionary().isPdfEnabled();
 	}
-	
+
+	public boolean isWordDictionaryCatalogEnabled() {
+		// pobranie konfiguracji
+		Config config = checkAndReloadConfigFile();
+		
+		// czy pokazac katalog
+		return config.getWordDictionary().isCatalogEnabled();
+	}
+
+	public boolean isNameDictionaryCatalogEnabled() {
+		// pobranie konfiguracji
+		Config config = checkAndReloadConfigFile();
+		
+		// czy pokazac katalog
+		return config.getNameDictionary().isCatalogEnabled();
+	}
+
+	public boolean isKanjiDictionaryCatalogEnabled() {
+		// pobranie konfiguracji
+		Config config = checkAndReloadConfigFile();
+		
+		// czy pokazac katalog
+		return config.getKanjiDictionary().isCatalogEnabled();
+	}
+
 	public static class ConfigWrapper {
 		private Config config;
 		private Long lastModified;

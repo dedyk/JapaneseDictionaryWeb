@@ -73,7 +73,9 @@ $().ready(function() {
 	if (scrollPos != null) {
 		$('html, body').animate({
 	    	scrollTop: scrollPos
-		}, 0);	
+		}, 0);
+		
+		localStorage.removeItem("scrollPos");
 	}
 });
 </script>
