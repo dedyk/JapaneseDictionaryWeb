@@ -24,7 +24,7 @@
 	</c:choose>
 	
 	<a href="${LinkGenerator.createCatalogLink(pageContext.request.contextPath, requestScope.catalogPageName, requestScope.selectedSectionType, currentSectionName, 1)}" 
-		class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionName}' /></span></a>
+		onclick="saveScrollPos()" class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionName}' /></span></a>
 </c:forEach>
 
 <%--Numery stron --%>
@@ -46,12 +46,35 @@
 		</c:choose>
 						
 		<a href="${LinkGenerator.createCatalogLink(pageContext.request.contextPath, requestScope.catalogPageName, requestScope.selectedSectionType, requestScope.selectedSectionName, currentSectionNamePageNo)}"
-			class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionNamePageNo}' /></span></a>
+			onclick="saveScrollPos()" class="<c:out value='${menuCatalogSectionNameItemClass}'/>"><span><c:out value='${currentSectionNamePageNo}' /></span></a>
 	</c:forEach>			
 </c:if>
 
 <%--Zawartosc spisu --%>
+<div id="sectionIndexContentStart"></div>
+
 <c:forEach items="${sectionIndex.sectionEntry}" var="currentSectionEntry">
 	<h5>${currentSectionEntry.romaji}</h5>
 
 </c:forEach>
+
+<%-- Przewijanie --%>
+<script>
+
+function saveScrollPos() {
+	localStorage.setItem("scrollPos", $(window).scrollTop());
+	
+	return true;
+};
+
+$().ready(function() {
+	var scrollPos = localStorage.getItem("scrollPos");
+	
+	if (scrollPos != null) {
+		$('html, body').animate({
+	    	scrollTop: scrollPos
+		}, 0);	
+	}
+});
+</script>
+
