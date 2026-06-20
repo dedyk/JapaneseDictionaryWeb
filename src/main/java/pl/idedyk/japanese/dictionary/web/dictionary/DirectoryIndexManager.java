@@ -8,24 +8,34 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.io.Files;
 import com.google.gson.Gson;
 
 import jakarta.annotation.PostConstruct;
+import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
+import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.DictionaryIndex;
+import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.EntryIndex;
+import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionEntry;
+import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionEntryIndexEntry;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionIndex;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionIndexMetadata;
+import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 
 @Service
 public class DirectoryIndexManager {
 	
 	private static final Logger logger = LogManager.getLogger(DirectoryIndexManager.class);
-	
+
+	private static final String MAIN_INDEX_FILE = "dictionaryindex.json";
 	private static final String otherSectionName = "Inne";
 
 	@Autowired
@@ -44,7 +54,7 @@ public class DirectoryIndexManager {
 		String dbDir = dictionaryManager.getDbDir();
 
 		// nazwa katalogu z zawartoscia indeksu
-		directoryindexMainDir = new File(dbDir, "directoryindex");
+		directoryindexMainDir = new File(dbDir, MAIN_INDEX_FILE);
 		
 		if (directoryindexMainDir.isDirectory() == false) {
 			logger.error("Błąd inicjalizacji indeksu słownika");
@@ -62,7 +72,13 @@ public class DirectoryIndexManager {
 		}
 		
 		// parsowanie pliku	
-		dictionaryIndex = null;
+		dictionaryIndex = readDictionaryIndex(directoryIndexMainFile);
+		
+		logger.error("Zakończono inicjalizacje indeksu słownika");
+	}
+	
+	private static DictionaryIndex readDictionaryIndex(File directoryIndexMainFile) {
+		
 		FileReader directoryIndexMainFileReader = null;
 		
 		try {
@@ -70,7 +86,7 @@ public class DirectoryIndexManager {
 			
 			directoryIndexMainFileReader = new FileReader(directoryIndexMainFile);
 			
-			dictionaryIndex = gson.fromJson(directoryIndexMainFileReader, DictionaryIndex.class);
+			return gson.fromJson(directoryIndexMainFileReader, DictionaryIndex.class);
 						
 		} catch (Exception e) {
 			logger.error("Błąd wczytanie głównego indeksu słownika", e);
@@ -86,9 +102,7 @@ public class DirectoryIndexManager {
 					// noop
 				}
 			}
-		}
-		
-		logger.error("Zakończono inicjalizacje indeksu słownika");
+		}	
 	}
 	
 	public List<String> getSectionNamesList(IndexType indexType, IndexSectionType indexSectionType) {
@@ -185,14 +199,17 @@ public class DirectoryIndexManager {
 			return null;
 		}
 		
+		return readSectionIndex(sectionIndexMetadataToLoadFile);
+	}
+	
+	private static SectionIndex readSectionIndex(File sectionIndexMetadataToLoadFile) {
+		
 		// mamy automatyczne zamkniecie strumyka
 		try (InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(sectionIndexMetadataToLoadFile))) {
 			
 			Gson gson = new Gson();
 			
-			SectionIndex sectionIndex = gson.fromJson(inputStreamReader, SectionIndex.class);
-			
-			return sectionIndex;		
+			return gson.fromJson(inputStreamReader, SectionIndex.class);			
 			
 		} catch (Exception e) {
 			throw new RuntimeException("Error during load section entries", e);		
@@ -268,6 +285,73 @@ public class DirectoryIndexManager {
 		
 		IndexSectionType(String indexSectionTypeName) {
 			this.indexSectionTypeName = indexSectionTypeName;
+		}
+	}
+	
+	//
+	
+	public void generateFromMain(DictionaryManager dictionaryManager, String baseServer, String sourcePath, String destinationPath) throws IOException {
+		
+		// glowny zrodlowy plik
+		File mainSourceIndexFile = new File(sourcePath, MAIN_INDEX_FILE);
+		File destinationIndexFile = new File(destinationPath, MAIN_INDEX_FILE);
+		
+		// glowny plik kopiujemy bez zmian		
+		Files.copy(mainSourceIndexFile, destinationIndexFile);
+		
+		// wczytujemy plik indeksu
+		DictionaryIndex dictionaryIndex = readDictionaryIndex(destinationIndexFile);
+		
+		// chodzimy po elementach i uzupelniamy o url
+		EntryIndex entryIndex = dictionaryIndex.getEntryIndex();
+		
+		if (entryIndex != null) {
+			
+			Map<Integer, JMdict.Entry> cache = new TreeMap<>();
+			
+			for (SectionIndexMetadata sectionIndexMetadata : entryIndex.getJapaneseIndexSectionIndex()) {
+				
+				// wczytujemy plik z zawartoscia sekcji
+				File sourceSectionIndexFile = new File(sourcePath, sectionIndexMetadata.getFileName());
+				File destinationSectionIndexFile = new File(destinationPath, sectionIndexMetadata.getFileName());
+				
+				SectionIndex sectionIndex = readSectionIndex(sourceSectionIndexFile);
+				
+				// chodzimy po wszystkich elementach i uzupelniamy w nim url
+				List<SectionEntry> sectionEntryList = sectionIndex.getSectionEntry();
+				
+				for (SectionEntry sectionEntry : sectionEntryList) {
+					
+					List<SectionEntryIndexEntry> sectionEntryEntries = sectionEntry.getEntries();
+					
+					for (SectionEntryIndexEntry sectionEntryIndexEntry : sectionEntryEntries) {
+						
+						// pobieramy slowko po entryId
+						JMdict.Entry dictionaryEntry2 = cache.computeIfAbsent(sectionEntryIndexEntry.getEntryId(), (e) -> {
+							try {
+								return dictionaryManager.getDictionaryEntry2ById(e);
+								
+							} catch (DictionaryException e1) {
+								throw new RuntimeException();
+							}
+						});
+						
+						if (dictionaryEntry2 != null) { // tutaj zawsze cos powinno byc
+							System.out.println(dictionaryEntry2.getEntryId());
+							
+							// generujemy url-a
+							String url = LinkGenerator.generateDictionaryEntryDetailsLink(baseServer, dictionaryEntry2);
+							
+							// ustawiamy go
+							sectionEntryIndexEntry.setUrl(url);
+						}
+					}					
+				}
+				
+				// zapisujemy zmodyfikowany plik w lokalizacji docelowej				
+				Gson gson = new Gson();		
+				Files.write(gson.toJson(sectionIndex).getBytes(), destinationSectionIndexFile);
+			}
 		}
 	}
 }
