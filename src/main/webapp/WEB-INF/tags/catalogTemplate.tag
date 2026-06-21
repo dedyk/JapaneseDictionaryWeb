@@ -82,18 +82,20 @@
             					if (subEntryEntryValue.length() > 0) {
             						subEntryEntryValue.append("  ");
             					}
+            					
+            					subEntryEntryValue.append(kana);
             				}
-            				subEntryEntryValue.append(kana);
 
             				if (romaji != null) {
             					if (subEntryEntryValue.length() > 0) {
             						subEntryEntryValue.append("  ");
             					}
-            				}
-            				subEntryEntryValue.append(romaji);            			
-            			%>
-            			            			            			
-            			<span class="menu-catalog-index-sub-entry-entry"><p style="white-space: pre-wrap;"><%= subEntryEntryValue.toString() %> </p></span></div>
+            					
+            					subEntryEntryValue.append(romaji);
+            				}			            			
+            			%>           			            			
+            			<span class="menu-catalog-index-sub-entry-entry"><p style="white-space: pre-wrap; margin: 0 0 0px"><a href="${currentSectionEntryEntry.url}"><%= subEntryEntryValue.toString() %></a> </p></span>
+            		</div>
             	</c:forEach>
 	    </div>
 	   </div>
