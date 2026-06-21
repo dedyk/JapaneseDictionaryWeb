@@ -54,5 +54,36 @@
 	background-color: #1c1e1f;	
 }
 
+.menu-catalog-index-columns {
+    column-count: 1;
+    column-gap: 0;
+    margin-top: 15px;
+}
+        
+@media (min-width: 768px) {
+    body { padding: 30px; }
+    .menu-catalog-index-columns {
+        column-count: 3;
+        column-gap: 40px;
+        column-rule: 1px solid #eee;
+        margin-top: 15px;
+    }
+} 
+      
+.menu-catalog-index-letter-section {
+    break-inside: avoid;
+    margin-bottom: 20px;
+}
 
+.menu-catalog-index-entry-group {
+    display: flex;
+   	/*flex-direction: column; */
+    margin-bottom: 12px;
+    break-inside: avoid;
+}
 
+.menu-catalog-index-main-word {
+    font-weight: bold;
+    font-size: 1em;
+    margin-bottom: 2px;
+}

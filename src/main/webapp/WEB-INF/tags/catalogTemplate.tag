@@ -29,7 +29,7 @@
 
 <%--Numery stron --%>
 <c:if test="${sectionNamePageNoList.size() > 1 }">
-	<h4><spring:message code="wordDictionary.catalog.pageNo.title" /></h4>
+	<h4 style="margin-top: 15px"><spring:message code="wordDictionary.catalog.pageNo.title" /></h4>
 	
 	<c:forEach items="${sectionNamePageNoList}" var="currentSectionNamePageNo">
 		
@@ -37,12 +37,10 @@
 		<c:choose>
 			<c:when test="${selectedSectionPageNo == currentSectionNamePageNo}">
 				<c:set var="menuCatalogSectionNameItemClass">menu-catalog-section-name-item menu-catalog-section-name-item-active</c:set>
-			</c:when>
-			
+			</c:when>			
 			<c:otherwise>
 			<c:set var="menuCatalogSectionNameItemClass">menu-catalog-section-name-item menu-catalog-section-name-item-inactive</c:set>
 			</c:otherwise>
-		
 		</c:choose>
 						
 		<a href="${LinkGenerator.createCatalogLink(pageContext.request.contextPath, requestScope.catalogPageName, requestScope.selectedSectionType, requestScope.selectedSectionName, currentSectionNamePageNo)}"
@@ -51,13 +49,25 @@
 </c:if>
 
 <%--Zawartosc spisu --%>
-<div id="sectionIndexContentStart"></div>
-
-<c:forEach items="${sectionIndex.sectionEntry}" var="currentSectionEntry">
-	<h5>${currentSectionEntry.romaji}</h5>
-
-</c:forEach>
-
+<div class="menu-catalog-index-columns">
+	<c:forEach items="${sectionIndex.sectionEntry}" var="currentSectionEntry">	
+	    <div class="menu-catalog-index-letter-section">
+	        <div class="menu-catalog-index-entry-group">
+            	<c:choose>
+            		<c:when test="${currentSectionEntry.polishWord != null}">
+            			<div class="menu-catalog-index-main-word"><c:out value="${currentSectionEntry.polishWord}" /></div>
+            		</c:when>
+            		<c:otherwise>
+            			<div class="menu-catalog-index-main-word"><c:out value="${currentSectionEntry.romaji}" /></div>, <c:out value="${currentSectionEntry.kana}" /> 
+            		</c:otherwise>            	
+            	</c:choose>
+            
+            <%--  <div class="sub-entry"><span class="translation">グラム</span><div class="dots"></div><span class="page-number">12</span></div> --%>
+	    </div>
+	   </div>
+	
+	</c:forEach>
+</div>
 <%-- Przewijanie --%>
 <script>
 
