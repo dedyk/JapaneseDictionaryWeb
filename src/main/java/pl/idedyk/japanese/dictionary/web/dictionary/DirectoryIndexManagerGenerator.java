@@ -2,7 +2,6 @@ package pl.idedyk.japanese.dictionary.web.dictionary;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -28,17 +27,10 @@ public class DirectoryIndexManagerGenerator {
 			destDirFile.mkdirs();
 		}
 		
-		// wczytanie pliku properties
-		Properties configProperties = new Properties();
-		
-		configProperties.load(DirectoryIndexManagerGenerator.class.getResourceAsStream("/config/config.properties"));
-
 		// tworzenie manadzera sitemap
 		DirectoryIndexManager directoryIndexManager = new DirectoryIndexManager();
-		
-		String baseServer = configProperties.getProperty("base.server");
-		
-		directoryIndexManager.generateFromMain(dictionaryManager, baseServer, "db/directoryindex", destDirFile.getAbsolutePath());
+				
+		directoryIndexManager.generateFromMain(dictionaryManager, "db/directoryindex", destDirFile.getAbsolutePath());
 		
 		// zamykamy baze danych
 		dictionaryManager.close();

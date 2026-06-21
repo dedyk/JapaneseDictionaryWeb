@@ -293,7 +293,7 @@ public class DirectoryIndexManager {
 	
 	//
 	
-	public void generateFromMain(DictionaryManager dictionaryManager, String baseServer, String sourcePath, String destinationPath) throws IOException {
+	public void generateFromMain(DictionaryManager dictionaryManager, String sourcePath, String destinationPath) throws IOException {
 		
 		// glowny zrodlowy plik
 		File mainSourceIndexFile = new File(sourcePath, MAIN_INDEX_FILE);
@@ -331,7 +331,7 @@ public class DirectoryIndexManager {
 						System.out.println("entryIndex: " + dictionaryEntry2.getEntryId());
 						
 						// generujemy url-a
-						return LinkGenerator.generateDictionaryEntryDetailsLink(baseServer, dictionaryEntry2);
+						return LinkGenerator.generateDictionaryEntryDetailsLink("", dictionaryEntry2);
 					}
 					
 					return null;
@@ -372,7 +372,7 @@ public class DirectoryIndexManager {
 						System.out.println("nameEntryIndex: " + nameDictionaryEntry2.getEntryId());
 						
 						// generujemy url-a
-						return LinkGenerator.generateNameDictionaryEntryDetailsLink(baseServer, nameDictionaryEntry2);
+						return LinkGenerator.generateNameDictionaryEntryDetailsLink("", nameDictionaryEntry2);
 					}
 					
 					return null;
@@ -411,7 +411,7 @@ public class DirectoryIndexManager {
 						System.out.println("kanjiEntryIndex: " + kanjiCharacterInfo.getId());
 						
 						// generujemy url-a
-						return LinkGenerator.generateKanjiDetailsLink(baseServer, kanjiCharacterInfo);
+						return LinkGenerator.generateKanjiDetailsLink("", kanjiCharacterInfo);
 					}
 					
 					return null;

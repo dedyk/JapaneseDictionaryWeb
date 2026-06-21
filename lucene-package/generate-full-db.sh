@@ -8,5 +8,5 @@ fi
 
 ./generate-sitemap-lastmod.sh
 ./generate-db.sh $1
-./generate-sitemap.sh $1
 ./generate-dictionary-index.sh $1
+./generate-sitemap.sh $1
