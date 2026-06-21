@@ -28,7 +28,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager.IndexSectionType;
 import pl.idedyk.japanese.dictionary.web.sitemap.exception.NotInitializedException;
+import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.DictionaryIndex;
+import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.EntryIndex;
+import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionIndexMetadata;
 import pl.idedyk.japanese.dictionary2.jmdict.xsd.JMdict;
 import pl.idedyk.japanese.dictionary2.jmnedict.xsd.JMnedict;
 import pl.idedyk.japanese.dictionary2.kanjidic2.xsd.KanjiCharacterInfo;
@@ -45,6 +50,9 @@ public class SitemapManager {
 						
 	@Autowired
 	private DictionaryManager dictionaryManager;
+	
+	@Autowired
+	private DirectoryIndexManager directoryIndexManager;
 	
 	private static final SimpleDateFormat lastModifiedSDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 	
@@ -111,9 +119,10 @@ public class SitemapManager {
 		cacheSitemap();
 	}
 	
-	public void generateFromMain(DictionaryManager dictionaryManager, String destDir) throws Exception {
+	public void generateFromMain(DictionaryManager dictionaryManager, DirectoryIndexManager directoryIndexManager, String destDir) throws Exception {
 		
 		this.dictionaryManager = dictionaryManager;
+		this.directoryIndexManager = directoryIndexManager;
 		
 		generateSitemaps(false, destDir, false);
 	}
@@ -154,7 +163,7 @@ public class SitemapManager {
 			createWordDictionaryLink(destDir, deleteOnExit, "wordDictionaryDetails", sitemapHelper, dictionaryEntry2, null);
 		}
 				
-		// katalog slow
+		// katalog slow - stary
 		/*
 		final int wordPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
 		
@@ -179,7 +188,7 @@ public class SitemapManager {
 			createWordDictionaryLink(destDir, deleteOnExit, "wordNameDictionaryDetails", sitemapHelper, null, nameDictionaryEntry2);
 		}
 
-		// katalog slow(nazwa)
+		// katalog slow(nazwa) - stary
 		/*
 		final int wordNamePageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w WordDictionaryController
 		
@@ -211,7 +220,7 @@ public class SitemapManager {
 			sitemapHelper.createUrl(destDir, deleteOnExit, "kanjiDetails", link, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.6), lastmod);
 		}
 		
-		// katalog znakow kanji
+		// katalog znakow kanji - stary
 		/*
 		final int kanjiPageSize = 50; // zmiana tego parametru wiaze sie ze zmiana w KanjiDictionaryController
 		
@@ -224,6 +233,67 @@ public class SitemapManager {
 			sitemapHelper.createUrl(destDir, deleteOnExit, "kanjiDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1));
 		}
 		*/
+		
+		// generowanie spisu slow i znakow kanji
+		DictionaryIndex dictionaryIndex = directoryIndexManager.getDictionaryIndex();
+		
+		EntryIndex entryIndex = dictionaryIndex.getEntryIndex();
+		EntryIndex nameEntryIndex = dictionaryIndex.getNameEntryIndex();
+		EntryIndex kanjiCharacterInfoListIndex = dictionaryIndex.getKanjiCharacterInfoListIndex();
+		
+		if (entryIndex != null) {
+			List<SectionIndexMetadata> polishIndexSectionIndex = entryIndex.getPolishIndexSectionIndex();
+			
+			for (SectionIndexMetadata sectionIndexMetadata : polishIndexSectionIndex) {
+				
+				String url = LinkGenerator.createCatalogLink("", "wordDictionaryCatalog2", IndexSectionType.polishIndexSection.getIndexSectionTypeName(), sectionIndexMetadata.getSectionName(), Long.valueOf(sectionIndexMetadata.getPartNo()));  
+				sitemapHelper.createUrl(destDir, deleteOnExit, "wordDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1), null);
+			}
+			
+			List<SectionIndexMetadata> japaneseIndexSectionIndex = entryIndex.getJapaneseIndexSectionIndex();
+			
+			for (SectionIndexMetadata sectionIndexMetadata : japaneseIndexSectionIndex) {
+				
+				String url = LinkGenerator.createCatalogLink("", "wordDictionaryCatalog2", IndexSectionType.japaneseIndexSection.getIndexSectionTypeName(), sectionIndexMetadata.getSectionName(), Long.valueOf(sectionIndexMetadata.getPartNo()));  
+				sitemapHelper.createUrl(destDir, deleteOnExit, "wordDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1), null);
+			}
+		}
+		
+		if (nameEntryIndex != null) {
+			List<SectionIndexMetadata> polishIndexSectionIndex = nameEntryIndex.getPolishIndexSectionIndex();
+			
+			for (SectionIndexMetadata sectionIndexMetadata : polishIndexSectionIndex) {
+				
+				String url = LinkGenerator.createCatalogLink("", "wordDictionaryNameCatalog2", IndexSectionType.polishIndexSection.getIndexSectionTypeName(), sectionIndexMetadata.getSectionName(), Long.valueOf(sectionIndexMetadata.getPartNo()));  
+				sitemapHelper.createUrl(destDir, deleteOnExit, "wordDictionaryNameCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1), null);
+			}
+			
+			List<SectionIndexMetadata> japaneseIndexSectionIndex = nameEntryIndex.getJapaneseIndexSectionIndex();
+			
+			for (SectionIndexMetadata sectionIndexMetadata : japaneseIndexSectionIndex) {
+				
+				String url = LinkGenerator.createCatalogLink("", "wordDictionaryNameCatalog2", IndexSectionType.japaneseIndexSection.getIndexSectionTypeName(), sectionIndexMetadata.getSectionName(), Long.valueOf(sectionIndexMetadata.getPartNo()));  
+				sitemapHelper.createUrl(destDir, deleteOnExit, "wordDictionaryNameCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1), null);
+			}
+		}
+		
+		if (kanjiCharacterInfoListIndex != null) {
+			List<SectionIndexMetadata> polishIndexSectionIndex = kanjiCharacterInfoListIndex.getPolishIndexSectionIndex();
+			
+			for (SectionIndexMetadata sectionIndexMetadata : polishIndexSectionIndex) {
+				
+				String url = LinkGenerator.createCatalogLink("", "kanjiDictionaryCatalog2", IndexSectionType.polishIndexSection.getIndexSectionTypeName(), sectionIndexMetadata.getSectionName(), Long.valueOf(sectionIndexMetadata.getPartNo()));  
+				sitemapHelper.createUrl(destDir, deleteOnExit, "kanjiDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1), null);
+			}
+			
+			List<SectionIndexMetadata> japaneseIndexSectionIndex = kanjiCharacterInfoListIndex.getJapaneseIndexSectionIndex();
+			
+			for (SectionIndexMetadata sectionIndexMetadata : japaneseIndexSectionIndex) {
+				
+				String url = LinkGenerator.createCatalogLink("", "kanjiDictionaryCatalog2", IndexSectionType.japaneseIndexSection.getIndexSectionTypeName(), sectionIndexMetadata.getSectionName(), Long.valueOf(sectionIndexMetadata.getPartNo()));  
+				sitemapHelper.createUrl(destDir, deleteOnExit, "kanjiDictionaryCatalog", url, ChangeFreqEnum.monthly, BigDecimal.valueOf(0.1), null);
+			}
+		}		
 		
 		// zakonczenie generowania
 		sitemapHelper.end();

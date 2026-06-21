@@ -47,7 +47,7 @@ public class SitemapGenerator {
 		
 		sitemapManager.setBaseServer(configProperties.getProperty("base.server"));
 		
-		sitemapManager.generateFromMain(dictionaryManager, destDirFile.getAbsolutePath());
+		sitemapManager.generateFromMain(dictionaryManager, directoryIndexManager, destDirFile.getAbsolutePath());
 
 		// zamykamy baze danych
 		dictionaryManager.close();

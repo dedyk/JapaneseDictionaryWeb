@@ -108,6 +108,10 @@ public class DirectoryIndexManager {
 		}	
 	}
 	
+	public DictionaryIndex getDictionaryIndex() {
+		return dictionaryIndex;
+	}
+	
 	public List<String> getSectionNamesList(IndexType indexType, IndexSectionType indexSectionType) {
 		
 		if (indexType == null || indexSectionType == null) {
@@ -288,6 +292,10 @@ public class DirectoryIndexManager {
 		
 		IndexSectionType(String indexSectionTypeName) {
 			this.indexSectionTypeName = indexSectionTypeName;
+		}
+
+		public String getIndexSectionTypeName() {
+			return indexSectionTypeName;
 		}
 	}
 	
