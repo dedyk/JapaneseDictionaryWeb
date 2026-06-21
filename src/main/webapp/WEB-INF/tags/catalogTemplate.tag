@@ -5,6 +5,7 @@
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <%@tag import="pl.idedyk.japanese.dictionary.web.common.LinkGenerator" %>
+<%@tag import="pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.SectionEntryIndexEntry" %>
 
 <h3>${pageTitle}</h3>
 
@@ -64,15 +65,36 @@
             	
             	<c:forEach items="${currentSectionEntry.entries}" var="currentSectionEntryEntry">	
             		<div class="menu-catalog-index-sub-entry">
-            			<c:if test="${currentSectionEntryEntry.kanji != null}">
-            				<span class="menu-catalog-index-sub-entry-entry""><c:out value="${currentSectionEntryEntry.kanji}" />, <c:out value="${currentSectionEntry.kana}" /></span></div>
-            			</c:if>
-            			<c:if test="${currentSectionEntryEntry.kanji == null}">
-            				<span class="menu-catalog-index-sub-entry-entry"><c:out value="${currentSectionEntry.kana}" /></span></div>
-            			</c:if>
+            			<%
+            				StringBuffer subEntryEntryValue = new StringBuffer();
+            			
+            				SectionEntryIndexEntry sectionEntryIndexEntryi = (SectionEntryIndexEntry) jspContext.getAttribute("currentSectionEntryEntry");
+            				
+            				String kanji = sectionEntryIndexEntryi.getKanji();
+            				String kana = sectionEntryIndexEntryi.getKana();
+            				String romaji = sectionEntryIndexEntryi.getRomaji();
+            				
+            				if (kanji != null) {
+            					subEntryEntryValue.append(kanji);
+            				}
+            				
+            				if (kana != null) {
+            					if (subEntryEntryValue.length() > 0) {
+            						subEntryEntryValue.append("  ");
+            					}
+            				}
+            				subEntryEntryValue.append(kana);
+
+            				if (romaji != null) {
+            					if (subEntryEntryValue.length() > 0) {
+            						subEntryEntryValue.append("  ");
+            					}
+            				}
+            				subEntryEntryValue.append(romaji);            			
+            			%>
+            			            			            			
+            			<span class="menu-catalog-index-sub-entry-entry"><p style="white-space: pre-wrap;"><%= subEntryEntryValue.toString() %> </p></span></div>
             	</c:forEach>
-            
-            	<%-- <div class="sub-entry"><span class="translation">FM_TEST: しゅ, 朱</span></div> --%>
 	    </div>
 	   </div>
 	
