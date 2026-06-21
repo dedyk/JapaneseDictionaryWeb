@@ -58,11 +58,21 @@
             			<div class="menu-catalog-index-main-word"><c:out value="${currentSectionEntry.polishWord}" /></div>
             		</c:when>
             		<c:otherwise>
-            			<div class="menu-catalog-index-main-word"><c:out value="${currentSectionEntry.romaji}" /></div>, <c:out value="${currentSectionEntry.kana}" /> 
-            		</c:otherwise>            	
+            			<div class="menu-catalog-index-main-word"><c:out value="${currentSectionEntry.romaji}" /></div>
+            		</c:otherwise>
             	</c:choose>
+            	
+            	<c:forEach items="${currentSectionEntry.entries}" var="currentSectionEntryEntry">	
+            		<div class="menu-catalog-index-sub-entry">
+            			<c:if test="${currentSectionEntryEntry.kanji != null}">
+            				<span class="menu-catalog-index-sub-entry-entry""><c:out value="${currentSectionEntryEntry.kanji}" />, <c:out value="${currentSectionEntry.kana}" /></span></div>
+            			</c:if>
+            			<c:if test="${currentSectionEntryEntry.kanji == null}">
+            				<span class="menu-catalog-index-sub-entry-entry"><c:out value="${currentSectionEntry.kana}" /></span></div>
+            			</c:if>
+            	</c:forEach>
             
-            <%--  <div class="sub-entry"><span class="translation">グラム</span><div class="dots"></div><span class="page-number">12</span></div> --%>
+            	<%-- <div class="sub-entry"><span class="translation">FM_TEST: しゅ, 朱</span></div> --%>
 	    </div>
 	   </div>
 	
