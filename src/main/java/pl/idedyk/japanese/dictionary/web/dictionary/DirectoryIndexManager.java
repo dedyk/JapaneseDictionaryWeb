@@ -460,4 +460,12 @@ public class DirectoryIndexManager {
 		
 		Files.write(gson.toJson(sectionIndex).getBytes(), destinationSectionIndexFile);
 	}
+
+	public DictionaryManager getDictionaryManager() {
+		return dictionaryManager;
+	}
+
+	public void setDictionaryManager(DictionaryManager dictionaryManager) {
+		this.dictionaryManager = dictionaryManager;
+	}
 }

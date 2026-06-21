@@ -27,7 +27,7 @@ public class DirectoryIndexManagerGenerator {
 			destDirFile.mkdirs();
 		}
 		
-		// tworzenie manadzera sitemap
+		// tworzenie manadzera spisu
 		DirectoryIndexManager directoryIndexManager = new DirectoryIndexManager();
 				
 		directoryIndexManager.generateFromMain(dictionaryManager, "db/directoryindex", destDirFile.getAbsolutePath());

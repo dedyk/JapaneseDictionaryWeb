@@ -9,6 +9,7 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.DefaultConfiguration;
 
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
+import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager;
 
 public class SitemapGenerator {
 	
@@ -22,6 +23,12 @@ public class SitemapGenerator {
 		DictionaryManager dictionaryManager = new DictionaryManager();
 		
 		dictionaryManager.initFromMain(args[0]);
+		
+		// tworzenie manadzera spisu
+		DirectoryIndexManager directoryIndexManager = new DirectoryIndexManager();		
+		
+		directoryIndexManager.setDictionaryManager(dictionaryManager);
+		directoryIndexManager.initialize();
 		
 		// utworzenie katalogu docelowego
 		File destDirFile = new File(args[0], "sitemap");
