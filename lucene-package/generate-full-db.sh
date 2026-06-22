@@ -6,7 +6,7 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 
-./generate-sitemap-lastmod.sh
-./generate-db.sh $1
-./generate-dictionary-index.sh $1
-./generate-sitemap.sh $1
+./01_generate-sitemap-lastmod.sh
+./02_generate-db.sh $1
+./03_generate-dictionary-index.sh $1
+./04_generate-sitemap.sh $1
