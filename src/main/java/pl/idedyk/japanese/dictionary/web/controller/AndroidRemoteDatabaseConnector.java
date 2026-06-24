@@ -28,6 +28,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindKanjiResult;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordCommonList;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPowerList;
 import pl.idedyk.japanese.dictionary.api.dto.GroupEnum;
 import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
@@ -982,6 +983,34 @@ public class AndroidRemoteDatabaseConnector {
 
 		// pobranie		
 		WordPowerList result = dictionaryManager.getWordPowerList();
+		
+		// logowanie
+		loggerSender.sendLog(new WordDictionaryGetWordPowerListLoggerModel(Utils.createLoggerModelCommon(request)));
+		
+		// typ odpowiedzi
+		response.setContentType("application/json");
+		
+		// zwrocenie wyniku
+		writer.append(gson.toJson(result));
+	}
+	
+	@RequestMapping(value = "/android/remoteDatabaseConnector/getWordCommonList", method = RequestMethod.POST)
+	public void getWordCommonList(HttpServletRequest request, HttpServletResponse response, Writer writer,
+			HttpSession session, Map<String, Object> model) throws IOException, DictionaryException {
+		
+		Gson gson = new Gson();
+		
+		// pobranie wejscia
+		String jsonRequest = getJson(request);
+				
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getWordCommonList] Parsuję żądanie: " + jsonRequest);
+			
+		// logowanie
+		logger.info("[AndroidRemoteDatabaseConnector.getWordCommonList] Pobierz powszechne słówka");
+
+		// pobranie		
+		WordCommonList result = dictionaryManager.getWordCommonList();
 		
 		// logowanie
 		loggerSender.sendLog(new WordDictionaryGetWordPowerListLoggerModel(Utils.createLoggerModelCommon(request)));

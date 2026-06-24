@@ -20,6 +20,7 @@ import pl.idedyk.japanese.dictionary.api.dictionary.DictionaryManagerAbstract;
 import pl.idedyk.japanese.dictionary.api.dictionary.Utils;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordRequest;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.FindWordResult;
+import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordCommonList;
 import pl.idedyk.japanese.dictionary.api.dictionary.dto.WordPowerList;
 import pl.idedyk.japanese.dictionary.api.dto.KanjivgEntry;
 import pl.idedyk.japanese.dictionary.api.dto.RadicalInfo;
@@ -47,6 +48,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	private static final String TRANSITIVE_INTRANSTIVE_PAIRS_FILE = "transitive_intransitive_pairs.csv";
 	private static final String KANA_FILE = "kana.csv";
 	private static final String WORD_POWER_FILE = "word-power.csv";
+	private static final String WORD_COMMON_FILE = "word-common.csv";
 
 	private static final String LUCENE_DB_DIR = "db-lucene";
 
@@ -59,6 +61,7 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	private List<TransitiveIntransitivePair> transitiveIntransitivePairsList = null;
 
 	private WordPowerList wordPowerList;
+	private WordCommonList wordCommmonList;
 
 	private boolean initialized = false;
 	
@@ -174,7 +177,20 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 
 			throw new RuntimeException(e);
 		}
+		
+		logger.info("Wczytywanie informacji o powszechnych słówkach");
 
+		try {
+			InputStream wordCommonInputStream = new FileInputStream(new File(dbDir, WORD_COMMON_FILE));
+
+			readWordCommonFromCsv(wordCommonInputStream);
+
+		} catch (Exception e) {
+			logger.error("Wczytywanie informacji o powszechnych slowkach zakonczylo sie bledem", e);
+
+			throw new RuntimeException(e);
+		}		
+		
 		logger.info("Wczytywanie informacji o parach czasownikow przechodnich i nieprzechodnich");
 
 		try {
@@ -345,7 +361,6 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	}
 
 	private void readWordPowerFromCsv(InputStream wordPowerInputStream) throws IOException {
-
 		CsvReader wordPowerInputStreamCsvReader = null;
 
 		try {
@@ -354,13 +369,10 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 			wordPowerList = new WordPowerList();
 
 			while (wordPowerInputStreamCsvReader.readRecord()) {
-
 				int columnCount = wordPowerInputStreamCsvReader.getColumnCount();
-
 				int power = Integer.parseInt(wordPowerInputStreamCsvReader.get(0));
 
 				for (int columnNo = 1; columnNo < columnCount; ++columnNo) {
-
 					int currentDictionaryEntryIdx = Integer.parseInt(wordPowerInputStreamCsvReader.get(columnNo));
 
 					wordPowerList.addPower(power, currentDictionaryEntryIdx);
@@ -368,11 +380,35 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 			}
 
 		} finally {
-
 			if (wordPowerInputStreamCsvReader != null) {
 				wordPowerInputStreamCsvReader.close();
 			}
 		}
+	}
+	
+	private void readWordCommonFromCsv(InputStream wordCommonInputStream) throws IOException {
+		CsvReader wordCommonInputStreamCsvReader = null;
+
+		try {
+			wordCommonInputStreamCsvReader = new CsvReader(new InputStreamReader(wordCommonInputStream), ',');
+
+			wordCommmonList = new WordCommonList();
+
+			while (wordCommonInputStreamCsvReader.readRecord()) {
+				int columnCount = wordCommonInputStreamCsvReader.getColumnCount();
+
+				for (int columnNo = 0; columnNo < columnCount; ++columnNo) {
+					int currentDictionaryEntryIdx = Integer.parseInt(wordCommonInputStreamCsvReader.get(columnNo));
+
+					wordCommmonList.addDictionaryEntryId(currentDictionaryEntryIdx);
+				}
+			}
+
+		} finally {
+			if (wordCommonInputStreamCsvReader != null) {
+				wordCommonInputStreamCsvReader.close();
+			}
+		}		
 	}
 
 	@Override
@@ -554,6 +590,11 @@ public class DictionaryManager extends DictionaryManagerAbstract {
 	@Override
 	public WordPowerList getWordPowerList() throws DictionaryException {
 		return wordPowerList;
+	}
+	
+	@Override
+	public WordCommonList getWordCommonList() throws DictionaryException {
+		return wordCommmonList;
 	}
 
 	public String getDbDir() {
