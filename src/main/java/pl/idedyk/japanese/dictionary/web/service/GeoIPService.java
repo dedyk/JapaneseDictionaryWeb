@@ -146,6 +146,23 @@ public class GeoIPService {
 		return "AS" + autonomousSystemNumber;		
 	}
 	
+	public String getAutonomousSystemOrganization(String ip) {
+		
+		AsnResponse autonomousSystem = getAutonomousSystem(ip);
+		
+		if (autonomousSystem == null) {
+			return null;
+		}
+		
+		String autonomousSystemOrganization = autonomousSystem.getAutonomousSystemOrganization();
+		
+		if (autonomousSystemOrganization == null) {
+			return null;
+		}
+		
+		return autonomousSystemOrganization;		
+	}
+	
 	public AsnResponse getAutonomousSystem(String ip) {
 		
 		try {

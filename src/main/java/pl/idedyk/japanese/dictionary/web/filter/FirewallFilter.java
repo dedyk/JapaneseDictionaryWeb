@@ -221,6 +221,7 @@ public class FirewallFilter implements Filter {
 			if (geoIPService != null && clientInfo.ip != null) {
 				clientInfo.country = geoIPService.getCountry(clientInfo.ip);
 				clientInfo.autonomousSystemNumber = geoIPService.getAutonomousSystemNumber(clientInfo.ip);
+				clientInfo.autonomousSystemOrganization = geoIPService.getAutonomousSystemOrganization(clientInfo.ip);
 			}
 		} catch (Exception e) {
 			logger.error("Błąd podczas pobierania nazwy kraju z adresu ip", e);

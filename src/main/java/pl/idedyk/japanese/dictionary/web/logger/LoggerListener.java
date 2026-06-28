@@ -108,16 +108,18 @@ public class LoggerListener {
 		String remoteIpHost = null;
 		String remoteIpCountry = null;
 		String remoteIpAsn = null;
+		String remoteIpAsnOrganizationName = null;
 		
 		if (clientInfo != null) {
 			remoteIp = clientInfo.ip;
 			remoteIpHost = Utils.getHostname(remoteIp);
 			remoteIpCountry = clientInfo.country;
 			remoteIpAsn = clientInfo.autonomousSystemNumber;
+			remoteIpAsnOrganizationName = clientInfo.autonomousSystemOrganization;
 		}
 		
 		// ogolna obsluga			
-		logger.info("Przetwarzam zadanie " + operation + " z kolejki od: " + remoteIp + " (" + remoteIpAsn + ", "  + remoteIpCountry + ") / " + remoteIpHost);
+		logger.info("Przetwarzam zadanie " + operation + " z kolejki od: " + remoteIp + " (" + remoteIpAsn + ", " + remoteIpAsnOrganizationName + ", "  + remoteIpCountry + ") / " + remoteIpHost);
 		
 		// utworzenie wpisu do bazy danych
 		genericLog = new GenericLog();
