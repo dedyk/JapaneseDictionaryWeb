@@ -92,9 +92,19 @@
             					}
             					
             					subEntryEntryValue.append(romaji);
-            				}			            			
+            				}
+            				
+            				// sprawdzenie, czy to kanji, jesli tak to nalezy zwiekszyc czcionke
+            				String additionalStyle = "";
+            				
+            				String catalogPageNameValue = (String) request.getAttribute("catalogPageName");
+            				
+            				if (catalogPageNameValue.startsWith("kanji") == true) {
+            					additionalStyle = "; font-size: 150%";
+            				} 
+            				
             			%>           			            			
-            			<span class="menu-catalog-index-sub-entry-entry"><p style="white-space: pre-wrap; margin: 0 0 0px"><a href="${currentSectionEntryEntry.url}"><%= subEntryEntryValue.toString() %></a> </p></span>
+            			<span class="menu-catalog-index-sub-entry-entry"><p style="white-space: pre-wrap; margin: 0 0 0px <%= additionalStyle %>"><a href="${currentSectionEntryEntry.url}"><%= subEntryEntryValue.toString() %></a> </p></span>
             		</div>
             	</c:forEach>
 	    </div>
