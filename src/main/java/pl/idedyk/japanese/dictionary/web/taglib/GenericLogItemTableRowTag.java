@@ -53,25 +53,29 @@ public class GenericLogItemTableRowTag extends TagSupport {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
             addColumn(tr, String.valueOf(simpleDateFormat.format(genericLog.getTimestamp())));
-
-            // operation
-            addColumn(tr, genericLog.getOperation().toString());
             
-            // sub operation
+            // operation i sub operation
+            StringBuffer operation = new StringBuffer();
+            
+            operation.append(genericLog.getOperation().toString());
+            
             if (genericLog.getOperation() == GenericLogOperationEnum.ADMIN_REQUEST) {
             	
             	AdminRequestLog adminRequestLog = mySQLConnector.getAdminRequestLogByGenericId(genericLog.getId());
             	
             	if (adminRequestLog != null) {
-            		addColumn(tr, adminRequestLog.getType());
+            		operation.append(" (" + adminRequestLog.getType() + ")");
+            		// addColumn(tr, adminRequestLog.getType());
             		
             	} else {
-            		addColumn(tr, (String)null);
+            		// addColumn(tr, (String)null);
             	}
             	
             } else {
-            	addColumn(tr, (String)null);
-            }            
+            	// addColumn(tr, (String)null);
+            }      
+            
+            addColumn(tr, operation.toString());
             
             // request url
             /*
@@ -121,7 +125,10 @@ public class GenericLogItemTableRowTag extends TagSupport {
             */
             
             StringBuffer remoteIpJoined = new StringBuffer();
-            remoteIpJoined.append(remoteIp);
+            
+            if (remoteIp != null) {
+            	remoteIpJoined.append(remoteIp);
+            }
             
             /*
             if (remoteIpAddInfoList.size() > 0) {
@@ -132,7 +139,7 @@ public class GenericLogItemTableRowTag extends TagSupport {
             addColumn(tr, remoteIpJoined.toString());
             
             // remote host
-            addColumn(tr, genericLog.getRemoteHost());
+            addColumn(tr, genericLog.getRemoteHost() != null ? genericLog.getRemoteHost() : "");
             
             // remote ip asn
             addColumn(tr, genericLog.getRemoteIpAsn() != null ? genericLog.getRemoteIpAsn() + " (" + genericLog.getRemoteIpAsnOrganizationName() + ")" : "");

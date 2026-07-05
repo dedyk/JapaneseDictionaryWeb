@@ -95,7 +95,7 @@
 						<th><spring:message code="admin.panel.genericlog.column.id" /></th>
 						<th><spring:message code="admin.panel.genericlog.column.timestamp" /></th>
 						<th><spring:message code="admin.panel.genericlog.column.operation" /></th>
-						<th><spring:message code="admin.panel.genericlog.column.suboperation" /></th>
+						<%--- <th><spring:message code="admin.panel.genericlog.column.suboperation" /></th> --%>
 						<%-- <th><spring:message code="admin.panel.genericlog.column.requestUrl" /></th> --%>
 						<th><spring:message code="admin.panel.genericlog.column.remoteIpCountry" /></th>
 						<th><spring:message code="admin.panel.genericlog.column.remoteIp" /></th>
