@@ -113,8 +113,9 @@ public class MySQLConnector {
 		try {
 			connection = connectionPool.getConnection();
 			
-			preparedStatement = connection.prepareStatement( "insert into generic_log(timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation) "
-					+ "values(?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			preparedStatement = connection.prepareStatement( "insert into generic_log(timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation, "
+					+ "remote_ip_asn, remote_ip_asn_organization_name, remote_ip_country) "
+					+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			preparedStatement.setTimestamp(1, genericLog.getTimestamp());
 			preparedStatement.setString(2, genericLog.getSessionId());
@@ -124,6 +125,9 @@ public class MySQLConnector {
 			preparedStatement.setString(6, genericLog.getRemoteIp());
 			preparedStatement.setString(7, genericLog.getRemoteHost());
 			preparedStatement.setString(8, genericLog.getOperation().toString());
+			preparedStatement.setString(9, genericLog.getRemoteIpAsn());
+			preparedStatement.setString(10, genericLog.getRemoteIpAsnOrganizationName());
+			preparedStatement.setString(11, genericLog.getRemoteIpCountry());
 			
 			preparedStatement.executeUpdate();
 			
@@ -232,9 +236,9 @@ public class MySQLConnector {
 			
 			StringBuffer sql = new StringBuffer();
 			
-			final String[] columnsToFilter = new String[] {"timestamp", "session_id", "user_agent", "request_url", "referer_url", "remote_ip", "remote_host" };
+			final String[] columnsToFilter = new String[] {"timestamp", "session_id", "user_agent", "request_url", "referer_url", "remote_ip", "remote_host", "remote_ip_asn", "remote_ip_asn_organization_name", "remote_ip_country" };
 			
-			sql.append("select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
+			sql.append("select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation, remote_ip_asn, remote_ip_asn_organization_name, remote_ip_country "
 					+ "from generic_log where operation in ( ");
 			
 			for (int idxGenericLogOperationStringList = 0; idxGenericLogOperationStringList < genericLogOperationStringList.size(); ++idxGenericLogOperationStringList) {
@@ -326,8 +330,8 @@ public class MySQLConnector {
 				
 		try {						
 			connection = connectionPool.getConnection();
-						
-			preparedStatement = connection.prepareStatement("select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
+			
+			preparedStatement = connection.prepareStatement("select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation, remote_ip_asn, remote_ip_asn_organization_name, remote_ip_country "
 					+ "from generic_log where id = ?");
 						
 			preparedStatement.setLong(1, id);
@@ -367,10 +371,13 @@ public class MySQLConnector {
 		genericLog.setUserAgent(resultSet.getString("user_agent"));
 		genericLog.setRequestURL(resultSet.getString("request_url"));
 		genericLog.setRefererURL(resultSet.getString("referer_url"));
-		genericLog.setRemoteIp(resultSet.getString("remote_ip"));
+		genericLog.setRemoteIp(resultSet.getString("remote_ip"));		
+		genericLog.setRemoteIpAsn(resultSet.getString("remote_ip_asn"));
+		genericLog.setRemoteIpAsnOrganizationName(resultSet.getString("remote_ip_asn_organization_name"));
+		genericLog.setRemoteIpCountry(resultSet.getString("remote_ip_country"));
 		genericLog.setRemoteHost(resultSet.getString("remote_host"));
 		genericLog.setOperation(GenericLogOperationEnum.valueOf(resultSet.getString("operation")));
-		
+				
 		return genericLog;
 	}
 		
@@ -2364,8 +2371,8 @@ public class MySQLConnector {
 				
 		try {						
 			connection = connectionPool.getConnection();
-						
-			String sql = "select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
+			
+			String sql = "select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation, remote_ip_asn, remote_ip_asn_organization_name, remote_ip_country "
 					+ "from generic_log where id >= ? and id <= ? order by id ";
 						
 			preparedStatement = connection.prepareStatement(sql.toString());
@@ -3527,7 +3534,7 @@ public class MySQLConnector {
 
 		try {
 			
-			preparedStatement = transaction.connection.prepareStatement("select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation "
+			preparedStatement = transaction.connection.prepareStatement("select id, timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation, remote_ip_asn, remote_ip_asn_organization_name, remote_ip_country "
 					+ "from generic_log where operation = ? and timestamp >= ? and timestamp <= ?");
 			
 			preparedStatement.setString(1, operation.toString());

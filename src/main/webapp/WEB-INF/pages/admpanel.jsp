@@ -97,8 +97,11 @@
 						<th><spring:message code="admin.panel.genericlog.column.operation" /></th>
 						<th><spring:message code="admin.panel.genericlog.column.suboperation" /></th>
 						<%-- <th><spring:message code="admin.panel.genericlog.column.requestUrl" /></th> --%>
+						<th><spring:message code="admin.panel.genericlog.column.remoteIpCountry" /></th>
 						<th><spring:message code="admin.panel.genericlog.column.remoteIp" /></th>
 						<th><spring:message code="admin.panel.genericlog.column.remoteHost" /></th>						
+						<th><spring:message code="admin.panel.genericlog.column.remoteIpAsn" /></th>
+						<%-- th><spring:message code="admin.panel.genericlog.column.remoteIpAsnOrganizationName" /></th> --%>
 						<th></th>
 					</tr>
 				</thead>

@@ -127,6 +127,9 @@ public class LoggerListener {
 		genericLog.setTimestamp(new Timestamp(loggerModelCommon.getDate().getTime()));
 		genericLog.setSessionId(loggerModelCommon.getSessionId());
 		genericLog.setRemoteIp(remoteIp);
+		genericLog.setRemoteIpAsn(remoteIpAsn);
+		genericLog.setRemoteIpAsnOrganizationName(remoteIpAsnOrganizationName);
+		genericLog.setRemoteIpCountry(remoteIpCountry);
 		genericLog.setUserAgent(loggerModelCommon.getUserAgent());
 		genericLog.setRequestURL(loggerModelCommon.getRequestURL());
 		genericLog.setRefererURL(loggerModelCommon.getRefererURL());

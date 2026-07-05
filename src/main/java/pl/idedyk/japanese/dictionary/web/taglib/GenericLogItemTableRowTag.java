@@ -94,12 +94,52 @@ public class GenericLogItemTableRowTag extends TagSupport {
             }
             */
             
+            // remote ip country
+            addColumn(tr, genericLog.getRemoteIpCountry());
+            
             // remote ip
-            addColumn(tr, genericLog.getRemoteIp());
+            String remoteIp = genericLog.getRemoteIp();
+            
+            // List<String> remoteIpAddInfoList = new ArrayList<>();
+            
+            // String remoteIpAsn = genericLog.getRemoteIpAsn();
+            // String remoteIpAsnOrganizationName = genericLog.getRemoteIpAsnOrganizationName();
+            // String remoteIpCountry = genericLog.getRemoteIpCountry();            		
+            
+            /*
+            if (remoteIpAsn != null) {
+            	remoteIpAddInfoList.add(remoteIpAsn);
+            }
+
+            if (remoteIpAsnOrganizationName != null) {
+            	remoteIpAddInfoList.add(remoteIpAsnOrganizationName);
+            }
+
+            if (remoteIpCountry != null) {
+            	remoteIpAddInfoList.add(remoteIpCountry);
+            }
+            */
+            
+            StringBuffer remoteIpJoined = new StringBuffer();
+            remoteIpJoined.append(remoteIp);
+            
+            /*
+            if (remoteIpAddInfoList.size() > 0) {
+            	remoteIpJoined.append(" (" + String.join(", ", remoteIpAddInfoList) + ")");
+            } 
+            */           
+            
+            addColumn(tr, remoteIpJoined.toString());
             
             // remote host
             addColumn(tr, genericLog.getRemoteHost());
-                        
+            
+            // remote ip asn
+            addColumn(tr, genericLog.getRemoteIpAsn() != null ? genericLog.getRemoteIpAsn() + " (" + genericLog.getRemoteIpAsnOrganizationName() + ")" : "");
+
+            // remote ip asn organization name
+            // addColumn(tr, genericLog.getRemoteIpAsnOrganizationName());
+            
             // details link
 	    	Td detailsLinkTd = new Td();
 	    	tr.addHtmlElement(detailsLinkTd);

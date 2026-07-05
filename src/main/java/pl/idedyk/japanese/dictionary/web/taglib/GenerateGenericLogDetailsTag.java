@@ -265,17 +265,31 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
         // remote host
         addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteHost"), genericLog.getRemoteHost());
 		
-        // remote ip country        
-        addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpCountry"), geoIPService.getCountry(genericLog.getRemoteIp()));
+        // remote ip country       
+        String remoteIpCountry = genericLog.getRemoteIpCountry();
+        
+        if (remoteIpCountry == null) { // zachowanie zgodnosci ze starymi danymi, gdy nie byl zapisywany kraj
+        	remoteIpCountry = geoIPService.getCountry(genericLog.getRemoteIp());
+        }
+        
+        addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpCountry"), remoteIpCountry);
         
         // remote ip asn
-        AsnResponse autonomousSystem = geoIPService.getAutonomousSystem(genericLog.getRemoteIp());
+        String remoteIpAsn = genericLog.getRemoteIpAsn();
+        String remoteIpAsnOrganizationName = genericLog.getRemoteIpAsnOrganizationName();
         
-        if (autonomousSystem != null) {
-        	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpAs"), "AS" + autonomousSystem.getAutonomousSystemNumber() + " (" + autonomousSystem.getAutonomousSystemOrganization() + ")");        	
+        if (remoteIpAsn == null) { // zachowanie zgodnosci ze starymi danymi, gdy nie byl zapisywany ASN
+            AsnResponse autonomousSystem = geoIPService.getAutonomousSystem(genericLog.getRemoteIp());
+            
+            if (autonomousSystem != null) {
+            	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpAs"), "AS" + autonomousSystem.getAutonomousSystemNumber() + " (" + autonomousSystem.getAutonomousSystemOrganization() + ")");        	
+            } else {
+            	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpAs"), "Unknown");
+            }
+            
         } else {
-        	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpAs"), "Unknown");
-        }
+        	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpAs"),remoteIpAsn + " (" + remoteIpAsnOrganizationName + ")");
+        }        
         
 		panelBody.addHtmlElement(table);
         		

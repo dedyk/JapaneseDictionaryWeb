@@ -16,11 +16,12 @@ public class GenericLog implements Serializable {
 	private String userAgent;
 	
 	private String requestURL;
-	
 	private String refererURL;
 	
 	private String remoteIp;
-	
+	private String remoteIpAsn;
+	private String remoteIpAsnOrganizationName;
+	private String remoteIpCountry;
 	private String remoteHost;
 	
 	private GenericLogOperationEnum operation;
@@ -80,6 +81,30 @@ public class GenericLog implements Serializable {
 	public void setRemoteIp(String remoteIp) {
 		this.remoteIp = remoteIp;
 	}
+	
+	public String getRemoteIpAsn() {
+		return remoteIpAsn;
+	}
+
+	public void setRemoteIpAsn(String remoteIpAsn) {
+		this.remoteIpAsn = remoteIpAsn;
+	}
+
+	public String getRemoteIpAsnOrganizationName() {
+		return remoteIpAsnOrganizationName;
+	}
+
+	public void setRemoteIpAsnOrganizationName(String remoteIpAsnOrganizationName) {
+		this.remoteIpAsnOrganizationName = remoteIpAsnOrganizationName;
+	}
+
+	public String getRemoteIpCountry() {
+		return remoteIpCountry;
+	}
+
+	public void setRemoteIpCountry(String remoteIpCountry) {
+		this.remoteIpCountry = remoteIpCountry;
+	}
 
 	public String getRemoteHost() {
 		return remoteHost;
@@ -95,5 +120,5 @@ public class GenericLog implements Serializable {
 
 	public void setOperation(GenericLogOperationEnum operation) {
 		this.operation = operation;
-	}
+	}	
 }
