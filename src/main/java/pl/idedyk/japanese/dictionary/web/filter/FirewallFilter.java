@@ -251,10 +251,12 @@ public class FirewallFilter implements Filter {
 			clientInfo.doBlock = false;
 		}
 
+		/*
 		// dostep do pliku robots.txt jest dozwolony
 		if (clientInfo.doBlock == true && clientInfo.httpMethod != null && clientInfo.httpMethod.equals("GET") == true && clientInfo.url.equals("/robots.txt") == true) {
 			clientInfo.doBlock = false;
 		}
+		*/
 		
 		if (clientInfo.doBlock == true) { // blokowanie
 			
