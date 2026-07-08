@@ -510,7 +510,7 @@ public class WordDictionaryController extends DictionaryCommonController {
 			// sprawdzenie, czy nie odwolujemy sie dokladnie do tej strony
 			if (	uniqueKanjiKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0]) == false ||
 					uniqueKanaKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[1]) == false ||
-					request.getRequestURI().equals(destinationUrl) == false) {
+					normalizeRequestURL(request.getRequestURI()).equals(destinationUrl) == false) {
 				
 				// wysylamy przekierowanie do wlasciwej strony
 				RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
@@ -670,7 +670,7 @@ public class WordDictionaryController extends DictionaryCommonController {
 			// sprawdzenie, czy nie odwolujemy sie dokladnie do tej strony
 			if (	uniqueKanjiKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[0]) == false ||
 					uniqueKanaKey.equals(uniqueKanjiKanaRomajiSetWithoutSearchOnly[1]) == false ||
-					request.getRequestURI().equals(destinationUrl) == false) {
+					normalizeRequestURL(request.getRequestURI()).equals(destinationUrl) == false) {
 				
 				RedirectLoggerModel redirectLoggerModel = new RedirectLoggerModel(Utils.createLoggerModelCommon(request), destinationUrl);
 				
@@ -1103,5 +1103,9 @@ public class WordDictionaryController extends DictionaryCommonController {
 		while ((bytesRead = input.read(buffer)) != -1) {
 			output.write(buffer, 0, bytesRead);
 		}
+	}
+	
+	private String normalizeRequestURL(String requestURL) {
+		return requestURL.replaceAll(",", "%2C");
 	}
 }
