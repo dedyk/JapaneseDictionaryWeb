@@ -74,6 +74,8 @@
             				String kana = sectionEntryIndexEntryi.getKana();
             				String romaji = sectionEntryIndexEntryi.getRomaji();
             				
+            				boolean isCommon = sectionEntryIndexEntryi.isCommon();
+            				
             				if (kanji != null) {
             					subEntryEntryValue.append(kanji);
             				}
@@ -99,9 +101,23 @@
             				
             				String catalogPageNameValue = (String) request.getAttribute("catalogPageName");
             				
+            				if (isCommon == true) {
+            					additionalStyle += "; font-weight: bold";
+            				}
+            				
             				if (catalogPageNameValue.startsWith("kanji") == true) {
-            					additionalStyle = "; font-size: 150%";
-            				} 
+            					if (isCommon == false) {
+            						additionalStyle += "; font-size: 140%";
+            						
+            					} else {
+            						additionalStyle += "; font-size: 190%";
+            					}
+            					
+            				}  else {
+                				if (isCommon == true) {
+                					additionalStyle += "; font-size: 140%;";
+                				}
+            				}
             				
             			%>           			            			
             			<span class="menu-catalog-index-sub-entry-entry"><p style="white-space: pre-wrap; margin: 0 0 0px <%= additionalStyle %>"><a href="${currentSectionEntryEntry.url}"><%= subEntryEntryValue.toString() %></a> </p></span>
