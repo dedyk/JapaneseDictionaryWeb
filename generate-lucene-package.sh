@@ -12,6 +12,9 @@ export LOG4J_VERSION=2.25.3
 export GOOGLE_GUAVA=32.1.1-jre
 export JGIT=7.6.0.202603022253-r
 export SLF4J=2.0.3
+export JAXB_VERSION=4.0.9
+export JAKARTA_XML_BIND_API_VERSION=4.0.5
+export JAKARTA_ACTIVATION_API_VERSION=2.1.4
 
 cp $HOME/.m2/repository/pl/idedyk/japanese/JapaneseDictionaryAPI/$JAPANESE_DICTIONARY_API_VERSION/JapaneseDictionaryAPI-$JAPANESE_DICTIONARY_API_VERSION.jar $BASE_DIR/lib
 cp $HOME/.m2/repository/pl/idedyk/japanese/JapaneseDictionaryLuceneCommon/$JAPANESE_DICTIONARY_LUCENE_COMMON_VERSION/JapaneseDictionaryLuceneCommon-$JAPANESE_DICTIONARY_LUCENE_COMMON_VERSION.jar $BASE_DIR/lib
@@ -30,5 +33,11 @@ cp $HOME/.m2/repository/org/slf4j/slf4j-api/$SLF4J/slf4j-api-$SLF4J.jar $BASE_DI
 
 cp $HOME/.m2/repository/org/apache/logging/log4j/log4j-core/$LOG4J_VERSION/log4j-core-$LOG4J_VERSION.jar $BASE_DIR/lib
 cp $HOME/.m2/repository/org/apache/logging/log4j/log4j-api/$LOG4J_VERSION/log4j-api-$LOG4J_VERSION.jar $BASE_DIR/lib
+
+cp $HOME/.m2/repository/com/sun/xml/bind/jaxb-impl/$JAXB_VERSION/jaxb-impl-$JAXB_VERSION.jar $BASE_DIR/lib
+cp $HOME/.m2/repository/com/sun/xml/bind/jaxb-core/$JAXB_VERSION/jaxb-core-$JAXB_VERSION.jar $BASE_DIR/lib
+
+cp $HOME/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/$JAKARTA_XML_BIND_API_VERSION/jakarta.xml.bind-api-$JAKARTA_XML_BIND_API_VERSION.jar $BASE_DIR/lib
+cp $HOME/.m2/repository/jakarta/activation/jakarta.activation-api/$JAKARTA_ACTIVATION_API_VERSION/jakarta.activation-api-$JAKARTA_ACTIVATION_API_VERSION.jar $BASE_DIR/lib
 
 cp -r db $BASE_DIR/db
