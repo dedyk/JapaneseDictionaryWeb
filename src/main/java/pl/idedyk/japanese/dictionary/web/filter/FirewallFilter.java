@@ -29,8 +29,10 @@ import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList;
 import pl.idedyk.japanese.dictionary.web.config.xsd.HostBlockOperation;
+import pl.idedyk.japanese.dictionary.web.controller.CaptchaController;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.RedirectToCatchaLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService.ConfigWrapper;
 import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
@@ -220,6 +222,11 @@ public class FirewallFilter implements Filter {
 				clientInfo.url.startsWith("/android/") == true && clientInfo.userAgent != null && clientInfo.userAgent.startsWith("JapaneseAndroidLearnHelper/") == true) {
 			clientInfo.hostBlockOperation = null;
 		}
+		
+		// sprawdzenie, czy wykonujemy pokazanie captcha
+		if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCH && clientInfo.url.startsWith(CaptchaController.CAPTCH_URL_PREFIX) == true) {
+			clientInfo.hostBlockOperation = null;
+		}
 
 		/*
 		// dostep do pliku robots.txt jest dozwolony
@@ -240,6 +247,16 @@ public class FirewallFilter implements Filter {
 				ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
 				
 				loggerSender.sendLog(clientBlockLoggerModel);
+				
+			} else if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCH && clientInfo.doSendToLoggerListener == true) {
+				ServletContext servletContext = request.getServletContext();
+				WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+				
+				LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
+				
+				RedirectToCatchaLoggerModel redirectToCatchaLoggerModel = new RedirectToCatchaLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
+				
+				loggerSender.sendLog(redirectToCatchaLoggerModel);	
 			}
 			
 			if (clientInfo.hostBlockOperation == HostBlockOperation.BLOCK) { // zwykla blokada
@@ -273,6 +290,11 @@ public class FirewallFilter implements Filter {
 				httpServletResponse.setHeader("Content-Type", "text/html;charset=UTF-8");
 								
 				httpServletResponse.getOutputStream().write(randomHtmlDoc.getBytes());
+				
+			} else if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCH) { // przekierowanie do weryfikacji captcha
+								
+				httpServletResponse.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
+				httpServletResponse.setHeader("Location", CaptchaController.CAPTCH_URL_CHECK);
 			}
 		        
 	        // zrobienie commit'a

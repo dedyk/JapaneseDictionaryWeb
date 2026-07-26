@@ -43,6 +43,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.PageNoFoundExceptionLogger
 import pl.idedyk.japanese.dictionary.web.logger.model.PageNotModifiedExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.PageServiceUnavailableExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.RedirectToCatchaLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RobotsGenerateLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.ServiceUnavailableExceptionLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.SitemapGenerateLoggerModel;
@@ -1229,7 +1230,10 @@ public class LoggerListener {
 			
 		} else if (ClientBlockLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.CLIENT_BLOCK;
-					
+			
+		} else if (RedirectToCatchaLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.REDIRECT_TO_CAPTCHA;
+						
 		} else {
 			throw new RuntimeException("Nieznany klasa: " + clazz);
 		}

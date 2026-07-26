@@ -120,7 +120,7 @@
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="block"></xsd:enumeration>
 			<xsd:enumeration value="send_random_data"></xsd:enumeration>
-			<!--  <xsd:enumeration value="REDIRECT_TO_CAPTCHA"></xsd:enumeration> -->
+			<xsd:enumeration value="redirect_to_captch"></xsd:enumeration>
 		</xsd:restriction>	
 	</xsd:simpleType>
 	
