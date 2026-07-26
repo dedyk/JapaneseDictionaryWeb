@@ -3,6 +3,7 @@ package pl.idedyk.japanese.dictionary.web.filter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,12 +27,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.AddressList.Address;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.AsnList.Asn;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.CountryList.Country;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.FullUrlList.FullUrl;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlock.UserAgentList.UserAgent;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.AddressList;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.AsnList;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.CountryList;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.FullUrlList;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.UserAgentList;
+import pl.idedyk.japanese.dictionary.web.config.xsd.HostBlockOperation;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
@@ -74,120 +76,105 @@ public class FirewallFilter implements Filter {
 		return configService;		
 	}
 	
-	private void isIpHostBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo) {
+	private void isClientBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo) {
 		
-		HostBlock hostBlock = configWrapper.getConfig().getFirewall().getHostBlock();
-				
-		try {	
-			// pobranie listy blokad asn
-			List<Asn> asnList = hostBlock.getAsnList().getAsn();
-			
-			// sprawdzenie, czy dany asn jest zablokowany
-			for (Asn asn : asnList) {
-				// sprawdzenie, czy nalezy blokowac dany asn
-				if (clientInfo.autonomousSystemNumber != null && asn.getValue().equals(clientInfo.autonomousSystemNumber) == true) {
-					
-					clientInfo.doBlock = true;
-					clientInfo.doBlockSendRandomData = asn.isRandomDataSend() != null ? asn.isRandomDataSend() : false;
-					clientInfo.doSendToLoggerListener = asn.isSendToLoggerListener() != null ? asn.isSendToLoggerListener() : false;
-					
-					return;
-				}
-			}			
-			
-			// pobranie listy blokad adresow ip i host name
-			List<Address> hostBlockAddressList = hostBlock.getAddressList().getAddress();
+		List<HostBlockList.HostBlock> hostBlockListList = configWrapper.getConfig().getFirewall().getHostBlockList().getHostBlock();
+		
+		for (HostBlockList.HostBlock hostBlock : hostBlockListList) {
 
-			// sprawdzamy, czy adres ip lub nazwa hosta jest na tej liscie
-			for (Address address : hostBlockAddressList) {
-				if (	(clientInfo.ip != null && clientInfo.ip.matches(address.getValue()) == true) ||
-						(clientInfo.hostName != null && clientInfo.hostName.matches(address.getValue()) == true)) {
+			// jezeli w danym host block wystepuje dany typ warunku to wszystkie one musza byc spelnione
+			
+			int numberOfCheckedConditions = 0; // liczba wykonanych sprawdzen	| aba warunki musza
+			int numberOfSatisfiedConditions = 0; // liczba spelnionych warunkow	| byc wieksze od siebie i byc rowne sobie
+			
+			// sprawdzanie kraju
+			CountryList countryList = hostBlock.getCountryList();
+			
+			if (countryList != null) {
+				numberOfCheckedConditions++;
+								
+				for (HostBlockList.HostBlock.CountryList.Country country : hostBlock.getCountryList().getCountry()) {
 					
-					clientInfo.doBlock = true;
-					clientInfo.doBlockSendRandomData = address.isRandomDataSend() != null ? address.isRandomDataSend() : false;
-					clientInfo.doSendToLoggerListener = address.isSendToLoggerListener() != null ? address.isSendToLoggerListener() : false;
+					if (clientInfo.country != null && country.getValue().equals(clientInfo.country) == true) {
+						numberOfSatisfiedConditions++;
+						break;
+					}
+				}	
+			}
+			
+			// sprawdzenie ASN
+			AsnList asnList = hostBlock.getAsnList();
+			
+			if (asnList != null) {
+				numberOfCheckedConditions++;
+				
+				for (AsnList.Asn asn : hostBlock.getAsnList().getAsn()) {
 					
-					return;
+					if (clientInfo.autonomousSystemNumber != null && asn.getValue().equals(clientInfo.autonomousSystemNumber) == true) {
+						numberOfSatisfiedConditions++;
+						break;
+					}
 				}
 			}
 			
-			// pobranie listy blokowanych krajow
-			List<Country> countryList = hostBlock.getCountryList().getCountry();
+			// sprawdzenie adresu up i host name
+			AddressList addressList = hostBlock.getAddressList();
 			
-			for (Country country : countryList) {
-				// sprawdzenie, czy nalezy blokowac dany kraj
-				if (clientInfo.country != null && country.getValue().equals(clientInfo.country) == true) {
-					
-					clientInfo.doBlock = true;
-					clientInfo.doBlockSendRandomData = country.isRandomDataSend() != null ? country.isRandomDataSend() : false;
-					clientInfo.doSendToLoggerListener = country.isSendToLoggerListener() != null ? country.isSendToLoggerListener() : false;
-					
-					return;
-				}
-			}			
-			
-		} catch (Exception e) {
-			logger.error("Błąd podczas sprawdzania adresu ip lub nazwy hosta", e);
-		}
-	}
-	
-	private void isUserAgentBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo) {
-		
-		if (clientInfo.userAgent == null) {
-			return;
-		}
-		
-		HostBlock hostBlock = configWrapper.getConfig().getFirewall().getHostBlock();
+			if (addressList != null) {
+				numberOfCheckedConditions++;
 				
-		try {			
-			// pobranie listy blokowanych user agent
-			List<UserAgent> hostBlockUserAgentList = hostBlock.getUserAgentList().getUserAgent();
-
-			// sprawdzamy, czy user agent jest na tej liscie
-			for (UserAgent userAgent : hostBlockUserAgentList) {
-				
-				if (clientInfo.userAgent.matches(userAgent.getValue()) == true) {
+				for (AddressList.Address address : addressList.getAddress()) {
 					
-					clientInfo.doBlock = true;
-					clientInfo.doBlockSendRandomData = userAgent.isRandomDataSend() != null ? userAgent.isRandomDataSend() : false;
-					clientInfo.doSendToLoggerListener = userAgent.isSendToLoggerListener() != null ? userAgent.isSendToLoggerListener() : false;
-					
-					return;						
-				}
-			}
+					if (	(clientInfo.ip != null && clientInfo.ip.matches(address.getValue()) == true) ||
+							(clientInfo.hostName != null && clientInfo.hostName.matches(address.getValue()) == true)) {
 						
-		} catch (Exception e) {
-			logger.error("Błąd podczas sprawdzania adresu user agent-a", e);
-		}
-	}
-	
-	private void isFullUrlBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo) {
-		
-		if (clientInfo.fullUrl == null) {
-			return;
-		}
-		
-		HostBlock hostBlock = configWrapper.getConfig().getFirewall().getHostBlock();
-		
-		try {
-			List<FullUrl> fullUrlList = hostBlock.getFullUrlList().getFullUrl();
-			
-			// sprawdzanie, czy dane wywolanie jest zablokowane
-			for (FullUrl fullUrl : fullUrlList) {
-				
-				if (clientInfo.fullUrl.matches(fullUrl.getValue()) == true) {
-					
-					clientInfo.doBlock = true;
-					clientInfo.doBlockSendRandomData = fullUrl.isRandomDataSend() != null ? fullUrl.isRandomDataSend() : false;
-					clientInfo.doSendToLoggerListener = fullUrl.isSendToLoggerListener() != null ? fullUrl.isSendToLoggerListener() : false;
-					
-					return;
+						numberOfSatisfiedConditions++;
+						break;
+					}
 				}
 			}
 			
-		} catch (Exception e) {
-			logger.error("Błąd podczas sprawdzania blokady full url", e);
-		}
+			// sprawdzenie user agent
+			UserAgentList userAgentList = hostBlock.getUserAgentList();
+			
+			if (userAgentList != null) {
+				numberOfCheckedConditions++;
+				
+				if (clientInfo.userAgent != null) {					
+					for (UserAgentList.UserAgent userAgent : userAgentList.getUserAgent()) {
+						
+						if (clientInfo.userAgent.matches(userAgent.getValue()) == true) {							
+							numberOfSatisfiedConditions++;
+							break;						
+						}
+					}
+				}
+			}
+			
+			// sprawdzenie adresu wywolania
+			FullUrlList fullUrlList = hostBlock.getFullUrlList();
+			
+			if (fullUrlList != null) {
+				numberOfCheckedConditions++;
+				
+				for (FullUrlList.FullUrl fullUrl : fullUrlList.getFullUrl()) {
+					
+					if (clientInfo.fullUrl.matches(fullUrl.getValue()) == true) {
+						numberOfSatisfiedConditions++;
+						break;
+					}
+				}
+			}
+			
+			// sprawdzenie, czy wszystkie ustawione warunki zostaly spelnione
+			if (numberOfCheckedConditions > 0 && numberOfCheckedConditions == numberOfSatisfiedConditions) {
+				
+				clientInfo.hostBlockOperation = hostBlock.getOperation();
+				clientInfo.doSendToLoggerListener = hostBlock.isSendToLoggerListener();
+				
+				return;
+			}
+		}		
 	}
 
 	@Override
@@ -229,26 +216,14 @@ public class FirewallFilter implements Filter {
 		
 		// zapisanie clientInfo do request-a
 		request.setAttribute(ClientInfo.REQUEST_ATTRIBUTE, clientInfo);
-						
-		// sprawdzanie, czy nalezy zablokowac ip/host
-		if (clientInfo.doBlock == false) {
-			isIpHostBlocked(configWrapper, clientInfo);
-		}
 		
-		// sprawdzenie, czy nalezy zablokowac po userAgent
-		if (clientInfo.doBlock == false) {
-			isUserAgentBlocked(configWrapper, clientInfo);
-		}
-						
-		// sprawdzenie, czy dany fullURL nalezy zablokowac
-		if (clientInfo.doBlock == false) {
-			isFullUrlBlocked(configWrapper, clientInfo);			
-		}
-		
+		// sprawdzenie, czy zablokowac danego clientInfo
+		isClientBlocked(configWrapper, clientInfo);
+				
 		// dodatkowe sprawdzenie, czy wywolanie nie pochodzi z aplikacji na Androida, jesli tak to pozwalamy na nie
-		if (	clientInfo.doBlock == true && clientInfo.httpMethod != null && clientInfo.httpMethod.equals("POST") == true && 
+		if (	clientInfo.hostBlockOperation != null && clientInfo.httpMethod != null && clientInfo.httpMethod.equals("POST") == true && 
 				clientInfo.url.startsWith("/android/") == true && clientInfo.userAgent != null && clientInfo.userAgent.startsWith("JapaneseAndroidLearnHelper/") == true) {
-			clientInfo.doBlock = false;
+			clientInfo.hostBlockOperation = null;
 		}
 
 		/*
@@ -258,10 +233,10 @@ public class FirewallFilter implements Filter {
 		}
 		*/
 		
-		if (clientInfo.doBlock == true) { // blokowanie
+		if (clientInfo.hostBlockOperation != null) { // jakas operacja blokowania
 			
 			// czy wyslac do logow
-			if (clientInfo.doSendToLoggerListener == true) {
+			if (Arrays.asList(HostBlockOperation.BLOCK, HostBlockOperation.SEND_RANDOM_DATA).contains(clientInfo.hostBlockOperation) == true && clientInfo.doSendToLoggerListener == true) {
 				ServletContext servletContext = request.getServletContext();
 				WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 				
@@ -272,13 +247,13 @@ public class FirewallFilter implements Filter {
 				loggerSender.sendLog(clientBlockLoggerModel);
 			}
 			
-			if (clientInfo.doBlockSendRandomData == false) { // zwykla blokada
+			if (clientInfo.hostBlockOperation == HostBlockOperation.BLOCK) { // zwykla blokada
 				logger.info("Blokowanie ip/host/user agent/url: " + clientInfo.ip + " (" + clientInfo.autonomousSystemNumber + ", " + clientInfo.country + ") / " + clientInfo.hostName + " / " + clientInfo.userAgent + " / " + clientInfo.fullUrl);
 								
 				// wysylamy brak dostepu
 				httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				
-			} else { // wysylanie losowych danych
+			} else if (clientInfo.hostBlockOperation == HostBlockOperation.SEND_RANDOM_DATA) { // wysylanie losowych danych
 				logger.info("Blokowanie ip/host/user agent/url i wysylanie losowych danych: " + clientInfo.ip + " (" + clientInfo.autonomousSystemNumber + ", " + clientInfo.country + ") / " + clientInfo.hostName + " / " + clientInfo.userAgent + " / " + clientInfo.fullUrl);
 				
 				// tworzenie generatora losowych stringow

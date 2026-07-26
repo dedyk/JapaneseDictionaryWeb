@@ -2,6 +2,8 @@ package pl.idedyk.japanese.dictionary.web.common;
 
 import java.io.Serializable;
 
+import pl.idedyk.japanese.dictionary.web.config.xsd.HostBlockOperation;
+
 public class ClientInfo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -20,8 +22,7 @@ public class ClientInfo implements Serializable {
 	public String autonomousSystemOrganization;
 	public String country;
 
-	public boolean doBlock = false;
-	public boolean doBlockSendRandomData = false;
+	public HostBlockOperation hostBlockOperation = null;
 	public boolean doSendToLoggerListener = false;
 }
 
