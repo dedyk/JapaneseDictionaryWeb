@@ -28,11 +28,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.AddressList;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.AsnList;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.CountryList;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.FullUrlList;
-import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.UserAgentList;
 import pl.idedyk.japanese.dictionary.web.config.xsd.HostBlockOperation;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
@@ -88,12 +83,12 @@ public class FirewallFilter implements Filter {
 			int numberOfSatisfiedConditions = 0; // liczba spelnionych warunkow	| byc wieksze od siebie i byc rowne sobie
 			
 			// sprawdzanie kraju
-			CountryList countryList = hostBlock.getCountryList();
+			List<HostBlockList.HostBlock.Country> countryList = hostBlock.getCountry();
 			
-			if (countryList != null) {
+			if (countryList.size() > 0) {
 				numberOfCheckedConditions++;
 								
-				for (HostBlockList.HostBlock.CountryList.Country country : hostBlock.getCountryList().getCountry()) {
+				for (HostBlockList.HostBlock.Country country : countryList) {
 					
 					if (clientInfo.country != null && country.getValue().equals(clientInfo.country) == true) {
 						numberOfSatisfiedConditions++;
@@ -103,12 +98,12 @@ public class FirewallFilter implements Filter {
 			}
 			
 			// sprawdzenie ASN
-			AsnList asnList = hostBlock.getAsnList();
+			List<HostBlockList.HostBlock.Asn> asnList = hostBlock.getAsn();
 			
-			if (asnList != null) {
+			if (asnList.size() > 0) {
 				numberOfCheckedConditions++;
 				
-				for (AsnList.Asn asn : hostBlock.getAsnList().getAsn()) {
+				for (HostBlockList.HostBlock.Asn asn : asnList) {
 					
 					if (clientInfo.autonomousSystemNumber != null && asn.getValue().equals(clientInfo.autonomousSystemNumber) == true) {
 						numberOfSatisfiedConditions++;
@@ -118,12 +113,12 @@ public class FirewallFilter implements Filter {
 			}
 			
 			// sprawdzenie adresu up i host name
-			AddressList addressList = hostBlock.getAddressList();
+			List<HostBlockList.HostBlock.Address> addressList = hostBlock.getAddress();
 			
-			if (addressList != null) {
+			if (addressList.size() > 0) {
 				numberOfCheckedConditions++;
 				
-				for (AddressList.Address address : addressList.getAddress()) {
+				for (HostBlockList.HostBlock.Address address : addressList) {
 					
 					if (	(clientInfo.ip != null && clientInfo.ip.matches(address.getValue()) == true) ||
 							(clientInfo.hostName != null && clientInfo.hostName.matches(address.getValue()) == true)) {
@@ -135,13 +130,13 @@ public class FirewallFilter implements Filter {
 			}
 			
 			// sprawdzenie user agent
-			UserAgentList userAgentList = hostBlock.getUserAgentList();
+			List<HostBlockList.HostBlock.UserAgent> userAgentList = hostBlock.getUserAgent();
 			
-			if (userAgentList != null) {
+			if (userAgentList.size() > 0) {
 				numberOfCheckedConditions++;
 				
 				if (clientInfo.userAgent != null) {					
-					for (UserAgentList.UserAgent userAgent : userAgentList.getUserAgent()) {
+					for (HostBlockList.HostBlock.UserAgent userAgent : userAgentList) {
 						
 						if (clientInfo.userAgent.matches(userAgent.getValue()) == true) {							
 							numberOfSatisfiedConditions++;
@@ -152,12 +147,12 @@ public class FirewallFilter implements Filter {
 			}
 			
 			// sprawdzenie adresu wywolania
-			FullUrlList fullUrlList = hostBlock.getFullUrlList();
+			List<HostBlockList.HostBlock.FullUrl> fullUrlList = hostBlock.getFullUrl();
 			
-			if (fullUrlList != null) {
+			if (fullUrlList.size() > 0) {
 				numberOfCheckedConditions++;
 				
-				for (FullUrlList.FullUrl fullUrl : fullUrlList.getFullUrl()) {
+				for (HostBlockList.HostBlock.FullUrl fullUrl : fullUrlList) {
 					
 					if (clientInfo.fullUrl.matches(fullUrl.getValue()) == true) {
 						numberOfSatisfiedConditions++;
