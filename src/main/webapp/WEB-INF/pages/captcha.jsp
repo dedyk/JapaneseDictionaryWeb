@@ -21,7 +21,7 @@
 
 	<jsp:body>
 			
-		<form:form method="get" action="${pageContext.request.contextPath}/catpcha/verify">
+		<form:form method="get" action="${pageContext.request.contextPath}/captcha/verify">
 		
 			<fieldset>
 				<legend><spring:message code="captcha.page.title2" /></legend>			
@@ -29,7 +29,12 @@
 			
 			<form:errors cssClass="alert alert-danger" path="*" element="div" />
 						
-			<table>				
+			<table>
+				<tr>
+					<td></td>
+					<td><img style="margin: 0px 0px 15px 0px" src="<c:url value='${command.captchaBase64Image}'/>"  /> </td>				
+				</tr>
+							
 				<tr>
 					<td><form:label path="userCaptcha" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="captcha.page.label.userCaptcha"/></form:label></td>
 					<td><form:input cssClass="form-control" cssStyle="margin: 0px 0px 10px 0px" id="userCaptcha" path="userCaptcha"/></td>				
