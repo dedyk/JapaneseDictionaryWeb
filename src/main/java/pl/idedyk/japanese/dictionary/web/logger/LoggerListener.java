@@ -21,6 +21,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetSpellCheckerSugg
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidQueueEventLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidSendMissingWordLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.BingSiteAuthGenerateLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.CatchaStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.FaviconIconSendLoggerModel;
@@ -1233,7 +1234,10 @@ public class LoggerListener {
 			
 		} else if (RedirectToCatchaLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.REDIRECT_TO_CAPTCHA;
-						
+
+		} else if (CatchaStartLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.CAPTCHA_START;
+
 		} else {
 			throw new RuntimeException("Nieznany klasa: " + clazz);
 		}

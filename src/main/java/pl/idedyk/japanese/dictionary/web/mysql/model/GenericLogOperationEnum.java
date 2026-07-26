@@ -72,7 +72,8 @@ public enum GenericLogOperationEnum {
 	METHOD_NOT_ALLOWED_EXCEPTION(90),
 	
 	CLIENT_BLOCK(30),
-	REDIRECT_TO_CAPTCHA(30);
+	REDIRECT_TO_CAPTCHA(30),
+	CAPTCHA_START(30);
 	
 	private boolean exportable;
 	

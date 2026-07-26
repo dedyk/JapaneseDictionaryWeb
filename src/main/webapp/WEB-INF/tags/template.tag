@@ -10,6 +10,7 @@
 <%@attribute name="pageDescription" required="false"%>
 <%@attribute name="canonicalUrl" required="false"%>
 <%@attribute name="scriptLdJson" required="false"%>
+<%@attribute name="disableNavmenu" required="false"%>
 
 <!doctype html>
 <html lang="pl">
@@ -135,6 +136,7 @@
 
 						<td style="font-size: 150%; width: 70%"><spring:message code="template.title.full.japanese"/><br /> <spring:message code="template.title.full.polish"/> </td>
 						
+						<c:if test="${disableNavmenu == null || disableNavmenu == 'false'}">
 						<td style="font-size: 150%; width: 10%">
 						    <div class="switch">
 						        <label class="theme-switch" for="themeCheckbox">
@@ -149,6 +151,7 @@
 						        </label>
 						    </div>						
 						</td>
+						</c:if>
 
 						<%-- 
 						<c:if test="${doNotShowSocialButtons == null || doNotShowSocialButtons == false}">						
@@ -194,6 +197,7 @@
 
 			</div>			
 			
+			<c:if test="${disableNavmenu == null || disableNavmenu == 'false'}">
  			<nav class="navbar navbar-default">
 				<div class="navbar-header">
 		            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -246,6 +250,7 @@
 					</ul>
 				</div>
 			</nav>
+			</c:if>
 
 			<jdwt:getWebMessage/>
 			

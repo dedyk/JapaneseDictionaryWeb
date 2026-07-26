@@ -224,7 +224,13 @@ public class FirewallFilter implements Filter {
 		}
 		
 		// sprawdzenie, czy wykonujemy pokazanie captcha
-		if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCH && clientInfo.url.startsWith(CaptchaController.CAPTCH_URL_PREFIX) == true) {
+		if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCH && 
+				(
+						clientInfo.url.startsWith(CaptchaController.CAPTCH_URL_PREFIX) == true ||
+						clientInfo.url.startsWith("/img/") == true ||
+						clientInfo.url.startsWith("/css/") == true ||
+						clientInfo.url.startsWith("/js/") == true)
+				) {
 			clientInfo.hostBlockOperation = null;
 		}
 
@@ -294,7 +300,7 @@ public class FirewallFilter implements Filter {
 			} else if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCH) { // przekierowanie do weryfikacji captcha
 								
 				httpServletResponse.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-				httpServletResponse.setHeader("Location", CaptchaController.CAPTCH_URL_CHECK);
+				httpServletResponse.setHeader("Location", CaptchaController.CAPTCH_URL_START);
 			}
 		        
 	        // zrobienie commit'a
