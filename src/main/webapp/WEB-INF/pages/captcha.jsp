@@ -11,6 +11,7 @@
 <c:set var="pageDescription"> <spring:message code="captcha.page.pageDescription"/> </c:set>
 
 <c:set var="verifyButtonValue"> <spring:message code="captcha.page.label.verifyButtonValue"/> </c:set>
+<c:set var="reloadButtonValue"> <spring:message code="captcha.page.label.reloadButtonValue"/> </c:set>
 
 <spring:eval var="useExternalStaticFiles" expression="@applicationProperties.getProperty('use.external.static.files')" />
 
@@ -37,8 +38,9 @@
 				<tr>
 					<td></td>
 					<td>
-						<input class="btn btn-default btn-lg" id="verifyButton" type="submit" value="${verifyButtonValue}" />					
-					</td>				
+						<input class="btn btn-default btn-lg" id="verifyButton" type="submit" value="${verifyButtonValue}" />
+						<input class="btn btn-default btn-lg" id="reloadButton" type="button" value="${reloadButtonValue}" onclick="window.location.href=window.location.href;" style="margin: 0px 0px 0px 10px"/>					
+					</td>
 				</tr>			
 			</table>
 		</form:form>
