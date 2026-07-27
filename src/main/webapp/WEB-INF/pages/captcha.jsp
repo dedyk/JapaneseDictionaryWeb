@@ -44,7 +44,7 @@
 					<td></td>
 					<td>
 						<input class="btn btn-default btn-lg" id="verifyButton" type="submit" value="${verifyButtonValue}" />
-						<input class="btn btn-default btn-lg" id="reloadButton" type="button" value="${reloadButtonValue}" onclick="window.location.href=window.location.href;" style="margin: 0px 0px 0px 10px"/>					
+						<input class="btn btn-default btn-lg" id="reloadButton" type="button" value="${reloadButtonValue}" onclick="window.location.href='${pageContext.request.contextPath}/captcha/start'" style="margin: 0px 0px 0px 10px"/>					
 					</td>
 				</tr>			
 			</table>
