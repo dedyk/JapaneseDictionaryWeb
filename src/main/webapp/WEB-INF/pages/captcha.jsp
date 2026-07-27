@@ -21,7 +21,7 @@
 
 	<jsp:body>
 			
-		<form:form method="get" action="${pageContext.request.contextPath}/captcha/verify">
+		<form:form method="post" action="${pageContext.request.contextPath}/captcha/verify">
 		
 			<fieldset>
 				<legend><spring:message code="captcha.page.title2" /></legend>			

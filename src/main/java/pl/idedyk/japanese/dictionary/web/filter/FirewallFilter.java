@@ -3,6 +3,7 @@ package pl.idedyk.japanese.dictionary.web.filter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock;
 import pl.idedyk.japanese.dictionary.web.config.xsd.HostBlockOperation;
 import pl.idedyk.japanese.dictionary.web.controller.CaptchaController;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
@@ -75,7 +77,8 @@ public class FirewallFilter implements Filter {
 	
 	private void isClientBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo) {
 		
-		List<HostBlockList.HostBlock> hostBlockListList = configWrapper.getConfig().getFirewall().getHostBlockList().getHostBlock();
+		List<HostBlockList.HostBlock> hostBlockListList = configWrapper.getConfig().getFirewall().getHostBlockList().getHostBlock();		
+		List<HostBlockList.HostBlock> matchedHostBlockList = new ArrayList<>(); // lista dopasowanych konfiguracji
 		
 		for (HostBlockList.HostBlock hostBlock : hostBlockListList) {
 
@@ -165,13 +168,35 @@ public class FirewallFilter implements Filter {
 			
 			// sprawdzenie, czy wszystkie ustawione warunki zostaly spelnione
 			if (numberOfCheckedConditions > 0 && numberOfCheckedConditions == numberOfSatisfiedConditions) {
-				
-				clientInfo.hostBlockOperation = hostBlock.getOperation();
-				clientInfo.doSendToLoggerListener = hostBlock.isSendToLoggerListener();
-				
-				return;
+				matchedHostBlockList.add(hostBlock);
 			}
-		}		
+		}
+		
+		if (matchedHostBlockList.size() > 0) { // mamy cos dopasowane
+			
+			// sprawdzenie, ktore typy operacji wystepuja
+			HostBlock blockHostBlock = matchedHostBlockList.stream().filter(f -> f.getOperation() == HostBlockOperation.BLOCK).findFirst().orElse(null);
+			HostBlock sendRandomDataHostBlock = matchedHostBlockList.stream().filter(f -> f.getOperation() == HostBlockOperation.SEND_RANDOM_DATA).findFirst().orElse(null);
+			HostBlock redirectToCaptchaHostBlock = matchedHostBlockList.stream().filter(f -> f.getOperation() == HostBlockOperation.REDIRECT_TO_CAPTCHA).findFirst().orElse(null);
+			
+			HostBlock hostBlockToUse = null;
+			
+			if (blockHostBlock != null) {
+				hostBlockToUse = blockHostBlock;
+				
+			} else if (sendRandomDataHostBlock != null) {
+				hostBlockToUse = sendRandomDataHostBlock;
+				
+			} else if (redirectToCaptchaHostBlock != null) {
+				hostBlockToUse = redirectToCaptchaHostBlock;
+				
+			}
+			
+			if (hostBlockToUse != null) {
+				clientInfo.hostBlockOperation = hostBlockToUse.getOperation();
+				clientInfo.doSendToLoggerListener = hostBlockToUse.isSendToLoggerListener();
+			}			
+		}
 	}
 
 	@Override
@@ -224,7 +249,7 @@ public class FirewallFilter implements Filter {
 		}
 		
 		// sprawdzenie, czy wykonujemy pokazanie captcha
-		if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCH && 
+		if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCHA && 
 				(
 						clientInfo.url.startsWith(CaptchaController.CAPTCHA_URL_PREFIX) == true ||
 						clientInfo.url.startsWith("/img/") == true ||
@@ -254,7 +279,7 @@ public class FirewallFilter implements Filter {
 				
 				loggerSender.sendLog(clientBlockLoggerModel);
 				
-			} else if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCH && clientInfo.doSendToLoggerListener == true) {
+			} else if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCHA && clientInfo.doSendToLoggerListener == true) {
 				ServletContext servletContext = request.getServletContext();
 				WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 				
@@ -297,7 +322,7 @@ public class FirewallFilter implements Filter {
 								
 				httpServletResponse.getOutputStream().write(randomHtmlDoc.getBytes());
 				
-			} else if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCH) { // przekierowanie do weryfikacji captcha
+			} else if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCHA) { // przekierowanie do weryfikacji captcha
 								
 				httpServletResponse.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
 				httpServletResponse.setHeader("Location", CaptchaController.CAPTCHA_URL_START);
