@@ -37,7 +37,7 @@
 							
 				<tr>
 					<td><form:label path="userCaptcha" cssStyle="margin: 0px 10px 10px 0px"><spring:message code="captcha.page.label.userCaptcha"/></form:label></td>
-					<td><form:input cssClass="form-control" cssStyle="margin: 0px 0px 10px 0px" id="userCaptcha" path="userCaptcha"/></td>				
+					<td><form:input cssClass="form-control" cssStyle="margin: 0px 0px 10px 0px" id="userCaptcha" path="userCaptcha" autocomplete="off"/></td>				
 				</tr>
 										
 				<tr>
