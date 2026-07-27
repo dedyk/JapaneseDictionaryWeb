@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -12,7 +13,10 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -23,8 +27,10 @@ import com.google.code.kaptcha.util.Config;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.CaptchaModel;
+import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.CatchaStartLoggerModel;
 
@@ -33,11 +39,15 @@ public class CaptchaController {
 	
 	public static final String CAPTCHA_URL_PREFIX = "/captcha/";
 	public static final String CAPTCHA_URL_START = CAPTCHA_URL_PREFIX + "start";
+	public static final String CAPTCHA_URL_VERIFY = CAPTCHA_URL_PREFIX + "verify";
 	
 	public static final String CAPTCHA_SESSION_CORRECT_TEXT = "captchaCorrectText";
 	
 	@Autowired
 	protected LoggerSender loggerSender;
+	
+	@Autowired
+	protected MessageSource messageSource;
 	
 	private static final Logger logger = LogManager.getLogger(CaptchaController.class);
 	
@@ -48,7 +58,23 @@ public class CaptchaController {
 		
 		// utworzenie model weryfikacji Captcha
 		CaptchaModel captchaModel = new CaptchaModel();
-
+		
+		// wygenerowanie captcha
+		generateCaptchaData(session, captchaModel);
+		
+		// logowanie dla loggera
+		CatchaStartLoggerModel redirectToCatchaLoggerModel = new CatchaStartLoggerModel(Utils.createLoggerModelCommon(request));
+		
+		loggerSender.sendLog(redirectToCatchaLoggerModel);
+		
+		// wypelnienie modelu z danymi formularza
+		model.put("command", captchaModel);
+		
+		return "captcha";
+	}
+	
+	private void generateCaptchaData(HttpSession session, CaptchaModel captchaModel) throws IOException {
+		
 		// wygenerowanie wykrzywiacza
 		String[] captchaData = generateCaptchImageAndEncodeAsBase64();
 		
@@ -58,10 +84,20 @@ public class CaptchaController {
 		// zapis obrazka do modelu
 		captchaModel.setCaptchaBase64Image(captchaData[1]);		
 		
-		// logowanie dla loggera
-		CatchaStartLoggerModel redirectToCatchaLoggerModel = new CatchaStartLoggerModel(Utils.createLoggerModelCommon(request));
+		// reset tego, co wpisal uzytkownik
+		captchaModel.setUserCaptcha(null);
+	}
+	
+	@RequestMapping(value = CAPTCHA_URL_VERIFY, method = RequestMethod.POST)
+	public String verify(HttpServletRequest request, HttpServletResponse response, HttpSession session,  @ModelAttribute("command") final CaptchaModel captchaModel, 
+			Map<String, Object> model, BindingResult bindingResult) throws IOException {
+
+		logger.info("Weryfikacja captcha");
 		
-		loggerSender.sendLog(redirectToCatchaLoggerModel);
+		bindingResult.reject("global.error.code", messageSource.getMessage("captcha.page.error.incorrect.captcha", new Object[] { }, Locale.getDefault()));
+		
+		// wygenerowanie captcha
+		generateCaptchaData(session, captchaModel);
 		
 		// wypelnienie modelu z danymi formularza
 		model.put("command", captchaModel);
