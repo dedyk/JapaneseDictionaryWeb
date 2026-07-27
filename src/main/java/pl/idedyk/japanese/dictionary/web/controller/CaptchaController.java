@@ -94,15 +94,25 @@ public class CaptchaController {
 
 		logger.info("Weryfikacja captcha");
 		
-		bindingResult.reject("global.error.code", messageSource.getMessage("captcha.page.error.incorrect.captcha", new Object[] { }, Locale.getDefault()));
+		// sprawdzenie, czy kod jest poprawny
+		String correctCaptchaCode = (String)session.getAttribute(CAPTCHA_SESSION_CORRECT_TEXT);
 		
-		// wygenerowanie captcha
-		generateCaptchaData(session, captchaModel);
+		if (captchaModel == null || captchaModel.getUserCaptcha() == null || correctCaptchaCode == null ||
+				correctCaptchaCode.equals(captchaModel.getUserCaptcha()) == false) {
+			
+			bindingResult.reject("global.error.code", messageSource.getMessage("captcha.page.error.incorrect.captcha", new Object[] { }, Locale.getDefault()));
+			
+			// wygenerowanie captcha
+			generateCaptchaData(session, captchaModel);
+			
+			// wypelnienie modelu z danymi formularza
+			model.put("command", captchaModel);
+			
+			return "captcha";
+		}
 		
-		// wypelnienie modelu z danymi formularza
-		model.put("command", captchaModel);
-		
-		return "captcha";
+		// TODO
+		return null;
 	}
 	
 	private String[] generateCaptchImageAndEncodeAsBase64() throws IOException {
