@@ -258,6 +258,13 @@ public class FirewallFilter implements Filter {
 				) {
 			clientInfo.hostBlockOperation = null;
 		}
+		
+		// sprawdzenie, czy uzytkownik zostal juz zweryfikowany przez captcha
+		if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCHA &&
+				httpServletRequest.getSession().getAttribute(CaptchaController.CAPTCHA_SESSION_CAPTCHA_VERIFIED) != null) {
+			
+			clientInfo.hostBlockOperation = null;
+		}
 
 		/*
 		// dostep do pliku robots.txt jest dozwolony
@@ -283,6 +290,10 @@ public class FirewallFilter implements Filter {
 				ServletContext servletContext = request.getServletContext();
 				WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
 				
+				// zapisanie do sesji adresu, na ktory wchodzil uzytkownik
+				httpServletRequest.getSession().setAttribute(CaptchaController.CAPTCHA_SESSION_USER_URL, clientInfo.fullUrl);
+				
+				// logger
 				LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
 				
 				RedirectToCatchaLoggerModel redirectToCatchaLoggerModel = new RedirectToCatchaLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));

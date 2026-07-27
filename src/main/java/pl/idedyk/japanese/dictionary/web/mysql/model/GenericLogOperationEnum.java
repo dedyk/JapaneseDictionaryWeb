@@ -73,7 +73,9 @@ public enum GenericLogOperationEnum {
 	
 	CLIENT_BLOCK(30),
 	REDIRECT_TO_CAPTCHA(30),
-	CAPTCHA_START(30);
+	CAPTCHA_START(30),
+	CAPTCHA_CORRECT(30),
+	CAPTCHA_INCORRECT(30);
 	
 	private boolean exportable;
 	

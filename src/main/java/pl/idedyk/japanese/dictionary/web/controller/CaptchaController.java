@@ -27,11 +27,11 @@ import com.google.code.kaptcha.util.Config;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.controller.model.CaptchaModel;
-import pl.idedyk.japanese.dictionary.web.controller.model.WordDictionarySearchModel;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.CatchaCorrectLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.CatchaIncorrectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.CatchaStartLoggerModel;
 
 @Controller
@@ -42,6 +42,8 @@ public class CaptchaController {
 	public static final String CAPTCHA_URL_VERIFY = CAPTCHA_URL_PREFIX + "verify";
 	
 	public static final String CAPTCHA_SESSION_CORRECT_TEXT = "captchaCorrectText";
+	public static final String CAPTCHA_SESSION_USER_URL = "captchaUserUrl";
+	public static final String CAPTCHA_SESSION_CAPTCHA_VERIFIED = "captchaVerified";
 	
 	@Autowired
 	protected LoggerSender loggerSender;
@@ -63,9 +65,9 @@ public class CaptchaController {
 		generateCaptchaData(session, captchaModel);
 		
 		// logowanie dla loggera
-		CatchaStartLoggerModel redirectToCatchaLoggerModel = new CatchaStartLoggerModel(Utils.createLoggerModelCommon(request));
+		CatchaStartLoggerModel catchaStartLoggerModel = new CatchaStartLoggerModel(Utils.createLoggerModelCommon(request));
 		
-		loggerSender.sendLog(redirectToCatchaLoggerModel);
+		loggerSender.sendLog(catchaStartLoggerModel);
 		
 		// wypelnienie modelu z danymi formularza
 		model.put("command", captchaModel);
@@ -98,21 +100,40 @@ public class CaptchaController {
 		String correctCaptchaCode = (String)session.getAttribute(CAPTCHA_SESSION_CORRECT_TEXT);
 		
 		if (captchaModel == null || captchaModel.getUserCaptcha() == null || correctCaptchaCode == null ||
-				correctCaptchaCode.equals(captchaModel.getUserCaptcha()) == false) {
+				correctCaptchaCode.equals(captchaModel.getUserCaptcha()) == false) { // czy zly captcha
+			
+			logger.info("Weryfikacja captcha zakończona wynikiem negatywnym");
 			
 			bindingResult.reject("global.error.code", messageSource.getMessage("captcha.page.error.incorrect.captcha", new Object[] { }, Locale.getDefault()));
 			
 			// wygenerowanie captcha
 			generateCaptchaData(session, captchaModel);
 			
+			// logowanie dla loggera
+			CatchaIncorrectLoggerModel catchaIncorrectLoggerModel = new CatchaIncorrectLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(catchaIncorrectLoggerModel);
+			
 			// wypelnienie modelu z danymi formularza
 			model.put("command", captchaModel);
-			
+						
+			// wygenerowanie strony z kolejna proba
 			return "captcha";
 		}
 		
-		// TODO
-		return null;
+		// weryfikacja pozytywna, przekierowanie na wlasciwa strone
+		logger.info("Weryfikacja captcha zakończona wynikiem pozytywnym");
+		
+		// ustawienie flagi, ze weryfikacja captcha zakonczyla sie wynikiem pozytywnym
+		session.setAttribute(CAPTCHA_SESSION_CAPTCHA_VERIFIED, true);
+		
+		// logowanie dla loggera
+		CatchaCorrectLoggerModel catchaCorrectLoggerModel = new CatchaCorrectLoggerModel(Utils.createLoggerModelCommon(request));
+		
+		loggerSender.sendLog(catchaCorrectLoggerModel);
+
+		// przekierowanie
+		return "redirect:" + session.getAttribute(CAPTCHA_SESSION_USER_URL);
 	}
 	
 	private String[] generateCaptchImageAndEncodeAsBase64() throws IOException {
