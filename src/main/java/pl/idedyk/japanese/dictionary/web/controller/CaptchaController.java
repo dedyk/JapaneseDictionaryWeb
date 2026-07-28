@@ -133,7 +133,13 @@ public class CaptchaController {
 		loggerSender.sendLog(catchaCorrectLoggerModel);
 
 		// przekierowanie
-		return "redirect:" + session.getAttribute(CAPTCHA_SESSION_USER_URL);
+		String redirectUrl = (String)session.getAttribute(CAPTCHA_SESSION_USER_URL);
+		
+		if (redirectUrl == null) { // to raczej nie powinno zdarzyc sie, ale gdyby
+			redirectUrl = "/";
+		}
+		
+		return "redirect:" + redirectUrl;
 	}
 	
 	private String[] generateCaptchImageAndEncodeAsBase64() throws IOException {

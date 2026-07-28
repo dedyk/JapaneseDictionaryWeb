@@ -71,11 +71,6 @@
 		<filter-name>CharacterEncodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-
-	<filter-mapping>
-		<filter-name>FirewallFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
 	
 	<filter-mapping>
 		<filter-name>RedirectFilter</filter-name>
@@ -84,6 +79,11 @@
 
 	<filter-mapping>
 		<filter-name>RedirectByConfigFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>FirewallFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
