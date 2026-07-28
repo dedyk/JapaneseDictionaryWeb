@@ -84,6 +84,14 @@
 															</xsd:simpleContent>																							
 														</xsd:complexType>										
 													</xsd:element>											
+
+													<xsd:element name="notAddress" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:simpleContent>
+																<xsd:extension base="xsd:string"/>
+															</xsd:simpleContent>																							
+														</xsd:complexType>										
+													</xsd:element>											
 															
 													<xsd:element name="fullUrl" minOccurs="0" maxOccurs="unbounded">
 														<xsd:complexType>

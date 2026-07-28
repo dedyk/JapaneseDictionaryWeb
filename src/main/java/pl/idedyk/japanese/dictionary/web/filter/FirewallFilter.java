@@ -117,7 +117,7 @@ public class FirewallFilter implements Filter {
 				}
 			}
 			
-			// sprawdzenie adresu up i host name
+			// sprawdzenie adresu i host name
 			List<HostBlockList.HostBlock.Address> addressList = hostBlock.getAddress();
 			
 			if (addressList.size() > 0) {
@@ -133,6 +133,28 @@ public class FirewallFilter implements Filter {
 					}
 				}
 			}
+			
+			// sprawdzenie, czy adres i host name nie jest jednym z (wszystkie warunki musza byc spelnione)
+			List<HostBlockList.HostBlock.NotAddress> notAddressList = hostBlock.getNotAddress();
+			
+			if (notAddressList.size() > 0) {
+				numberOfCheckedConditions++;
+				
+				int notAddressSatisfiedConditions = 0;
+				
+				for (HostBlockList.HostBlock.NotAddress notAddress : notAddressList) {
+					
+					if (	(clientInfo.ip != null && clientInfo.ip.matches(notAddress.getValue()) == false) &&
+							(clientInfo.hostName != null && clientInfo.hostName.matches(notAddress.getValue()) == false)) {
+						
+						notAddressSatisfiedConditions++;
+					}
+				}
+				
+				if (notAddressSatisfiedConditions == notAddressList.size()) { // czy warunek spelniony, nic nie moze pasowac
+					numberOfSatisfiedConditions++;
+				}
+			}			
 			
 			// sprawdzenie user agent
 			List<HostBlockList.HostBlock.UserAgent> userAgentList = hostBlock.getUserAgent();
