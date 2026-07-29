@@ -37,7 +37,6 @@ import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectToCatchaLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService.ConfigWrapper;
-import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
 
 public class FirewallFilter implements Filter {
 	
@@ -58,15 +57,7 @@ public class FirewallFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// noop
 	}
-	
-	private GeoIPService getGeoIPService(ServletRequest request) {
-		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
 		
-		GeoIPService geoIPService = webApplicationContext.getBean(GeoIPService.class);
-		
-		return geoIPService;		
-	}
-	
 	private ConfigService getConfigService(ServletRequest request) {
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
 		
@@ -309,39 +300,13 @@ public class FirewallFilter implements Filter {
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 		
-		GeoIPService geoIPService = getGeoIPService(request);
 		ConfigService configService = getConfigService(httpServletRequest);
 		
 		// pobranie konfiguracji
 		ConfigWrapper configWrapper = configService.getConfig();
 		
-		// utworzenie informacji o kliencie
-		ClientInfo clientInfo = new ClientInfo();
-		
-		clientInfo.ip = Utils.getRemoteIp(httpServletRequest);
-		clientInfo.hostName = Utils.getHostname(clientInfo.ip);
-		clientInfo.userAgent = httpServletRequest.getHeader("User-Agent");	
-		clientInfo.url = httpServletRequest.getRequestURI();
-		clientInfo.httpMethod = httpServletRequest.getMethod();
-		
-		clientInfo.fullUrl = Utils.getRequestURL(httpServletRequest);
-		
-		clientInfo.country = null;
-		clientInfo.autonomousSystemNumber = null;
-		
-		try {
-			// pobranie kraju na podstawie adresu ip
-			if (geoIPService != null && clientInfo.ip != null) {
-				clientInfo.country = geoIPService.getCountry(clientInfo.ip);
-				clientInfo.autonomousSystemNumber = geoIPService.getAutonomousSystemNumber(clientInfo.ip);
-				clientInfo.autonomousSystemOrganization = geoIPService.getAutonomousSystemOrganization(clientInfo.ip);
-			}
-		} catch (Exception e) {
-			logger.error("Błąd podczas pobierania nazwy kraju z adresu ip", e);
-		}
-		
-		// zapisanie clientInfo do request-a
-		request.setAttribute(ClientInfo.REQUEST_ATTRIBUTE, clientInfo);
+		// pobranie informacji o kliencie (tutaj zawsze cos musi byc)
+		ClientInfo clientInfo = (ClientInfo)request.getAttribute(ClientInfo.REQUEST_ATTRIBUTE);
 		
 		// sprawdzenie, czy zablokowac danego clientInfo
 		isClientBlocked(configWrapper, clientInfo);
