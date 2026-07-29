@@ -102,6 +102,26 @@ public class FirewallFilter implements Filter {
 				}	
 			}
 			
+			// sprawdzenie listy wykluczonych krajow
+			List<HostBlockList.HostBlock.NotCountry> notCountryList = hostBlock.getNotCountry();
+			
+			if (notCountryList.size() > 0) {
+				numberOfCheckedConditions++;
+				
+				int notCountrySatisfiedConditions = 0;
+				
+				for (HostBlockList.HostBlock.NotCountry notCountry : notCountryList) {
+					
+					if (clientInfo.country != null && notCountry.getValue().equals(clientInfo.country) == false) {						
+						notCountrySatisfiedConditions++;
+					}
+				}
+				
+				if (notCountrySatisfiedConditions == notCountryList.size()) { // czy warunek spelniony, nic nie moze pasowac
+					numberOfSatisfiedConditions++;
+				}
+			}
+			
 			// sprawdzenie ASN
 			List<HostBlockList.HostBlock.Asn> asnList = hostBlock.getAsn();
 			
@@ -114,6 +134,26 @@ public class FirewallFilter implements Filter {
 						numberOfSatisfiedConditions++;
 						break;
 					}
+				}
+			}
+			
+			// sprawdzenie listy wykluczonych ASN
+			List<HostBlockList.HostBlock.NotAsn> notAsnList = hostBlock.getNotAsn();
+			
+			if (notAsnList.size() > 0) {
+				numberOfCheckedConditions++;
+				
+				int notAsnSatisfiedConditions = 0;
+				
+				for (HostBlockList.HostBlock.NotAsn notAsn : notAsnList) {
+
+					if (clientInfo.autonomousSystemNumber != null && notAsn.getValue().equals(clientInfo.autonomousSystemNumber) == false) {						
+						notAsnSatisfiedConditions++;
+					}
+				}
+				
+				if (notAsnSatisfiedConditions == notAsnList.size()) { // czy warunek spelniony, nic nie moze pasowac
+					numberOfSatisfiedConditions++;
 				}
 			}
 			
@@ -173,6 +213,26 @@ public class FirewallFilter implements Filter {
 				}
 			}
 			
+			// sprawdzenie listy wykluczonych user agent
+			List<HostBlockList.HostBlock.NotUserAgent> notUserAgentList = hostBlock.getNotUserAgent();
+			
+			if (notUserAgentList.size() > 0) {
+				numberOfCheckedConditions++;
+				
+				int notUserAgentSatisfiedConditions = 0;
+				
+				for (HostBlockList.HostBlock.NotUserAgent notUserAgent : notUserAgentList) {
+					
+					if (clientInfo.userAgent.matches(notUserAgent.getValue()) == false) {						
+						notUserAgentSatisfiedConditions++;
+					}
+				}
+				
+				if (notUserAgentSatisfiedConditions == notUserAgentList.size()) { // czy warunek spelniony, nic nie moze pasowac
+					numberOfSatisfiedConditions++;
+				}
+			}
+			
 			// sprawdzenie adresu wywolania
 			List<HostBlockList.HostBlock.FullUrl> fullUrlList = hostBlock.getFullUrl();
 			
@@ -187,6 +247,28 @@ public class FirewallFilter implements Filter {
 					}
 				}
 			}
+			
+			// sprawdzenie listy wykluczonych adresow wywolania
+			List<HostBlockList.HostBlock.NotFullUrl> notFullUrlList = hostBlock.getNotFullUrl();
+			
+			if (notFullUrlList.size() > 0) {
+				numberOfCheckedConditions++;
+				
+				int notFullUrlSatisfiedConditions = 0;
+				
+				for (HostBlockList.HostBlock.NotFullUrl notFullUrl : notFullUrlList) {
+					
+					if (clientInfo.fullUrl.matches(notFullUrl.getValue()) == false) {						
+						notFullUrlSatisfiedConditions++;
+					}
+				}
+				
+				if (notFullUrlSatisfiedConditions == notFullUrlList.size()) { // czy warunek spelniony, nic nie moze pasowac
+					numberOfSatisfiedConditions++;
+				}
+			}
+			
+			//
 			
 			// sprawdzenie, czy wszystkie ustawione warunki zostaly spelnione
 			if (numberOfCheckedConditions > 0 && numberOfCheckedConditions == numberOfSatisfiedConditions) {

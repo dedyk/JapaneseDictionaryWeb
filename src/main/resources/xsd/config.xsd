@@ -69,7 +69,23 @@
 														</xsd:complexType>										
 													</xsd:element>									
 
+													<xsd:element name="notCountry" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:simpleContent>
+																<xsd:extension base="xsd:string"/>						
+															</xsd:simpleContent>																							
+														</xsd:complexType>										
+													</xsd:element>									
+
 													<xsd:element name="asn" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:simpleContent>
+																<xsd:extension base="xsd:string"/>					
+															</xsd:simpleContent>																							
+														</xsd:complexType>										
+													</xsd:element>
+													
+													<xsd:element name="notAsn" minOccurs="0" maxOccurs="unbounded">
 														<xsd:complexType>
 															<xsd:simpleContent>
 																<xsd:extension base="xsd:string"/>					
@@ -100,8 +116,24 @@
 															</xsd:simpleContent>																							
 														</xsd:complexType>										
 													</xsd:element>
+
+													<xsd:element name="notFullUrl" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:simpleContent>
+																<xsd:extension base="xsd:string"/>
+															</xsd:simpleContent>																							
+														</xsd:complexType>										
+													</xsd:element>
 													
 													<xsd:element name="userAgent" minOccurs="0" maxOccurs="unbounded">
+														<xsd:complexType>
+															<xsd:simpleContent>
+																<xsd:extension base="xsd:string"/>
+															</xsd:simpleContent>																							
+														</xsd:complexType>										
+													</xsd:element>
+
+													<xsd:element name="notUserAgent" minOccurs="0" maxOccurs="unbounded">
 														<xsd:complexType>
 															<xsd:simpleContent>
 																<xsd:extension base="xsd:string"/>
