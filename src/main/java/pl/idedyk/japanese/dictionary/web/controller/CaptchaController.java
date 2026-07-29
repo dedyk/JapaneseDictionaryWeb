@@ -71,6 +71,7 @@ public class CaptchaController {
 		
 		// wypelnienie modelu z danymi formularza
 		model.put("command", captchaModel);
+		model.put("metaRobots", "noindex, follow");
 		
 		return "captcha";
 	}
@@ -116,6 +117,7 @@ public class CaptchaController {
 			
 			// wypelnienie modelu z danymi formularza
 			model.put("command", captchaModel);
+			model.put("metaRobots", "noindex, follow");
 						
 			// wygenerowanie strony z kolejna proba
 			return "captcha";
