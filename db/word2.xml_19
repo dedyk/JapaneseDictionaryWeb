@@ -299,6 +299,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="48062" dictionaryEntryTypeList="WORD_VERB_U" kanji="鈍らす" kana="にぶらす" romaji="niburasu" uniqueKey="鈍らす/にぶらす/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -434,6 +435,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="52769" dictionaryEntryTypeList="WORD_NOUN" kanji="入塾" kana="にゅうじゅく" romaji="nyuujuku" uniqueKey="入塾/にゅうじゅく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -790,15 +792,17 @@
         <sense>
             <pos>Godan verb with 'ku' ending</pos>
             <pos>intransitive verb</pos>
+            <s_inf xml:lang="pol">np. zwyczajów</s_inf>
             <gloss xml:lang="eng">to take root</gloss>
             <gloss xml:lang="eng">to strike</gloss>
-            <gloss xml:lang="pol">zakorzenienie (np. zwyczajów)</gloss>
+            <gloss xml:lang="pol">zakorzenienie</gloss>
             <gloss xml:lang="pol">przyjęcie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61626" dictionaryEntryTypeList="WORD_VERB_U" kanji="根付く" kana="ねづく" romaji="neduku" uniqueKey="根付く/ねづく/1"/>
                 <entries id="61768" dictionaryEntryTypeList="WORD_VERB_U" kanji="根づく" kana="ねづく" romaji="neduku" uniqueKey="根づく/ねづく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -850,6 +854,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="59316" dictionaryEntryTypeList="WORD_NOUN" kanji="熱延" kana="ねつえん" romaji="netsuen" uniqueKey="熱延/ねつえん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -1116,8 +1121,7 @@
             <misc>word usually written using kana alone</misc>
             <gloss xml:lang="eng">to become intimate with (e.g. a woman)</gloss>
             <gloss xml:lang="eng">to become acquainted</gloss>
-            <gloss xml:lang="pol">zbliżyć się do (np. kobiety)</gloss>
-            <gloss xml:lang="pol">zżyć się z (np. kobietą)</gloss>
+            <gloss xml:lang="pol">nawiązać intymną relację z (np. kobietą)</gloss>
             <gloss xml:lang="pol">zaznajomić się</gloss>
         </sense>
         <misc>
@@ -1777,6 +1781,7 @@
                 <entries id="54128" dictionaryEntryTypeList="WORD_NOUN" kanji="飲み過ぎ" kana="のみすぎ" romaji="nomi sugi" uniqueKey="飲み過ぎ/のみすぎ/1"/>
                 <entries id="64707" dictionaryEntryTypeList="WORD_NOUN" kanji="飲みすぎ" kana="のみすぎ" romaji="nomi sugi" uniqueKey="飲みすぎ/のみすぎ/1"/>
                 <entries id="54184" dictionaryEntryTypeList="WORD_NOUN" kanji="飲過ぎ" kana="のみすぎ" romaji="nomi sugi" uniqueKey="飲過ぎ/のみすぎ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>6145963</exampleSentenceGroupIdsList>
@@ -1997,6 +2002,8 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <gloss xml:lang="eng">vent</gloss>
+            <gloss xml:lang="eng">exhaust opening</gloss>
             <gloss xml:lang="eng">exhaust port</gloss>
             <gloss xml:lang="pol">szczelina wylotowa</gloss>
         </sense>
@@ -2180,17 +2187,30 @@
         <k_ele>
             <keb>肺病病み</keb>
         </k_ele>
+        <k_ele>
+            <keb>肺病やみ</keb>
+        </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="haibyou yami">はいびょうやみ</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <gloss xml:lang="eng">patient with pulmonary tuberculosis</gloss>
-            <gloss xml:lang="pol">pacjent z gruźlicą płuc</gloss>
+            <misc>rare term</misc>
+            <gloss xml:lang="eng">tuberculosis patient</gloss>
+            <gloss xml:lang="eng">person with a lung disease</gloss>
+            <gloss xml:lang="pol">chory na gruźlicę</gloss>
+            <gloss xml:lang="pol">osoba cierpiąca na chorobę płuc</gloss>
+        </sense>
+        <sense>
+            <pos>noun (common) (futsuumeishi)</pos>
+            <misc>rare term</misc>
+            <gloss xml:lang="eng">suffering from lung disease</gloss>
+            <gloss xml:lang="pol">cierpiący na chorobę płuc</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="242369" dictionaryEntryTypeList="WORD_NOUN" kanji="肺病病み" kana="はいびょうやみ" romaji="haibyou yami" uniqueKey="肺病病み/はいびょうやみ/1"/>
+                <entries id="49366" dictionaryEntryTypeList="WORD_NOUN" kanji="肺病やみ" kana="はいびょうやみ" romaji="haibyou yami" uniqueKey="肺病やみ/はいびょうやみ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -2773,6 +2793,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="57216" dictionaryEntryTypeList="WORD_NOUN" kanji="弾き" kana="はじき" romaji="hajiki" uniqueKey="弾き/はじき/1"/>
                 <entries id="166678" dictionaryEntryTypeList="WORD_NOUN" kana="ハジキ" romaji="hajiki" uniqueKey="-/ハジキ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>131288</exampleSentenceGroupIdsList>
@@ -3857,6 +3878,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="47882" dictionaryEntryTypeList="WORD_NOUN" kanji="班員" kana="はんいん" romaji="han'in" uniqueKey="班員/はんいん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -4109,6 +4131,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="54751" dictionaryEntryTypeList="WORD_EXPRESSION" kanji="早まって" kana="はやまって" romaji="haya matte" uniqueKey="早まって/はやまって/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -4526,6 +4549,7 @@
                 <entries id="294449" dictionaryEntryTypeList="WORD_VERB_RU" kanji="張合わせる" kana="はりあわせる" romaji="hari awaseru" uniqueKey="張合わせる/はりあわせる/1"/>
                 <entries id="294450" dictionaryEntryTypeList="WORD_VERB_RU" kanji="貼合せる" kana="はりあわせる" romaji="hari awaseru" uniqueKey="貼合せる/はりあわせる/1"/>
                 <entries id="294451" dictionaryEntryTypeList="WORD_VERB_RU" kanji="張合せる" kana="はりあわせる" romaji="hari awaseru" uniqueKey="張合せる/はりあわせる/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -4826,6 +4850,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="67736" dictionaryEntryTypeList="WORD_NOUN" kanji="晴れやかな笑顔" kana="はれやかなえがお" romaji="hare yakana egao" uniqueKey="晴れやかな笑顔/はれやかなえがお/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -5619,6 +5644,9 @@
     <entry>
         <ent_seq>1903190</ent_seq>
         <k_ele>
+            <keb>枚をふくむ</keb>
+        </k_ele>
+        <k_ele>
             <keb>枚を銜む</keb>
         </k_ele>
         <k_ele>
@@ -5636,6 +5664,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
+                <entries id="325653" dictionaryEntryTypeList="WORD_VERB_U,WORD_EXPRESSION" kanji="枚をふくむ" kana="ばいをふくむ" romaji="bai o fukumu" uniqueKey="枚をふくむ/ばいをふくむ/1"/>
                 <entries id="177252" dictionaryEntryTypeList="WORD_VERB_U,WORD_EXPRESSION" kanji="枚を銜む" kana="ばいをふくむ" romaji="bai o fukumu" uniqueKey="枚を銜む/ばいをふくむ/1"/>
                 <entries id="177304" dictionaryEntryTypeList="WORD_VERB_U,WORD_EXPRESSION" kanji="枚を含む" kana="ばいをふくむ" romaji="bai o fukumu" uniqueKey="枚を含む/ばいをふくむ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
@@ -6462,6 +6491,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="42907" dictionaryEntryTypeList="WORD_NOUN" kanji="浸し物" kana="ひたしもの" romaji="hitashi mono" uniqueKey="浸し物/ひたしもの/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -7985,6 +8015,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="49123" dictionaryEntryTypeList="WORD_NOUN" kanji="標章" kana="ひょうしょう" romaji="hyoushou" uniqueKey="標章/ひょうしょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -10134,12 +10165,14 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">Osaki lub Kioto</s_inf>
             <gloss xml:lang="eng">urban prefectural tax (of Osaka or Kyoto)</gloss>
             <gloss xml:lang="pol">miejski prefekturalny podatek</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="58347" dictionaryEntryTypeList="WORD_NOUN" kanji="府税" kana="ふぜい" romaji="fuzei" uniqueKey="府税/ふぜい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -10638,6 +10671,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="59587" dictionaryEntryTypeList="WORD_NOUN" kanji="風土記" kana="ふどき" romaji="fudoki" uniqueKey="風土記/ふどき/1"/>
                 <entries id="59605" dictionaryEntryTypeList="WORD_NOUN" kanji="風土記" kana="ふうどき" romaji="fuudoki" uniqueKey="風土記/ふうどき/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -10777,6 +10811,9 @@
     <entry>
         <ent_seq>1906530</ent_seq>
         <k_ele>
+            <keb>父母のもと</keb>
+        </k_ele>
+        <k_ele>
             <keb>父母の許</keb>
         </k_ele>
         <r_ele>
@@ -10784,11 +10821,14 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <gloss xml:lang="eng">under one's parents roof</gloss>
+            <gloss xml:lang="eng">under one's parents' roof</gloss>
+            <gloss xml:lang="eng">living with one's parents</gloss>
             <gloss xml:lang="pol">pod dachem rodziców</gloss>
+            <gloss xml:lang="pol">mieszkanie z rodzicami</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
+                <entries id="24028" dictionaryEntryTypeList="WORD_NOUN" kanji="父母のもと" kana="ふぼのもと" romaji="fubo no moto" uniqueKey="父母のもと/ふぼのもと/1"/>
                 <entries id="235469" dictionaryEntryTypeList="WORD_NOUN" kanji="父母の許" kana="ふぼのもと" romaji="fubo no moto" uniqueKey="父母の許/ふぼのもと/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
@@ -11038,6 +11078,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="50798" dictionaryEntryTypeList="WORD_NOUN" kanji="墳丘" kana="ふんきゅう" romaji="funkyuu" uniqueKey="墳丘/ふんきゅう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -11714,6 +11755,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68241" dictionaryEntryTypeList="WORD_NOUN" kanji="文博" kana="ぶんはく" romaji="bunhaku" uniqueKey="文博/ぶんはく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -12412,6 +12454,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="65310" dictionaryEntryTypeList="WORD_NOUN" kanji="米審" kana="べいしん" romaji="beishin" uniqueKey="米審/べいしん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -12606,6 +12649,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="49775" dictionaryEntryTypeList="WORD_NOUN" kanji="法会" kana="ほうえ" romaji="houe" uniqueKey="法会/ほうえ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -13259,7 +13303,7 @@
             <ke_pri>nf47</ke_pri>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="houmurisaru">ほうむりさる</reb>
+            <reb kana_type="HIRAGANA" romaji="houmuri saru">ほうむりさる</reb>
             <re_pri>news2</re_pri>
             <re_pri>nf47</re_pri>
         </r_ele>
@@ -13272,7 +13316,8 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="55085" dictionaryEntryTypeList="WORD_VERB_U" kanji="葬り去る" kana="ほうむりさる" romaji="houmurisaru" uniqueKey="葬り去る/ほうむりさる/1"/>
+                <entries id="55085" dictionaryEntryTypeList="WORD_VERB_U" kanji="葬り去る" kana="ほうむりさる" romaji="houmuri saru" uniqueKey="葬り去る/ほうむりさる/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -15493,12 +15538,14 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">flexure</gloss>
             <gloss xml:lang="eng">bending</gloss>
+            <gloss xml:lang="pol">wygięcie</gloss>
             <gloss xml:lang="pol">zgięcie</gloss>
             <gloss xml:lang="pol">zagięcie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="49049" dictionaryEntryTypeList="WORD_NOUN" kanji="曲げ" kana="まげ" romaji="mage" uniqueKey="曲げ/まげ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -17274,6 +17321,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="56388" dictionaryEntryTypeList="WORD_NOUN" kanji="未踏峰" kana="みとうほう" romaji="mitouhou" uniqueKey="未踏峰/みとうほう/1"/>
                 <entries id="56426" dictionaryEntryTypeList="WORD_NOUN" kanji="未登峰" kana="みとうほう" romaji="mitouhou" uniqueKey="未登峰/みとうほう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -17888,6 +17936,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="48721" dictionaryEntryTypeList="WORD_NOUN" kanji="弥勒" kana="みろく" romaji="miroku" uniqueKey="弥勒/みろく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -19363,6 +19412,7 @@
             <pos>Godan verb with 'bu' ending</pos>
             <gloss xml:lang="eng">to form an alliance</gloss>
             <gloss xml:lang="pol">zawrzeć przymierze</gloss>
+            <gloss xml:lang="pol">zawrzeć sojusz</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -20458,11 +20508,15 @@
         <k_ele>
             <keb>盲管</keb>
         </k_ele>
+        <k_ele>
+            <keb>盲貫</keb>
+        </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="moukan">もうかん</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <xref type="see" seq="1605060" xk="盲管銃創">盲管銃創</xref>
             <field>medicine</field>
             <gloss xml:lang="eng">cul-de-sac</gloss>
             <gloss xml:lang="eng">blind pouch</gloss>
@@ -20473,6 +20527,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="173206" dictionaryEntryTypeList="WORD_NOUN" kanji="盲管" kana="もうかん" romaji="moukan" uniqueKey="盲管/もうかん/1"/>
+                <entries id="325978" dictionaryEntryTypeList="WORD_NOUN" kanji="盲貫" kana="もうかん" romaji="moukan" uniqueKey="盲貫/もうかん/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -20507,6 +20562,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68871" dictionaryEntryTypeList="WORD_NOUN" kanji="孟子" kana="もうし" romaji="moushi" uniqueKey="孟子/もうし/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -20636,6 +20692,10 @@
             <keb>萌え立つ</keb>
         </k_ele>
         <k_ele>
+            <keb>萌えたつ</keb>
+            <ke_inf>search-only kanji form</ke_inf>
+        </k_ele>
+        <k_ele>
             <keb>もえ立つ</keb>
             <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
@@ -20654,6 +20714,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="150321" dictionaryEntryTypeList="WORD_VERB_U" kanji="萌え立つ" kana="もえたつ" romaji="moe tatsu" uniqueKey="萌え立つ/もえたつ/1"/>
+                <entries id="326427" dictionaryEntryTypeList="WORD_VERB_U" kanji="萌えたつ" kana="もえたつ" romaji="moe tatsu" uniqueKey="萌えたつ/もえたつ/1"/>
                 <entries id="308706" dictionaryEntryTypeList="WORD_VERB_U" kanji="もえ立つ" kana="もえたつ" romaji="moe tatsu" uniqueKey="もえ立つ/もえたつ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
@@ -20709,6 +20770,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="51392" dictionaryEntryTypeList="WORD_NOUN" kanji="模試" kana="もし" romaji="moshi" uniqueKey="模試/もし/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -22592,6 +22654,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="56729" dictionaryEntryTypeList="WORD_NOUN" kanji="山鉾" kana="やまぼこ" romaji="yamaboko" uniqueKey="山鉾/やまぼこ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -24813,6 +24876,7 @@
             <pos>Godan verb with 'su' ending</pos>
             <gloss xml:lang="eng">to have one's own way (against all reason)</gloss>
             <gloss xml:lang="eng">to push through an unreasonable idea</gloss>
+            <gloss xml:lang="pol">postępować po swojemu (wbrew wszelkiej logice)</gloss>
             <gloss xml:lang="pol">obrać swój własny kierunek (wbrew wszystkim powodom)</gloss>
             <gloss xml:lang="pol">przeforsować niedorzeczny pomysł</gloss>
         </sense>
@@ -25062,6 +25126,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61018" dictionaryEntryTypeList="WORD_NOUN" kanji="読み上げ算" kana="よみあげざん" romaji="yomi agezan" uniqueKey="読み上げ算/よみあげざん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -25340,6 +25405,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68938" dictionaryEntryTypeList="WORD_NOUN" kanji="弱まり" kana="よわまり" romaji="yowamari" uniqueKey="弱まり/よわまり/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -26726,6 +26792,7 @@
             <pos>Godan verb with 'ru' ending</pos>
             <gloss xml:lang="eng">to enjoy the cool breeze</gloss>
             <gloss xml:lang="pol">cieszyć się chłodnym wiaterkiem</gloss>
+            <gloss xml:lang="pol">cieszyć się chłodną bryzą</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -26971,10 +27038,12 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">clinician</gloss>
             <gloss xml:lang="pol">lekarz praktyk</gloss>
+            <gloss xml:lang="pol">klinicysta</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="64104" dictionaryEntryTypeList="WORD_NOUN" kanji="臨床医" kana="りんしょうい" romaji="rinshoui" uniqueKey="臨床医/りんしょうい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -28761,6 +28830,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68380" dictionaryEntryTypeList="WORD_NOUN" kanji="分かれ" kana="わかれ" romaji="wakare" uniqueKey="分かれ/わかれ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -29604,6 +29674,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="49844" dictionaryEntryTypeList="WORD_NOUN" kanji="悪知恵" kana="わるぢえ" romaji="warudie" uniqueKey="悪知恵/わるぢえ/1"/>
                 <entries id="49879" dictionaryEntryTypeList="WORD_NOUN" kanji="悪知恵" kana="わるじえ" romaji="warujie" uniqueKey="悪知恵/わるじえ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -30616,10 +30687,12 @@
             <gloss xml:lang="eng">liquefy</gloss>
             <gloss xml:lang="pol">przechodzenie w stan ciekły</gloss>
             <gloss xml:lang="pol">skraplanie</gloss>
+            <gloss xml:lang="pol">upłynnianie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68842" dictionaryEntryTypeList="WORD_NOUN" kanji="液状化" kana="えきじょうか" romaji="ekijouka" uniqueKey="液状化/えきじょうか/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -31513,6 +31586,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="49646" dictionaryEntryTypeList="WORD_NOUN" kanji="糠" kana="ぬか" romaji="nuka" uniqueKey="糠/ぬか/1"/>
                 <entries id="49692" dictionaryEntryTypeList="WORD_NOUN" kana="ヌカ" romaji="nuka" uniqueKey="-/ヌカ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -32032,6 +32106,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61627" dictionaryEntryTypeList="WORD_NOUN" kanji="導入部" kana="どうにゅうぶ" romaji="dounyuubu" uniqueKey="導入部/どうにゅうぶ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -32504,6 +32579,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="6392" dictionaryEntryTypeList="WORD_NOUN" kanji="架" kana="か" romaji="ka" uniqueKey="架/か/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -33585,6 +33661,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="54668" dictionaryEntryTypeList="WORD_COUNTER,WORD_NOUN" kanji="泊" kana="はく" romaji="haku" uniqueKey="泊/はく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>24455</exampleSentenceGroupIdsList>
@@ -34992,8 +35069,9 @@
             <gloss xml:lang="eng">to go with (a companion)</gloss>
             <gloss xml:lang="eng">to hang out with</gloss>
             <gloss xml:lang="eng">to do together</gloss>
-            <gloss xml:lang="pol">iść z (towarzyszem)</gloss>
-            <gloss xml:lang="pol">spędzać czas z</gloss>
+            <gloss xml:lang="pol">spędzać czas z (kimś)</gloss>
+            <gloss xml:lang="pol">spędzać czas razem</gloss>
+            <gloss xml:lang="pol">robić coś razem</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -35029,6 +35107,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="131" dictionaryEntryTypeList="WORD_PRE_NOUN_ADJECTIVAL" kanji="何の" kana="どの" romaji="dono" uniqueKey="何の/どの/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="3"/>
                 <groupsList>GENKI_1_2</groupsList>
                 <exampleSentenceGroupIdsList>1037900</exampleSentenceGroupIdsList>
@@ -38620,6 +38699,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="56488" dictionaryEntryTypeList="WORD_NOUN" kanji="飛" kana="ひ" romaji="hi" uniqueKey="飛/ひ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -38924,6 +39004,7 @@
                 <entries id="52200" dictionaryEntryTypeList="WORD_NOUN" kanji="疼木" kana="ひいらぎ" romaji="hiiragi" uniqueKey="疼木/ひいらぎ/1"/>
                 <entries id="273159" dictionaryEntryTypeList="WORD_NOUN" kanji="柊木" kana="ひいらぎ" romaji="hiiragi" uniqueKey="柊木/ひいらぎ/1"/>
                 <entries id="52201" dictionaryEntryTypeList="WORD_NOUN" kana="ヒイラギ" romaji="hiiragi" uniqueKey="-/ヒイラギ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -40558,6 +40639,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="67597" dictionaryEntryTypeList="WORD_VERB_U" kanji="皮肉る" kana="ひにくる" romaji="hinikuru" uniqueKey="皮肉る/ひにくる/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -40878,6 +40960,7 @@
             <gloss xml:lang="eng">uneducated</gloss>
             <gloss xml:lang="pol">niewyuczony</gloss>
             <gloss xml:lang="pol">niewykształcony</gloss>
+            <gloss xml:lang="pol">nieposiadający wykształcenia</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -46824,14 +46907,13 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka, ang: Viterbi decoding</s_inf>
             <gloss xml:lang="eng">Viterbi decoding</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">dekodowanie Viterbiego</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="190764" dictionaryEntryTypeList="WORD_NOUN" kanji="ビタビ復号" kana="ビタビふくごう" romaji="bitabi fukugou" uniqueKey="ビタビ復号/ビタビふくごう/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -47215,6 +47297,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="6073" dictionaryEntryTypeList="WORD_VERB_IRREGULAR" kanji="奏する" kana="そうする" romaji="sou suru" uniqueKey="奏する/そうする/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -50970,7 +51053,8 @@
             <gloss xml:lang="eng">specialty shop</gloss>
             <gloss xml:lang="eng">pro shop</gloss>
             <gloss xml:lang="pol">sklep specjalistyczny</gloss>
-            <gloss xml:lang="pol">profesjonalny sklep</gloss>
+            <gloss xml:lang="pol">sklep z artykułami specjalistycznymi</gloss>
+            <gloss xml:lang="pol">sklep dla profesjonalistów</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -54757,6 +54841,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="57111" dictionaryEntryTypeList="WORD_NOUN" kanji="亜硫酸ガス" kana="ありゅうさんガス" romaji="aryuusan gasu" uniqueKey="亜硫酸ガス/ありゅうさんガス/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -54787,6 +54872,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="1627" dictionaryEntryTypeList="WORD_NOUN" kanji="阿弗利加" kana="アフリカ" romaji="afurika" uniqueKey="阿弗利加/アフリカ/1"/>
                 <entries id="67225" dictionaryEntryTypeList="WORD_NOUN" kanji="亜弗利加" kana="アフリカ" romaji="afurika" uniqueKey="亜弗利加/アフリカ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="104"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>135456</exampleSentenceGroupIdsList>
@@ -55189,12 +55275,18 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <gloss xml:lang="eng">false propaganda</gloss>
+            <pos>noun or participle which takes the aux. verb suru</pos>
+            <pos>intransitive verb</pos>
+            <xref type="see" seq="2503480" xr="ネガティブキャンペーン">ネガティブキャンペーン</xref>
+            <gloss xml:lang="eng">negative campaign</gloss>
+            <gloss xml:lang="eng">smear campaign</gloss>
+            <gloss xml:lang="eng">malicious propaganda</gloss>
             <gloss xml:lang="pol">fałszywa propaganda</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="235035" dictionaryEntryTypeList="WORD_NOUN" kanji="悪宣伝" kana="あくせんでん" romaji="akusenden" uniqueKey="悪宣伝/あくせんでん/1"/>
+                <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -59676,11 +59768,15 @@
             <gloss xml:lang="eng">baked sweet goods (e.g. Danish pastry, melon bread)</gloss>
             <gloss xml:lang="eng">sweet pastry</gloss>
             <gloss xml:lang="eng">sweet bread</gloss>
+            <gloss xml:lang="pol">wyroby cukiernicze (np. ciastka duńskie, chleb melonowy)</gloss>
+            <gloss xml:lang="pol">słodkie wypieki</gloss>
             <gloss xml:lang="pol">słodka bułka</gloss>
+            <gloss xml:lang="pol">słodki chleb</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="50589" dictionaryEntryTypeList="WORD_NOUN" kanji="菓子パン" kana="かしパン" romaji="kashi pan" uniqueKey="菓子パン/かしパン/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -60965,6 +61061,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="56066" dictionaryEntryTypeList="WORD_NOUN" kanji="革製品" kana="かわせいひん" romaji="kawaseihin" uniqueKey="革製品/かわせいひん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -62619,6 +62716,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="58750" dictionaryEntryTypeList="WORD_NOUN" kanji="既成概念" kana="きせいがいねん" romaji="kisei gainen" uniqueKey="既成概念/きせいがいねん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -63143,6 +63241,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="60601" dictionaryEntryTypeList="WORD_NOUN" kanji="議会主義" kana="ぎかいしゅぎ" romaji="gikai shugi" uniqueKey="議会主義/ぎかいしゅぎ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -63336,7 +63435,7 @@
             <keb>急行停車駅</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="kyuukouteishaeki">きゅうこうていしゃえき</reb>
+            <reb kana_type="HIRAGANA" romaji="kyuukou teisha eki">きゅうこうていしゃえき</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -63345,7 +63444,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="190529" dictionaryEntryTypeList="WORD_NOUN" kanji="急行停車駅" kana="きゅうこうていしゃえき" romaji="kyuukouteishaeki" uniqueKey="急行停車駅/きゅうこうていしゃえき/1"/>
+                <entries id="190529" dictionaryEntryTypeList="WORD_NOUN" kanji="急行停車駅" kana="きゅうこうていしゃえき" romaji="kyuukou teisha eki" uniqueKey="急行停車駅/きゅうこうていしゃえき/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -64357,6 +64456,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68587" dictionaryEntryTypeList="WORD_NOUN,WORD_ADJECTIVE_NA,WORD_ADJECTIVE_NO" kanji="筋肉質" kana="きんにくしつ" romaji="kinnikushitsu" uniqueKey="筋肉質/きんにくしつ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -66328,6 +66428,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="54814" dictionaryEntryTypeList="WORD_NOUN" kanji="厳冬期" kana="げんとうき" romaji="gentouki" uniqueKey="厳冬期/げんとうき/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -66425,6 +66526,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="57112" dictionaryEntryTypeList="WORD_NOUN" kanji="現場監督" kana="げんばかんとく" romaji="genba kantoku" uniqueKey="現場監督/げんばかんとく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -66535,15 +66637,17 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">np. włoskiej architektury renesansu</s_inf>
             <gloss xml:lang="eng">modern version</gloss>
             <gloss xml:lang="eng">modern edition</gloss>
             <gloss xml:lang="eng">updated, contemporary edition</gloss>
             <gloss xml:lang="pol">współczesna wersja</gloss>
+            <gloss xml:lang="pol">współczesne wydanie</gloss>
+            <gloss xml:lang="pol">zaktualizowane, współczesne wydanie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="52953" dictionaryEntryTypeList="WORD_NOUN" kanji="現代版" kana="げんだいばん" romaji="gendaiban" uniqueKey="現代版/げんだいばん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -66917,6 +67021,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="48245" dictionaryEntryTypeList="WORD_NOUN" kanji="固定票" kana="こていひょう" romaji="koteihyou" uniqueKey="固定票/こていひょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -67159,6 +67264,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="58819" dictionaryEntryTypeList="WORD_NOUN" kanji="語学力" kana="ごがくりょく" romaji="gogakuryoku" uniqueKey="語学力/ごがくりょく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -67206,6 +67312,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68445" dictionaryEntryTypeList="WORD_NOUN" kanji="交響詩" kana="こうきょうし" romaji="koukyoushi" uniqueKey="交響詩/こうきょうし/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -68033,6 +68140,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61628" dictionaryEntryTypeList="WORD_NOUN" kanji="行政管理庁" kana="ぎょうせいかんりちょう" romaji="gyousei kanrichou" uniqueKey="行政管理庁/ぎょうせいかんりちょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -68076,14 +68184,15 @@
             <gloss xml:lang="eng">administrative scrivener</gloss>
             <gloss xml:lang="eng">notary public</gloss>
             <gloss g_type="expl" xml:lang="eng">paralegal qualified to prepare legal documents on administrative matters, e.g. immigration</gloss>
-            <gloss xml:lang="pol">sekretarz administracji</gloss>
+            <gloss xml:lang="pol">urzędnik administracyjny</gloss>
             <gloss xml:lang="pol">notariusz</gloss>
             <gloss xml:lang="pol">rejent</gloss>
-            <gloss xml:lang="pol">osoba uprawniona do przygotowywania dokumentów prawnych</gloss>
+            <gloss g_type="expl" xml:lang="pol">asystent prawny uprawniony do sporządzania dokumentów prawnych w sprawach administracyjnych, np. imigracyjnych</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="48129" dictionaryEntryTypeList="WORD_NOUN" kanji="行政書士" kana="ぎょうせいしょし" romaji="gyousei shoshi" uniqueKey="行政書士/ぎょうせいしょし/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -68381,6 +68490,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="50860" dictionaryEntryTypeList="WORD_NOUN" kanji="高等科" kana="こうとうか" romaji="koutouka" uniqueKey="高等科/こうとうか/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -68607,6 +68717,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="12911" dictionaryEntryTypeList="WORD_NOUN" kanji="国語学" kana="こくごがく" romaji="kokugo gaku" uniqueKey="国語学/こくごがく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -70718,6 +70829,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="60067" dictionaryEntryTypeList="WORD_NOUN" kanji="獅子舞" kana="ししまい" romaji="shishimai" uniqueKey="獅子舞/ししまい/1"/>
                 <entries id="60068" dictionaryEntryTypeList="WORD_NOUN" kanji="獅子舞い" kana="ししまい" romaji="shishimai" uniqueKey="獅子舞い/ししまい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -70853,6 +70965,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="49845" dictionaryEntryTypeList="WORD_NOUN" kanji="紙吹雪" kana="かみふぶき" romaji="kami fubuki" uniqueKey="紙吹雪/かみふぶき/1"/>
                 <entries id="243464" dictionaryEntryTypeList="WORD_NOUN" kanji="紙ふぶき" kana="かみふぶき" romaji="kami fubuki" uniqueKey="紙ふぶき/かみふぶき/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -72465,6 +72578,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="50524" dictionaryEntryTypeList="WORD_NOUN" kanji="実質賃金" kana="じっしつちんぎん" romaji="jisshitsu chingin" uniqueKey="実質賃金/じっしつちんぎん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -75544,6 +75658,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="61769" dictionaryEntryTypeList="WORD_NOUN" kanji="情緒障害" kana="じょうちょしょうがい" romaji="joucho shougai" uniqueKey="情緒障害/じょうちょしょうがい/1"/>
                 <entries id="61629" dictionaryEntryTypeList="WORD_NOUN" kanji="情緒障害" kana="じょうしょしょうがい" romaji="jousho shougai" uniqueKey="情緒障害/じょうしょしょうがい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -75897,10 +76012,12 @@
             <gloss xml:lang="eng">pulse rate</gloss>
             <gloss xml:lang="pol">tętno</gloss>
             <gloss xml:lang="pol">szybkość tętna</gloss>
+            <gloss xml:lang="pol">częstotliwość pulsu</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="54894" dictionaryEntryTypeList="WORD_NOUN" kanji="心拍数" kana="しんぱくすう" romaji="shinpakusuu" uniqueKey="心拍数/しんぱくすう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -76099,6 +76216,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="21288" dictionaryEntryTypeList="WORD_NOUN" kanji="新刊書" kana="しんかんしょ" romaji="shinkansho" uniqueKey="新刊書/しんかんしょ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>269265</exampleSentenceGroupIdsList>
@@ -76228,6 +76346,7 @@
             <gloss xml:lang="eng">newly built ship</gloss>
             <gloss xml:lang="eng">new boat</gloss>
             <gloss xml:lang="pol">nowo wybudowany statek (okręt)</gloss>
+            <gloss xml:lang="pol">nowa łódź</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -76496,6 +76615,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="54669" dictionaryEntryTypeList="WORD_NOUN" kanji="申告書" kana="しんこくしょ" romaji="shinkokusho" uniqueKey="申告書/しんこくしょ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -76610,6 +76730,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="61019" dictionaryEntryTypeList="WORD_NOUN" kanji="真実味" kana="しんじつみ" romaji="shinjitsumi" uniqueKey="真実味/しんじつみ/1"/>
                 <entries id="308141" dictionaryEntryTypeList="WORD_NOUN" kanji="真実み" kana="しんじつみ" romaji="shinjitsumi" uniqueKey="真実み/しんじつみ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -77515,6 +77636,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="54475" dictionaryEntryTypeList="WORD_NOUN" kanji="髄膜炎" kana="ずいまくえん" romaji="zuimakuen" uniqueKey="髄膜炎/ずいまくえん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -77749,6 +77871,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="60938" dictionaryEntryTypeList="WORD_NOUN" kanji="世帯数" kana="せたいすう" romaji="setaisuu" uniqueKey="世帯数/せたいすう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -77903,7 +78026,7 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">ang: poplar</s_inf>
+            <s_inf xml:lang="pol">szczególnie Lombardy poplar, Populus nigra odm. italica, ang: poplar</s_inf>
             <gloss xml:lang="eng">poplar (esp. Lombardy poplar, Populus nigra var. italica)</gloss>
             <gloss xml:lang="pol">topola</gloss>
         </sense>
@@ -79006,6 +79129,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61630" dictionaryEntryTypeList="WORD_NOUN" kanji="生鮮食料品" kana="せいせんしょくりょうひん" romaji="seisen shokuryouhin" uniqueKey="生鮮食料品/せいせんしょくりょうひん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -79244,6 +79368,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="55455" dictionaryEntryTypeList="WORD_NOUN" kanji="精神主義" kana="せいしんしゅぎ" romaji="seishin shugi" uniqueKey="精神主義/せいしんしゅぎ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -80759,6 +80884,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68646" dictionaryEntryTypeList="WORD_NOUN" kanji="選挙公報" kana="せんきょこうほう" romaji="senkyo kouhou" uniqueKey="選挙公報/せんきょこうほう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -81508,6 +81634,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="55644" dictionaryEntryTypeList="WORD_NOUN" kanji="測定器" kana="そくていき" romaji="sokuteiki" uniqueKey="測定器/そくていき/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -82182,6 +82309,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="56730" dictionaryEntryTypeList="WORD_NOUN" kanji="帯状疱疹" kana="たいじょうほうしん" romaji="taijou houshin" uniqueKey="帯状疱疹/たいじょうほうしん/1"/>
                 <entries id="56770" dictionaryEntryTypeList="WORD_NOUN" kanji="帯状疱疹" kana="おびじょうほうしん" romaji="obijou houshin" uniqueKey="帯状疱疹/おびじょうほうしん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -82627,6 +82755,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="55064" dictionaryEntryTypeList="WORD_NOUN" kanji="単純平均" kana="たんじゅんへいきん" romaji="tanjun heikin" uniqueKey="単純平均/たんじゅんへいきん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -83295,6 +83424,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="65108" dictionaryEntryTypeList="WORD_NOUN" kanji="地場産業" kana="じばさんぎょう" romaji="jiba sangyou" uniqueKey="地場産業/じばさんぎょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -83390,6 +83520,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="58348" dictionaryEntryTypeList="WORD_NOUN" kanji="地方団体" kana="ちほうだんたい" romaji="chihou dantai" uniqueKey="地方団体/ちほうだんたい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -83522,7 +83653,7 @@
             <keb>窒素酸化物</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="chissosan kabutsu">ちっそさんかぶつ</reb>
+            <reb kana_type="HIRAGANA" romaji="chisso sankabutsu">ちっそさんかぶつ</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -83531,7 +83662,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="119037" dictionaryEntryTypeList="WORD_NOUN" kanji="窒素酸化物" kana="ちっそさんかぶつ" romaji="chissosan kabutsu" uniqueKey="窒素酸化物/ちっそさんかぶつ/1"/>
+                <entries id="119037" dictionaryEntryTypeList="WORD_NOUN" kanji="窒素酸化物" kana="ちっそさんかぶつ" romaji="chisso sankabutsu" uniqueKey="窒素酸化物/ちっそさんかぶつ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -83934,6 +84065,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="10428" dictionaryEntryTypeList="WORD_NOUN" kanji="抽象化" kana="ちゅうしょうか" romaji="chuushouka" uniqueKey="抽象化/ちゅうしょうか/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -84125,6 +84257,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="60784" dictionaryEntryTypeList="WORD_NOUN" kanji="貯蔵庫" kana="ちょぞうこ" romaji="chozouko" uniqueKey="貯蔵庫/ちょぞうこ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -84535,6 +84668,7 @@
             <gloss xml:lang="eng">lessee</gloss>
             <gloss xml:lang="eng">leaseholder</gloss>
             <gloss xml:lang="pol">najemca</gloss>
+            <gloss xml:lang="pol">wynajmujący</gloss>
             <gloss xml:lang="pol">dzierżawca</gloss>
         </sense>
         <misc>
@@ -84876,6 +85010,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="54343" dictionaryEntryTypeList="WORD_NOUN" kanji="釣り場" kana="つりば" romaji="tsuri ba" uniqueKey="釣り場/つりば/1"/>
                 <entries id="315843" dictionaryEntryTypeList="WORD_NOUN" kanji="釣場" kana="つりば" romaji="tsuri ba" uniqueKey="釣場/つりば/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -86530,7 +86665,7 @@
             <ke_pri>nf45</ke_pri>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="fuyudori">ふゆどり</reb>
+            <reb kana_type="HIRAGANA" romaji="fuyu dori">ふゆどり</reb>
             <re_pri>news2</re_pri>
             <re_pri>nf45</re_pri>
         </r_ele>
@@ -86542,7 +86677,8 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="66780" dictionaryEntryTypeList="WORD_NOUN" kanji="冬鳥" kana="ふゆどり" romaji="fuyudori" uniqueKey="冬鳥/ふゆどり/1"/>
+                <entries id="66780" dictionaryEntryTypeList="WORD_NOUN" kanji="冬鳥" kana="ふゆどり" romaji="fuyu dori" uniqueKey="冬鳥/ふゆどり/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -86749,6 +86885,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="49511" dictionaryEntryTypeList="WORD_NOUN" kanji="東南東" kana="とうなんとう" romaji="tounantou" uniqueKey="東南東/とうなんとう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -86775,6 +86912,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68588" dictionaryEntryTypeList="WORD_NOUN" kanji="東北東" kana="とうほくとう" romaji="touhokutou" uniqueKey="東北東/とうほくとう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -90405,6 +90543,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">cost of damage</gloss>
             <gloss xml:lang="pol">ilość (zakres) uszkodzeń</gloss>
+            <gloss xml:lang="pol">koszt szkód</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -91467,6 +91606,7 @@
                 <entries id="220739" dictionaryEntryTypeList="WORD_NOUN" kanji="覆刻版" kana="ふっこくばん" romaji="fukkokuban" uniqueKey="覆刻版/ふっこくばん/1"/>
                 <entries id="220740" dictionaryEntryTypeList="WORD_NOUN" kanji="複刻版" kana="ふっこくばん" romaji="fukkokuban" uniqueKey="複刻版/ふっこくばん/1"/>
                 <entries id="220741" dictionaryEntryTypeList="WORD_NOUN" kanji="復刻板" kana="ふっこくばん" romaji="fukkokuban" uniqueKey="復刻板/ふっこくばん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -92516,6 +92656,7 @@
                 <entries id="66630" dictionaryEntryTypeList="WORD_NOUN" kanji="捕物帳" kana="とりものちょう" romaji="torimonochou" uniqueKey="捕物帳/とりものちょう/1"/>
                 <entries id="66631" dictionaryEntryTypeList="WORD_NOUN" kanji="捕物帖" kana="とりものちょう" romaji="torimonochou" uniqueKey="捕物帖/とりものちょう/1"/>
                 <entries id="85174" dictionaryEntryTypeList="WORD_NOUN" kanji="捕り物帳" kana="とりものちょう" romaji="torimonochou" uniqueKey="捕り物帳/とりものちょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -94582,14 +94723,15 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <pos>nouns which may take the genitive case particle 'no'</pos>
-            <s_inf xml:lang="pol">o zwierzętach</s_inf>
             <gloss xml:lang="eng">nocturnality</gloss>
             <gloss xml:lang="eng">nocturnal habits</gloss>
             <gloss xml:lang="pol">nocny tryb życia</gloss>
+            <gloss xml:lang="pol">nocne zwyczaje</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="47507" dictionaryEntryTypeList="WORD_NOUN,WORD_ADJECTIVE_NO" kanji="夜行性" kana="やこうせい" romaji="yakousei" uniqueKey="夜行性/やこうせい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -95097,6 +95239,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61631" dictionaryEntryTypeList="WORD_NOUN" kanji="有機肥料" kana="ゆうきひりょう" romaji="yuuki hiryou" uniqueKey="有機肥料/ゆうきひりょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -96036,6 +96179,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">army, navy and air force</gloss>
             <gloss xml:lang="eng">land, sea and air forces</gloss>
+            <gloss xml:lang="pol">wojsko lądowe, marynarka wojenna i siły powietrzne</gloss>
             <gloss xml:lang="pol">siły lądowe, morskie i powietrzne</gloss>
         </sense>
         <misc>
@@ -97389,6 +97533,10 @@
             <keb>とう椅子</keb>
             <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
+        <k_ele>
+            <keb>籘椅子</keb>
+            <ke_inf>search-only kanji form</ke_inf>
+        </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="tou isu">とういす</reb>
         </r_ele>
@@ -97410,6 +97558,7 @@
                 <entries id="62617" dictionaryEntryTypeList="WORD_NOUN" kanji="籐いす" kana="とういす" romaji="tou isu" uniqueKey="籐いす/とういす/1"/>
                 <entries id="301447" dictionaryEntryTypeList="WORD_NOUN" kanji="籐イス" kana="とういす" romaji="tou isu" uniqueKey="籐イス/とういす/1"/>
                 <entries id="301448" dictionaryEntryTypeList="WORD_NOUN" kanji="とう椅子" kana="とういす" romaji="tou isu" uniqueKey="とう椅子/とういす/1"/>
+                <entries id="326230" dictionaryEntryTypeList="WORD_NOUN" kanji="籘椅子" kana="とういす" romaji="tou isu" uniqueKey="籘椅子/とういす/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -97767,6 +97916,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="55048" dictionaryEntryTypeList="WORD_NOUN" kanji="達し" kana="たっし" romaji="tasshi" uniqueKey="達し/たっし/1"/>
                 <entries id="55149" dictionaryEntryTypeList="WORD_NOUN" kanji="達示" kana="たっし" romaji="tasshi" uniqueKey="達示/たっし/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -97932,6 +98082,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="9128" dictionaryEntryTypeList="WORD_VERB_U" kanji="浮かす" kana="うかす" romaji="ukasu" uniqueKey="浮かす/うかす/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="VERB_INTRANSITIVITY_PAIR" value="8269"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -98027,13 +98178,14 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1034380" xr="オセアニア">オセアニア</xref>
+            <s_inf xml:lang="pol">kraje leżąca na Pacyfiku</s_inf>
             <gloss xml:lang="eng">Oceania</gloss>
             <gloss xml:lang="pol">Oceania</gloss>
-            <gloss xml:lang="pol">kraje leżąca na Pacyfiku</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="63543" dictionaryEntryTypeList="WORD_NOUN" kanji="大洋州" kana="たいようしゅう" romaji="taiyoushuu" uniqueKey="大洋州/たいようしゅう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -98754,32 +98906,6 @@
                 <exampleSentenceGroupIdsList>265832</exampleSentenceGroupIdsList>
                 <exampleSentenceGroupIdsList>322806</exampleSentenceGroupIdsList>
                 <exampleSentenceGroupIdsList>36768</exampleSentenceGroupIdsList>
-            </oldPolishJapaneseDictionary>
-        </misc>
-    </entry>
-    <entry>
-        <ent_seq>1949670</ent_seq>
-        <k_ele>
-            <keb>なんて目じゃない</keb>
-        </k_ele>
-        <r_ele>
-            <reb kana_type="HIRAGANA" romaji="nante mejanai">なんてめじゃない</reb>
-        </r_ele>
-        <sense>
-            <pos>expressions (phrases, clauses, etc.)</pos>
-            <xref type="see" seq="2079360" xk="目じゃない">目じゃない</xref>
-            <gloss xml:lang="eng">it's not a problem</gloss>
-            <gloss xml:lang="eng">it's not a big deal</gloss>
-            <gloss xml:lang="eng">(person or thing) can be easily beaten or bettered (by one)</gloss>
-            <gloss xml:lang="pol">to nie problem</gloss>
-            <gloss xml:lang="pol">to nie jest wielka sprawa</gloss>
-            <gloss xml:lang="pol">(osoba lub rzecz), którą można łatwo pokonać lub ulepszyć</gloss>
-        </sense>
-        <misc>
-            <oldPolishJapaneseDictionary>
-                <entries id="178239" dictionaryEntryTypeList="WORD_EXPRESSION" kanji="なんて目じゃない" kana="なんてめじゃない" romaji="nante mejanai" uniqueKey="なんて目じゃない/なんてめじゃない/1"/>
-                <attributeList type="PRIORITY" value="255"/>
-                <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
     </entry>
@@ -100009,6 +100135,7 @@
                 <entries id="198804" dictionaryEntryTypeList="WORD_NOUN" kanji="引き落し" kana="ひきおとし" romaji="hiki otoshi" uniqueKey="引き落し/ひきおとし/1"/>
                 <entries id="41988" dictionaryEntryTypeList="WORD_NOUN" kanji="引落とし" kana="ひきおとし" romaji="hiki otoshi" uniqueKey="引落とし/ひきおとし/1"/>
                 <entries id="198805" dictionaryEntryTypeList="WORD_NOUN" kanji="引落" kana="ひきおとし" romaji="hiki otoshi" uniqueKey="引落/ひきおとし/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -100027,8 +100154,8 @@
             <gloss xml:lang="eng">ringworm (of the groin)</gloss>
             <gloss xml:lang="eng">jock itch</gloss>
             <gloss xml:lang="eng">tinea cruris</gloss>
-            <gloss xml:lang="pol">grzybica skóry (pachwiny, krocza)</gloss>
-            <gloss xml:lang="pol">grzybica goleni</gloss>
+            <gloss xml:lang="pol">grzybica pachwiny</gloss>
+            <gloss xml:lang="pol">grzybica krocza</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -100133,6 +100260,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="59217" dictionaryEntryTypeList="WORD_NOUN" kanji="営為" kana="えいい" romaji="eii" uniqueKey="営為/えいい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -100214,6 +100342,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="55922" dictionaryEntryTypeList="WORD_NOUN" kanji="遠投" kana="えんとう" romaji="entou" uniqueKey="遠投/えんとう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -100268,6 +100397,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61632" dictionaryEntryTypeList="WORD_NOUN" kanji="押し倒し" kana="おしたおし" romaji="oshitaoshi" uniqueKey="押し倒し/おしたおし/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -100461,6 +100591,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="64468" dictionaryEntryTypeList="WORD_EXPRESSION" kanji="果ては" kana="はては" romaji="hate wa" uniqueKey="果ては/はては/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -100561,6 +100692,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="55723" dictionaryEntryTypeList="WORD_NOUN" kanji="快投" kana="かいとう" romaji="kaitou" uniqueKey="快投/かいとう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -100838,6 +100970,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="49721" dictionaryEntryTypeList="WORD_NOUN" kanji="完調" kana="かんちょう" romaji="kanchou" uniqueKey="完調/かんちょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -100930,6 +101063,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="60704" dictionaryEntryTypeList="WORD_NOUN" kanji="間仕切り" kana="まじきり" romaji="majikiri" uniqueKey="間仕切り/まじきり/1"/>
                 <entries id="60756" dictionaryEntryTypeList="WORD_NOUN" kanji="間じきり" kana="まじきり" romaji="majikiri" uniqueKey="間じきり/まじきり/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -101046,6 +101180,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="66718" dictionaryEntryTypeList="WORD_NOUN" kanji="喜望峰" kana="きぼうほう" romaji="kibouhou" uniqueKey="喜望峰/きぼうほう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -101141,6 +101276,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="56450" dictionaryEntryTypeList="WORD_NOUN" kanji="鬼子母神" kana="きしもじん" romaji="kishi mojin" uniqueKey="鬼子母神/きしもじん/1"/>
                 <entries id="56499" dictionaryEntryTypeList="WORD_NOUN" kanji="鬼子母神" kana="きしぼじん" romaji="kishi bojin" uniqueKey="鬼子母神/きしぼじん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -101197,6 +101333,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="52225" dictionaryEntryTypeList="WORD_NOUN" kanji="吸い上げ" kana="すいあげ" romaji="sui age" uniqueKey="吸い上げ/すいあげ/1"/>
                 <entries id="52248" dictionaryEntryTypeList="WORD_NOUN" kanji="吸上げ" kana="すいあげ" romaji="sui age" uniqueKey="吸上げ/すいあげ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -101277,6 +101414,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="58663" dictionaryEntryTypeList="WORD_VERB_RU" kanji="泣かされる" kana="なかされる" romaji="nakasareru" uniqueKey="泣かされる/なかされる/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -101340,6 +101478,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61633" dictionaryEntryTypeList="WORD_NOUN" kanji="球速" kana="きゅうそく" romaji="kyuusoku" uniqueKey="球速/きゅうそく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -102082,6 +102221,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="51439" dictionaryEntryTypeList="WORD_NOUN" kanji="建学" kana="けんがく" romaji="kengaku" uniqueKey="建学/けんがく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -102199,6 +102339,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="52731" dictionaryEntryTypeList="WORD_NOUN" kanji="原液" kana="げんえき" romaji="gen'eki" uniqueKey="原液/げんえき/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -102228,6 +102369,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="54670" dictionaryEntryTypeList="WORD_NOUN" kanji="原酒" kana="げんしゅ" romaji="genshu" uniqueKey="原酒/げんしゅ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -102460,6 +102602,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68446" dictionaryEntryTypeList="WORD_NOUN" kanji="誤爆" kana="ごばく" romaji="gobaku" uniqueKey="誤爆/ごばく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -103005,6 +103148,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="54344" dictionaryEntryTypeList="WORD_NOUN" kanji="黒鳥" kana="こくちょう" romaji="kokuchou" uniqueKey="黒鳥/こくちょう/1"/>
                 <entries id="54385" dictionaryEntryTypeList="WORD_NOUN" kana="コクチョウ" romaji="kokuchou" uniqueKey="-/コクチョウ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -103136,6 +103280,7 @@
                 <entries id="50687" dictionaryEntryTypeList="WORD_NOUN" kanji="差し込み" kana="さしこみ" romaji="sashi komi" uniqueKey="差し込み/さしこみ/1"/>
                 <entries id="50717" dictionaryEntryTypeList="WORD_NOUN" kanji="差込み" kana="さしこみ" romaji="sashi komi" uniqueKey="差込み/さしこみ/1"/>
                 <entries id="50718" dictionaryEntryTypeList="WORD_NOUN" kanji="差込" kana="さしこみ" romaji="sashi komi" uniqueKey="差込/さしこみ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -103256,6 +103401,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="64774" dictionaryEntryTypeList="WORD_NOUN" kanji="最後列" kana="さいこうれつ" romaji="saikouretsu" uniqueKey="最後列/さいこうれつ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -103908,6 +104054,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="57993" dictionaryEntryTypeList="WORD_NOUN" kanji="紫綬褒章" kana="しじゅほうしょう" romaji="shiju houshou" uniqueKey="紫綬褒章/しじゅほうしょう/1"/>
                 <entries id="91734" dictionaryEntryTypeList="WORD_NOUN" kanji="紫綬褒賞" kana="しじゅほうしょう" romaji="shiju houshou" uniqueKey="紫綬褒賞/しじゅほうしょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -104328,11 +104475,12 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">one's chief (literary) work</gloss>
             <gloss xml:lang="eng">main work</gloss>
-            <gloss xml:lang="pol">swoje główne dzieło literackie</gloss>
+            <gloss xml:lang="pol">główne dzieło literackie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="58664" dictionaryEntryTypeList="WORD_NOUN" kanji="主著" kana="しゅちょ" romaji="shucho" uniqueKey="主著/しゅちょ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -104362,6 +104510,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="66933" dictionaryEntryTypeList="WORD_NOUN" kanji="取っ組み合い" kana="とっくみあい" romaji="tokkumi ai" uniqueKey="取っ組み合い/とっくみあい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>52670</exampleSentenceGroupIdsList>
@@ -104693,7 +104842,7 @@
             <reb kana_type="HIRAGANA" romaji="juushimatsu">じゅうしまつ</reb>
         </r_ele>
         <r_ele>
-            <reb kana_type="KATAKANA" romaji="juushimatsu">ジュウシマツ</reb>
+            <reb kana_type="KATAKANA_EXCEPTION" romaji="juushimatsu">ジュウシマツ</reb>
             <re_nokanji/>
         </r_ele>
         <sense>
@@ -104702,7 +104851,7 @@
             <gloss xml:lang="eng">Bengalese finch</gloss>
             <gloss xml:lang="eng">society finch (Lonchura striata var. domestica)</gloss>
             <gloss xml:lang="pol">mewka japońska (udomowiona forma mniszki białorzytnej ptaka z rodziny astryldowatych)</gloss>
-            <gloss xml:lang="pol">mniszka białorzytna (gatunek małego ptaka z rodziny astryldowatych, podrodziny mniszek, lonchura striata)</gloss>
+            <gloss xml:lang="pol">mniszka białorzytna (gatunek małego ptaka z rodziny astryldowatych, podrodziny mniszek, Lonchura striata odm. domestica)</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -104882,6 +105031,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="56118" dictionaryEntryTypeList="WORD_NOUN" kanji="書き直し" kana="かきなおし" romaji="kaki naoshi" uniqueKey="書き直し/かきなおし/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -105025,6 +105175,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61634" dictionaryEntryTypeList="WORD_NOUN" kanji="序二段" kana="じょにだん" romaji="jonidan" uniqueKey="序二段/じょにだん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -105077,6 +105228,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="66464" dictionaryEntryTypeList="WORD_NOUN" kanji="勝差" kana="しょうさ" romaji="shousa" uniqueKey="勝差/しょうさ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -105141,7 +105293,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>sumo</field>
-            <s_inf xml:lang="pol">sumo</s_inf>
             <gloss xml:lang="eng">armlock throw</gloss>
             <gloss xml:lang="eng">forearm throw</gloss>
             <gloss xml:lang="pol">rzut sprzed ramienia</gloss>
@@ -105149,6 +105300,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68242" dictionaryEntryTypeList="WORD_NOUN" kanji="小手投げ" kana="こてなげ" romaji="kotenage" uniqueKey="小手投げ/こてなげ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -105287,6 +105439,7 @@
                 <entries id="59254" dictionaryEntryTypeList="WORD_VERB_U" kanji="消し去る" kana="けしさる" romaji="keshi saru" uniqueKey="消し去る/けしさる/1"/>
                 <entries id="307086" dictionaryEntryTypeList="WORD_VERB_U" kanji="消しさる" kana="けしさる" romaji="keshi saru" uniqueKey="消しさる/けしさる/1"/>
                 <entries id="307087" dictionaryEntryTypeList="WORD_VERB_U" kanji="消去る" kana="けしさる" romaji="keshi saru" uniqueKey="消去る/けしさる/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -105343,6 +105496,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="52770" dictionaryEntryTypeList="WORD_NOUN" kanji="照葉樹林" kana="しょうようじゅりん" romaji="shouyou jurin" uniqueKey="照葉樹林/しょうようじゅりん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -105625,6 +105779,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="67797" dictionaryEntryTypeList="WORD_NOUN" kanji="新譜" kana="しんぷ" romaji="shinpu" uniqueKey="新譜/しんぷ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -105892,6 +106047,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="58206" dictionaryEntryTypeList="WORD_NOUN" kanji="吹き付け" kana="ふきつけ" romaji="fuki tsuke" uniqueKey="吹き付け/ふきつけ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -106134,6 +106290,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="53895" dictionaryEntryTypeList="WORD_NOUN" kanji="据え付け" kana="すえつけ" romaji="sue tsuke" uniqueKey="据え付け/すえつけ/1"/>
                 <entries id="53927" dictionaryEntryTypeList="WORD_NOUN" kanji="据付" kana="すえつけ" romaji="sue tsuke" uniqueKey="据付/すえつけ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -106424,6 +106581,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68872" dictionaryEntryTypeList="WORD_NOUN" kanji="積み出し" kana="つみだし" romaji="tsumi dashi" uniqueKey="積み出し/つみだし/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -106706,6 +106864,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="67737" dictionaryEntryTypeList="WORD_NOUN" kanji="船会社" kana="ふながいしゃ" romaji="funagaisha" uniqueKey="船会社/ふながいしゃ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -107003,6 +107162,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="65039" dictionaryEntryTypeList="WORD_NOUN" kanji="走力" kana="そうりょく" romaji="souryoku" uniqueKey="走力/そうりょく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -107261,6 +107421,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="63312" dictionaryEntryTypeList="WORD_NOUN" kanji="退室" kana="たいしつ" romaji="taishitsu" uniqueKey="退室/たいしつ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -107311,6 +107472,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="59739" dictionaryEntryTypeList="WORD_PRE_NOUN_ADJECTIVAL" kanji="大それた" kana="だいそれた" romaji="daisoreta" uniqueKey="大それた/だいそれた/1"/>
                 <entries id="25777" dictionaryEntryTypeList="WORD_PRE_NOUN_ADJECTIVAL" kanji="大それた" kana="おおそれた" romaji="oosoreta" uniqueKey="大それた/おおそれた/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -107358,6 +107520,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="60879" dictionaryEntryTypeList="WORD_NOUN" kanji="大軍" kana="たいぐん" romaji="taigun" uniqueKey="大軍/たいぐん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -107427,6 +107590,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="48130" dictionaryEntryTypeList="WORD_NOUN" kanji="大所帯" kana="おおじょたい" romaji="oojotai" uniqueKey="大所帯/おおじょたい/1"/>
                 <entries id="308271" dictionaryEntryTypeList="WORD_NOUN" kanji="大世帯" kana="おおじょたい" romaji="oojotai" uniqueKey="大世帯/おおじょたい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -107609,6 +107773,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="51814" dictionaryEntryTypeList="WORD_NOUN" kanji="奪い合い" kana="うばいあい" romaji="ubaiai" uniqueKey="奪い合い/うばいあい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -107846,6 +108011,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="63909" dictionaryEntryTypeList="WORD_NOUN" kanji="段位" kana="だんい" romaji="dan'i" uniqueKey="段位/だんい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -108714,6 +108880,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="66719" dictionaryEntryTypeList="WORD_NOUN" kanji="同和" kana="どうわ" romaji="douwa" uniqueKey="同和/どうわ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -109044,6 +109211,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="50183" dictionaryEntryTypeList="WORD_NOUN,WORD_ADJECTIVE_NO" kanji="二元" kana="にげん" romaji="nigen" uniqueKey="二元/にげん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -109152,11 +109320,14 @@
             <gloss xml:lang="eng">annual leave</gloss>
             <gloss xml:lang="eng">annual paid vacation</gloss>
             <gloss xml:lang="eng">annual paid holiday</gloss>
-            <gloss xml:lang="pol">roczne płatne wakacje</gloss>
+            <gloss xml:lang="pol">roczny urlop</gloss>
+            <gloss xml:lang="pol">płatny roczny urlop</gloss>
+            <gloss xml:lang="pol">płatne roczne wakacje</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="40490" dictionaryEntryTypeList="WORD_NOUN" kanji="年休" kana="ねんきゅう" romaji="nenkyuu" uniqueKey="年休/ねんきゅう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -109348,6 +109519,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="62920" dictionaryEntryTypeList="WORD_NOUN" kanji="廃油" kana="はいゆ" romaji="haiyu" uniqueKey="廃油/はいゆ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -109398,6 +109570,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61635" dictionaryEntryTypeList="WORD_NOUN" kanji="配点" kana="はいてん" romaji="haiten" uniqueKey="配点/はいてん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -109481,6 +109654,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="33151" dictionaryEntryTypeList="WORD_NOUN" kanji="白州" kana="しらす" romaji="shirasu" uniqueKey="白州/しらす/1"/>
                 <entries id="33183" dictionaryEntryTypeList="WORD_NOUN" kanji="白洲" kana="しらす" romaji="shirasu" uniqueKey="白洲/しらす/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -109759,6 +109933,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="49050" dictionaryEntryTypeList="WORD_NOUN" kanji="皮脂" kana="ひし" romaji="hishi" uniqueKey="皮脂/ひし/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -109937,6 +110112,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="53953" dictionaryEntryTypeList="WORD_NOUN" kanji="腐臭" kana="ふしゅう" romaji="fushuu" uniqueKey="腐臭/ふしゅう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -110036,6 +110212,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="64915" dictionaryEntryTypeList="WORD_NOUN" kanji="払い下げ" kana="はらいさげ" romaji="harai sage" uniqueKey="払い下げ/はらいさげ/1"/>
                 <entries id="316487" dictionaryEntryTypeList="WORD_NOUN" kanji="払下げ" kana="はらいさげ" romaji="harai sage" uniqueKey="払下げ/はらいさげ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -110052,10 +110229,11 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>Buddhism</field>
+            <s_inf xml:lang="pol">krótka drewniana lub bambusowa laska z pękiem włosów lub konopi używanej przez mnicha Zen Buddyzm</s_inf>
             <gloss xml:lang="eng">hossu</gloss>
             <gloss xml:lang="eng">(ceremonial) fly whisk</gloss>
             <gloss xml:lang="eng">horse tail whisk</gloss>
-            <gloss xml:lang="pol">krótka drewniana lub bambusowa laska z pękiem włosów lub konopi używanej przez mnicha Zen Buddyzm</gloss>
+            <gloss xml:lang="pol">hossu</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -110243,6 +110421,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="58420" dictionaryEntryTypeList="WORD_NOUN" kanji="聞こえ" kana="きこえ" romaji="kikoe" uniqueKey="聞こえ/きこえ/1"/>
                 <entries id="129893" dictionaryEntryTypeList="WORD_NOUN" kanji="聞え" kana="きこえ" romaji="kikoe" uniqueKey="聞え/きこえ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>1747991</exampleSentenceGroupIdsList>
@@ -110347,6 +110526,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="57940" dictionaryEntryTypeList="WORD_NOUN" kanji="歩幅" kana="ほはば" romaji="hohaba" uniqueKey="歩幅/ほはば/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -110811,6 +110991,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="66252" dictionaryEntryTypeList="WORD_NOUN,WORD_ADJECTIVE_NO" kanji="無国籍" kana="むこくせき" romaji="mukokuseki" uniqueKey="無国籍/むこくせき/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -110889,6 +111070,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="53050" dictionaryEntryTypeList="WORD_NOUN" kanji="目くじら" kana="めくじら" romaji="mekujira" uniqueKey="目くじら/めくじら/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -110928,6 +111110,7 @@
                 <entries id="68647" dictionaryEntryTypeList="WORD_NOUN" kanji="目覚め" kana="めざめ" romaji="mezame" uniqueKey="目覚め/めざめ/1"/>
                 <entries id="102057" dictionaryEntryTypeList="WORD_NOUN" kanji="目醒め" kana="めざめ" romaji="mezame" uniqueKey="目醒め/めざめ/1"/>
                 <entries id="68686" dictionaryEntryTypeList="WORD_NOUN" kanji="目ざめ" kana="めざめ" romaji="mezame" uniqueKey="目ざめ/めざめ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -111156,6 +111339,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="61636" dictionaryEntryTypeList="WORD_NOUN" kanji="油絵の具" kana="あぶらえのぐ" romaji="aburae no gu" uniqueKey="油絵の具/あぶらえのぐ/1"/>
                 <entries id="61770" dictionaryEntryTypeList="WORD_NOUN" kanji="油絵具" kana="あぶらえのぐ" romaji="aburae no gu" uniqueKey="油絵具/あぶらえのぐ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -111181,6 +111365,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="53338" dictionaryEntryTypeList="WORD_NOUN" kanji="優駿" kana="ゆうしゅん" romaji="yuushun" uniqueKey="優駿/ゆうしゅん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -111791,6 +111976,7 @@
                 <entries id="57070" dictionaryEntryTypeList="WORD_NOUN" kanji="韲え物" kana="あえもの" romaji="aemono" uniqueKey="韲え物/あえもの/1"/>
                 <entries id="57072" dictionaryEntryTypeList="WORD_NOUN" kanji="韲物" kana="あえもの" romaji="aemono" uniqueKey="韲物/あえもの/1"/>
                 <entries id="57073" dictionaryEntryTypeList="WORD_NOUN" kanji="あえ物" kana="あえもの" romaji="aemono" uniqueKey="あえ物/あえもの/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -112841,6 +113027,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="9770" dictionaryEntryTypeList="WORD_NOUN" kanji="鞍" kana="くら" romaji="kura" uniqueKey="鞍/くら/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -112877,6 +113064,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="4269" dictionaryEntryTypeList="WORD_NOUN" kanji="易" kana="えき" romaji="eki" uniqueKey="易/えき/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -112902,6 +113090,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="5232" dictionaryEntryTypeList="WORD_NOUN" kanji="井" kana="い" romaji="i" uniqueKey="井/い/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>1074744</exampleSentenceGroupIdsList>
@@ -113130,6 +113319,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="5104" dictionaryEntryTypeList="WORD_NOUN" kanji="怪" kana="かい" romaji="kai" uniqueKey="怪/かい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="999"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -113220,6 +113410,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68447" dictionaryEntryTypeList="WORD_NOUN" kanji="渇" kana="かつ" romaji="katsu" uniqueKey="渇/かつ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -113249,6 +113440,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="56451" dictionaryEntryTypeList="WORD_NOUN" kanji="寒" kana="かん" romaji="kan" uniqueKey="寒/かん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>10600670</exampleSentenceGroupIdsList>
@@ -113302,9 +113494,11 @@
         <ent_seq>1955970</ent_seq>
         <k_ele>
             <keb>感</keb>
+            <ke_pri>spec1</ke_pri>
         </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="kan">かん</reb>
+            <re_pri>spec1</re_pri>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -113324,6 +113518,17 @@
             <gloss xml:lang="pol">wrażenie</gloss>
         </sense>
         <sense>
+            <pos>suffix</pos>
+            <gloss xml:lang="eng">tentative</gloss>
+            <gloss xml:lang="eng">rough</gloss>
+            <gloss xml:lang="eng">unconfirmed</gloss>
+            <gloss xml:lang="eng">estimated</gloss>
+            <gloss xml:lang="pol">wstępny</gloss>
+            <gloss xml:lang="pol">przybliżony</gloss>
+            <gloss xml:lang="pol">niepotwierdzony</gloss>
+            <gloss xml:lang="pol">szacunkowy</gloss>
+        </sense>
+        <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1212580" xk="感動詞">感動詞</xref>
             <field>linguistics</field>
@@ -113335,8 +113540,9 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="92093" dictionaryEntryTypeList="WORD_NOUN,WORD_NOUN_SUFFIX" kanji="感" kana="かん" romaji="kan" uniqueKey="感/かん/1"/>
-                <attributeList type="PRIORITY" value="255"/>
+                <entries id="92093" dictionaryEntryTypeList="WORD_NOUN,WORD_NOUN_SUFFIX,WORD_SUFFIX" kanji="感" kana="かん" romaji="kan" uniqueKey="感/かん/1"/>
+                <attributeList type="COMMON_WORD"/>
+                <attributeList type="PRIORITY" value="104"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>128526</exampleSentenceGroupIdsList>
             </oldPolishJapaneseDictionary>
@@ -113600,6 +113806,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="10036" dictionaryEntryTypeList="WORD_NOUN,WORD_ADJECTIVE_NO,WORD_NOUN_PREFIX" kanji="義" kana="ぎ" romaji="gi" uniqueKey="義/ぎ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -113652,6 +113859,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="49647" dictionaryEntryTypeList="WORD_NOUN" kanji="杵" kana="きね" romaji="kine" uniqueKey="杵/きね/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -113785,6 +113993,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="5925" dictionaryEntryTypeList="WORD_NOUN" kanji="禁" kana="きん" romaji="kin" uniqueKey="禁/きん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -113857,6 +114066,7 @@
                 <entries id="50745" dictionaryEntryTypeList="WORD_NOUN" kanji="躯" kana="むくろ" romaji="mukuro" uniqueKey="躯/むくろ/1"/>
                 <entries id="50770" dictionaryEntryTypeList="WORD_NOUN" kanji="骸" kana="むくろ" romaji="mukuro" uniqueKey="骸/むくろ/1"/>
                 <entries id="50771" dictionaryEntryTypeList="WORD_NOUN" kanji="身" kana="むくろ" romaji="mukuro" uniqueKey="身/むくろ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>240712</exampleSentenceGroupIdsList>
@@ -114123,6 +114333,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="6035" dictionaryEntryTypeList="WORD_NOUN" kanji="欠" kana="けつ" romaji="ketsu" uniqueKey="欠/けつ/1"/>
                 <entries id="29009" dictionaryEntryTypeList="WORD_NOUN" kanji="缺" kana="けつ" romaji="ketsu" uniqueKey="缺/けつ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -114179,6 +114390,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="51179" dictionaryEntryTypeList="WORD_NOUN" kanji="硯" kana="すずり" romaji="suzuri" uniqueKey="硯/すずり/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -114238,6 +114450,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="7859" dictionaryEntryTypeList="WORD_NOUN" kanji="弧" kana="こ" romaji="ko" uniqueKey="弧/こ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -114428,6 +114641,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="11000" dictionaryEntryTypeList="WORD_ADJECTIVE_NA,WORD_ADJECTIVE_TARU,WORD_ADVERB_TO,WORD_PREFIX" kanji="最" kana="さい" romaji="sai" uniqueKey="最/さい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>17693</exampleSentenceGroupIdsList>
@@ -114816,6 +115030,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="54345" dictionaryEntryTypeList="WORD_NOUN" kanji="書き入れ" kana="かきいれ" romaji="kaki ire" uniqueKey="書き入れ/かきいれ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -114955,6 +115170,15 @@
             <s_inf xml:lang="pol">gatunek ryby okoniokształtnej z rodziny podnawkowatych, Echeneis naucrates</s_inf>
             <gloss xml:lang="eng">live sharksucker (Echeneis naucrates)</gloss>
             <gloss xml:lang="pol">podnawka</gloss>
+        </sense>
+        <sense>
+            <pos>noun (common) (futsuumeishi)</pos>
+            <misc>word usually written using kana alone</misc>
+            <misc>derogatory</misc>
+            <gloss xml:lang="eng">person who attaches themself to someone else for personal gain</gloss>
+            <gloss xml:lang="eng">hanger-on</gloss>
+            <gloss xml:lang="pol">osoba, która przywiązuje się do kogoś innego dla własnej korzyści</gloss>
+            <gloss xml:lang="pol">pasożyt</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -115112,6 +115336,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="8097" dictionaryEntryTypeList="WORD_NOUN,WORD_NOUN_SUFFIX" kanji="陣" kana="じん" romaji="jin" uniqueKey="陣/じん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -115194,6 +115419,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="53073" dictionaryEntryTypeList="WORD_NOUN" kanji="嵩" kana="かさ" romaji="kasa" uniqueKey="嵩/かさ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -115235,6 +115461,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="8313" dictionaryEntryTypeList="WORD_NOUN" kanji="寸" kana="すん" romaji="sun" uniqueKey="寸/すん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -115479,6 +115706,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="8372" dictionaryEntryTypeList="WORD_NOUN" kanji="賊" kana="ぞく" romaji="zoku" uniqueKey="賊/ぞく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -115886,6 +116114,7 @@
                 <entries id="9919" dictionaryEntryTypeList="WORD_NOUN" kanji="槌" kana="つち" romaji="tsuchi" uniqueKey="槌/つち/1"/>
                 <entries id="273795" dictionaryEntryTypeList="WORD_NOUN" kanji="鎚" kana="つち" romaji="tsuchi" uniqueKey="鎚/つち/1"/>
                 <entries id="273796" dictionaryEntryTypeList="WORD_NOUN" kanji="椎" kana="つち" romaji="tsuchi" uniqueKey="椎/つち/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -115919,6 +116148,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="43069" dictionaryEntryTypeList="WORD_NOUN" kanji="紬" kana="つむぎ" romaji="tsumugi" uniqueKey="紬/つむぎ/1"/>
                 <entries id="43101" dictionaryEntryTypeList="WORD_NOUN" kanji="紡ぎ" kana="つむぎ" romaji="tsumugi" uniqueKey="紡ぎ/つむぎ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -116061,6 +116291,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="63544" dictionaryEntryTypeList="WORD_NOUN" kanji="投了" kana="とうりょう" romaji="touryou" uniqueKey="投了/とうりょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -116451,6 +116682,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="8309" dictionaryEntryTypeList="WORD_NOUN" kanji="譜" kana="ふ" romaji="fu" uniqueKey="譜/ふ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -116538,6 +116770,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="5865" dictionaryEntryTypeList="WORD_NOUN,WORD_PREFIX" kanji="複" kana="ふく" romaji="fuku" uniqueKey="複/ふく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -116872,6 +117105,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="48859" dictionaryEntryTypeList="WORD_NOUN" kanji="柳刃包丁" kana="やなぎばぼうちょう" romaji="yanagiba bouchou" uniqueKey="柳刃包丁/やなぎばぼうちょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -117298,6 +117532,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68873" dictionaryEntryTypeList="WORD_NOUN" kanji="檄" kana="げき" romaji="geki" uniqueKey="檄/げき/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -119868,13 +120103,13 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>abbreviation</misc>
-            <s_inf xml:lang="pol">skrót</s_inf>
             <gloss xml:lang="eng">National Institute of Health</gloss>
             <gloss xml:lang="pol">Narodowy Instytut Zdrowia</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="51541" dictionaryEntryTypeList="WORD_NOUN" kanji="予研" kana="よけん" romaji="yoken" uniqueKey="予研/よけん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -120008,6 +120243,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="53274" dictionaryEntryTypeList="WORD_NOUN" kanji="情報学" kana="じょうほうがく" romaji="jouhougaku" uniqueKey="情報学/じょうほうがく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -120253,7 +120489,6 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <s_inf xml:lang="pol">ang: ice cream soda</s_inf>
             <gloss xml:lang="eng">ice cream soda</gloss>
-            <gloss xml:lang="eng">icecream soda</gloss>
             <gloss xml:lang="pol">porcja lodów z syropem owocowym i wodą sodową</gloss>
         </sense>
         <misc>
@@ -122868,6 +123103,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="56731" dictionaryEntryTypeList="WORD_VERB_IRREGULAR" kanji="類する" kana="るいする" romaji="rui suru" uniqueKey="類する/るいする/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -123067,6 +123303,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="3318" dictionaryEntryTypeList="WORD_VERB_IRREGULAR" kanji="服する" kana="ふくする" romaji="fuku suru" uniqueKey="服する/ふくする/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -124656,7 +124893,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">parnassian butterfly</gloss>
-            <gloss xml:lang="pol">odmiana motyla</gloss>
+            <gloss xml:lang="pol">[odmiana motyla]</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -137337,8 +137574,11 @@
         <lsource xml:lang="dut">patroon</lsource>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">papier siarczanowy, wytwarzany z makulatury lub włókien pierwotnych</s_inf>
             <gloss xml:lang="eng">kraft paper</gloss>
             <gloss xml:lang="pol">papier typu kraft</gloss>
+            <gloss xml:lang="pol">papier kraftowy</gloss>
+            <gloss xml:lang="pol">papier do rękodzieła</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -146114,6 +146354,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="1554" dictionaryEntryTypeList="WORD_NOUN" kanji="安全ピン" kana="あんぜんピン" romaji="anzen pin" uniqueKey="安全ピン/あんぜんピン/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -146699,6 +146940,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="50027" dictionaryEntryTypeList="WORD_NOUN" kanji="委任統治" kana="いにんとうち" romaji="inin touchi" uniqueKey="委任統治/いにんとうち/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -147458,6 +147700,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="50590" dictionaryEntryTypeList="WORD_NOUN" kanji="移動性高気圧" kana="いどうせいこうきあつ" romaji="idousei koukiatsu" uniqueKey="移動性高気圧/いどうせいこうきあつ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -147667,6 +147910,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="58820" dictionaryEntryTypeList="WORD_NOUN" kanji="胃カメラ" kana="いカメラ" romaji="i kamera" uniqueKey="胃カメラ/いカメラ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -149612,6 +149856,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="56522" dictionaryEntryTypeList="WORD_NOUN" kanji="陰イオン" kana="いんイオン" romaji="in' ion" uniqueKey="陰イオン/いんイオン/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -152666,6 +152911,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="51505" dictionaryEntryTypeList="WORD_NOUN" kanji="塩尻" kana="しおじり" romaji="shiojiri" uniqueKey="塩尻/しおじり/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -155108,6 +155354,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61096" dictionaryEntryTypeList="WORD_NOUN" kanji="家庭医" kana="かていい" romaji="kateii" uniqueKey="家庭医/かていい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -155305,6 +155552,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="48131" dictionaryEntryTypeList="WORD_NOUN" kanji="科学史" kana="かがくし" romaji="kagakushi" uniqueKey="科学史/かがくし/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -155919,7 +156167,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>word usually written using kana alone</misc>
-            <s_inf xml:lang="pol">gatunek nocnego motyla z rodziny Erebidae i podrodziny niedźwiedziówkowatych, arctia caja</s_inf>
+            <s_inf xml:lang="pol">gatunek nocnego motyla z rodziny Erebidae i podrodziny niedźwiedziówkowatych, Arctia caja</s_inf>
             <gloss xml:lang="eng">garden tiger moth (Arctia caja)</gloss>
             <gloss xml:lang="pol">niedźwiedziówka kaja</gloss>
             <gloss xml:lang="pol">niedźwiedziówka nożówka</gloss>
@@ -157751,6 +157999,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="55923" dictionaryEntryTypeList="WORD_NOUN" kanji="画業" kana="がぎょう" romaji="gagyou" uniqueKey="画業/がぎょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -160527,6 +160776,7 @@
                 <entries id="65109" dictionaryEntryTypeList="WORD_NOUN" kanji="絵空事" kana="えそらごと" romaji="esora goto" uniqueKey="絵空事/えそらごと/1"/>
                 <entries id="65150" dictionaryEntryTypeList="WORD_NOUN" kanji="絵空言" kana="えそらごと" romaji="esora goto" uniqueKey="絵空言/えそらごと/1"/>
                 <entries id="298354" dictionaryEntryTypeList="WORD_NOUN" kanji="絵空ごと" kana="えそらごと" romaji="esora goto" uniqueKey="絵空ごと/えそらごと/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -160583,6 +160833,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="68713" dictionaryEntryTypeList="WORD_ADJECTIVE_NO,WORD_NOUN" kanji="絵入り" kana="えいり" romaji="eiri" uniqueKey="絵入り/えいり/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -160907,6 +161158,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="65249" dictionaryEntryTypeList="WORD_NOUN" kanji="開所" kana="かいしょ" romaji="kaisho" uniqueKey="開所/かいしょ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -161992,12 +162244,14 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">canvasser</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">agitator</gloss>
+            <gloss xml:lang="pol">działacz polityczny</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="59125" dictionaryEntryTypeList="WORD_NOUN" kanji="外務員" kana="がいむいん" romaji="gaimuin" uniqueKey="外務員/がいむいん/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="COMMON_WORD"/>
+                <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -165920,6 +166174,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="11320" dictionaryEntryTypeList="WORD_NOUN" kanji="環境衛生" kana="かんきょうえいせい" romaji="kankyou eisei" uniqueKey="環境衛生/かんきょうえいせい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -166055,6 +166310,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="55010" dictionaryEntryTypeList="WORD_NOUN,WORD_ADJECTIVE_NO" kanji="甘辛" kana="あまから" romaji="amakara" uniqueKey="甘辛/あまから/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -167143,6 +167399,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="62406" dictionaryEntryTypeList="WORD_NOUN" kanji="国家公安委員会" kana="こっかこうあんいいんかい" romaji="kokka kouan' iinkai" uniqueKey="国家公安委員会/こっかこうあんいいんかい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -167188,11 +167445,12 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">Environmental Dispute Coordination Commission</gloss>
-            <gloss xml:lang="pol">Environmental Dispute Coordination Commission</gloss>
+            <gloss xml:lang="pol">Komisja ds. Koordynacji Sporów Środowiskowych</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61020" dictionaryEntryTypeList="WORD_NOUN" kanji="公害等調整委員会" kana="こうがいとうちょうせいいいんかい" romaji="kougai touchousei iinkai" uniqueKey="公害等調整委員会/こうがいとうちょうせいいいんかい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -168029,18 +168287,32 @@
         <k_ele>
             <keb>たたり目</keb>
         </k_ele>
+        <k_ele>
+            <keb>祟りめ</keb>
+            <ke_inf>search-only kanji form</ke_inf>
+        </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="tatari me">たたりめ</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <gloss xml:lang="eng">the evil eye</gloss>
-            <gloss xml:lang="pol">złe oko</gloss>
+            <xref type="see" seq="1324640" xk="弱り目に祟り目">弱り目に祟り目</xref>
+            <s_inf xml:lang="eng">usu. as 弱り目に～</s_inf>
+            <s_inf xml:lang="pol">zwykle jako 弱り目に～</s_inf>
+            <gloss xml:lang="eng">time of misfortune</gloss>
+            <gloss xml:lang="eng">stroke of bad luck</gloss>
+            <gloss xml:lang="eng">calamity</gloss>
+            <gloss xml:lang="eng">woe</gloss>
+            <gloss xml:lang="pol">okres nieszczęścia</gloss>
+            <gloss xml:lang="pol">pech</gloss>
+            <gloss xml:lang="pol">katastrofa</gloss>
+            <gloss xml:lang="pol">nieszczęście</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="106278" dictionaryEntryTypeList="WORD_NOUN" kanji="祟り目" kana="たたりめ" romaji="tatari me" uniqueKey="祟り目/たたりめ/1"/>
                 <entries id="106321" dictionaryEntryTypeList="WORD_NOUN" kanji="たたり目" kana="たたりめ" romaji="tatari me" uniqueKey="たたり目/たたりめ/1"/>
+                <entries id="326155" dictionaryEntryTypeList="WORD_NOUN" kanji="祟りめ" kana="たたりめ" romaji="tatari me" uniqueKey="祟りめ/たたりめ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -168052,6 +168324,10 @@
             <keb>籐</keb>
             <ke_pri>news2</ke_pri>
             <ke_pri>nf34</ke_pri>
+        </k_ele>
+        <k_ele>
+            <keb>籘</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="tou">とう</reb>
@@ -168074,6 +168350,8 @@
             <oldPolishJapaneseDictionary>
                 <entries id="62549" dictionaryEntryTypeList="WORD_NOUN" kanji="籐" kana="とう" romaji="tou" uniqueKey="籐/とう/1"/>
                 <entries id="254219" dictionaryEntryTypeList="WORD_NOUN" kana="トウ" romaji="tou" uniqueKey="-/トウ/2"/>
+                <entries id="326225" dictionaryEntryTypeList="WORD_NOUN" kanji="籘" kana="とう" romaji="tou" uniqueKey="籘/とう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -168616,6 +168894,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="51440" dictionaryEntryTypeList="WORD_NOUN" kanji="夏日" kana="なつび" romaji="natsubi" uniqueKey="夏日/なつび/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -168804,6 +169083,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="53698" dictionaryEntryTypeList="WORD_NOUN" kanji="過少申告" kana="かしょうしんこく" romaji="kashou shinkoku" uniqueKey="過少申告/かしょうしんこく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -170512,6 +170792,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="53618" dictionaryEntryTypeList="WORD_ADJECTIVE_I" kanji="愛くるしい" kana="あいくるしい" romaji="aikurushii" uniqueKey="愛くるしい/あいくるしい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -170597,6 +170878,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="60452" dictionaryEntryTypeList="WORD_NOUN" kanji="整体" kana="せいたい" romaji="seitai" uniqueKey="整体/せいたい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -170878,6 +171160,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="51180" dictionaryEntryTypeList="WORD_NOUN,WORD_EXPRESSION" kanji="菜の花" kana="なのはな" romaji="na no hana" uniqueKey="菜の花/なのはな/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -170997,12 +171280,12 @@
         <sense>
             <pos>expressions (phrases, clauses, etc.)</pos>
             <gloss xml:lang="eng">even though things may appear this way</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">chociaż może się tak wydawać</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="78186" dictionaryEntryTypeList="WORD_EXPRESSION" kana="これでも" romaji="kore demo" uniqueKey="-/これでも/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -171455,6 +171738,7 @@
                 <entries id="292196" dictionaryEntryTypeList="WORD_ADJECTIVE_I,WORD_EXPRESSION" kanji="どう仕様も無い" kana="どうしょうもない" romaji="doushou mo nai" uniqueKey="どう仕様も無い/どうしょうもない/1"/>
                 <entries id="165234" dictionaryEntryTypeList="WORD_ADJECTIVE_I,WORD_EXPRESSION" kanji="如何仕様も無い" kana="どうしようもない" romaji="doushi you mo nai" uniqueKey="如何仕様も無い/どうしようもない/1"/>
                 <entries id="292197" dictionaryEntryTypeList="WORD_ADJECTIVE_I,WORD_EXPRESSION" kanji="如何仕様も無い" kana="どうしょうもない" romaji="doushou mo nai" uniqueKey="如何仕様も無い/どうしょうもない/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="104"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>17623</exampleSentenceGroupIdsList>
@@ -173599,6 +173883,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="59412" dictionaryEntryTypeList="WORD_ADJECTIVE_NO" kanji="畳敷き" kana="たたみじき" romaji="tatami jiki" uniqueKey="畳敷き/たたみじき/1"/>
                 <entries id="59518" dictionaryEntryTypeList="WORD_ADJECTIVE_NO" kanji="畳敷" kana="たたみじき" romaji="tatami jiki" uniqueKey="畳敷/たたみじき/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -174184,6 +174469,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="55470" dictionaryEntryTypeList="WORD_VERB_RU" kanji="打ちひしがれる" kana="うちひしがれる" romaji="uchi hishigareru" uniqueKey="打ちひしがれる/うちひしがれる/1"/>
                 <entries id="55500" dictionaryEntryTypeList="WORD_VERB_RU" kanji="打ち拉がれる" kana="うちひしがれる" romaji="uchi hishigareru" uniqueKey="打ち拉がれる/うちひしがれる/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -176228,6 +176514,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="49776" dictionaryEntryTypeList="WORD_NOUN" kanji="小女子" kana="こうなご" romaji="kounago" uniqueKey="小女子/こうなご/1"/>
                 <entries id="49813" dictionaryEntryTypeList="WORD_NOUN" kana="コウナゴ" romaji="kounago" uniqueKey="-/コウナゴ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -177152,11 +177439,13 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">ginjō sake</gloss>
             <gloss g_type="expl" xml:lang="eng">high-quality sake brewed by low temperature fermentation from white rice milled to 60%</gloss>
-            <gloss xml:lang="pol">rodzaj sake fermentowanego w niskiej temperaturze</gloss>
+            <gloss xml:lang="pol">sake ginjō</gloss>
+            <gloss g_type="expl" xml:lang="pol">wysokiej jakości sake warzone metodą fermentacji w niskiej temperaturze z białego ryżu zmielonego do 60%</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="55086" dictionaryEntryTypeList="WORD_NOUN" kanji="吟醸酒" kana="ぎんじょうしゅ" romaji="ginjoushu" uniqueKey="吟醸酒/ぎんじょうしゅ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -177787,6 +178076,7 @@
                 <entries id="55087" dictionaryEntryTypeList="WORD_ADJECTIVE_I" kanji="口煩い" kana="くちうるさい" romaji="kuchi urusai" uniqueKey="口煩い/くちうるさい/1"/>
                 <entries id="55164" dictionaryEntryTypeList="WORD_ADJECTIVE_I" kanji="口煩さい" kana="くちうるさい" romaji="kuchi urusai" uniqueKey="口煩さい/くちうるさい/1"/>
                 <entries id="304478" dictionaryEntryTypeList="WORD_ADJECTIVE_I" kanji="口五月蠅い" kana="くちうるさい" romaji="kuchi urusai" uniqueKey="口五月蠅い/くちうるさい/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>68084</exampleSentenceGroupIdsList>
@@ -178248,6 +178538,7 @@
             <oldPolishJapaneseDictionary>
                 <entries id="52588" dictionaryEntryTypeList="WORD_NOUN" kanji="気づき" kana="きづき" romaji="ki duki" uniqueKey="気づき/きづき/1"/>
                 <entries id="52558" dictionaryEntryTypeList="WORD_NOUN" kanji="気付き" kana="きづき" romaji="ki duki" uniqueKey="気付き/きづき/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -178785,6 +179076,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="55065" dictionaryEntryTypeList="WORD_VERB_U" kanji="飲ます" kana="のます" romaji="nomasu" uniqueKey="飲ます/のます/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -178883,6 +179175,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="63825" dictionaryEntryTypeList="WORD_VERB_RU" kanji="踊らされる" kana="おどらされる" romaji="odorasareru" uniqueKey="踊らされる/おどらされる/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -179331,6 +179624,7 @@
                 <entries id="287478" dictionaryEntryTypeList="WORD_PRONOUN" kanji="あいつ等" kana="アイツら" romaji="aitsura" uniqueKey="あいつ等/アイツら/1"/>
                 <entries id="287479" dictionaryEntryTypeList="WORD_PRONOUN" kanji="彼奴ら" kana="アイツら" romaji="aitsura" uniqueKey="彼奴ら/アイツら/1"/>
                 <entries id="287480" dictionaryEntryTypeList="WORD_PRONOUN" kanji="彼奴等" kana="アイツら" romaji="aitsura" uniqueKey="彼奴等/アイツら/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="104"/>
                 <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>71968</exampleSentenceGroupIdsList>
@@ -187887,6 +188181,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="58068" dictionaryEntryTypeList="WORD_NOUN" kanji="介護保険" kana="かいごほけん" romaji="kaigo hoken" uniqueKey="介護保険/かいごほけん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -193602,6 +193897,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="50410" dictionaryEntryTypeList="WORD_NOUN" kanji="憲法裁判所" kana="けんぽうさいばんしょ" romaji="kenpousai bansho" uniqueKey="憲法裁判所/けんぽうさいばんしょ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -197383,6 +197679,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="66781" dictionaryEntryTypeList="WORD_NOUN" kanji="産業スパイ" kana="さんぎょうスパイ" romaji="sangyou supai" uniqueKey="産業スパイ/さんぎょうスパイ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -200241,6 +200538,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="51888" dictionaryEntryTypeList="WORD_NOUN" kanji="出自" kana="しゅつじ" romaji="shutsuji" uniqueKey="出自/しゅつじ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -202205,6 +202503,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="51181" dictionaryEntryTypeList="WORD_NOUN" kanji="水頭症" kana="すいとうしょう" romaji="suitoushou" uniqueKey="水頭症/すいとうしょう/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -204305,13 +204604,13 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1964470" xk="シアン化カリウム">シアン化カリウム</xref>
             <field>chemistry</field>
-            <s_inf xml:lang="pol">skrót</s_inf>
             <gloss xml:lang="eng">potassium cyanide</gloss>
             <gloss xml:lang="pol">cyjanek potasu</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="49910" dictionaryEntryTypeList="WORD_NOUN" kanji="青酸カリ" kana="せいさんカリ" romaji="seisan kari" uniqueKey="青酸カリ/せいさんカリ/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -206559,12 +206858,14 @@
             <gloss xml:lang="eng">bloodbath</gloss>
             <gloss xml:lang="pol">masowe morderstwo</gloss>
             <gloss xml:lang="pol">masowy mord</gloss>
+            <gloss xml:lang="pol">krwawa rzeź</gloss>
             <gloss xml:lang="pol">masakra</gloss>
             <gloss xml:lang="pol">rzeź</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="51542" dictionaryEntryTypeList="WORD_NOUN" kanji="大量殺人" kana="たいりょうさつじん" romaji="tairyou satsujin" uniqueKey="大量殺人/たいりょうさつじん/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -209513,6 +209814,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="56067" dictionaryEntryTypeList="WORD_NOUN" kanji="内科学" kana="ないかがく" romaji="naikagaku" uniqueKey="内科学/ないかがく/1"/>
+                <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
