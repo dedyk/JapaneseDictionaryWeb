@@ -14,11 +14,13 @@ done
 
 echo $CLASSPATH
 
-java -cp $CLASSPATH pl.idedyk.japanese.dictionary.lucene.LuceneDBGenerator web db/word.csv db/sentences.csv db/sentences_groups.csv db/kanji2.xml db/radical.csv db/word2.xml db/name2.xml db/lastmod db-lucene
+mkdir TMP
+
+java -cp $CLASSPATH -Djava.io.tmpdir=./TMP pl.idedyk.japanese.dictionary.lucene.LuceneDBGenerator web db/word.csv db/sentences.csv db/sentences_groups.csv db/kanji2.xml db/radical.csv db/word2.xml db/name2.xml db/lastmod db-lucene
 
 mkdir $1
 
 cp db/kana.csv db/radical.csv db/transitive_intransitive_pairs.csv db/word-power.csv db/word-common.csv db/kanji_recognizer.model.db db/dictionary-common.pdf db/dictionary-full.pdf $1
 cp -r db-lucene $1/db-lucene/
 
-rm -rf db-lucene
+rm -rf db-lucene TMP
