@@ -73,15 +73,12 @@ public class ConfigService {
 			
 			// zastapienie starej konfiguracji nowa
 			config = newConfig;
-			
 			configLastModified = configFile.lastModified();
 						
 		} catch (Exception e) {			
 			logger.error("Błąd podczas wczytywania pliku: " + configFile, e);
-			
-			configLastModified = null;
-			
-			return config;	
+
+			return config; // zwracamy stary plik	
 		}
 		
 		return config;
