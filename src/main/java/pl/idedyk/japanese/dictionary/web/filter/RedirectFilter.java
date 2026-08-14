@@ -1,12 +1,15 @@
 package pl.idedyk.japanese.dictionary.web.filter;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.servlet.HandlerExecutionChain;
+import org.springframework.web.servlet.HandlerMapping;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -33,7 +36,7 @@ public class RedirectFilter extends RedirectCommonFilter implements Filter {
 		ServletContext servletContext = request.getServletContext();
 		
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-
+		
 		Properties applicationProperties = (Properties)webApplicationContext.getBean("applicationProperties");
 				
 		String newServerName = applicationProperties.getProperty("new.server.name");
@@ -67,10 +70,38 @@ public class RedirectFilter extends RedirectCommonFilter implements Filter {
 			return;
 		}
 
+		// jezeli chcemy zrobic przekierowanie to musi jeszcze sprawdzic, czy bedzie ktos chcial to wywolanie obsluzyc
+		if (isRequestWillBeHandled(webApplicationContext, httpServletRequest) == false) {
+			send404(webApplicationContext, httpServletRequest, httpServletResponse);
+			
+			return;
+		}
+		
 		// przekierowanie na nowy adres serwera
 		String redirectUrl = getRedirectNewServerUrl(httpServletRequest, httpServletResponse, newServerName);
 
 		redirectToUrl(webApplicationContext, httpServletRequest, httpServletResponse, redirectUrl);		
+	}
+	
+	private boolean isRequestWillBeHandled(WebApplicationContext webApplicationContext, HttpServletRequest httpServletRequest) {
+		
+		// pobranie wszystkich obslugiwaczy wywolan
+		Map<String, HandlerMapping> handlerMappingMap = webApplicationContext.getBeansOfType(HandlerMapping.class);
+		
+		for (HandlerMapping handlerMapping : handlerMappingMap.values()) {
+			try {
+				HandlerExecutionChain handler = handlerMapping.getHandler(httpServletRequest);
+				
+				if (handler != null) { // mamy
+					return true;
+				}
+				
+			} catch (Exception e) {
+				logger.error("Exception", e);
+			}
+		}
+		
+		return false;		
 	}
 
 	@Override
