@@ -152,6 +152,8 @@
 						</xsd:sequence>
 					</xsd:complexType>				
 				</xsd:element>
+			
+				<xsd:element name="message" type="message" minOccurs="1" maxOccurs="1"/>
 			</xsd:sequence>
 		</xsd:complexType>
 	</xsd:element>
@@ -164,4 +166,48 @@
 		</xsd:restriction>	
 	</xsd:simpleType>
 	
+	<!--  elementy przeniesione i zmodyfikowane z klas JAXB - Message -->
+	  <xsd:complexType name="message">
+	    <xsd:sequence>
+	      <xsd:element name="androidMessageList" type="androidMessageListWrapper" minOccurs="0"/>
+	      <xsd:element name="androidAutocompleteList" type="androidAutocompleteMessageListWrapper" minOccurs="0"/>
+	      <xsd:element name="webMessageList" type="webMessageListWrapper" minOccurs="0"/>
+	    </xsd:sequence>
+	  </xsd:complexType>
+	
+	  <xsd:complexType name="androidMessageListWrapper">
+	    <xsd:sequence>
+	      <xsd:element name="androidMessage" type="messageEntry" minOccurs="0" maxOccurs="unbounded"/>
+	    </xsd:sequence>
+	  </xsd:complexType>
+	
+	  <xsd:complexType name="messageEntry">
+	    <xsd:sequence>
+	      <xsd:element name="userAgentCondition" type="xsd:string" minOccurs="0"/>
+	      <xsd:element name="timestamp" type="xsd:string" minOccurs="0"/>
+	      <xsd:element name="message" type="xsd:string" minOccurs="0"/>
+	    </xsd:sequence>
+	  </xsd:complexType>
+	
+	  <xsd:complexType name="androidAutocompleteMessageListWrapper">
+	    <xsd:sequence>
+	      <xsd:element name="androidAutocompleteMessage" type="androidAutocompleteMessageEntry" minOccurs="0" maxOccurs="unbounded"/>
+	    </xsd:sequence>
+	  </xsd:complexType>
+	
+	  <xsd:complexType name="androidAutocompleteMessageEntry">
+	    <xsd:complexContent>
+	      <xsd:extension base="messageEntry">
+	        <xsd:sequence>
+	          <xsd:element name="autocompleteType" type="xsd:string" minOccurs="0"/>
+	        </xsd:sequence>
+	      </xsd:extension>
+	    </xsd:complexContent>
+	  </xsd:complexType>
+	
+	  <xsd:complexType name="webMessageListWrapper">
+	    <xsd:sequence>
+	      <xsd:element name="webMessage" type="messageEntry" minOccurs="0" maxOccurs="unbounded"/>
+	    </xsd:sequence>
+	  </xsd:complexType>	
 </xsd:schema>

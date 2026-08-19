@@ -1,29 +1,19 @@
 package pl.idedyk.japanese.dictionary.web.service;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import pl.idedyk.japanese.dictionary.web.config.xsd.AndroidAutocompleteMessageEntry;
+import pl.idedyk.japanese.dictionary.web.config.xsd.AndroidAutocompleteMessageListWrapper;
+import pl.idedyk.japanese.dictionary.web.config.xsd.AndroidMessageListWrapper;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Message;
+import pl.idedyk.japanese.dictionary.web.config.xsd.MessageEntry;
+import pl.idedyk.japanese.dictionary.web.config.xsd.WebMessageListWrapper;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.AndroidAutocompleteMessageEntry;
-import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.AndroidAutocompleteMessageListWrapper;
-import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.AndroidMessageListWrapper;
-import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.MessageEntry;
-import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.WebMessageListWrapper;
 
 @Service
 public class MessageService {
@@ -33,15 +23,16 @@ public class MessageService {
 	@Autowired
 	private ConfigService configService;
 
-	private JAXBContext jaxbContext;
+	// private JAXBContext jaxbContext;
 	
 	//
 	
-	private File messageFile = null; 
-	private Long messageFileLastModified = null;
+	// private File messageFile = null; 
+	// private Long messageFileLastModified = null;
 	
-	private Message message = null;
+	// private Message message = null;
 	
+	/*
 	@PostConstruct
 	public void init() throws JAXBException {
 
@@ -53,10 +44,14 @@ public class MessageService {
 		
 		checkAndReloadMessageFile();
 	}
+	*/
 	
-	public synchronized Message.MessageEntry getMessageForAndroid(String userAgent) {
+	public synchronized MessageEntry getMessageForAndroid(String userAgent) {
 		
-		checkAndReloadMessageFile();
+		// checkAndReloadMessageFile();
+		
+		// pobieramy konfiguracje
+		Message message = configService.getConfig().getConfig().getMessage();
 		
 		if (userAgent == null) {
 			return null;
@@ -67,36 +62,35 @@ public class MessageService {
 		}
 		
 		// proba znalezienia odpowiedzi
-		AndroidMessageListWrapper androidMessageListWrapper = message.getAndroidMessageListWrapper();
+		AndroidMessageListWrapper androidMessageListWrapper = message.getAndroidMessageList();
 		
 		if (androidMessageListWrapper == null) {
 			return null;
 		}
 		
-		List<MessageEntry> androidMessageList = androidMessageListWrapper.getAndroidMessageList();
+		List<MessageEntry> androidMessageList = androidMessageListWrapper.getAndroidMessage();
 		
 		MessageEntry defaultMessage = null;
 		
-		for (MessageEntry message : androidMessageList) {
+		for (MessageEntry currentAndroidMessage : androidMessageList) {
 			
-			String messageUserAgentCondition = message.getUserAgentCondition();
-			String messageTimestamp = message.getTimestamp();
+			String messageUserAgentCondition = currentAndroidMessage.getUserAgentCondition();
+			String messageTimestamp = currentAndroidMessage.getTimestamp();
 			
 			if (messageUserAgentCondition == null || messageTimestamp == null) {
 				continue;
 			}
 			
-			if (messageUserAgentCondition.equals("default") == true) {
-				defaultMessage = message;
+			if (messageUserAgentCondition.equals("default") == true) { // to jest konfiguracja domyslna
+				defaultMessage = currentAndroidMessage;
 				
 				continue;
 			}
 			
-			// mamy pasujaca odpowiedz
-			
+			// mamy pasujaca odpowiedz			
 			try {
 				if (userAgent.matches(messageUserAgentCondition) == true) {
-					return message;
+					return currentAndroidMessage;
 				}
 				
 			} catch (PatternSyntaxException e) {
@@ -110,9 +104,12 @@ public class MessageService {
 		return defaultMessage;
 	}
 	
-	public synchronized Message.AndroidAutocompleteMessageEntry getMessageForAndroidAutocomplete(String userAgent, String autocompleteType) {
+	public synchronized AndroidAutocompleteMessageEntry getMessageForAndroidAutocomplete(String userAgent, String autocompleteType) {
 		
-		checkAndReloadMessageFile();
+		// checkAndReloadMessageFile();
+		
+		// pobieramy konfiguracje
+		Message message = configService.getConfig().getConfig().getMessage();
 		
 		if (userAgent == null) {
 			return null;
@@ -123,37 +120,36 @@ public class MessageService {
 		}
 		
 		// proba znalezienia odpowiedzi
-		AndroidAutocompleteMessageListWrapper androidAutocompleteMessageListWrapper = message.getAndroidAutocompleteMessageListWrapper();
+		AndroidAutocompleteMessageListWrapper androidAutocompleteMessageListWrapper = message.getAndroidAutocompleteList();;
 		
 		if (androidAutocompleteMessageListWrapper == null) {
 			return null;
 		}
 		
-		List<AndroidAutocompleteMessageEntry> androidAutocompleteMessageList = androidAutocompleteMessageListWrapper.getAndroidAutocompleteMessageList();
+		List<AndroidAutocompleteMessageEntry> androidAutocompleteMessageList = androidAutocompleteMessageListWrapper.getAndroidAutocompleteMessage();
 		
 		AndroidAutocompleteMessageEntry defaultMessage = null;
 		
-		for (AndroidAutocompleteMessageEntry message : androidAutocompleteMessageList) {
+		for (AndroidAutocompleteMessageEntry currentMessage : androidAutocompleteMessageList) {
 			
-			String messageUserAgentCondition = message.getUserAgentCondition();
-			String messageTimestamp = message.getTimestamp();
-			String messageAutocompleteType = message.getAutocompleteType();
+			String messageUserAgentCondition = currentMessage.getUserAgentCondition();
+			String messageTimestamp = currentMessage.getTimestamp();
+			String messageAutocompleteType = currentMessage.getAutocompleteType();
 			
 			if (messageUserAgentCondition == null || messageTimestamp == null || messageAutocompleteType == null) {
 				continue;
 			}
 			
-			if (autocompleteType.equals(messageAutocompleteType) == true && messageUserAgentCondition.equals("default") == true) {
-				defaultMessage = message;
+			if (autocompleteType.equals(messageAutocompleteType) == true && messageUserAgentCondition.equals("default") == true) { // to jest konfiguracja domyslna
+				defaultMessage = currentMessage;
 				
 				continue;
 			}
 			
 			// mamy pasujaca odpowiedz
-			
 			try {
 				if (autocompleteType.equals(messageAutocompleteType) == true && userAgent.matches(messageUserAgentCondition) == true) {
-					return message;
+					return currentMessage;
 				}
 				
 			} catch (PatternSyntaxException e) {
@@ -166,35 +162,38 @@ public class MessageService {
 		// nic nie dopasowalismy, zwrocenie domyslnej odpowiedzi (jesli jakas dopasowala sie)
 		return defaultMessage;
 	}
-
-	public synchronized Message.MessageEntry getMessageForWeb() {
+	
+	public synchronized MessageEntry getMessageForWeb() {
 		
-		checkAndReloadMessageFile();
+		// checkAndReloadMessageFile();
+		
+		// pobieramy konfiguracje
+		Message message = configService.getConfig().getConfig().getMessage();
 				
 		if (message == null) {
 			return null;
 		}
 		
 		// proba znalezienia odpowiedzi
-		WebMessageListWrapper webMessageListWrapper = message.getWebMessageListWrapper();
+		WebMessageListWrapper webMessageListWrapper = message.getWebMessageList();
 		
 		if (webMessageListWrapper == null) {
 			return null;
 		}
 		
-		List<MessageEntry> webMessageList = webMessageListWrapper.getWebMessageList();
+		List<MessageEntry> webMessageList = webMessageListWrapper.getWebMessage();
 				
-		for (MessageEntry message : webMessageList) {
+		for (MessageEntry currentMessage : webMessageList) {
 			
-			String messageUserAgentCondition = message.getUserAgentCondition();
-			String messageTimestamp = message.getTimestamp();
+			String messageUserAgentCondition = currentMessage.getUserAgentCondition();
+			String messageTimestamp = currentMessage.getTimestamp();
 			
 			if (messageUserAgentCondition == null || messageTimestamp == null) {
 				continue;
 			}
 			
 			if (messageUserAgentCondition.equals("default") == true) { // szukamy tylko default
-				return message;
+				return currentMessage;
 			}			
 		}
 		
@@ -202,6 +201,7 @@ public class MessageService {
 		return null;
 	}
 	
+	/*
 	private void checkAndReloadMessageFile() {
 		
 		// nie ma pliku lub nie mozna go przeczytac
@@ -394,4 +394,5 @@ public class MessageService {
 			}			
 		}
 	}
+	*/
 }

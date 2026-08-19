@@ -35,6 +35,8 @@ import pl.idedyk.japanese.dictionary.api.dto.DictionaryEntryType;
 import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.config.xsd.AndroidAutocompleteMessageEntry;
+import pl.idedyk.japanese.dictionary.web.config.xsd.MessageEntry;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetMessageLoggerModel;
@@ -46,8 +48,6 @@ import pl.idedyk.japanese.dictionary.web.logger.model.KanjiDictionaryAutocomplet
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionaryAutocompleteLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.WordDictionarySearchLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.MessageService;
-import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.AndroidAutocompleteMessageEntry;
-import pl.idedyk.japanese.dictionary.web.service.MessageService.Message.MessageEntry;
 
 @Controller
 public class AndroidController {

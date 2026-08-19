@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
-import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
 
