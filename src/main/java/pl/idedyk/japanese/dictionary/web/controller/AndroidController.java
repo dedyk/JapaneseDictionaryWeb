@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -610,8 +612,14 @@ public class AndroidController {
 		// zwrocenie wyniku
 		JSONObject resultJsonObject = new JSONObject();
 		
+		String timestamp = androidMessageEntry.getTimestamp();
+		
+		if (timestamp.equals("always") == true) {
+			timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		}		
+		
 		if (androidMessageEntry != null) {
-			resultJsonObject.put("timestamp", androidMessageEntry.getTimestamp().trim());
+			resultJsonObject.put("timestamp", timestamp.trim());
 			resultJsonObject.put("message", androidMessageEntry.getMessage() != null ? androidMessageEntry.getMessage().trim() : null);
 		}		
 		
