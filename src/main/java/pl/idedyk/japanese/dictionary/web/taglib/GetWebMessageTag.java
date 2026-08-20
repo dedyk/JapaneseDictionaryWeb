@@ -8,7 +8,7 @@ import jakarta.servlet.jsp.tagext.TagSupport;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import pl.idedyk.japanese.dictionary.web.config.xsd.MessageEntry;
+import pl.idedyk.japanese.dictionary.web.config.xsd.WebMessageListWrapper;
 import pl.idedyk.japanese.dictionary.web.html.Div;
 import pl.idedyk.japanese.dictionary.web.html.Text;
 import pl.idedyk.japanese.dictionary.web.service.MessageService;
@@ -26,13 +26,13 @@ public class GetWebMessageTag extends TagSupport {
 		
 		MessageService messageService = webApplicationContext.getBean(MessageService.class);
 		
-		MessageEntry messageForWeb = messageService.getMessageForWeb();
+		WebMessageListWrapper.WebMessage messageForWeb = messageService.getMessageForWeb();
 		
 		if (messageForWeb == null) {
 			return SKIP_BODY;
 		}
 		
-		String messageText = messageForWeb.getMessage();
+		String messageText = messageForWeb.getHtmlMessage();
 		
 		if (messageText == null) {
 			return SKIP_BODY;

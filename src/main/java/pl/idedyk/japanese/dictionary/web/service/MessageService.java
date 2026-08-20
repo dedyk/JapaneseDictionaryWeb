@@ -7,7 +7,6 @@ import pl.idedyk.japanese.dictionary.web.config.xsd.AndroidAutocompleteMessageEn
 import pl.idedyk.japanese.dictionary.web.config.xsd.AndroidAutocompleteMessageListWrapper;
 import pl.idedyk.japanese.dictionary.web.config.xsd.AndroidMessageListWrapper;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Message;
-import pl.idedyk.japanese.dictionary.web.config.xsd.MessageEntry;
 import pl.idedyk.japanese.dictionary.web.config.xsd.WebMessageListWrapper;
 
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +45,7 @@ public class MessageService {
 	}
 	*/
 	
-	public synchronized MessageEntry getMessageForAndroid(String userAgent) {
+	public synchronized AndroidMessageListWrapper.AndroidMessage getMessageForAndroid(String userAgent) {
 		
 		// checkAndReloadMessageFile();
 		
@@ -68,11 +67,11 @@ public class MessageService {
 			return null;
 		}
 		
-		List<MessageEntry> androidMessageList = androidMessageListWrapper.getAndroidMessage();
+		List<AndroidMessageListWrapper.AndroidMessage> androidMessageList = androidMessageListWrapper.getAndroidMessage();
 		
-		MessageEntry defaultMessage = null;
+		AndroidMessageListWrapper.AndroidMessage defaultMessage = null;
 		
-		for (MessageEntry currentAndroidMessage : androidMessageList) {
+		for (AndroidMessageListWrapper.AndroidMessage currentAndroidMessage : androidMessageList) {
 			
 			String messageUserAgentCondition = currentAndroidMessage.getUserAgentCondition();
 			String messageTimestamp = currentAndroidMessage.getTimestamp();
@@ -163,7 +162,7 @@ public class MessageService {
 		return defaultMessage;
 	}
 	
-	public synchronized MessageEntry getMessageForWeb() {
+	public synchronized WebMessageListWrapper.WebMessage getMessageForWeb() {
 		
 		// checkAndReloadMessageFile();
 		
@@ -181,9 +180,9 @@ public class MessageService {
 			return null;
 		}
 		
-		List<MessageEntry> webMessageList = webMessageListWrapper.getWebMessage();
+		List<WebMessageListWrapper.WebMessage> webMessageList = webMessageListWrapper.getWebMessage();
 				
-		for (MessageEntry currentMessage : webMessageList) {
+		for (WebMessageListWrapper.WebMessage currentMessage : webMessageList) {
 			
 			String messageUserAgentCondition = currentMessage.getUserAgentCondition();
 			String messageTimestamp = currentMessage.getTimestamp();

@@ -177,15 +177,16 @@
 	
 	  <xsd:complexType name="androidMessageListWrapper">
 	    <xsd:sequence>
-	      <xsd:element name="androidMessage" type="messageEntry" minOccurs="0" maxOccurs="unbounded"/>
-	    </xsd:sequence>
-	  </xsd:complexType>
-	
-	  <xsd:complexType name="messageEntry">
-	    <xsd:sequence>
-	      <xsd:element name="userAgentCondition" type="xsd:string" minOccurs="0"/>
-	      <xsd:element name="timestamp" type="xsd:string" minOccurs="0"/>
-	      <xsd:element name="message" type="xsd:string" minOccurs="0"/>
+	      <xsd:element name="androidMessage" minOccurs="0" maxOccurs="unbounded">
+			  <xsd:complexType>
+			    <xsd:sequence>
+			      <xsd:element name="userAgentCondition" type="xsd:string" minOccurs="0"/>
+			      <xsd:element name="timestamp" type="xsd:string" minOccurs="0"/>
+			      <xsd:element name="message" type="xsd:string" minOccurs="0"/>
+			      <xsd:element name="htmlMessage" type="xsd:string" minOccurs="0"/>
+			    </xsd:sequence>
+			  </xsd:complexType>
+	      </xsd:element>
 	    </xsd:sequence>
 	  </xsd:complexType>
 	
@@ -196,18 +197,25 @@
 	  </xsd:complexType>
 	
 	  <xsd:complexType name="androidAutocompleteMessageEntry">
-	    <xsd:complexContent>
-	      <xsd:extension base="messageEntry">
 	        <xsd:sequence>
+		      <xsd:element name="userAgentCondition" type="xsd:string" minOccurs="0"/>
+		      <xsd:element name="timestamp" type="xsd:string" minOccurs="0"/>
+		      <xsd:element name="message" type="xsd:string" minOccurs="0"/>
 	          <xsd:element name="autocompleteType" type="xsd:string" minOccurs="0"/>
 	        </xsd:sequence>
-	      </xsd:extension>
-	    </xsd:complexContent>
 	  </xsd:complexType>
 	
 	  <xsd:complexType name="webMessageListWrapper">
 	    <xsd:sequence>
-	      <xsd:element name="webMessage" type="messageEntry" minOccurs="0" maxOccurs="unbounded"/>
+	      <xsd:element name="webMessage" minOccurs="0" maxOccurs="unbounded">
+			  <xsd:complexType>
+			    <xsd:sequence>
+			      <xsd:element name="userAgentCondition" type="xsd:string" minOccurs="0"/>
+			      <xsd:element name="timestamp" type="xsd:string" minOccurs="0"/>
+			      <xsd:element name="htmlMessage" type="xsd:string" minOccurs="0"/>
+			    </xsd:sequence>
+			  </xsd:complexType>	      
+	      </xsd:element>
 	    </xsd:sequence>
 	  </xsd:complexType>	
 </xsd:schema>

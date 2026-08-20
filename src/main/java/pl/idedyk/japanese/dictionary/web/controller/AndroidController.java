@@ -38,7 +38,7 @@ import pl.idedyk.japanese.dictionary.api.exception.DictionaryException;
 import pl.idedyk.japanese.dictionary.lucene.LuceneDatabaseSuggesterAndSpellCheckerSource;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.config.xsd.AndroidAutocompleteMessageEntry;
-import pl.idedyk.japanese.dictionary.web.config.xsd.MessageEntry;
+import pl.idedyk.japanese.dictionary.web.config.xsd.AndroidMessageListWrapper;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.AndroidGetMessageLoggerModel;
@@ -604,7 +604,7 @@ public class AndroidController {
 			HttpSession session, Map<String, Object> model) throws Exception {
 
 		// wczytywanie komunikatu dla klienta
-		MessageEntry androidMessageEntry = messageService.getMessageForAndroid(request.getHeader("User-Agent"));
+		AndroidMessageListWrapper.AndroidMessage androidMessageEntry = messageService.getMessageForAndroid(request.getHeader("User-Agent"));
 		
 		// logowanie
 		loggerSender.sendLog(new AndroidGetMessageLoggerModel(Utils.createLoggerModelCommon(request)));
@@ -621,6 +621,7 @@ public class AndroidController {
 		if (androidMessageEntry != null) {
 			resultJsonObject.put("timestamp", timestamp.trim());
 			resultJsonObject.put("message", androidMessageEntry.getMessage() != null ? androidMessageEntry.getMessage().trim() : null);
+			resultJsonObject.put("htmlMessage", androidMessageEntry.getHtmlMessage() != null ? androidMessageEntry.getHtmlMessage().trim() : null);
 		}		
 		
 		// typ odpowiedzi
