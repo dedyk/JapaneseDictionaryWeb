@@ -568,7 +568,9 @@ public class KanjiDictionaryController extends DictionaryCommonController {
 		KanjiDictionaryDrawStroke kanjiDictionaryDrawStroke = new KanjiDictionaryDrawStroke();
 		
 		try {
-			detectKanjiResult = detectKanji(strokes, width, height, kanjiDictionaryDrawStroke);
+			if (strokes != null && width != null && height != null) {
+				detectKanjiResult = detectKanji(strokes, width, height, kanjiDictionaryDrawStroke);
+			}
 			
 		} catch (Exception e) {
 			errorMessage = e.getMessage();
@@ -626,13 +628,15 @@ public class KanjiDictionaryController extends DictionaryCommonController {
 		// sprawdzanie, czy uruchomic animacje przewijania
 		Integer lastKanjiDetectSearchResultHash = (Integer)session.getAttribute("lastKanjiDetectSearchResultHash");
 		
-		session.setAttribute("lastKanjiDetectSearchResultHash", strokes.hashCode());
+		if (strokes != null) {
+			session.setAttribute("lastKanjiDetectSearchResultHash", strokes.hashCode());
 		
-		if (lastKanjiDetectSearchResultHash == null) {			
-			model.put("runScrollAnim", true);
-						
-		} else {			
-			model.put("runScrollAnim", strokes.hashCode() != lastKanjiDetectSearchResultHash);
+			if (lastKanjiDetectSearchResultHash == null) {			
+				model.put("runScrollAnim", true);
+							
+			} else {			
+				model.put("runScrollAnim", strokes.hashCode() != lastKanjiDetectSearchResultHash);
+			}
 		}
 
 		model.put("command", kanjiDictionarySearchModel);
