@@ -300,7 +300,11 @@ public class LoggerListener {
 							}
 							
 							@Override
-							public void changeDate() {								
+							public void changeDate() {
+								if (wordDictionarySearchMissingWordQueue2.getMissingWord().length() >= 600) {
+									wordDictionarySearchMissingWordQueue2.setMissingWord(wordDictionarySearchMissingWordQueue2.getMissingWord().substring(0, 599) + "...");
+								}
+								
 								wordDictionarySearchMissingWordQueue2.setMissingWord(Utils.stringToBase64String(wordDictionarySearchMissingWordQueue2.getMissingWord()));
 							}
 						});
