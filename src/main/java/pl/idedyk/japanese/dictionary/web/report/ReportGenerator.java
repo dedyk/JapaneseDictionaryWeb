@@ -158,6 +158,9 @@ public class ReportGenerator {
 
 				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.operation.stat", genericLogOperationStatList);
 				
+				// statystyki krajow (caly ruch)
+				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.city.stat.all", groupByStat(splitUserAgentStatByType.getAllList(), new CountryCityGroupBy(0)));
+				
 				// statystyki krajow (bez robotow i innych)		
 				appendGenericTextStat(httpServletRequest, reportDiv, "report.generate.daily.report.city.stat", groupByStat(splitUserAgentStatByType.getHumanList(), new CountryCityGroupBy(0)));
 												
@@ -606,6 +609,8 @@ public class ReportGenerator {
 		for (GenericLog genericLog : genericLogList) {
 			
 			UserAgentInfo userAgentInfo = userAgentService.getUserAgentInfo(genericLog.getUserAgent());
+			
+			result.allList.add(new ImmutablePair<GenericLog, UserAgentInfo>(genericLog, userAgentInfo));
 			
 			switch (userAgentInfo.getType()) {
 				
@@ -1298,16 +1303,12 @@ public class ReportGenerator {
 		
 		private List<ImmutablePair<GenericLog, UserAgentInfo>> japaneseAndroidLearnerHelperList = new ArrayList<>();
 		
+		private List<ImmutablePair<GenericLog, UserAgentInfo>> allList = new ArrayList<>();
 		private List<ImmutablePair<GenericLog, UserAgentInfo>> desktopList = new ArrayList<>();
-		
 		private List<ImmutablePair<GenericLog, UserAgentInfo>> phoneList = new ArrayList<>();
-		
-		private List<ImmutablePair<GenericLog, UserAgentInfo>> tableList = new ArrayList<>();
-		
-		private List<ImmutablePair<GenericLog, UserAgentInfo>> robotList = new ArrayList<>();
-		
-		private List<ImmutablePair<GenericLog, UserAgentInfo>> otherList = new ArrayList<>();
-		
+		private List<ImmutablePair<GenericLog, UserAgentInfo>> tableList = new ArrayList<>();		
+		private List<ImmutablePair<GenericLog, UserAgentInfo>> robotList = new ArrayList<>();		
+		private List<ImmutablePair<GenericLog, UserAgentInfo>> otherList = new ArrayList<>();		
 		private List<ImmutablePair<GenericLog, UserAgentInfo>> nullList = new ArrayList<>();
 		
 		//
@@ -1324,6 +1325,10 @@ public class ReportGenerator {
 			result.addAll(tableList);
 			
 			return result;
+		}
+		
+		public List<ImmutablePair<GenericLog, UserAgentInfo>> getAllList() {
+			return allList;			
 		}
 	}
 	
