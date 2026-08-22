@@ -14,6 +14,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
+
 @Service
 public class BlacklistManager {
 	
@@ -28,6 +30,25 @@ public class BlacklistManager {
 	private ConfigService configService;
 	
 	private Set<String> blacklist;
+	
+	@PostConstruct
+	public void readBlacklist() throws IOException {		
+		logger.info("Wczytawanie czarnej listy adresów ip");
+		
+		// nazwa pliku
+		File currentBlackListFile = getCurrentBlackList();
+		
+		if (currentBlackListFile.canRead() == false) {
+			logger.error("Nie udało się wczytać pliku z czarną listą adresów ip. Brak pliku lub brak uprawnień");
+			
+			return;
+		}
+		
+		// wczytanie zawartosci pliku
+		blacklist = readIpsumBlackListFile(currentBlackListFile);
+		
+		logger.info("Nowa czarna lista liczy " + blacklist.size() + " pozycji.");
+	}
 	
 	public void downloadNewBlackList() {
 		

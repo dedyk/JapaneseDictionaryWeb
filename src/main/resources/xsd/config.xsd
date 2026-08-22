@@ -160,6 +160,7 @@
 
 	<xsd:simpleType name="hostBlockOperation">
 		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="info"></xsd:enumeration>
 			<xsd:enumeration value="block"></xsd:enumeration>
 			<xsd:enumeration value="send_random_data"></xsd:enumeration>
 			<xsd:enumeration value="redirect_to_captcha"></xsd:enumeration>
