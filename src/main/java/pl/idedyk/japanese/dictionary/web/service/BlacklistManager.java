@@ -1,7 +1,14 @@
 package pl.idedyk.japanese.dictionary.web.service;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -35,6 +42,11 @@ public class BlacklistManager {
 			// sciagniecie nowej zawartosci pliku blacklist
 			FileUtils.copyURLToFile(new URL(blacklistsourceURL), newBlackListFile, 5000, 10000);
 			
+			// wczytanie nowego pliku blacklist
+			Set<String> newBlacklist = readIpsumBlackListFile(newBlackListFile);
+			
+			System.out.println("AAAA: " + newBlacklist);
+			
 			
 		} catch (Exception e) {
 			logger.error("Błąd podczas aktualizacji czarnych list", e);
@@ -47,5 +59,49 @@ public class BlacklistManager {
 	
 	private File getNewBlackList() {
 		return new File(configService.getCatalinaConfDir(), "blacklist.txt.new");
+	}
+	
+	private Set<String> readIpsumBlackListFile(File ipsumBlackListFile) throws IOException {
+		
+		Set<String> blacklist = new TreeSet<>();
+		
+		BufferedReader bufferedReader = null;
+		
+		try {
+			bufferedReader = new BufferedReader(new FileReader(ipsumBlackListFile));
+		    			
+			String line;
+	        while ((line = bufferedReader.readLine()) != null) {
+	            line = line.trim();
+	            
+	            if (line.startsWith("#") == true) { // to nas nie interesuje
+	            	continue;
+	            }
+	            
+	            // wczytanie adresu ip i liczby czarnych list
+	            String[] lineSplited = line.split("\t");
+	            
+	            if (lineSplited.length != 2) { // to jest cos dziwnego, ignorujemy
+	            	continue;
+	            }
+	            
+	            // sprawdzenie wyrazenia regularnego
+	            if (lineSplited[0].matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$") == true) {
+	            	blacklist.add(lineSplited[0]);	            	
+	            }	            
+	        }
+	        
+	        return blacklist;
+	        
+		} finally {
+		    if (bufferedReader != null) {
+		        try {
+		        	bufferedReader.close();
+		        	
+		        } catch (IOException e) {
+		        	logger.error("Błąd zamykania pliku", e);
+		        }
+		    }
+		}
 	}
 }
