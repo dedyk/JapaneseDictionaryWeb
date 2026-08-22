@@ -24,6 +24,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.BingSiteAuthGenerateLogger
 import pl.idedyk.japanese.dictionary.web.logger.model.CatchaCorrectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.CatchaIncorrectLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.CatchaStartLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockInfoOnlyLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.FaviconIconSendLoggerModel;
@@ -1237,6 +1238,9 @@ public class LoggerListener {
 			
 		} else if (ClientBlockLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.CLIENT_BLOCK;
+			
+		} else if (ClientBlockInfoOnlyLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.CLIENT_BLOCK_INFO_ONLY;
 			
 		} else if (RedirectToCatchaLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.REDIRECT_TO_CAPTCHA;

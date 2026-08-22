@@ -33,6 +33,7 @@ import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockLis
 import pl.idedyk.japanese.dictionary.web.config.xsd.HostBlockOperation;
 import pl.idedyk.japanese.dictionary.web.controller.CaptchaController;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockInfoOnlyLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectToCatchaLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
@@ -270,6 +271,7 @@ public class FirewallFilter implements Filter {
 		if (matchedHostBlockList.size() > 0) { // mamy cos dopasowane
 			
 			// sprawdzenie, ktore typy operacji wystepuja
+			HostBlock infoHostBlock = matchedHostBlockList.stream().filter(f -> f.getOperation() == HostBlockOperation.INFO).findFirst().orElse(null);
 			HostBlock blockHostBlock = matchedHostBlockList.stream().filter(f -> f.getOperation() == HostBlockOperation.BLOCK).findFirst().orElse(null);
 			HostBlock sendRandomDataHostBlock = matchedHostBlockList.stream().filter(f -> f.getOperation() == HostBlockOperation.SEND_RANDOM_DATA).findFirst().orElse(null);
 			HostBlock redirectToCaptchaHostBlock = matchedHostBlockList.stream().filter(f -> f.getOperation() == HostBlockOperation.REDIRECT_TO_CAPTCHA).findFirst().orElse(null);
@@ -285,6 +287,8 @@ public class FirewallFilter implements Filter {
 			} else if (redirectToCaptchaHostBlock != null) {
 				hostBlockToUse = redirectToCaptchaHostBlock;
 				
+			} else if (infoHostBlock != null) {
+				hostBlockToUse = infoHostBlock;
 			}
 			
 			if (hostBlockToUse != null) {
@@ -331,6 +335,22 @@ public class FirewallFilter implements Filter {
 		// sprawdzenie, czy uzytkownik zostal juz zweryfikowany przez captcha
 		if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCHA &&
 				httpServletRequest.getSession().getAttribute(CaptchaController.CAPTCHA_SESSION_CAPTCHA_VERIFIED) != null) {
+			
+			clientInfo.hostBlockOperation = null;
+		}
+		
+		// sprawdzenie, czy to tylko rejestrowanie faktu
+		if (clientInfo.hostBlockOperation == HostBlockOperation.INFO) {
+			
+			// zapis do logow
+			ServletContext servletContext = request.getServletContext();
+			WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+			
+			LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
+			
+			ClientBlockInfoOnlyLoggerModel clientBlockInfoOnlyLoggerModel = new ClientBlockInfoOnlyLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
+			
+			loggerSender.sendLog(clientBlockInfoOnlyLoggerModel);
 			
 			clientInfo.hostBlockOperation = null;
 		}
