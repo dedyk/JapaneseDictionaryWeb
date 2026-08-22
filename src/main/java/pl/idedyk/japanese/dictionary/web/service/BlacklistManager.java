@@ -50,6 +50,15 @@ public class BlacklistManager {
 		logger.info("Nowa czarna lista liczy " + blacklist.size() + " pozycji.");
 	}
 	
+	public boolean isIpExistsInBlackList(String ip) {
+		
+		if (blacklist == null) {
+			return false;
+		}
+		
+		return blacklist.contains(ip);
+	}
+	
 	public void downloadNewBlackList() {
 		
 		try {

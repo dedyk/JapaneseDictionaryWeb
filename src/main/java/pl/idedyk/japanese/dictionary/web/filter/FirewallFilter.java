@@ -36,6 +36,7 @@ import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockInfoOnlyLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectToCatchaLoggerModel;
+import pl.idedyk.japanese.dictionary.web.service.BlacklistManager;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService.ConfigWrapper;
 
@@ -67,7 +68,15 @@ public class FirewallFilter implements Filter {
 		return configService;		
 	}
 	
-	private void isClientBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo) {
+	private BlacklistManager getBlacklistManager(ServletRequest request) {
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+		
+		BlacklistManager blacklistManager = webApplicationContext.getBean(BlacklistManager.class);
+		
+		return blacklistManager;		
+	}
+	
+	private void isClientBlocked(ConfigWrapper configWrapper, BlacklistManager blacklistManager, ClientInfo clientInfo) {
 		
 		List<HostBlockList.HostBlock> hostBlockListList = configWrapper.getConfig().getFirewall().getHostBlockList().getHostBlock();		
 		List<HostBlockList.HostBlock> matchedHostBlockList = new ArrayList<>(); // lista dopasowanych konfiguracji
@@ -78,6 +87,17 @@ public class FirewallFilter implements Filter {
 			
 			int numberOfCheckedConditions = 0; // liczba wykonanych sprawdzen	| aba warunki musza
 			int numberOfSatisfiedConditions = 0; // liczba spelnionych warunkow	| byc wieksze od siebie i byc rowne sobie
+			
+			// sprawdzenie, czy adres ip jest na czarnej liscie
+			Object blackListElemnt = hostBlock.getBlackList();
+			
+			if (blackListElemnt != null) {
+				numberOfCheckedConditions++;
+				
+				if (clientInfo.ip != null && blacklistManager.isIpExistsInBlackList(clientInfo.ip) == true) {
+					numberOfSatisfiedConditions++;
+				}
+			}
 			
 			// sprawdzanie kraju
 			List<HostBlockList.HostBlock.Country> countryList = hostBlock.getCountry();
@@ -305,6 +325,7 @@ public class FirewallFilter implements Filter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 		
 		ConfigService configService = getConfigService(httpServletRequest);
+		BlacklistManager blacklistManager = getBlacklistManager(httpServletRequest);
 		
 		// pobranie konfiguracji
 		ConfigWrapper configWrapper = configService.getConfig();
@@ -313,7 +334,7 @@ public class FirewallFilter implements Filter {
 		ClientInfo clientInfo = (ClientInfo)request.getAttribute(ClientInfo.REQUEST_ATTRIBUTE);
 		
 		// sprawdzenie, czy zablokowac danego clientInfo
-		isClientBlocked(configWrapper, clientInfo);
+		isClientBlocked(configWrapper, blacklistManager, clientInfo);
 				
 		// dodatkowe sprawdzenie, czy wywolanie nie pochodzi z aplikacji na Androida, jesli tak to pozwalamy na nie
 		if (	clientInfo.hostBlockOperation != null && clientInfo.httpMethod != null && clientInfo.httpMethod.equals("POST") == true && 
