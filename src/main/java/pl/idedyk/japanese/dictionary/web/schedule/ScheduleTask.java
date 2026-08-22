@@ -51,6 +51,7 @@ import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionaryNameDetailsLo
 import pl.idedyk.japanese.dictionary.web.mysql.model.WordDictionarySearchLog;
 import pl.idedyk.japanese.dictionary.web.queue.QueueService;
 import pl.idedyk.japanese.dictionary.web.report.ReportGenerator;
+import pl.idedyk.japanese.dictionary.web.service.BlacklistManager;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.SemaphoreService;
 
@@ -79,6 +80,9 @@ public class ScheduleTask {
 	
 	@Autowired
 	private ConfigService configService;
+	
+	@Autowired
+	private BlacklistManager blackListManager;
 	
 	@Value("${db.arch.dir}")
 	private String dbArchDir; 
@@ -283,6 +287,16 @@ public class ScheduleTask {
 		}
 		
 		queueService.processLocalDirQueueItems();
+	}
+	
+	@Scheduled(cron="0 10 3 * * ?") // o 3:10 w nocy 
+	public void processDownloadBlacklist() {
+		
+		if (configService.isProcessDBCleanup() == false) {
+			return;
+		}
+		
+		blackListManager.downloadNewBlackList();
 	}
 	
 	//@Scheduled(cron="* * * * * ?") // tymczasowo

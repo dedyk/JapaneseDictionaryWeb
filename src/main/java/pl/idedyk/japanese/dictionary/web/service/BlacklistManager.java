@@ -21,8 +21,8 @@ public class BlacklistManager {
 	
 	private static final Logger logger = LogManager.getLogger(BlacklistManager.class);
 	
-	private final String blacklistsourceURL = "file:///tmp/a/ipsum/ipsum.txt";
-	// private final String blacklistsourceURL = "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt";
+	// private final String blacklistsourceURL = "file:///tmp/a/ipsum/ipsum.txt";
+	private final String blacklistsourceURL = "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt";
 	
 	//
 	
@@ -62,6 +62,8 @@ public class BlacklistManager {
 	public void downloadNewBlackList() {
 		
 		try {
+			logger.info("Pobieranie nowej czarnej listy");
+			
 			// przygotowanie nazwy plikow blacklist
 			File currentBlackListFile = getCurrentBlackList();
 			File oldBlackBlackListFile = getOldBlackList();
