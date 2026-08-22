@@ -1,9 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.service;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
@@ -29,11 +27,14 @@ public class BlacklistManager {
 	@Autowired
 	private ConfigService configService;
 	
+	private Set<String> blacklist;
+	
 	public void downloadNewBlackList() {
 		
 		try {
 			// przygotowanie nazwy plikow blacklist
 			File currentBlackListFile = getCurrentBlackList();
+			File oldBlackBlackListFile = getOldBlackList();
 			File newBlackListFile = getNewBlackList();			
 			
 			// usuniecie nowego pliku (jesli istnieje)
@@ -45,8 +46,24 @@ public class BlacklistManager {
 			// wczytanie nowego pliku blacklist
 			Set<String> newBlacklist = readIpsumBlackListFile(newBlackListFile);
 			
-			System.out.println("AAAA: " + newBlacklist);
+			if (newBlacklist.size() == 0) {
+				logger.error("Nowy plik blacklist liczy zero pozycji");
+				return;
+			}
+
+			// kasujemy stary plik
+			oldBlackBlackListFile.delete();
 			
+			// zamiana aktualnego pliku na stary			
+			currentBlackListFile.renameTo(oldBlackBlackListFile);
+			
+			// zamiana nowego pliku na aktualny
+			newBlackListFile.renameTo(currentBlackListFile);
+			
+			// podmiana set-a, aby zaczela byc uzywana nowa
+			blacklist = newBlacklist;
+			
+			logger.info("Nowa czarna lista liczy " + blacklist.size() + " pozycji.");
 			
 		} catch (Exception e) {
 			logger.error("Błąd podczas aktualizacji czarnych list", e);
@@ -60,7 +77,11 @@ public class BlacklistManager {
 	private File getNewBlackList() {
 		return new File(configService.getCatalinaConfDir(), "blacklist.txt.new");
 	}
-	
+
+	private File getOldBlackList() {
+		return new File(configService.getCatalinaConfDir(), "blacklist.txt.old");
+	}
+
 	private Set<String> readIpsumBlackListFile(File ipsumBlackListFile) throws IOException {
 		
 		Set<String> blacklist = new TreeSet<>();
