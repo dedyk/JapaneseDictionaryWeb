@@ -381,7 +381,8 @@ public class ScheduleTask {
 								
 				// dodatkowo jeszcze dla wybranych typow, eksportowanie danych szczegolowych oraz ich usuniecie
 				switch (genericLogOperationEnum) {
-				
+					
+					/*
 					case START_APP:
 					case START:
 					case FAVICON_ICON:
@@ -412,7 +413,8 @@ public class ScheduleTask {
 					case CLIENT_BLOCK:
 						
 						// noop
-						break;					
+						break;
+				 	*/					
 					
 					case WORD_DICTIONARY_DETAILS:
 						
@@ -685,7 +687,8 @@ public class ScheduleTask {
 						break;
 						
 					default:
-						throw new RuntimeException("Nieznana operacji do archiwizacji: " + genericLogOperationEnum);
+						// nic do roboty
+						// throw new RuntimeException("Nieznana operacji do archiwizacji: " + genericLogOperationEnum);
 				}
 				
 				if (doDelete == true) {
