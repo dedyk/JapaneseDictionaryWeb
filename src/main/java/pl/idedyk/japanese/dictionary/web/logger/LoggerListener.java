@@ -115,6 +115,7 @@ public class LoggerListener {
 		String remoteIpCountry = null;
 		String remoteIpAsn = null;
 		String remoteIpAsnOrganizationName = null;
+		Integer blackListLevel = null;
 		
 		if (clientInfo != null) {
 			remoteIp = clientInfo.ip;
@@ -122,6 +123,7 @@ public class LoggerListener {
 			remoteIpCountry = clientInfo.country;
 			remoteIpAsn = clientInfo.autonomousSystemNumber;
 			remoteIpAsnOrganizationName = clientInfo.autonomousSystemOrganization;
+			blackListLevel = clientInfo.blackListLevel;
 		}
 		
 		// ogolna obsluga			
@@ -140,6 +142,7 @@ public class LoggerListener {
 		genericLog.setRequestURL(loggerModelCommon.getRequestURL());
 		genericLog.setRefererURL(loggerModelCommon.getRefererURL());
 		genericLog.setRemoteHost(remoteIpHost);
+		genericLog.setBlackListLevel(blackListLevel);
 		genericLog.setOperation(operation);
 		
 		// wstawienie wpisu do bazy danych

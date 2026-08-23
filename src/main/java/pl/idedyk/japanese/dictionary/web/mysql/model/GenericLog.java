@@ -23,6 +23,7 @@ public class GenericLog implements Serializable {
 	private String remoteIpAsnOrganizationName;
 	private String remoteIpCountry;
 	private String remoteHost;
+	private Integer blackListLevel;
 	
 	private GenericLogOperationEnum operation;
 
@@ -112,6 +113,14 @@ public class GenericLog implements Serializable {
 
 	public void setRemoteHost(String remoteHost) {
 		this.remoteHost = remoteHost;
+	}
+
+	public Integer getBlackListLevel() {
+		return blackListLevel;
+	}
+
+	public void setBlackListLevel(Integer blackListLevel) {
+		this.blackListLevel = blackListLevel;
 	}
 
 	public GenericLogOperationEnum getOperation() {

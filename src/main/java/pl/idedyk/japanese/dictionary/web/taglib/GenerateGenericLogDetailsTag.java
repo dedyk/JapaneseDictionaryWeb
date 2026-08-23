@@ -288,8 +288,13 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
             }
             
         } else {
-        	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpAs"),remoteIpAsn + " (" + remoteIpAsnOrganizationName + ")");
-        }        
+        	addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.remoteIpAs"), remoteIpAsn + " (" + remoteIpAsnOrganizationName + ")");
+        }
+        
+        // poziom czarnej listy
+        Integer blacklistLevel = genericLog.getBlackListLevel();
+        
+        addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.blacklistLevel"), blacklistLevel == null ? "-" : blacklistLevel.toString());
         
 		panelBody.addHtmlElement(table);
         		
