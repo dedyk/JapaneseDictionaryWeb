@@ -115,7 +115,7 @@ public class MySQLConnector {
 			
 			preparedStatement = connection.prepareStatement( "insert into generic_log(timestamp, session_id, user_agent, request_url, referer_url, remote_ip, remote_host, operation, "
 					+ "remote_ip_asn, remote_ip_asn_organization_name, remote_ip_country, blacklist_level) "
-					+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+					+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			preparedStatement.setTimestamp(1, genericLog.getTimestamp());
 			preparedStatement.setString(2, genericLog.getSessionId());
@@ -128,7 +128,7 @@ public class MySQLConnector {
 			preparedStatement.setString(9, genericLog.getRemoteIpAsn());
 			preparedStatement.setString(10, genericLog.getRemoteIpAsnOrganizationName());
 			preparedStatement.setString(11, genericLog.getRemoteIpCountry());
-			preparedStatement.setInt(12, genericLog.getBlackListLevel());
+			preparedStatement.setBigDecimal(12, genericLog.getBlackListLevel());
 			
 			preparedStatement.executeUpdate();
 			
@@ -377,7 +377,7 @@ public class MySQLConnector {
 		genericLog.setRemoteIpAsnOrganizationName(resultSet.getString("remote_ip_asn_organization_name"));
 		genericLog.setRemoteIpCountry(resultSet.getString("remote_ip_country"));
 		genericLog.setRemoteHost(resultSet.getString("remote_host"));
-		genericLog.setBlackListLevel(resultSet.getInt("blacklist_level"));
+		genericLog.setBlackListLevel(resultSet.getBigDecimal("blacklist_level"));
 		genericLog.setOperation(GenericLogOperationEnum.valueOf(resultSet.getString("operation")));
 				
 		return genericLog;

@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.mysql.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class GenericLog implements Serializable {
@@ -23,7 +24,7 @@ public class GenericLog implements Serializable {
 	private String remoteIpAsnOrganizationName;
 	private String remoteIpCountry;
 	private String remoteHost;
-	private Integer blackListLevel;
+	private BigDecimal blackListLevel;
 	
 	private GenericLogOperationEnum operation;
 
@@ -115,11 +116,11 @@ public class GenericLog implements Serializable {
 		this.remoteHost = remoteHost;
 	}
 
-	public Integer getBlackListLevel() {
+	public BigDecimal getBlackListLevel() {
 		return blackListLevel;
 	}
 
-	public void setBlackListLevel(Integer blackListLevel) {
+	public void setBlackListLevel(BigDecimal blackListLevel) {
 		this.blackListLevel = blackListLevel;
 	}
 

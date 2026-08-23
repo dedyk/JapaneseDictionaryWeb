@@ -10,7 +10,7 @@ create table generic_log (
     remote_ip_asn_organization_name varchar(128),
     remote_ip_country varchar(30) null,
     remote_host varchar(512) null,
-    blacklist_level integer null,
+    blacklist_level numeric(5,0) null,
     operation varchar(40) not null
 ) default character set = utf8 collate = utf8_polish_ci;
 

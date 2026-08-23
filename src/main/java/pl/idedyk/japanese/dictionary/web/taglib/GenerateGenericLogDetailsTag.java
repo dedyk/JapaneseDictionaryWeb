@@ -1,6 +1,7 @@
 package pl.idedyk.japanese.dictionary.web.taglib;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -292,9 +293,9 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
         }
         
         // poziom czarnej listy
-        Integer blacklistLevel = genericLog.getBlackListLevel();
+        BigDecimal blacklistLevel = genericLog.getBlackListLevel();
         
-        addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.blacklistLevel"), blacklistLevel == null ? "-" : blacklistLevel.toString());
+        addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.blacklistLevel"), blacklistLevel == null ? "" : blacklistLevel.toString());
         
 		panelBody.addHtmlElement(table);
         		

@@ -1,5 +1,6 @@
 package pl.idedyk.japanese.dictionary.web.logger;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -142,7 +143,7 @@ public class LoggerListener {
 		genericLog.setRequestURL(loggerModelCommon.getRequestURL());
 		genericLog.setRefererURL(loggerModelCommon.getRefererURL());
 		genericLog.setRemoteHost(remoteIpHost);
-		genericLog.setBlackListLevel(blackListLevel);
+		genericLog.setBlackListLevel(blackListLevel != null ? BigDecimal.valueOf(blackListLevel) : null);
 		genericLog.setOperation(operation);
 		
 		// wstawienie wpisu do bazy danych
