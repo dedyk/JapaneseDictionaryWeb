@@ -61,7 +61,11 @@
 											<xsd:complexType>
 												<xsd:sequence>
 												
-													<xsd:element name="blackList" minOccurs="0" maxOccurs="1"/>
+													<xsd:element name="blackList" minOccurs="0" maxOccurs="1">
+														<xsd:complexType>
+															<xsd:attribute name="minLevel" use="required" type="xsd:short" />
+														</xsd:complexType>
+													</xsd:element>
 													
 													<xsd:element name="country" minOccurs="0" maxOccurs="unbounded">
 														<xsd:complexType>

@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
+import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
+import pl.idedyk.japanese.dictionary.web.logger.model.BlackListUpdatedLoggerModel;
 
 @Service
 public class BlacklistManager {
@@ -29,7 +31,10 @@ public class BlacklistManager {
 	@Autowired
 	private ConfigService configService;
 	
-	private Set<String> blacklist;
+	@Autowired
+	private LoggerSender loggerSender;
+	
+	private Map<String, Integer> blacklist;
 	
 	@PostConstruct
 	public void readBlacklist() throws IOException {		
@@ -50,13 +55,21 @@ public class BlacklistManager {
 		logger.info("Nowa czarna lista liczy " + blacklist.size() + " pozycji.");
 	}
 	
-	public boolean isIpExistsInBlackList(String ip) {
+	public boolean isIpExistsInBlackList(String ip, int minLevel) {
 		
 		if (blacklist == null) {
 			return false;
 		}
 		
-		return blacklist.contains(ip);
+		Integer foundLevel = blacklist.get(ip);
+		
+		if (foundLevel == null) {
+			return false;
+		}
+		
+		logger.info("Znaleziono adres na czarnej liście: " + ip + ", poziom: " + foundLevel + ", wymagany poziom: " + minLevel);
+		
+		return foundLevel >= minLevel;
 	}
 	
 	public void downloadNewBlackList() {
@@ -76,7 +89,7 @@ public class BlacklistManager {
 			FileUtils.copyURLToFile(new URL(blacklistsourceURL), newBlackListFile, 5000, 10000);
 			
 			// wczytanie nowego pliku blacklist
-			Set<String> newBlacklist = readIpsumBlackListFile(newBlackListFile);
+			Map<String, Integer> newBlacklist = readIpsumBlackListFile(newBlackListFile);
 			
 			if (newBlacklist.size() == 0) {
 				logger.error("Nowy plik blacklist liczy zero pozycji");
@@ -97,6 +110,11 @@ public class BlacklistManager {
 			
 			logger.info("Nowa czarna lista liczy " + blacklist.size() + " pozycji.");
 			
+			// info do logger			
+			BlackListUpdatedLoggerModel blackListUpdatedLoggerModel = new BlackListUpdatedLoggerModel(null);
+			
+			loggerSender.sendLog(blackListUpdatedLoggerModel);
+			
 		} catch (Exception e) {
 			logger.error("Błąd podczas aktualizacji czarnych list", e);
 		}
@@ -114,9 +132,9 @@ public class BlacklistManager {
 		return new File(configService.getCatalinaConfDir(), "blacklist.txt.old");
 	}
 
-	private Set<String> readIpsumBlackListFile(File ipsumBlackListFile) throws IOException {
+	private Map<String, Integer> readIpsumBlackListFile(File ipsumBlackListFile) throws IOException {
 		
-		Set<String> blacklist = new TreeSet<>();
+		Map<String, Integer> blacklist = new TreeMap<>();
 		
 		BufferedReader bufferedReader = null;
 		
@@ -139,8 +157,8 @@ public class BlacklistManager {
 	            }
 	            
 	            // sprawdzenie wyrazenia regularnego
-	            if (lineSplited[0].matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$") == true) {
-	            	blacklist.add(lineSplited[0]);	            	
+	            if (lineSplited[0].matches("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$") == true && lineSplited[1].matches("^[0-9]*$") == true) {
+	            	blacklist.put(lineSplited[0], Integer.parseInt(lineSplited[1]));	            	
 	            }	            
 	        }
 	        

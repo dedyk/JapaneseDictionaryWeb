@@ -89,12 +89,12 @@ public class FirewallFilter implements Filter {
 			int numberOfSatisfiedConditions = 0; // liczba spelnionych warunkow	| byc wieksze od siebie i byc rowne sobie
 			
 			// sprawdzenie, czy adres ip jest na czarnej liscie
-			Object blackListElemnt = hostBlock.getBlackList();
+			HostBlock.BlackList blackListElemnt = hostBlock.getBlackList();
 			
 			if (blackListElemnt != null) {
 				numberOfCheckedConditions++;
 				
-				if (clientInfo.ip != null && blacklistManager.isIpExistsInBlackList(clientInfo.ip) == true) {
+				if (clientInfo.ip != null && blacklistManager.isIpExistsInBlackList(clientInfo.ip, blackListElemnt.getMinLevel()) == true) {
 					numberOfSatisfiedConditions++;
 				}
 			}
