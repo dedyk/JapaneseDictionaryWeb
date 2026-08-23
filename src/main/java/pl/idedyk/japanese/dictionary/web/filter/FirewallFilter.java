@@ -36,7 +36,6 @@ import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockInfoOnlyLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectToCatchaLoggerModel;
-import pl.idedyk.japanese.dictionary.web.service.BlacklistManager;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService.ConfigWrapper;
 
@@ -67,16 +66,8 @@ public class FirewallFilter implements Filter {
 		
 		return configService;		
 	}
-	
-	private BlacklistManager getBlacklistManager(ServletRequest request) {
-		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
 		
-		BlacklistManager blacklistManager = webApplicationContext.getBean(BlacklistManager.class);
-		
-		return blacklistManager;		
-	}
-	
-	private void isClientBlocked(ConfigWrapper configWrapper, BlacklistManager blacklistManager, ClientInfo clientInfo) {
+	private void isClientBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo) {
 		
 		List<HostBlockList.HostBlock> hostBlockListList = configWrapper.getConfig().getFirewall().getHostBlockList().getHostBlock();		
 		List<HostBlockList.HostBlock> matchedHostBlockList = new ArrayList<>(); // lista dopasowanych konfiguracji
@@ -94,7 +85,7 @@ public class FirewallFilter implements Filter {
 			if (blackListElemnt != null) {
 				numberOfCheckedConditions++;
 				
-				if (clientInfo.ip != null && blacklistManager.isIpExistsInBlackList(clientInfo.ip, blackListElemnt.getMinLevel()) == true) {
+				if (clientInfo.ip != null && clientInfo.blackListLevel != null && clientInfo.blackListLevel.intValue() >= blackListElemnt.getMinLevel()) {
 					numberOfSatisfiedConditions++;
 				}
 			}
@@ -325,7 +316,6 @@ public class FirewallFilter implements Filter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 		
 		ConfigService configService = getConfigService(httpServletRequest);
-		BlacklistManager blacklistManager = getBlacklistManager(httpServletRequest);
 		
 		// pobranie konfiguracji
 		ConfigWrapper configWrapper = configService.getConfig();
@@ -334,7 +324,7 @@ public class FirewallFilter implements Filter {
 		ClientInfo clientInfo = (ClientInfo)request.getAttribute(ClientInfo.REQUEST_ATTRIBUTE);
 		
 		// sprawdzenie, czy zablokowac danego clientInfo
-		isClientBlocked(configWrapper, blacklistManager, clientInfo);
+		isClientBlocked(configWrapper, clientInfo);
 				
 		// dodatkowe sprawdzenie, czy wywolanie nie pochodzi z aplikacji na Androida, jesli tak to pozwalamy na nie
 		if (	clientInfo.hostBlockOperation != null && clientInfo.httpMethod != null && clientInfo.httpMethod.equals("POST") == true && 

@@ -15,6 +15,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
+import pl.idedyk.japanese.dictionary.web.service.BlacklistManager;
 import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
 
 public class GetClientInfoFilter implements Filter {
@@ -27,6 +28,7 @@ public class GetClientInfoFilter implements Filter {
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		
 		GeoIPService geoIPService = getGeoIPService(request);
+		BlacklistManager blacklistManager = getBlacklistManager(httpServletRequest);
 		
 		// utworzenie informacji o kliencie
 		ClientInfo clientInfo = new ClientInfo();
@@ -42,12 +44,20 @@ public class GetClientInfoFilter implements Filter {
 		clientInfo.country = null;
 		clientInfo.autonomousSystemNumber = null;
 		
+		clientInfo.blackListLevel = null;
+		
 		try {
 			// pobranie kraju na podstawie adresu ip
 			if (geoIPService != null && clientInfo.ip != null) {
 				clientInfo.country = geoIPService.getCountry(clientInfo.ip);
 				clientInfo.autonomousSystemNumber = geoIPService.getAutonomousSystemNumber(clientInfo.ip);
 				clientInfo.autonomousSystemOrganization = geoIPService.getAutonomousSystemOrganization(clientInfo.ip);
+				
+				clientInfo.blackListLevel = blacklistManager.getBlackListLevel(clientInfo.ip);
+				
+				if (clientInfo.blackListLevel != null) {
+					logger.info("Znaleziono adres na czarnej liście: " + clientInfo.ip + ", poziom: " + clientInfo.blackListLevel);
+				}
 			}
 		} catch (Exception e) {
 			logger.error("Błąd podczas pobierania nazwy kraju z adresu ip", e);
@@ -67,4 +77,13 @@ public class GetClientInfoFilter implements Filter {
 		
 		return geoIPService;		
 	}
+	
+	private BlacklistManager getBlacklistManager(ServletRequest request) {
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+		
+		BlacklistManager blacklistManager = webApplicationContext.getBean(BlacklistManager.class);
+		
+		return blacklistManager;		
+	}
+
 }

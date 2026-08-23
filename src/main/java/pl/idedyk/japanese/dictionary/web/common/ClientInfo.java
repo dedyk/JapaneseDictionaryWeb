@@ -21,6 +21,8 @@ public class ClientInfo implements Serializable {
 	public String autonomousSystemNumber;
 	public String autonomousSystemOrganization;
 	public String country;
+	
+	public Integer blackListLevel;
 
 	public HostBlockOperation hostBlockOperation = null;
 	public boolean doSendToLoggerListener = false;

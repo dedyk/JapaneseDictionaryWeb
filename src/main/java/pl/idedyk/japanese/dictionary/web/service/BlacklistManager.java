@@ -55,21 +55,13 @@ public class BlacklistManager {
 		logger.info("Nowa czarna lista liczy " + blacklist.size() + " pozycji.");
 	}
 	
-	public boolean isIpExistsInBlackList(String ip, int minLevel) {
+	public Integer getBlackListLevel(String ip) {
 		
 		if (blacklist == null) {
-			return false;
+			return null;
 		}
 		
-		Integer foundLevel = blacklist.get(ip);
-		
-		if (foundLevel == null) {
-			return false;
-		}
-		
-		logger.info("Znaleziono adres na czarnej liście: " + ip + ", poziom: " + foundLevel + ", wymagany poziom: " + minLevel);
-		
-		return foundLevel >= minLevel;
+		return blacklist.get(ip);
 	}
 	
 	public void downloadNewBlackList() {
