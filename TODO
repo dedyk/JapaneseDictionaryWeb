@@ -8,7 +8,7 @@
 * Slownik imion
 * Wyszukiwanie czytan znakow kanji
 ----- 2026 -----
-* Strona z dowolną treścią
++ * Strona z dowolną treścią
 + * Automatyczne blokowanie na czas, gdy ktoś wchodzi na wybrane strony
 + * Możliwy wyciek pamięci w FirewallFilter
 - * Wydzielić sprawdzanie liczby jednoczesnych połączeń z FirewallFilter
