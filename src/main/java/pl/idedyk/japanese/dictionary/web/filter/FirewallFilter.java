@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.apache.commons.text.RandomStringGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,6 +37,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.RedirectToCatchaLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService.ConfigWrapper;
+import pl.idedyk.japanese.dictionary.web.taglib.utils.PassiveExpiringMapWithAutoClearExpiredObjects;
 
 public class FirewallFilter implements Filter {
 	
@@ -52,7 +52,7 @@ public class FirewallFilter implements Filter {
 			"/android/", "/wordDictionary/autocomplete", "/kanjiDictionary/autocomplete"
 	};
 	
-	private PassiveExpiringMap<String, ClientIP> clientRateMemoryMap = new PassiveExpiringMap<>(CLIENT_RATE_REMEMBER_SECONDS, TimeUnit.SECONDS);
+	private PassiveExpiringMapWithAutoClearExpiredObjects<String, ClientIP> clientRateMemoryMap = new PassiveExpiringMapWithAutoClearExpiredObjects<>(CLIENT_RATE_REMEMBER_SECONDS, TimeUnit.SECONDS);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
