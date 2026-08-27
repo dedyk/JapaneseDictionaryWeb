@@ -42,7 +42,7 @@ public class ClientRateFilter implements Filter {
 	// private static final float CLIENT_RATE_THRESHOLD = 5.0f;
 	
 	private static final String[] CLIENT_RATE_URL_FILTER = new String[] {
-			"/android/", "/wordDictionary/autocomplete", "/kanjiDictionary/autocomplete"
+			"/android/", "/wordDictionary/autocomplete", "/kanjiDictionary/autocomplete", "/js/", "/css/"
 	};
 	
 	// mapa do liczenia liczby jednoczesnych polaczen dla wybranego adresu ip, aby wykrywac i blokowac ataki DDOS
