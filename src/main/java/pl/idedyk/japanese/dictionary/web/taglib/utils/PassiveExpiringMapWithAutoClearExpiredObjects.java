@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.collections4.map.PassiveExpiringMap;
+import org.apache.commons.collections4.map.PassiveExpiringMap.ExpirationPolicy;
 
 public class PassiveExpiringMapWithAutoClearExpiredObjects<K, V> {
 	
@@ -13,6 +14,12 @@ public class PassiveExpiringMapWithAutoClearExpiredObjects<K, V> {
 	
 	public PassiveExpiringMapWithAutoClearExpiredObjects(final long timeToLive, final TimeUnit timeUnit) {
 		passiveExpiringMap = new PassiveExpiringMap<K,V>(timeToLive, timeUnit);
+		
+		countNextAutoClearTime();
+	}
+	
+	public PassiveExpiringMapWithAutoClearExpiredObjects(ExpirationPolicy<K, V> expirationPolicy) {
+		passiveExpiringMap = new PassiveExpiringMap<K,V>(expirationPolicy);
 		
 		countNextAutoClearTime();
 	}

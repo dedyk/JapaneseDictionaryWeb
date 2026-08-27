@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.collections4.map.PassiveExpiringMap.ExpirationPolicy;
 import org.apache.commons.text.RandomStringGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,8 +53,25 @@ public class FirewallFilter implements Filter {
 			"/android/", "/wordDictionary/autocomplete", "/kanjiDictionary/autocomplete"
 	};
 	
+	// mapa do liczenia liczby jednoczesnych polaczen dla wybranego adresu ip, aby wykrywac i blokowac ataki DDOS
 	private PassiveExpiringMapWithAutoClearExpiredObjects<String, ClientIP> clientRateMemoryMap = new PassiveExpiringMapWithAutoClearExpiredObjects<>(CLIENT_RATE_REMEMBER_SECONDS, TimeUnit.SECONDS);
 
+	// gablota, tych klientow nie obslugujemy (w momencie, gdy przy blokadzie byl ustawiony czas)
+	private PassiveExpiringMapWithAutoClearExpiredObjects<String, ClientInfo> temporaryBlockMap = new PassiveExpiringMapWithAutoClearExpiredObjects<>(new ExpirationPolicy<String, ClientInfo>() {
+
+		@Override
+		public long expirationTime(String key, ClientInfo value) {
+			
+			if (value.hostBlockTime != null) { // tutaj czas jest w sekundach
+				return System.currentTimeMillis() + value.hostBlockTime * 1000;
+			}
+			
+			// to nigdy nie powinno zdarzyc sie
+			return 0;
+		}
+		
+	});
+	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		// noop
@@ -67,7 +85,15 @@ public class FirewallFilter implements Filter {
 		return configService;		
 	}
 		
-	private void isClientBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo) {
+	private void isClientBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo, ClientInfo blockOldClientInfo) {
+
+		// czy jest stara istniejaca blokada czasowa
+		if (blockOldClientInfo != null && blockOldClientInfo.hostBlockOperation == HostBlockOperation.BLOCK) { // tego klienta tymczasowo nie obslugujemy
+			clientInfo.hostBlockOperation = blockOldClientInfo.hostBlockOperation;
+			clientInfo.doSendToLoggerListener = blockOldClientInfo.doSendToLoggerListener;
+			
+			return;
+		}
 		
 		List<HostBlockList.HostBlock> hostBlockListList = configWrapper.getConfig().getFirewall().getHostBlockList().getHostBlock();		
 		List<HostBlockList.HostBlock> matchedHostBlockList = new ArrayList<>(); // lista dopasowanych konfiguracji
@@ -304,6 +330,7 @@ public class FirewallFilter implements Filter {
 			
 			if (hostBlockToUse != null) {
 				clientInfo.hostBlockOperation = hostBlockToUse.getOperation();
+				clientInfo.hostBlockTime = hostBlockToUse.getBlockTime() != null ? hostBlockToUse.getBlockTime().intValue() : null;
 				clientInfo.doSendToLoggerListener = hostBlockToUse.isSendToLoggerListener();
 			}			
 		}
@@ -323,8 +350,17 @@ public class FirewallFilter implements Filter {
 		// pobranie informacji o kliencie (tutaj zawsze cos musi byc)
 		ClientInfo clientInfo = (ClientInfo)request.getAttribute(ClientInfo.REQUEST_ATTRIBUTE);
 		
+		// sprawdzenie, czy tego klienta nie obslugujemy, gdyz mial ustawiony czas blokady
+		ClientInfo blockOldClientInfo = null;
+		
+		if (clientInfo.ip != null) {
+			synchronized (temporaryBlockMap) {			
+				blockOldClientInfo = temporaryBlockMap.get(clientInfo.ip);
+			}
+		}
+				
 		// sprawdzenie, czy zablokowac danego clientInfo
-		isClientBlocked(configWrapper, clientInfo);
+		isClientBlocked(configWrapper, clientInfo, blockOldClientInfo);
 				
 		// dodatkowe sprawdzenie, czy wywolanie nie pochodzi z aplikacji na Androida, jesli tak to pozwalamy na nie
 		if (	clientInfo.hostBlockOperation != null && clientInfo.httpMethod != null && clientInfo.httpMethod.equals("POST") == true && 
@@ -402,8 +438,18 @@ public class FirewallFilter implements Filter {
 			}
 			
 			if (clientInfo.hostBlockOperation == HostBlockOperation.BLOCK) { // zwykla blokada
-				logger.info("Blokowanie ip/host/user agent/url: " + clientInfo.ip + " (" + clientInfo.autonomousSystemNumber + ", " + clientInfo.country + ") / " + clientInfo.hostName + " / " + clientInfo.userAgent + " / " + clientInfo.fullUrl);
-								
+				logger.info("Blokowanie ip/host/user agent/url: " + clientInfo.ip + 
+						" (" + clientInfo.autonomousSystemNumber + ", " + clientInfo.country + ") / " + clientInfo.hostName + " / " + clientInfo.userAgent + " / " + clientInfo.fullUrl + 
+						(clientInfo.hostBlockTime != null ? (" - tymczasowa blokana na " + clientInfo.hostBlockTime + " sekund") : ""));
+				
+				if (clientInfo.hostBlockTime != null) { // istnieje wskazanie blokady czasowej, wiec dodajemy klienta do gabloty: tych klientow nie obslugujemy (tymczasowo)	
+					if (clientInfo.ip != null) {
+						synchronized (temporaryBlockMap) {			
+							temporaryBlockMap.put(clientInfo.ip, clientInfo);
+						}
+					}
+				}
+				
 				// wysylamy brak dostepu
 				httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				
@@ -453,14 +499,16 @@ public class FirewallFilter implements Filter {
 					clientInfo.ip, clientInfo.hostName, clientInfo.userAgent, clientInfo.url, isClientRateExceededResult.callRate);
 			
 	        // logger
-	        ServletContext servletContext = request.getServletContext();
-			WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
-			
-			LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
-			
-			ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
-			
-			loggerSender.sendLog(clientBlockLoggerModel);
+			if (configWrapper.getConfig().getFirewall().getClientRateExceeded().isClientRateExceededSendToLoggerListener() == true) {
+		        ServletContext servletContext = request.getServletContext();
+				WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+				
+				LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
+				
+				ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
+				
+				loggerSender.sendLog(clientBlockLoggerModel);				
+			}			
 			
 			// wysylamy brak dostepu
 			httpServletResponse.setStatus(429);

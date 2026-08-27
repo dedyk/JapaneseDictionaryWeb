@@ -25,6 +25,7 @@ public class ClientInfo implements Serializable {
 	public Integer blackListLevel;
 
 	public HostBlockOperation hostBlockOperation = null;
+	public Integer hostBlockTime = null;
 	public boolean doSendToLoggerListener = false;
 }
 

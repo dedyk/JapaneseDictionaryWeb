@@ -53,7 +53,15 @@
 				
 				<xsd:element name="firewall" minOccurs="1" maxOccurs="1">
 					<xsd:complexType>						
-						<xsd:sequence>
+						<xsd:sequence>							
+							<xsd:element name="clientRateExceeded" minOccurs="1" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="clientRateExceededSendToLoggerListener" minOccurs="1" maxOccurs="1" type="xsd:boolean"/>
+									</xsd:sequence>
+								</xsd:complexType>
+							</xsd:element>
+												
 							<xsd:element name="hostBlockList" minOccurs="1" maxOccurs="1">
 								<xsd:complexType>
 									<xsd:sequence>
@@ -150,6 +158,7 @@
 																								
 												<xsd:attribute name="operation" use="required" type="hostBlockOperation" />
 												<xsd:attribute name="sendToLoggerListener" use="required" type="xsd:boolean" />
+												<xsd:attribute name="blockTime" use="optional" type="xsd:integer" />
 											</xsd:complexType>
 										</xsd:element>									
 									</xsd:sequence>								
