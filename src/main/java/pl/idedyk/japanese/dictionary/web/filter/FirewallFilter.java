@@ -452,12 +452,22 @@ public class FirewallFilter implements Filter {
 			logger.info("Przekroczono liczbę jednoczesnych wywolan, ip {}, host name: {}, user agent: {}, url: {}, call rate: {} ",
 					clientInfo.ip, clientInfo.hostName, clientInfo.userAgent, clientInfo.url, isClientRateExceededResult.callRate);
 			
+	        // logger
+	        ServletContext servletContext = request.getServletContext();
+			WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+			
+			LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
+			
+			ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
+			
+			loggerSender.sendLog(clientBlockLoggerModel);
+			
 			// wysylamy brak dostepu
 			httpServletResponse.setStatus(429);
 	        
 	        // zrobienie commit'a
 	        response.flushBuffer();
-	        
+	        	        
 	        return;
 	        
 		} else {

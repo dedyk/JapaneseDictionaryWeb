@@ -17,7 +17,7 @@ public class LoadTest {
 	public static void main(String[] args) throws Exception {
 		// 
 
-		final String URL = "https://localhost:8443/wordDictionary";
+		final String URL = "https://127.0.0.1:8443/wordDictionary";
 		final int NUMBER_OF_THREADS = 5;
 		final int NUMBER_OF_CALLS = 100;
 		final int[] SLEEP_RANGE = new int[] { 500, 501 };
@@ -94,6 +94,7 @@ public class LoadTest {
 	    sc.init(null, trustAllCerts, new java.security.SecureRandom());
 
 		HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+		HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
 	    
 		// tworzymy polaczenie
 		HttpsURLConnection httpURLConnection = (HttpsURLConnection)url.openConnection();
