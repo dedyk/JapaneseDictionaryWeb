@@ -20,7 +20,7 @@ public class LoadTest {
 		final String URL = "https://127.0.0.1:8443/wordDictionary";
 		final int NUMBER_OF_THREADS = 5;
 		final int NUMBER_OF_CALLS = 100;
-		final int[] SLEEP_RANGE = new int[] { 500, 501 };
+		final int[] SLEEP_RANGE = new int[] { 1000, 1001 };
 		
 		Runnable runnable = new Runnable() {
 			

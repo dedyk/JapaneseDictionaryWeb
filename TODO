@@ -11,5 +11,5 @@
 + * Strona z dowolną treścią
 + * Automatyczne blokowanie na czas, gdy ktoś wchodzi na wybrane strony
 + * Możliwy wyciek pamięci w FirewallFilter
-- * Wydzielić sprawdzanie liczby jednoczesnych połączeń z FirewallFilter
++ * Wydzielić sprawdzanie liczby jednoczesnych połączeń z FirewallFilter
 + * FirewallFilter przed RedirectFilter

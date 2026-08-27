@@ -57,7 +57,11 @@
 							<xsd:element name="clientRateExceeded" minOccurs="1" maxOccurs="1">
 								<xsd:complexType>
 									<xsd:sequence>
-										<xsd:element name="clientRateExceededSendToLoggerListener" minOccurs="1" maxOccurs="1" type="xsd:boolean"/>
+										<xsd:element name="clientRateRememberSeconds" minOccurs="1" maxOccurs="1" type="xsd:integer"/> <!-- ile sekund aplikacja ma zapamietywac adresy ip -->
+										<xsd:element name="clientRateRememberCallsSeconds" minOccurs="1" maxOccurs="1" type="xsd:integer"/> <!-- od ilu sekund zapamietywac wywolania -->
+										<xsd:element name="clientRateMinEnlistmentTimeSeconds" minOccurs="1" maxOccurs="1" type="xsd:integer"/> <!-- minimalny czas w sekundach od ktorego bedzie liczony poziom -->
+										<xsd:element name="clientRateThreashold" minOccurs="1" maxOccurs="1" type="xsd:float"/> <!-- prog od ktorego polaczenia sa blokowane -->
+										<xsd:element name="clientRateExceededSendToLoggerListener" minOccurs="1" maxOccurs="1" type="xsd:boolean"/> <!-- czy wysylac informacje do logger listenera -->
 									</xsd:sequence>
 								</xsd:complexType>
 							</xsd:element>
