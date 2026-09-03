@@ -2,6 +2,7 @@ package pl.idedyk.japanese.dictionary.web.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 
 import org.apache.logging.log4j.LogManager;
@@ -23,11 +24,11 @@ public class GeoIPService {
 	
 	private static final Logger logger = LogManager.getLogger(GeoIPService.class);
 	
-	@Value("${geoip.db.city.path}")
-	private String dbCityPath;
+	// @Value("${geoip.db.city.path}")
+	// private String dbCityPath;
 
-	@Value("${geoip.db.asn.path}")
-	private String dbASNPath;
+	// @Value("${geoip.db.asn.path}")
+	// private String dbASNPath;
 
 	private DatabaseReader cityDatabaseReader = null;
 	private DatabaseReader asnDatabaseReader = null;
@@ -37,8 +38,25 @@ public class GeoIPService {
 		
 		logger.info("Inicjalizacja GeoIPService");
 		
-		cityDatabaseReader = new DatabaseReader.Builder(new File(dbCityPath)).withCache(new CHMCache()).build();
-		asnDatabaseReader = new DatabaseReader.Builder(new File(dbASNPath)).withCache(new CHMCache()).build();
+		// cityDatabaseReader = new DatabaseReader.Builder(new File(dbCityPath)).withCache(new CHMCache()).build();
+		// asnDatabaseReader = new DatabaseReader.Builder(new File(dbASNPath)).withCache(new CHMCache()).build();
+		
+		InputStream geoLite2CityInputStream = GeoIPService.class.getResourceAsStream("/geoip/GeoLite2-City.mmdb");
+		InputStream geoLite2AsnInputStream = GeoIPService.class.getResourceAsStream("/geoip/GeoLite2-ASN.mmdb");
+		
+		if (geoLite2CityInputStream != null) {
+			cityDatabaseReader = new DatabaseReader.Builder(geoLite2CityInputStream).withCache(new CHMCache()).build();
+			
+		} else {
+			logger.warn("Nie wczytano pliku GeoLite2-City.mmdb");
+		}
+		
+		if (geoLite2AsnInputStream != null) {
+			asnDatabaseReader = new DatabaseReader.Builder(geoLite2AsnInputStream).withCache(new CHMCache()).build();
+			
+		} else {
+			logger.warn("Nie wczytano pliku GeoLite2-ASN.mmdb");
+		}
 	}
 	
 	public String getCountry(String ip) {
@@ -112,7 +130,11 @@ public class GeoIPService {
 	}
 	
 	private CityResponse getCityResponse(String ip) {
-				
+		
+		if (cityDatabaseReader == null) {
+			return null;
+		}
+		
 		try {
 			InetAddress inetAddress = getInetAddress(ip);
 			
@@ -164,6 +186,10 @@ public class GeoIPService {
 	}
 	
 	public AsnResponse getAutonomousSystem(String ip) {
+		
+		if (asnDatabaseReader == null) {
+			return null;
+		}
 		
 		try {
 			InetAddress inetAddress = getInetAddress(ip);
