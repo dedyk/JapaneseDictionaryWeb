@@ -105,7 +105,7 @@ public class GeoIPService {
 			return inetAddress;
 		
 		} catch (Exception e) {
-			logger.error("Can't get inet address", e);
+			logger.error("Can't get inet address: " + e.getClass() + " - " + e.getMessage());
 			
 			return null;			
 		}
@@ -123,7 +123,7 @@ public class GeoIPService {
 			return cityDatabaseReader.city(inetAddress);
 		
 		} catch (Exception e) {
-			logger.error("Can't get city response", e);
+			logger.error("Can't get city response: " + e.getClass() + " - " + e.getMessage());
 			
 			return null;			
 		}
@@ -175,7 +175,7 @@ public class GeoIPService {
 			return asnDatabaseReader.asn(inetAddress);
 		
 		} catch (Exception e) {
-			logger.error("Can't get asn response", e);
+			logger.error("Can't get asn response: " + e.getClass() + " - " + e.getMessage());
 			
 			return null;			
 		}
