@@ -1,9 +1,12 @@
 package pl.idedyk.japanese.dictionary.web.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +38,7 @@ public class SitemapController {
 	
 	@Autowired
 	private LoggerSender loggerSender;
-	
+		
     @RequestMapping(value = "/sitemap.xml", method = RequestMethod.GET)
 	public void sitemap(HttpServletRequest request, HttpServletResponse response, HttpSession session, OutputStream outputStream) throws IOException {
 	
@@ -136,6 +139,37 @@ public class SitemapController {
 			
 			loggerSender.sendLog(pageNoFoundExceptionLoggerModel);
 		}
+	}    
+
+    @RequestMapping(value = "/sitemap/info", method = RequestMethod.GET)
+	public void sitemapDynamicInfo(HttpServletRequest request, HttpServletResponse response, HttpSession session, OutputStream outputStream) throws IOException {
+	
+		logger.info("Generowanie pliku sitemap dla dynamicznych stron info");
+		
+		// logowanie
+		loggerSender.sendLog(new SitemapGenerateLoggerModel(Utils.createLoggerModelCommon(request)));
+		
+		// pobranie zawartosci sitemap info
+		String infoDynamicSitemapBody;
+		
+		try {
+			infoDynamicSitemapBody = sitemapManager.getInfoDynamicSitemapBody();
+			
+		} catch (IOException | XMLStreamException e) {
+			
+			response.sendError(503);
+			
+			ServiceUnavailableExceptionLoggerModel serviceUnavailableExceptionLoggerModel = new ServiceUnavailableExceptionLoggerModel(Utils.createLoggerModelCommon(request));
+			
+			loggerSender.sendLog(serviceUnavailableExceptionLoggerModel);
+			
+			return;			
+		}
+		
+		response.setContentType("application/xml");
+		
+		// wyslanie zawartosci
+		copyStream(new ByteArrayInputStream(infoDynamicSitemapBody.getBytes()), outputStream);
 	}    
     
 	private void copyStream(InputStream input, OutputStream output) throws IOException {

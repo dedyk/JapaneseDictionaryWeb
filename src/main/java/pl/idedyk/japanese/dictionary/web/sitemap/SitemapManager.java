@@ -2,6 +2,8 @@ package pl.idedyk.japanese.dictionary.web.sitemap;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -20,6 +22,7 @@ import java.util.regex.Pattern;
 import jakarta.annotation.PostConstruct;
 
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,9 +30,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import pl.idedyk.japanese.dictionary.web.common.LinkGenerator;
+import pl.idedyk.japanese.dictionary.web.config.xsd.InfoPage;
 import pl.idedyk.japanese.dictionary.web.dictionary.DictionaryManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager;
 import pl.idedyk.japanese.dictionary.web.dictionary.DirectoryIndexManager.IndexSectionType;
+import pl.idedyk.japanese.dictionary.web.service.ConfigService;
+import pl.idedyk.japanese.dictionary.web.service.ConfigService.ConfigWrapper;
 import pl.idedyk.japanese.dictionary.web.sitemap.exception.NotInitializedException;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.DictionaryIndex;
 import pl.idedyk.japanese.dictionary2.dictionaryindex.xsd.EntryIndex;
@@ -53,6 +59,9 @@ public class SitemapManager {
 	
 	@Autowired
 	private DirectoryIndexManager directoryIndexManager;
+	
+	@Autowired
+	private ConfigService configService;
 	
 	private static final SimpleDateFormat lastModifiedSDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 	
@@ -358,12 +367,20 @@ public class SitemapManager {
 				
 				xmlStreamWriter.writeEndElement(); // sitemap				
 			}			
-		}		
-				
+		}
+		
+		// dodatkowo dodanie listy z dynamiczna lista info
+		xmlStreamWriter.writeStartElement("sitemap"); // sitemap		
+		xmlStreamWriter.writeStartElement("loc");		
+		xmlStreamWriter.writeCharacters(baseServer + "/sitemap/info");			
+		xmlStreamWriter.writeEndElement(); // loc		
+		xmlStreamWriter.writeEndElement(); // sitemap		
+		
+		// tagi zamykajace		
 		xmlStreamWriter.writeEndElement(); // sitemapindex		
 		xmlStreamWriter.writeEndDocument();
 		
-		// zamkniecie
+		// zamkniecie dokumentu
 		xmlStreamWriter.flush();
 		xmlStreamWriter.close();
 		
@@ -538,6 +555,67 @@ public class SitemapManager {
 		}
 		
 		return sitemapFile;
+	}
+	
+	public String getInfoDynamicSitemapBody() throws XMLStreamException, IOException {
+		
+		// fabryczka xml-i
+		XMLOutputFactory xmlOutputFactory = XMLOutputFactory.newInstance();
+		
+		// zapisujemy zawartosc do pliku
+		StringWriter infoSitemapBody = new StringWriter();
+		
+		// utworzenie zapisywacza xml'i
+		XMLStreamWriter xmlStreamWriter = xmlOutputFactory.createXMLStreamWriter(infoSitemapBody);
+		
+		// zapis naglowka
+		xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
+		
+		// utworzenie glownego elementu
+		xmlStreamWriter.writeStartElement("urlset");
+		xmlStreamWriter.writeDefaultNamespace("http://www.sitemaps.org/schemas/sitemap/0.9");	
+
+		// pobranie konfiguracji
+		ConfigWrapper config = configService.getConfig();
+		
+		// pobranie wszystkich stron z konfiguracji i dodanie ich do listy
+		for (InfoPage.Page infoPage : config.getConfig().getInfoPage().getPage()) {
+			
+			if (infoPage.isSitemap() == false) {
+				continue;
+			}
+			
+			xmlStreamWriter.writeStartElement("url"); // url
+			
+			// loc
+			xmlStreamWriter.writeStartElement("loc");
+			xmlStreamWriter.writeCharacters(baseServer + "/info/" + infoPage.getCode());			
+			xmlStreamWriter.writeEndElement();
+			
+			// changefreq
+			xmlStreamWriter.writeStartElement("changefreq");
+			xmlStreamWriter.writeCharacters(ChangeFreqEnum.weekly.name());			
+			xmlStreamWriter.writeEndElement();
+			
+			// priority
+			xmlStreamWriter.writeStartElement("priority");
+			xmlStreamWriter.writeCharacters("0.4");			
+			xmlStreamWriter.writeEndElement();
+						
+			xmlStreamWriter.writeEndElement(); // url
+		}
+				
+		// zakonczenie zawartosci pliku
+		xmlStreamWriter.writeEndElement(); // urlset		
+		xmlStreamWriter.writeEndDocument();
+		
+		// zamkniecie
+		xmlStreamWriter.flush();
+		xmlStreamWriter.close();
+		
+		infoSitemapBody.close();
+
+		return infoSitemapBody.toString();		
 	}
 
 	public String getBaseServer() {

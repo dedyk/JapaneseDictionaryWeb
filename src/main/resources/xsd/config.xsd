@@ -250,6 +250,7 @@
 						<xsd:element name="pageDescription" type="xsd:string" minOccurs="1"/>						
 			      		<xsd:element name="content" type="xsd:string" minOccurs="1"/>	    	
 	    			</xsd:sequence>
+	    			<xsd:attribute name="sitemap" use="required" type="xsd:boolean" />
 	    		</xsd:complexType>
 	    	</xsd:element>	    
 	   	</xsd:sequence>
