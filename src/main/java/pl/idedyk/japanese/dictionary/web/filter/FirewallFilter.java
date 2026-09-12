@@ -69,14 +69,6 @@ public class FirewallFilter implements Filter {
 	}
 		
 	private void isClientBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo, ClientInfo blockOldClientInfo) {
-
-		// czy jest stara istniejaca blokada czasowa
-		if (blockOldClientInfo != null && (blockOldClientInfo.hostBlockOperation == HostBlockOperation.BLOCK || blockOldClientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCHA)) { // tego klienta tymczasowo nie obslugujemy
-			clientInfo.hostBlockOperation = blockOldClientInfo.hostBlockOperation;
-			clientInfo.doSendToLoggerListener = blockOldClientInfo.doSendToLoggerListener;
-			
-			return;
-		}
 		
 		List<HostBlockList.HostBlock> hostBlockListList = configWrapper.getConfig().getFirewall().getHostBlockList().getHostBlock();		
 		List<HostBlockList.HostBlock> matchedHostBlockList = new ArrayList<>(); // lista dopasowanych konfiguracji
@@ -287,7 +279,7 @@ public class FirewallFilter implements Filter {
 				matchedHostBlockList.add(hostBlock);
 			}
 		}
-		
+				
 		if (matchedHostBlockList.size() > 0) { // mamy cos dopasowane
 			
 			// sprawdzenie, ktore typy operacji wystepuja
@@ -316,6 +308,18 @@ public class FirewallFilter implements Filter {
 				clientInfo.hostBlockTime = hostBlockToUse.getBlockTime() != null ? hostBlockToUse.getBlockTime().intValue() : null;
 				clientInfo.doSendToLoggerListener = hostBlockToUse.isSendToLoggerListener();
 			}			
+		}
+		
+		// na koniec sprawdzenie, czy jest stara istniejaca blokada czasowa (ale nie jest to blokada wyliczona z konfiguracji)
+		if (	clientInfo.hostBlockOperation != HostBlockOperation.BLOCK && 
+				blockOldClientInfo != null && 
+				(blockOldClientInfo.hostBlockOperation == HostBlockOperation.BLOCK || blockOldClientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCHA)) { // tego klienta tymczasowo nie obslugujemy
+			
+			clientInfo.hostBlockOperation = blockOldClientInfo.hostBlockOperation;
+			// clientInfo.hostBlockTime = blockOldClientInfo.hostBlockTime;
+			clientInfo.doSendToLoggerListener = blockOldClientInfo.doSendToLoggerListener;
+			
+			return;
 		}
 	}
 
