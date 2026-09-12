@@ -71,7 +71,7 @@ public class FirewallFilter implements Filter {
 	private void isClientBlocked(ConfigWrapper configWrapper, ClientInfo clientInfo, ClientInfo blockOldClientInfo) {
 
 		// czy jest stara istniejaca blokada czasowa
-		if (blockOldClientInfo != null && blockOldClientInfo.hostBlockOperation == HostBlockOperation.BLOCK) { // tego klienta tymczasowo nie obslugujemy
+		if (blockOldClientInfo != null && (blockOldClientInfo.hostBlockOperation == HostBlockOperation.BLOCK || blockOldClientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCHA)) { // tego klienta tymczasowo nie obslugujemy
 			clientInfo.hostBlockOperation = blockOldClientInfo.hostBlockOperation;
 			clientInfo.doSendToLoggerListener = blockOldClientInfo.doSendToLoggerListener;
 			
@@ -462,7 +462,15 @@ public class FirewallFilter implements Filter {
 				httpServletResponse.getOutputStream().write(randomHtmlDoc.getBytes());
 				
 			} else if (clientInfo.hostBlockOperation == HostBlockOperation.REDIRECT_TO_CAPTCHA) { // przekierowanie do weryfikacji captcha
-								
+				
+				if (clientInfo.hostBlockTime != null) { // istnieje wskazanie blokady czasowej, wiec dodajemy klienta do gabloty: tych klientow nalezy zweryfikowac (tymczasowo)	
+					if (clientInfo.ip != null) {
+						synchronized (temporaryBlockMap) {			
+							temporaryBlockMap.put(clientInfo.ip, clientInfo);
+						}
+					}
+				}
+				
 				httpServletResponse.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
 				httpServletResponse.setHeader("Location", CaptchaController.CAPTCHA_URL_START);
 			}
