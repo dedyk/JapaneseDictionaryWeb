@@ -26,7 +26,7 @@ import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.ClientRateExceeded;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
-import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.ClientRateBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService;
 import pl.idedyk.japanese.dictionary.web.service.ConfigService.ConfigWrapper;
 import pl.idedyk.japanese.dictionary.web.taglib.utils.PassiveExpiringMapWithAutoClearExpiredObjects;
@@ -89,9 +89,9 @@ public class ClientRateFilter implements Filter {
 				
 				LoggerSender loggerSender = webApplicationContext.getBean(LoggerSender.class);
 				
-				ClientBlockLoggerModel clientBlockLoggerModel = new ClientBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
+				ClientRateBlockLoggerModel clientRateBlockLoggerModel = new ClientRateBlockLoggerModel(Utils.createLoggerModelCommon(httpServletRequest));
 				
-				loggerSender.sendLog(clientBlockLoggerModel);				
+				loggerSender.sendLog(clientRateBlockLoggerModel);				
 			}			
 			
 			// wysylamy brak dostepu

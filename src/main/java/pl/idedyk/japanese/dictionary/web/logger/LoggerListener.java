@@ -28,6 +28,7 @@ import pl.idedyk.japanese.dictionary.web.logger.model.CatchaIncorrectLoggerModel
 import pl.idedyk.japanese.dictionary.web.logger.model.CatchaStartLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockInfoOnlyLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.ClientBlockLoggerModel;
+import pl.idedyk.japanese.dictionary.web.logger.model.ClientRateBlockLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.DailyReportLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.FaviconIconSendLoggerModel;
 import pl.idedyk.japanese.dictionary.web.logger.model.GeneralExceptionLoggerModel;
@@ -1246,6 +1247,9 @@ public class LoggerListener {
 			
 		} else if (ClientBlockInfoOnlyLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.CLIENT_BLOCK_INFO_ONLY;
+
+		} else if (ClientRateBlockLoggerModel.class.isAssignableFrom(clazz) == true) {
+			return GenericLogOperationEnum.CLIENT_RATE_BLOCK;			
 			
 		} else if (RedirectToCatchaLoggerModel.class.isAssignableFrom(clazz) == true) {
 			return GenericLogOperationEnum.REDIRECT_TO_CAPTCHA;
