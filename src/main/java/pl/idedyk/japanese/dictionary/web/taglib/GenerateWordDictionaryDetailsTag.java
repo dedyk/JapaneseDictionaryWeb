@@ -1944,52 +1944,48 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			kanjiTdH4.addHtmlElement(new Text(grammaFormKanjiSb.toString()));
 		}
 		
-		List<String> grammaFormKanaList = grammaFormConjugateResult.getKanaList();
-		List<String> grammaFormRomajiList = grammaFormConjugateResult.getRomajiList();
+		String grammaFormKana = grammaFormConjugateResult.getKana();
+		String grammaFormRomaji = grammaFormConjugateResult.getRomaji();
 
-		for (int idx = 0; idx < grammaFormKanaList.size(); ++idx) {
+		// kana
+		StringBuffer sb = new StringBuffer();
 
-			StringBuffer sb = new StringBuffer();
+		if (prefixKana != null && prefixKana.equals("") == false) {
+			sb.append("(").append(prefixKana).append(") ");
+		}
 
-			if (prefixKana != null && prefixKana.equals("") == false) {
-				sb.append("(").append(prefixKana).append(") ");
-			}
+		sb.append(grammaFormKana);
+		
+		Tr tr2 = new Tr();
+		table.addHtmlElement(tr2);
+		
+		Td kanaTd = new Td();
+		tr2.addHtmlElement(kanaTd);
+		
+		H kanaTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
+		kanaTd.addHtmlElement(kanaTdH4);
+		
+		kanaTdH4.addHtmlElement(new Text(sb.toString()));
+		
+		// romaji
+		StringBuffer grammaFormRomajiSb = new StringBuffer();
 
-			sb.append(grammaFormKanaList.get(idx));
-			
-			Tr tr2 = new Tr();
-			table.addHtmlElement(tr2);
-			
-			Td kanaTd = new Td();
-			tr2.addHtmlElement(kanaTd);
-			
-			H kanaTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
-			kanaTd.addHtmlElement(kanaTdH4);
-			
-			kanaTdH4.addHtmlElement(new Text(sb.toString()));
+		if (prefixRomaji != null && prefixRomaji.equals("") == false) {
+			grammaFormRomajiSb.append("(").append(prefixRomaji).append(") ");
 		}
 		
-		for (int idx = 0; idx < grammaFormRomajiList.size(); ++idx) {
+		grammaFormRomajiSb.append(grammaFormRomaji);
 
-			StringBuffer grammaFormRomajiSb = new StringBuffer();
-
-			if (prefixRomaji != null && prefixRomaji.equals("") == false) {
-				grammaFormRomajiSb.append("(").append(prefixRomaji).append(") ");
-			}
-			
-			grammaFormRomajiSb.append(grammaFormRomajiList.get(idx));
-
-			Tr tr3 = new Tr();
-			table.addHtmlElement(tr3);
-			
-			Td romajiTd = new Td();
-			tr3.addHtmlElement(romajiTd);
-			
-			H romajiTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
-			romajiTd.addHtmlElement(romajiTdH4);
-			
-			romajiTdH4.addHtmlElement(new Text(grammaFormRomajiSb.toString()));
-		}
+		Tr tr3 = new Tr();
+		table.addHtmlElement(tr3);
+		
+		Td romajiTd = new Td();
+		tr3.addHtmlElement(romajiTd);
+		
+		H romajiTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
+		romajiTd.addHtmlElement(romajiTdH4);
+		
+		romajiTdH4.addHtmlElement(new Text(grammaFormRomajiSb.toString()));
 		
 		String info = grammaFormConjugateResult.getInfo();
 		
@@ -2318,53 +2314,50 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			kanjiTdH4.addHtmlElement(new Text(exampleKanjiSb.toString()));
 		}
 		
-		List<String> exampleKanaList = exampleResult.getKanaList();
-		List<String> exampleRomajiList = exampleResult.getRomajiList();
+		String exampleKana = exampleResult.getKana();
+		String exampleRomaji = exampleResult.getRomaji();
 
-		for (int idx = 0; idx < exampleKanaList.size(); ++idx) {
+		// kana
+		StringBuffer sb = new StringBuffer();
 
-			StringBuffer sb = new StringBuffer();
+		if (prefixKana != null && prefixKana.equals("") == false) {
+			sb.append("(").append(prefixKana).append(") ");
+		}
 
-			if (prefixKana != null && prefixKana.equals("") == false) {
-				sb.append("(").append(prefixKana).append(") ");
-			}
+		sb.append(exampleKana);
+		
+		Tr tr2 = new Tr();
+		table.addHtmlElement(tr2);
+		
+		Td kanaTd = new Td();
+		tr2.addHtmlElement(kanaTd);
+		
+		H kanaTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
+		kanaTd.addHtmlElement(kanaTdH4);
+		
+		kanaTdH4.addHtmlElement(new Text(sb.toString()));
+		
+		// romaji
+		StringBuffer exampleRomajiSb = new StringBuffer();
 
-			sb.append(exampleKanaList.get(idx));
-			
-			Tr tr2 = new Tr();
-			table.addHtmlElement(tr2);
-			
-			Td kanaTd = new Td();
-			tr2.addHtmlElement(kanaTd);
-			
-			H kanaTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
-			kanaTd.addHtmlElement(kanaTdH4);
-			
-			kanaTdH4.addHtmlElement(new Text(sb.toString()));
+		if (prefixRomaji != null && prefixRomaji.equals("") == false) {
+			exampleRomajiSb.append("(").append(prefixRomaji).append(") ");
 		}
 		
-		for (int idx = 0; idx < exampleRomajiList.size(); ++idx) {
+		exampleRomajiSb.append(exampleRomaji);
 
-			StringBuffer exampleRomajiSb = new StringBuffer();
-
-			if (prefixRomaji != null && prefixRomaji.equals("") == false) {
-				exampleRomajiSb.append("(").append(prefixRomaji).append(") ");
-			}
-			
-			exampleRomajiSb.append(exampleRomajiList.get(idx));
-
-			Tr tr3 = new Tr();
-			table.addHtmlElement(tr3);
-			
-			Td romajiTd = new Td();
-			tr3.addHtmlElement(romajiTd);
-			
-			H romajiTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
-			romajiTd.addHtmlElement(romajiTdH4);
-			
-			romajiTdH4.addHtmlElement(new Text(exampleRomajiSb.toString()));
-		}
+		Tr tr3 = new Tr();
+		table.addHtmlElement(tr3);
 		
+		Td romajiTd = new Td();
+		tr3.addHtmlElement(romajiTd);
+		
+		H romajiTdH4 = new H(4, null, "margin-top: 0px; margin-bottom: 5px;");
+		romajiTd.addHtmlElement(romajiTdH4);
+		
+		romajiTdH4.addHtmlElement(new Text(exampleRomajiSb.toString()));
+		
+		// info
 		String info = exampleResult.getInfo();
 		
 		if (info != null) {
