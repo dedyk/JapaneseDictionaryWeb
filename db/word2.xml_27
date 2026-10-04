@@ -18074,9 +18074,9 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>word usually written using kana alone</misc>
-            <s_inf xml:lang="pol">zwierzę</s_inf>
+            <s_inf xml:lang="pol">gatunek ssaka z rodziny ryjówkowatych</s_inf>
             <gloss xml:lang="eng">Japanese shrew mole (Urotrichus talpoides)</gloss>
-            <gloss xml:lang="pol">urotrichus talpoides</gloss>
+            <gloss xml:lang="pol">Urotrichus talpoides</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -60253,6 +60253,8 @@
             <gloss xml:lang="eng">gold bullion quotation</gloss>
             <gloss xml:lang="eng">gold rate</gloss>
             <gloss xml:lang="eng">price of gold</gloss>
+            <gloss xml:lang="pol">notowania złota w sztabkach</gloss>
+            <gloss xml:lang="pol">kurs złota</gloss>
             <gloss xml:lang="pol">wycena złota</gloss>
             <gloss xml:lang="pol">cena złota</gloss>
         </sense>
@@ -91026,6 +91028,7 @@
             <gloss xml:lang="eng">animal spirit</gloss>
             <gloss xml:lang="eng">animal ghost</gloss>
             <gloss xml:lang="pol">zwierzęcy duch</gloss>
+            <gloss xml:lang="pol">duch zwierzęcia</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -125503,14 +125506,13 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>mahjong</field>
-            <s_inf xml:lang="pol">Mahjong</s_inf>
             <gloss xml:lang="eng">east round</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">runda wschodnia</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="133357" dictionaryEntryTypeList="WORD_NOUN" kanji="東場" kana="トンば" romaji="tonba" uniqueKey="東場/トンば/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -129430,7 +129432,7 @@
         <sense>
             <pos>expressions (phrases, clauses, etc.)</pos>
             <pos>particle</pos>
-            <xref type="see" seq="2201380" xr="わい">わい</xref>
+            <xref type="see" seq="2201380" sno="1" xr="わい">わい[1]</xref>
             <xref type="see" seq="1469800" sno="5" xr="の">の[5]</xref>
             <xref type="see" seq="2029110" sno="1" xr="な">な[1]</xref>
             <misc>archaic</misc>
@@ -146401,6 +146403,7 @@
             <gloss xml:lang="eng">vernacular</gloss>
             <gloss xml:lang="eng">local dialect</gloss>
             <gloss xml:lang="pol">dialekt</gloss>
+            <gloss xml:lang="pol">lokalny dialekt</gloss>
             <gloss xml:lang="pol">gwara</gloss>
             <gloss xml:lang="pol">żargon</gloss>
         </sense>
@@ -148136,6 +148139,7 @@
             <gloss xml:lang="pol">profesjonalista</gloss>
             <gloss xml:lang="pol">osoba dobra w określonej pracy</gloss>
             <gloss xml:lang="pol">osoba, która wykonuje pracę bez pomyłek</gloss>
+            <gloss xml:lang="pol">osoba, która wykonuje swoją pracę bezbłędnie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -161512,6 +161516,7 @@
             <s_inf xml:lang="pol">np. kwalifikacje, struktury administracyjne</s_inf>
             <gloss xml:lang="eng">mandatory requirements (e.g. qualifications, administrative structures, etc.)</gloss>
             <gloss xml:lang="pol">obowiązkowe wymagania</gloss>
+            <gloss xml:lang="pol">wymagania obowiązkowe</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -203057,6 +203062,7 @@
             <xref type="see" seq="1994130" xk="私服警官">私服警官</xref>
             <gloss xml:lang="eng">plainclothes police officer</gloss>
             <gloss xml:lang="eng">plain-clothes detective</gloss>
+            <gloss xml:lang="pol">policjant w cywilu</gloss>
             <gloss xml:lang="pol">funkcjonariusz policji w cywilu</gloss>
             <gloss xml:lang="pol">detektyw po cywilnemu</gloss>
         </sense>
@@ -205902,7 +205908,9 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <gloss xml:lang="eng">illegal street racers (on motorbikes)</gloss>
+            <xref type="see" seq="1146900" sno="3" xr="ローリング">ローリング[3]</xref>
+            <gloss xml:lang="eng">illegal mountain-road racers</gloss>
+            <gloss xml:lang="eng">illegal road racers</gloss>
             <gloss xml:lang="pol">nielegalne wyścigi uliczne (na motorach)</gloss>
         </sense>
         <misc>
@@ -233552,7 +233560,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">medical officer</gloss>
-            <gloss xml:lang="pol">lekarz wojskowy</gloss>
+            <gloss xml:lang="pol">lekarz</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>

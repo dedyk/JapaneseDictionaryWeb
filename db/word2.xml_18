@@ -1005,12 +1005,14 @@
             <gloss xml:lang="eng">intellectual class</gloss>
             <gloss xml:lang="eng">educated class</gloss>
             <gloss xml:lang="eng">intelligentsia</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">klasa intelektualna</gloss>
+            <gloss xml:lang="pol">klasa wykształcona</gloss>
+            <gloss xml:lang="pol">inteligencja</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="130300" dictionaryEntryTypeList="WORD_NOUN" kanji="知識階級" kana="ちしきかいきゅう" romaji="chishiki kaikyuu" uniqueKey="知識階級/ちしきかいきゅう/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -7936,7 +7938,7 @@
             <keb>花落ち</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="hanaochi">はなおち</reb>
+            <reb kana_type="HIRAGANA" romaji="hana ochi">はなおち</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -7945,7 +7947,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="50642" dictionaryEntryTypeList="WORD_NOUN" kanji="花落ち" kana="はなおち" romaji="hanaochi" uniqueKey="花落ち/はなおち/1"/>
+                <entries id="50642" dictionaryEntryTypeList="WORD_NOUN" kanji="花落ち" kana="はなおち" romaji="hana ochi" uniqueKey="花落ち/はなおち/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -18747,6 +18749,7 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <field>food, cooking</field>
             <s_inf xml:lang="pol">związane bambusowym kijkiem lub sznurkiem i przebite przez oczodoły</s_inf>
             <gloss xml:lang="eng">dried sardines (held together by a bamboo skewer or string piercing the eye sockets)</gloss>
             <gloss xml:lang="pol">suszone sardynki</gloss>
@@ -32662,6 +32665,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">general store</gloss>
             <gloss xml:lang="pol">sklep ogólny</gloss>
+            <gloss xml:lang="pol">sklep wielobranżowy</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -35899,6 +35903,9 @@
             <gloss xml:lang="eng">receiving state</gloss>
             <gloss xml:lang="eng">host nation</gloss>
             <gloss xml:lang="pol">kraj odbiorcy</gloss>
+            <gloss xml:lang="pol">kraj przyjmujący</gloss>
+            <gloss xml:lang="pol">państwo przyjmujące</gloss>
+            <gloss xml:lang="pol">kraj gospodarza</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -44802,8 +44809,8 @@
             <xref type="see" seq="1441830" sno="3" xk="伝" xr="でん">伝(でん)[3]</xref>
             <gloss xml:lang="eng">(admission to the) secrets of a discipline</gloss>
             <gloss xml:lang="eng">esoterics of a discipline</gloss>
-            <gloss xml:lang="pol">ezoteryczny</gloss>
-            <gloss xml:lang="pol">tajemniczy</gloss>
+            <gloss xml:lang="pol">(wtajemniczenie w) tajniki danej dziedziny</gloss>
+            <gloss xml:lang="pol">ezoteryka danej dziedziny</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -52728,7 +52735,7 @@
             <keb>隠花植物</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="inkashokubutsu">いんかしょくぶつ</reb>
+            <reb kana_type="HIRAGANA" romaji="inka shokubutsu">いんかしょくぶつ</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -52741,10 +52748,11 @@
             <gloss xml:lang="eng">cryptogamic plant</gloss>
             <gloss xml:lang="pol">kryptogram</gloss>
             <gloss xml:lang="pol">roślina zarodkowa</gloss>
+            <gloss xml:lang="pol">roślina kryptogamiczna</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="193293" dictionaryEntryTypeList="WORD_NOUN" kanji="隠花植物" kana="いんかしょくぶつ" romaji="inkashokubutsu" uniqueKey="隠花植物/いんかしょくぶつ/1"/>
+                <entries id="193293" dictionaryEntryTypeList="WORD_NOUN" kanji="隠花植物" kana="いんかしょくぶつ" romaji="inka shokubutsu" uniqueKey="隠花植物/いんかしょくぶつ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -63877,7 +63885,9 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">resort</gloss>
+            <gloss xml:lang="pol">kurort</gloss>
             <gloss xml:lang="pol">ośrodek wypoczynkowy</gloss>
+            <gloss xml:lang="pol">ośrodek wczasowy</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -80109,6 +80119,7 @@
             <gloss xml:lang="eng">astronomical observation</gloss>
             <gloss xml:lang="eng">stargazing</gloss>
             <gloss xml:lang="pol">obserwacja astronomiczna</gloss>
+            <gloss xml:lang="pol">obserwowanie gwiazd</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -85037,7 +85048,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">thumb print</gloss>
-            <gloss xml:lang="pol">odcisk kciuku</gloss>
+            <gloss xml:lang="pol">odcisk kciuka</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -123227,7 +123238,8 @@
             <pos>intransitive verb</pos>
             <gloss xml:lang="eng">to be completely satisfied</gloss>
             <gloss xml:lang="eng">to be completely contented</gloss>
-            <gloss xml:lang="pol">być całkowicie zadowolonym</gloss>
+            <gloss xml:lang="pol">być w pełni zadowolonym</gloss>
+            <gloss xml:lang="pol">być w pełni usatysfakcjonowanym</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -134216,6 +134228,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">stainless steel</gloss>
             <gloss xml:lang="pol">stal nierdzewna</gloss>
+            <gloss xml:lang="pol">nierdzewka</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -142922,7 +142935,8 @@
             <pos>Godan verb with 'su' ending</pos>
             <gloss xml:lang="eng">to form a crowd</gloss>
             <gloss xml:lang="eng">to have a crowd of people</gloss>
-            <gloss xml:lang="pol">tworzenie się tłum ludzi</gloss>
+            <gloss xml:lang="pol">formułować tłum</gloss>
+            <gloss xml:lang="pol">tworzyć tłum</gloss>
             <gloss xml:lang="pol">mieć tłum ludzi</gloss>
         </sense>
         <misc>
@@ -154506,7 +154520,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">single-handled pot</gloss>
             <gloss xml:lang="pol">garnek z jedną rączką</gloss>
-            <gloss xml:lang="pol">pojemnik z jedną dłuższą rączką</gloss>
+            <gloss xml:lang="pol">pojemnik z jedną rączką</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>

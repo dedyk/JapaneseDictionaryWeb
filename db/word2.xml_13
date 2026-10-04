@@ -13959,7 +13959,7 @@
             <gloss xml:lang="eng">liquidation (of a company)</gloss>
             <gloss xml:lang="eng">finishing remaining business</gloss>
             <gloss xml:lang="pol">likwidacja firmy</gloss>
-            <gloss xml:lang="pol">skończenie pozostałego interesu</gloss>
+            <gloss xml:lang="pol">zakończenie pozostałych spraw</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -89198,9 +89198,11 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">means</gloss>
             <gloss xml:lang="eng">way</gloss>
+            <gloss xml:lang="eng">method</gloss>
             <gloss xml:lang="eng">measure</gloss>
             <gloss xml:lang="pol">sposób</gloss>
             <gloss xml:lang="pol">środek</gloss>
+            <gloss xml:lang="pol">metoda</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -122529,6 +122531,7 @@
             <gloss xml:lang="eng">bleeding</gloss>
             <gloss xml:lang="eng">haemorrhage</gloss>
             <gloss xml:lang="eng">hemorrhage</gloss>
+            <gloss xml:lang="eng">bleed</gloss>
             <gloss xml:lang="pol">krwawienie</gloss>
             <gloss xml:lang="pol">krwotok</gloss>
         </sense>
@@ -188419,9 +188422,9 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">pious man</gloss>
             <gloss xml:lang="eng">religionist</gloss>
-            <gloss xml:lang="pol">pobożny osoba</gloss>
-            <gloss xml:lang="pol">współwyznawca</gloss>
-            <gloss xml:lang="pol">współwyznawczyni</gloss>
+            <gloss xml:lang="pol">pobożna osoba</gloss>
+            <gloss xml:lang="pol">religijna osoba</gloss>
+            <gloss xml:lang="pol">osoba głęboko wierząca</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -214317,7 +214320,6 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1601940" sno="1" xk="人差し指" xr="ひとさしゆび">人差し指(ひとさしゆび)[1]</xref>
             <misc>abbreviation</misc>
-            <s_inf xml:lang="pol">skrót</s_inf>
             <gloss xml:lang="eng">index finger</gloss>
             <gloss xml:lang="eng">forefinger</gloss>
             <gloss xml:lang="pol">palec wskazujący</gloss>
@@ -217716,7 +217718,7 @@
             <keb>人まかせ</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="hitomakase">ひとまかせ</reb>
+            <reb kana_type="HIRAGANA" romaji="hito makase">ひとまかせ</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -217726,8 +217728,8 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="103991" dictionaryEntryTypeList="WORD_NOUN" kanji="人任せ" kana="ひとまかせ" romaji="hitomakase" uniqueKey="人任せ/ひとまかせ/1"/>
-                <entries id="104011" dictionaryEntryTypeList="WORD_NOUN" kanji="人まかせ" kana="ひとまかせ" romaji="hitomakase" uniqueKey="人まかせ/ひとまかせ/1"/>
+                <entries id="103991" dictionaryEntryTypeList="WORD_NOUN" kanji="人任せ" kana="ひとまかせ" romaji="hito makase" uniqueKey="人任せ/ひとまかせ/1"/>
+                <entries id="104011" dictionaryEntryTypeList="WORD_NOUN" kanji="人まかせ" kana="ひとまかせ" romaji="hito makase" uniqueKey="人まかせ/ひとまかせ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -222486,6 +222488,7 @@
         </k_ele>
         <k_ele>
             <keb>吹荒れる</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="fuki areru">ふきあれる</reb>
@@ -225643,6 +225646,7 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">nagły wzrost ciśnienia</s_inf>
             <gloss xml:lang="eng">water hammer</gloss>
             <gloss xml:lang="pol">uderzenie hydrauliczne</gloss>
         </sense>

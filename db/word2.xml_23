@@ -48908,14 +48908,14 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">ang: brouter</s_inf>
+            <s_inf xml:lang="pol">router mostkowy</s_inf>
             <gloss xml:lang="eng">brouter (bridge router)</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">brouter</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="82164" dictionaryEntryTypeList="WORD_NOUN" kana="ブルータ" romaji="buruuta" uniqueKey="-/ブルータ/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -81702,7 +81702,7 @@
             <keb>欧字コード化集合</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA_KATAKANA" romaji="ouji koodo kashuugou">おうじコードかしゅうごう</reb>
+            <reb kana_type="HIRAGANA_KATAKANA" romaji="ouji koodo ka shuugou">おうじコードかしゅうごう</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -81712,7 +81712,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="97856" dictionaryEntryTypeList="WORD_NOUN" kanji="欧字コード化集合" kana="おうじコードかしゅうごう" romaji="ouji koodo kashuugou" uniqueKey="欧字コード化集合/おうじコードかしゅうごう/1"/>
+                <entries id="97856" dictionaryEntryTypeList="WORD_NOUN" kanji="欧字コード化集合" kana="おうじコードかしゅうごう" romaji="ouji koodo ka shuugou" uniqueKey="欧字コード化集合/おうじコードかしゅうごう/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -111996,10 +111996,10 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">ang: least significant digit</s_inf>
+            <s_inf xml:lang="pol">ang: least significant digit, LSD</s_inf>
             <gloss xml:lang="eng">least significant digit</gloss>
             <gloss xml:lang="eng">LSD</gloss>
-            <gloss xml:lang="pol">LSD</gloss>
+            <gloss xml:lang="pol">cyfra o najmniejszym znaczeniu</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -122958,12 +122958,12 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
             <gloss xml:lang="eng">trailer</gloss>
-            <gloss xml:lang="pol">trailer</gloss>
+            <gloss xml:lang="pol">???</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="111194" dictionaryEntryTypeList="WORD_NOUN" kanji="終端部" kana="しゅうたんぶ" romaji="shuutanbu" uniqueKey="終端部/しゅうたんぶ/1"/>
-                <attributeList type="PRIORITY" value="255"/>
+                <attributeList type="PRIORITY" value="999"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -144042,7 +144042,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka</s_inf>
             <gloss xml:lang="eng">MSS</gloss>
             <gloss xml:lang="eng">Mass Storage System</gloss>
             <gloss xml:lang="pol">system pamięci masowej</gloss>
@@ -180281,6 +180280,7 @@
             <field>computing</field>
             <gloss xml:lang="eng">effective data transfer rate</gloss>
             <gloss xml:lang="pol">efektywna prędkość przesyłu danych</gloss>
+            <gloss xml:lang="pol">efektywna prędkość transferu danych</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -187699,7 +187699,7 @@
             <keb>足まとい</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="ashimatoi">あしまとい</reb>
+            <reb kana_type="HIRAGANA" romaji="ashi matoi">あしまとい</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -187712,8 +187712,8 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="174699" dictionaryEntryTypeList="WORD_NOUN" kanji="足纏い" kana="あしまとい" romaji="ashimatoi" uniqueKey="足纏い/あしまとい/1"/>
-                <entries id="174738" dictionaryEntryTypeList="WORD_NOUN" kanji="足まとい" kana="あしまとい" romaji="ashimatoi" uniqueKey="足まとい/あしまとい/1"/>
+                <entries id="174699" dictionaryEntryTypeList="WORD_NOUN" kanji="足纏い" kana="あしまとい" romaji="ashi matoi" uniqueKey="足纏い/あしまとい/1"/>
+                <entries id="174738" dictionaryEntryTypeList="WORD_NOUN" kanji="足まとい" kana="あしまとい" romaji="ashi matoi" uniqueKey="足まとい/あしまとい/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>

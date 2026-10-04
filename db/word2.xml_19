@@ -9377,29 +9377,6 @@
         </misc>
     </entry>
     <entry>
-        <ent_seq>1905600</ent_seq>
-        <k_ele>
-            <keb>深い霧</keb>
-        </k_ele>
-        <r_ele>
-            <reb kana_type="HIRAGANA" romaji="fukai kiri">ふかいきり</reb>
-        </r_ele>
-        <sense>
-            <pos>expressions (phrases, clauses, etc.)</pos>
-            <pos>noun (common) (futsuumeishi)</pos>
-            <gloss xml:lang="eng">thick fog</gloss>
-            <gloss xml:lang="eng">dense fog</gloss>
-            <gloss xml:lang="pol">gęsta mgła</gloss>
-        </sense>
-        <misc>
-            <oldPolishJapaneseDictionary>
-                <entries id="11921" dictionaryEntryTypeList="WORD_NOUN,WORD_EXPRESSION" kanji="深い霧" kana="ふかいきり" romaji="fukai kiri" uniqueKey="深い霧/ふかいきり/1"/>
-                <attributeList type="PRIORITY" value="255"/>
-                <groupsList>OTHER</groupsList>
-            </oldPolishJapaneseDictionary>
-        </misc>
-    </entry>
-    <entry>
         <ent_seq>1905610</ent_seq>
         <k_ele>
             <keb>不覚を取る</keb>
@@ -46144,7 +46121,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1134320" xr="メンテナンス">メンテナンス</xref>
             <misc>abbreviation</misc>
-            <s_inf xml:lang="pol">skrót, ang: maintenance</s_inf>
+            <s_inf xml:lang="pol">ang: maintenance</s_inf>
             <gloss xml:lang="eng">maintenance</gloss>
             <gloss xml:lang="pol">konserwacja</gloss>
             <gloss xml:lang="pol">utrzymanie</gloss>
@@ -68081,7 +68058,7 @@
             <gloss xml:lang="eng">doer</gloss>
             <gloss xml:lang="eng">performer (of a deed)</gloss>
             <gloss xml:lang="eng">perpetrator</gloss>
-            <gloss xml:lang="pol">człowiek czynu</gloss>
+            <gloss xml:lang="pol">wykonawca czynności</gloss>
             <gloss xml:lang="pol">sprawca</gloss>
             <gloss xml:lang="pol">przestępca</gloss>
             <gloss xml:lang="pol">sprawca przestępstwa</gloss>
@@ -69738,9 +69715,11 @@
         <ent_seq>1936030</ent_seq>
         <k_ele>
             <keb>作業員</keb>
+            <ke_pri>spec2</ke_pri>
         </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="sagyouin">さぎょういん</reb>
+            <re_pri>spec2</re_pri>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -69753,7 +69732,8 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="63560" dictionaryEntryTypeList="WORD_NOUN" kanji="作業員" kana="さぎょういん" romaji="sagyouin" uniqueKey="作業員/さぎょういん/1"/>
-                <attributeList type="PRIORITY" value="255"/>
+                <attributeList type="COMMON_WORD"/>
+                <attributeList type="PRIORITY" value="108"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -74921,8 +74901,8 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">female friend</gloss>
             <gloss xml:lang="eng">woman friend</gloss>
-            <gloss xml:lang="pol">dziewczyna (przyjaciółka)</gloss>
             <gloss xml:lang="pol">przyjaciółka</gloss>
+            <gloss xml:lang="pol">kobieta-przyjaciółka</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -79147,6 +79127,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">livelihood assistance</gloss>
             <gloss xml:lang="pol">pomoc w utrzymaniu</gloss>
+            <gloss xml:lang="pol">pomoc w zakresie utrzymania</gloss>
             <gloss xml:lang="pol">wsparcie środków do życia</gloss>
         </sense>
         <misc>
@@ -91955,6 +91936,7 @@
             <gloss xml:lang="eng">divisional officer</gloss>
             <gloss xml:lang="pol">lider drużyny</gloss>
             <gloss xml:lang="pol">lider grupy</gloss>
+            <gloss xml:lang="pol">dowódca oddziału</gloss>
             <gloss xml:lang="pol">oficer dywizji</gloss>
         </sense>
         <misc>
@@ -125399,6 +125381,7 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">Coffea arabica</s_inf>
             <gloss xml:lang="eng">arabica coffee (Coffea arabica)</gloss>
             <gloss xml:lang="pol">kawa arabika</gloss>
         </sense>
@@ -127763,7 +127746,7 @@
             <pos>expressions (phrases, clauses, etc.)</pos>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>physics</field>
-            <s_inf xml:lang="pol">fizyka</s_inf>
+            <s_inf xml:lang="pol">prawo fizyki głoszące proporcjonalność natężenia prądu płynącego przez przewodnik do napięcia panującego między końcami przewodnika</s_inf>
             <gloss xml:lang="eng">Ohm's law</gloss>
             <gloss xml:lang="pol">prawo Ohma</gloss>
         </sense>
@@ -163460,6 +163443,8 @@
             <gloss xml:lang="eng">stratum corneum</gloss>
             <gloss xml:lang="eng">horny layer</gloss>
             <gloss xml:lang="eng">cornified layer</gloss>
+            <gloss xml:lang="pol">warstwa rogowa</gloss>
+            <gloss xml:lang="pol">warstwa zrogowaciała</gloss>
             <gloss xml:lang="pol">warstwa rogowa naskórka</gloss>
         </sense>
         <misc>

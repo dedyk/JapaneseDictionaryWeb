@@ -3562,14 +3562,28 @@
         </r_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="wae">わえ</reb>
+            <re_inf>rarely used kana form</re_inf>
         </r_ele>
         <sense>
             <pos>particle</pos>
             <xref type="see" seq="2029100" sno="1" xr="わ">わ[1]</xref>
-            <s_inf xml:lang="eng">sentence end, mainly masc.</s_inf>
-            <s_inf xml:lang="pol">używane głównie przez mężczyzn, umieszczane na końcu zdania</s_inf>
-            <gloss g_type="expl" xml:lang="eng">indicates emotion</gloss>
-            <gloss g_type="expl" xml:lang="pol">wskazywanie emocji</gloss>
+            <misc>dated term</misc>
+            <misc>male term or language</misc>
+            <s_inf xml:lang="eng">at sentence end; used chiefly by the elderly</s_inf>
+            <s_inf xml:lang="pol">na końcu zdania; używane głównie przez osoby starsze</s_inf>
+            <gloss xml:lang="eng">indicates emotion or exclamation</gloss>
+            <gloss xml:lang="pol">wskazuje na emocję lub okrzyk</gloss>
+        </sense>
+        <sense>
+            <pos>particle</pos>
+            <xref type="see" seq="2029090" sno="1" xr="よ">よ[1]</xref>
+            <misc>colloquial</misc>
+            <s_inf xml:lang="eng">dialectal; at sentence end; indicates certainty, emphasis, contempt, request, warning, etc.</s_inf>
+            <s_inf xml:lang="pol">dialektalne; na końcu zdania; wyraża pewność, nacisk, pogardę, prośbę, ostrzeżenie itp.</s_inf>
+            <gloss xml:lang="eng">hey</gloss>
+            <gloss xml:lang="eng">you</gloss>
+            <gloss xml:lang="pol">hej</gloss>
+            <gloss xml:lang="pol">ty</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -13685,9 +13699,9 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>historical term</misc>
-            <s_inf xml:lang="pol">około 1787 - 1843</s_inf>
+            <s_inf xml:lang="pol">między reformami Kansei a reformami Tempo, ok. 1787–1843</s_inf>
             <gloss xml:lang="eng">Ōgosho period (between the Kansei Reforms and the Tempo Reforms, approx. 1787-1843)</gloss>
-            <gloss xml:lang="pol">okres Ogosho</gloss>
+            <gloss xml:lang="pol">okres Ōgosho</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -52517,6 +52531,7 @@
             <gloss xml:lang="eng">thrust</gloss>
             <gloss xml:lang="pol">pchnięcie</gloss>
             <gloss xml:lang="pol">popchnięcie</gloss>
+            <gloss xml:lang="pol">popychanie</gloss>
             <gloss xml:lang="pol">nacisk</gloss>
         </sense>
         <misc>
@@ -131019,7 +131034,7 @@
             <keb>統計学者</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="toukeigakusha">とうけいがくしゃ</reb>
+            <reb kana_type="HIRAGANA" romaji="toukei gakusha">とうけいがくしゃ</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -131028,7 +131043,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="73082" dictionaryEntryTypeList="WORD_NOUN" kanji="統計学者" kana="とうけいがくしゃ" romaji="toukeigakusha" uniqueKey="統計学者/とうけいがくしゃ/1"/>
+                <entries id="73082" dictionaryEntryTypeList="WORD_NOUN" kanji="統計学者" kana="とうけいがくしゃ" romaji="toukei gakusha" uniqueKey="統計学者/とうけいがくしゃ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -136673,12 +136688,13 @@
             <field>grammar</field>
             <gloss xml:lang="eng">past progressive form</gloss>
             <gloss xml:lang="eng">past progressive tense</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">forma czasu przeszłego ciągłego</gloss>
+            <gloss xml:lang="pol">czas przeszły ciągły</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="85438" dictionaryEntryTypeList="WORD_NOUN" kanji="過去進行形" kana="かこしんこうけい" romaji="kako shinkoukei" uniqueKey="過去進行形/かこしんこうけい/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -143223,15 +143239,15 @@
             <pos>interjection (kandoushi)</pos>
             <xref type="see" seq="2037140" sno="1" xk="無ければ">無ければ[1]</xref>
             <misc>colloquial</misc>
-            <s_inf xml:lang="pol">kolokwializm</s_inf>
             <gloss xml:lang="eng">unless one ...</gloss>
             <gloss xml:lang="eng">if one does not ...</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">chyba że ktoś…</gloss>
+            <gloss xml:lang="pol">jeśli ktoś nie…</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="122426" dictionaryEntryTypeList="WORD_INTERJECTION" kanji="無けりゃ" kana="なけりゃ" romaji="nakerya" uniqueKey="無けりゃ/なけりゃ/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -188177,7 +188193,7 @@
             <keb>仮押さえ</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="kariosae">かりおさえ</reb>
+            <reb kana_type="HIRAGANA" romaji="kari osae">かりおさえ</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -188186,7 +188202,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="119213" dictionaryEntryTypeList="WORD_NOUN" kanji="仮押さえ" kana="かりおさえ" romaji="kariosae" uniqueKey="仮押さえ/かりおさえ/1"/>
+                <entries id="119213" dictionaryEntryTypeList="WORD_NOUN" kanji="仮押さえ" kana="かりおさえ" romaji="kari osae" uniqueKey="仮押さえ/かりおさえ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -199540,6 +199556,7 @@
             <field>mathematics</field>
             <gloss xml:lang="eng">octal</gloss>
             <gloss xml:lang="eng">base 8</gloss>
+            <gloss xml:lang="pol">ósemkowy</gloss>
             <gloss xml:lang="pol">system ósemkowy</gloss>
         </sense>
         <misc>
@@ -214580,6 +214597,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1960330" xk="顔文字">顔文字</xref>
+            <s_inf xml:lang="pol">szczególnie w zachodnim stylu</s_inf>
             <gloss xml:lang="eng">emoticon (esp. Western style)</gloss>
             <gloss xml:lang="pol">emoticon</gloss>
             <gloss xml:lang="pol">emotikona</gloss>

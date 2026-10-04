@@ -8455,7 +8455,7 @@
             <keb>走り抜く</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="hashirinuku">はしりぬく</reb>
+            <reb kana_type="HIRAGANA" romaji="hashiri nuku">はしりぬく</reb>
         </r_ele>
         <sense>
             <pos>Godan verb with 'ku' ending</pos>
@@ -8465,7 +8465,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="114138" dictionaryEntryTypeList="WORD_VERB_U" kanji="走り抜く" kana="はしりぬく" romaji="hashirinuku" uniqueKey="走り抜く/はしりぬく/1"/>
+                <entries id="114138" dictionaryEntryTypeList="WORD_VERB_U" kanji="走り抜く" kana="はしりぬく" romaji="hashiri nuku" uniqueKey="走り抜く/はしりぬく/1"/>
                 <attributeList type="PRIORITY" value="999"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -26601,7 +26601,7 @@
             <keb>太陽光線</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="taiyoukou sen">たいようこうせん</reb>
+            <reb kana_type="HIRAGANA" romaji="taiyou kousen">たいようこうせん</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -26612,7 +26612,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="60646" dictionaryEntryTypeList="WORD_NOUN" kanji="太陽光線" kana="たいようこうせん" romaji="taiyoukou sen" uniqueKey="太陽光線/たいようこうせん/1"/>
+                <entries id="60646" dictionaryEntryTypeList="WORD_NOUN" kanji="太陽光線" kana="たいようこうせん" romaji="taiyou kousen" uniqueKey="太陽光線/たいようこうせん/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -75193,6 +75193,10 @@
             <ke_pri>news1</ke_pri>
             <ke_pri>nf09</ke_pri>
         </k_ele>
+        <k_ele>
+            <keb>著物</keb>
+            <ke_inf>search-only kanji form</ke_inf>
+        </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="kimono">きもの</reb>
             <re_pri>ichi1</re_pri>
@@ -75217,10 +75221,12 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="982" dictionaryEntryTypeList="WORD_NOUN" kanji="着物" kana="きもの" romaji="kimono" uniqueKey="着物/きもの/1"/>
+                <entries id="327741" dictionaryEntryTypeList="WORD_NOUN" kanji="著物" kana="きもの" romaji="kimono" uniqueKey="著物/きもの/1"/>
                 <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="29"/>
                 <groupsList>GENKI_2_13</groupsList>
                 <groupsList>GENKI_KANJI_2_13</groupsList>
+                <groupsList>OTHER</groupsList>
                 <exampleSentenceGroupIdsList>24906</exampleSentenceGroupIdsList>
                 <exampleSentenceGroupIdsList>315763</exampleSentenceGroupIdsList>
                 <exampleSentenceGroupIdsList>320621</exampleSentenceGroupIdsList>
@@ -136390,7 +136396,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>word usually written using kana alone</misc>
-            <s_inf xml:lang="pol">gatunek żaby, rana nigromaculata, pelophylax nigromaculatus</s_inf>
+            <s_inf xml:lang="pol">gatunek żaby, Rana nigromaculata, Pelophylax nigromaculatus</s_inf>
             <gloss xml:lang="eng">black-spotted pond frog (Rana nigromaculata)</gloss>
             <gloss xml:lang="pol">rzekotka krzyżowa</gloss>
         </sense>
@@ -144180,7 +144186,9 @@
             <pos>Godan verb with 'su' ending</pos>
             <gloss xml:lang="eng">to go too far</gloss>
             <gloss xml:lang="eng">to go to excess</gloss>
+            <gloss xml:lang="pol">posunąć się za daleko</gloss>
             <gloss xml:lang="pol">pójść za daleko</gloss>
+            <gloss xml:lang="pol">przesadzić</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -190823,24 +190831,24 @@
             <keb>南京虫</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="KATAKANA_HIRAGANA" romaji="nankinmushi">ナンキンむし</reb>
+            <reb kana_type="KATAKANA_HIRAGANA" romaji="nankin mushi">ナンキンむし</reb>
         </r_ele>
         <r_ele>
-            <reb kana_type="KATAKANA" romaji="nankinmushi">ナンキンムシ</reb>
+            <reb kana_type="KATAKANA" romaji="nankin mushi">ナンキンムシ</reb>
             <re_nokanji/>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="2059050" xk="床虱">床虱</xref>
-            <s_inf xml:lang="pol">cimex lectularius, gatunek owada należący do rzędu pluskwiaków różnoskrzydłych, rodziny pluskwowatych</s_inf>
+            <s_inf xml:lang="pol">gatunek owada należący do podrzędu pluskwiaków różnoskrzydłych, rodziny pluskwowatych, Cimex lectularius</s_inf>
             <gloss xml:lang="eng">bed bug (Cimex lectularius)</gloss>
             <gloss xml:lang="eng">bedbug</gloss>
             <gloss xml:lang="pol">pluskwa domowa</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="66091" dictionaryEntryTypeList="WORD_NOUN" kanji="南京虫" kana="ナンキンむし" romaji="nankinmushi" uniqueKey="南京虫/ナンキンむし/1"/>
-                <entries id="66143" dictionaryEntryTypeList="WORD_NOUN" kana="ナンキンムシ" romaji="nankinmushi" uniqueKey="-/ナンキンムシ/1"/>
+                <entries id="66091" dictionaryEntryTypeList="WORD_NOUN" kanji="南京虫" kana="ナンキンむし" romaji="nankin mushi" uniqueKey="南京虫/ナンキンむし/1"/>
+                <entries id="66143" dictionaryEntryTypeList="WORD_NOUN" kana="ナンキンムシ" romaji="nankin mushi" uniqueKey="-/ナンキンムシ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -203295,10 +203303,12 @@
             <ke_pri>nf36</ke_pri>
         </k_ele>
         <k_ele>
-            <keb>日ぐれ</keb>
+            <keb>日暮</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <k_ele>
-            <keb>日暮</keb>
+            <keb>日ぐれ</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="higure">ひぐれ</reb>
@@ -203320,8 +203330,8 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="18757" dictionaryEntryTypeList="WORD_NOUN" kanji="日暮れ" kana="ひぐれ" romaji="higure" uniqueKey="日暮れ/ひぐれ/1"/>
-                <entries id="33005" dictionaryEntryTypeList="WORD_NOUN" kanji="日ぐれ" kana="ひぐれ" romaji="higure" uniqueKey="日ぐれ/ひぐれ/1"/>
                 <entries id="33006" dictionaryEntryTypeList="WORD_NOUN" kanji="日暮" kana="ひぐれ" romaji="higure" uniqueKey="日暮/ひぐれ/1"/>
+                <entries id="33005" dictionaryEntryTypeList="WORD_NOUN" kanji="日ぐれ" kana="ひぐれ" romaji="higure" uniqueKey="日ぐれ/ひぐれ/1"/>
                 <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="102"/>
                 <groupsList>OTHER</groupsList>
@@ -205992,11 +206002,11 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1465480" sno="1" xk="入り浸る">入り浸る[1]</xref>
-            <gloss xml:lang="eng">frequenting (a bar, etc.)</gloss>
-            <gloss xml:lang="eng">staying around (at someone's house, etc.)</gloss>
+            <gloss xml:lang="eng">frequenting (e.g. a bar)</gloss>
+            <gloss xml:lang="eng">staying around (e.g. at someone's house)</gloss>
             <gloss xml:lang="eng">haunting</gloss>
             <gloss xml:lang="pol">bywanie (w barze itp.)</gloss>
-            <gloss xml:lang="pol">przebywanie (w czyimś domu itp.)</gloss>
+            <gloss xml:lang="pol">przebywanie (np. w czyimś domu)</gloss>
             <gloss xml:lang="pol">???</gloss>
         </sense>
         <misc>
@@ -240453,7 +240463,7 @@
             <keb>麦打ち</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="mugiuchi">むぎうち</reb>
+            <reb kana_type="HIRAGANA" romaji="mugi uchi">むぎうち</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -240462,7 +240472,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="89637" dictionaryEntryTypeList="WORD_NOUN" kanji="麦打ち" kana="むぎうち" romaji="mugiuchi" uniqueKey="麦打ち/むぎうち/1"/>
+                <entries id="89637" dictionaryEntryTypeList="WORD_NOUN" kanji="麦打ち" kana="むぎうち" romaji="mugi uchi" uniqueKey="麦打ち/むぎうち/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -241748,7 +241758,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1718000" xk="裾回し">裾回し</xref>
             <gloss xml:lang="eng">lining for cuffs and hem of a kimono</gloss>
-            <gloss xml:lang="pol">wewnętrzny materiał używany wokół mankietu i brzegu ubrania</gloss>
+            <gloss xml:lang="pol">podszewka do mankietów i brzegu kimona</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -276829,6 +276839,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">style of penmanship</gloss>
             <gloss xml:lang="pol">styl kaligrafii</gloss>
+            <gloss xml:lang="pol">styl pisma</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -278805,7 +278816,6 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1488555" xk="百目">百目</xref>
             <misc>archaic</misc>
-            <s_inf xml:lang="pol">archaizm</s_inf>
             <gloss xml:lang="eng">375 grams (100 monme)</gloss>
             <gloss xml:lang="pol">375 gramów (100 monme)</gloss>
         </sense>
@@ -311562,6 +311572,10 @@
             <ke_pri>news2</ke_pri>
             <ke_pri>nf46</ke_pri>
         </k_ele>
+        <k_ele>
+            <keb>舞いこむ</keb>
+            <ke_inf>search-only kanji form</ke_inf>
+        </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="mai komu">まいこむ</reb>
             <re_pri>news2</re_pri>
@@ -311586,6 +311600,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="59675" dictionaryEntryTypeList="WORD_VERB_U" kanji="舞い込む" kana="まいこむ" romaji="mai komu" uniqueKey="舞い込む/まいこむ/1"/>
+                <entries id="11921" dictionaryEntryTypeList="WORD_VERB_U" kanji="舞いこむ" kana="まいこむ" romaji="mai komu" uniqueKey="舞いこむ/まいこむ/1"/>
                 <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>

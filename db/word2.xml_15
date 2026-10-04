@@ -6574,7 +6574,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">place sacred to Buddhism</gloss>
-            <gloss xml:lang="pol">miejsce święte dla buddyzmu</gloss>
+            <gloss xml:lang="pol">miejsce święte dla Buddyzmu</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -80713,6 +80713,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">all kinds of sicknesses</gloss>
             <gloss xml:lang="pol">wszystkie rodzaje chorób</gloss>
+            <gloss xml:lang="pol">wszelkiego rodzaju choroby</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -93624,7 +93625,7 @@
             <keb>無体財産</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="mutaizaisan">むたいざいさん</reb>
+            <reb kana_type="HIRAGANA" romaji="mutai zaisan">むたいざいさん</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -93633,7 +93634,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="88591" dictionaryEntryTypeList="WORD_NOUN" kanji="無体財産" kana="むたいざいさん" romaji="mutaizaisan" uniqueKey="無体財産/むたいざいさん/1"/>
+                <entries id="88591" dictionaryEntryTypeList="WORD_NOUN" kanji="無体財産" kana="むたいざいさん" romaji="mutai zaisan" uniqueKey="無体財産/むたいざいさん/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -130601,6 +130602,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <s_inf xml:lang="pol">np. w kierownicy</s_inf>
             <gloss xml:lang="eng">play (in a mechanism, e.g. a steering wheel)</gloss>
+            <gloss xml:lang="eng">slack</gloss>
             <gloss xml:lang="pol">luz (w mechanizmie)</gloss>
         </sense>
         <sense>
@@ -135691,8 +135693,10 @@
             <misc>formal or literary term</misc>
             <gloss xml:lang="eng">I</gloss>
             <gloss xml:lang="eng">me</gloss>
+            <gloss xml:lang="eng">(royal) we</gloss>
             <gloss xml:lang="pol">ja</gloss>
             <gloss xml:lang="pol">mnie</gloss>
+            <gloss xml:lang="pol">(królewskie) my</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -145245,6 +145249,7 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <gloss xml:lang="eng">element</gloss>
             <gloss xml:lang="eng">component</gloss>
             <gloss xml:lang="eng">factor</gloss>
             <gloss xml:lang="eng">item (e.g. in list)</gloss>
@@ -174451,10 +174456,10 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <pos>noun or participle which takes the aux. verb suru</pos>
-            <s_inf xml:lang="pol">dyskusja</s_inf>
             <gloss xml:lang="eng">taking turns reading, explaining, etc.</gloss>
             <gloss xml:lang="eng">round-table (discussion)</gloss>
-            <gloss xml:lang="pol">okrągły stół</gloss>
+            <gloss xml:lang="pol">czytanie na zmianę, wyjaśnianie itp.</gloss>
+            <gloss xml:lang="pol">okrągły stół (dyskusja)</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -180843,6 +180848,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">spiritual ability</gloss>
             <gloss xml:lang="pol">duchowa zdolność</gloss>
+            <gloss xml:lang="pol">zdolności duchowe</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -280238,6 +280244,14 @@
             <keb>行渡る</keb>
             <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
+        <k_ele>
+            <keb>いき渡る</keb>
+            <ke_inf>search-only kanji form</ke_inf>
+        </k_ele>
+        <k_ele>
+            <keb>ゆき渡る</keb>
+            <ke_inf>search-only kanji form</ke_inf>
+        </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="iki wataru">いきわたる</reb>
             <re_pri>ichi1</re_pri>
@@ -280268,6 +280282,10 @@
                 <entries id="101823" dictionaryEntryTypeList="WORD_VERB_U" kanji="行きわたる" kana="ゆきわたる" romaji="yuki wataru" uniqueKey="行きわたる/ゆきわたる/1"/>
                 <entries id="22375" dictionaryEntryTypeList="WORD_VERB_U" kanji="行渡る" kana="いきわたる" romaji="iki wataru" uniqueKey="行渡る/いきわたる/1"/>
                 <entries id="22376" dictionaryEntryTypeList="WORD_VERB_U" kanji="行渡る" kana="ゆきわたる" romaji="yuki wataru" uniqueKey="行渡る/ゆきわたる/1"/>
+                <entries id="327725" dictionaryEntryTypeList="WORD_VERB_U" kanji="いき渡る" kana="いきわたる" romaji="iki wataru" uniqueKey="いき渡る/いきわたる/1"/>
+                <entries id="327726" dictionaryEntryTypeList="WORD_VERB_U" kanji="いき渡る" kana="ゆきわたる" romaji="yuki wataru" uniqueKey="いき渡る/ゆきわたる/1"/>
+                <entries id="327727" dictionaryEntryTypeList="WORD_VERB_U" kanji="ゆき渡る" kana="いきわたる" romaji="iki wataru" uniqueKey="ゆき渡る/いきわたる/1"/>
+                <entries id="327728" dictionaryEntryTypeList="WORD_VERB_U" kanji="ゆき渡る" kana="ゆきわたる" romaji="yuki wataru" uniqueKey="ゆき渡る/ゆきわたる/1"/>
                 <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="102"/>
                 <groupsList>OTHER</groupsList>

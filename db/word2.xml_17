@@ -11510,16 +11510,16 @@
             <keb>縁切り寺</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="enkiridera">えんきりでら</reb>
+            <reb kana_type="HIRAGANA" romaji="enkiri dera">えんきりでら</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">(historic) a temple in which women seeking release from marriage could take refuge</gloss>
-            <gloss xml:lang="pol">świątynia, w której kobieta mogła schronić się szukając uwolnienia od małżeństwa</gloss>
+            <gloss xml:lang="pol">historyczna świątynia, w której kobieta mogła schronić się szukając uwolnienia od małżeństwa</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="67484" dictionaryEntryTypeList="WORD_NOUN" kanji="縁切り寺" kana="えんきりでら" romaji="enkiridera" uniqueKey="縁切り寺/えんきりでら/1"/>
+                <entries id="67484" dictionaryEntryTypeList="WORD_NOUN" kanji="縁切り寺" kana="えんきりでら" romaji="enkiri dera" uniqueKey="縁切り寺/えんきりでら/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -29077,12 +29077,12 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">deposit</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">depozyt</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="112171" dictionaryEntryTypeList="WORD_NOUN" kanji="予約金" kana="よやくきん" romaji="yoyakukin" uniqueKey="予約金/よやくきん/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -30326,12 +30326,14 @@
             <gloss xml:lang="eng">open-air storage</gloss>
             <gloss xml:lang="eng">piling up out in the open</gloss>
             <gloss xml:lang="eng">leaving in a pile outside</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">magazynowanie na wolnym powietrzu</gloss>
+            <gloss xml:lang="pol">gromadzenie na otwartej przestrzeni</gloss>
+            <gloss xml:lang="pol">pozostawianie na stosie na zewnątrz</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="108839" dictionaryEntryTypeList="WORD_NOUN" kanji="野積み" kana="のづみ" romaji="nodumi" uniqueKey="野積み/のづみ/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -107802,7 +107804,8 @@
             <xref type="see" seq="1786610" xk="大欲">大欲</xref>
             <gloss xml:lang="eng">(being) slightly covetous</gloss>
             <gloss xml:lang="eng">a little covetousness</gloss>
-            <gloss xml:lang="pol">(bycie) nieco chciwy</gloss>
+            <gloss xml:lang="pol">(bycie) nieco chciwym</gloss>
+            <gloss xml:lang="pol">odrobina chciwości</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -214261,12 +214264,13 @@
             <reb kana_type="HIRAGANA" romaji="ooarikui">おおありくい</reb>
         </r_ele>
         <r_ele>
-            <reb kana_type="KATAKANA" romaji="ooarikui">オオアリクイ</reb>
+            <reb kana_type="KATAKANA_EXCEPTION" romaji="ooarikui">オオアリクイ</reb>
             <re_nokanji/>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>word usually written using kana alone</misc>
+            <s_inf xml:lang="pol">gatunek ssaka z rodziny mrówkojadowatych, Myrmecophaga tridactyla</s_inf>
             <gloss xml:lang="eng">giant anteater (Myrmecophaga tridactyla)</gloss>
             <gloss xml:lang="pol">mrówkojad wielki</gloss>
         </sense>

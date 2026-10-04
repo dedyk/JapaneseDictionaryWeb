@@ -21396,6 +21396,7 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">wielkość astronomiczna</s_inf>
             <gloss xml:lang="eng">oblateness</gloss>
             <gloss xml:lang="pol">spłaszczenie</gloss>
         </sense>
@@ -26171,7 +26172,7 @@
             <keb>黒茶色</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="kuro cha iro">くろちゃいろ</reb>
+            <reb kana_type="HIRAGANA" romaji="kuro chairo">くろちゃいろ</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -26181,7 +26182,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="194382" dictionaryEntryTypeList="WORD_NOUN,WORD_ADJECTIVE_NO" kanji="黒茶色" kana="くろちゃいろ" romaji="kuro cha iro" uniqueKey="黒茶色/くろちゃいろ/1"/>
+                <entries id="194382" dictionaryEntryTypeList="WORD_NOUN,WORD_ADJECTIVE_NO" kanji="黒茶色" kana="くろちゃいろ" romaji="kuro chairo" uniqueKey="黒茶色/くろちゃいろ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -40479,8 +40480,8 @@
             <field>biology</field>
             <field>medicine</field>
             <gloss xml:lang="eng">reproductive function</gloss>
-            <gloss xml:lang="pol">funkcje rozrodcze</gloss>
-            <gloss xml:lang="pol">funkcje reprodukcyjne</gloss>
+            <gloss xml:lang="pol">funkcja rozrodcza</gloss>
+            <gloss xml:lang="pol">funkcja reprodukcyjna</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -66020,6 +66021,7 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">błona umożliwiająca latanie lub szybowanie u kręgowców</s_inf>
             <gloss xml:lang="eng">patagium (vertebrate flying or gliding membrane)</gloss>
             <gloss xml:lang="pol">błona lotna</gloss>
         </sense>
@@ -67379,7 +67381,7 @@
             <keb>公訴時効</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="kousojikou">こうそじこう</reb>
+            <reb kana_type="HIRAGANA" romaji="kouso jikou">こうそじこう</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -67388,11 +67390,11 @@
             <gloss xml:lang="eng">prescription of the right to prosecute an accused</gloss>
             <gloss xml:lang="eng">statute of limitation</gloss>
             <gloss xml:lang="pol">przedawnienie</gloss>
-            <gloss xml:lang="pol">przepisy o przedawnieniu</gloss>
+            <gloss xml:lang="pol">prawo o przedawnieniu</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="45218" dictionaryEntryTypeList="WORD_NOUN" kanji="公訴時効" kana="こうそじこう" romaji="kousojikou" uniqueKey="公訴時効/こうそじこう/1"/>
+                <entries id="45218" dictionaryEntryTypeList="WORD_NOUN" kanji="公訴時効" kana="こうそじこう" romaji="kouso jikou" uniqueKey="公訴時効/こうそじこう/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -73991,7 +73993,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="2531190" xk="卒制">卒制</xref>
             <gloss xml:lang="eng">art project which is done in place of a graduation thesis at a college of arts</gloss>
-            <gloss xml:lang="pol">projekt artystyczny, który jest gotowy w miejscu pracy dyplomowej na uczelni artystycznej</gloss>
+            <gloss xml:lang="pol">projekt artystyczny realizowany w ramach studiów artystycznych zamiast pracy dyplomowej</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -78724,15 +78726,14 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="2533200" xr="オフタートル">オフタートル</xref>
-            <s_inf xml:lang="pol">ang: French turtle</s_inf>
             <gloss xml:lang="eng">knit top with a loose turtleneck or cowl neck</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">dzianinowy top z luźnym golfem lub kołnierzem typu komin</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="74336" dictionaryEntryTypeList="WORD_NOUN" kana="フレンチタートル" romaji="furenchi taatoru" uniqueKey="-/フレンチタートル/1"/>
                 <entries id="74383" dictionaryEntryTypeList="WORD_NOUN" kana="フレンチ・タートル" romaji="furenchi taatoru" uniqueKey="-/フレンチ・タートル/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -176950,7 +176951,7 @@
             <keb>異端審問</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="itanshinmon">いたんしんもん</reb>
+            <reb kana_type="HIRAGANA" romaji="itan shinmon">いたんしんもん</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -176960,7 +176961,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="123665" dictionaryEntryTypeList="WORD_NOUN" kanji="異端審問" kana="いたんしんもん" romaji="itanshinmon" uniqueKey="異端審問/いたんしんもん/1"/>
+                <entries id="123665" dictionaryEntryTypeList="WORD_NOUN" kanji="異端審問" kana="いたんしんもん" romaji="itan shinmon" uniqueKey="異端審問/いたんしんもん/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -193552,7 +193553,7 @@
             <pos>expressions (phrases, clauses, etc.)</pos>
             <pos>Ichidan verb</pos>
             <gloss xml:lang="eng">to know much of the world</gloss>
-            <gloss xml:lang="pol">znać wiele świata</gloss>
+            <gloss xml:lang="pol">dobrze poznać świat</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -198001,7 +198002,6 @@
             <pos>transitive verb</pos>
             <xref type="see" seq="1519970" xk="膨らます">膨らます</xref>
             <misc>archaic</misc>
-            <s_inf xml:lang="pol">archaizm</s_inf>
             <gloss xml:lang="eng">to expand</gloss>
             <gloss xml:lang="eng">to inflate</gloss>
             <gloss xml:lang="pol">zwiększyć</gloss>
@@ -223820,7 +223820,8 @@
             <gloss xml:lang="eng">edge face</gloss>
             <gloss xml:lang="eng">end face</gloss>
             <gloss xml:lang="pol">krawędź</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">powierzchnia krawędzi</gloss>
+            <gloss xml:lang="pol">powierzchnia czołowa</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -234937,19 +234938,21 @@
             <keb>駆け去る</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="kakesaru">かけさる</reb>
+            <reb kana_type="HIRAGANA" romaji="kake saru">かけさる</reb>
         </r_ele>
         <sense>
             <pos>Godan verb with 'ru' ending</pos>
             <gloss xml:lang="eng">to dart away</gloss>
             <gloss xml:lang="eng">to dart off</gloss>
             <gloss xml:lang="eng">to gallop away</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">pędzić</gloss>
+            <gloss xml:lang="pol">pędzić w dal</gloss>
+            <gloss xml:lang="pol">galopować</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="57151" dictionaryEntryTypeList="WORD_VERB_U" kanji="駆け去る" kana="かけさる" romaji="kakesaru" uniqueKey="駆け去る/かけさる/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <entries id="57151" dictionaryEntryTypeList="WORD_VERB_U" kanji="駆け去る" kana="かけさる" romaji="kake saru" uniqueKey="駆け去る/かけさる/1"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>

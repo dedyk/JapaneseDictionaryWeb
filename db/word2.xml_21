@@ -3061,7 +3061,6 @@
             <pos>noun or participle which takes the aux. verb suru</pos>
             <xref type="see" seq="1109970" xr="フェラチオ">フェラチオ</xref>
             <misc>abbreviation</misc>
-            <s_inf xml:lang="pol">slang, skrót</s_inf>
             <gloss xml:lang="eng">fellatio</gloss>
             <gloss xml:lang="pol">fellatio</gloss>
             <gloss xml:lang="pol">robienie laski</gloss>
@@ -24014,10 +24013,12 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">advanced materials</gloss>
             <gloss xml:lang="eng">new high-tech materials</gloss>
+            <gloss xml:lang="pol">materiały zaawansowane</gloss>
             <gloss xml:lang="pol">zaawansowany materiał</gloss>
             <gloss xml:lang="pol">zaawansowane materiały</gloss>
             <gloss xml:lang="pol">najnowocześniejszy materiał</gloss>
             <gloss xml:lang="pol">najnowocześniejsze materiały</gloss>
+            <gloss xml:lang="pol">nowe materiały high-tech</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -46722,6 +46723,7 @@
             <gloss xml:lang="eng">to fall into disgrace with</gloss>
             <gloss xml:lang="eng">to incur someone's displeasure</gloss>
             <gloss xml:lang="pol">popaść w niełaskę</gloss>
+            <gloss xml:lang="pol">narazić się komuś</gloss>
             <gloss xml:lang="pol">narazić się na czyiś gniew</gloss>
         </sense>
         <misc>
@@ -55391,7 +55393,7 @@
             <pos>particle</pos>
             <xref type="see" seq="2017770" xr="かえ">かえ</xref>
             <xref type="see" seq="2428170" xr="ぞえ">ぞえ</xref>
-            <xref type="see" seq="2201380" xr="わえ">わえ</xref>
+            <xref type="see" seq="2201380" sno="1" xr="わえ">わえ[1]</xref>
             <misc>archaic</misc>
             <s_inf xml:lang="eng">at sentence end</s_inf>
             <s_inf xml:lang="pol">na końcu zdania</s_inf>
@@ -80199,7 +80201,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">word with difficult-to-read kanji</gloss>
-            <gloss xml:lang="pol">trudne słowo</gloss>
+            <gloss xml:lang="pol">słowo zawierające trudne do odczytania znaki kanji</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -91619,7 +91621,7 @@
             <ke_inf>rarely used kanji form</ke_inf>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="o oite">をおいて</reb>
+            <reb kana_type="HIRAGANA_EXCEPTION" romaji="o oite">をおいて</reb>
         </r_ele>
         <sense>
             <pos>expressions (phrases, clauses, etc.)</pos>
@@ -104555,8 +104557,8 @@
             <misc>archaic</misc>
             <gloss xml:lang="eng">presenting no difficulty</gloss>
             <gloss xml:lang="eng">not being a problem</gloss>
-            <gloss xml:lang="pol">nie przedstawiających żadnych trudności</gloss>
-            <gloss xml:lang="pol">nietrudny</gloss>
+            <gloss xml:lang="pol">niesprawiający żadnych trudności</gloss>
+            <gloss xml:lang="pol">niestanowiący problemu</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -120395,7 +120397,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1146810" sno="1" xk="ローマ字">ローマ字[1]</xref>
             <misc>rare term</misc>
-            <s_inf xml:lang="pol">szczególnie alfabet łaciński, mało znane słowo</s_inf>
+            <s_inf xml:lang="pol">szczególnie alfabet łaciński</s_inf>
             <gloss xml:lang="eng">characters used by Western civilization (esp. the Latin alphabet)</gloss>
             <gloss xml:lang="pol">znaki używane przez zachodnią cywilizację</gloss>
         </sense>
@@ -174793,8 +174795,9 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">leki zawierające arsen</s_inf>
             <gloss xml:lang="eng">arsenicals (drugs containing arsenic)</gloss>
-            <gloss xml:lang="pol">lekarstwo (narkotyk) zawierające arszenik</gloss>
+            <gloss xml:lang="pol">arseniki</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -210343,7 +210346,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">skewered fish (or vegetables, etc.) coated with miso and cooked</gloss>
-            <gloss xml:lang="pol">smażone ryby (lub warzywa) pokryte miso i gotowane</gloss>
+            <gloss xml:lang="pol">ryba (lub warzywa itp.) nadziana na szpikulec obtoczona miso i gotowana</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>

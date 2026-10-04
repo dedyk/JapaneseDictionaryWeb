@@ -2855,6 +2855,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">practice sword</gloss>
             <gloss xml:lang="eng">fake sword</gloss>
+            <gloss xml:lang="pol">miecz treningowy</gloss>
             <gloss xml:lang="pol">miecz do praktyk</gloss>
             <gloss xml:lang="pol">fałszywy miecz</gloss>
         </sense>
@@ -7632,7 +7633,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>trademark</field>
-            <s_inf xml:lang="pol">ang: invar</s_inf>
+            <s_inf xml:lang="pol">stop niklowo-stalowy</s_inf>
             <gloss xml:lang="eng">Invar (nickel-steel alloy)</gloss>
             <gloss xml:lang="pol">inwar</gloss>
         </sense>
@@ -25346,6 +25347,7 @@
             <gloss xml:lang="eng">transparent watercolor (as opposed to gouache)</gloss>
             <gloss xml:lang="eng">aquarelle</gloss>
             <gloss xml:lang="pol">akwarela</gloss>
+            <gloss xml:lang="pol">transparentna akwarela (w przeciwieństwie do gwaszu)</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -28292,6 +28294,8 @@
             <gloss xml:lang="eng">delinquent account charge</gloss>
             <gloss xml:lang="pol">zaległość w opłatach</gloss>
             <gloss xml:lang="pol">opłata za zwłokę</gloss>
+            <gloss xml:lang="pol">opłata za opóźnienie</gloss>
+            <gloss xml:lang="pol">opłata za zaległe płatności</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -60452,8 +60456,9 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>food, cooking</field>
+            <s_inf xml:lang="pol">lokalna specjalność z Hokkaido</s_inf>
             <gloss xml:lang="eng">soup made with salted or rice-bran-pickled fish, vegetables, and sometimes sake lees (Hokkaido local specialty dish)</gloss>
-            <gloss xml:lang="pol">[lokalna specjalna potrawa z Hokkaido]</gloss>
+            <gloss xml:lang="pol">zupa przygotowywana z ryb solonych lub marynowanych w otrębach ryżowych, warzyw, a czasem z osadu po destylacji sake</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -71473,6 +71478,7 @@
             <gloss xml:lang="eng">aluminium can</gloss>
             <gloss xml:lang="eng">aluminum can</gloss>
             <gloss xml:lang="pol">aluminiowa puszka</gloss>
+            <gloss xml:lang="pol">puszka aluminiowa</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -94945,7 +94951,8 @@
             <gloss xml:lang="eng">incessant falling (e.g. rain, snow)</gloss>
             <gloss xml:lang="eng">prolonged continuation (of something)</gloss>
             <gloss xml:lang="pol">bezustanne opady (np. deszczu, śniegu)</gloss>
-            <gloss xml:lang="pol">przedłużające się coś</gloss>
+            <gloss xml:lang="pol">nieustanne opady (np. deszczu, śniegu)</gloss>
+            <gloss xml:lang="pol">długotrwałe trwanie (czegoś)</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -105543,6 +105550,7 @@
             <gloss xml:lang="pol">mimo wszystko</gloss>
             <gloss xml:lang="pol">wszak</gloss>
             <gloss xml:lang="pol">wszakże</gloss>
+            <gloss xml:lang="pol">przecież</gloss>
             <gloss xml:lang="pol">ponieważ</gloss>
             <gloss xml:lang="pol">albowiem</gloss>
             <gloss xml:lang="pol">bo</gloss>
@@ -105571,7 +105579,9 @@
             <gloss xml:lang="eng">they say</gloss>
             <gloss xml:lang="eng">I hear</gloss>
             <gloss xml:lang="eng">you mean</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">mówią, że</gloss>
+            <gloss xml:lang="pol">słyszałem, że</gloss>
+            <gloss xml:lang="pol">masz na myśli</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -105588,7 +105598,11 @@
             <reb kana_type="HIRAGANA" romaji="tatte">たって</reb>
             <re_pri>spec1</re_pri>
         </r_ele>
+        <r_ele>
+            <reb kana_type="HIRAGANA" romaji="ttatte">ったって</reb>
+        </r_ele>
         <sense>
+            <stagr>たって</stagr>
             <pos>particle</pos>
             <s_inf xml:lang="eng">also だって</s_inf>
             <s_inf xml:lang="pol">również だって</s_inf>
@@ -105600,15 +105614,15 @@
         <sense>
             <pos>particle</pos>
             <xref type="see" seq="2136190" xr="といっても">といっても</xref>
-            <s_inf xml:lang="eng">also ったって</s_inf>
-            <s_inf xml:lang="pol">również ったって</s_inf>
             <gloss xml:lang="eng">although one might say</gloss>
             <gloss xml:lang="eng">although called</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">chociaż można by rzec</gloss>
+            <gloss xml:lang="pol">chociaż nazywane</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="94131" dictionaryEntryTypeList="WORD_PARTICULE" kana="たって" romaji="tatte" uniqueKey="-/たって/1"/>
+                <entries id="327744" dictionaryEntryTypeList="WORD_PARTICULE" kana="ったって" romaji="ttatte" uniqueKey="-/ったって/1"/>
                 <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="104"/>
                 <groupsList>OTHER</groupsList>
@@ -141337,8 +141351,8 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1949360" xk="地球温暖化防止">地球温暖化防止</xref>
             <misc>abbreviation</misc>
-            <s_inf xml:lang="pol">skrót</s_inf>
             <gloss xml:lang="eng">prevention of global warming</gloss>
+            <gloss xml:lang="pol">zapobieganie globalnemu ociepleniu</gloss>
             <gloss xml:lang="pol">zapobieganie ociepleniu klimatu</gloss>
         </sense>
         <misc>
@@ -179306,6 +179320,7 @@
             <gloss xml:lang="eng">likely</gloss>
             <gloss xml:lang="pol">prawdopodobny</gloss>
             <gloss xml:lang="pol">przypuszczalny</gloss>
+            <gloss xml:lang="pol">możliwy</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -227828,6 +227843,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">quantity of hot spring water</gloss>
             <gloss xml:lang="pol">ilość gorącej wody źródlanej</gloss>
+            <gloss xml:lang="pol">ilość wody termalnej</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>

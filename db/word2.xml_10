@@ -3276,10 +3276,13 @@
             <gloss xml:lang="eng">poop</gloss>
             <gloss xml:lang="eng">doo-doo</gloss>
             <gloss xml:lang="eng">caca</gloss>
+            <gloss xml:lang="eng">number two</gloss>
             <gloss xml:lang="eng">whoopsie</gloss>
             <gloss xml:lang="pol">kupka</gloss>
             <gloss xml:lang="pol">gówno</gloss>
             <gloss xml:lang="pol">odchody</gloss>
+            <gloss xml:lang="pol">kaka</gloss>
+            <gloss xml:lang="pol">numer dwa</gloss>
             <gloss xml:lang="pol">kał</gloss>
             <gloss xml:lang="pol">stolec</gloss>
         </sense>
@@ -41984,7 +41987,6 @@
         <lsource xml:lang="chi">bēngzi</lsource>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">chin: bēngzi</s_inf>
             <gloss xml:lang="eng">fraud</gloss>
             <gloss xml:lang="eng">swindle</gloss>
             <gloss xml:lang="pol">oszustwo</gloss>
@@ -110553,7 +110555,7 @@
             <s_inf xml:lang="pol">ang: key punch</s_inf>
             <gloss xml:lang="eng">keypunch</gloss>
             <gloss xml:lang="eng">card punching machine</gloss>
-            <gloss xml:lang="pol">dziurkarka klawiaturowa</gloss>
+            <gloss xml:lang="pol">maszyna do dziurkowania kart</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -181428,7 +181430,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <s_inf xml:lang="pol">rodzaj fryzury</s_inf>
             <gloss xml:lang="eng">spiky cut</gloss>
-            <gloss xml:lang="pol">ang: spiky cut</gloss>
+            <gloss xml:lang="pol">spiky cut</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -211888,7 +211890,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <s_inf xml:lang="pol">ang: topic news</s_inf>
             <gloss xml:lang="eng">topic news</gloss>
-            <gloss xml:lang="pol">temat wiadomości</gloss>
+            <gloss xml:lang="pol">wiadomości tematyczne</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>

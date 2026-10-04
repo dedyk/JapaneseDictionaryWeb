@@ -31575,6 +31575,11 @@
         </k_ele>
         <k_ele>
             <keb>刈取る</keb>
+            <ke_inf>search-only kanji form</ke_inf>
+        </k_ele>
+        <k_ele>
+            <keb>刈りとる</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="kari toru">かりとる</reb>
@@ -31592,10 +31597,21 @@
             <gloss xml:lang="pol">żąć (zboże)</gloss>
             <gloss xml:lang="pol">zbierać plony</gloss>
         </sense>
+        <sense>
+            <pos>Godan verb with 'ru' ending</pos>
+            <pos>transitive verb</pos>
+            <gloss xml:lang="eng">to eradicate</gloss>
+            <gloss xml:lang="eng">to root out (e.g. evil)</gloss>
+            <gloss xml:lang="eng">to remove</gloss>
+            <gloss xml:lang="pol">wyplenić</gloss>
+            <gloss xml:lang="pol">wykorzenić (np. zło)</gloss>
+            <gloss xml:lang="pol">usunąć</gloss>
+        </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="46378" dictionaryEntryTypeList="WORD_VERB_U" kanji="刈り取る" kana="かりとる" romaji="kari toru" uniqueKey="刈り取る/かりとる/1"/>
                 <entries id="46443" dictionaryEntryTypeList="WORD_VERB_U" kanji="刈取る" kana="かりとる" romaji="kari toru" uniqueKey="刈取る/かりとる/1"/>
+                <entries id="327730" dictionaryEntryTypeList="WORD_VERB_U" kanji="刈りとる" kana="かりとる" romaji="kari toru" uniqueKey="刈りとる/かりとる/1"/>
                 <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -286590,8 +286606,15 @@
             <pos>noun or participle which takes the aux. verb suru</pos>
             <pos>transitive verb</pos>
             <gloss xml:lang="eng">assessment (of value, damages, etc.)</gloss>
-            <gloss xml:lang="eng">revision (of a budget)</gloss>
+            <gloss xml:lang="eng">scrutiny (of budget requests, etc.)</gloss>
             <gloss xml:lang="pol">szacowanie (np. wartości, uszkodzeń i etc)</gloss>
+            <gloss xml:lang="pol">analiza (np. wniosków budżetowych)</gloss>
+        </sense>
+        <sense>
+            <pos>noun (common) (futsuumeishi)</pos>
+            <pos>noun or participle which takes the aux. verb suru</pos>
+            <pos>transitive verb</pos>
+            <gloss xml:lang="eng">revision (of a budget)</gloss>
             <gloss xml:lang="pol">korekta (budżetu)</gloss>
         </sense>
         <misc>

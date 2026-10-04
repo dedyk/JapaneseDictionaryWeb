@@ -2412,13 +2412,13 @@
             <reb kana_type="HIRAGANA" romaji="tsuruumemodoki">つるうめもどき</reb>
         </r_ele>
         <r_ele>
-            <reb kana_type="KATAKANA" romaji="tsuruumemodoki">ツルウメモドキ</reb>
+            <reb kana_type="KATAKANA_EXCEPTION" romaji="tsuruumemodoki">ツルウメモドキ</reb>
             <re_nokanji/>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>word usually written using kana alone</misc>
-            <s_inf xml:lang="pol">gatunek liściastego pnącza z rodziny dławiszowatych, celastrus orbiculatus</s_inf>
+            <s_inf xml:lang="pol">gatunek liściastego pnącza z rodziny dławiszowatych, Celastrus orbiculatus</s_inf>
             <gloss xml:lang="eng">Celastrus orbiculatus</gloss>
             <gloss xml:lang="pol">dławisz okrągłolistny</gloss>
         </sense>
@@ -60907,7 +60907,7 @@
         </r_ele>
         <sense>
             <pos>expressions (phrases, clauses, etc.)</pos>
-            <xref type="see" seq="2424510" xk="手段を選ばずに">手段を選ばずに</xref>
+            <xref type="see" seq="2830669" xk="手段を選ばない">手段を選ばない</xref>
             <gloss xml:lang="eng">to be willing to do anything (any trick) to achieve one's end</gloss>
             <gloss xml:lang="pol">bądź gotów zrobić wszystko (dowolny trik), aby osiągnąć swój cel</gloss>
         </sense>
@@ -64116,9 +64116,9 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">np. małżeństwa te samej płci, poligamia, małżeństwo z osobą nieletnią</s_inf>
+            <s_inf xml:lang="pol">np. małżeństwo osób tej samej płci, poligamia, małżeństwo z udziałem osób niepełnoletnich</s_inf>
             <gloss xml:lang="eng">international marriage which is recognized in only one party's country (e.g. same-sex marriage, polygamy, underage marriage)</gloss>
-            <gloss xml:lang="pol">międzynarodowe małżeństwo, które jest uznawane tylko w jednym kraju</gloss>
+            <gloss xml:lang="pol">małżeństwo międzynarodowe, które jest uznawane wyłącznie w kraju jednej ze stron</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -70242,7 +70242,7 @@
             <xref type="see" seq="2017770" xr="かい">かい</xref>
             <xref type="see" seq="2428170" xr="ぞい">ぞい</xref>
             <xref type="see" seq="2097680" sno="1" xr="だい">だい[1]</xref>
-            <xref type="see" seq="2201380" xr="わい">わい</xref>
+            <xref type="see" seq="2201380" sno="1" xr="わい">わい[1]</xref>
             <misc>familiar language</misc>
             <gloss xml:lang="eng">strengthens a question, assertion, etc.</gloss>
             <gloss xml:lang="pol">wzmacnianie pytania, stwierdzenia i etc</gloss>
@@ -100904,6 +100904,7 @@
             <misc>word usually written using kana alone</misc>
             <gloss xml:lang="eng">to give rein to (imagination)</gloss>
             <gloss xml:lang="pol">poddać się (wyobraźni)</gloss>
+            <gloss xml:lang="pol">dać upust (wyobraźni)</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -127772,10 +127773,10 @@
             <pos>nouns which may take the genitive case particle 'no'</pos>
             <xref type="see" seq="1582710" xk="日本">日本</xref>
             <misc>poetical term</misc>
-            <s_inf xml:lang="pol">archaizm</s_inf>
             <gloss xml:lang="eng">Japan</gloss>
             <gloss xml:lang="eng">Land of the Rising Sun</gloss>
             <gloss xml:lang="pol">Japonia</gloss>
+            <gloss xml:lang="pol">Kraina Wschodzącego Słońca</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -154543,8 +154544,7 @@
         <sense>
             <pos>nouns which may take the genitive case particle 'no'</pos>
             <gloss xml:lang="eng">untranslated</gloss>
-            <gloss xml:lang="pol">nieprzetłumaczalne</gloss>
-            <gloss xml:lang="pol">nieprzetłumaczalny</gloss>
+            <gloss xml:lang="pol">nieprzetłumaczony</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -199922,7 +199922,8 @@
             <s_inf xml:lang="pol">ang: free pistol</s_inf>
             <gloss xml:lang="eng">free pistol event</gloss>
             <gloss xml:lang="eng">50 metre pistol (meter)</gloss>
-            <gloss xml:lang="pol">pistolet dowolny</gloss>
+            <gloss xml:lang="pol">strzelanie z pistoletu dowolnego</gloss>
+            <gloss xml:lang="pol">pistolet, 50 metrów</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>

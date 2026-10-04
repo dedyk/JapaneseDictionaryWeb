@@ -31889,7 +31889,8 @@
             <pos>intransitive verb</pos>
             <gloss xml:lang="eng">entering and leaving a hospital</gloss>
             <gloss xml:lang="eng">admission and discharge</gloss>
-            <gloss xml:lang="pol">wejście i opuszczenie szpitala</gloss>
+            <gloss xml:lang="pol">przyjęcie do szpitala i opuszczenie szpitala</gloss>
+            <gloss xml:lang="pol">przyjęcie i wypisanie ze szpitala</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -112490,6 +112491,7 @@
             <gloss xml:lang="eng">demerit system</gloss>
             <gloss xml:lang="eng">points-off system</gloss>
             <gloss xml:lang="pol">system przewinień</gloss>
+            <gloss xml:lang="pol">system karny</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -114876,7 +114878,7 @@
             <keb>三文役者</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="sanmon'yakusha">さんもんやくしゃ</reb>
+            <reb kana_type="HIRAGANA" romaji="sanmon' yakusha">さんもんやくしゃ</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -114885,7 +114887,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="79445" dictionaryEntryTypeList="WORD_NOUN" kanji="三文役者" kana="さんもんやくしゃ" romaji="sanmon'yakusha" uniqueKey="三文役者/さんもんやくしゃ/1"/>
+                <entries id="79445" dictionaryEntryTypeList="WORD_NOUN" kanji="三文役者" kana="さんもんやくしゃ" romaji="sanmon' yakusha" uniqueKey="三文役者/さんもんやくしゃ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -117706,6 +117708,7 @@
             <gloss xml:lang="eng">stubbornly honest</gloss>
             <gloss xml:lang="pol">mocno uczciwy</gloss>
             <gloss xml:lang="pol">mocno rzetelny</gloss>
+            <gloss xml:lang="pol">uparcie uczciwy</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -129226,7 +129229,7 @@
             <gloss xml:lang="eng">wide knowledge and versatile talents</gloss>
             <gloss xml:lang="eng">profound learning and varied attainments</gloss>
             <gloss xml:lang="pol">szeroka wiedza i wszechstronne talenty</gloss>
-            <gloss xml:lang="pol">głęboka nauka i różnorodne osiągnięcia</gloss>
+            <gloss xml:lang="pol">głęboka wiedza i różnorodne osiągnięcia</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -150628,8 +150631,8 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">chairman of (party) policy bureau</gloss>
             <gloss xml:lang="eng">policy chief</gloss>
-            <gloss xml:lang="pol">przewodniczący biura politycznego (partyjny)</gloss>
-            <gloss xml:lang="pol">szef polityki</gloss>
+            <gloss xml:lang="pol">przewodniczący biura programowego (partii)</gloss>
+            <gloss xml:lang="pol">szef ds. programowych</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -185132,7 +185135,7 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">ang: french horn</s_inf>
+            <s_inf xml:lang="pol">instrument muzyczny, ang: French horn</s_inf>
             <gloss xml:lang="eng">French horn</gloss>
             <gloss xml:lang="pol">waltornia</gloss>
             <gloss xml:lang="pol">róg</gloss>
@@ -218139,6 +218142,7 @@
             <s_inf xml:lang="pol">skrócona forma od という</s_inf>
             <gloss xml:lang="eng">the said ...</gloss>
             <gloss xml:lang="eng">said ...</gloss>
+            <gloss xml:lang="pol">zwany</gloss>
             <gloss xml:lang="pol">tak zwany</gloss>
             <gloss xml:lang="pol">wspomniany</gloss>
         </sense>
@@ -237339,6 +237343,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">chaos on the roads</gloss>
+            <gloss xml:lang="eng">high incidence of road traffic casualties</gloss>
             <gloss g_type="lit" xml:lang="eng">traffic war</gloss>
             <gloss xml:lang="pol">chaos na drogach</gloss>
             <gloss xml:lang="pol">wojna drogowa</gloss>
@@ -237991,6 +237996,7 @@
             <gloss xml:lang="eng">learning disability</gloss>
             <gloss xml:lang="eng">learning disabled</gloss>
             <gloss xml:lang="pol">problemy z przyswajaniem wiedzy</gloss>
+            <gloss xml:lang="pol">trudności w uczeniu się</gloss>
             <gloss xml:lang="pol">kłopoty z uczeniem się</gloss>
         </sense>
         <misc>
@@ -243462,7 +243468,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>rare term</misc>
-            <s_inf xml:lang="pol">mało znane słowo</s_inf>
             <gloss xml:lang="eng">Buddhist image used as jewellery or to decorate one's home</gloss>
             <gloss xml:lang="pol">buddyjski wizerunek używany jako biżuteria lub do dekoracji własnego domu</gloss>
         </sense>

@@ -118918,6 +118918,7 @@
             <gloss xml:lang="eng">evil practices</gloss>
             <gloss xml:lang="pol">zły nawyk</gloss>
             <gloss xml:lang="pol">złe praktyki</gloss>
+            <gloss xml:lang="pol">niegodziwe praktyki</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -201172,11 +201173,14 @@
             <keb>鉛製</keb>
         </k_ele>
         <r_ele>
+            <reb kana_type="HIRAGANA" romaji="namarisei">なまりせい</reb>
+        </r_ele>
+        <r_ele>
             <reb kana_type="HIRAGANA" romaji="ensei">えんせい</reb>
         </r_ele>
         <sense>
-            <pos>noun (common) (futsuumeishi)</pos>
             <pos>nouns which may take the genitive case particle 'no'</pos>
+            <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">leaden</gloss>
             <gloss xml:lang="eng">made of lead</gloss>
             <gloss xml:lang="pol">ołowiany</gloss>
@@ -201184,6 +201188,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
+                <entries id="327742" dictionaryEntryTypeList="WORD_NOUN,WORD_ADJECTIVE_NO" kanji="鉛製" kana="なまりせい" romaji="namarisei" uniqueKey="鉛製/なまりせい/1"/>
                 <entries id="104112" dictionaryEntryTypeList="WORD_NOUN,WORD_ADJECTIVE_NO" kanji="鉛製" kana="えんせい" romaji="ensei" uniqueKey="鉛製/えんせい/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
@@ -215811,6 +215816,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">kindly face</gloss>
             <gloss xml:lang="pol">życzliwa twarz</gloss>
+            <gloss xml:lang="pol">miła twarz</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
