@@ -2045,7 +2045,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			/// 
 			
 			// pogrupowanie typow przykladow dla typow
-			Map<DictionaryEntryType, Map<ExampleGroupType, Map<Integer, List<ExampleResult>>>> examplesGroupedByDictionaryEntryTypeMap = new LinkedHashMap<>();
+			Map<DictionaryEntryType, Map<ExampleGroupType, Map<Integer, Map<Integer, List<ExampleResult>>>>> examplesGroupedByDictionaryEntryTypeMap = new LinkedHashMap<>();
 			
 			for (Map.Entry<Integer, GrammaFormConjugateAndExampleEntry> grammaFormConjugateAndExampleEntryMapEntry : grammaFormConjugateAndExampleEntryMap.entrySet()) {			
 				for (GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType : grammaFormConjugateAndExampleEntryMapEntry.getValue().grammaFormConjugateAndExampleEntryForDictionaryTypeList) {
@@ -2055,7 +2055,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					List<ExampleGroupTypeElements> exampleGroupTypeElementsList = grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList;
 					
 					// mapa typow dla typu slowa
-					Map<ExampleGroupType, Map<Integer, List<ExampleResult>>> examplesForDictionaryEntryTypeMap = examplesGroupedByDictionaryEntryTypeMap.get(dictionaryEntryType);
+					Map<ExampleGroupType, Map<Integer, Map<Integer, List<ExampleResult>>>> examplesForDictionaryEntryTypeMap = examplesGroupedByDictionaryEntryTypeMap.get(dictionaryEntryType);
 					
 					// poszukanie w mapie i ewentualnie dodanie
 					if (examplesForDictionaryEntryTypeMap == null) {
@@ -2067,7 +2067,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					for (ExampleGroupTypeElements exampleGroupTypeElements : exampleGroupTypeElementsList) {
 						// poszukanie typu przykladu w mapie
 						// mapa z przykladami z unikalnymi informacjami dodatkowy (info)
-						Map<Integer, List<ExampleResult>> examplesForDictionaryEntryTypeMapUniqueKeyMap  = examplesForDictionaryEntryTypeMap.get(exampleGroupTypeElements.getExampleGroupType());
+						Map<Integer, Map<Integer, List<ExampleResult>>> examplesForDictionaryEntryTypeMapUniqueKeyMap  = examplesForDictionaryEntryTypeMap.get(exampleGroupTypeElements.getExampleGroupType());
 						
 						if (examplesForDictionaryEntryTypeMapUniqueKeyMap == null) {
 							examplesForDictionaryEntryTypeMapUniqueKeyMap = new LinkedHashMap<>();
@@ -2080,14 +2080,18 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 							return Objects.hashCode(e.getInfo());
 						};
 						
-						for (ExampleResult currentExampleResult : exampleGroupTypeElements.getExampleResults()) {
+						for (int exampleResultsIdx = 0; exampleResultsIdx < exampleGroupTypeElements.getExampleResults().size(); ++exampleResultsIdx) {
+							ExampleResult currentExampleResult = exampleGroupTypeElements.getExampleResults().get(exampleResultsIdx);
 							
-							// wygenerowanie klucza podzialu
+							// podzial na podstawie zawartosci info
 							Integer key = examplesForDictionaryEntryTypeMapUniqueKeyMapKeyGenerator.apply(currentExampleResult);
 							
-							List<ExampleResult> exampleListForKey = examplesForDictionaryEntryTypeMapUniqueKeyMap.computeIfAbsent(key, (f) -> new ArrayList<>());
+							Map<Integer, List<ExampleResult>> exampleMapListForKey = examplesForDictionaryEntryTypeMapUniqueKeyMap.computeIfAbsent(key, (f) -> new LinkedHashMap<>());
 							
-							exampleListForKey.add(currentExampleResult);
+							// podzial po numerze elementu (ten sam typ (alternatywny) dla roznych DictionaryEntry powinien miec ten sam indeks na liscie
+							List<ExampleResult> exampleMapListForKeyExampleResultList = exampleMapListForKey.computeIfAbsent(exampleResultsIdx, (f) -> new ArrayList<>());
+							
+							exampleMapListForKeyExampleResultList.add(currentExampleResult);
 						}
 					}
 				}
