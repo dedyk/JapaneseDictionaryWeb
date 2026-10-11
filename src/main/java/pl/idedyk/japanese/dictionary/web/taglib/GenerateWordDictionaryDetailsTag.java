@@ -31,6 +31,7 @@ import pl.idedyk.japanese.dictionary.api.dto.FuriganaEntry;
 import pl.idedyk.japanese.dictionary.api.dto.GroupWithTatoebaSentenceList;
 import pl.idedyk.japanese.dictionary.api.dto.TatoebaSentence;
 import pl.idedyk.japanese.dictionary.api.example.ExampleManager;
+import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupType;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleGroupTypeElements;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleRequest;
 import pl.idedyk.japanese.dictionary.api.example.dto.ExampleResult;
@@ -2020,7 +2021,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 	
 	private Div generateExample(Menu mainMenu) throws IOException {
-		
+				
 		// jezeli wczesniej wyliczono odmiany gramatyczne, to przyklady tez powinno dac sie
 		if (grammaFormConjugateAndExampleEntryMap.size() > 0) {
 			
@@ -2037,6 +2038,52 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					}
 				}				
 			}
+			
+			//////////
+			/// 
+			/// 
+			
+			// pogrupowanie typow przykladow dla typow
+			Map<DictionaryEntryType, Map<ExampleGroupType, List<List<ExampleResult>>>> examplesGroupedByDictionaryEntryTypeMap = new LinkedHashMap<>();
+			
+			for (Map.Entry<Integer, GrammaFormConjugateAndExampleEntry> grammaFormConjugateAndExampleEntryMapEntry : grammaFormConjugateAndExampleEntryMap.entrySet()) {			
+				for (GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType : grammaFormConjugateAndExampleEntryMapEntry.getValue().grammaFormConjugateAndExampleEntryForDictionaryTypeList) {
+					
+					// dla typu przyklady
+					DictionaryEntryType dictionaryEntryType = grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType;
+					List<ExampleGroupTypeElements> exampleGroupTypeElementsList = grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList;
+					
+					// mapa typow dla typu slowa
+					Map<ExampleGroupType, List<List<ExampleResult>>> examplesForDictionaryEntryTypeMap = examplesGroupedByDictionaryEntryTypeMap.get(dictionaryEntryType);
+					
+					// poszukanie w mapie i ewentualnie dodanie
+					if (examplesForDictionaryEntryTypeMap == null) {
+						examplesForDictionaryEntryTypeMap = new LinkedHashMap<>();
+						
+						examplesGroupedByDictionaryEntryTypeMap.put(dictionaryEntryType, examplesForDictionaryEntryTypeMap);
+					}
+					
+					for (ExampleGroupTypeElements exampleGroupTypeElements : exampleGroupTypeElementsList) {
+						// poszukanie typu przykladu w mapie
+						List<List<ExampleResult>> list____ = examplesForDictionaryEntryTypeMap.get(exampleGroupTypeElements.getExampleGroupType());
+						
+						if (list____ == null) {
+							list____ = new ArrayList<>();
+							
+							examplesForDictionaryEntryTypeMap.put(exampleGroupTypeElements.getExampleGroupType(), list____);
+						}
+						
+						list____.add(exampleGroupTypeElements.getExampleResults());
+					}
+					
+					
+					
+				}
+			}
+
+			
+			////////////
+			/// //////////
 			
 			// pokazanie przykladow
 			// tutaj();
