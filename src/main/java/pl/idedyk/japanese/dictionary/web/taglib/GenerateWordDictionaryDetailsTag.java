@@ -2434,6 +2434,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			infoTd.addHtmlElement(infoH5);			
 		}
 		
+		int fixme = 1; // FM_FIXME !!!!!!
+		/*
 		ExampleResult alternative = exampleResult.getAlternative();
 		
 		if (alternative != null) {
@@ -2446,7 +2448,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			tr4Td.addHtmlElement(new Div(null, "margin-bottom: 15px;"));
 			
 			generateExampleResult(table, alternative);
-		}		
+		}
+		*/		
 	}
 	
 	private IHtmlElement addSuggestionElements(Menu mainMenu) {
