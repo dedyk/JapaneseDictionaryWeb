@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -825,7 +826,10 @@ public class ScheduleTask {
 					return ((Integer)fieldValue).toString();					
 					
 				} else if (fieldValue instanceof Long == true) {
-					return ((Long)fieldValue).toString();					
+					return ((Long)fieldValue).toString();
+					
+				} else if (fieldValue instanceof BigDecimal == true) {
+					return ((BigDecimal)fieldValue).toPlainString();
 					
 				} else if (fieldValue instanceof Boolean == true) {
 					return ((Boolean)fieldValue).toString();
