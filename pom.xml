@@ -31,7 +31,7 @@
 		<lucene.version>4.7.2</lucene.version>
         
         <!-- log4j version -->
-        <log4j.version>2.25.4</log4j.version>
+        <log4j.version>2.25.5</log4j.version>
 	</properties>
 
 	<profiles>
@@ -303,7 +303,7 @@
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
-			<version>9.1.0</version>
+			<version>26.10.0</version>
 		</dependency>
 
 		<dependency>
