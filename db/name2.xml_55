@@ -686050,17 +686050,17 @@
             <keb>椿大神社</keb>
         </k_ele>
         <r_ele>
-            <reb>つばきだいじんじゃ</reb>
-            <romaji>tsubakidaijinja</romaji>
+            <reb>つばきおおかみやしろ</reb>
+            <romaji>tsubakiookamiyashiro</romaji>
         </r_ele>
         <trans>
             <name_type>place name</name_type>
-            <trans_det xml:lang="eng">Tsubakidai Shrine</trans_det>
+            <trans_det xml:lang="eng">Tsubaki Grand Shrine</trans_det>
         </trans>
         <misc>
             <oldPolishJapaneseDictionary>
                 <dictionaryEntryTypeList>WORD_PLACE</dictionaryEntryTypeList>
-                <uniqueKeyList>椿大神社/つばきだいじんじゃ/1</uniqueKeyList>
+                <uniqueKeyList>椿大神社/つばきおおかみやしろ/1</uniqueKeyList>
             </oldPolishJapaneseDictionary>
         </misc>
     </entry>
@@ -816837,26 +816837,6 @@
             <oldPolishJapaneseDictionary>
                 <dictionaryEntryTypeList>WORD_PLACE</dictionaryEntryTypeList>
                 <uniqueKeyList>天文/てんもん/1</uniqueKeyList>
-            </oldPolishJapaneseDictionary>
-        </misc>
-    </entry>
-    <entry>
-        <ent_seq>5540981</ent_seq>
-        <k_ele>
-            <keb>天文科学館</keb>
-        </k_ele>
-        <r_ele>
-            <reb>てんもんかがくかん</reb>
-            <romaji>tenmonkagakukan</romaji>
-        </r_ele>
-        <trans>
-            <name_type>place name</name_type>
-            <trans_det xml:lang="eng">Tenmonkagakukan</trans_det>
-        </trans>
-        <misc>
-            <oldPolishJapaneseDictionary>
-                <dictionaryEntryTypeList>WORD_PLACE</dictionaryEntryTypeList>
-                <uniqueKeyList>天文科学館/てんもんかがくかん/1</uniqueKeyList>
             </oldPolishJapaneseDictionary>
         </misc>
     </entry>

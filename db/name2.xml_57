@@ -797181,6 +797181,10 @@
             <reb>ルーラ</reb>
             <romaji>ruura</romaji>
         </r_ele>
+        <r_ele>
+            <reb>ルラ</reb>
+            <romaji>rura</romaji>
+        </r_ele>
         <trans>
             <name_type>full name of a particular person</name_type>
             <trans_det xml:lang="eng">Luiz Inácio "Lula" da Silva (1945.10.27-)</trans_det>
@@ -797189,6 +797193,7 @@
             <oldPolishJapaneseDictionary>
                 <dictionaryEntryTypeList>WORD_PERSON</dictionaryEntryTypeList>
                 <uniqueKeyList>-/ルーラ/1</uniqueKeyList>
+                <uniqueKeyList>-/ルラ/1</uniqueKeyList>
             </oldPolishJapaneseDictionary>
         </misc>
     </entry>
@@ -810007,7 +810012,7 @@
         </r_ele>
         <trans>
             <name_type>place name</name_type>
-            <trans_det xml:lang="eng">Taiwan Province</trans_det>
+            <trans_det xml:lang="eng">Taiwan Province (nominal ROC province, claimed PRC province)</trans_det>
         </trans>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -881691,6 +881696,318 @@
             <oldPolishJapaneseDictionary>
                 <dictionaryEntryTypeList>WORD_STATION_NAME</dictionaryEntryTypeList>
                 <uniqueKeyList>万世橋駅/まんせいばしえき/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748107</ent_seq>
+        <r_ele>
+            <reb>キャッチャーインザライ</reb>
+            <romaji>kyacchaainzarai</romaji>
+        </r_ele>
+        <r_ele>
+            <reb>キャッチャー・イン・ザ・ライ</reb>
+            <romaji>kyacchaainzarai</romaji>
+        </r_ele>
+        <trans>
+            <name_type>work of art, literature, music, etc. name</name_type>
+            <trans_det xml:lang="eng">Catcher in the Rye (1951 novel by J. D. Salinger)</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_WORK</dictionaryEntryTypeList>
+                <uniqueKeyList>-/キャッチャーインザライ/1</uniqueKeyList>
+                <uniqueKeyList>-/キャッチャー・イン・ザ・ライ/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748108</ent_seq>
+        <k_ele>
+            <keb>硤合</keb>
+        </k_ele>
+        <r_ele>
+            <reb>そあい</reb>
+            <romaji>soai</romaji>
+        </r_ele>
+        <trans>
+            <name_type>family or surname</name_type>
+            <trans_det xml:lang="eng">Soai</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_SURNAME_NAME</dictionaryEntryTypeList>
+                <uniqueKeyList>硤合/そあい/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748109</ent_seq>
+        <k_ele>
+            <keb>バタネス州</keb>
+        </k_ele>
+        <r_ele>
+            <reb>バタネスしゅう</reb>
+            <romaji>batanesushuu</romaji>
+        </r_ele>
+        <trans>
+            <name_type>place name</name_type>
+            <trans_det xml:lang="eng">Batanes (Philippines)</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_PLACE</dictionaryEntryTypeList>
+                <uniqueKeyList>バタネス州/バタネスしゅう/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748110</ent_seq>
+        <k_ele>
+            <keb>秘密軍事組織</keb>
+        </k_ele>
+        <r_ele>
+            <reb>ひみつぐんじそしき</reb>
+            <romaji>himitsugunjisoshiki</romaji>
+        </r_ele>
+        <trans>
+            <name_type>organization name</name_type>
+            <trans_det xml:lang="eng">Organisation armée secrète</trans_det>
+            <trans_det xml:lang="eng">OAS</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_ORGANIZATION_NAME</dictionaryEntryTypeList>
+                <uniqueKeyList>秘密軍事組織/ひみつぐんじそしき/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748111</ent_seq>
+        <r_ele>
+            <reb>ベベルイ</reb>
+            <romaji>beberui</romaji>
+        </r_ele>
+        <trans>
+            <name_type>place name</name_type>
+            <trans_det xml:lang="eng">Beberui</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_PLACE</dictionaryEntryTypeList>
+                <uniqueKeyList>-/ベベルイ/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748112</ent_seq>
+        <k_ele>
+            <keb>地下鉄博物館</keb>
+        </k_ele>
+        <r_ele>
+            <reb>ちかてつはくぶつかん</reb>
+            <romaji>chikatetsuhakubutsukan</romaji>
+        </r_ele>
+        <trans>
+            <name_type>place name</name_type>
+            <trans_det xml:lang="eng">Tokyo Metro Museum</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_PLACE</dictionaryEntryTypeList>
+                <uniqueKeyList>地下鉄博物館/ちかてつはくぶつかん/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748113</ent_seq>
+        <r_ele>
+            <reb>ちかはく</reb>
+            <romaji>chikahaku</romaji>
+        </r_ele>
+        <trans>
+            <name_type>place name</name_type>
+            <trans_det xml:lang="eng">Tokyo Metro Museum (abbr)</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_PLACE</dictionaryEntryTypeList>
+                <uniqueKeyList>-/ちかはく/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748114</ent_seq>
+        <k_ele>
+            <keb>真夏の夜の淫夢</keb>
+        </k_ele>
+        <r_ele>
+            <reb>まなつのよのいんむ</reb>
+            <romaji>manatsunoyonoinmu</romaji>
+        </r_ele>
+        <r_ele>
+            <reb>まなつのよるのいんむ</reb>
+            <romaji>manatsunoyorunoinmu</romaji>
+        </r_ele>
+        <trans>
+            <name_type>work of art, literature, music, etc. name</name_type>
+            <trans_det xml:lang="eng">Manatsu no Yo no Inmu (adult film)</trans_det>
+            <trans_det xml:lang="eng">A Midsummer Night's Lewd Dream</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_WORK</dictionaryEntryTypeList>
+                <uniqueKeyList>真夏の夜の淫夢/まなつのよのいんむ/1</uniqueKeyList>
+                <uniqueKeyList>真夏の夜の淫夢/まなつのよるのいんむ/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748115</ent_seq>
+        <k_ele>
+            <keb>韓国国際協力団</keb>
+        </k_ele>
+        <r_ele>
+            <reb>かんこくこくさいきょうりょくだん</reb>
+            <romaji>kankokukokusaikyouryokudan</romaji>
+        </r_ele>
+        <trans>
+            <name_type>organization name</name_type>
+            <trans_det xml:lang="eng">Korea International Cooperation Agency</trans_det>
+            <trans_det xml:lang="eng">KOICA</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_ORGANIZATION_NAME</dictionaryEntryTypeList>
+                <uniqueKeyList>韓国国際協力団/かんこくこくさいきょうりょくだん/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748116</ent_seq>
+        <r_ele>
+            <reb>ミリテク</reb>
+            <romaji>miriteku</romaji>
+        </r_ele>
+        <trans>
+            <name_type>product name</name_type>
+            <trans_det xml:lang="eng">Militech (Cyberpunk series)</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_PRODUCT_NAME</dictionaryEntryTypeList>
+                <uniqueKeyList>-/ミリテク/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748117</ent_seq>
+        <r_ele>
+            <reb>ケンタロス</reb>
+            <romaji>kentarosu</romaji>
+        </r_ele>
+        <trans>
+            <name_type>creature</name_type>
+            <name_type>fiction</name_type>
+            <trans_det xml:lang="eng">Tauros (Pokémon)</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_CREATURE</dictionaryEntryTypeList>
+                <dictionaryEntryTypeList>WORD_FICT</dictionaryEntryTypeList>
+                <uniqueKeyList>-/ケンタロス/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748118</ent_seq>
+        <k_ele>
+            <keb>京浜工業地帯</keb>
+        </k_ele>
+        <r_ele>
+            <reb>けいひんこうぎょうちたい</reb>
+            <romaji>keihinkougyouchitai</romaji>
+        </r_ele>
+        <trans>
+            <name_type>place name</name_type>
+            <trans_det xml:lang="eng">Keihin Industrial Zone (industrial belt encompassing Tokyo, Kanagawa, and Saitama)</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_PLACE</dictionaryEntryTypeList>
+                <uniqueKeyList>京浜工業地帯/けいひんこうぎょうちたい/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748119</ent_seq>
+        <r_ele>
+            <reb>アゼベド</reb>
+            <romaji>azebedo</romaji>
+        </r_ele>
+        <r_ele>
+            <reb>アゼヴェド</reb>
+            <romaji>azevedo</romaji>
+        </r_ele>
+        <r_ele>
+            <reb>アゼヴェード</reb>
+            <romaji>azeveedo</romaji>
+        </r_ele>
+        <r_ele>
+            <reb>アゼベード</reb>
+            <romaji>azebeedo</romaji>
+        </r_ele>
+        <trans>
+            <name_type>family or surname</name_type>
+            <trans_det xml:lang="eng">Azevedo</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_SURNAME_NAME</dictionaryEntryTypeList>
+                <uniqueKeyList>-/アゼベド/1</uniqueKeyList>
+                <uniqueKeyList>-/アゼヴェド/1</uniqueKeyList>
+                <uniqueKeyList>-/アゼヴェード/1</uniqueKeyList>
+                <uniqueKeyList>-/アゼベード/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748120</ent_seq>
+        <k_ele>
+            <keb>明辰</keb>
+        </k_ele>
+        <r_ele>
+            <reb>あきのぶ</reb>
+            <romaji>akinobu</romaji>
+        </r_ele>
+        <trans>
+            <name_type>male given name or forename</name_type>
+            <trans_det xml:lang="eng">Akinobu</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_MALE_NAME</dictionaryEntryTypeList>
+                <uniqueKeyList>明辰/あきのぶ/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748121</ent_seq>
+        <k_ele>
+            <keb>明辰</keb>
+        </k_ele>
+        <r_ele>
+            <reb>あきたつ</reb>
+            <romaji>akitatsu</romaji>
+        </r_ele>
+        <trans>
+            <name_type>male given name or forename</name_type>
+            <trans_det xml:lang="eng">Akitatsu</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_MALE_NAME</dictionaryEntryTypeList>
+                <uniqueKeyList>明辰/あきたつ/1</uniqueKeyList>
             </oldPolishJapaneseDictionary>
         </misc>
     </entry>

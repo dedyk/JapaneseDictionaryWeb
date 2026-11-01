@@ -929290,8 +929290,8 @@
         </r_ele>
         <trans>
             <name_type>place name</name_type>
-            <trans_det xml:lang="eng">Southern Kuril Islands (administered by Russia, claimed by Japan)</trans_det>
-            <trans_det xml:lang="eng">Northern Territories</trans_det>
+            <trans_det xml:lang="eng">Northern Territories (administered by Russia, claimed by Japan)</trans_det>
+            <trans_det xml:lang="eng">Southern Kuril Islands</trans_det>
         </trans>
         <misc>
             <oldPolishJapaneseDictionary>

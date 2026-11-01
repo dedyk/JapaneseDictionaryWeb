@@ -1867958,6 +1867958,9 @@
     <entry>
         <ent_seq>5493864</ent_seq>
         <k_ele>
+            <keb>大キレット</keb>
+        </k_ele>
+        <k_ele>
             <keb>大切戸</keb>
         </k_ele>
         <r_ele>
@@ -1867966,11 +1867969,12 @@
         </r_ele>
         <trans>
             <name_type>place name</name_type>
-            <trans_det xml:lang="eng">Daikiretto</trans_det>
+            <trans_det xml:lang="eng">Daikiretto (V-shaped ridge in the Hida Mountains)</trans_det>
         </trans>
         <misc>
             <oldPolishJapaneseDictionary>
                 <dictionaryEntryTypeList>WORD_PLACE</dictionaryEntryTypeList>
+                <uniqueKeyList>大キレット/だいきれっと/1</uniqueKeyList>
                 <uniqueKeyList>大切戸/だいきれっと/1</uniqueKeyList>
             </oldPolishJapaneseDictionary>
         </misc>
