@@ -483,26 +483,6 @@
         </misc>
     </entry>
     <entry>
-        <ent_seq>7000555</ent_seq>
-        <k_ele>
-            <keb>うちの子</keb>
-        </k_ele>
-        <r_ele>
-            <reb kana_type="HIRAGANA" romaji="uchi no ko">うちのこ</reb>
-        </r_ele>
-        <sense>
-            <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">własna rodzina</s_inf>
-            <gloss xml:lang="pol">dziecko</gloss>
-        </sense>
-        <misc>
-            <oldPolishJapaneseDictionary notExistsInJMdict="true">
-                <entries id="555" dictionaryEntryTypeList="WORD_NOUN" kanji="うちの子" kana="うちのこ" romaji="uchi no ko" uniqueKey="うちの子/うちのこ/1"/>
-                <groupsList>OTHER</groupsList>
-            </oldPolishJapaneseDictionary>
-        </misc>
-    </entry>
-    <entry>
         <ent_seq>7000585</ent_seq>
         <k_ele>
             <keb>知っています</keb>

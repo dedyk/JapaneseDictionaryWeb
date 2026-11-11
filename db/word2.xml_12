@@ -8677,6 +8677,8 @@
             <gloss xml:lang="eng">opening (of a broadcasting station, post office, bureau, etc.)</gloss>
             <gloss xml:lang="eng">establishment</gloss>
             <gloss xml:lang="pol">otwarcie (stacji nadawczej, urzędu pocztowego, biura itp.)</gloss>
+            <gloss xml:lang="pol">rozpoczęcie nadawania (np. programu radiowego lub telewizyjnego)</gloss>
+            <gloss xml:lang="pol">założenie</gloss>
             <gloss xml:lang="pol">ustanowienie</gloss>
         </sense>
         <misc>
@@ -26911,10 +26913,12 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">szczególnie do gotowania, czyszczenia i prac domowych</s_inf>
             <gloss xml:lang="eng">coverall apron</gloss>
             <gloss xml:lang="eng">cook's apron</gloss>
-            <gloss xml:lang="pol">fartuch (szczególnie do gotowania, czyszczenia i prac domowych)</gloss>
+            <gloss xml:lang="pol">fartuch</gloss>
             <gloss xml:lang="pol">kuchenny fartuch</gloss>
+            <gloss xml:lang="pol">fartuch kuchenny</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -88536,6 +88540,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">mutual enemies</gloss>
+            <gloss xml:lang="pol">wspólni wrogowie</gloss>
             <gloss xml:lang="pol">wzajemni wrogowie</gloss>
             <gloss xml:lang="pol">wzajemny nieprzyjaciel</gloss>
         </sense>
@@ -95169,9 +95174,8 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <gloss xml:lang="eng">job advertisement</gloss>
-            <gloss xml:lang="pol">ogłoszenie o pracę</gloss>
-            <gloss xml:lang="pol">ogłoszenie z ofertą pracy</gloss>
+            <gloss xml:lang="eng">job advertisement magazine</gloss>
+            <gloss xml:lang="pol">magazyn z ogłoszeniami o pracy</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -101207,10 +101211,7 @@
         </r_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="gonbo">ごんぼ</reb>
-        </r_ele>
-        <r_ele>
-            <reb kana_type="HIRAGANA" romaji="umafubuki">うまふぶき</reb>
-            <re_inf>out-dated or obsolete kana usage</re_inf>
+            <re_inf>rarely used kana form</re_inf>
         </r_ele>
         <r_ele>
             <reb kana_type="KATAKANA" romaji="gobou">ゴボウ</reb>
@@ -101221,15 +101222,14 @@
             <misc>word usually written using kana alone</misc>
             <s_inf xml:lang="pol">gatunek rośliny z rodziny astrowatych, Arctium lappa</s_inf>
             <gloss xml:lang="eng">great burdock (Arctium lappa)</gloss>
-            <gloss xml:lang="eng">gobo</gloss>
+            <gloss xml:lang="eng">gobō</gloss>
             <gloss xml:lang="pol">łopian większy</gloss>
-            <gloss xml:lang="pol">gobo</gloss>
+            <gloss xml:lang="pol">gobō</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="41061" dictionaryEntryTypeList="WORD_NOUN" kanji="牛蒡" kana="ごぼう" romaji="gobou" uniqueKey="牛蒡/ごぼう/1"/>
                 <entries id="41062" dictionaryEntryTypeList="WORD_NOUN" kanji="牛蒡" kana="ごんぼ" romaji="gonbo" uniqueKey="牛蒡/ごんぼ/1"/>
-                <entries id="41063" dictionaryEntryTypeList="WORD_NOUN" kanji="牛蒡" kana="うまふぶき" romaji="umafubuki" uniqueKey="牛蒡/うまふぶき/1"/>
                 <entries id="41064" dictionaryEntryTypeList="WORD_NOUN" kana="ゴボウ" romaji="gobou" uniqueKey="-/ゴボウ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
@@ -147624,8 +147624,9 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">shoe sore</gloss>
             <gloss xml:lang="eng">foot blister (caused by shoes)</gloss>
-            <gloss xml:lang="pol">bolesny but</gloss>
-            <gloss xml:lang="pol">but, po którym ma się rany na stopie</gloss>
+            <gloss xml:lang="pol">odcisk od butów</gloss>
+            <gloss xml:lang="pol">oparzenia od butów</gloss>
+            <gloss xml:lang="pol">pęcherze na stopie (od butów butami)</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -165208,6 +165209,16 @@
             <gloss g_type="expl" xml:lang="eng">stones that are not solid but can be used to sacrifice to gain something elsewhere</gloss>
             <gloss xml:lang="pol">nieważny (kształt lub kamienie)</gloss>
             <gloss g_type="expl" xml:lang="pol">nieważne kamienie, które nie są lite, ale można je wykorzystać do złożenia ofiary, aby uzyskać coś innego</gloss>
+        </sense>
+        <sense>
+            <stagr>かるい</stagr>
+            <pos>adjective (keiyoushi)</pos>
+            <field>computing</field>
+            <s_inf xml:lang="pol">w odniesieniu do komputera, oprogramowania itp.</s_inf>
+            <gloss xml:lang="eng">fast</gloss>
+            <gloss xml:lang="eng">responsive (of a computer, software, etc.)</gloss>
+            <gloss xml:lang="pol">szybki</gloss>
+            <gloss xml:lang="pol">responsywny</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -243750,8 +243761,11 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <gloss xml:lang="eng">favourite dish (favorite)</gloss>
+            <gloss xml:lang="eng">favourite dish</gloss>
+            <gloss xml:lang="eng">favorite dish</gloss>
             <gloss xml:lang="eng">favourite food</gloss>
+            <gloss xml:lang="eng">favorite food</gloss>
+            <gloss xml:lang="pol">ulubione danie</gloss>
             <gloss xml:lang="pol">ulubiona potrawa</gloss>
             <gloss xml:lang="pol">ulubione jedzenie</gloss>
         </sense>
@@ -259716,7 +259730,7 @@
             <keb>降三世明王</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="gouzanzemyouou">ごうざんぜみょうおう</reb>
+            <reb kana_type="HIRAGANA" romaji="gouzanze myouou">ごうざんぜみょうおう</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -259728,7 +259742,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="54246" dictionaryEntryTypeList="WORD_NOUN" kanji="降三世明王" kana="ごうざんぜみょうおう" romaji="gouzanzemyouou" uniqueKey="降三世明王/ごうざんぜみょうおう/1"/>
+                <entries id="54246" dictionaryEntryTypeList="WORD_NOUN" kanji="降三世明王" kana="ごうざんぜみょうおう" romaji="gouzanze myouou" uniqueKey="降三世明王/ごうざんぜみょうおう/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -298276,7 +298290,7 @@
             <gloss xml:lang="eng">festivities</gloss>
             <gloss xml:lang="eng">merrymaking</gloss>
             <gloss xml:lang="pol">święto</gloss>
-            <gloss xml:lang="pol">uroczystość</gloss>
+            <gloss xml:lang="pol">uroczystości</gloss>
             <gloss xml:lang="pol">zabawa</gloss>
         </sense>
         <misc>
@@ -305981,6 +305995,7 @@
             <gloss xml:lang="eng">of unknown authorship</gloss>
             <gloss xml:lang="pol">autor nieznany</gloss>
             <gloss xml:lang="pol">anonimowy</gloss>
+            <gloss xml:lang="pol">nieznanego autorstwa</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -311712,8 +311727,10 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">idle thoughts</gloss>
             <gloss xml:lang="eng">worldly thoughts</gloss>
+            <gloss xml:lang="pol">bezcelowe rozmyślania</gloss>
             <gloss xml:lang="pol">leniwe myśli</gloss>
             <gloss xml:lang="pol">doczesne myśli</gloss>
+            <gloss xml:lang="pol">ziemskie myśli</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>

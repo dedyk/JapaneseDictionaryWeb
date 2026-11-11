@@ -16701,7 +16701,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">divining the year's crop yields from the shape of lingering snow</gloss>
-            <gloss xml:lang="pol">przepowiadanie rocznych plonów na podstawie pozostałego śniegu</gloss>
+            <gloss xml:lang="pol">przepowiadanie tegorocznych plonów na podstawie kształtu pozostałego śniegu</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -35965,7 +35965,7 @@
             <keb>青紫</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="aomurasaki">あおむらさき</reb>
+            <reb kana_type="HIRAGANA" romaji="ao murasaki">あおむらさき</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -35974,7 +35974,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="105683" dictionaryEntryTypeList="WORD_NOUN" kanji="青紫" kana="あおむらさき" romaji="aomurasaki" uniqueKey="青紫/あおむらさき/1"/>
+                <entries id="105683" dictionaryEntryTypeList="WORD_NOUN" kanji="青紫" kana="あおむらさき" romaji="ao murasaki" uniqueKey="青紫/あおむらさき/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -37863,7 +37863,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>historical term</misc>
-            <s_inf xml:lang="pol">Japoni, 1986-1991</s_inf>
+            <s_inf xml:lang="pol">Japonii, 1986-1991</s_inf>
             <gloss xml:lang="eng">bubble economy (of Japan; 1986-1991)</gloss>
             <gloss xml:lang="pol">bańka gospodarcza</gloss>
         </sense>
@@ -38478,7 +38478,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>abbreviation</misc>
-            <s_inf xml:lang="pol">skrót</s_inf>
             <gloss xml:lang="eng">Nuclear and Industrial Safety Agency</gloss>
             <gloss xml:lang="eng">NISA</gloss>
             <gloss xml:lang="pol">Agencja Bezpieczeństwa Jądrowego i Przemysłowego</gloss>
@@ -44206,6 +44205,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">liability insurance</gloss>
             <gloss xml:lang="pol">ubezpieczenie OC</gloss>
+            <gloss xml:lang="pol">ubezpieczenie od odpowiedzialności cywilnej</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -47951,10 +47951,12 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <pos>noun or verb acting prenominally</pos>
+            <s_inf xml:lang="pol">np. urząd, prawo i etc</s_inf>
             <gloss xml:lang="eng">labor standard</gloss>
             <gloss xml:lang="eng">labor standards (e.g. bureau, law)</gloss>
             <gloss xml:lang="pol">standard pracy</gloss>
             <gloss xml:lang="pol">standardy pracy</gloss>
+            <gloss xml:lang="pol">normy pracy</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -58653,7 +58655,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>archaic</misc>
-            <s_inf xml:lang="pol">archaizm</s_inf>
             <gloss xml:lang="eng">palace of a retired emperor</gloss>
             <gloss xml:lang="pol">pałac emerytowanego cesarza</gloss>
         </sense>
@@ -61054,12 +61055,12 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="ant" seq="1838070" xk="立て板に水">立て板に水</xref>
             <misc>idiomatic expression</misc>
-            <s_inf xml:lang="pol">wyrażenie idiomatyczne</s_inf>
             <gloss xml:lang="eng">halting speech</gloss>
             <gloss xml:lang="eng">stammering</gloss>
             <gloss g_type="lit" xml:lang="eng">(like) rain water (slowly) dripping off a horizontal board</gloss>
             <gloss xml:lang="pol">mowa przerywana</gloss>
             <gloss xml:lang="pol">jąkanie się</gloss>
+            <gloss g_type="lit" xml:lang="pol">(jak) woda deszczowa (powoli) kapiąca z poziomej deski</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -61466,9 +61467,9 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="2115750" xk="窓外放出">窓外放出</xref>
+            <s_inf xml:lang="pol">wyrzucenie czegoś lub kogoś przez okno</s_inf>
             <gloss xml:lang="eng">defenestration (throwing something or someone out the window)</gloss>
             <gloss xml:lang="pol">defenestracja</gloss>
-            <gloss xml:lang="pol">wyrzucenie czegoś lub kogoś przez okno</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -92808,6 +92809,7 @@
             <s_inf xml:lang="pol">w gazecie</s_inf>
             <gloss xml:lang="eng">editorial column</gloss>
             <gloss xml:lang="pol">redakcyjna kolumna</gloss>
+            <gloss xml:lang="pol">kolumna redakcyjna</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -108539,8 +108541,9 @@
             <gloss xml:lang="eng">to have sparkling eyes</gloss>
             <gloss xml:lang="eng">to have shining eyes</gloss>
             <gloss xml:lang="eng">to have a gleam in one's eyes</gloss>
-            <gloss xml:lang="pol">błyszczenie oczu</gloss>
-            <gloss xml:lang="pol">z błyskiem oka</gloss>
+            <gloss xml:lang="pol">mieć błyszczące oczy</gloss>
+            <gloss xml:lang="pol">mieć lśniące oczy</gloss>
+            <gloss xml:lang="pol">mieć iskierkę w oczach</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -112096,12 +112099,12 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1531910" xk="名誉除隊">名誉除隊</xref>
-            <s_inf xml:lang="pol">np. ze służby</s_inf>
+            <s_inf xml:lang="pol">np. z wojska</s_inf>
             <gloss xml:lang="eng">dishonorable discharge</gloss>
             <gloss xml:lang="eng">dishonourable discharge</gloss>
-            <gloss xml:lang="pol">karne zwolnienie z wojska</gloss>
-            <gloss xml:lang="pol">niehonorowe zwolnienie z wojska</gloss>
-            <gloss xml:lang="pol">haniebne zwolnienie z wojska</gloss>
+            <gloss xml:lang="pol">karne zwolnienie</gloss>
+            <gloss xml:lang="pol">niehonorowe zwolnienie</gloss>
+            <gloss xml:lang="pol">haniebne zwolnienie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -116113,11 +116116,11 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">szczególnie stoisko z jedzeniem na festiwalach, dialekt Kansai</s_inf>
             <dial>Kansai-ben</dial>
             <gloss xml:lang="eng">booth</gloss>
             <gloss xml:lang="eng">stall</gloss>
-            <gloss xml:lang="pol">stoisko ustawione na chodniku przed sklepem lub domem</gloss>
+            <gloss xml:lang="pol">stragan</gloss>
+            <gloss xml:lang="pol">stoisko</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -123761,12 +123764,12 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="2651220" xk="真壁">真壁</xref>
             <gloss xml:lang="eng">wall bearing no exposed pillars</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">ściana nośna bez widocznych filarów</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="202168" dictionaryEntryTypeList="WORD_NOUN" kanji="大壁" kana="おおかべ" romaji="ookabe" uniqueKey="大壁/おおかべ/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -125736,7 +125739,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1464670" xk="日本酒">日本酒</xref>
-            <s_inf xml:lang="pol">głównie sake, ale również shochu i wino owocowe</s_inf>
+            <s_inf xml:lang="pol">głównie sake, ale również shōchū i wino owocowe</s_inf>
             <gloss xml:lang="eng">traditional Japanese alcohol (primarily sake, but also shōchū and fruit wine)</gloss>
             <gloss xml:lang="pol">tradycyjny japoński alkohol</gloss>
         </sense>
@@ -133291,7 +133294,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>historical term</misc>
             <gloss xml:lang="eng">Teigin Bank robbery (in which 12 people died of cyanide poisoning; 1948)</gloss>
-            <gloss xml:lang="pol">napad na Bank Tengin (1948), kiedy to 12 osób zginęło od zatrucia cyjankiem</gloss>
+            <gloss xml:lang="pol">napad na Bank Tengin w 1948 roku, kiedy to 12 osób zginęło od zatrucia cyjankiem</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -147409,7 +147412,6 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="2661130" xk="独占禁止政策">独占禁止政策</xref>
             <misc>abbreviation</misc>
-            <s_inf xml:lang="pol">skrót</s_inf>
             <gloss xml:lang="eng">antitrust policy</gloss>
             <gloss xml:lang="pol">polityka antymonopolowa</gloss>
         </sense>
@@ -152162,6 +152164,7 @@
             <misc>onomatopoeic or mimetic word</misc>
             <gloss xml:lang="eng">falling plump</gloss>
             <gloss xml:lang="eng">falling down flat</gloss>
+            <gloss xml:lang="pol">upaść z hukiem</gloss>
             <gloss xml:lang="pol">upaść płasko</gloss>
             <gloss xml:lang="pol">upaść na płask</gloss>
         </sense>
@@ -153235,9 +153238,9 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="2663640" xk="朝座">朝座</xref>
             <field>Buddhism</field>
-            <s_inf xml:lang="pol">buddyzm</s_inf>
             <gloss xml:lang="eng">evening service</gloss>
             <gloss xml:lang="pol">nabożeństwo wieczorne</gloss>
+            <gloss xml:lang="pol">wieczorne nabożeństwo</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -155543,9 +155546,9 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1275010" xk="公立学校">公立学校</xref>
             <misc>abbreviation</misc>
-            <s_inf xml:lang="pol">skrót</s_inf>
             <gloss xml:lang="eng">public school</gloss>
             <gloss xml:lang="pol">szkoła państwowa</gloss>
+            <gloss xml:lang="pol">szkoła publiczna</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -161105,6 +161108,7 @@
             <xref type="see" seq="2667000" xk="内蓋">内蓋</xref>
             <gloss xml:lang="eng">outer lid</gloss>
             <gloss xml:lang="pol">zewnętrzna pokrywa</gloss>
+            <gloss xml:lang="pol">pokrywa zewnętrzna</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -161127,13 +161131,14 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1573970" xk="閻魔">閻魔</xref>
             <field>Buddhism</field>
+            <s_inf xml:lang="pol">z ludzka głową na szczycie</s_inf>
             <gloss xml:lang="eng">Yama's pole (with a human head on the top)</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">słup Yama</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="82872" dictionaryEntryTypeList="WORD_NOUN" kanji="人頭幢" kana="にんずどう" romaji="ninzudou" uniqueKey="人頭幢/にんずどう/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -163010,6 +163015,7 @@
             <gloss xml:lang="eng">Palaeolithic culture</gloss>
             <gloss xml:lang="eng">Paleolithic culture</gloss>
             <gloss xml:lang="pol">kultura paleolitu</gloss>
+            <gloss xml:lang="pol">kultura paleolityczna</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -165773,6 +165779,7 @@
             <gloss xml:lang="eng">to stay in one's heart</gloss>
             <gloss xml:lang="eng">to be enduringly memorable</gloss>
             <gloss xml:lang="eng">to be unforgettable</gloss>
+            <gloss xml:lang="pol">pozostać w sercu</gloss>
             <gloss xml:lang="pol">zostawiać w sercu</gloss>
             <gloss xml:lang="pol">być trwale zapamiętane</gloss>
             <gloss xml:lang="pol">być niezapomniany</gloss>
@@ -180524,6 +180531,7 @@
             <pos>noun or participle which takes the aux. verb suru</pos>
             <pos>transitive verb</pos>
             <pos>intransitive verb</pos>
+            <s_inf xml:lang="pol">coś, np. palcem</s_inf>
             <gloss xml:lang="eng">pointing (at; with one's finger)</gloss>
             <gloss xml:lang="pol">wskazywanie na</gloss>
         </sense>
@@ -199427,6 +199435,7 @@
             <pos>transitive verb</pos>
             <gloss xml:lang="eng">allowing to cool</gloss>
             <gloss xml:lang="eng">cooling</gloss>
+            <gloss xml:lang="pol">pozostawienie do ostygnięcia</gloss>
             <gloss xml:lang="pol">chłodzenie</gloss>
         </sense>
         <misc>
@@ -203827,8 +203836,8 @@
             <gloss xml:lang="eng">bubbles and shadows</gloss>
             <gloss g_type="fig" xml:lang="eng">something transient</gloss>
             <gloss xml:lang="pol">bąble i cienie</gloss>
-            <gloss xml:lang="pol">coś przejściowego</gloss>
-            <gloss xml:lang="pol">coś chwilowego</gloss>
+            <gloss g_type="fig" xml:lang="pol">coś przejściowego</gloss>
+            <gloss g_type="fig" xml:lang="pol">coś chwilowego</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -203850,7 +203859,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>honorific or respectful (sonkeigo) language</misc>
-            <s_inf xml:lang="pol">honoryfikatywnie</s_inf>
             <gloss xml:lang="eng">poem</gloss>
             <gloss xml:lang="pol">wiersz</gloss>
         </sense>
@@ -204515,6 +204523,7 @@
             <xref type="see" seq="1315240" xk="寺" xr="てら">寺(てら)</xref>
             <gloss xml:lang="eng">temple (Buddhist)</gloss>
             <gloss xml:lang="pol">świątynia buddyjska</gloss>
+            <gloss xml:lang="pol">buddyjska świątynia</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -204621,6 +204630,7 @@
             <misc>obsolete term</misc>
             <gloss xml:lang="eng">walking around aimlessly</gloss>
             <gloss xml:lang="pol">chodzenie bez celu</gloss>
+            <gloss xml:lang="pol">bezcelowe włóczenie się</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -204921,7 +204931,7 @@
             <gloss xml:lang="eng">at ordinary times and on special occasions</gloss>
             <gloss xml:lang="eng">on every occasion</gloss>
             <gloss xml:lang="eng">at all times</gloss>
-            <gloss xml:lang="pol">w zwykłych czasach i na specjalne okazje</gloss>
+            <gloss xml:lang="pol">na co dzień i na specjalne okazje</gloss>
             <gloss xml:lang="pol">na każdą okazję</gloss>
             <gloss xml:lang="pol">w każdym momencie</gloss>
         </sense>
@@ -209439,10 +209449,10 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">bakterie</s_inf>
+            <s_inf xml:lang="pol">gatunek bakterii</s_inf>
             <gloss xml:lang="eng">purple sulfur bacteria</gloss>
             <gloss xml:lang="eng">purple sulphur bacteria</gloss>
-            <gloss xml:lang="pol">chromatiales</gloss>
+            <gloss xml:lang="pol">Chromatiales</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -210460,13 +210470,15 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">teoria gier</s_inf>
             <gloss xml:lang="eng">repeated game (game theory)</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">gra powtarzalna</gloss>
+            <gloss xml:lang="pol">powtarzalna gra</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="126193" dictionaryEntryTypeList="WORD_NOUN" kanji="繰り返しゲーム" kana="くりかえしゲーム" romaji="kuri kaeshi geemu" uniqueKey="繰り返しゲーム/くりかえしゲーム/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -214693,13 +214705,15 @@
             <pos>expressions (phrases, clauses, etc.)</pos>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="2168220" xr="ミッシングリンク">ミッシングリンク</xref>
+            <s_inf xml:lang="pol">formy organizmów łączących cechy dwóch grup systematycznych</s_inf>
             <gloss xml:lang="eng">missing link</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">formy przejściowe</gloss>
+            <gloss xml:lang="pol">'brakujące ogniwo'</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="123388" dictionaryEntryTypeList="WORD_EXPRESSION,WORD_NOUN" kanji="失われた環" kana="うしなわれたかん" romaji="ushinawareta kan" uniqueKey="失われた環/うしなわれたかん/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -237752,7 +237766,7 @@
             <s_inf xml:lang="pol">prawa do nazwania własności (obiektu, miejsca, wydarzenia), najczęściej przyznawane w zamian za finansowe wynagrodzenie</s_inf>
             <gloss xml:lang="eng">naming right</gloss>
             <gloss xml:lang="eng">naming rights</gloss>
-            <gloss xml:lang="pol">ang: naming rights</gloss>
+            <gloss xml:lang="pol">prawo do nazwy</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>

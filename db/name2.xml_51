@@ -605341,20 +605341,22 @@
         <k_ele>
             <keb>宇多田ヒカル</keb>
         </k_ele>
+        <k_ele>
+            <keb>宇多田光</keb>
+        </k_ele>
         <r_ele>
             <reb>うただヒカル</reb>
-            <romaji>utada hikaru</romaji>
+            <romaji>utadahikaru</romaji>
         </r_ele>
         <trans>
-            <name_type>female given name or forename</name_type>
             <name_type>full name of a particular person</name_type>
-            <trans_det xml:lang="eng">Utada Hikaru (1983.1-)</trans_det>
+            <trans_det xml:lang="eng">Hikaru Utada (1983.1.19-; Japanese-American singer and songwriter)</trans_det>
         </trans>
         <misc>
             <oldPolishJapaneseDictionary>
-                <dictionaryEntryTypeList>WORD_FEMALE_NAME</dictionaryEntryTypeList>
                 <dictionaryEntryTypeList>WORD_PERSON</dictionaryEntryTypeList>
                 <uniqueKeyList>宇多田ヒカル/うただヒカル/1</uniqueKeyList>
+                <uniqueKeyList>宇多田光/うただヒカル/1</uniqueKeyList>
             </oldPolishJapaneseDictionary>
         </misc>
     </entry>

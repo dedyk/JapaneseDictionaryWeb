@@ -8965,14 +8965,14 @@
             <field>computing</field>
             <s_inf xml:lang="pol">ang: swapped in</s_inf>
             <gloss xml:lang="eng">swapping in (data from secondary storage to main memory)</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">wczytywanie danych z pamięci pomocniczej do pamięci głównej</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="76988" dictionaryEntryTypeList="WORD_NOUN" kana="スワップイン" romaji="suwappu in" uniqueKey="-/スワップイン/1"/>
                 <entries id="77029" dictionaryEntryTypeList="WORD_NOUN" kana="スワップ・イン" romaji="suwappu in" uniqueKey="-/スワップ・イン/1"/>
                 <attributeList type="SURU_VERB"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -9914,6 +9914,7 @@
             <gloss xml:lang="eng">traditional animation</gloss>
             <gloss xml:lang="pol">animacja rysunkowa</gloss>
             <gloss xml:lang="pol">tradycyjna animacja</gloss>
+            <gloss xml:lang="pol">animacja rysowana ręcznie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -13546,7 +13547,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka, ang: dynamic memory</s_inf>
+            <s_inf xml:lang="pol">ang: dynamic memory</s_inf>
             <gloss xml:lang="eng">dynamic memory</gloss>
             <gloss xml:lang="pol">pamięć dynamiczna</gloss>
         </sense>
@@ -29256,7 +29257,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka, ang: native format</s_inf>
+            <s_inf xml:lang="pol">ang: native format</s_inf>
             <gloss xml:lang="eng">native format</gloss>
             <gloss xml:lang="pol">natywny format</gloss>
         </sense>
@@ -31488,7 +31489,7 @@
             <keb>ハードウェアＴ＆Ｌ</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="KATAKANA" romaji="haadowea tiia ndo eru">ハードウェアティーアンドエル</reb>
+            <reb kana_type="KATAKANA" romaji="haadowea tii ando eru">ハードウェアティーアンドエル</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -31501,7 +31502,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="93220" dictionaryEntryTypeList="WORD_NOUN" kanji="ハードウェアＴ＆Ｌ" kana="ハードウェアティーアンドエル" romaji="haadowea tiia ndo eru" uniqueKey="ハードウェアＴ＆Ｌ/ハードウェアティーアンドエル/1"/>
+                <entries id="93220" dictionaryEntryTypeList="WORD_NOUN" kanji="ハードウェアＴ＆Ｌ" kana="ハードウェアティーアンドエル" romaji="haadowea tii ando eru" uniqueKey="ハードウェアＴ＆Ｌ/ハードウェアティーアンドエル/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -31588,7 +31589,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka, ang: hardware based</s_inf>
+            <s_inf xml:lang="pol">ang: hardware based</s_inf>
             <gloss xml:lang="eng">hardware based</gloss>
             <gloss xml:lang="pol">oparte na sprzęcie</gloss>
         </sense>
@@ -34998,7 +34999,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka</s_inf>
             <gloss xml:lang="eng">bus master</gloss>
             <gloss xml:lang="pol">bus master</gloss>
         </sense>
@@ -39689,7 +39689,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka, ang: bit-field</s_inf>
+            <s_inf xml:lang="pol">ang: bit-field</s_inf>
             <gloss xml:lang="eng">bit-field</gloss>
             <gloss xml:lang="pol">pole bitowe</gloss>
         </sense>
@@ -57347,15 +57347,15 @@
     <entry>
         <ent_seq>2330680</ent_seq>
         <r_ele>
-            <reb kana_type="KATAKANA" romaji="pointo tsuu maruchipointo">ポイントツウマルチポイント</reb>
+            <reb kana_type="KATAKANA_EXCEPTION" romaji="pointo tsuu maruchipointo">ポイントツウマルチポイント</reb>
         </r_ele>
         <r_ele>
-            <reb kana_type="KATAKANA" romaji="pointo tsuu maruchipointo">ポイント・ツウ・マルチポイント</reb>
+            <reb kana_type="KATAKANA_EXCEPTION" romaji="pointo tsuu maruchipointo">ポイント・ツウ・マルチポイント</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka, ang: point to multipoint</s_inf>
+            <s_inf xml:lang="pol">ang: point to multipoint</s_inf>
             <gloss xml:lang="eng">point to multipoint</gloss>
             <gloss xml:lang="pol">transmisja z jednego miejsca do wielu odbiorców</gloss>
         </sense>
@@ -62729,7 +62729,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">szczególnie oprogramowania, ang: major version up</s_inf>
+            <s_inf xml:lang="pol">szczególnie oprogramowania</s_inf>
             <gloss xml:lang="eng">major upgrade (esp. software)</gloss>
             <gloss xml:lang="eng">major update</gloss>
             <gloss xml:lang="pol">duży upgrade</gloss>
@@ -70538,6 +70538,7 @@
             <s_inf xml:lang="pol">ang: remote access</s_inf>
             <gloss xml:lang="eng">remote access</gloss>
             <gloss xml:lang="pol">zdalny dostęp</gloss>
+            <gloss xml:lang="pol">dostęp zdalny</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -71205,7 +71206,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka, ang: link state</s_inf>
+            <s_inf xml:lang="pol">ang: link state</s_inf>
             <gloss xml:lang="eng">link state</gloss>
             <gloss xml:lang="pol">stan łącza</gloss>
         </sense>
@@ -84758,6 +84759,7 @@
             <field>computing</field>
             <gloss xml:lang="eng">pel array</gloss>
             <gloss xml:lang="pol">tablica pikseli</gloss>
+            <gloss xml:lang="pol">macierz pikseli</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -97445,7 +97447,7 @@
             <keb>共役直径対</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="kyouekichokkeitai">きょうえきちょっけいたい</reb>
+            <reb kana_type="HIRAGANA" romaji="kyoueki chokkeitai">きょうえきちょっけいたい</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -97456,7 +97458,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="101142" dictionaryEntryTypeList="WORD_NOUN" kanji="共役直径対" kana="きょうえきちょっけいたい" romaji="kyouekichokkeitai" uniqueKey="共役直径対/きょうえきちょっけいたい/1"/>
+                <entries id="101142" dictionaryEntryTypeList="WORD_NOUN" kanji="共役直径対" kana="きょうえきちょっけいたい" romaji="kyoueki chokkeitai" uniqueKey="共役直径対/きょうえきちょっけいたい/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -122261,6 +122263,7 @@
             <gloss xml:lang="eng">passive threat</gloss>
             <gloss xml:lang="pol">pasywne zagrożenie</gloss>
             <gloss xml:lang="pol">bierne zagrożenie</gloss>
+            <gloss xml:lang="pol">zagrożenie bierne</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -126946,19 +126949,18 @@
             <keb>消去可能記憶装置</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="shoukyoka noukiokusouchi">しょうきょかのうきおくそうち</reb>
+            <reb kana_type="HIRAGANA" romaji="shoukyoka noukioku souchi">しょうきょかのうきおくそうち</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka</s_inf>
             <gloss xml:lang="eng">erasable storage</gloss>
             <gloss xml:lang="pol">pamięć możliwa do skasowania</gloss>
             <gloss xml:lang="pol">wymazywalna pamięć</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="61896" dictionaryEntryTypeList="WORD_NOUN" kanji="消去可能記憶装置" kana="しょうきょかのうきおくそうち" romaji="shoukyoka noukiokusouchi" uniqueKey="消去可能記憶装置/しょうきょかのうきおくそうち/1"/>
+                <entries id="61896" dictionaryEntryTypeList="WORD_NOUN" kanji="消去可能記憶装置" kana="しょうきょかのうきおくそうち" romaji="shoukyoka noukioku souchi" uniqueKey="消去可能記憶装置/しょうきょかのうきおくそうち/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -140688,7 +140690,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka</s_inf>
             <gloss xml:lang="eng">sending entity</gloss>
             <gloss xml:lang="eng">sender</gloss>
             <gloss xml:lang="pol">podmiot wysyłający</gloss>
@@ -170576,7 +170577,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka, baza danych istniejąca fizycznie na dwóch lub większej liczbie komputerów, traktowana jednak jak jedna logiczna całość, dzięki czemu zmiany w zawartości bazy w jednym komputerze są uwzględniane również w innych maszynach</s_inf>
+            <s_inf xml:lang="pol">baza danych istniejąca fizycznie na dwóch lub większej liczbie komputerów, traktowana jednak jak jedna logiczna całość, dzięki czemu zmiany w zawartości bazy w jednym komputerze są uwzględniane również w innych maszynach</s_inf>
             <gloss xml:lang="eng">distributed database</gloss>
             <gloss xml:lang="pol">rozproszona baza danych</gloss>
         </sense>
@@ -177189,7 +177190,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">liczby ułożone tak, że suma każdej kolumny i rzędu jest równa tej samej liczbie, macierz</s_inf>
+            <s_inf xml:lang="pol">macierz, liczby ułożone tak, że suma każdej kolumny i rzędu jest równa tej samej liczbie</s_inf>
             <gloss xml:lang="eng">magic square (matrix)</gloss>
             <gloss xml:lang="pol">kwadrat magiczny</gloss>
         </sense>
@@ -186866,9 +186867,11 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">ang: vertical take off and landing</s_inf>
             <gloss xml:lang="eng">vertical take off and landing</gloss>
             <gloss xml:lang="eng">VTOL</gloss>
             <gloss xml:lang="pol">pionowy start i lądowanie</gloss>
+            <gloss xml:lang="pol">VTOL</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -200081,7 +200084,7 @@
             <keb>草付</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="kusatsuki">くさつき</reb>
+            <reb kana_type="HIRAGANA" romaji="kusa tsuki">くさつき</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
@@ -200091,8 +200094,8 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="56690" dictionaryEntryTypeList="WORD_NOUN" kanji="草付き" kana="くさつき" romaji="kusatsuki" uniqueKey="草付き/くさつき/1"/>
-                <entries id="56704" dictionaryEntryTypeList="WORD_NOUN" kanji="草付" kana="くさつき" romaji="kusatsuki" uniqueKey="草付/くさつき/1"/>
+                <entries id="56690" dictionaryEntryTypeList="WORD_NOUN" kanji="草付き" kana="くさつき" romaji="kusa tsuki" uniqueKey="草付き/くさつき/1"/>
+                <entries id="56704" dictionaryEntryTypeList="WORD_NOUN" kanji="草付" kana="くさつき" romaji="kusa tsuki" uniqueKey="草付/くさつき/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>

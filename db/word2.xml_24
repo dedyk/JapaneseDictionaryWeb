@@ -6446,7 +6446,6 @@
             <gloss xml:lang="pol">przerywać</gloss>
             <gloss xml:lang="pol">wtrącać się</gloss>
             <gloss xml:lang="pol">wcinać się</gloss>
-            <gloss xml:lang="pol">wcinanie się</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -7734,6 +7733,7 @@
             <gloss xml:lang="eng">to feel nauseated</gloss>
             <gloss xml:lang="eng">to feel sick</gloss>
             <gloss xml:lang="pol">przyprawiać o mdłości</gloss>
+            <gloss xml:lang="pol">odczuwać mdłości</gloss>
             <gloss xml:lang="pol">czuć mdłości</gloss>
             <gloss xml:lang="pol">czuć się niedobrze</gloss>
         </sense>
@@ -10060,15 +10060,14 @@
     <entry>
         <ent_seq>2404110</ent_seq>
         <r_ele>
-            <reb kana_type="KATAKANA" romaji="masutaa appu">マスターアップ</reb>
+            <reb kana_type="KATAKANA_EXCEPTION" romaji="masutaa appu">マスターアップ</reb>
         </r_ele>
         <r_ele>
-            <reb kana_type="KATAKANA" romaji="masutaa appu">マスター・アップ</reb>
+            <reb kana_type="KATAKANA_EXCEPTION" romaji="masutaa appu">マスター・アップ</reb>
         </r_ele>
         <lsource ls_wasei="y" xml:lang="eng">master up</lsource>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">ang: master up</s_inf>
             <gloss xml:lang="eng">(game) development deadline</gloss>
             <gloss xml:lang="pol">ostateczny termin developmentu gry</gloss>
         </sense>
@@ -12829,8 +12828,9 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">tam i z powrotem</s_inf>
             <gloss xml:lang="eng">round trip (airplane) ticket</gloss>
-            <gloss xml:lang="pol">lotniczy bilet w obie strony (tam i z powrotem)</gloss>
+            <gloss xml:lang="pol">lotniczy bilet w obie strony</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -13469,9 +13469,6 @@
         <k_ele>
             <keb>装蹄師</keb>
         </k_ele>
-        <k_ele>
-            <keb>装締師</keb>
-        </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="souteishi">そうていし</reb>
         </r_ele>
@@ -13485,7 +13482,6 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="88406" dictionaryEntryTypeList="WORD_NOUN" kanji="装蹄師" kana="そうていし" romaji="souteishi" uniqueKey="装蹄師/そうていし/1"/>
-                <entries id="88439" dictionaryEntryTypeList="WORD_NOUN" kanji="装締師" kana="そうていし" romaji="souteishi" uniqueKey="装締師/そうていし/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -32408,17 +32404,17 @@
             <keb>如露亦如電</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="nyoroyakunyoden">にょろやくにょでん</reb>
+            <reb kana_type="HIRAGANA" romaji="nyoroyaku nyoden">にょろやくにょでん</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>Buddhism</field>
             <gloss xml:lang="eng">existence (as we perceive it) is as mutable and incorporeal as is the morning dew or a flash of lightning</gloss>
-            <gloss xml:lang="pol">jak rosa lub błyskawica, znikają w mgnieniu oka</gloss>
+            <gloss xml:lang="pol">istnienie (tak, jak je postrzegamy) jest równie zmienne i niematerialne jak poranna rosa czy błysk pioruna</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="229620" dictionaryEntryTypeList="WORD_NOUN" kanji="如露亦如電" kana="にょろやくにょでん" romaji="nyoroyakunyoden" uniqueKey="如露亦如電/にょろやくにょでん/1"/>
+                <entries id="229620" dictionaryEntryTypeList="WORD_NOUN" kanji="如露亦如電" kana="にょろやくにょでん" romaji="nyoroyaku nyoden" uniqueKey="如露亦如電/にょろやくにょでん/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -69651,6 +69647,7 @@
             <gloss xml:lang="eng">out of curiosity</gloss>
             <gloss xml:lang="eng">inquisitiveness</gloss>
             <gloss xml:lang="pol">dociekliwość poznawcza</gloss>
+            <gloss xml:lang="pol">ciekawość intelektualna</gloss>
             <gloss xml:lang="pol">z ciekawości</gloss>
             <gloss xml:lang="pol">ciekawość</gloss>
             <gloss xml:lang="pol">dociekliwość</gloss>
@@ -71922,7 +71919,7 @@
             <ke_inf>ateji (phonetic) reading</ke_inf>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="sasuga wa">さすがは</reb>
+            <reb kana_type="HIRAGANA_EXCEPTION" romaji="sasuga wa">さすがは</reb>
         </r_ele>
         <sense>
             <pos>expressions (phrases, clauses, etc.)</pos>
@@ -71932,6 +71929,8 @@
             <gloss xml:lang="eng">just as you'd expect (from)</gloss>
             <gloss xml:lang="eng">just like (someone)</gloss>
             <gloss xml:lang="pol">jak można się spodziewać</gloss>
+            <gloss xml:lang="pol">tak jak można się spodziewać (od)</gloss>
+            <gloss xml:lang="pol">tak jak (ktoś)</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -83677,7 +83676,7 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">w samolocie, ang: afterburner</s_inf>
+            <s_inf xml:lang="pol">np. w samolocie, ang: afterburner</s_inf>
             <gloss xml:lang="eng">afterburner</gloss>
             <gloss xml:lang="pol">dopalacz</gloss>
         </sense>
@@ -83898,6 +83897,7 @@
             <s_inf xml:lang="pol">ang: application system</s_inf>
             <gloss xml:lang="eng">application system</gloss>
             <gloss xml:lang="pol">system aplikacji</gloss>
+            <gloss xml:lang="pol">system aplikacyjny</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -91903,7 +91903,8 @@
             <s_inf xml:lang="eng">from 姫電話</s_inf>
             <s_inf xml:lang="pol">od 姫電話</s_inf>
             <gloss xml:lang="eng">highly decorated cell phone</gloss>
-            <gloss xml:lang="pol">bardzo ozdobiony telefon komórkowy</gloss>
+            <gloss xml:lang="pol">telefon komórkowy z wieloma ozdobami</gloss>
+            <gloss xml:lang="pol">telefon komórkowy z mnóstwem ozdób</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -93790,7 +93791,7 @@
             <xref type="see" seq="2438310" xk="流行性角結膜炎">流行性角結膜炎</xref>
             <field>medicine</field>
             <gloss xml:lang="eng">epidemic keratoconjunctivitis</gloss>
-            <gloss xml:lang="pol">ostre epidemiczne zapalenie spojówek</gloss>
+            <gloss xml:lang="pol">epidemiczne zapalenie rogówki i spojówek</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -95406,6 +95407,7 @@
             <gloss xml:lang="eng">remaining quantity</gloss>
             <gloss xml:lang="eng">residual quantity</gloss>
             <gloss xml:lang="pol">pozostała ilość</gloss>
+            <gloss xml:lang="pol">resztkowa ilość</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -99939,9 +99941,9 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">ang: wellness</s_inf>
+            <s_inf xml:lang="pol">fizyczna i psychiczna, ang: wellness</s_inf>
             <gloss xml:lang="eng">wellness</gloss>
-            <gloss xml:lang="pol">dobra kondycja (fizyczna i psychiczna)</gloss>
+            <gloss xml:lang="pol">dobra kondycja</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -117566,6 +117568,7 @@
             <s_inf xml:lang="pol">ang: recipient</s_inf>
             <gloss xml:lang="eng">recipient</gloss>
             <gloss xml:lang="pol">biorca</gloss>
+            <gloss xml:lang="pol">adresat</gloss>
             <gloss xml:lang="pol">odbiorca</gloss>
         </sense>
         <misc>
@@ -119685,14 +119688,15 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">szczególnie dla gejów, ang: homo bar</s_inf>
             <gloss xml:lang="eng">cruising bar, esp. for gays</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">bar typu cruising</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="87184" dictionaryEntryTypeList="WORD_NOUN" kana="ホモバー" romaji="homo baa" uniqueKey="-/ホモバー/1"/>
                 <entries id="87241" dictionaryEntryTypeList="WORD_NOUN" kana="ホモ・バー" romaji="homo baa" uniqueKey="-/ホモ・バー/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -146765,6 +146769,7 @@
             <s_inf xml:lang="pol">unieruchamiający złamaną kończynę</s_inf>
             <gloss xml:lang="eng">plaster cast</gloss>
             <gloss xml:lang="pol">gips</gloss>
+            <gloss xml:lang="pol">gipsowy odlew</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -147610,9 +147615,9 @@
             <gloss xml:lang="eng">being isolated</gloss>
             <gloss xml:lang="eng">being separated</gloss>
             <gloss xml:lang="eng">being cut off</gloss>
-            <gloss xml:lang="pol">stawać się izolowany</gloss>
-            <gloss xml:lang="pol">stawać się rozdzielony</gloss>
-            <gloss xml:lang="pol">stawać się oddzielony</gloss>
+            <gloss xml:lang="pol">bycie odizolowanym</gloss>
+            <gloss xml:lang="pol">bycie oddzielonym</gloss>
+            <gloss xml:lang="pol">bycie odciętym</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -149406,10 +149411,10 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">jednostka temperatury</s_inf>
             <gloss xml:lang="eng">kelvin</gloss>
             <gloss g_type="expl" xml:lang="eng">measure of temperature from absolute zero (-273C)</gloss>
-            <gloss xml:lang="pol">Kelwin</gloss>
+            <gloss xml:lang="pol">kelwin</gloss>
+            <gloss g_type="expl" xml:lang="pol">jednostka temperatury liczona od zera absolutnego (-273 °C)</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -149925,7 +149930,7 @@
             <s_inf xml:lang="pol">neuropsychiatryczne zaburzenie na podłożu organicznym o różnej etiologii</s_inf>
             <gloss xml:lang="eng">Korsakoff's syndrome</gloss>
             <gloss xml:lang="eng">Korsakoff's psychosis</gloss>
-            <gloss xml:lang="pol">Zespół Korsakowa</gloss>
+            <gloss xml:lang="pol">zespół Korsakowa</gloss>
             <gloss xml:lang="pol">psychoza Korsakowa</gloss>
         </sense>
         <misc>
@@ -168003,7 +168008,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1927840" sno="1" xr="ロスタイム">ロスタイム[1]</xref>
             <field>sports</field>
-            <s_inf xml:lang="pol">w sporcie, ang: injury time</s_inf>
+            <s_inf xml:lang="pol">ang: injury time</s_inf>
             <gloss xml:lang="eng">injury time</gloss>
             <gloss xml:lang="eng">stoppage time</gloss>
             <gloss xml:lang="pol">czas doliczony za przerwy w grze</gloss>
@@ -172913,6 +172918,7 @@
             <s_inf xml:lang="pol">ang: postmodern feminism</s_inf>
             <gloss xml:lang="eng">postmodern feminism</gloss>
             <gloss xml:lang="pol">postmodernistyczny feminizm</gloss>
+            <gloss xml:lang="pol">feminizm postmodernistyczny</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -187871,6 +187877,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <s_inf xml:lang="pol">gatunek południowoafrykańskiej rośliny wieloletniej z rodziny astrowatych, ang: blue daisy</s_inf>
             <gloss xml:lang="eng">blue daisy</gloss>
+            <gloss xml:lang="pol">jasieniec piaskowy</gloss>
             <gloss xml:lang="pol">felicja gawędkowa</gloss>
         </sense>
         <misc>
@@ -194049,9 +194056,9 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">ang: cut step</s_inf>
+            <s_inf xml:lang="pol">charakterystyczne cięcie włosów, w którym zamiast gładkiego cieniowania (jak w klasycznych warstwach) tworzy się wyraźne, kaskadowe stopnie z ostrą granicą między poszczególnymi długościami, ang: cut step</s_inf>
             <gloss xml:lang="eng">cut step</gloss>
-            <gloss xml:lang="pol">krok cięcia</gloss>
+            <gloss xml:lang="pol">strzyżenie schodkowe</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -210324,7 +210331,7 @@
         <sense>
             <pos>expressions (phrases, clauses, etc.)</pos>
             <field>baseball</field>
-            <s_inf xml:lang="pol">baseball, ang: no hit</s_inf>
+            <s_inf xml:lang="pol">ang: no hit</s_inf>
             <gloss xml:lang="eng">no hit</gloss>
             <gloss xml:lang="pol">bez uderzenia</gloss>
         </sense>
@@ -217438,10 +217445,9 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <pos>noun or participle which takes the aux. verb suru</pos>
             <pos>transitive verb</pos>
-            <s_inf xml:lang="pol">ang: razor cut, laser cutting</s_inf>
+            <s_inf xml:lang="pol">ang: laser cutting</s_inf>
             <gloss xml:lang="eng">laser cutting</gloss>
             <gloss xml:lang="eng">lasing</gloss>
-            <gloss xml:lang="pol">wygolona fryzura</gloss>
             <gloss xml:lang="pol">cięcie laserem</gloss>
             <gloss xml:lang="pol">cięcie laserowe</gloss>
         </sense>
@@ -222780,11 +222786,8 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <s_inf xml:lang="pol">ang: soft touch</s_inf>
             <gloss xml:lang="eng">soft touch</gloss>
-            <gloss xml:lang="pol">miękkie w dotyku</gloss>
-            <gloss xml:lang="pol">naiwniak</gloss>
-            <gloss xml:lang="pol">osoba, którą można łatwo naciągnąć</gloss>
-            <gloss xml:lang="pol">łatwa dziewczyna</gloss>
-            <gloss xml:lang="pol">puszczalska</gloss>
+            <gloss xml:lang="pol">miękki dotyk</gloss>
+            <gloss xml:lang="pol">delikatny dotyk</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -223736,7 +223739,7 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">samochodu, ang: spoiler</s_inf>
+            <s_inf xml:lang="pol">w pojeździe</s_inf>
             <gloss xml:lang="eng">spoiler</gloss>
             <gloss xml:lang="pol">spoiler</gloss>
         </sense>

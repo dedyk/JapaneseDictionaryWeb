@@ -14213,7 +14213,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1131610" xr="ミャンマー">ミャンマー</xref>
-            <s_inf xml:lang="pol">również pisane jako 緬甸</s_inf>
             <gloss xml:lang="eng">Burma</gloss>
             <gloss xml:lang="pol">Birma</gloss>
         </sense>
@@ -18447,7 +18446,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka</s_inf>
             <gloss xml:lang="eng">file separator</gloss>
             <gloss xml:lang="eng">FS</gloss>
             <gloss xml:lang="pol">separator plików</gloss>
@@ -37874,7 +37872,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>abbreviation</misc>
-            <s_inf xml:lang="pol">skrót</s_inf>
             <gloss xml:lang="eng">prima donna</gloss>
             <gloss xml:lang="pol">prima donna</gloss>
             <gloss xml:lang="pol">prymadonna</gloss>
@@ -57247,7 +57244,7 @@
             <xref type="see" seq="1124600" xr="ポークカツレツ">ポークカツレツ</xref>
             <field>food, cooking</field>
             <misc>abbreviation</misc>
-            <s_inf xml:lang="pol">skrót, ang: pork cutlet</s_inf>
+            <s_inf xml:lang="pol">ang: pork cutlet</s_inf>
             <gloss xml:lang="eng">pork cutlet</gloss>
             <gloss xml:lang="pol">kotlet wieprzowy</gloss>
             <gloss xml:lang="pol">kotlet schabowy</gloss>
@@ -77304,7 +77301,6 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1133280" xr="メタノール">メタノール</xref>
             <field>chemistry</field>
-            <s_inf xml:lang="pol">ang: methyl alcohol</s_inf>
             <gloss xml:lang="eng">methyl alcohol</gloss>
             <gloss xml:lang="eng">methanol</gloss>
             <gloss xml:lang="pol">alkohol metylowy</gloss>
@@ -88015,7 +88011,7 @@
             <reb kana_type="KATAKANA" romaji="razanie">ラザニエ</reb>
         </r_ele>
         <r_ele>
-            <reb kana_type="KATAKANA" romaji="razaanie">ラザーニェ</reb>
+            <reb kana_type="KATAKANA_EXCEPTION" romaji="razaanie">ラザーニェ</reb>
         </r_ele>
         <r_ele>
             <reb kana_type="KATAKANA" romaji="rasaniya">ラサニヤ</reb>
@@ -88023,9 +88019,10 @@
         <lsource xml:lang="ita"></lsource>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">danie z pieczonego makaronu, sera i warzyw</s_inf>
             <gloss xml:lang="eng">lasagna</gloss>
             <gloss xml:lang="eng">lasagne</gloss>
-            <gloss xml:lang="pol">lasagne (danie z pieczonego makaronu, sera i warzyw)</gloss>
+            <gloss xml:lang="pol">lasagne</gloss>
             <gloss xml:lang="pol">lazania</gloss>
         </sense>
         <misc>
@@ -103964,13 +103961,13 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <s_inf xml:lang="pol">ang: repertory system</s_inf>
             <gloss xml:lang="eng">repertory system</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">system repertuarowy</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="81791" dictionaryEntryTypeList="WORD_NOUN" kana="レパートリーシステム" romaji="repaatorii shisutemu" uniqueKey="-/レパートリーシステム/1"/>
                 <entries id="81843" dictionaryEntryTypeList="WORD_NOUN" kana="レパートリー・システム" romaji="repaatorii shisutemu" uniqueKey="-/レパートリー・システム/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -122768,6 +122765,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">oppressor</gloss>
             <gloss xml:lang="eng">tyrant</gloss>
+            <gloss xml:lang="pol">oprawca</gloss>
             <gloss xml:lang="pol">ciemiężca</gloss>
             <gloss xml:lang="pol">tyran</gloss>
             <gloss xml:lang="pol">despota</gloss>
@@ -124470,6 +124468,7 @@
             <gloss xml:lang="eng">to be at ease</gloss>
             <gloss xml:lang="pol">być zadowolonym</gloss>
             <gloss xml:lang="pol">czuć się zrelaksowanym</gloss>
+            <gloss xml:lang="pol">czuć się swobodnie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -202154,6 +202153,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">(hot) saltwater bath</gloss>
             <gloss xml:lang="pol">gorąca słona kąpiel</gloss>
+            <gloss xml:lang="pol">gorąca kąpiel w słonej wodzie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -221544,6 +221544,9 @@
             <ke_pri>news2</ke_pri>
             <ke_pri>nf44</ke_pri>
         </k_ele>
+        <k_ele>
+            <keb>下取</keb>
+        </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="shita dori">したどり</reb>
             <re_pri>news2</re_pri>
@@ -221561,6 +221564,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="64956" dictionaryEntryTypeList="WORD_NOUN" kanji="下取り" kana="したどり" romaji="shita dori" uniqueKey="下取り/したどり/1"/>
+                <entries id="328074" dictionaryEntryTypeList="WORD_NOUN" kanji="下取" kana="したどり" romaji="shita dori" uniqueKey="下取/したどり/1"/>
                 <attributeList type="COMMON_WORD"/>
                 <attributeList type="SURU_VERB"/>
                 <attributeList type="PRIORITY" value="107"/>
@@ -250292,6 +250296,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">caustic soda</gloss>
             <gloss xml:lang="eng">sodium hydroxide</gloss>
+            <gloss xml:lang="pol">soda kaustyczna</gloss>
             <gloss xml:lang="pol">wodorotlenek sodu</gloss>
         </sense>
         <misc>
@@ -259854,6 +259859,7 @@
             <s_inf xml:lang="pol">władzy ustawodawczej, zgromadzenia ustawodawczego</s_inf>
             <gloss xml:lang="eng">during a session (of the legislature)</gloss>
             <gloss xml:lang="pol">podczas posiedzenia</gloss>
+            <gloss xml:lang="pol">w trakcie sesji</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>

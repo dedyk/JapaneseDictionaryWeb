@@ -27464,6 +27464,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">the instruction of a teacher</gloss>
             <gloss xml:lang="pol">instrukcja nauczyciela</gloss>
+            <gloss xml:lang="pol">wskazówki nauczyciela</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -33560,6 +33561,19 @@
         </k_ele>
         <k_ele>
             <keb>已むを得ず</keb>
+            <ke_inf>rarely used kanji form</ke_inf>
+        </k_ele>
+        <k_ele>
+            <keb>やむ得ず</keb>
+            <ke_inf>search-only kanji form</ke_inf>
+        </k_ele>
+        <k_ele>
+            <keb>止む得ず</keb>
+            <ke_inf>search-only kanji form</ke_inf>
+        </k_ele>
+        <k_ele>
+            <keb>已む得ず</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="yamu o ezu">やむをえず</reb>
@@ -33585,6 +33599,9 @@
                 <entries id="118305" dictionaryEntryTypeList="WORD_EXPRESSION,WORD_ADVERB" kanji="やむを得ず" kana="やむをえず" romaji="yamu o ezu" uniqueKey="やむを得ず/やむをえず/1"/>
                 <entries id="118366" dictionaryEntryTypeList="WORD_EXPRESSION,WORD_ADVERB" kanji="止むを得ず" kana="やむをえず" romaji="yamu o ezu" uniqueKey="止むを得ず/やむをえず/1"/>
                 <entries id="118367" dictionaryEntryTypeList="WORD_EXPRESSION,WORD_ADVERB" kanji="已むを得ず" kana="やむをえず" romaji="yamu o ezu" uniqueKey="已むを得ず/やむをえず/1"/>
+                <entries id="328079" dictionaryEntryTypeList="WORD_EXPRESSION,WORD_ADVERB" kanji="やむ得ず" kana="やむをえず" romaji="yamu o ezu" uniqueKey="やむ得ず/やむをえず/1"/>
+                <entries id="328080" dictionaryEntryTypeList="WORD_EXPRESSION,WORD_ADVERB" kanji="止む得ず" kana="やむをえず" romaji="yamu o ezu" uniqueKey="止む得ず/やむをえず/1"/>
+                <entries id="328081" dictionaryEntryTypeList="WORD_EXPRESSION,WORD_ADVERB" kanji="已む得ず" kana="やむをえず" romaji="yamu o ezu" uniqueKey="已む得ず/やむをえず/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -54251,16 +54268,18 @@
             <keb>耳鼻咽喉専門医</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="jibiinkou senmon'i">じびいんこうせんもんい</reb>
+            <reb kana_type="HIRAGANA" romaji="jibi inkou senmon'i">じびいんこうせんもんい</reb>
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">ear, nose and throat specialist</gloss>
             <gloss xml:lang="pol">lekarz ds. ucha, nosa i gardła</gloss>
+            <gloss xml:lang="pol">otolaryngolog</gloss>
+            <gloss xml:lang="pol">laryngolog</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="83226" dictionaryEntryTypeList="WORD_NOUN" kanji="耳鼻咽喉専門医" kana="じびいんこうせんもんい" romaji="jibiinkou senmon'i" uniqueKey="耳鼻咽喉専門医/じびいんこうせんもんい/1"/>
+                <entries id="83226" dictionaryEntryTypeList="WORD_NOUN" kanji="耳鼻咽喉専門医" kana="じびいんこうせんもんい" romaji="jibi inkou senmon'i" uniqueKey="耳鼻咽喉専門医/じびいんこうせんもんい/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -110958,9 +110977,19 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1307780" sno="1" xk="子" xr="ね">子(ね)[1]</xref>
-            <xref type="see" seq="1576460" sno="1" xk="卯">卯[1]</xref>
+            <xref type="see" seq="1172250" sno="1" xk="丑">丑[1]</xref>
             <xref type="see" seq="1457270" sno="1" xk="寅">寅[1]</xref>
-            <gloss xml:lang="eng">12 signs of the Chinese zodiac</gloss>
+            <xref type="see" seq="1576460" sno="1" xk="卯" xr="う">卯(う)[1]</xref>
+            <xref type="see" seq="1416290" sno="1" xk="辰">辰[1]</xref>
+            <xref type="see" seq="1528180" sno="1" xk="巳" xr="み">巳(み)[1]</xref>
+            <xref type="see" seq="1268970" sno="1" xk="午" xr="うま">午(うま)[1]</xref>
+            <xref type="see" seq="1527090" sno="1" xk="未" xr="ひつじ">未(ひつじ)[1]</xref>
+            <xref type="see" seq="1362820" sno="1" xk="申">申[1]</xref>
+            <xref type="see" seq="1457290" sno="1" xk="酉">酉[1]</xref>
+            <xref type="see" seq="1567040" sno="1" xk="戌">戌[1]</xref>
+            <xref type="see" seq="1575920" sno="1" xk="亥">亥[1]</xref>
+            <s_inf xml:lang="pol">Szczur, Wół, Tygrys, Królik, Wąż, Koń, Owca, Małpa, Kogut, Pies i Dzik</s_inf>
+            <gloss xml:lang="eng">the 12 signs of the Chinese zodiac (the Rat, the Ox, the Tiger, the Rabbit, the Snake, the Horse, the Sheep, the Monkey, the Rooster, the Dog and the Boar)</gloss>
             <gloss xml:lang="pol">12 znaków chińskiego zodiaku</gloss>
         </sense>
         <misc>
@@ -112282,7 +112311,6 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1456120" xk="独立変数">独立変数</xref>
             <field>mathematics</field>
-            <s_inf xml:lang="pol">matematyka</s_inf>
             <gloss xml:lang="eng">dependent variable</gloss>
             <gloss xml:lang="pol">zmienna zależna</gloss>
         </sense>
@@ -147697,12 +147725,13 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">commercial customary law</gloss>
             <gloss xml:lang="eng">commercial custom law</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">prawo zwyczajowe w zakresie handlu</gloss>
+            <gloss xml:lang="pol">prawo zwyczajowe dotyczące handlu</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="57521" dictionaryEntryTypeList="WORD_NOUN" kanji="商慣習法" kana="しょうかんしゅうほう" romaji="shoukan shuuhou" uniqueKey="商慣習法/しょうかんしゅうほう/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -160979,6 +161008,7 @@
         </k_ele>
         <k_ele>
             <keb>照付ける</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="teri tsukeru">てりつける</reb>
@@ -194628,6 +194658,7 @@
         </k_ele>
         <k_ele>
             <keb>振替える</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="furi kaeru">ふりかえる</reb>
@@ -194637,15 +194668,21 @@
         <sense>
             <pos>Ichidan verb</pos>
             <pos>transitive verb</pos>
-            <gloss xml:lang="eng">to change (e.g. a bill)</gloss>
-            <gloss xml:lang="eng">to transfer (e.g. money)</gloss>
-            <gloss xml:lang="eng">to switch over</gloss>
+            <gloss xml:lang="eng">to switch</gloss>
+            <gloss xml:lang="eng">to change</gloss>
             <gloss xml:lang="eng">to move over</gloss>
-            <gloss xml:lang="pol">rozmieniać (np. banknoty)</gloss>
-            <gloss xml:lang="pol">przelać (np. pieniądze)</gloss>
             <gloss xml:lang="pol">przełączyć</gloss>
             <gloss xml:lang="pol">przerzucać</gloss>
             <gloss xml:lang="pol">przesuwać</gloss>
+        </sense>
+        <sense>
+            <pos>Ichidan verb</pos>
+            <pos>transitive verb</pos>
+            <field>finance</field>
+            <s_inf xml:lang="pol">pieniądze na inne konto</s_inf>
+            <gloss xml:lang="eng">to transfer (money to a different account)</gloss>
+            <gloss xml:lang="pol">przelać</gloss>
+            <gloss xml:lang="pol">przelewać</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -228842,7 +228879,7 @@
             <keb>衰え果てる</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="otoroehateru">おとろえはてる</reb>
+            <reb kana_type="HIRAGANA" romaji="otoroe hateru">おとろえはてる</reb>
         </r_ele>
         <sense>
             <pos>Ichidan verb</pos>
@@ -228852,7 +228889,7 @@
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="40105" dictionaryEntryTypeList="WORD_VERB_RU" kanji="衰え果てる" kana="おとろえはてる" romaji="otoroehateru" uniqueKey="衰え果てる/おとろえはてる/1"/>
+                <entries id="40105" dictionaryEntryTypeList="WORD_VERB_RU" kanji="衰え果てる" kana="おとろえはてる" romaji="otoroe hateru" uniqueKey="衰え果てる/おとろえはてる/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
@@ -269026,18 +269063,18 @@
             <keb>切れ込む</keb>
         </k_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="kirekomu">きれこむ</reb>
+            <reb kana_type="HIRAGANA" romaji="kire komu">きれこむ</reb>
         </r_ele>
         <sense>
             <pos>Godan verb with 'mu' ending</pos>
             <pos>intransitive verb</pos>
             <gloss xml:lang="eng">to cut into</gloss>
-            <gloss xml:lang="pol">???</gloss>
+            <gloss xml:lang="pol">pokroić na</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="63255" dictionaryEntryTypeList="WORD_VERB_U" kanji="切れ込む" kana="きれこむ" romaji="kirekomu" uniqueKey="切れ込む/きれこむ/1"/>
-                <attributeList type="PRIORITY" value="999"/>
+                <entries id="63255" dictionaryEntryTypeList="WORD_VERB_U" kanji="切れ込む" kana="きれこむ" romaji="kire komu" uniqueKey="切れ込む/きれこむ/1"/>
+                <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
             </oldPolishJapaneseDictionary>
         </misc>
@@ -277585,7 +277622,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">right to prior consideration</gloss>
-            <gloss xml:lang="pol">prawo do wcześniejszego wynagrodzenia</gloss>
+            <gloss xml:lang="pol">prawo do wcześniejszego rozpatrzenia</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>

@@ -13629,9 +13629,11 @@
         </k_ele>
         <k_ele>
             <keb>振替え</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <k_ele>
             <keb>振り替</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="furikae">ふりかえ</reb>
@@ -41155,14 +41157,15 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <gloss xml:lang="eng">aquatic products</gloss>
+            <pos>noun or verb acting prenominally</pos>
+            <s_inf xml:lang="pol">np. owoce morza</s_inf>
+            <gloss xml:lang="eng">aquatic products (e.g. seafood)</gloss>
             <gloss xml:lang="eng">fisheries</gloss>
-            <gloss xml:lang="pol">gospodarka morska</gloss>
-            <gloss xml:lang="pol">rybołówstwo</gloss>
+            <gloss xml:lang="pol">produkty pochodzenia wodnego</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
-                <entries id="11180" dictionaryEntryTypeList="WORD_NOUN" kanji="水産" kana="すいさん" romaji="suisan" uniqueKey="水産/すいさん/1"/>
+                <entries id="11180" dictionaryEntryTypeList="WORD_NOUN,WORD_ADJECTIVE_F" kanji="水産" kana="すいさん" romaji="suisan" uniqueKey="水産/すいさん/1"/>
                 <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="102"/>
                 <groupsList>OTHER</groupsList>
@@ -69723,9 +69726,21 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <pos>noun or participle which takes the aux. verb suru</pos>
             <pos>intransitive verb</pos>
-            <gloss xml:lang="eng">prominent</gloss>
+            <gloss xml:lang="eng">prominence</gloss>
+            <gloss xml:lang="eng">being prominent</gloss>
             <gloss xml:lang="eng">standing out</gloss>
+            <gloss xml:lang="pol">wybitność</gloss>
+            <gloss xml:lang="pol">bycie wybitnym</gloss>
             <gloss xml:lang="pol">wyróżnianie się</gloss>
+        </sense>
+        <sense>
+            <pos>noun (common) (futsuumeishi)</pos>
+            <pos>noun or participle which takes the aux. verb suru</pos>
+            <pos>intransitive verb</pos>
+            <xref type="see" seq="1117910" sno="2" xr="プロミネンス">プロミネンス[2]</xref>
+            <field>linguistics</field>
+            <gloss xml:lang="eng">prominence</gloss>
+            <gloss xml:lang="pol">znaczenie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -75800,6 +75815,8 @@
             <gloss xml:lang="eng">culture medium</gloss>
             <gloss xml:lang="eng">growth medium</gloss>
             <gloss xml:lang="pol">pożywka bakteryjna</gloss>
+            <gloss xml:lang="pol">pożywka hodowlana</gloss>
+            <gloss xml:lang="pol">pożywka wzrostowa</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -90439,7 +90456,7 @@
             <pos>noun or participle which takes the aux. verb suru</pos>
             <pos>intransitive verb</pos>
             <gloss xml:lang="eng">offering a wand with hemp and paper streamers to a Shinto god</gloss>
-            <gloss xml:lang="pol">ofiarowując różdżkę z konopiami i papierowymi serpentynami bogu Shinto</gloss>
+            <gloss xml:lang="pol">ofiarowanie różdżki z konopi i papierowych serpentyn shintoistycznemu bogu</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -110681,10 +110698,12 @@
             <ke_pri>nf40</ke_pri>
         </k_ele>
         <k_ele>
-            <keb>かかえ込む</keb>
+            <keb>抱えこむ</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <k_ele>
-            <keb>抱えこむ</keb>
+            <keb>かかえ込む</keb>
+            <ke_inf>search-only kanji form</ke_inf>
         </k_ele>
         <r_ele>
             <reb kana_type="HIRAGANA" romaji="kakae komu">かかえこむ</reb>
@@ -110712,8 +110731,8 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="61504" dictionaryEntryTypeList="WORD_VERB_U" kanji="抱え込む" kana="かかえこむ" romaji="kakae komu" uniqueKey="抱え込む/かかえこむ/1"/>
-                <entries id="61746" dictionaryEntryTypeList="WORD_VERB_U" kanji="かかえ込む" kana="かかえこむ" romaji="kakae komu" uniqueKey="かかえ込む/かかえこむ/1"/>
                 <entries id="61747" dictionaryEntryTypeList="WORD_VERB_U" kanji="抱えこむ" kana="かかえこむ" romaji="kakae komu" uniqueKey="抱えこむ/かかえこむ/1"/>
+                <entries id="61746" dictionaryEntryTypeList="WORD_VERB_U" kanji="かかえ込む" kana="かかえこむ" romaji="kakae komu" uniqueKey="かかえ込む/かかえこむ/1"/>
                 <attributeList type="COMMON_WORD"/>
                 <attributeList type="PRIORITY" value="107"/>
                 <groupsList>OTHER</groupsList>
@@ -118737,9 +118756,10 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">np. wysłannika</s_inf>
             <gloss xml:lang="eng">dispatching to the United States (e.g. an envoy)</gloss>
             <gloss xml:lang="eng">sending to the United States</gloss>
-            <gloss xml:lang="pol">wysyłanie do Ameryki</gloss>
+            <gloss xml:lang="pol">wysyłanie do Stanów Zjednoczonych</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -124777,8 +124797,9 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
+            <s_inf xml:lang="pol">np. podczas siadania</s_inf>
             <gloss xml:lang="eng">having buttock cleavage exposed (e.g. when sitting)</gloss>
-            <gloss xml:lang="pol">dżinsy noszone nisko, odsłaniając część pośladków</gloss>
+            <gloss xml:lang="pol">odsłonięcie części pośladków</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -134798,6 +134819,8 @@
             <gloss xml:lang="eng">partly for fun</gloss>
             <gloss xml:lang="eng">capricious</gloss>
             <gloss xml:lang="pol">częściowo dla zabawy</gloss>
+            <gloss xml:lang="pol">kapryśny</gloss>
+            <gloss xml:lang="pol">grymaśny</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -156847,7 +156870,7 @@
             <reb kana_type="HIRAGANA" romaji="seppi">せっぴ</reb>
         </r_ele>
         <r_ele>
-            <reb kana_type="HIRAGANA" romaji="yukibisashi">ゆきびさし</reb>
+            <reb kana_type="HIRAGANA" romaji="yuki bisashi">ゆきびさし</reb>
             <re_restr>雪庇</re_restr>
         </r_ele>
         <sense>
@@ -156859,7 +156882,7 @@
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="163596" dictionaryEntryTypeList="WORD_NOUN" kanji="雪庇" kana="せっぴ" romaji="seppi" uniqueKey="雪庇/せっぴ/1"/>
-                <entries id="163620" dictionaryEntryTypeList="WORD_NOUN" kanji="雪庇" kana="ゆきびさし" romaji="yukibisashi" uniqueKey="雪庇/ゆきびさし/1"/>
+                <entries id="163620" dictionaryEntryTypeList="WORD_NOUN" kanji="雪庇" kana="ゆきびさし" romaji="yuki bisashi" uniqueKey="雪庇/ゆきびさし/1"/>
                 <entries id="229756" dictionaryEntryTypeList="WORD_NOUN" kanji="雪ぴ" kana="せっぴ" romaji="seppi" uniqueKey="雪ぴ/せっぴ/1"/>
                 <attributeList type="PRIORITY" value="255"/>
                 <groupsList>OTHER</groupsList>
@@ -160674,8 +160697,9 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <misc>historical term</misc>
+            <s_inf xml:lang="pol">autostrada Edo-Kyoto z okresu Edo w Japonii</s_inf>
             <gloss xml:lang="eng">fifty-three stations on the Tōkaidō (Edo-Kyoto highway in Edo-period Japan)</gloss>
-            <gloss xml:lang="pol">53 stacje na Tōkaidō (autostrada Edo-Kyoto z okresu Edo w Japonii)</gloss>
+            <gloss xml:lang="pol">53 stacje na Tōkaidō</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -166374,9 +166398,9 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">entrance</gloss>
             <gloss xml:lang="eng">hatch(way)</gloss>
-            <gloss xml:lang="pol">luk</gloss>
-            <gloss xml:lang="pol">właz</gloss>
             <gloss xml:lang="pol">wejście</gloss>
+            <gloss xml:lang="pol">właz</gloss>
+            <gloss xml:lang="pol">luk</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -188242,9 +188266,9 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">sharp tongue</gloss>
             <gloss xml:lang="eng">eloquence</gloss>
+            <gloss xml:lang="pol">ostry język</gloss>
             <gloss xml:lang="pol">elokwencja</gloss>
             <gloss xml:lang="pol">wymowność</gloss>
-            <gloss xml:lang="pol">(ostry) język</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -220339,7 +220363,8 @@
             <xref type="see" seq="2069190" xk="攻めあぐねる">攻めあぐねる</xref>
             <gloss xml:lang="eng">to be at a loss how to continue an offensive</gloss>
             <gloss xml:lang="eng">to be frustrated by impregnable defences</gloss>
-            <gloss xml:lang="pol">stracić atakującą inicjatywę</gloss>
+            <gloss xml:lang="pol">być zagubionym, nie wiedzieć, jak kontynuować ofensywę</gloss>
+            <gloss xml:lang="pol">być sfrustrowanym przez obronę nie do zdobycia</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -239315,7 +239340,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <gloss xml:lang="eng">streamlined management</gloss>
-            <gloss xml:lang="pol">sprawniejsze zarządzanie</gloss>
+            <gloss xml:lang="pol">usprawnione zarządzanie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -256634,6 +256659,7 @@
             <gloss xml:lang="eng">complementary color</gloss>
             <gloss xml:lang="eng">complementary colour</gloss>
             <gloss xml:lang="pol">kolor uzupełniający</gloss>
+            <gloss xml:lang="pol">kolor dopełniający</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -256924,6 +256950,7 @@
             <gloss xml:lang="eng">appointment to an official post</gloss>
             <gloss xml:lang="eng">assignment</gloss>
             <gloss xml:lang="pol">mianowanie na urzędnicze stanowisko</gloss>
+            <gloss xml:lang="pol">przydział</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -270441,9 +270468,9 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">prefektury Okayama, Hiroshima, Shimane, Tottori i Yamaguchi</s_inf>
+            <s_inf xml:lang="pol">zachodnia część wyspy Honsiu, obejmująca prefektury Okayama, Hiroshima, Yamaguchi, Tottori i Shimane</s_inf>
             <gloss xml:lang="eng">Chūgoku region (western part of Honshu comprising the prefectures of Okayama, Hiroshima, Yamaguchi, Tottori and Shimane)</gloss>
-            <gloss xml:lang="pol">region Chugoku zachodniego Honshu</gloss>
+            <gloss xml:lang="pol">region Chūgoku</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>

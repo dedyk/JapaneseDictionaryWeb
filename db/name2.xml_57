@@ -882011,4 +882011,87 @@
             </oldPolishJapaneseDictionary>
         </misc>
     </entry>
+    <entry>
+        <ent_seq>5748122</ent_seq>
+        <r_ele>
+            <reb>ワニノコ</reb>
+            <romaji>waninoko</romaji>
+        </r_ele>
+        <trans>
+            <name_type>creature</name_type>
+            <name_type>fiction</name_type>
+            <trans_det xml:lang="eng">Totodile (Pokémon)</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_CREATURE</dictionaryEntryTypeList>
+                <dictionaryEntryTypeList>WORD_FICT</dictionaryEntryTypeList>
+                <uniqueKeyList>-/ワニノコ/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748123</ent_seq>
+        <k_ele>
+            <keb>鋳車</keb>
+        </k_ele>
+        <r_ele>
+            <reb>いぐるま</reb>
+            <romaji>iguruma</romaji>
+        </r_ele>
+        <trans>
+            <name_type>family or surname</name_type>
+            <name_type>fiction</name_type>
+            <trans_det xml:lang="eng">Iguruma</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_SURNAME_NAME</dictionaryEntryTypeList>
+                <dictionaryEntryTypeList>WORD_FICT</dictionaryEntryTypeList>
+                <uniqueKeyList>鋳車/いぐるま/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748124</ent_seq>
+        <k_ele>
+            <keb>火鉈</keb>
+        </k_ele>
+        <r_ele>
+            <reb>ひなた</reb>
+            <romaji>hinata</romaji>
+        </r_ele>
+        <trans>
+            <name_type>female given name or forename</name_type>
+            <name_type>fiction</name_type>
+            <trans_det xml:lang="eng">Hinata</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_FEMALE_NAME</dictionaryEntryTypeList>
+                <dictionaryEntryTypeList>WORD_FICT</dictionaryEntryTypeList>
+                <uniqueKeyList>火鉈/ひなた/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
+    <entry>
+        <ent_seq>5748125</ent_seq>
+        <k_ele>
+            <keb>淘宝</keb>
+        </k_ele>
+        <r_ele>
+            <reb>タオバオ</reb>
+            <romaji>taobao</romaji>
+        </r_ele>
+        <trans>
+            <name_type>service</name_type>
+            <trans_det xml:lang="eng">Taobao (Chinese online shopping platform)</trans_det>
+        </trans>
+        <misc>
+            <oldPolishJapaneseDictionary>
+                <dictionaryEntryTypeList>WORD_SERVICE</dictionaryEntryTypeList>
+                <uniqueKeyList>淘宝/タオバオ/1</uniqueKeyList>
+            </oldPolishJapaneseDictionary>
+        </misc>
+    </entry>
 </JMnedict>

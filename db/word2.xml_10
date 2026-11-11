@@ -17269,6 +17269,7 @@
             <pos>expressions (phrases, clauses, etc.)</pos>
             <gloss xml:lang="eng">the same as this</gloss>
             <gloss xml:lang="pol">taki sam jak to</gloss>
+            <gloss xml:lang="pol">tak samo jak to</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -26471,6 +26472,8 @@
             <gloss xml:lang="pol">z tego powodu</gloss>
             <gloss xml:lang="pol">na tej podstawie</gloss>
             <gloss xml:lang="pol">w konsekwencji</gloss>
+            <gloss xml:lang="pol">przecież</gloss>
+            <gloss xml:lang="pol">bo w końcu</gloss>
         </sense>
         <sense>
             <pos>expressions (phrases, clauses, etc.)</pos>
@@ -38636,7 +38639,9 @@
             <gloss xml:lang="eng">relentlessly</gloss>
             <gloss xml:lang="pol">nieubłaganie</gloss>
             <gloss xml:lang="pol">nieustępliwie</gloss>
+            <gloss xml:lang="pol">nieustannie</gloss>
             <gloss xml:lang="pol">zawzięcie</gloss>
+            <gloss xml:lang="pol">uparcie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -77050,6 +77055,7 @@
             <gloss xml:lang="eng">wet suit</gloss>
             <gloss xml:lang="pol">pianka do nurkowania</gloss>
             <gloss xml:lang="pol">strój piankowy do nurkowania</gloss>
+            <gloss xml:lang="pol">kombinezon do nurkowania</gloss>
             <gloss xml:lang="pol">skafander</gloss>
         </sense>
         <misc>
@@ -91744,7 +91750,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>golf</field>
-            <s_inf xml:lang="pol">golf, ang: over par</s_inf>
+            <s_inf xml:lang="pol">ang: over par</s_inf>
             <gloss xml:lang="eng">over par</gloss>
             <gloss xml:lang="pol">ponad par</gloss>
         </sense>
@@ -100984,6 +100990,7 @@
             <s_inf xml:lang="pol">ang: car life</s_inf>
             <gloss xml:lang="eng">car life</gloss>
             <gloss xml:lang="pol">życie w samochodzie</gloss>
+            <gloss xml:lang="pol">samochodowe życie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -101568,7 +101575,7 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">w boksie, ang: counterblow</s_inf>
+            <s_inf xml:lang="pol">np. w boksie, ang: counterblow</s_inf>
             <gloss xml:lang="eng">counterblow</gloss>
             <gloss xml:lang="pol">kontra</gloss>
         </sense>
@@ -107363,7 +107370,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>finance</field>
-            <s_inf xml:lang="pol">ang: country risk</s_inf>
+            <s_inf xml:lang="pol">ryzyko związane z inwestowaniem lub udzielaniem kredytów w danym kraju, ang: country risk</s_inf>
             <gloss xml:lang="eng">country risk (risk of investing or lending in a country)</gloss>
             <gloss xml:lang="pol">ryzyko kraju</gloss>
         </sense>
@@ -114020,6 +114027,7 @@
             <s_inf xml:lang="pol">ang: cutie</s_inf>
             <gloss xml:lang="eng">cutie</gloss>
             <gloss xml:lang="pol">ślicznotka</gloss>
+            <gloss xml:lang="pol">słodziak</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -117125,7 +117133,7 @@
     <entry>
         <ent_seq>1043600</ent_seq>
         <r_ele>
-            <reb kana_type="KATAKANA" romaji="kuooku">クォーク</reb>
+            <reb kana_type="KATAKANA_EXCEPTION" romaji="kuooku">クォーク</reb>
         </r_ele>
         <r_ele>
             <reb kana_type="KATAKANA" romaji="kuooku">クオーク</reb>
@@ -125744,6 +125752,7 @@
             <gloss xml:lang="eng">group discussion</gloss>
             <gloss xml:lang="pol">dyskusja grupowa</gloss>
             <gloss xml:lang="pol">grupowa dyskusja</gloss>
+            <gloss xml:lang="pol">dyskusja w grupie</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -137748,9 +137757,9 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">ang: conditioner</s_inf>
+            <s_inf xml:lang="pol">np. do włosów, skóry i etc, ang: conditioner</s_inf>
             <gloss xml:lang="eng">conditioner (hair, skin, etc.)</gloss>
-            <gloss xml:lang="pol">odżywka do włosów</gloss>
+            <gloss xml:lang="pol">odżywka</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -138579,7 +138588,7 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>computing</field>
-            <s_inf xml:lang="pol">informatyka, ang: compiler</s_inf>
+            <s_inf xml:lang="pol">ang: compiler</s_inf>
             <gloss xml:lang="eng">compiler</gloss>
             <gloss xml:lang="pol">kompilator</gloss>
         </sense>
@@ -144533,6 +144542,7 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1751150" xk="精神分析">精神分析</xref>
             <misc>rare term</misc>
+            <s_inf xml:lang="pol">ang: psychoanalysis</s_inf>
             <gloss xml:lang="eng">psychoanalysis</gloss>
             <gloss xml:lang="pol">psychoanaliza</gloss>
         </sense>
@@ -146241,7 +146251,8 @@
             <pos>noun (common) (futsuumeishi)</pos>
             <s_inf xml:lang="pol">ang: sound man</s_inf>
             <gloss xml:lang="eng">sound man</gloss>
-            <gloss xml:lang="pol">zdrowy mężczyzna</gloss>
+            <gloss xml:lang="pol">dźwiękowiec</gloss>
+            <gloss xml:lang="pol">realizator dźwięku</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -164041,9 +164052,9 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <xref type="see" seq="1316250" xk="時差ぼけ" xr="じさぼけ">時差ぼけ(じさぼけ)</xref>
-            <s_inf xml:lang="pol">ang: jet-lag</s_inf>
+            <s_inf xml:lang="pol">złe samopoczucie z powodu różnicy między strefami czasowymi</s_inf>
             <gloss xml:lang="eng">jet lag</gloss>
-            <gloss xml:lang="pol">złe samopoczucie z powodu różnicy między strefami czasowymi</gloss>
+            <gloss xml:lang="pol">jet lag</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -177081,6 +177092,7 @@
             <s_inf xml:lang="pol">ang: steam iron</s_inf>
             <gloss xml:lang="eng">steam iron</gloss>
             <gloss xml:lang="pol">żelazko z nawilżaczem</gloss>
+            <gloss xml:lang="pol">żelazko ze spryskiwaczem</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -189476,6 +189488,7 @@
             <gloss xml:lang="eng">sorting</gloss>
             <gloss xml:lang="eng">categorization</gloss>
             <gloss xml:lang="pol">sortowanie</gloss>
+            <gloss xml:lang="pol">kategoryzacja</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -209944,9 +209957,9 @@
         </r_ele>
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
-            <s_inf xml:lang="pol">ang: tokay</s_inf>
+            <s_inf xml:lang="pol">rodzaj małego gekona</s_inf>
             <gloss xml:lang="eng">Tokay</gloss>
-            <gloss xml:lang="pol">rodzaj małego gekona</gloss>
+            <gloss xml:lang="pol">Tokay</gloss>
         </sense>
         <misc>
             <oldPolishJapaneseDictionary>
@@ -227722,6 +227735,12 @@
             <gloss xml:lang="eng">rough draft</gloss>
             <gloss xml:lang="pol">rozrysowanie kadrów</gloss>
         </sense>
+        <sense>
+            <pos>noun (common) (futsuumeishi)</pos>
+            <field>manga</field>
+            <gloss xml:lang="eng">dialogue in a speech balloon</gloss>
+            <gloss xml:lang="pol">dialog w dymku</gloss>
+        </sense>
         <misc>
             <oldPolishJapaneseDictionary>
                 <entries id="19432" dictionaryEntryTypeList="WORD_NOUN" kana="ネーム" romaji="neemu" uniqueKey="-/ネーム/1"/>
@@ -231912,7 +231931,6 @@
         <sense>
             <pos>noun (common) (futsuumeishi)</pos>
             <field>music</field>
-            <s_inf xml:lang="pol">muzyka, słowo pochodzenia włoskiego</s_inf>
             <gloss xml:lang="eng">non troppo</gloss>
             <gloss xml:lang="pol">non troppo</gloss>
         </sense>
