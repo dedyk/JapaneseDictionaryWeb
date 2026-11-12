@@ -25,6 +25,8 @@ import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList;
 import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.IsRobot;
+import pl.idedyk.japanese.dictionary.web.config.xsd.Config.Firewall.HostBlockList.HostBlock.NotIsRobot;
 import pl.idedyk.japanese.dictionary.web.config.xsd.HostBlockOperation;
 import pl.idedyk.japanese.dictionary.web.controller.CaptchaController;
 import pl.idedyk.japanese.dictionary.web.logger.LoggerSender;
@@ -271,6 +273,28 @@ public class FirewallFilter implements Filter {
 					numberOfSatisfiedConditions++;
 				}
 			}
+			
+			// czy to robot
+			IsRobot isRobot = hostBlock.getIsRobot();
+			
+			if (isRobot != null) {
+				numberOfCheckedConditions++;
+				
+				if (clientInfo.isRobot == true) {						
+					numberOfSatisfiedConditions++;
+				}				
+			}
+			
+			// czy to nie jest robot
+			NotIsRobot notIsRobot = hostBlock.getNotIsRobot();
+			
+			if (notIsRobot != null) {
+				numberOfCheckedConditions++;
+				
+				if (clientInfo.isRobot == false) {						
+					numberOfSatisfiedConditions++;
+				}				
+			}			
 			
 			//
 			

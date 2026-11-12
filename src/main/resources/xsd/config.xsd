@@ -158,6 +158,16 @@
 															</xsd:simpleContent>																							
 														</xsd:complexType>										
 													</xsd:element>
+													
+													<xsd:element name="isRobot" minOccurs="0" maxOccurs="1">
+														<xsd:complexType>
+														</xsd:complexType>
+													</xsd:element>
+
+													<xsd:element name="notIsRobot" minOccurs="0" maxOccurs="1">
+														<xsd:complexType>
+														</xsd:complexType>
+													</xsd:element>
 												</xsd:sequence>
 																								
 												<xsd:attribute name="operation" use="required" type="hostBlockOperation" />
