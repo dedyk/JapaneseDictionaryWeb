@@ -297,6 +297,11 @@ public class GenerateGenericLogDetailsTag extends GenerateDictionaryDetailsTagAb
         
         addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.blacklistLevel"), blacklistLevel == null ? "" : blacklistLevel.toString());
         
+        // czy robot
+        boolean isRobot = genericLog.isIsRobot();
+        
+        addRowToTable(table, getMessage("admin.panel.genericLogDetails.page.genericLog.mainInfo.isRobot"), String.valueOf(isRobot));        
+        
 		panelBody.addHtmlElement(table);
         		
 		panelDiv.addHtmlElement(panelBody);

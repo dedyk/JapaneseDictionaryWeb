@@ -17,6 +17,7 @@ import pl.idedyk.japanese.dictionary.web.common.ClientInfo;
 import pl.idedyk.japanese.dictionary.web.common.Utils;
 import pl.idedyk.japanese.dictionary.web.service.BlacklistManager;
 import pl.idedyk.japanese.dictionary.web.service.GeoIPService;
+import pl.idedyk.japanese.dictionary.web.service.UserAgentService;
 
 public class GetClientInfoFilter implements Filter {
 	
@@ -29,6 +30,7 @@ public class GetClientInfoFilter implements Filter {
 		
 		GeoIPService geoIPService = getGeoIPService(request);
 		BlacklistManager blacklistManager = getBlacklistManager(httpServletRequest);
+		UserAgentService userAgentService = getUserAgentService(httpServletRequest);
 		
 		// utworzenie informacji o kliencie
 		ClientInfo clientInfo = new ClientInfo();
@@ -44,6 +46,8 @@ public class GetClientInfoFilter implements Filter {
 		clientInfo.country = null;
 		clientInfo.autonomousSystemNumber = null;
 		
+		clientInfo.isRobot = userAgentService.isRobot(clientInfo.userAgent);
+				
 		clientInfo.blackListLevel = null;
 		
 		try {
@@ -85,5 +89,12 @@ public class GetClientInfoFilter implements Filter {
 		
 		return blacklistManager;		
 	}
-
+	
+	private UserAgentService getUserAgentService(ServletRequest request) {
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+		
+		UserAgentService userAgentService = webApplicationContext.getBean(UserAgentService.class);
+		
+		return userAgentService;		
+	}
 }

@@ -26,6 +26,8 @@ public class GenericLog implements Serializable {
 	private String remoteHost;
 	private BigDecimal blackListLevel;
 	
+	private Boolean isRobot;
+	
 	private GenericLogOperationEnum operation;
 
 	public Long getId() {
@@ -130,5 +132,13 @@ public class GenericLog implements Serializable {
 
 	public void setOperation(GenericLogOperationEnum operation) {
 		this.operation = operation;
-	}	
+	}
+
+	public boolean isIsRobot() {
+		return isRobot;
+	}
+
+	public void setIsRobot(boolean isRobot) {
+		this.isRobot = isRobot;
+	}
 }

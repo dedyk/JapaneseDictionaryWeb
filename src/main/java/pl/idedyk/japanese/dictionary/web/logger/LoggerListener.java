@@ -118,6 +118,7 @@ public class LoggerListener {
 		String remoteIpAsn = null;
 		String remoteIpAsnOrganizationName = null;
 		Integer blackListLevel = null;
+		boolean isRobot = false;
 		
 		if (clientInfo != null) {
 			remoteIp = clientInfo.ip;
@@ -126,10 +127,11 @@ public class LoggerListener {
 			remoteIpAsn = clientInfo.autonomousSystemNumber;
 			remoteIpAsnOrganizationName = clientInfo.autonomousSystemOrganization;
 			blackListLevel = clientInfo.blackListLevel;
+			isRobot = clientInfo.isRobot;
 		}
 		
 		// ogolna obsluga			
-		logger.info("Przetwarzam zadanie " + operation + " z kolejki od: " + remoteIp + " (" + remoteIpAsn + ", " + remoteIpAsnOrganizationName + ", "  + remoteIpCountry + ") / " + remoteIpHost);
+		logger.info("Przetwarzam zadanie " + operation + " z kolejki od: " + remoteIp + " (" + remoteIpAsn + ", " + remoteIpAsnOrganizationName + ", "  + remoteIpCountry + ", "  + isRobot + ") / " + remoteIpHost);
 		
 		// utworzenie wpisu do bazy danych
 		genericLog = new GenericLog();
@@ -145,6 +147,7 @@ public class LoggerListener {
 		genericLog.setRefererURL(loggerModelCommon.getRefererURL());
 		genericLog.setRemoteHost(remoteIpHost);
 		genericLog.setBlackListLevel(blackListLevel != null ? BigDecimal.valueOf(blackListLevel) : null);
+		genericLog.setIsRobot(isRobot);
 		genericLog.setOperation(operation);
 		
 		// wstawienie wpisu do bazy danych

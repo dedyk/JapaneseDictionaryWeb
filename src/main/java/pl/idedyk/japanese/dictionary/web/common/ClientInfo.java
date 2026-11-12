@@ -21,6 +21,7 @@ public class ClientInfo implements Serializable {
 	public String autonomousSystemNumber;
 	public String autonomousSystemOrganization;
 	public String country;
+	public boolean isRobot;
 	
 	public Integer blackListLevel;
 

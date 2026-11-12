@@ -50,7 +50,7 @@ public class UserAgentService {
 			return false;
 		}
 		
-		return deviceClass.equalsIgnoreCase("Robot") == true;		
+		return deviceClass.startsWith("Robot") == true;		
 	}
 	
 	/*
