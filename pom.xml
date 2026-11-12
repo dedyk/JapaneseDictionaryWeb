@@ -269,7 +269,7 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20240303</version>
+			<version>20260814</version>
 		</dependency>
 
 		<dependency>
@@ -372,7 +372,7 @@
 		<dependency>
 		    <groupId>com.google.guava</groupId>
 		    <artifactId>guava</artifactId>
-		    <version>32.1.1-jre</version>
+		    <version>32.1.2-jre</version>
 		</dependency>
 
 	    <dependency>
