@@ -1674,7 +1674,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					// rodzaj tego slowa
 					Div dictionaryEntryTypeDiv = new Div("panel-heading");
 					
-					String dictionaryEntryTypeString = getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate.dictionaryEntryTypeAs") + " " + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName();
+					String dictionaryEntryTypeString = getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaExampleFormConjugate.dictionaryEntryTypeAs") + " " + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName();
 					
 					dictionaryEntryTypeDiv.addHtmlElement(new Text(dictionaryEntryTypeString));
 					dictionaryEntryGrammaTypeMainDiv.addHtmlElement(dictionaryEntryTypeDiv);
@@ -2207,7 +2207,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					// rodzaj tego slowa
 					Div dictionaryEntryTypeDiv = new Div("panel-heading");
 					
-					String dictionaryEntryTypeString = getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate.dictionaryEntryTypeAs") + " " + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName();
+					String dictionaryEntryTypeString = getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaExampleFormConjugate.dictionaryEntryTypeAs") + " " + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName();
 					
 					dictionaryEntryTypeDiv.addHtmlElement(new Text(dictionaryEntryTypeString));
 					dictionaryEntryExampleTypeMainDiv.addHtmlElement(dictionaryEntryTypeDiv);
