@@ -1626,7 +1626,93 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			
 			panelDiv.addHtmlElement(panelBody);
 
-			// wygenerowanie zakladek
+			// wygenerowanie wszystkich kombinacji slowek i typow
+			for (GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry : grammaFormConjugateAndExampleEntryMap.values()) {
+				
+				DictionaryEntry currentGrammaDictionaryEntry = grammaFormConjugateAndExampleEntry.dictionaryEntry;
+
+				// glowny dic dla danego slowa
+				Div dictionaryEntryGrammaMainDiv = new Div("panel panel-default");
+
+				// tytul tego slowa
+				Div dictionaryEntryGrammaWordTitleDiv = new Div("panel-heading");					
+				dictionaryEntryGrammaWordTitleDiv.addHtmlElement(new Text((
+						currentGrammaDictionaryEntry.isKanjiExists() == true ? currentGrammaDictionaryEntry.getKanji()  + ", " : "") + currentGrammaDictionaryEntry.getKana()));					
+				dictionaryEntryGrammaMainDiv.addHtmlElement(dictionaryEntryGrammaWordTitleDiv);
+				
+				// zawartosc sekcji
+				Div dictionaryEntryGrammaMainBodyDiv = new Div("panel-body");
+				dictionaryEntryGrammaMainDiv.addHtmlElement(dictionaryEntryGrammaMainBodyDiv);
+				
+				// pokazanie odmian dla typow
+				List<GrammaFormConjugateAndExampleEntryForDictionaryType> currentGrammaFormConjugateAndExampleEntryForDictionaryTypeList = grammaFormConjugateAndExampleEntry.grammaFormConjugateAndExampleEntryForDictionaryTypeList;
+				
+				for (GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType : currentGrammaFormConjugateAndExampleEntryForDictionaryTypeList) {
+					
+					// glowny dic dla typu danego slowa
+					Div dictionaryEntryGrammaTypeMainDiv = new Div("panel panel-default");
+					dictionaryEntryGrammaMainBodyDiv.addHtmlElement(dictionaryEntryGrammaTypeMainDiv);
+					
+					// rodzaj tego slowa
+					Div dictionaryEntryTypeDiv = new Div("panel-heading");
+					dictionaryEntryTypeDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate.dictionaryEntryTypeAs") + " " + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName()));
+					dictionaryEntryGrammaTypeMainDiv.addHtmlElement(dictionaryEntryTypeDiv);
+					
+					// zawartosc sekcji
+					Div dictionaryEntryGrammaTypeMainBodyDiv = new Div("panel-body");
+					dictionaryEntryGrammaTypeMainDiv.addHtmlElement(dictionaryEntryGrammaTypeMainBodyDiv);
+
+					// wygenerowanie odmian					
+					for (int idx = 0; idx < grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormConjugateGroupTypeElementsList.size(); ++idx) {
+						
+						GrammaFormConjugateGroupTypeElements currentGrammaFormConjugateGroupTypeElements = grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormConjugateGroupTypeElementsList.get(idx);
+						
+						if (currentGrammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().isShow() == false) {
+							continue;
+						}
+						
+						int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;									
+						String tab2LevelId = "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
+						
+						// FM_FIXME: menu !!!!!!!!!!!!!!!!!!!!!!!!!
+						dictionaryEntryGrammaTypeMainBodyDiv.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, null, /* tabObjectToProcessCreateDivWrapper2.menu */
+								(id) -> { return "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType + "_" + id; },
+								(id) -> { return createLevel2TabOnclickScrollScript("grammaFormConjugateEntry", tabIdx, tab2LevelId, id); }																								
+							));
+						
+						if (idx != grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormConjugateGroupTypeElementsList.size() - 1) {
+							dictionaryEntryGrammaTypeMainBodyDiv.addHtmlElement(new Hr());
+						}
+					}
+
+					
+					
+					// dictionaryEntryGrammaTypeMainBodyDiv.addHtmlElement(new Text("AAAAAAAA"));
+					
+					
+					// slowo i typ
+					/*
+					
+					
+					
+					
+					
+					*/
+					
+					
+				}
+				
+				panelBody.addHtmlElement(dictionaryEntryGrammaMainDiv);
+				
+			}
+			
+			int a = 0;
+			
+			a++;
+			
+			
+			// wygenerowanie zakladek			
+			if (1 == 2) { // FM_FIXME !!!!
 			createTabs(grammaFormConjugateMenu, panelBody,
 					grammaFormConjugateAndExampleEntryMap.size(),
 					(tabIdx) -> new ArrayList<>(grammaFormConjugateAndExampleEntryMap.values()).get(tabIdx),
@@ -1702,7 +1788,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						
 						return createLevel1TabOnclickScrollScript("grammaFormConjugateEntry", "grammaFormConjugateContentEntry", tabIdx);
 					}					
-				);					
+				);	
+			}
 			
 			return panelDiv;
 			
@@ -1827,7 +1914,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	Menu row1Menu = new Menu(row1TitleH4.getId(), grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName());
     	row1Menu.setCustomOnClick(menuOnClickGenerator.apply(row1TitleH4.getId()));
     	
-    	menu.getChildMenu().add(row1Menu);
+    	// FM_FIXME: !!!!!!!
+    	// menu.getChildMenu().add(row1Menu);
     	
     	row1TitleDiv.addHtmlElement(row1TitleH4);
     	row1Div.addHtmlElement(row1TitleDiv);

@@ -44,7 +44,12 @@ public class PageModifiedCheckService {
 	}
 	
 	private void checkIfPageIsModifiedAndGenerateHttp304NotModified(HttpServletRequest request, String objectName, Integer id, String realModifiedDateString) {
-				
+		
+		// dla dev wylaczenie mechanizmu
+		if (version.equals("dev") == true) {
+			return;
+		}
+		
 		// pobranie If-None-Match z wywolania
 		String ifNoneMatch = request.getHeader(HttpHeaders.IF_NONE_MATCH);
 		
