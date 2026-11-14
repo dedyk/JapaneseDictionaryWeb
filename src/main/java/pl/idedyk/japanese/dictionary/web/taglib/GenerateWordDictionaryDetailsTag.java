@@ -1710,8 +1710,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					}
 				}
 				
-				panelBody.addHtmlElement(dictionaryEntryGrammaMainDiv);
-				
+				panelBody.addHtmlElement(dictionaryEntryGrammaMainDiv);				
 			}
 			
 			// wygenerowanie zakladek - stary kod
@@ -1802,28 +1801,27 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}
 	}
 	
+	/*
 	private String createLevel1TabOnclickScrollScript(String tabId, String tab2Id, int tabIdx) {
-		
-		// FM_FIXME: !!!!!!!!!!!!!!!!!
-		
+				
 		return "$('#" + tabId + tabIdx + "').tab('show');"
 				+ "setTimeout(() => { $('html, body').animate({ " 
 				+ "scrollTop: $('#" + tab2Id + tabIdx + "').offset().top - 15 " 
 				+ "}, 1000); }, 300); return false; ";						
 	}
+	*/
 	
 	private String createLevel2TabOnclickScrollScript(String tabId, int tabIdx, String tab2LevelId, String scrollTargetId) {
-
-		// FM_FIXME: !!!!!!!!!!!!!!!!!
 		
-		return "$('#" + tabId + tabIdx + "').tab('show');"
+		return /* "$('#" + tabId + tabIdx + "').tab('show');"
 				+ "$('#" + tab2LevelId + "').tab('show');"
-				+ "setTimeout(() => { $('html, body').animate({ " 
+				+ */ 
+				"setTimeout(() => { $('html, body').animate({ " 
 				+ "scrollTop: $('#" + scrollTargetId + "').offset().top - 15 " 
 				+ "}, 1000); }, 300); return false; ";
 
 	}
-		
+	/*	
 	private void createTabs(Menu menu, Div panelBody, int tabsNumbers,
 			Function<Integer,Object> getObjectGetter,
 			Function<Integer, String> tabIdHrefGetter,
@@ -1831,9 +1829,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			Function<Object, String> tabNameGetter,
 			Function<TabObjectToProcessCreateDivWrapper, Div> contentDivGetter,
 			Function<Object, String> customOnClickGenerator) {
-		
-		// FM_FIXME: !!!!!!!!!!!!!!!!
-		
+				
 		// wygenerowanie zakladek			
 		Ul tabUl = new Ul("nav nav-tabs");
 		panelBody.addHtmlElement(tabUl);
@@ -1895,6 +1891,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			objectToProcessEntryDiv.addHtmlElement(contentDivGetter.apply(new TabObjectToProcessCreateDivWrapper(objectToProcess, menuForObjectToProcess)));
 		}
 	}
+	*/
 	
 	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements, Menu menu,
 			Function<String, String> idGenerator,
@@ -1923,7 +1920,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	}
     	
     	Menu row1Menu = new Menu(row1TitleH4.getId(), grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName());
-    	row1Menu.setCustomOnClick(menuOnClickGenerator.apply(row1TitleH4.getId()));
+		// row1Menu.setCustomOnClick(menuOnClickGenerator.apply(row1TitleH4.getId()));
     	
     	menu.getChildMenu().add(row1Menu);
     	
@@ -2136,9 +2133,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				}				
 			}
 			
-			// pokazanie przykladow
-			// tutaj();
-			
+			// pokazanie przykladow			
 			Div panelDiv = new Div("panel panel-default");		
 			Div panelHeading = new Div("panel-heading");
 
@@ -2163,8 +2158,92 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			Div panelBody = new Div("panel-body");
 			
 			panelDiv.addHtmlElement(panelBody);		
+									
+			// wygenerowanie wszystkich kombinacji slowek i typow
+			List<GrammaFormConjugateAndExampleEntry> grammaFormConjugateAndExampleEntryMapValues = new ArrayList<>(grammaFormConjugateAndExampleEntryMap.values());
+			
+			for (int grammaFormConjugateAndExampleEntryIdx = 0; grammaFormConjugateAndExampleEntryIdx < grammaFormConjugateAndExampleEntryMapValues.size(); ++grammaFormConjugateAndExampleEntryIdx) {
+				
+				GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = grammaFormConjugateAndExampleEntryMapValues.get(grammaFormConjugateAndExampleEntryIdx);
+								
+				DictionaryEntry currentGrammaDictionaryEntry = grammaFormConjugateAndExampleEntry.dictionaryEntry;
+
+				// glowny div dla danego slowa
+				Div dictionaryEntryExampleMainDiv = new Div("panel panel-default");
+
+				dictionaryEntryExampleMainDiv.setId("exampleFormConjugateEntry" + grammaFormConjugateAndExampleEntryIdx);
+				
+				// tytul tego slowa
+				Div dictionaryEntryExampleWordTitleDiv = new Div("panel-heading");
+				
+				String dictionaryEntryExampleWordTitleString = (currentGrammaDictionaryEntry.isKanjiExists() == true ? currentGrammaDictionaryEntry.getKanji()  + ", " : "") + currentGrammaDictionaryEntry.getKana();
+				
+				dictionaryEntryExampleWordTitleDiv.addHtmlElement(new Text(dictionaryEntryExampleWordTitleString));					
+				dictionaryEntryExampleMainDiv.addHtmlElement(dictionaryEntryExampleWordTitleDiv);
+				
+				// i dodanie do menu
+				Menu menuForDictionaryEntryExampleWordTitleDiv = new Menu(dictionaryEntryExampleMainDiv.getId(), dictionaryEntryExampleWordTitleString);				
+				exampleMenu.getChildMenu().add(menuForDictionaryEntryExampleWordTitleDiv);
+				
+				// zawartosc sekcji
+				Div dictionaryEntryExampleMainBodyDiv = new Div("panel-body");
+				dictionaryEntryExampleMainDiv.addHtmlElement(dictionaryEntryExampleMainBodyDiv);
+				
+				// pokazanie przykladow dla typow
+				List<GrammaFormConjugateAndExampleEntryForDictionaryType> currentGrammaFormConjugateAndExampleEntryForDictionaryTypeList = grammaFormConjugateAndExampleEntry.grammaFormConjugateAndExampleEntryForDictionaryTypeList;
+								
+				for (	int grammaFormConjugateAndExampleEntryForDictionaryTypeIdx = 0; 
+						grammaFormConjugateAndExampleEntryForDictionaryTypeIdx < currentGrammaFormConjugateAndExampleEntryForDictionaryTypeList.size();
+						grammaFormConjugateAndExampleEntryForDictionaryTypeIdx++) {
+					
+					GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = currentGrammaFormConjugateAndExampleEntryForDictionaryTypeList.get(grammaFormConjugateAndExampleEntryForDictionaryTypeIdx);
+										
+					// glowny div dla typu danego slowa
+					Div dictionaryEntryExampleTypeMainDiv = new Div("panel panel-default");
+					dictionaryEntryExampleMainBodyDiv.addHtmlElement(dictionaryEntryExampleTypeMainDiv);
+					
+					dictionaryEntryExampleTypeMainDiv.setId("exampleFormConjugateEntry" + grammaFormConjugateAndExampleEntryIdx + "Type" + grammaFormConjugateAndExampleEntryForDictionaryTypeIdx);
+					
+					// rodzaj tego slowa
+					Div dictionaryEntryTypeDiv = new Div("panel-heading");
+					
+					String dictionaryEntryTypeString = getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate.dictionaryEntryTypeAs") + " " + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName();
+					
+					dictionaryEntryTypeDiv.addHtmlElement(new Text(dictionaryEntryTypeString));
+					dictionaryEntryExampleTypeMainDiv.addHtmlElement(dictionaryEntryTypeDiv);
+					
+					// i dodanie do menu
+					Menu menuForDictionaryEntryExampleTypeMainDiv  = new Menu(dictionaryEntryExampleTypeMainDiv.getId(), dictionaryEntryTypeString);				
+					menuForDictionaryEntryExampleWordTitleDiv.getChildMenu().add(menuForDictionaryEntryExampleTypeMainDiv);
+					
+					// zawartosc sekcji
+					Div dictionaryEntryExampleTypeMainBodyDiv = new Div("panel-body");
+					dictionaryEntryExampleTypeMainDiv.addHtmlElement(dictionaryEntryExampleTypeMainBodyDiv);
+
+					// wygenerowanie odmian					
+					for (int idx = 0; idx < grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList.size(); ++idx) {
 						
-			// wygenerowanie zakladek
+						ExampleGroupTypeElements currentExampleGroupTypeElements = grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList.get(idx);
+						
+						int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;									
+						String tab2LevelId = "exampleEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
+						
+						dictionaryEntryExampleTypeMainBodyDiv.addHtmlElement(generateExampleGroupTypeElements(currentExampleGroupTypeElements, menuForDictionaryEntryExampleTypeMainDiv,
+								(id) -> { return "exampleEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType + "_" + id; },
+								(id) -> { return createLevel2TabOnclickScrollScript("exampleEntry", tabIdx, tab2LevelId, id); }																								
+							));
+						
+						if (idx != grammaFormConjugateAndExampleEntryForDictionaryType.exampleGroupTypeElementsList.size() - 1) {
+							dictionaryEntryExampleTypeMainBodyDiv.addHtmlElement(new Hr());
+						}
+					}
+				}
+				
+				panelBody.addHtmlElement(dictionaryEntryExampleMainDiv);
+			}			
+			
+			// wygenerowanie zakladek - stary kod
+			/*
 			createTabs(exampleMenu, panelBody,
 					grammaFormConjugateAndExampleEntryMap.size(),
 					(tabIdx) -> new ArrayList<>(grammaFormConjugateAndExampleEntryMap.values()).get(tabIdx),
@@ -2237,6 +2316,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						return createLevel1TabOnclickScrollScript("exampleEntry", "exampleContentEntry", tabIdx);
 					}					
 				);
+			*/
 						
 			return panelDiv;
 			
@@ -2591,6 +2671,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		}		
 	}
 	
+	/*
 	private static class TabObjectToProcessCreateDivWrapper {
 		private Object objectToProcess;
 		private Menu menu;
@@ -2601,4 +2682,5 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			this.menu = menu;
 		}		
 	}
+	*/
 }
