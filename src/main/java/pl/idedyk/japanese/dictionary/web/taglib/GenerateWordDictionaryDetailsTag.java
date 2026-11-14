@@ -174,7 +174,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
             }
                         
             // odmiany gramatyczne            
-            Div grammaFormConjugateDiv = generateGrammaFormConjugate(mainMenu);
+            Div grammaFormConjugateDiv = generateGrammaFormConjugate(mainMenu, mobile);
             
             if (grammaFormConjugateDiv != null) {
             	contentDiv.addHtmlElement(grammaFormConjugateDiv);
@@ -1549,7 +1549,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 		return panelDiv;
 	}
 	
-	private Div generateGrammaFormConjugate(Menu mainMenu) throws IOException {
+	private Div generateGrammaFormConjugate(Menu mainMenu, boolean mobile) throws IOException {
 				
 		List<DictionaryEntry> dictionaryEntryList = new ArrayList<>();
 		
@@ -1701,7 +1701,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						
 						dictionaryEntryGrammaTypeMainBodyDiv.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, menuForDictionaryEntryGrammaTypeMainDiv,
 								(id) -> { return "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType + "_" + id; },
-								(id) -> { return createLevel2TabOnclickScrollScript("grammaFormConjugateEntry", tabIdx, tab2LevelId, id); }																								
+								(id) -> { return createLevel2TabOnclickScrollScript("grammaFormConjugateEntry", tabIdx, tab2LevelId, id); }, mobile																								
 							));
 						
 						if (idx != grammaFormConjugateAndExampleEntryForDictionaryType.grammaFormConjugateGroupTypeElementsList.size() - 1) {
@@ -1895,7 +1895,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	
 	private Div generateGrammaFormConjugateGroupTypeElements(GrammaFormConjugateGroupTypeElements grammaFormConjugateGroupTypeElements, Menu menu,
 			Function<String, String> idGenerator,
-			Function<String, String> menuOnClickGenerator) {
+			Function<String, String> menuOnClickGenerator,
+			boolean mobile) {
 		
 		Div resultDiv = new Div();
 		
@@ -1903,7 +1904,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	Div row1Div = new Div("row");
     	
     	// tytul
-    	Div row1TitleDiv = new Div("col-md-12");
+    	Div row1TitleDiv = new Div(mobile == false ? "col-md-12" : "", mobile == false ? "" : "margin-left: 5px");
     	
     	H row1TitleH4 = new H(4, null, "margin-top: 0px; font-weight:bold;");    	
     	row1TitleH4.setId(idGenerator.apply(grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().toString()));  	
