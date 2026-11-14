@@ -1627,18 +1627,30 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			panelDiv.addHtmlElement(panelBody);
 
 			// wygenerowanie wszystkich kombinacji slowek i typow
-			for (GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry : grammaFormConjugateAndExampleEntryMap.values()) {
+			List<GrammaFormConjugateAndExampleEntry> grammaFormConjugateAndExampleEntryMapValues = new ArrayList<>(grammaFormConjugateAndExampleEntryMap.values());
+			
+			for (int grammaFormConjugateAndExampleEntryIdx = 0; grammaFormConjugateAndExampleEntryIdx < grammaFormConjugateAndExampleEntryMapValues.size(); ++grammaFormConjugateAndExampleEntryIdx) {
 				
+				GrammaFormConjugateAndExampleEntry grammaFormConjugateAndExampleEntry = grammaFormConjugateAndExampleEntryMapValues.get(grammaFormConjugateAndExampleEntryIdx);
+								
 				DictionaryEntry currentGrammaDictionaryEntry = grammaFormConjugateAndExampleEntry.dictionaryEntry;
 
 				// glowny dic dla danego slowa
 				Div dictionaryEntryGrammaMainDiv = new Div("panel panel-default");
 
+				dictionaryEntryGrammaMainDiv.setId("grammaFormConjugateEntry" + grammaFormConjugateAndExampleEntryIdx);
+				
 				// tytul tego slowa
-				Div dictionaryEntryGrammaWordTitleDiv = new Div("panel-heading");					
-				dictionaryEntryGrammaWordTitleDiv.addHtmlElement(new Text((
-						currentGrammaDictionaryEntry.isKanjiExists() == true ? currentGrammaDictionaryEntry.getKanji()  + ", " : "") + currentGrammaDictionaryEntry.getKana()));					
+				Div dictionaryEntryGrammaWordTitleDiv = new Div("panel-heading");
+				
+				String dictionaryEntryGrammaWordTitleString = (currentGrammaDictionaryEntry.isKanjiExists() == true ? currentGrammaDictionaryEntry.getKanji()  + ", " : "") + currentGrammaDictionaryEntry.getKana();
+				
+				dictionaryEntryGrammaWordTitleDiv.addHtmlElement(new Text(dictionaryEntryGrammaWordTitleString));					
 				dictionaryEntryGrammaMainDiv.addHtmlElement(dictionaryEntryGrammaWordTitleDiv);
+				
+				// i dodanie do menu
+				Menu menuForDictionaryEntryGrammaWordTitleDiv = new Menu(dictionaryEntryGrammaMainDiv.getId(), dictionaryEntryGrammaWordTitleString);				
+				grammaFormConjugateMenu.getChildMenu().add(menuForDictionaryEntryGrammaWordTitleDiv);
 				
 				// zawartosc sekcji
 				Div dictionaryEntryGrammaMainBodyDiv = new Div("panel-body");
@@ -1647,16 +1659,29 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 				// pokazanie odmian dla typow
 				List<GrammaFormConjugateAndExampleEntryForDictionaryType> currentGrammaFormConjugateAndExampleEntryForDictionaryTypeList = grammaFormConjugateAndExampleEntry.grammaFormConjugateAndExampleEntryForDictionaryTypeList;
 				
-				for (GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType : currentGrammaFormConjugateAndExampleEntryForDictionaryTypeList) {
+				for (	int grammaFormConjugateAndExampleEntryForDictionaryTypeIdx = 0; 
+						grammaFormConjugateAndExampleEntryForDictionaryTypeIdx < currentGrammaFormConjugateAndExampleEntryForDictionaryTypeList.size();
+						grammaFormConjugateAndExampleEntryForDictionaryTypeIdx++) {
 					
+					GrammaFormConjugateAndExampleEntryForDictionaryType grammaFormConjugateAndExampleEntryForDictionaryType = currentGrammaFormConjugateAndExampleEntryForDictionaryTypeList.get(grammaFormConjugateAndExampleEntryForDictionaryTypeIdx);
+										
 					// glowny dic dla typu danego slowa
 					Div dictionaryEntryGrammaTypeMainDiv = new Div("panel panel-default");
 					dictionaryEntryGrammaMainBodyDiv.addHtmlElement(dictionaryEntryGrammaTypeMainDiv);
 					
+					dictionaryEntryGrammaTypeMainDiv.setId("grammaFormConjugateEntry" + grammaFormConjugateAndExampleEntryIdx + "Type" + grammaFormConjugateAndExampleEntryForDictionaryTypeIdx);
+					
 					// rodzaj tego slowa
 					Div dictionaryEntryTypeDiv = new Div("panel-heading");
-					dictionaryEntryTypeDiv.addHtmlElement(new Text(getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate.dictionaryEntryTypeAs") + " " + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName()));
+					
+					String dictionaryEntryTypeString = getMessage("wordDictionaryDetails.page.dictionaryEntry.grammaFormConjugate.dictionaryEntryTypeAs") + " " + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType.getName();
+					
+					dictionaryEntryTypeDiv.addHtmlElement(new Text(dictionaryEntryTypeString));
 					dictionaryEntryGrammaTypeMainDiv.addHtmlElement(dictionaryEntryTypeDiv);
+					
+					// i dodanie do menu
+					Menu menuForDictionaryEntryGrammaTypeMainDiv  = new Menu(dictionaryEntryGrammaTypeMainDiv.getId(), dictionaryEntryTypeString);				
+					menuForDictionaryEntryGrammaWordTitleDiv.getChildMenu().add(menuForDictionaryEntryGrammaTypeMainDiv);
 					
 					// zawartosc sekcji
 					Div dictionaryEntryGrammaTypeMainBodyDiv = new Div("panel-body");
@@ -1674,8 +1699,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 						int tabIdx = grammaFormConjugateAndExampleEntry.dictionaryEntryIdx;									
 						String tab2LevelId = "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType; 
 						
-						// FM_FIXME: menu !!!!!!!!!!!!!!!!!!!!!!!!!
-						dictionaryEntryGrammaTypeMainBodyDiv.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, null, /* tabObjectToProcessCreateDivWrapper2.menu */
+						dictionaryEntryGrammaTypeMainBodyDiv.addHtmlElement(generateGrammaFormConjugateGroupTypeElements(currentGrammaFormConjugateGroupTypeElements, menuForDictionaryEntryGrammaTypeMainDiv,
 								(id) -> { return "grammaFormConjugateEntry" + tabIdx + "_" + grammaFormConjugateAndExampleEntryForDictionaryType.dictionaryEntryType + "_" + id; },
 								(id) -> { return createLevel2TabOnclickScrollScript("grammaFormConjugateEntry", tabIdx, tab2LevelId, id); }																								
 							));
@@ -1684,35 +1708,14 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 							dictionaryEntryGrammaTypeMainBodyDiv.addHtmlElement(new Hr());
 						}
 					}
-
-					
-					
-					// dictionaryEntryGrammaTypeMainBodyDiv.addHtmlElement(new Text("AAAAAAAA"));
-					
-					
-					// slowo i typ
-					/*
-					
-					
-					
-					
-					
-					*/
-					
-					
 				}
 				
 				panelBody.addHtmlElement(dictionaryEntryGrammaMainDiv);
 				
 			}
 			
-			int a = 0;
-			
-			a++;
-			
-			
-			// wygenerowanie zakladek			
-			if (1 == 2) { // FM_FIXME !!!!
+			// wygenerowanie zakladek - stary kod
+			/*
 			createTabs(grammaFormConjugateMenu, panelBody,
 					grammaFormConjugateAndExampleEntryMap.size(),
 					(tabIdx) -> new ArrayList<>(grammaFormConjugateAndExampleEntryMap.values()).get(tabIdx),
@@ -1790,6 +1793,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 					}					
 				);	
 			}
+			*/
 			
 			return panelDiv;
 			
@@ -1799,6 +1803,9 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 	
 	private String createLevel1TabOnclickScrollScript(String tabId, String tab2Id, int tabIdx) {
+		
+		// FM_FIXME: !!!!!!!!!!!!!!!!!
+		
 		return "$('#" + tabId + tabIdx + "').tab('show');"
 				+ "setTimeout(() => { $('html, body').animate({ " 
 				+ "scrollTop: $('#" + tab2Id + tabIdx + "').offset().top - 15 " 
@@ -1806,6 +1813,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 	}
 	
 	private String createLevel2TabOnclickScrollScript(String tabId, int tabIdx, String tab2LevelId, String scrollTargetId) {
+
+		// FM_FIXME: !!!!!!!!!!!!!!!!!
 		
 		return "$('#" + tabId + tabIdx + "').tab('show');"
 				+ "$('#" + tab2LevelId + "').tab('show');"
@@ -1822,6 +1831,8 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
 			Function<Object, String> tabNameGetter,
 			Function<TabObjectToProcessCreateDivWrapper, Div> contentDivGetter,
 			Function<Object, String> customOnClickGenerator) {
+		
+		// FM_FIXME: !!!!!!!!!!!!!!!!
 		
 		// wygenerowanie zakladek			
 		Ul tabUl = new Ul("nav nav-tabs");
@@ -1914,8 +1925,7 @@ public class GenerateWordDictionaryDetailsTag extends GenerateDictionaryDetailsT
     	Menu row1Menu = new Menu(row1TitleH4.getId(), grammaFormConjugateGroupTypeElements.getGrammaFormConjugateGroupType().getName());
     	row1Menu.setCustomOnClick(menuOnClickGenerator.apply(row1TitleH4.getId()));
     	
-    	// FM_FIXME: !!!!!!!
-    	// menu.getChildMenu().add(row1Menu);
+    	menu.getChildMenu().add(row1Menu);
     	
     	row1TitleDiv.addHtmlElement(row1TitleH4);
     	row1Div.addHtmlElement(row1TitleDiv);
