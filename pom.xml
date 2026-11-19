@@ -22,7 +22,7 @@
 		<version.compiler.plugin>3.15.0</version.compiler.plugin>
 
 		<!-- spring version -->
-		<spring.version>6.2.19</spring.version>
+		<spring.version>7.0.10</spring.version>
 		
 		<!-- spring security version -->
 		<spring.security.version>6.5.11</spring.security.version>
@@ -141,14 +141,14 @@
 		<dependency>
 		    <groupId>jakarta.servlet</groupId>
 		    <artifactId>jakarta.servlet-api</artifactId>
-		    <version>6.0.0</version>
+		    <version>6.1.0</version>
 		    <scope>provided</scope>
 		</dependency>
 
 		<dependency>
 		    <groupId>jakarta.servlet.jsp</groupId>
 		    <artifactId>jakarta.servlet.jsp-api</artifactId>
-		    <version>3.1.1</version>
+		    <version>4.0.0</version>
 		    <scope>provided</scope>
 		</dependency>
 
@@ -185,7 +185,7 @@
 		<dependency>
 		    <groupId>jakarta.servlet.jsp.jstl</groupId>
 		    <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-		    <version>3.0.0</version>
+		    <version>3.0.2</version>
 		</dependency>
 		
 		<dependency>
@@ -275,7 +275,7 @@
 		<dependency>
 		    <groupId>jakarta.validation</groupId>
 		    <artifactId>jakarta.validation-api</artifactId>
-		    <version>3.0.2</version>
+		    <version>3.1.1</version>
 		</dependency>
 		
 		<dependency>

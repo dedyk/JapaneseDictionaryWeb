@@ -58,14 +58,14 @@ public class InfoController {
 		ConfigWrapper config = configService.getConfig();
 
 		if (code == null) { // to nigdy nie powinno zdarzyc sie
-			throw new NoResourceFoundException(HttpMethod.GET, "Not found");
+			throw new NoResourceFoundException(HttpMethod.GET, "Not found", "");
 		}
 		
 		// szukamy strony w konfiguracji
 		Page page = config.getConfig().getInfoPage().getPage().stream().filter(f -> f.getCode().equals(code)).findFirst().orElse(null);
 		
 		if (page == null) { // nie znaleziono takiej strony
-			throw new NoResourceFoundException(HttpMethod.GET, "Not found");
+			throw new NoResourceFoundException(HttpMethod.GET, "Not found", "");
 		}
 		
 		// pokazanie tej strony
